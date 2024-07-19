@@ -12,8 +12,9 @@ jobs:
       run:
         shell: bash
         working-directory: ./backend
+
     permissions:
-      contents: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
