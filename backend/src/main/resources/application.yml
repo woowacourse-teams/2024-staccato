@@ -1,3 +1,19 @@
 spring:
   application:
     name: staccato
+  sql:
+    init:
+      mode: always
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:staccato
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
