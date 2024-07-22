@@ -48,7 +48,7 @@ public class Travel extends BaseEntity {
     }
 
     private void validateDate(LocalDate startAt, LocalDate endAt) {
-        if(endAt.isBefore(startAt)){
+        if (endAt.isBefore(startAt)) {
             throw new InvalidTravelException("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
         }
     }
