@@ -13,11 +13,49 @@
         tools:context=".presentation.main.MainActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_bottom_sheet"
+            android:id="@+id/constraint_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#888888">
+
+            <Button
+                android:id="@+id/btn_timeline"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"
+                android:text="타임라인 보기"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_visit_create"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"
+                android:text="방문 기록 생성하기"
+                app:layout_constraintBottom_toTopOf="@id/btn_travel_create"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <Button
+                android:id="@+id/btn_travel_create"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="130dp"
+                android:text="여행 생성하기 버튼"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="700dp"
             android:background="#AAAAAA"
-            android:padding="10dp"
+            android:paddingTop="50dp"
             app:behavior_peekHeight="100dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             app:layout_constraintBottom_toBottomOf="parent"
