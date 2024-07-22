@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.is;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -115,7 +114,6 @@ class TravelAcceptanceTest {
                 .header(HttpHeaders.LOCATION, containsString("/travels/"));
     }
 
-    @Disabled
     @DisplayName("사용자가 제목 없이 여행 상세를 생성할 수 없다.")
     @Test
     void failCreateTravelWithoutTitle() {
@@ -137,11 +135,10 @@ class TravelAcceptanceTest {
                 .post("/travels")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("messages", is("여행 제목을 입력해주세요."))
+                .body("message", is("여행 제목을 입력해주세요."))
                 .body("status", is(BAD_REQUEST_STATUS));
     }
 
-    @Disabled
     @DisplayName("사용자가 시작 날짜 없이 여행 상세를 생성할 수 없다.")
     @Test
     void failCreateTravelWithoutStartDate() {
@@ -163,12 +160,11 @@ class TravelAcceptanceTest {
                 .post("/travels")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("messages", is("여행 시작 날짜를 입력해주세요."))
+                .body("message", is("여행 시작 날짜를 입력해주세요."))
                 .body("status", is(BAD_REQUEST_STATUS));
     }
 
-    @Disabled
-    @DisplayName("사용자가 시작 날짜 없이 여행 상세를 생성할 수 없다.")
+    @DisplayName("사용자가 끝 날짜 없이 여행 상세를 생성할 수 없다.")
     @Test
     void failCreateTravelWithoutEndDate() {
         // given
@@ -189,7 +185,7 @@ class TravelAcceptanceTest {
                 .post("/travels")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("messages", is("여행 끝 날짜를 입력해주세요."))
+                .body("message", is("여행 끝 날짜를 입력해주세요."))
                 .body("status", is(BAD_REQUEST_STATUS));
     }
 }
