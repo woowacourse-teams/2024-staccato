@@ -13,15 +13,12 @@ import org.hibernate.annotations.SQLDelete;
 import com.staccato.config.domain.BaseEntity;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE travel SET is_deleted = true WHERE id = ?")
 public class Travel extends BaseEntity {
@@ -38,4 +35,13 @@ public class Travel extends BaseEntity {
     private LocalDate startAt;
     @Column(nullable = false)
     private LocalDate endAt;
+
+    @Builder
+    public Travel(String thumbnailUrl, String title, String description, LocalDate startAt, LocalDate endAt) {
+        this.thumbnailUrl = thumbnailUrl;
+        this.title = title;
+        this.description = description;
+        this.startAt = startAt;
+        this.endAt = endAt;
+    }
 }
