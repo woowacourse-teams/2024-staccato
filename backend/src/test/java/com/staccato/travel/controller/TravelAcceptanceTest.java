@@ -27,7 +27,6 @@ import io.restassured.http.ContentType;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TravelAcceptanceTest {
     private static final String USER_AUTHORIZATION = "1";
-    private static final String BAD_REQUEST_STATUS = "400 BAD_REQUEST";
 
     @Autowired
     private MemberRepository memberRepository;
@@ -136,7 +135,7 @@ class TravelAcceptanceTest {
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is("여행 제목을 입력해주세요."))
-                .body("status", is(BAD_REQUEST_STATUS));
+                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 
     @DisplayName("사용자가 시작 날짜 없이 여행 상세를 생성할 수 없다.")
@@ -161,7 +160,7 @@ class TravelAcceptanceTest {
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is("여행 시작 날짜를 입력해주세요."))
-                .body("status", is(BAD_REQUEST_STATUS));
+                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 
     @DisplayName("사용자가 끝 날짜 없이 여행 상세를 생성할 수 없다.")
@@ -186,7 +185,7 @@ class TravelAcceptanceTest {
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is("여행 끝 날짜를 입력해주세요."))
-                .body("status", is(BAD_REQUEST_STATUS));
+                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 
     @DisplayName("사용자가 제목을 30자 초과로 입력하면 여행 상세를 생성할 수 없다.")
@@ -211,7 +210,7 @@ class TravelAcceptanceTest {
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is("제목의 최대 허용 글자수는 공백 포함 30자입니다."))
-                .body("status", is(BAD_REQUEST_STATUS));
+                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 
     @DisplayName("사용자가 설명을 500자 초과로 입력하면 여행 상세를 생성할 수 없다.")
@@ -236,7 +235,7 @@ class TravelAcceptanceTest {
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is("내용의 최대 허용 글자수는 공백 포함 500자입니다."))
-                .body("status", is(BAD_REQUEST_STATUS));
+                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 
 
@@ -262,6 +261,6 @@ class TravelAcceptanceTest {
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is("끝 날짜가 시작 날짜보다 앞설 수 없어요."))
-                .body("status", is(BAD_REQUEST_STATUS));
+                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 }
