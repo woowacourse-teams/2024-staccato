@@ -3,6 +3,7 @@ package com.woowacourse.staccato.presentation.main
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -13,6 +14,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDE
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityMainBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
+import com.woowacourse.staccato.presentation.travelcreation.TravelCreationActivity
+import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     override val layoutResourceId: Int
@@ -21,6 +24,25 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+
+    private val travelCreationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let {
+                    Toast.makeText(this, "새로운 여행을 만들었어요!", Toast.LENGTH_SHORT).show()
+                    navigateTo(R.id.travelFragment)
+                }
+            }
+        }
+    private val visitCreationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let {
+                    Toast.makeText(this, "새로운 방문 기록을 만들었어요!", Toast.LENGTH_SHORT).show()
+                    navigateTo(R.id.visitFragment)
+                }
+            }
+        }
 
     override fun initStartView(savedInstanceState: Bundle?) {
         setupBottomSheetController()
@@ -60,16 +82,27 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     }
 
     private fun setupBottomSheetNavigation() {
-        val navOptions = buildNavOptions()
         binding.btnTravelCreate.setOnClickListener {
-            navigateTo(R.id.travelCreationFragment, navOptions)
+            TravelCreationActivity.startWithResultLauncher(
+                this,
+                travelCreationLauncher,
+            )
         }
         binding.btnVisitCreate.setOnClickListener {
-            navigateTo(R.id.visitCreationFragment, navOptions)
+            VisitCreationActivity.startWithResultLauncher(
+                this,
+                visitCreationLauncher,
+            )
         }
         binding.btnTimeline.setOnClickListener {
-            navigateTo(R.id.timelineFragment, navOptions)
+            navigateTo(R.id.timelineFragment)
         }
+    }
+
+    private fun navigateTo(navResourceId: Int) {
+        val navOptions = buildNavOptions()
+        navController.navigate(navResourceId, null, navOptions)
+        behavior.state = STATE_EXPANDED
     }
 
     private fun buildNavOptions() =
@@ -77,12 +110,4 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             .setLaunchSingleTop(true)
             .setPopUpTo(R.id.timelineFragment, false)
             .build()
-
-    private fun navigateTo(
-        navResourceId: Int,
-        navOptions: NavOptions,
-    ) {
-        navController.navigate(navResourceId, null, navOptions)
-        behavior.state = STATE_EXPANDED
-    }
 }
