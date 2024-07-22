@@ -11,5 +11,5 @@ data class VisitDto(
     @SerialName("address") val address: String,
     @SerialName("visited_at") val visitedAt: String,
     @SerialName("visited_count") val visitedCount: Long,
-    @SerialName("visit_logs") val visitLogs: List<VisitLogDto>
+    @SerialName("visit_logs") val visitLogs: List<VisitLogDto>,
 )

@@ -11,23 +11,26 @@ import retrofit2.Retrofit
 object StaccatoClient {
     private const val BASE_URL = BuildConfig.BASE_URL
 
-    private val provideLoggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-    }
+    private val provideLoggingInterceptor =
+        HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
 
-    private val provideHttpClient = OkHttpClient.Builder()
-        .addInterceptor(provideLoggingInterceptor)
-        .build()
+    private val provideHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(provideLoggingInterceptor)
+            .build()
 
     private val jsonBuilder = Json { coerceInputValues = true }
 
-    private val provideRetrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .client(provideHttpClient)
-        .addConverterFactory(
-            jsonBuilder.asConverterFactory("application/json".toMediaType())
-        )
-        .build()
+    private val provideRetrofit =
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(provideHttpClient)
+            .addConverterFactory(
+                jsonBuilder.asConverterFactory("application/json".toMediaType()),
+            )
+            .build()
 
     fun <T> create(service: Class<T>): T {
         return provideRetrofit.create(service)

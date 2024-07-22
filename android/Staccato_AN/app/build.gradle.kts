@@ -1,9 +1,10 @@
 import java.io.FileInputStream
 import java.util.Properties
 
-val localProperties = Properties().apply {
-    load(FileInputStream(rootProject.file("local.properties")))
-}
+val localProperties =
+    Properties().apply {
+        load(FileInputStream(rootProject.file("local.properties")))
+    }
 
 plugins {
     alias(libs.plugins.androidApplication)
