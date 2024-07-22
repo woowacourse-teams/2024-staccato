@@ -8,7 +8,8 @@ val localProperties = Properties().apply {
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("kotlin-kapt")
+    alias(libs.plugins.kotlinKapt)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 android {
