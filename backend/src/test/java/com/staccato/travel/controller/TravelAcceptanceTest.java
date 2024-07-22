@@ -238,4 +238,30 @@ class TravelAcceptanceTest {
                 .body("message", is("내용의 최대 허용 글자수는 공백 포함 500자입니다."))
                 .body("status", is(BAD_REQUEST_STATUS));
     }
+
+
+    @DisplayName("사용자가 끝 날짜를 시작 날짜보다 앞서게 설정하면 여행 상세를 생성할 수 없다.")
+    @Test
+    void failCreateTravelWhenEndDateAheadOfStartDate() {
+        // given
+        TravelRequest travelRequest = new TravelRequest(
+                "https://example.com/travels/geumohrm.jpg",
+                "2023 여름 휴가",
+                "친구들과 함께한 여름 휴가 여행",
+                LocalDate.of(2023, 7, 10),
+                LocalDate.of(2023, 7, 1)
+        );
+
+        // when & then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .body(travelRequest)
+                .when().log().all()
+                .post("/travels")
+                .then().log().all()
+                .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("끝 날짜가 시작 날짜보다 앞설 수 없어요."))
+                .body("status", is(BAD_REQUEST_STATUS));
+    }
 }

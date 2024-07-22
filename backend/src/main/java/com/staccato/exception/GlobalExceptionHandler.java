@@ -25,4 +25,10 @@ public class GlobalExceptionHandler {
                 .orElse("요청 형식이 잘못되었습니다.");
         return ResponseEntity.badRequest().body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), message));
     }
+
+    @ExceptionHandler(InvalidTravelException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidTravelException(InvalidTravelException e) {
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
+    }
 }
