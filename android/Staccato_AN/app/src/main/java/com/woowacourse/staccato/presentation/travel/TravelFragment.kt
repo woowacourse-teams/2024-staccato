@@ -12,8 +12,8 @@ class TravelFragment : BindingFragment<FragmentTravelBinding>(R.layout.fragment_
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        binding.btnTravelCreation.setOnClickListener {
-            findNavController().navigate(R.id.action_travelFragment_to_travelCreationFragment)
+        binding.btnTravelUpdate.setOnClickListener {
+            findNavController().navigate(R.id.action_travelFragment_to_travelUpdateFragment)
         }
         binding.btnVisit.setOnClickListener {
             findNavController().navigate(R.id.action_travelFragment_to_visitFragment)

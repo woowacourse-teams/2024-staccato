@@ -23,11 +23,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
         <Button
-            android:id="@+id/btn_visit"
+            android:id="@+id/btn_visit_update"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="방문 상세 수정 버튼(방문 생성 페이지로)"
+            android:text="내용 수정하기(방문 수정 화면으로)"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

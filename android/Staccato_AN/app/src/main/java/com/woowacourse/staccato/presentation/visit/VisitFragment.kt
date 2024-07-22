@@ -13,8 +13,8 @@ class VisitFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        binding.btnVisit.setOnClickListener {
-            findNavController().navigate(R.id.action_visitFragment_to_visitCreationFragment)
+        binding.btnVisitUpdate.setOnClickListener {
+            findNavController().navigate(R.id.action_visitFragment_to_visitUpdateFragment)
         }
     }
 }
