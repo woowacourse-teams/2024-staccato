@@ -1,25 +1,47 @@
 package com.staccato.travel.controller;
 
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 import java.time.LocalDate;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import com.staccato.member.domain.Member;
+import com.staccato.member.repository.MemberRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
+import com.staccato.util.DatabaseCleanerExtension;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
-@Disabled
+@ExtendWith(DatabaseCleanerExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TravelAcceptanceTest {
     private static final String USER_AUTHORIZATION = "1";
     private static final String BAD_REQUEST_STATUS = "400 BAD_REQUEST";
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void setPort() {
+        RestAssured.port = port;
+
+        memberRepository.save(Member.builder().nickname("staccato").build());
+    }
 
     @DisplayName("사용자가 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")
     @Test
@@ -42,7 +64,7 @@ class TravelAcceptanceTest {
                 .post("/travels")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.CREATED.value())
-                .header(HttpHeaders.LOCATION, contains("/travels/"));
+                .header(HttpHeaders.LOCATION, containsString("/travels/"));
     }
 
     @DisplayName("사용자가 썸네일 없이 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")
@@ -66,7 +88,7 @@ class TravelAcceptanceTest {
                 .post("/travels")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.CREATED.value())
-                .header(HttpHeaders.LOCATION, contains("/travels/"));
+                .header(HttpHeaders.LOCATION, containsString("/travels/"));
     }
 
     @DisplayName("사용자가 썸네일 없이 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")
@@ -90,9 +112,10 @@ class TravelAcceptanceTest {
                 .post("/travels")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.CREATED.value())
-                .header(HttpHeaders.LOCATION, contains("/travels/"));
+                .header(HttpHeaders.LOCATION, containsString("/travels/"));
     }
 
+    @Disabled
     @DisplayName("사용자가 제목 없이 여행 상세를 생성할 수 없다.")
     @Test
     void failCreateTravelWithoutTitle() {
@@ -118,6 +141,7 @@ class TravelAcceptanceTest {
                 .body("status", is(BAD_REQUEST_STATUS));
     }
 
+    @Disabled
     @DisplayName("사용자가 시작 날짜 없이 여행 상세를 생성할 수 없다.")
     @Test
     void failCreateTravelWithoutStartDate() {
@@ -143,6 +167,7 @@ class TravelAcceptanceTest {
                 .body("status", is(BAD_REQUEST_STATUS));
     }
 
+    @Disabled
     @DisplayName("사용자가 시작 날짜 없이 여행 상세를 생성할 수 없다.")
     @Test
     void failCreateTravelWithoutEndDate() {
