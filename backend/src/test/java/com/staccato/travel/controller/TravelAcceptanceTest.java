@@ -90,7 +90,7 @@ class TravelAcceptanceTest {
                 .header(HttpHeaders.LOCATION, containsString("/travels/"));
     }
 
-    @DisplayName("사용자가 썸네일 없이 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")
+    @DisplayName("사용자가 여행 소개 없이 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")
     @Test
     void createTravelWithoutDescription() {
         // given
