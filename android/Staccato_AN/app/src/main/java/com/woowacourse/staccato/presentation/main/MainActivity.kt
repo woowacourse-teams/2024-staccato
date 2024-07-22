@@ -1,11 +1,14 @@
 package com.woowacourse.staccato.presentation.main
 
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityMainBinding
@@ -22,6 +25,31 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     override fun initStartView(savedInstanceState: Bundle?) {
         setupBottomSheetController()
         setupBottomSheetNavigation()
+        setupBackPressedHandler()
+    }
+
+    private fun setupBackPressedHandler() {
+        var backPressedTime = 0L
+        onBackPressedDispatcher.addCallback {
+            if (behavior.state == STATE_EXPANDED) {
+                behavior.state = STATE_COLLAPSED
+            } else {
+                handleBackPressedTwice(backPressedTime).also {
+                    backPressedTime = it
+                }
+            }
+        }
+    }
+
+    private fun handleBackPressedTwice(backPressedTime: Long): Long {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - backPressedTime >= 3000L) {
+            Toast.makeText(this@MainActivity, "버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            finish()
+        }
+        return currentTime
     }
 
     private fun setupBottomSheetController() {
