@@ -20,6 +20,6 @@ public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        return request.getHeader(HttpHeaders.AUTHORIZATION);
+        return Long.parseLong(request.getHeader(HttpHeaders.AUTHORIZATION));
     }
 }
