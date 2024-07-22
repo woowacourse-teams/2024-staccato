@@ -14,4 +14,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 날짜 형식입니다."));
     }
+
+    @ExceptionHandler(InvalidIdException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidIdException(InvalidIdException e) {
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
+    }
 }

@@ -21,4 +21,15 @@ class VisitControllerTest {
                 .then().log().all()
                 .statusCode(204);
     }
+
+    @DisplayName("1보다 작은 id로 Visit 삭제를 시도하면 Bad Request를 반환한다.")
+    @Test
+    void deleteByIdFail() {
+        RestAssured.given().log().all()
+                .header("Authorization", "1")
+                .contentType(ContentType.JSON)
+                .when().delete("/visits/0")
+                .then().log().all()
+                .statusCode(400);
+    }
 }
