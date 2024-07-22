@@ -13,9 +13,13 @@ import org.hibernate.annotations.SQLDelete;
 import com.staccato.config.domain.BaseEntity;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE travel SET is_deleted = true WHERE id = ?")
 public class Travel extends BaseEntity {
