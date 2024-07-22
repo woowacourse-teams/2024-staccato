@@ -188,4 +188,54 @@ class TravelAcceptanceTest {
                 .body("message", is("여행 끝 날짜를 입력해주세요."))
                 .body("status", is(BAD_REQUEST_STATUS));
     }
+
+    @DisplayName("사용자가 제목을 30자 초과로 입력하면 여행 상세를 생성할 수 없다.")
+    @Test
+    void failCreateTravelWhenTitleExceedLength() {
+        // given
+        TravelRequest travelRequest = new TravelRequest(
+                "https://example.com/travels/geumohrm.jpg",
+                "가".repeat(31),
+                "친구들과 함께한 여름 휴가 여행",
+                LocalDate.of(2023, 7, 1),
+                LocalDate.of(2023, 7, 10)
+        );
+
+        // when & then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .body(travelRequest)
+                .when().log().all()
+                .post("/travels")
+                .then().log().all()
+                .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("제목의 최대 허용 글자수는 공백 포함 30자입니다."))
+                .body("status", is(BAD_REQUEST_STATUS));
+    }
+
+    @DisplayName("사용자가 설명을 500자 초과로 입력하면 여행 상세를 생성할 수 없다.")
+    @Test
+    void failCreateTravelWhenDescriptionExceedLength() {
+        // given
+        TravelRequest travelRequest = new TravelRequest(
+                "https://example.com/travels/geumohrm.jpg",
+                "2023 여름 휴가",
+                "가".repeat(501),
+                LocalDate.of(2023, 7, 1),
+                LocalDate.of(2023, 7, 10)
+        );
+
+        // when & then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .body(travelRequest)
+                .when().log().all()
+                .post("/travels")
+                .then().log().all()
+                .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("내용의 최대 허용 글자수는 공백 포함 500자입니다."))
+                .body("status", is(BAD_REQUEST_STATUS));
+    }
 }
