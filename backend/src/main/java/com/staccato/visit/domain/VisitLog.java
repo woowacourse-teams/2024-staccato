@@ -15,9 +15,13 @@ import com.staccato.config.domain.BaseEntity;
 import com.staccato.member.domain.Member;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE visit_log SET is_deleted = true WHERE id = ?")
 public class VisitLog extends BaseEntity {
