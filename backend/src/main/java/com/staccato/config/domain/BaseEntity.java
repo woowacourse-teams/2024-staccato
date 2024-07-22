@@ -20,12 +20,4 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime modifiedDateTime;
     private Boolean isDeleted = false;
-
-    public void delete() {
-        isDeleted = true;
-    }
-
-    public void restore() {
-        isDeleted = false;
-    }
 }

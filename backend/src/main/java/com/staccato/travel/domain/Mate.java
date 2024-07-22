@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+import org.hibernate.annotations.SQLDelete;
+
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.member.domain.Member;
 
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE mate SET is_deleted = true WHERE id = ?")
 public class Mate extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

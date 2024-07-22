@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+import org.hibernate.annotations.SQLDelete;
+
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.pin.domain.Pin;
 import com.staccato.travel.domain.Travel;
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE visit SET is_deleted = true WHERE id = ?")
 public class Visit extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
