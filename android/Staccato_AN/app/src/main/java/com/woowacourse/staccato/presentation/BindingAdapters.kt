@@ -3,9 +3,9 @@ package com.woowacourse.staccato.presentation
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
-import com.bumptech.glide.Glide
 import coil.load
 import coil.transform.RoundedCornersTransformation
+import com.bumptech.glide.Glide
 
 @BindingAdapter("coilImageUrl")
 fun ImageView.loadImageWithCoil(
