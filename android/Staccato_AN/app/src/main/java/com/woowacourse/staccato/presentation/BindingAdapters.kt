@@ -7,7 +7,10 @@ import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.bumptech.glide.Glide
 
-@BindingAdapter("coilImageUrl")
+@BindingAdapter(
+    value = ["coilImageUrl", "coilPlaceHolder"],
+    requireAll = false,
+)
 fun ImageView.loadImageWithCoil(
     url: String?,
     placeHolder: Drawable? = null,
@@ -20,7 +23,10 @@ fun ImageView.loadImageWithCoil(
     }
 }
 
-@BindingAdapter("coilCircleImageUrl")
+@BindingAdapter(
+    value = ["coilCircleImageUrl", "coilPlaceHolder"],
+    requireAll = false,
+)
 fun ImageView.setCircleImageWithCoil(
     url: String?,
     placeHolder: Drawable? = null,
@@ -34,7 +40,10 @@ fun ImageView.setCircleImageWithCoil(
     }
 }
 
-@BindingAdapter("glideImageUrl")
+@BindingAdapter(
+    value = ["glideImageUrl", "glidePlaceHolder"],
+    requireAll = false,
+)
 fun ImageView.loadImageWithGlide(
     url: String?,
     placeHolder: Drawable? = null,
@@ -46,7 +55,10 @@ fun ImageView.loadImageWithGlide(
         .into(this)
 }
 
-@BindingAdapter("glideCircleImageUrl")
+@BindingAdapter(
+    value = ["glideCircleImageUrl", "glidePlaceHolder"],
+    requireAll = false,
+)
 fun ImageView.setCircleImageWithGlide(
     url: String?,
     placeHolder: Drawable? = null,
