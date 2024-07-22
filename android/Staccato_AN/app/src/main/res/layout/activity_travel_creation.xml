@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#999999"
-        tools:context=".`TravelCreationFragment.kt`">
+        tools:context=".presentation.travelcreation.TravelCreationActivity">
 
         <TextView
             android:id="@+id/tv_tmp_title"
@@ -26,10 +26,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btn_travel_update_done"
+            android:id="@+id/btn_travel_create_done"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="완료 (여행 상세로 이동)"
+            android:text="생성 완료 (여행 상세로 이동)"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

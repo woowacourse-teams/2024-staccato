@@ -13,7 +13,7 @@ class VisitCreationActivity : BindingActivity<ActivityVisitCreationBinding>() {
     override val layoutResourceId = R.layout.activity_visit_creation
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        binding.btnVisitUpdateDone.setOnClickListener {
+        binding.btnVisitCreateDone.setOnClickListener {
             val resultIntent = Intent()
             setResult(Activity.RESULT_OK, resultIntent)
             finish()

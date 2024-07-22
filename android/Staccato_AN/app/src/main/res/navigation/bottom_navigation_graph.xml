@@ -21,53 +21,11 @@
         <action
             android:id="@+id/action_travelFragment_to_visitFragment"
             app:destination="@id/visitFragment" />
-        <action
-            android:id="@+id/action_travelFragment_to_travelUpdateFragment"
-            app:destination="@id/travelUpdateFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/visitCreationFragment"
-        android:name="com.woowacourse.staccato.presentation.visitcreation.VisitCreationFragment"
-        android:label="fragment_visit_creation"
-        tools:layout="@layout/fragment_visit_creation">
-        <action
-            android:id="@+id/action_visitCreationFragment_to_visitFragment"
-            app:destination="@id/visitFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/visitUpdateFragment"
-        android:name="com.woowacourse.staccato.presentation.visitupdate.VisitUpdateFragment"
-        android:label="fragment_visit_creation"
-        tools:layout="@layout/fragment_visit_creation">
-        <action
-            android:id="@+id/action_visitCreationFragment_to_visitFragment"
-            app:destination="@id/visitFragment" />
     </fragment>
     <fragment
         android:id="@+id/visitFragment"
         android:name="com.woowacourse.staccato.presentation.visit.VisitFragment"
         android:label="fragment_visit"
         tools:layout="@layout/fragment_visit">
-        <action
-            android:id="@+id/action_visitFragment_to_visitUpdateFragment"
-            app:destination="@id/visitUpdateFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/travelUpdateFragment"
-        android:name="com.woowacourse.staccato.presentation.travelupdate.TravelUpdateFragment"
-        android:label="fragment_travel_update"
-        tools:layout="@layout/fragment_travel_creation">
-        <action
-            android:id="@+id/action_travelUpdateFragment_to_travelFragment"
-            app:destination="@id/travelFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/travelCreationFragment"
-        android:name="com.woowacourse.staccato.presentation.travelcreation.TravelCreationFragment"
-        android:label="fragment_travel_creation"
-        tools:layout="@layout/fragment_travel_creation">
-        <action
-            android:id="@+id/action_travelCreationFragment_to_travelFragment"
-            app:destination="@id/travelFragment" />
     </fragment>
 </navigation>

@@ -30,16 +30,37 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     Toast.makeText(this, "새로운 여행을 만들었어요!", Toast.LENGTH_SHORT).show()
-                    navigateTo(R.id.travelFragment)
+                    navigateTo(R.id.travelFragment, R.id.timelineFragment)
                 }
             }
         }
+
+    val travelUpdateLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let {
+                    Toast.makeText(this, "여행을 수정했어요!", Toast.LENGTH_SHORT).show()
+                    navigateTo(R.id.travelFragment, R.id.timelineFragment)
+                }
+            }
+        }
+
     private val visitCreationLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     Toast.makeText(this, "새로운 방문 기록을 만들었어요!", Toast.LENGTH_SHORT).show()
-                    navigateTo(R.id.visitFragment)
+                    navigateTo(R.id.visitFragment, R.id.visitFragment)
+                }
+            }
+        }
+
+    val visitUpdateLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let {
+                    Toast.makeText(this, "방문 기록을 수정했어요!", Toast.LENGTH_SHORT).show()
+                    navigateTo(R.id.visitFragment, R.id.visitFragment)
                 }
             }
         }
@@ -95,19 +116,22 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             )
         }
         binding.btnTimeline.setOnClickListener {
-            navigateTo(R.id.timelineFragment)
+            navigateTo(R.id.timelineFragment, R.id.timelineFragment)
         }
     }
 
-    private fun navigateTo(navResourceId: Int) {
-        val navOptions = buildNavOptions()
-        navController.navigate(navResourceId, null, navOptions)
+    private fun navigateTo(
+        navigateToId: Int,
+        popUpToId: Int,
+    ) {
+        val navOptions = buildNavOptions(popUpToId)
+        navController.navigate(navigateToId, null, navOptions)
         behavior.state = STATE_EXPANDED
     }
 
-    private fun buildNavOptions() =
+    private fun buildNavOptions(popUpToId: Int) =
         NavOptions.Builder()
             .setLaunchSingleTop(true)
-            .setPopUpTo(R.id.timelineFragment, false)
+            .setPopUpTo(popUpToId, false)
             .build()
 }

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#999999"
-        tools:context=".presentation.visitupdate.VisitUpdateFragment">
+        tools:context=".presentation.visitupdate.VisitUpdateActivity">
 
         <TextView
             android:id="@+id/tv_tmp_title"
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
             android:gravity="center"
-            android:text="방문 상세 생성 화면"
+            android:text="방문 상세 수정 화면"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
             android:id="@+id/btn_visit_update_done"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="완료 (방문 상세로 이동)"
+            android:text="수정 완료 (방문 상세로 이동)"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

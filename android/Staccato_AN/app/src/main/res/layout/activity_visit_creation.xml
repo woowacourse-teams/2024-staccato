@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#999999"
-        tools:context=".presentation.visitupdate.VisitUpdateFragment">
+        tools:context=".presentation.visitcreation.VisitCreationActivity">
 
         <TextView
             android:id="@+id/tv_tmp_title"
@@ -26,10 +26,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btn_visit_update_done"
+            android:id="@+id/btn_visit_create_done"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="완료 (방문 상세로 이동)"
+            android:text="생성 완료 (방문 상세로 이동)"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.travelcreation
+package com.woowacourse.staccato.presentation.visitupdate
 
 import android.app.Activity
 import android.content.Context
@@ -6,14 +6,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import com.woowacourse.staccato.R
-import com.woowacourse.staccato.databinding.ActivityTravelCreationBinding
+import com.woowacourse.staccato.databinding.ActivityVisitUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 
-class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>() {
-    override val layoutResourceId = R.layout.activity_travel_creation
+class VisitUpdateActivity : BindingActivity<ActivityVisitUpdateBinding>() {
+    override val layoutResourceId = R.layout.activity_visit_update
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        binding.btnTravelCreateDone.setOnClickListener {
+        binding.btnVisitUpdateDone.setOnClickListener {
             val resultIntent = Intent()
             setResult(Activity.RESULT_OK, resultIntent)
             finish()
@@ -25,8 +25,8 @@ class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>() 
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
-            Intent(context, TravelCreationActivity::class.java).apply {
-                // putExtra(EXTRA_TRAVEL_ID, travelId)
+            Intent(context, VisitUpdateActivity::class.java).apply {
+                // putExtra(EXTRA_VISIT_ID, visitId)
                 activityLauncher.launch(this)
             }
         }
