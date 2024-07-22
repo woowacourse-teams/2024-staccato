@@ -1,6 +1,7 @@
 package com.staccato.travel.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -15,11 +16,13 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TravelService {
     private final TravelRepository travelRepository;
     private final MateRepository mateRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public TravelResponse createTravel(TravelRequest travelRequest, Long memberId) {
         Travel travel = Travel.builder()
                 .title(travelRequest.travelTitle())
