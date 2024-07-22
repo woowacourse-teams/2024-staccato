@@ -2,6 +2,7 @@ package com.woowacourse.staccato.presentation.visitcreation
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentVisitCreationBinding
@@ -13,8 +14,12 @@ class VisitCreationFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        binding.btnVisitCreation.setOnClickListener {
-            findNavController().popBackStack(R.id.visitFragment, false)
+        binding.btnVisitUpdateDone.setOnClickListener {
+            findNavController().navigate(
+                R.id.visitFragment,
+                null,
+                NavOptions.Builder().setPopUpTo(R.id.visitCreationFragment, true).build(),
+            )
         }
     }
 }
