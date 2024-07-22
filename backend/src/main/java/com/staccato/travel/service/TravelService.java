@@ -32,10 +32,10 @@ public class TravelService {
         return new TravelResponse(travel);
     }
 
-    private void saveMate(Long memberId, Travel savedTravel) {
+    private void saveMate(Long memberId, Travel travel) {
         Member member = getMemberById(memberId);
         Mate mate = Mate.builder()
-                .travel(savedTravel)
+                .travel(travel)
                 .member(member)
                 .build();
         mateRepository.save(mate);
