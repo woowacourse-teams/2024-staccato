@@ -19,11 +19,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleValidationException(MethodArgumentNotValidException exception) {
-        String message = Optional.ofNullable(exception.getBindingResult().getFieldError())
+    public ResponseEntity<ExceptionResponse> handleValidationException(MethodArgumentNotValidException e) {
+        String message = Optional.ofNullable(e.getBindingResult().getFieldError())
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .orElse("요청 형식이 잘못되었습니다.");
-        return ResponseEntity.badRequest().body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), message));
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), message));
     }
 
     @ExceptionHandler(InvalidTravelException.class)
