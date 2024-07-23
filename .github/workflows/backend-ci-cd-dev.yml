@@ -1,0 +1,59 @@
+name: Backend CI/CD dev
+
+on:
+  push:
+    branches: [ "develop-be" ]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Setup with Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
+
+      - name: Docker Image Build
+        run: |
+          docker build --platform linux/arm64 -t hotea990/staccato -f Dockerfile .
+
+      - name: Docker Hub Push
+        run: docker push hotea990/staccato
+
+  cd:
+    needs: ci
+    runs-on: self-hosted
+    steps:
+      - name: Pull Docker image
+        run: |
+          sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
+          sudo docker pull hotea990/staccato
+
+      - name: Docker Compose up
+        run: sudo docker-compose -f /home/ubuntu/staccato/docker-compose.yml up -d
