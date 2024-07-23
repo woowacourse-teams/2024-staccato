@@ -11,15 +11,16 @@ import jakarta.persistence.Id;
 import org.hibernate.annotations.SQLDelete;
 
 import com.staccato.config.domain.BaseEntity;
+import com.staccato.exception.StaccatoException;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
-@Builder
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE travel SET is_deleted = true WHERE id = ?")
 public class Travel extends BaseEntity {
@@ -36,4 +37,20 @@ public class Travel extends BaseEntity {
     private LocalDate startAt;
     @Column(nullable = false)
     private LocalDate endAt;
+
+    @Builder
+    public Travel(String thumbnailUrl, @NonNull String title, String description, @NonNull LocalDate startAt, @NonNull LocalDate endAt) {
+        validateDate(startAt, endAt);
+        this.thumbnailUrl = thumbnailUrl;
+        this.title = title;
+        this.description = description;
+        this.startAt = startAt;
+        this.endAt = endAt;
+    }
+
+    private void validateDate(LocalDate startAt, LocalDate endAt) {
+        if (endAt.isBefore(startAt)) {
+            throw new StaccatoException("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
+        }
+    }
 }

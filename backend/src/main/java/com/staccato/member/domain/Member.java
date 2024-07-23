@@ -11,9 +11,13 @@ import org.hibernate.annotations.SQLDelete;
 import com.staccato.config.domain.BaseEntity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?")
 public class Member extends BaseEntity {
@@ -24,4 +28,10 @@ public class Member extends BaseEntity {
     private String nickname;
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
+
+    @Builder
+    public Member(@NonNull String nickname, String imageUrl) {
+        this.nickname = nickname;
+        this.imageUrl = imageUrl;
+    }
 }
