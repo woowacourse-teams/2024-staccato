@@ -14,6 +14,7 @@ class TravelTest {
     @Test
     void validateDate() {
         assertThatCode(() -> Travel.builder()
+                .title("2023 여름 여행")
                 .endAt(LocalDate.MIN)
                 .startAt(LocalDate.MAX)
                 .build())

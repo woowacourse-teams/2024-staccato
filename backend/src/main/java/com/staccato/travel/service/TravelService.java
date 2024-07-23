@@ -24,12 +24,7 @@ public class TravelService {
 
     @Transactional
     public TravelResponse createTravel(TravelRequest travelRequest, Long memberId) {
-        Travel travel = Travel.builder()
-                .title(travelRequest.travelTitle())
-                .description(travelRequest.description())
-                .startAt(travelRequest.startAt())
-                .endAt(travelRequest.endAt())
-                .build();
+        Travel travel = travelRequest.toTravel();
         Travel savedTravel = travelRepository.save(travel);
         saveMate(memberId, savedTravel);
         return new TravelResponse(savedTravel);
