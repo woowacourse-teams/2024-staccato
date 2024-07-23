@@ -9,7 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
 object StaccatoClient {
-    private const val BASE_URL = BuildConfig.BASE_URL
+    private val BASE_URL = BuildConfig.BASE_URL
 
     private val provideLoggingInterceptor =
         HttpLoggingInterceptor().apply {
