@@ -14,13 +14,13 @@ import com.staccato.config.domain.BaseEntity;
 import com.staccato.member.domain.Member;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
-@Builder
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE mate SET is_deleted = true WHERE id = ?")
 public class Mate extends BaseEntity {
@@ -33,4 +33,10 @@ public class Mate extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_id", nullable = false)
     private Travel travel;
+
+    @Builder
+    public Mate(@NonNull Member member, @NonNull Travel travel) {
+        this.member = member;
+        this.travel = travel;
+    }
 }
