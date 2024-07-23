@@ -30,7 +30,7 @@
         android:theme="@style/Theme.Staccato_AN"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -39,6 +39,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".presentation.visitupdate.VisitUpdateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.travelupdate.TravelUpdateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.visitcreation.VisitCreationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.travelcreation.TravelCreationActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
