@@ -12,6 +12,7 @@
     <string name="all_visited_date">방문 날짜</string>
     <string name="all_date_dots_format">%s. %s. %s</string>
     <string name="all_date_kr_format">%s년 %s월 %s일</string>
+    <string name="all_image_content_description">사진</string>
 
     // fragment_timeline
     <string name="timeline_year">%s년</string>
@@ -58,5 +59,4 @@
     // dialog_delete
     <string name="delete_title">삭제하시겠습니까?</string>
     <string name="delete_description">삭제를 누르면 복구할 수 없습니다</string>
-    <string name="all_image_content_description">사진</string>
 </resources>
