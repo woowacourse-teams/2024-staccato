@@ -26,6 +26,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Create local.properties
+        run: |
+          echo "LOCAL_PROPERTIES_API_KEY=\"$LOCAL_PROPERTIES_API_KEY\"" > local.properties
+        shell: bash
+
       - name: set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -47,7 +52,3 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
-
-      - name: Access LOCAL_PROPERTIES_API_KEY
-        run: echo "LOCAL_PROPERTIES_API_KEY=\"$LOCAL_PROPERTIES_API_KEY\"" > local.properties
-        shell: bash
