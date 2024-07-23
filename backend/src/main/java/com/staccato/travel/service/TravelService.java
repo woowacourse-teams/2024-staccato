@@ -32,7 +32,7 @@ public class TravelService {
                 .build();
         Travel savedTravel = travelRepository.save(travel);
         saveMate(memberId, savedTravel);
-        return new TravelResponse(travel);
+        return new TravelResponse(savedTravel);
     }
 
     private void saveMate(Long memberId, Travel travel) {
