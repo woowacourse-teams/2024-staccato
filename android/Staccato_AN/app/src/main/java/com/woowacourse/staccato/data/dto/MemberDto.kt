@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MemberDto(
-    @SerialName("member_id") val memberId: Long,
-    @SerialName("nick_name") val nickName: String,
-    @SerialName("member_image") val memberImage: String,
+    @SerialName("memberId") val memberId: Long,
+    @SerialName("nickName") val nickName: String,
+    @SerialName("memberImage") val memberImage: String,
 )

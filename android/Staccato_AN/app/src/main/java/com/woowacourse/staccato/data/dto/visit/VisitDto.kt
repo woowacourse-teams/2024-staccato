@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VisitDto(
-    @SerialName("visit_id") val visitId: Long,
-    @SerialName("place_name") val placeName: String,
-    @SerialName("visited_images") val visitedImages: List<String>,
+    @SerialName("visitId") val visitId: Long,
+    @SerialName("placeName") val placeName: String,
+    @SerialName("visitedImages") val visitedImages: List<String>,
     @SerialName("address") val address: String,
-    @SerialName("visited_at") val visitedAt: String,
-    @SerialName("visited_count") val visitedCount: Long,
-    @SerialName("visit_logs") val visitLogs: List<VisitLogDto>,
+    @SerialName("visitedAt") val visitedAt: String,
+    @SerialName("visitedCount") val visitedCount: Long,
+    @SerialName("visitLogs") val visitLogs: List<VisitLogDto>,
 )
