@@ -46,8 +46,7 @@ jobs:
         run: ./gradlew build
 
       - name: Access LOCAL_PROPERTIES_API_KEY
-        run: |
-          echo LOCAL_PROPERTIES_API_KEY=\"$LOCAL_PROPERTIES_API_KEY\" > local.properties
+        run: echo LOCAL_PROPERTIES_API_KEY=\"$LOCAL_PROPERTIES_API_KEY\" > local.properties
         shell: bash
         env:
           LOCAL_PROPERTIES_API_KEY: ${{ secrets.LOCAL_PROPERTIES_API_KEY }}
