@@ -44,12 +44,17 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    dataBinding {
+        enable = true
     }
 }
 
@@ -104,4 +109,8 @@ dependencies {
     // Mockk
     testImplementation(libs.mockk.android)
     testImplementation(libs.mockk.agent)
+
+    // Navigation
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 }

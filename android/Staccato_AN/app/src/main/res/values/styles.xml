@@ -1,0 +1,124 @@
+<resources>
+
+    <style name="DefaultToolbarStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="navigationIcon">@drawable/icon_arrow_left</item>
+    </style>
+
+    <style name="SubTitleStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/Typography.Title2</item>
+    </style>
+
+    <style name="DialogDescriptionStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:textAppearance">@style/Typography.Body2</item>
+        <item name="android:textColor">@color/gray3</item>
+    </style>
+
+    <style name="EditTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/Typography.Body1</item>
+        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textColorHint">@color/gray3</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingVertical">14dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textAppearance">@style/Typography.Title3</item>
+    </style>
+
+    <style name="ButtonStyle.Save" parent="ButtonStyle">
+        <item name="android:background">@drawable/selector_button_5dp</item>
+        <item name="android:text">@string/all_save</item>
+        <item name="android:textColor">@color/gray4</item>
+        <item name="android:enabled">false</item>
+    </style>
+
+    <style name="ButtonStyle.Save.Active" parent="ButtonStyle.Save">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:enabled">true</item>
+    </style>
+
+    <style name="ButtonStyle.Confirm" parent="ButtonStyle">
+        <item name="android:background">@drawable/shape_button_staccato_blue_5dp</item>
+        <item name="android:text">@string/all_confirm</item>
+        <item name="android:layout_marginTop">36dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ButtonStyle.Confirm.Narrow" parent="ButtonStyle.Confirm">
+        <item name="android:paddingHorizontal">32dp</item>
+    </style>
+
+    <style name="ButtonStyle.Cancel" parent="ButtonStyle">
+        <item name="android:text">@string/all_cancel</item>
+        <item name="android:layout_marginTop">36dp</item>
+        <item name="android:paddingHorizontal">32dp</item>
+        <item name="android:background">@drawable/shape_button_gray1_5dp</item>
+        <item name="android:textColor">@color/gray4</item>
+    </style>
+
+    <style name="ToolbarMenuStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:paddingVertical">14dp</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textAppearance">@style/Typography.Body2</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingHorizontal">8dp</item>
+    </style>
+
+    <style name="PhotoAttachMenuStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/Typography.Body1</item>
+        <item name="android:textColor">@color/gray4</item>
+    </style>
+
+    <style name="DividerStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="dividerColor">@color/gray2</item>
+    </style>
+
+    <style name="DialogBackgroundStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/shape_dialog_10dp</item>
+        <item name="android:paddingHorizontal">24dp</item>
+        <item name="android:paddingVertical">20dp</item>
+    </style>
+
+    <style name="PhotoAttachBoxStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
+        <item name="layout_constraintDimensionRatio">8:5</item>
+    </style>
+
+    <style name="DragHandleStyle">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">5dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:background">@drawable/shape_drag_handle</item>
+    </style>
+</resources>
