@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation_graph"
+    app:startDestination="@id/timelineFragment">
+    <fragment
+        android:id="@+id/timelineFragment"
+        android:name="com.woowacourse.staccato.presentation.timeline.TimelineFragment"
+        android:label="fragment_timeline"
+        tools:layout="@layout/fragment_timeline">
+        <action
+            android:id="@+id/action_timelineFragment_to_travelFragment"
+            app:destination="@id/travelFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/travelFragment"
+        android:name="com.woowacourse.staccato.presentation.travel.TravelFragment"
+        android:label="fragment_travel"
+        tools:layout="@layout/fragment_travel">
+        <action
+            android:id="@+id/action_travelFragment_to_visitFragment"
+            app:destination="@id/visitFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/visitFragment"
+        android:name="com.woowacourse.staccato.presentation.visit.VisitFragment"
+        android:label="fragment_visit"
+        tools:layout="@layout/fragment_visit">
+    </fragment>
+</navigation>
