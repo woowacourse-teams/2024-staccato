@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_detail"
+        style="@style/DefaultToolbarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="8dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_detail_delete"
+            style="@style/ToolbarMenuStyle"
+            android:text="@string/all_delete" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_detail_update"
+            style="@style/ToolbarMenuStyle"
+            android:text="@string/all_update" />
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+</layout>
