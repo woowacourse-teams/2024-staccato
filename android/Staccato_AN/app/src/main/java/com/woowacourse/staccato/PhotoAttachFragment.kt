@@ -12,7 +12,9 @@ class PhotoAttachFragment : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentPhotoAttachBinding.inflate(inflater, container, false)
         return binding.root
