@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TravelDto(
+data class TravelResponse(
     @SerialName("travelId") val travelId: Long,
     @SerialName("travelThumbnail") val travelThumbnail: String,
     @SerialName("travelTitle") val travelTitle: String,

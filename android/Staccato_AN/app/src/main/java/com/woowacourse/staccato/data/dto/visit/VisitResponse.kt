@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VisitDto(
+data class VisitResponse(
     @SerialName("visitId") val visitId: Long,
     @SerialName("placeName") val placeName: String,
     @SerialName("visitedImages") val visitedImages: List<String>,
