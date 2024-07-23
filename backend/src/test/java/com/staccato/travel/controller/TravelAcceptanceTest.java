@@ -4,11 +4,14 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -41,19 +44,47 @@ class TravelAcceptanceTest {
         memberRepository.save(Member.builder().nickname("staccato").build());
     }
 
+    static Stream<TravelRequest> travelRequestProvider() {
+        return Stream.of(
+                new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                new TravelRequest(null, "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", null, LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10))
+        );
+    }
+
+    static Stream<Arguments> invalidTravelRequestProvider() {
+        return Stream.of(
+                Arguments.of(
+                        new TravelRequest("https://example.com/travels/geumohrm.jpg", null, "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        "여행 제목을 입력해주세요."
+                ),
+                Arguments.of(
+                        new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", null, LocalDate.of(2023, 7, 10)),
+                        "여행 시작 날짜를 입력해주세요."
+                ),
+                Arguments.of(
+                        new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), null),
+                        "여행 끝 날짜를 입력해주세요."
+                ),
+                Arguments.of(
+                        new TravelRequest("https://example.com/travels/geumohrm.jpg", "가".repeat(31), "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        "제목의 최대 허용 글자수는 공백 포함 30자입니다."
+                ),
+                Arguments.of(
+                        new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "가".repeat(501), LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        "내용의 최대 허용 글자수는 공백 포함 500자입니다."
+                ),
+                Arguments.of(
+                        new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 10), LocalDate.of(2023, 7, 1)),
+                        "끝 날짜가 시작 날짜보다 앞설 수 없어요."
+                )
+        );
+    }
+
     @DisplayName("사용자가 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")
-    @Test
-    void createTravel() {
-        // given
-        TravelRequest travelRequest = new TravelRequest(
-                "https://example.com/travels/geumohrm.jpg",
-                "2023 여름 휴가",
-                "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(2023, 7, 1),
-                LocalDate.of(2023, 7, 10)
-        );
-
-        // when & then
+    @ParameterizedTest
+    @MethodSource("travelRequestProvider")
+    void createTravel(TravelRequest travelRequest) {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
@@ -65,67 +96,10 @@ class TravelAcceptanceTest {
                 .header(HttpHeaders.LOCATION, containsString("/travels/"));
     }
 
-    @DisplayName("사용자가 썸네일 없이 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")
-    @Test
-    void createTravelWithoutThumbnail() {
-        // given
-        TravelRequest travelRequest = new TravelRequest(
-                null,
-                "2023 여름 휴가",
-                "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(2023, 7, 1),
-                LocalDate.of(2023, 7, 10)
-        );
-
-        // when & then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
-                .body(travelRequest)
-                .when().log().all()
-                .post("/travels")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.CREATED.value())
-                .header(HttpHeaders.LOCATION, containsString("/travels/"));
-    }
-
-    @DisplayName("사용자가 여행 소개 없이 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")
-    @Test
-    void createTravelWithoutDescription() {
-        // given
-        TravelRequest travelRequest = new TravelRequest(
-                "https://example.com/travels/geumohrm.jpg",
-                "2023 여름 휴가",
-                null,
-                LocalDate.of(2023, 7, 1),
-                LocalDate.of(2023, 7, 10)
-        );
-
-        // when & then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
-                .body(travelRequest)
-                .when().log().all()
-                .post("/travels")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.CREATED.value())
-                .header(HttpHeaders.LOCATION, containsString("/travels/"));
-    }
-
-    @DisplayName("사용자가 제목 없이 여행 상세를 생성할 수 없다.")
-    @Test
-    void failCreateTravelWithoutTitle() {
-        // given
-        TravelRequest travelRequest = new TravelRequest(
-                "https://example.com/travels/geumohrm.jpg",
-                null,
-                "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(2023, 7, 1),
-                LocalDate.of(2023, 7, 10)
-        );
-
-        // when & then
+    @DisplayName("사용자가 잘못된 방식으로 정보를 입력하면, 여행 상세를 생성할 수 없다.")
+    @ParameterizedTest
+    @MethodSource("invalidTravelRequestProvider")
+    void failCreateTravel(TravelRequest travelRequest, String expectedMessage) {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
@@ -134,133 +108,7 @@ class TravelAcceptanceTest {
                 .post("/travels")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("여행 제목을 입력해주세요."))
-                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
-    }
-
-    @DisplayName("사용자가 시작 날짜 없이 여행 상세를 생성할 수 없다.")
-    @Test
-    void failCreateTravelWithoutStartDate() {
-        // given
-        TravelRequest travelRequest = new TravelRequest(
-                "https://example.com/travels/geumohrm.jpg",
-                "2023 여름 휴가",
-                "친구들과 함께한 여름 휴가 여행",
-                null,
-                LocalDate.of(2023, 7, 10)
-        );
-
-        // when & then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
-                .body(travelRequest)
-                .when().log().all()
-                .post("/travels")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("여행 시작 날짜를 입력해주세요."))
-                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
-    }
-
-    @DisplayName("사용자가 끝 날짜 없이 여행 상세를 생성할 수 없다.")
-    @Test
-    void failCreateTravelWithoutEndDate() {
-        // given
-        TravelRequest travelRequest = new TravelRequest(
-                "https://example.com/travels/geumohrm.jpg",
-                "2023 여름 휴가",
-                "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(2023, 7, 1),
-                null
-        );
-
-        // when & then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
-                .body(travelRequest)
-                .when().log().all()
-                .post("/travels")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("여행 끝 날짜를 입력해주세요."))
-                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
-    }
-
-    @DisplayName("사용자가 제목을 30자 초과로 입력하면 여행 상세를 생성할 수 없다.")
-    @Test
-    void failCreateTravelWhenTitleExceedLength() {
-        // given
-        TravelRequest travelRequest = new TravelRequest(
-                "https://example.com/travels/geumohrm.jpg",
-                "가".repeat(31),
-                "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(2023, 7, 1),
-                LocalDate.of(2023, 7, 10)
-        );
-
-        // when & then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
-                .body(travelRequest)
-                .when().log().all()
-                .post("/travels")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("제목의 최대 허용 글자수는 공백 포함 30자입니다."))
-                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
-    }
-
-    @DisplayName("사용자가 설명을 500자 초과로 입력하면 여행 상세를 생성할 수 없다.")
-    @Test
-    void failCreateTravelWhenDescriptionExceedLength() {
-        // given
-        TravelRequest travelRequest = new TravelRequest(
-                "https://example.com/travels/geumohrm.jpg",
-                "2023 여름 휴가",
-                "가".repeat(501),
-                LocalDate.of(2023, 7, 1),
-                LocalDate.of(2023, 7, 10)
-        );
-
-        // when & then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
-                .body(travelRequest)
-                .when().log().all()
-                .post("/travels")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("내용의 최대 허용 글자수는 공백 포함 500자입니다."))
-                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
-    }
-
-
-    @DisplayName("사용자가 끝 날짜를 시작 날짜보다 앞서게 설정하면 여행 상세를 생성할 수 없다.")
-    @Test
-    void failCreateTravelWhenEndDateAheadOfStartDate() {
-        // given
-        TravelRequest travelRequest = new TravelRequest(
-                "https://example.com/travels/geumohrm.jpg",
-                "2023 여름 휴가",
-                "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(2023, 7, 10),
-                LocalDate.of(2023, 7, 1)
-        );
-
-        // when & then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
-                .body(travelRequest)
-                .when().log().all()
-                .post("/travels")
-                .then().log().all()
-                .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("끝 날짜가 시작 날짜보다 앞설 수 없어요."))
+                .body("message", is(expectedMessage))
                 .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 }
