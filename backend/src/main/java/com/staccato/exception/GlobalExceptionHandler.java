@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(ConstraintViolationException e) {
+    public ResponseEntity<ExceptionResponse> handleConstraintViolationException(ConstraintViolationException e) {
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
     }
