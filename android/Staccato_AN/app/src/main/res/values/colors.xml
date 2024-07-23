@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="staccato_black">#FF222222</color>
+    <color name="staccato_blue">#FF6C7BFF</color>
+
+    <color name="gray1">#FFF4F4F4</color>
+    <color name="gray2">#FFD2D2D2</color>
+    <color name="gray3">#FF949494</color>
+    <color name="gray4">#FF777777</color>
+    <color name="gray5">#FF3E3E3E</color>
 </resources>
