@@ -17,7 +17,7 @@ services:
       - springboot-mysql-network
   application:
     container_name: staccato-backend-app
-    build: .
+    image: ${STACCATO_IMAGE}
     depends_on:
       - database
     environment:
@@ -25,7 +25,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
     ports:
-      - "8080:8080"
+      - "80:8080"
     restart: always
     networks:
       - springboot-mysql-network
