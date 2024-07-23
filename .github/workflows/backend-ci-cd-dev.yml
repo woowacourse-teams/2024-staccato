@@ -57,5 +57,9 @@ jobs:
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
           sudo docker pull hotea990/staccato
 
+      - name: Change directory to staccato
+        run: cd ~/staccato
+
       - name: Docker Compose up
-        run: sudo docker-compose -f ~/staccato/docker-compose.yml up -d
+        working-directory: ~/staccato
+        run: sudo docker-compose up -d
