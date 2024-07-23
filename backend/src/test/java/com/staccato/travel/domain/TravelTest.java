@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.staccato.exception.InvalidTravelException;
+import com.staccato.exception.StaccatoException;
 
 class TravelTest {
     @DisplayName("끝 날짜는 시작 날짜보다 앞설 수 없다.")
@@ -17,7 +17,7 @@ class TravelTest {
                 .endAt(LocalDate.MIN)
                 .startAt(LocalDate.MAX)
                 .build())
-                .isInstanceOf(InvalidTravelException.class)
+                .isInstanceOf(StaccatoException.class)
                 .hasMessage("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
     }
 }

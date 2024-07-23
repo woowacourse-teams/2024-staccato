@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import org.hibernate.annotations.SQLDelete;
 
 import com.staccato.config.domain.BaseEntity;
-import com.staccato.exception.InvalidTravelException;
+import com.staccato.exception.StaccatoException;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -49,7 +49,7 @@ public class Travel extends BaseEntity {
 
     private void validateDate(LocalDate startAt, LocalDate endAt) {
         if (endAt.isBefore(startAt)) {
-            throw new InvalidTravelException("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
+            throw new StaccatoException("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
         }
     }
 }
