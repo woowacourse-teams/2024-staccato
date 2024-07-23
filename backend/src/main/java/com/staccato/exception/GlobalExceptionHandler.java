@@ -3,6 +3,8 @@ package com.staccato.exception;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
+import jakarta.validation.ConstraintViolationException;
+
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +29,21 @@ public class GlobalExceptionHandler {
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), message));
     }
 
-    @ExceptionHandler(InvalidTravelException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidTravelException(InvalidTravelException e) {
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ExceptionResponse> handleConstraintViolationException(ConstraintViolationException e) {
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
+    }
+
+    @ExceptionHandler(StaccatoException.class)
+    public ResponseEntity<ExceptionResponse> handleStaccatoException(StaccatoException e) {
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ExceptionResponse> handleInternalServerErrorException() {
+        return ResponseEntity.internalServerError()
+                .body(new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "예기치 못한 서버 오류입니다. 다시 시도해주세요."));
     }
 }
