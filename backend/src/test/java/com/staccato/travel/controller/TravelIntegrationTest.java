@@ -8,41 +8,26 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import com.staccato.IntegrationTest;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
-import com.staccato.util.DatabaseCleanerExtension;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
-@ExtendWith(DatabaseCleanerExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TravelAcceptanceTest {
+class TravelIntegrationTest extends IntegrationTest {
     private static final String USER_AUTHORIZATION = "1";
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @LocalServerPort
-    private int port;
-
-    @BeforeEach
-    void setPort() {
-        RestAssured.port = port;
-
-        memberRepository.save(Member.builder().nickname("staccato").build());
-    }
 
     static Stream<TravelRequest> travelRequestProvider() {
         return Stream.of(
@@ -79,6 +64,11 @@ class TravelAcceptanceTest {
                         "끝 날짜가 시작 날짜보다 앞설 수 없어요."
                 )
         );
+    }
+
+    @BeforeEach
+    void init() {
+        memberRepository.save(Member.builder().nickname("staccato").build());
     }
 
     @DisplayName("사용자가 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")

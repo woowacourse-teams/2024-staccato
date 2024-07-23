@@ -7,21 +7,17 @@ import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
+import com.staccato.ServiceSliceTest;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.travel.domain.Mate;
 import com.staccato.travel.repository.MateRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelResponse;
-import com.staccato.util.DatabaseCleanerExtension;
 
-@ExtendWith(DatabaseCleanerExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-class TravelServiceTest {
+class TravelServiceTest extends ServiceSliceTest {
     @Autowired
     private TravelService travelService;
     @Autowired
