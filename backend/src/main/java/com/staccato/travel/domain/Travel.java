@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @Getter
@@ -38,7 +39,7 @@ public class Travel extends BaseEntity {
     private LocalDate endAt;
 
     @Builder
-    public Travel(String thumbnailUrl, String title, String description, LocalDate startAt, LocalDate endAt) {
+    public Travel(String thumbnailUrl, @NonNull String title, String description, @NonNull LocalDate startAt, @NonNull LocalDate endAt) {
         validateDate(startAt, endAt);
         this.thumbnailUrl = thumbnailUrl;
         this.title = title;

@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @Getter
@@ -29,7 +30,7 @@ public class Member extends BaseEntity {
     private String imageUrl;
 
     @Builder
-    public Member(String nickname, String imageUrl) {
+    public Member(@NonNull String nickname, String imageUrl) {
         this.nickname = nickname;
         this.imageUrl = imageUrl;
     }

@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @Getter
@@ -34,7 +35,7 @@ public class Mate extends BaseEntity {
     private Travel travel;
 
     @Builder
-    public Mate(Member member, Travel travel) {
+    public Mate(@NonNull Member member, @NonNull Travel travel) {
         this.member = member;
         this.travel = travel;
     }
