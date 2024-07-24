@@ -2,9 +2,8 @@ package com.staccato.visit.service;
 
 import java.util.List;
 
-import jakarta.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.staccato.pin.domain.Pin;
 import com.staccato.pin.repository.PinRepository;
@@ -19,6 +18,7 @@ import com.staccato.visit.service.dto.request.VisitRequest;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class VisitService {
     private final VisitRepository visitRepository;
