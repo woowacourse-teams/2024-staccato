@@ -10,46 +10,44 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import com.staccato.member.domain.Member;
-import com.staccato.member.repository.MemberRepository;
 import com.staccato.pin.domain.Pin;
 import com.staccato.pin.repository.PinRepository;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.visit.domain.Visit;
-import com.staccato.visit.domain.VisitLog;
+import com.staccato.visit.domain.VisitImage;
 
 @DataJpaTest
-class VisitLogRepositoryTest {
+class VisitImageRepositoryTest {
     @Autowired
-    private VisitLogRepository visitLogRepository;
+    private VisitImageRepository visitImageRepository;
     @Autowired
     private VisitRepository visitRepository;
     @Autowired
     private TravelRepository travelRepository;
     @Autowired
     private PinRepository pinRepository;
-    @Autowired
-    private MemberRepository memberRepository;
 
-    @DisplayName("특정 visitId를 갖는 visitLog들을 모두 삭제한다.")
+    @DisplayName("특정 visitId를 갖는 visitImage들을 모두 삭제한다.")
     @Test
     void deleteByVisitId() {
         // given
         Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").build());
-        Travel travel = travelRepository.save(Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build());
+        Travel travel = travelRepository.save(Travel.builder().title("Sample Travel").startAt(LocalDate.now())
+                .endAt(LocalDate.now().plusDays(1)).build());
         Visit visit = visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(travel).build());
-        Member member = memberRepository.save(Member.builder().nickname("Sample Member").build());
-        VisitLog visitLog1 = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log1").visit(visit).member(member).build());
-        VisitLog visitLog2 = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log2").visit(visit).member(member).build());
+        VisitImage visitImage1 = visitImageRepository.save(VisitImage.builder().imageUrl("Sample Visit Image1")
+                .visit(visit).build());
+        VisitImage visitImage2 = visitImageRepository.save(VisitImage.builder().imageUrl("Sample Visit Image2")
+                .visit(visit).build());
 
         // when
-        visitLogRepository.deleteByVisitId(visit.getId());
+        visitImageRepository.deleteByVisitId(visit.getId());
 
         // then
         assertAll(
-                () -> assertThat(visitLogRepository.findById(visitLog1.getId()).get().getIsDeleted()).isTrue(),
-                () -> assertThat(visitLogRepository.findById(visitLog2.getId()).get().getIsDeleted()).isTrue()
+                () -> assertThat(visitImageRepository.findById(visitImage1.getId()).get().getIsDeleted()).isTrue(),
+                () -> assertThat(visitImageRepository.findById(visitImage2.getId()).get().getIsDeleted()).isTrue()
         );
     }
 }

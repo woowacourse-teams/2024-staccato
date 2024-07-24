@@ -44,6 +44,7 @@ public class VisitService {
     @Transactional
     public void deleteById(Long visitId) {
         visitLogRepository.deleteByVisitId(visitId);
+        visitImageRepository.deleteByVisitId(visitId);
         visitRepository.deleteById(visitId);
     }
 
