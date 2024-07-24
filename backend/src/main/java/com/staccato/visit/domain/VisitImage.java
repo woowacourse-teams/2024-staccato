@@ -1,5 +1,6 @@
 package com.staccato.visit.domain;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +34,7 @@ public class VisitImage extends BaseEntity {
     private Visit visit;
 
     @Builder
-    public VisitImage(String imageUrl, Visit visit) {
+    public VisitImage(@Nonnull String imageUrl, @Nonnull Visit visit) {
         this.imageUrl = imageUrl;
         this.visit = visit;
     }
