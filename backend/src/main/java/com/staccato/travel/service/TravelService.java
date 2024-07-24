@@ -10,7 +10,6 @@ import com.staccato.travel.domain.TravelMember;
 import com.staccato.travel.repository.TravelMemberRepostiory;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
-import com.staccato.travel.service.dto.response.TravelResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,10 +22,10 @@ public class TravelService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public TravelResponse createTravel(TravelRequest travelRequest, Long memberId) {
+    public long createTravel(TravelRequest travelRequest, Long memberId) {
         Travel travel = travelRepository.save(travelRequest.toTravel());
         saveTravelMember(memberId, travel);
-        return new TravelResponse(travel);
+        return travel.getId();
     }
 
     private TravelMember saveTravelMember(Long memberId, Travel travel) {
