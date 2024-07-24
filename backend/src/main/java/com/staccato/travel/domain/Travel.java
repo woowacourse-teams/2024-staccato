@@ -15,6 +15,7 @@ import org.hibernate.annotations.SQLDelete;
 
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
+import com.staccato.visit.domain.Visit;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -63,12 +64,25 @@ public class Travel extends BaseEntity {
         travelMembers.add(travelMember);
     }
 
-    public void update(Travel travel) {
-        // 방문 기록을 모두 포함하는 기간으로 설정되었는지 검증 필요
-        this.thumbnailUrl = travel.getThumbnailUrl();
-        this.title = travel.getTitle();
-        this.description = travel.getDescription();
-        this.startAt = travel.getStartAt();
-        this.endAt = travel.getEndAt();
+    public void update(Travel updatedTravel, List<Visit> visits) {
+        validateDuration(updatedTravel, visits);
+        this.thumbnailUrl = updatedTravel.getThumbnailUrl();
+        this.title = updatedTravel.getTitle();
+        this.description = updatedTravel.getDescription();
+        this.startAt = updatedTravel.getStartAt();
+        this.endAt = updatedTravel.getEndAt();
+    }
+
+    private void validateDuration(Travel updatedTravel, List<Visit> visits) {
+        visits.stream()
+                .filter(visit -> !updatedTravel.withinDuration(visit.getVisitedAt()))
+                .findAny()
+                .ifPresent(visit -> {
+                    throw new StaccatoException("변경하려는 여행 기간이 이미 존재하는 방문 기록을 포함하지 않습니다. 여행 기간을 다시 설정해주세요.");
+                });
+    }
+
+    public boolean withinDuration(LocalDate date) {
+        return startAt.isBefore(date) && endAt.isAfter(date);
     }
 }

@@ -1,5 +1,7 @@
 package com.staccato.travel.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,8 @@ import com.staccato.travel.repository.TravelMemberRepository;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelResponse;
+import com.staccato.visit.domain.Visit;
+import com.staccato.visit.repository.VisitRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class TravelService {
     private final TravelRepository travelRepository;
     private final TravelMemberRepository travelMemberRepository;
+    private final VisitRepository visitRepository;
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -48,7 +53,8 @@ public class TravelService {
     public void updateTravel(TravelRequest travelRequest, Long travelId) {
         Travel updatedTravel = travelRequest.toTravel();
         Travel originTravel = getTravelById(travelId);
-        originTravel.update(updatedTravel);
+        List<Visit> visits =  visitRepository.findAllByTravelId(travelId);
+        originTravel.update(updatedTravel, visits);
     }
 
     private Travel getTravelById(long travelId) {
