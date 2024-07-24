@@ -37,6 +37,21 @@ fun ImageView.setCircleImageWithCoil(
 }
 
 @BindingAdapter(
+    value = ["coilRoundedCornerImageUrl", "coilPlaceHolder", "coilRoundingRadius"],
+)
+fun ImageView.setRoundedCornerImageWithCoil(
+    url: String?,
+    placeHolder: Drawable? = null,
+    roundingRadius: Float,
+) {
+    load(url) {
+        placeholder(placeHolder)
+        transformations(RoundedCornersTransformation(roundingRadius))
+        error(placeHolder)
+    }
+}
+
+@BindingAdapter(
     value = ["glideImageUrl", "glidePlaceHolder"],
 )
 fun ImageView.loadImageWithGlide(
