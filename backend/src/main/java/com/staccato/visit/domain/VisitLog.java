@@ -31,7 +31,7 @@ public class VisitLog extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "visit_id", nullable = false)
@@ -41,7 +41,7 @@ public class VisitLog extends BaseEntity {
     private Member member;
 
     @Builder
-    public VisitLog(String content, @NotNull Visit visit, @NonNull Member member) {
+    public VisitLog(@NonNull String content, @NotNull Visit visit, @NonNull Member member) {
         this.content = content;
         this.visit = visit;
         this.member = member;
