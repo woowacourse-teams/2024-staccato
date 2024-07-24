@@ -10,6 +10,12 @@ import androidx.fragment.app.DialogFragment
 import com.woowacourse.staccato.databinding.FragmentDeleteDialogBinding
 
 class DeleteDialogFragment : DialogFragment() {
+    private lateinit var dialogHandler: DialogHandler
+
+    fun setDialogHandler(newDialogHandler: DialogHandler) {
+        dialogHandler = newDialogHandler
+    }
+
     private var _binding: FragmentDeleteDialogBinding? = null
     private val binding get() = _binding!!
 
@@ -29,7 +35,18 @@ class DeleteDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentDeleteDialogBinding.inflate(inflater, container, false)
+        initButtonClickListener()
         return binding.root
+    }
+
+    private fun initButtonClickListener() {
+        binding.btnDeleteCancel.setOnClickListener {
+            dismiss()
+        }
+        binding.btnDeleteConfirm.setOnClickListener {
+            dialogHandler.onConfirmClicked()
+            dismiss()
+        }
     }
 
     override fun onDestroyView() {
@@ -40,4 +57,8 @@ class DeleteDialogFragment : DialogFragment() {
     companion object {
         const val TAG = "DeleteDialogFragment"
     }
+}
+
+fun interface DialogHandler {
+    fun onConfirmClicked()
 }
