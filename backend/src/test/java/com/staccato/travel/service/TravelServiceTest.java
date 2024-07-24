@@ -1,11 +1,11 @@
 package com.staccato.travel.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,8 +50,8 @@ class TravelServiceTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> Assertions.assertThat(travelMember.getMember().getId()).isEqualTo(member.getId()),
-                () -> Assertions.assertThat(travelMember.getTravel().getId()).isEqualTo(travel.travelId())
+                () -> assertThat(travelMember.getMember().getId()).isEqualTo(member.getId()),
+                () -> assertThat(travelMember.getTravel().getId()).isEqualTo(travel.travelId())
         );
     }
 
@@ -68,7 +68,7 @@ class TravelServiceTest extends ServiceSliceTest {
         TravelDetailResponses travelDetailResponses = travelService.readAllTravels(member.getId(), year);
 
         // then
-        Assertions.assertThat(travelDetailResponses.travels()).hasSize(expectedSize);
+        assertThat(travelDetailResponses.travels()).hasSize(expectedSize);
     }
 
     private static TravelRequest createTravelRequest(int year) {
