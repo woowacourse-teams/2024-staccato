@@ -3,10 +3,14 @@ package com.staccato.travel.service;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.staccato.ServiceSliceTest;
@@ -26,11 +30,18 @@ class TravelServiceTest extends ServiceSliceTest {
     @Autowired
     private TravelMemberRepository travelMemberRepository;
 
+    static Stream<Arguments> yearProvider() {
+        return Stream.of(
+                Arguments.of(null, 2),
+                Arguments.of(2023, 1)
+        );
+    }
+
     @DisplayName("여행 상세 정보를 기반으로, 여행 상세를 생성하고 작성자를 저장한다.")
     @Test
     void createTravel() {
         // given
-        TravelRequest travelRequest = createTravelRequest();
+        TravelRequest travelRequest = createTravelRequest(2024);
         Member member = memberRepository.save(Member.builder().nickname("staccato").build());
 
         // when
@@ -44,31 +55,29 @@ class TravelServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("모든 여행 상세 목록을 조회한다.")
-    @Test
-    void readAllTravels() {
+    @DisplayName("조건에 따라 여행 상세 목록을 조회한다.")
+    @MethodSource("yearProvider")
+    @ParameterizedTest
+    void readAllTravels(Integer year, int expectedSize) {
         // given
-        TravelRequest travelRequest = createTravelRequest();
         Member member = memberRepository.save(Member.builder().nickname("staccato").build());
-        travelService.createTravel(travelRequest, member.getId());
+        travelService.createTravel(createTravelRequest(2023), member.getId());
+        travelService.createTravel(createTravelRequest(2024), member.getId());
 
         // when
-        TravelDetailResponses travelDetailResponses = travelService.readAllTravels(member.getId());
+        TravelDetailResponses travelDetailResponses = travelService.readAllTravels(member.getId(), year);
 
         // then
-        assertAll(
-                () -> Assertions.assertThat(travelDetailResponses.travels()).hasSize(1),
-                () -> Assertions.assertThat(travelDetailResponses.travels().get(0).mates().members()).hasSize(1)
-        );
+        Assertions.assertThat(travelDetailResponses.travels()).hasSize(expectedSize);
     }
 
-    private static TravelRequest createTravelRequest() {
+    private static TravelRequest createTravelRequest(int year) {
         return new TravelRequest(
                 "https://example.com/travels/geumohrm.jpg",
-                "2023 여름 휴가",
+                year + " 여름 휴가",
                 "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(2023, 7, 1),
-                LocalDate.of(2023, 7, 10)
+                LocalDate.of(year, 7, 1),
+                LocalDate.of(2024, 7, 10)
         );
     }
 }

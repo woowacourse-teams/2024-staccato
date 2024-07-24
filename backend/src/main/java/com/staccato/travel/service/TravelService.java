@@ -46,8 +46,28 @@ public class TravelService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Operation"));
     }
 
-    public TravelDetailResponses readAllTravels(long memberId) {
+    public TravelDetailResponses readAllTravels(long memberId, Integer year) {
+        if (isNoCondition(year)) {
+            return readAll(memberId);
+        }
+        return readAllByYear(memberId, year);
+    }
+
+    private static boolean isNoCondition(Integer year) {
+        return year == null;
+    }
+
+    private TravelDetailResponses readAll(long memberId) {
         List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberId(memberId);
+        return getTravelDetailResponses(travelMembers);
+    }
+
+    private TravelDetailResponses readAllByYear(long memberId, Integer year) {
+        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndTravelStartAtYear(memberId, year);
+        return getTravelDetailResponses(travelMembers);
+    }
+
+    private TravelDetailResponses getTravelDetailResponses(List<TravelMember> travelMembers) {
         List<Travel> travels = travelMembers.stream()
                 .map(TravelMember::getTravel)
                 .toList();
