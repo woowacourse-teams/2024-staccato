@@ -28,7 +28,6 @@ public class VisitService {
     private final TravelRepository travelRepository;
     private final VisitImageRepository visitImageRepository;
     private final VisitLogRepository visitLogRepository;
-    private final VisitImageRepository visitImageRepository;
 
     @Transactional
     public long createVisit(VisitRequest visitRequest) {
