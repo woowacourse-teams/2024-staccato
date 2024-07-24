@@ -53,7 +53,7 @@ public class TravelService {
     }
 
     private TravelResponses readAll(long memberId) {
-        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberId(memberId);
+        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndIsDeletedIsFalse(memberId);
         return getTravelDetailResponses(travelMembers);
     }
 

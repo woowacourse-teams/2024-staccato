@@ -43,6 +43,24 @@ class TravelMemberRepositoryTest {
         assertThat(result).hasSize(2);
     }
 
+    @DisplayName("사용자 식별자와 년도로 삭제 되지 않은 여행 상세 목록만 조회한다.")
+    @Test
+    void findAllByMemberIdAndTravelStartAtYearWithoutDeleted() {
+        // given
+        Member member = memberRepository.save(Member.builder().nickname("staccato").build());
+        Travel travel = travelRepository.save(createTravel(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)));
+        Travel travel2 = travelRepository.save(createTravel(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        TravelMember target = travelMemberRepository.save(new TravelMember(member, travel));
+        travelMemberRepository.save(new TravelMember(member, travel2));
+        travelMemberRepository.deleteById(target.getId());
+
+        // when
+        List<TravelMember> result = travelMemberRepository.findAllByMemberIdAndTravelStartAtYear(member.getId(), 2023);
+
+        // then
+        assertThat(result).hasSize(1);
+    }
+
     private static Travel createTravel(LocalDate startAt, LocalDate endAt) {
         return Travel.builder()
                 .title("여행")
