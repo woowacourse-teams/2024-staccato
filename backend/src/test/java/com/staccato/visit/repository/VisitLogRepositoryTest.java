@@ -39,10 +39,9 @@ class VisitLogRepositoryTest {
         Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").build());
         Travel travel = travelRepository.save(Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build());
         Visit visit = visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(travel).build());
-        Member member1 = memberRepository.save(Member.builder().nickname("Sample Member1").build());
-        Member member2 = memberRepository.save(Member.builder().nickname("Sample Member2").build());
-        VisitLog visitLog1 = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log1").visit(visit).member(member1).build());
-        VisitLog visitLog2 = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log2").visit(visit).member(member2).build());
+        Member member = memberRepository.save(Member.builder().nickname("Sample Member").build());
+        VisitLog visitLog1 = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log1").visit(visit).member(member).build());
+        VisitLog visitLog2 = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log2").visit(visit).member(member).build());
 
         // when
         visitLogRepository.deleteByVisitId(visit.getId());
