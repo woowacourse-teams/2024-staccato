@@ -6,6 +6,8 @@ import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 
 @BindingAdapter(
     value = ["coilImageUrl", "coilPlaceHolder"],
@@ -59,6 +61,22 @@ fun ImageView.setCircleImageWithGlide(
         .load(url)
         .placeholder(placeHolder)
         .circleCrop()
+        .error(placeHolder)
+        .into(this)
+}
+
+@BindingAdapter(
+    value = ["glideRoundedCornerImageUrl", "glidePlaceHolder", "glideRoundingRadius"],
+)
+fun ImageView.setRoundedCornerImageWithGlide(
+    url: String?,
+    placeHolder: Drawable? = null,
+    roundingRadius: Int,
+) {
+    Glide.with(context)
+        .load(url)
+        .placeholder(placeHolder)
+        .apply(RequestOptions.bitmapTransform(RoundedCorners(roundingRadius)))
         .error(placeHolder)
         .into(this)
 }
