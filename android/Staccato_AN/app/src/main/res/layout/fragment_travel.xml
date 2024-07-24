@@ -9,6 +9,10 @@
             name="viewModel"
             type="com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel" />
 
+        <variable
+            name="toolbarHandler"
+            type="com.woowacourse.staccato.presentation.ToolbarHandler" />
+
         <import type="java.time.LocalDate" />
     </data>
 
@@ -23,7 +27,8 @@
             layout="@layout/toolbar_detail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:toolbarHandler="@{toolbarHandler}"/>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/sv_travel"
