@@ -14,7 +14,7 @@ public class VisitService {
     private final VisitLogRepository visitLogRepository;
 
     public void deleteById(Long visitId) {
-        visitRepository.deleteById(visitId);
         visitLogRepository.deleteByVisitId(visitId);
+        visitRepository.deleteById(visitId);
     }
 }
