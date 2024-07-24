@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.staccato.config.auth.MemberId;
 import com.staccato.travel.service.TravelService;
 import com.staccato.travel.service.dto.request.TravelRequest;
-import com.staccato.travel.service.dto.response.TravelResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +24,7 @@ public class TravelController {
 
     @PostMapping
     public ResponseEntity<Void> createTravel(@Valid @RequestBody TravelRequest travelRequest, @MemberId Long memberId) {
-        TravelResponse travelResponse = travelService.createTravel(travelRequest, memberId);
-        return ResponseEntity.created(URI.create("/travels/" + travelResponse.travelId())).build();
+        long travelId = travelService.createTravel(travelRequest, memberId);
+        return ResponseEntity.created(URI.create("/travels/" + travelId)).build();
     }
 }
