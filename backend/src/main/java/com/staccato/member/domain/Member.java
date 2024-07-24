@@ -1,14 +1,18 @@
 package com.staccato.member.domain;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import org.hibernate.annotations.SQLDelete;
 
 import com.staccato.config.domain.BaseEntity;
+import com.staccato.travel.domain.TravelMember;
 
 import lombok.AccessLevel;
 import lombok.Builder;
