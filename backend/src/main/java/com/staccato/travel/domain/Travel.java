@@ -62,4 +62,13 @@ public class Travel extends BaseEntity {
     public void addTravelMember(TravelMember travelMember) {
         travelMembers.add(travelMember);
     }
+
+    public void update(Travel travel) {
+        // 방문 기록을 모두 포함하는 기간으로 설정되었는지 검증 필요
+        this.thumbnailUrl = travel.getThumbnailUrl();
+        this.title = travel.getTitle();
+        this.description = travel.getDescription();
+        this.startAt = travel.getStartAt();
+        this.endAt = travel.getEndAt();
+    }
 }
