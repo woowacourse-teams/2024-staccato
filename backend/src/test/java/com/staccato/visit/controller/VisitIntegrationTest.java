@@ -14,10 +14,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
 
 import com.staccato.IntegrationTest;
 import com.staccato.pin.domain.Pin;
@@ -36,14 +34,6 @@ class VisitIntegrationTest extends IntegrationTest {
     private PinRepository pinRepository;
     @Autowired
     private TravelRepository travelRepository;
-
-    static Stream<VisitRequest> visitRequestProvider() {
-        return Stream.of(
-                new VisitRequest(1L, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
-                new VisitRequest(2L, List.of("https://example2.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
-                new VisitRequest(3L, List.of("https://example3.com.jpg"), LocalDate.of(2023, 7, 1), 1L)
-        );
-    }
 
     static Stream<Arguments> invalidVisitRequestProvider() {
         return Stream.of(
@@ -64,9 +54,7 @@ class VisitIntegrationTest extends IntegrationTest {
 
     @BeforeEach
     void init() {
-        pinRepository.save(Pin.builder().place("장소1").address("주소1").build());
-        pinRepository.save(Pin.builder().place("장소2").address("주소2").build());
-        pinRepository.save(Pin.builder().place("장소3").address("주소3").build());
+        pinRepository.save(Pin.builder().place("장소").address("주소").build());
         travelRepository.save(Travel.builder()
                 .thumbnailUrl("https://example1.com.jpg")
                 .title("2023 여름 휴가")
@@ -77,9 +65,13 @@ class VisitIntegrationTest extends IntegrationTest {
     }
 
     @DisplayName("사용자가 방문 기록 정보를 입력하면, 새로운 방문 기록을 생성한다.")
-    @ParameterizedTest
-    @MethodSource("visitRequestProvider")
-    void createVisit(VisitRequest visitRequest) {
+    @Test
+    void createVisit() {
+        // given
+        VisitRequest visitRequest = new VisitRequest(1L, List.of("https://example1.com.jpg"),
+                LocalDate.of(2023, 7, 1), 1L);
+
+        // when & then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
