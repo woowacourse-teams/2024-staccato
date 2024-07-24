@@ -1,10 +1,10 @@
 package com.woowacourse.staccato.presentation.timeline.adapter
 
-import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineNoThumbnailBinding
+import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineFirstBinding
 import com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel
 
-class WithoutThumbnailTravelViewHolder(
-    private val binding: LayoutItemFragmentTimelineNoThumbnailBinding,
+class FirstTravelViewHolder(
+    private val binding: LayoutItemFragmentTimelineFirstBinding
 ): TimelineViewHolder(binding) {
     override fun bind(item: TimelineTravelUiModel) {
         binding.travel = item
