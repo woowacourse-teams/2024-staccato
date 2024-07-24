@@ -10,22 +10,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.timeline.TimelineFragment">
-
-        <View
-            android:layout_width="4dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="20dp"
-            android:foreground="@color/gray2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        tools:context=".presentation.timeline.TimelineFragment"
+        android:background="@color/white">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_timeline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginHorizontal="10dp"
             android:clipToPadding="false"
             android:paddingBottom="60dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -33,7 +25,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/layout_item_fragment_timeline_no_thumbnail" />
+            tools:listitem="@layout/layout_item_fragment_timeline_middle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
