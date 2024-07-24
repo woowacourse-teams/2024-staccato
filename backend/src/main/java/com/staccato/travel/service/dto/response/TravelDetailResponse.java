@@ -14,7 +14,7 @@ public record TravelDetailResponse(
         LocalDate endAt,
         MemberResponses mates
 ) {
-    public TravelDetailResponse(Travel travel){
+    public TravelDetailResponse(Travel travel) {
         this(
                 travel.getId(),
                 travel.getThumbnailUrl(),

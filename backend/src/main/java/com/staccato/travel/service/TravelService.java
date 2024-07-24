@@ -53,7 +53,7 @@ public class TravelService {
         return readAllByYear(memberId, year);
     }
 
-    private static boolean isNoCondition(Integer year) {
+    private boolean isNoCondition(Integer year) {
         return year == null;
     }
 
