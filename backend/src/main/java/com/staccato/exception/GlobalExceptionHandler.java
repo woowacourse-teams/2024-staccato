@@ -2,9 +2,7 @@ package com.staccato.exception;
 
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
-import java.util.Set;
 
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -34,9 +32,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ExceptionResponse> handleConstraintViolationException(ConstraintViolationException e) {
-        Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-        ConstraintViolation<?> violation = violations.iterator().next();
-        String errorMessage = violation.getMessage();
+        String errorMessage = e.getConstraintViolations()
+                .iterator()
+                .next()
+                .getMessage();
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage));
     }
