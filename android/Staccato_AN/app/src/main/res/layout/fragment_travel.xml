@@ -5,6 +5,11 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel" />
+
+        <import type="java.time.LocalDate" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,11 +45,13 @@
                     android:layout_height="0dp"
                     android:contentDescription="@string/all_image_content_description"
                     android:scaleType="centerCrop"
+                    app:coilImageUrl="@{viewModel.travel.thumbnail}"
+                    app:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@drawable/ic_launcher_background" />
+                    tools:src="@drawable/shape_place_holder_rectangle" />
 
                 <TextView
                     android:id="@+id/tv_travel_title"
@@ -54,6 +61,7 @@
                     android:layout_marginTop="16dp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:text="@{viewModel.travel.title}"
                     android:textAppearance="@style/Typography.Title1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -65,6 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:text="@{@string/travel_period(viewModel.travel.startAt.year, viewModel.travel.startAt.monthValue, viewModel.travel.startAt.dayOfMonth, viewModel.travel.endAt.year, viewModel.travel.endAt.monthValue, viewModel.travel.endAt.dayOfMonth)}"
                     android:textAppearance="@style/Typography.Body4"
                     app:layout_constraintStart_toStartOf="@id/tv_travel_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_travel_title"
@@ -83,6 +92,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
+                    android:text="@{viewModel.travel.description}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_travel_first"
