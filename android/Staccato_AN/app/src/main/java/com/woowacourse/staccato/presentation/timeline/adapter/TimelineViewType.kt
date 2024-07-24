@@ -1,14 +1,22 @@
 package com.woowacourse.staccato.presentation.timeline.adapter
 
 enum class TimelineViewType {
-    WITH_THUMBNAIL, NO_THUMBNAIL;
+    FIRST_ITEM, MIDDLE_ITEM, LAST_ITEM;
 
     companion object {
-        fun from(thumbnailUrl: String?): TimelineViewType {
-            return if (thumbnailUrl.isNullOrEmpty()) {
-                NO_THUMBNAIL
+        private const val FIRST_INDEX = 0
+        private const val LAST_INDEX_ADJUSTMENT = 1
+
+        fun fromPosition(
+            position: Int,
+            totalSize: Int,
+        ): TimelineViewType {
+            return if (position == FIRST_INDEX) {
+                FIRST_ITEM
+            } else if (position < totalSize - LAST_INDEX_ADJUSTMENT) {
+                MIDDLE_ITEM
             } else {
-                WITH_THUMBNAIL
+                LAST_ITEM
             }
         }
     }

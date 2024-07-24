@@ -3,47 +3,48 @@ package com.woowacourse.staccato.presentation.timeline.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineBinding
-import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineNoThumbnailBinding
+import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineFirstBinding
+import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineLastBinding
+import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineMiddleBinding
 import com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel
 
 class TimelineAdapter() : RecyclerView.Adapter<TimelineViewHolder>() {
     private var travels = emptyList<TimelineTravelUiModel>()
 
     override fun getItemViewType(position: Int): Int {
-        return TimelineViewType.from(travels[position].travelThumbnail).ordinal
+        return TimelineViewType.fromPosition(position, itemCount).ordinal
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimelineViewHolder {
         return when (viewType) {
-            TimelineViewType.NO_THUMBNAIL.ordinal -> {
+            TimelineViewType.FIRST_ITEM.ordinal -> {
                 val binding =
-                    LayoutItemFragmentTimelineNoThumbnailBinding.inflate(
+                    LayoutItemFragmentTimelineFirstBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false,
                     )
-                WithoutThumbnailTravelViewHolder(binding)
+                FirstTravelViewHolder(binding)
             }
 
-            TimelineViewType.WITH_THUMBNAIL.ordinal -> {
+            TimelineViewType.MIDDLE_ITEM.ordinal -> {
                 val binding =
-                    LayoutItemFragmentTimelineBinding.inflate(
+                    LayoutItemFragmentTimelineMiddleBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false,
                     )
-                TravelViewHolder(binding)
+                MiddleTravelViewHolder(binding)
             }
 
             else -> {
                 val binding =
-                    LayoutItemFragmentTimelineNoThumbnailBinding.inflate(
+                    LayoutItemFragmentTimelineLastBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false,
                     )
-                WithoutThumbnailTravelViewHolder(binding)
+                LastTravelViewHolder(binding)
             }
         }
     }
