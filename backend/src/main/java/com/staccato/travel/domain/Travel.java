@@ -1,12 +1,15 @@
 package com.staccato.travel.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import org.hibernate.annotations.SQLDelete;
 
@@ -37,6 +40,8 @@ public class Travel extends BaseEntity {
     private LocalDate startAt;
     @Column(nullable = false)
     private LocalDate endAt;
+    @OneToMany(mappedBy = "travel")
+    private List<TravelMember> travelMembers = new ArrayList<>();
 
     @Builder
     public Travel(String thumbnailUrl, @NonNull String title, String description, @NonNull LocalDate startAt, @NonNull LocalDate endAt) {
@@ -52,5 +57,9 @@ public class Travel extends BaseEntity {
         if (endAt.isBefore(startAt)) {
             throw new StaccatoException("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
         }
+    }
+
+    public void addTravelMember(TravelMember travelMember) {
+        travelMembers.add(travelMember);
     }
 }
