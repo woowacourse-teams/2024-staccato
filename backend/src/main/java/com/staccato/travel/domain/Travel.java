@@ -1,12 +1,14 @@
 package com.staccato.travel.domain;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import org.hibernate.annotations.SQLDelete;
 
@@ -37,6 +39,8 @@ public class Travel extends BaseEntity {
     private LocalDate startAt;
     @Column(nullable = false)
     private LocalDate endAt;
+    @OneToMany(mappedBy = "travel")
+    private List<TravelMember> travelMembers;
 
     @Builder
     public Travel(String thumbnailUrl, @NonNull String title, String description, @NonNull LocalDate startAt, @NonNull LocalDate endAt) {
