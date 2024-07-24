@@ -45,13 +45,13 @@
             android:layout_height="0dp"
             android:scaleType="centerCrop"
             app:coilImageUrl="@{travel.travelThumbnail}"
-            app:coilPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
+            app:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="8:5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.527"
-            tools:src="@drawable/ic_launcher_background" />
+            tools:src="@drawable/shape_all_gray2_4dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
