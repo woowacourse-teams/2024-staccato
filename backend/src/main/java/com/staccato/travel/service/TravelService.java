@@ -42,7 +42,7 @@ public class TravelService {
     }
 
     private Member getMemberById(long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndIsDeletedIsFalse(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Operation"));
     }
 
