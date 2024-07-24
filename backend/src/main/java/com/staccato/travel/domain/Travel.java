@@ -1,6 +1,7 @@
 package com.staccato.travel.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -40,7 +41,7 @@ public class Travel extends BaseEntity {
     @Column(nullable = false)
     private LocalDate endAt;
     @OneToMany(mappedBy = "travel")
-    private List<TravelMember> travelMembers;
+    private List<TravelMember> travelMembers = new ArrayList<>();
 
     @Builder
     public Travel(String thumbnailUrl, @NonNull String title, String description, @NonNull LocalDate startAt, @NonNull LocalDate endAt) {
