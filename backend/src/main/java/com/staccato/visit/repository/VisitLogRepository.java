@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import com.staccato.visit.domain.VisitLog;
 
 public interface VisitLogRepository extends JpaRepository<VisitLog, Long> {
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE VisitLog v SET v.isDeleted = true WHERE v.visit.id = :visitId")
     void deleteByVisitId(@Param("visitId") Long visitId);
 }
