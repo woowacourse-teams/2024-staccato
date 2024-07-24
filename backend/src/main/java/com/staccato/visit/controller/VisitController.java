@@ -24,6 +24,6 @@ public class VisitController {
     public ResponseEntity<Void> deleteById(
             @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") Long visitId) {
         visitService.deleteById(visitId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
