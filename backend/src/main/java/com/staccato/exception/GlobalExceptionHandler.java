@@ -2,14 +2,13 @@ package com.staccato.exception;
 
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
-import java.util.Set;
 
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,9 +32,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ExceptionResponse> handleConstraintViolationException(ConstraintViolationException e) {
-        Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-        ConstraintViolation<?> violation = violations.iterator().next();
-        String errorMessage = violation.getMessage();
+        String errorMessage = e.getConstraintViolations()
+                .iterator()
+                .next()
+                .getMessage();
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException() {
+        String errorMessage = "요청 본문을 읽을 수 없습니다. 올바른 형식으로 데이터를 제공해주세요.";
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage));
     }
