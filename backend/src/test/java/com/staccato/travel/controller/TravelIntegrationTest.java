@@ -127,7 +127,9 @@ class TravelIntegrationTest extends IntegrationTest {
     @MethodSource("invalidTravelRequestProvider")
     void failUpdateTravel(TravelRequest invalidTravelRequest, String expectedMessage) {
         // given
+        TravelRequest travelRequest = new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
         Long travelId = 1L;
+        createTravel(travelRequest);
 
         // when & then
         RestAssured.given().pathParam("travelId", travelId).log().all()
@@ -149,6 +151,7 @@ class TravelIntegrationTest extends IntegrationTest {
         // given
         TravelRequest travelRequest = new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
         String expectedMessage = "여행 식별자는 양수로 이루어져야 합니다.";
+        createTravel(travelRequest);
 
         // when & then
         RestAssured.given().pathParam("travelId", travelId).log().all()
