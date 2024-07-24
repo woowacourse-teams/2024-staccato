@@ -3,6 +3,9 @@
 
     <data>
 
+        <variable
+            name="toolbarHandler"
+            type="com.woowacourse.staccato.presentation.ToolbarHandler" />
     </data>
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -15,11 +18,13 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_detail_delete"
             style="@style/ToolbarMenuStyle"
+            android:onClick="@{()->toolbarHandler.onDeleteClicked()}"
             android:text="@string/all_delete" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_detail_update"
             style="@style/ToolbarMenuStyle"
+            android:onClick="@{()->toolbarHandler.onUpdateClicked()}"
             android:text="@string/all_update" />
 
     </com.google.android.material.appbar.MaterialToolbar>
