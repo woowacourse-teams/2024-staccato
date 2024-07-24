@@ -17,7 +17,7 @@
             android:id="@+id/rv_timeline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
+            android:paddingHorizontal="10dp"
             android:clipToPadding="false"
             android:paddingBottom="60dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
