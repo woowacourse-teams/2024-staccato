@@ -14,13 +14,12 @@ import org.hibernate.annotations.SQLDelete;
 import com.staccato.config.domain.BaseEntity;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Builder
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE visit_image SET is_deleted = true WHERE id = ?")
 public class VisitImage extends BaseEntity {
@@ -32,4 +31,10 @@ public class VisitImage extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "visit_id", nullable = false)
     private Visit visit;
+
+    @Builder
+    public VisitImage(String imageUrl, Visit visit) {
+        this.imageUrl = imageUrl;
+        this.visit = visit;
+    }
 }

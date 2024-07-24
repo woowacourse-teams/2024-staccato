@@ -11,9 +11,12 @@ import org.hibernate.annotations.SQLDelete;
 import com.staccato.config.domain.BaseEntity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE pin SET is_deleted = true WHERE id = ?")
 public class Pin extends BaseEntity {
@@ -24,4 +27,10 @@ public class Pin extends BaseEntity {
     private String place;
     @Column(nullable = false)
     private String address;
+
+    @Builder
+    public Pin(String place, String address) {
+        this.place = place;
+        this.address = address;
+    }
 }
