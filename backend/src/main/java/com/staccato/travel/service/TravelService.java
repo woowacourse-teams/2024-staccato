@@ -32,13 +32,13 @@ public class TravelService {
         return new TravelResponse(travel);
     }
 
-    private TravelMember saveTravelMember(Long memberId, Travel travel) {
+    private void saveTravelMember(Long memberId, Travel travel) {
         Member member = getMemberById(memberId);
         TravelMember mate = TravelMember.builder()
                 .travel(travel)
                 .member(member)
                 .build();
-        return travelMemberRepository.save(mate);
+        travelMemberRepository.save(mate);
     }
 
     private Member getMemberById(long memberId) {
