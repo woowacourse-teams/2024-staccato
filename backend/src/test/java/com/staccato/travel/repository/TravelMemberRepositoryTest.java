@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,6 +24,7 @@ class TravelMemberRepositoryTest {
     @Autowired
     private TravelRepository travelRepository;
 
+    @DisplayName("사용자 식별자와 년도로 여행 상세 목록을 조회한다.")
     @Test
     void findAllByMemberIdAndTravelStartAtYear() {
         // given
