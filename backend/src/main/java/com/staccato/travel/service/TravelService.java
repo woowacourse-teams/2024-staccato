@@ -5,9 +5,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.travel.domain.Mate;
 import com.staccato.travel.domain.Travel;
-import com.staccato.travel.repository.MateRepository;
+import com.staccato.travel.domain.TravelMember;
+import com.staccato.travel.repository.TravelMemberRepostiory;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelResponse;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class TravelService {
     private final TravelRepository travelRepository;
-    private final MateRepository mateRepository;
+    private final TravelMemberRepostiory travelMemberRepostiory;
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -32,11 +32,11 @@ public class TravelService {
 
     private void saveMate(Long memberId, Travel travel) {
         Member member = getMemberById(memberId);
-        Mate mate = Mate.builder()
+        TravelMember mate = TravelMember.builder()
                 .travel(travel)
                 .member(member)
                 .build();
-        mateRepository.save(mate);
+        travelMemberRepostiory.save(mate);
     }
 
     private Member getMemberById(long memberId) {

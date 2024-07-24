@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.travel.domain.Mate;
-import com.staccato.travel.repository.MateRepository;
+import com.staccato.travel.domain.TravelMember;
+import com.staccato.travel.repository.TravelMemberRepostiory;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelResponse;
 
@@ -23,7 +23,7 @@ class TravelServiceTest extends ServiceSliceTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
-    private MateRepository mateRepository;
+    private TravelMemberRepostiory travelMemberRepostiory;
 
     @DisplayName("여행 상세 정보를 기반으로, 여행 상세를 생성하고 작성자를 저장한다.")
     @Test
@@ -40,12 +40,12 @@ class TravelServiceTest extends ServiceSliceTest {
 
         // when
         TravelResponse travel = travelService.createTravel(travelRequest, member.getId());
-        Mate mate = mateRepository.findAll().get(0);
+        TravelMember travelMember = travelMemberRepostiory.findAll().get(0);
 
         // then
         assertAll(
-                () -> Assertions.assertThat(mate.getMember().getId()).isEqualTo(member.getId()),
-                () -> Assertions.assertThat(mate.getTravel().getId()).isEqualTo(travel.travelId())
+                () -> Assertions.assertThat(travelMember.getMember().getId()).isEqualTo(member.getId()),
+                () -> Assertions.assertThat(travelMember.getTravel().getId()).isEqualTo(travel.travelId())
         );
     }
 }

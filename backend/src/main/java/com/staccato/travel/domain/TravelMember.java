@@ -23,7 +23,7 @@ import lombok.NonNull;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE mate SET is_deleted = true WHERE id = ?")
-public class Mate extends BaseEntity {
+public class TravelMember extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,7 +35,7 @@ public class Mate extends BaseEntity {
     private Travel travel;
 
     @Builder
-    public Mate(@NonNull Member member, @NonNull Travel travel) {
+    public TravelMember(@NonNull Member member, @NonNull Travel travel) {
         this.member = member;
         this.travel = travel;
     }
