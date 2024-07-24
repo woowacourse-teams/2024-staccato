@@ -8,6 +8,8 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -100,5 +102,64 @@ class TravelIntegrationTest extends IntegrationTest {
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is(expectedMessage))
                 .body("status", is(HttpStatus.BAD_REQUEST.toString()));
+    }
+
+    @DisplayName("사용자의 모든 여행 상세 목록을 조회한다.")
+    @TestFactory
+    Stream<DynamicTest> findAllTravels() {
+        return Stream.of(
+                createTravel(2024),
+                createTravel(2024),
+                DynamicTest.dynamicTest("사용자가 타임라인을 조회하면 2개의 여행 목록이 조회된다.", () ->
+                        RestAssured.given().log().all()
+                                .contentType(ContentType.JSON)
+                                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                                .when().log().all()
+                                .get("/travels")
+                                .then().log().all()
+                                .assertThat().statusCode(HttpStatus.OK.value())
+                                .body("travels.size()", is(2)))
+        );
+    }
+
+    @DisplayName("사용자가 2023년도에 다녀온 모든 여행 상세 목록을 조회한다.")
+    @TestFactory
+    Stream<DynamicTest> findAllTravelsOn2023() {
+        return Stream.of(
+                createTravel(2023),
+                createTravel(2024),
+                DynamicTest.dynamicTest("사용자가 타임라인에서 2023년도를 선택하면 1개의 여행 목록이 조회된다.", () ->
+                        RestAssured.given().log().all()
+                                .contentType(ContentType.JSON)
+                                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                                .param("year", 2023)
+                                .when().log().all()
+                                .get("/travels")
+                                .then().log().all()
+                                .assertThat().statusCode(HttpStatus.OK.value())
+                                .body("size()", is(1)))
+        );
+    }
+
+    private DynamicTest createTravel(int year) {
+        return DynamicTest.dynamicTest("사용자가 새로운 여행 상세를 추가한다.", () ->
+                RestAssured.given().log().all()
+                        .contentType(ContentType.JSON)
+                        .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                        .body(createTravelRequest(year))
+                        .when().log().all()
+                        .post("/travels")
+                        .then().log().all()
+                        .assertThat().statusCode(HttpStatus.CREATED.value())
+                        .header(HttpHeaders.LOCATION, containsString("/travels/")));
+    }
+
+    private TravelRequest createTravelRequest(int year) {
+        return new TravelRequest(
+                "https://example.com/travels/geumohrm.jpg",
+                year + "여름 휴가",
+                "친구들과 함께한 여름 휴가 여행",
+                LocalDate.of(year, 7, 1),
+                LocalDate.of(year, 7, 10));
     }
 }

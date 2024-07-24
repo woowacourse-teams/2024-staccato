@@ -15,6 +15,7 @@ import org.hibernate.annotations.SQLDelete;
 
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
+import com.staccato.member.domain.Member;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -61,5 +62,11 @@ public class Travel extends BaseEntity {
 
     public void addTravelMember(TravelMember travelMember) {
         travelMembers.add(travelMember);
+    }
+
+    public List<Member> getMates() {
+        return travelMembers.stream()
+                .map(TravelMember::getMember)
+                .toList();
     }
 }
