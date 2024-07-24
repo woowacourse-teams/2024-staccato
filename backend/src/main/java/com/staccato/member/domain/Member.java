@@ -32,8 +32,6 @@ public class Member extends BaseEntity {
     private String nickname;
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
-    @OneToMany(mappedBy = "member")
-    private List<TravelMember> travelMembers;
 
     @Builder
     public Member(@NonNull String nickname, String imageUrl) {
