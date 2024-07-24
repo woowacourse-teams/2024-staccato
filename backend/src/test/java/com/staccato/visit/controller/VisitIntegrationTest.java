@@ -4,17 +4,15 @@ import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
+
+import com.staccato.IntegrationTest;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class VisitIntegrationTest {
+class VisitIntegrationTest extends IntegrationTest {
     @DisplayName("Visit을 삭제한다.")
     @Test
     void deleteById() {
