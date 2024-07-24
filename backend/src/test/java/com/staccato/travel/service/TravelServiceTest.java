@@ -20,7 +20,6 @@ import com.staccato.travel.domain.TravelMember;
 import com.staccato.travel.repository.TravelMemberRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelDetailResponses;
-import com.staccato.travel.service.dto.response.TravelResponse;
 
 class TravelServiceTest extends ServiceSliceTest {
     @Autowired
@@ -45,13 +44,13 @@ class TravelServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(Member.builder().nickname("staccato").build());
 
         // when
-        TravelResponse travel = travelService.createTravel(travelRequest, member.getId());
-        TravelMember travelMember = travelMemberRepository.findAll().get(0);
+        long travelId = travelService.createTravel(travelRequest, member.getId());
+        TravelMember travelMember = travelMemberRepostiory.findAll().get(0);
 
         // then
         assertAll(
-                () -> assertThat(travelMember.getMember().getId()).isEqualTo(member.getId()),
-                () -> assertThat(travelMember.getTravel().getId()).isEqualTo(travel.travelId())
+                () -> Assertions.assertThat(travelMember.getMember().getId()).isEqualTo(member.getId()),
+                () -> Assertions.assertThat(travelMember.getTravel().getId()).isEqualTo(travelId)
         );
     }
 
