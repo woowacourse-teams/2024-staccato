@@ -9,6 +9,6 @@ import com.staccato.visit.domain.VisitLog;
 
 public interface VisitLogRepository extends JpaRepository<VisitLog, Long> {
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE VisitLog v SET v.isDeleted = true WHERE v.visit.id = :visitId")
+    @Query("UPDATE VisitLog vl SET vl.isDeleted = true WHERE vl.visit.id = :visitId")
     void deleteByVisitId(@Param("visitId") Long visitId);
 }
