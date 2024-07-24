@@ -20,10 +20,12 @@ import com.staccato.travel.domain.Travel;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
-@Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE visit SET is_deleted = true WHERE id = ?")
@@ -39,4 +41,11 @@ public class Visit extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_id", nullable = false)
     private Travel travel;
+
+    @Builder
+    public Visit(@NonNull LocalDate visitedAt, @NonNull Pin pin, @NonNull Travel travel) {
+        this.visitedAt = visitedAt;
+        this.pin = pin;
+        this.travel = travel;
+    }
 }
