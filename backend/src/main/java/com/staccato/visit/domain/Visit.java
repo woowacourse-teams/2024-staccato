@@ -18,7 +18,6 @@ import com.staccato.pin.domain.Pin;
 import com.staccato.travel.domain.Travel;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +25,6 @@ import lombok.NonNull;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE visit SET is_deleted = true WHERE id = ?")
 public class Visit extends BaseEntity {
