@@ -20,6 +20,7 @@ class TimelineFragment : BindingFragment<FragmentTimelineBinding>(R.layout.fragm
         setUpViewModel()
         setUpAdapter()
         setUpObserving()
+        viewModel.loadTimeline()
     }
 
     private fun setUpViewModel() {

@@ -35,6 +35,24 @@ class TempTimelineRepository : TimelineRepository {
                 travelPeriod = "2024.05.28 - 29",
                 travelTitle = "서울 나들이",
             ),
+            TimelineTravelUiModel(
+                travelId = 5L,
+                travelThumbnail = "https://triptogo.world/web/product/big/202104/e827b41e2d22aeddc8015b018df9aa5b.png",
+                travelPeriod = "2024.05.28 - 29",
+                travelTitle = "서울 나들이",
+            ),
+            TimelineTravelUiModel(
+                travelId = 6L,
+                travelThumbnail = "https://triptogo.world/web/product/big/202104/e827b41e2d22aeddc8015b018df9aa5b.png",
+                travelPeriod = "2024.05.28 - 29",
+                travelTitle = "서울 나들이",
+            ),
+            TimelineTravelUiModel(
+                travelId = 7L,
+                travelThumbnail = "https://triptogo.world/web/product/big/202104/e827b41e2d22aeddc8015b018df9aa5b.png",
+                travelPeriod = "2024.05.28 - 29",
+                travelTitle = "서울 나들이",
+            ),
         )
 
     override fun loadTravels(): List<TimelineTravelUiModel> {
