@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import com.staccato.member.service.dto.response.MemberResponses;
 import com.staccato.travel.domain.Travel;
 
-public record TravelDetailResponse(
+public record TravelResponse(
         Long travelId,
         String travelThumbnail,
         String travelTitle,
@@ -14,7 +14,7 @@ public record TravelDetailResponse(
         LocalDate endAt,
         MemberResponses mates
 ) {
-    public TravelDetailResponse(Travel travel) {
+    public TravelResponse(Travel travel) {
         this(
                 travel.getId(),
                 travel.getThumbnailUrl(),

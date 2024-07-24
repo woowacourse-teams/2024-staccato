@@ -19,7 +19,7 @@ import com.staccato.member.repository.MemberRepository;
 import com.staccato.travel.domain.TravelMember;
 import com.staccato.travel.repository.TravelMemberRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
-import com.staccato.travel.service.dto.response.TravelDetailResponses;
+import com.staccato.travel.service.dto.response.TravelResponses;
 
 class TravelServiceTest extends ServiceSliceTest {
     @Autowired
@@ -45,12 +45,12 @@ class TravelServiceTest extends ServiceSliceTest {
 
         // when
         long travelId = travelService.createTravel(travelRequest, member.getId());
-        TravelMember travelMember = travelMemberRepostiory.findAll().get(0);
+        TravelMember travelMember = travelMemberRepository.findAll().get(0);
 
         // then
         assertAll(
-                () -> Assertions.assertThat(travelMember.getMember().getId()).isEqualTo(member.getId()),
-                () -> Assertions.assertThat(travelMember.getTravel().getId()).isEqualTo(travelId)
+                () -> assertThat(travelMember.getMember().getId()).isEqualTo(member.getId()),
+                () -> assertThat(travelMember.getTravel().getId()).isEqualTo(travelId)
         );
     }
 
@@ -64,10 +64,10 @@ class TravelServiceTest extends ServiceSliceTest {
         travelService.createTravel(createTravelRequest(2024), member.getId());
 
         // when
-        TravelDetailResponses travelDetailResponses = travelService.readAllTravels(member.getId(), year);
+        TravelResponses travelResponses = travelService.readAllTravels(member.getId(), year);
 
         // then
-        assertThat(travelDetailResponses.travels()).hasSize(expectedSize);
+        assertThat(travelResponses.travels()).hasSize(expectedSize);
     }
 
     private static TravelRequest createTravelRequest(int year) {

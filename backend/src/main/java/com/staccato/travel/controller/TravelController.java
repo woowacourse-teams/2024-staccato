@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.staccato.config.auth.MemberId;
 import com.staccato.travel.service.TravelService;
 import com.staccato.travel.service.dto.request.TravelRequest;
-import com.staccato.travel.service.dto.response.TravelDetailResponses;
+import com.staccato.travel.service.dto.response.TravelResponses;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +32,7 @@ public class TravelController {
     }
 
     @GetMapping
-    public ResponseEntity<TravelDetailResponses> readAllTravels(
+    public ResponseEntity<TravelResponses> readAllTravels(
             @MemberId Long memberId,
             @RequestParam(value = "year", required = false) Integer year) {
         return ResponseEntity.ok(travelService.readAllTravels(memberId, year));

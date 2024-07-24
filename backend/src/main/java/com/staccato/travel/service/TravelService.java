@@ -13,7 +13,7 @@ import com.staccato.travel.domain.TravelMember;
 import com.staccato.travel.repository.TravelMemberRepository;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
-import com.staccato.travel.service.dto.response.TravelDetailResponses;
+import com.staccato.travel.service.dto.response.TravelResponses;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,26 +46,26 @@ public class TravelService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Operation"));
     }
 
-    public TravelDetailResponses readAllTravels(long memberId, Integer year) {
+    public TravelResponses readAllTravels(long memberId, Integer year) {
         return Optional.ofNullable(year)
                 .map(y -> readAllByYear(memberId, y))
                 .orElseGet(() -> readAll(memberId));
     }
 
-    private TravelDetailResponses readAll(long memberId) {
+    private TravelResponses readAll(long memberId) {
         List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberId(memberId);
         return getTravelDetailResponses(travelMembers);
     }
 
-    private TravelDetailResponses readAllByYear(long memberId, Integer year) {
+    private TravelResponses readAllByYear(long memberId, Integer year) {
         List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndTravelStartAtYear(memberId, year);
         return getTravelDetailResponses(travelMembers);
     }
 
-    private TravelDetailResponses getTravelDetailResponses(List<TravelMember> travelMembers) {
+    private TravelResponses getTravelDetailResponses(List<TravelMember> travelMembers) {
         List<Travel> travels = travelMembers.stream()
                 .map(TravelMember::getTravel)
                 .toList();
-        return TravelDetailResponses.from(travels);
+        return TravelResponses.from(travels);
     }
 }
