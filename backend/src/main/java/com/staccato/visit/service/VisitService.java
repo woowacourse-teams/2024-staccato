@@ -17,12 +17,9 @@ import com.staccato.visit.repository.VisitRepository;
 import com.staccato.visit.service.dto.request.VisitRequest;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-@Transactional
 @RequiredArgsConstructor
 public class VisitService {
     private final VisitRepository visitRepository;
@@ -60,6 +57,7 @@ public class VisitService {
         return travelRepository.findById(travelId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Operation"));
     }
+
     private final VisitLogRepository visitLogRepository;
 
     public void deleteById(Long visitId) {
