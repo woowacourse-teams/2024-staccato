@@ -26,6 +26,7 @@ public class VisitService {
     private final PinRepository pinRepository;
     private final TravelRepository travelRepository;
     private final VisitImageRepository visitImageRepository;
+    private final VisitLogRepository visitLogRepository;
 
     @Transactional
     public long createVisit(VisitRequest visitRequest) {
@@ -37,6 +38,12 @@ public class VisitService {
         visitImageRepository.saveAll(visitImages);
 
         return visit.getId();
+    }
+
+    @Transactional
+    public void deleteById(Long visitId) {
+        visitLogRepository.deleteByVisitId(visitId);
+        visitRepository.deleteById(visitId);
     }
 
     private List<VisitImage> makeVisitImages(List<String> visitedImages, Visit visit) {
@@ -56,12 +63,5 @@ public class VisitService {
     private Travel getTravelById(long travelId) {
         return travelRepository.findById(travelId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Operation"));
-    }
-
-    private final VisitLogRepository visitLogRepository;
-
-    public void deleteById(Long visitId) {
-        visitLogRepository.deleteByVisitId(visitId);
-        visitRepository.deleteById(visitId);
     }
 }
