@@ -3,6 +3,7 @@ package com.woowacourse.staccato.presentation.travel
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.woowacourse.staccato.DeleteDialogFragment
@@ -35,6 +36,7 @@ class TravelFragment : BindingFragment<FragmentTravelBinding>(R.layout.fragment_
         initMatesAdapter()
         initVisitsAdapter()
         observeTravel()
+        navigateToVisit()
     }
 
     private fun initBinding() {
@@ -63,8 +65,15 @@ class TravelFragment : BindingFragment<FragmentTravelBinding>(R.layout.fragment_
     }
 
     private fun initVisitsAdapter() {
-        visitsAdapter = VisitsAdapter()
+        visitsAdapter = VisitsAdapter(handler = viewModel)
         binding.rvTravelVisits.adapter = visitsAdapter
+    }
+
+    private fun navigateToVisit() {
+        viewModel.visitId.observe(viewLifecycleOwner) { visitId ->
+            val bundle = bundleOf(VISIT_ID_KEY to visitId)
+            findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
+        }
     }
 
     override fun onUpdateClicked() {
@@ -89,5 +98,9 @@ class TravelFragment : BindingFragment<FragmentTravelBinding>(R.layout.fragment_
             }
             show(fragmentManager, DeleteDialogFragment.TAG)
         }
+    }
+
+    companion object {
+        const val VISIT_ID_KEY = "visitId"
     }
 }

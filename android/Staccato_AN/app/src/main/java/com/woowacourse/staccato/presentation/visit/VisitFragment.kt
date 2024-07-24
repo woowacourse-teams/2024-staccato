@@ -1,11 +1,13 @@
 package com.woowacourse.staccato.presentation.visit
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentVisitBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.main.MainActivity
+import com.woowacourse.staccato.presentation.travel.TravelFragment.Companion.VISIT_ID_KEY
 import com.woowacourse.staccato.presentation.visitupdate.VisitUpdateActivity
 
 class VisitFragment :
@@ -14,6 +16,7 @@ class VisitFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
+        Log.d("hye: 선택된 방문 기록의 id", getVisitId().toString())
         binding.btnVisitUpdate.setOnClickListener {
             val visitUpdateLauncher = (activity as MainActivity).visitUpdateLauncher
             VisitUpdateActivity.startWithResultLauncher(
@@ -23,4 +26,6 @@ class VisitFragment :
 //            findNavController().navigate(R.id.action_travelFragment_to_travelUpdateFragment)
         }
     }
+
+    private fun getVisitId(): Long? = arguments?.getLong(VISIT_ID_KEY)
 }
