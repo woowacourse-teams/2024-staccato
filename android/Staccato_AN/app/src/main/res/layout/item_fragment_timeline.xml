@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="travel"
+            type="com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
             android:layout_marginTop="1dp"
+            android:text="@{travel.travelPeriod}"
             android:textAppearance="@style/Typography.Body4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -30,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
             android:layout_marginTop="2dp"
+            android:text="@{travel.travelTitle}"
             android:textAppearance="@style/Typography.Title3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_travel_period"
@@ -40,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
-            app:coilImageUrl="@{}"
+            app:coilImageUrl="@{travel.travelThumbnail}"
             app:coilPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="8:5"
