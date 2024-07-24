@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="visit"
+            type="com.woowacourse.staccato.presentation.travel.model.VisitUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginBottom="4dp"
+            android:text="@{@string/all_date_dots_format(visit.visitedAt.year, visit.visitedAt.monthValue, visit.visitedAt.dayOfMonth)}"
             android:textAppearance="@style/Typography.Body4"
             app:layout_constraintBottom_toTopOf="@id/divider_visits"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginTop="4dp"
+            android:text="@{visit.placeName}"
             android:textAppearance="@style/Typography.Title3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider_visits"
@@ -50,13 +55,15 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/all_image_content_description"
-            android:scaleType="centerCrop"
+            app:glidePlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            app:glideRoundedCornerImageUrl="@{visit.visitImage}"
+            app:glideRoundingRadius="@{12}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="8:5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/divider_visits"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_launcher_background" />
+            tools:src="@drawable/shape_all_gray2_4dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
