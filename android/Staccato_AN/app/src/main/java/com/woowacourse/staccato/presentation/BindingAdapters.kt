@@ -61,6 +61,7 @@ fun ImageView.loadImageWithGlide(
     Glide.with(context)
         .load(url)
         .placeholder(placeHolder)
+        .centerCrop()
         .error(placeHolder)
         .into(this)
 }
@@ -91,6 +92,7 @@ fun ImageView.setRoundedCornerImageWithGlide(
     Glide.with(context)
         .load(url)
         .placeholder(placeHolder)
+        .centerCrop()
         .apply(RequestOptions.bitmapTransform(RoundedCorners(roundingRadius)))
         .error(placeHolder)
         .into(this)
