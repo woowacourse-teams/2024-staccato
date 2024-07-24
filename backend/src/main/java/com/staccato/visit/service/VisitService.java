@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.staccato.exception.StaccatoException;
 import com.staccato.pin.domain.Pin;
 import com.staccato.pin.repository.PinRepository;
 import com.staccato.travel.domain.Travel;
@@ -57,11 +58,11 @@ public class VisitService {
 
     private Pin getPinById(long pinId) {
         return pinRepository.findById(pinId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Operation"));
+                .orElseThrow(() -> new StaccatoException("요청하신 핀을 찾을 수 없어요."));
     }
 
     private Travel getTravelById(long travelId) {
         return travelRepository.findById(travelId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Operation"));
+                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 }
