@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="mate"
+            type="com.woowacourse.staccato.presentation.travel.model.MateUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,10 +20,12 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="@string/all_image_content_description"
+            app:coilCircleImageUrl="@{mate.memberImage}"
+            app:coilPlaceHolder="@{@drawable/shape_place_holder_oval}"
             app:layout_constraintEnd_toEndOf="@id/tv_mates_nickname"
             app:layout_constraintStart_toStartOf="@id/tv_mates_nickname"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_launcher_background" />
+            tools:src="@drawable/shape_place_holder_oval" />
 
         <TextView
             android:id="@+id/tv_mates_nickname"
@@ -28,6 +33,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{mate.nickName}"
             android:textAppearance="@style/Typography.Body4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
