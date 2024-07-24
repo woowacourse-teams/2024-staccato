@@ -1,6 +1,7 @@
 package com.staccato.travel.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,14 +48,9 @@ public class TravelService {
     }
 
     public TravelDetailResponses readAllTravels(long memberId, Integer year) {
-        if (isNoCondition(year)) {
-            return readAll(memberId);
-        }
-        return readAllByYear(memberId, year);
-    }
-
-    private boolean isNoCondition(Integer year) {
-        return year == null;
+        return Optional.ofNullable(year)
+                .map(y -> readAllByYear(memberId, y))
+                .orElseGet(() -> readAll(memberId));
     }
 
     private TravelDetailResponses readAll(long memberId) {
