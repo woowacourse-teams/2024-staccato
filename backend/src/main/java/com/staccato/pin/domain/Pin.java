@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @Getter
@@ -29,7 +30,7 @@ public class Pin extends BaseEntity {
     private String address;
 
     @Builder
-    public Pin(String place, String address) {
+    public Pin(@NonNull String place, @NonNull String address) {
         this.place = place;
         this.address = address;
     }

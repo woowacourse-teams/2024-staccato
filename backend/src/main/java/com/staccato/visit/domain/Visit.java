@@ -21,6 +21,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @Getter
@@ -40,7 +41,7 @@ public class Visit extends BaseEntity {
     private Travel travel;
 
     @Builder
-    public Visit(LocalDate visitedAt, Pin pin, Travel travel) {
+    public Visit(@NonNull LocalDate visitedAt, @NonNull Pin pin, @NonNull Travel travel) {
         this.visitedAt = visitedAt;
         this.pin = pin;
         this.travel = travel;
