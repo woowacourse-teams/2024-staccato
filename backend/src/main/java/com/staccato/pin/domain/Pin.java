@@ -12,10 +12,12 @@ import com.staccato.config.domain.BaseEntity;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE pin SET is_deleted = true WHERE id = ?")
 public class Pin extends BaseEntity {

@@ -15,6 +15,7 @@ import org.hibernate.annotations.SQLDelete;
 
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
+import com.staccato.member.domain.Member;
 import com.staccato.visit.domain.Visit;
 
 import lombok.AccessLevel;
@@ -84,5 +85,11 @@ public class Travel extends BaseEntity {
 
     public boolean withinDuration(LocalDate date) {
         return startAt.isBefore(date) && endAt.isAfter(date);
+    }
+
+    public List<Member> getMates() {
+        return travelMembers.stream()
+                .map(TravelMember::getMember)
+                .toList();
     }
 }

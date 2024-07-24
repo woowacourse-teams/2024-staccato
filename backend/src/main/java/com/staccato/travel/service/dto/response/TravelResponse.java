@@ -2,6 +2,7 @@ package com.staccato.travel.service.dto.response;
 
 import java.time.LocalDate;
 
+import com.staccato.member.service.dto.response.MemberResponses;
 import com.staccato.travel.domain.Travel;
 
 public record TravelResponse(
@@ -10,7 +11,9 @@ public record TravelResponse(
         String travelTitle,
         String description,
         LocalDate startAt,
-        LocalDate endAt) {
+        LocalDate endAt,
+        MemberResponses mates
+) {
     public TravelResponse(Travel travel) {
         this(
                 travel.getId(),
@@ -18,7 +21,8 @@ public record TravelResponse(
                 travel.getTitle(),
                 travel.getDescription(),
                 travel.getStartAt(),
-                travel.getEndAt()
+                travel.getEndAt(),
+                MemberResponses.from(travel.getMates())
         );
     }
 }
