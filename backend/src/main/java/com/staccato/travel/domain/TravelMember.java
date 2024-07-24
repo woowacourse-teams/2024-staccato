@@ -22,7 +22,7 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE mate SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE travel_member SET is_deleted = true WHERE id = ?")
 public class TravelMember extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
