@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -105,7 +104,6 @@ class TravelIntegrationTest extends IntegrationTest {
                 .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 
-    @Disabled
     @DisplayName("사용자의 모든 여행 상세 목록을 조회한다.")
     @TestFactory
     Stream<DynamicTest> findAllTravels() {
@@ -120,11 +118,10 @@ class TravelIntegrationTest extends IntegrationTest {
                                 .get("/travels")
                                 .then().log().all()
                                 .assertThat().statusCode(HttpStatus.OK.value())
-                                .body("size()", is(2)))
+                                .body("travels.size()", is(2)))
         );
     }
 
-    @Disabled
     @DisplayName("사용자가 2023년도에 다녀온 모든 여행 상세 목록을 조회한다.")
     @TestFactory
     Stream<DynamicTest> findAllTravelsOn2023() {
