@@ -38,5 +38,6 @@ public class TravelMember extends BaseEntity {
     public TravelMember(@NonNull Member member, @NonNull Travel travel) {
         this.member = member;
         this.travel = travel;
+        travel.addTravelMember(this);
     }
 }

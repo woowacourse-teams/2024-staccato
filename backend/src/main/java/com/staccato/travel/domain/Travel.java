@@ -58,4 +58,8 @@ public class Travel extends BaseEntity {
             throw new StaccatoException("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
         }
     }
+
+    public void addTravelMember(TravelMember travelMember) {
+        travelMembers.add(travelMember);
+    }
 }

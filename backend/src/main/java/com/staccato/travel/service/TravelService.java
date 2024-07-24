@@ -24,19 +24,18 @@ public class TravelService {
 
     @Transactional
     public TravelResponse createTravel(TravelRequest travelRequest, Long memberId) {
-        Travel travel = travelRequest.toTravel();
-        Travel savedTravel = travelRepository.save(travel);
-        saveMate(memberId, savedTravel);
-        return new TravelResponse(savedTravel);
+        Travel travel = travelRepository.save(travelRequest.toTravel());
+        saveTravelMember(memberId, travel);
+        return new TravelResponse(travel);
     }
 
-    private void saveMate(Long memberId, Travel travel) {
+    private TravelMember saveTravelMember(Long memberId, Travel travel) {
         Member member = getMemberById(memberId);
         TravelMember mate = TravelMember.builder()
                 .travel(travel)
                 .member(member)
                 .build();
-        travelMemberRepostiory.save(mate);
+        return travelMemberRepostiory.save(mate);
     }
 
     private Member getMemberById(long memberId) {
