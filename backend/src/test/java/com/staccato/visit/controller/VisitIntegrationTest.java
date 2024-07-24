@@ -11,7 +11,7 @@ import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class VisitControllerTest {
+class VisitIntegrationTest {
     @DisplayName("Visit을 삭제한다.")
     @Test
     void deleteById() {
