@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineFirstBinding
 import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineLastBinding
 import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineMiddleBinding
+import com.woowacourse.staccato.presentation.timeline.TimelineHandler
 import com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel
 
-class TimelineAdapter() : RecyclerView.Adapter<TimelineViewHolder>() {
+class TimelineAdapter(private val eventHandler: TimelineHandler) :
+    RecyclerView.Adapter<TimelineViewHolder>() {
     private var travels = emptyList<TimelineTravelUiModel>()
 
     override fun getItemViewType(position: Int): Int {
@@ -24,7 +26,7 @@ class TimelineAdapter() : RecyclerView.Adapter<TimelineViewHolder>() {
                         parent,
                         false,
                     )
-                FirstTravelViewHolder(binding)
+                FirstTravelViewHolder(binding, eventHandler)
             }
 
             TimelineViewType.MIDDLE_ITEM.ordinal -> {
@@ -34,7 +36,7 @@ class TimelineAdapter() : RecyclerView.Adapter<TimelineViewHolder>() {
                         parent,
                         false,
                     )
-                MiddleTravelViewHolder(binding)
+                MiddleTravelViewHolder(binding, eventHandler)
             }
 
             else -> {
@@ -44,7 +46,7 @@ class TimelineAdapter() : RecyclerView.Adapter<TimelineViewHolder>() {
                         parent,
                         false,
                     )
-                LastTravelViewHolder(binding)
+                LastTravelViewHolder(binding, eventHandler)
             }
         }
     }

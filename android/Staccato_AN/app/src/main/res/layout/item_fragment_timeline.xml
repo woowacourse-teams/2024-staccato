@@ -10,13 +10,18 @@
         <variable
             name="travel"
             type="com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel" />
+
+        <variable
+            name="eventHandler"
+            type="com.woowacourse.staccato.presentation.timeline.TimelineHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_all_gray1_4dp"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:onClickListener="@{() -> eventHandler.onTravelClicked(travel.travelId)}">
 
         <TextView
             android:id="@+id/tv_travel_period"

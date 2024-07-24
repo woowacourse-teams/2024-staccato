@@ -9,7 +9,8 @@ import com.woowacourse.staccato.databinding.FragmentTimelineBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.timeline.adapter.TimelineAdapter
 
-class TimelineFragment : BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline) {
+class TimelineFragment : BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
+    TimelineHandler {
     private lateinit var viewModel: TimelineViewModel
     private lateinit var adapter: TimelineAdapter
 
@@ -29,7 +30,7 @@ class TimelineFragment : BindingFragment<FragmentTimelineBinding>(R.layout.fragm
     }
 
     private fun setUpAdapter() {
-        adapter = TimelineAdapter()
+        adapter = TimelineAdapter(this)
         binding.rvTimeline.adapter = adapter
     }
 
@@ -41,5 +42,10 @@ class TimelineFragment : BindingFragment<FragmentTimelineBinding>(R.layout.fragm
 
     private fun navigateToTravel() {
         findNavController().navigate(R.id.action_timelineFragment_to_travelFragment)
+    }
+
+    override fun onTravelClicked(travelId: Long) {
+        // Log.d("ㅌㅅㅌ", "clicked item: $travelId")
+        navigateToTravel()
     }
 }
