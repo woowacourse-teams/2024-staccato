@@ -8,9 +8,8 @@ public record TravelDetailResponses(
         List<TravelDetailResponse> travels
 ) {
     public static TravelDetailResponses from(List<Travel> travels) {
-        List<TravelDetailResponse> travelDetailResponses = travels.stream()
+        return new TravelDetailResponses(travels.stream()
                 .map(TravelDetailResponse::new)
-                .toList();
-        return new TravelDetailResponses(travelDetailResponses);
+                .toList());
     }
 }
