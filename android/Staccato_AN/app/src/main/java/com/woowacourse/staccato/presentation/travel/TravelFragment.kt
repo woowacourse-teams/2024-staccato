@@ -27,7 +27,7 @@ class TravelFragment :
     private val viewModel: TravelViewModel by viewModels {
         TravelViewModelFactory(
             TravelDefaultRepository(TravelRemoteDataSource(travelApiService)),
-            getTravelId()
+            getTravelId(),
         )
     }
     private val deleteDialog = DeleteDialogFragment { findNavController().popBackStack() }
@@ -48,8 +48,7 @@ class TravelFragment :
         showErrorToast()
     }
 
-    private fun getTravelId(): Long =
-        arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException(INVALID_TRAVEL_ID)
+    private fun getTravelId(): Long = arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException(INVALID_TRAVEL_ID)
 
     private fun initBinding() {
         binding.lifecycleOwner = this

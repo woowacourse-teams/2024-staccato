@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/iv_thumbnail"
-            coilImageUrl="@{visitDefault.visitImages}"
+            coilImageUrl="@{visitDefault.visitImage}"
             coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
             android:layout_width="match_parent"
             android:layout_height="0dp"

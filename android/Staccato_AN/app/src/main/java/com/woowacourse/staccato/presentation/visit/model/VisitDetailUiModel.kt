@@ -6,7 +6,7 @@ sealed class VisitDetailUiModel {
     data class VisitDefaultUiModel(
         val id: Long,
         val placeName: String,
-        val visitImages: String,
+        val visitImage: String,
         val address: String,
         val visitedAt: LocalDate,
         val visitedCount: Long,
