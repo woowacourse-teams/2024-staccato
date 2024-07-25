@@ -18,12 +18,16 @@ import com.staccato.ServiceSliceTest;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
+import com.staccato.pin.domain.Pin;
+import com.staccato.pin.repository.PinRepository;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.domain.TravelMember;
 import com.staccato.travel.repository.TravelMemberRepository;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelResponses;
+import com.staccato.visit.domain.Visit;
+import com.staccato.visit.repository.VisitRepository;
 
 class TravelServiceTest extends ServiceSliceTest {
     @Autowired
@@ -34,6 +38,10 @@ class TravelServiceTest extends ServiceSliceTest {
     private TravelMemberRepository travelMemberRepository;
     @Autowired
     private TravelRepository travelRepository;
+    @Autowired
+    private VisitRepository visitRepository;
+    @Autowired
+    private PinRepository pinRepository;
 
     static Stream<Arguments> yearProvider() {
         return Stream.of(
@@ -90,15 +98,8 @@ class TravelServiceTest extends ServiceSliceTest {
     @Test
     void updateTravel() {
         // given
-        Long travelId = 1L;
-        Travel originTravel = new Travel(
-                "https://example.com/travels/geumohrm.jpg",
-                "2023 여름 휴가",
-                "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(2023, 7, 1),
-                LocalDate.of(2023, 7, 10)
-        );
-        travelRepository.save(originTravel);
+        Travel travel = createAndSaveTravel(2023);
+        Long travelId = travel.getId();
         TravelRequest updatedTravel = new TravelRequest(
                 "https://example.com/travels/geumohrm.jpg",
                 "2023 신나는 여름 휴가",
@@ -109,33 +110,66 @@ class TravelServiceTest extends ServiceSliceTest {
 
         // when
         travelService.updateTravel(updatedTravel, travelId);
-        Travel travel = travelRepository.findById(travelId).get();
+        Travel foundedTravel = travelRepository.findById(travelId).get();
 
         // then
         assertAll(
-                () -> assertThat(travel.getId()).isEqualTo(travelId),
-                () -> assertThat(travel.getTitle()).isEqualTo(updatedTravel.travelTitle()),
-                () -> assertThat(travel.getDescription()).isEqualTo(updatedTravel.description()),
-                () -> assertThat(travel.getStartAt()).isEqualTo(updatedTravel.startAt()),
-                () -> assertThat(travel.getEndAt()).isEqualTo(updatedTravel.endAt())
+                () -> assertThat(foundedTravel.getId()).isEqualTo(travelId),
+                () -> assertThat(foundedTravel.getTitle()).isEqualTo(updatedTravel.travelTitle()),
+                () -> assertThat(foundedTravel.getDescription()).isEqualTo(updatedTravel.description()),
+                () -> assertThat(foundedTravel.getStartAt()).isEqualTo(updatedTravel.startAt()),
+                () -> assertThat(foundedTravel.getEndAt()).isEqualTo(updatedTravel.endAt())
         );
+    }
+
+    private Travel createAndSaveTravel(int year) {
+        Travel travel = new Travel(
+                "https://example.com/travels/geumohrm.jpg",
+                year + " 여름 휴가",
+                "친구들과 함께한 여름 휴가 여행",
+                LocalDate.of(year, 7, 1),
+                LocalDate.of(year, 7, 10)
+        );
+        return travelRepository.save(travel);
     }
 
     @DisplayName("존재하지 않는 여행 상세를 수정하려 할 경우 예외가 발생한다.")
     @Test
     void failUpdateTravel() {
         // given
-        TravelRequest travelRequest = new TravelRequest(
-                "https://example.com/travels/geumohrm.jpg",
-                "2023 여름 휴가",
-                "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(2023, 7, 1),
-                LocalDate.of(2023, 7, 10)
-        );
+        TravelRequest travelRequest = createTravelRequest(2023);
 
         // when & then
         assertThatThrownBy(() -> travelService.updateTravel(travelRequest, 1L))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 여행을 찾을 수 없어요.");
+    }
+
+    @DisplayName("여행 식별값을 통해 여행 상세를 삭제한다.")
+    @Test
+    void deleteTravel() {
+        // given
+        Travel travel = createAndSaveTravel(2023);
+
+        // when
+        travelService.deleteTravel(travel.getId());
+
+        // then
+        Travel foundTravel = travelRepository.findById(travel.getId()).get();
+        assertThat(foundTravel.getIsDeleted()).isTrue();
+    }
+
+    @DisplayName("방문기록이 존재하는 여행 상세에 삭제를 시도할 경우 예외가 발생한다.")
+    @Test
+    void failDeleteTravel() {
+        // given
+        Travel travel = createAndSaveTravel(2023);
+        Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").build());
+        visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(travel).build());
+
+        // when & then
+        assertThatThrownBy(() -> travelService.deleteTravel(travel.getId()))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
     }
 }
