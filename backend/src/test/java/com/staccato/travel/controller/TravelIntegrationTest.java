@@ -203,7 +203,6 @@ class TravelIntegrationTest extends IntegrationTest {
         );
     }
 
-    @Disabled
     @DisplayName("사용자가 특정 여행 상세를 조회한다.")
     @TestFactory
     Stream<DynamicTest> findTravelById() {
@@ -220,7 +219,6 @@ class TravelIntegrationTest extends IntegrationTest {
         );
     }
 
-    @Disabled
     @DisplayName("사용자가 잘못된 여행식별자로 조회하려고 한다면 예외가 발생한다.")
     @Test
     void failFindTravelById() {
