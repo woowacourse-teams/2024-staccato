@@ -10,7 +10,7 @@ public record VisitLogResponse(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String memberImage,
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        String context
+        String content
 ) {
     public VisitLogResponse(VisitLog visitLog) {
         this(

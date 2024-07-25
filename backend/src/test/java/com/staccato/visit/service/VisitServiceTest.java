@@ -84,7 +84,7 @@ class VisitServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(visitDetailResponse.visitId()).isEqualTo(visit.getId()),
                 () -> assertThat(visitDetailResponse.placeName()).isEqualTo(pin.getPlace()),
-                () -> assertThat(visitDetailResponse.visitedImages()).containsExactly(visitImage.getImageUrl()),
+                () -> assertThat(visitDetailResponse.visitImages()).containsExactly(visitImage.getImageUrl()),
                 () -> assertThat(visitDetailResponse.address()).isEqualTo(pin.getAddress()),
                 () -> assertThat(visitDetailResponse.visitedAt()).isEqualTo(visit.getVisitedAt()),
                 () -> assertThat(visitDetailResponse.visitedCount()).isEqualTo(2L),

@@ -160,8 +160,7 @@ class VisitIntegrationTest extends IntegrationTest {
                                 .then().log().all()
                                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
                                 .body("message", is("방문 기록 식별자는 양수로 이루어져야 합니다."))
-                                .body("status", is(HttpStatus.BAD_REQUEST.toString()))
-                )
+                                .body("status", is(HttpStatus.BAD_REQUEST.toString())))
         );
     }
 
