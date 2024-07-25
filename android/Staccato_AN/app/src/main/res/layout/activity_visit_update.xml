@@ -42,7 +42,7 @@
                 tools:context=".presentation.visitcreation.VisitCreationActivity">
 
                 <TextView
-                    android:id="@+id/tv_place_name_title"
+                    android:id="@+id/tv_visit_update_place_name_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="24dp"
@@ -63,9 +63,9 @@
                     android:paddingVertical="12dp"
                     android:text="@{viewModel.visitUpdateData.placeName}"
                     android:textAppearance="@style/Typography.Body1"
-                    app:layout_constraintEnd_toEndOf="@id/tv_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_place_name_title"
+                    app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_visit_update_place_name_title"
                     tools:text="장소 이름 (고정)" />
 
                 <TextView
@@ -75,8 +75,8 @@
                     android:layout_marginTop="24dp"
                     android:text="@string/visit_creation_address"
                     android:textAppearance="@style/Typography.Title2"
-                    app:layout_constraintEnd_toEndOf="@id/tv_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_place_name_title"
+                    app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_name" />
 
                 <TextView
@@ -89,8 +89,8 @@
                     android:paddingVertical="12dp"
                     android:text="@{viewModel.visitUpdateData.address}"
                     android:textAppearance="@style/Typography.Body1"
-                    app:layout_constraintEnd_toEndOf="@id/tv_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_place_name_title"
+                    app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address_title"
                     tools:text="장소 주소 (고정)" />
 
@@ -101,8 +101,8 @@
                     android:layout_marginTop="24dp"
                     android:text="@string/all_photo"
                     android:textAppearance="@style/Typography.Title2"
-                    app:layout_constraintEnd_toEndOf="@id/tv_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_place_name_title"
+                    app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address" />
 
                 <FrameLayout
@@ -112,8 +112,8 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:onClick="@{()->visitUpdateHandler.onPhotoAttachClicked()}"
-                    app:layout_constraintEnd_toEndOf="@id/tv_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_place_name_title"
+                    app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_photo_title">
 
                     <include
@@ -132,8 +132,8 @@
                     android:layout_marginTop="24dp"
                     android:text="여행 선택"
                     android:textAppearance="@style/Typography.Title2"
-                    app:layout_constraintEnd_toEndOf="@id/tv_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_place_name_title"
+                    app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/frame_photo_attach" />
 
                 <TextView
@@ -147,8 +147,8 @@
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
                     app:bindSetSelectedTravel="@{viewModel.selectedTravel}"
-                    app:layout_constraintEnd_toEndOf="@id/tv_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_place_name_title"
+                    app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_travel_selection_title" />
 
                 <TextView
@@ -158,8 +158,8 @@
                     android:layout_marginTop="24dp"
                     android:text="@string/visit_creation_visited_at"
                     android:textAppearance="@style/Typography.Title2"
-                    app:layout_constraintEnd_toEndOf="@id/tv_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_place_name_title"
+                    app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_travel_selection" />
 
                 <TextView
@@ -173,8 +173,8 @@
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
                     app:bindSetSelectedVisitedAt="@{viewModel.selectedVisitedAt}"
-                    app:layout_constraintEnd_toEndOf="@id/tv_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_place_name_title"
+                    app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title" />
 
 
