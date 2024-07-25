@@ -32,5 +32,6 @@ public class VisitImage {
     public VisitImage(@Nonnull String imageUrl, @Nonnull Visit visit) {
         this.imageUrl = imageUrl;
         this.visit = visit;
+        visit.addVisitImage(this);
     }
 }

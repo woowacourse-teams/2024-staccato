@@ -1,7 +1,10 @@
 package com.staccato.visit.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 import org.hibernate.annotations.SQLDelete;
 
@@ -40,10 +44,24 @@ public class Visit extends BaseEntity {
     @JoinColumn(name = "travel_id", nullable = false)
     private Travel travel;
 
+    @OneToMany(mappedBy = "visit", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private List<VisitImage> visitImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "visit", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private List<VisitLog> visitLogs = new ArrayList<>();
+
     @Builder
     public Visit(@NonNull LocalDate visitedAt, @NonNull Pin pin, @NonNull Travel travel) {
         this.visitedAt = visitedAt;
         this.pin = pin;
         this.travel = travel;
+    }
+
+    public void addVisitImage(VisitImage visitImage) {
+        visitImages.add(visitImage);
+    }
+
+    public void addVisitLog(VisitLog visitLog) {
+        visitLogs.add(visitLog);
     }
 }

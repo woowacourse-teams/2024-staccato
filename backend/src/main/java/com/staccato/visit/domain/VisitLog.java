@@ -41,5 +41,6 @@ public class VisitLog {
         this.content = content;
         this.visit = visit;
         this.member = member;
+        visit.addVisitLog(this);
     }
 }
