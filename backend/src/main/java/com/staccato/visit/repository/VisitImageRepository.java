@@ -1,5 +1,6 @@
 package com.staccato.visit.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,6 @@ public interface VisitImageRepository extends JpaRepository<VisitImage, Long> {
     void deleteByVisitId(@Param("visitId") Long visitId);
 
     Optional<VisitImage> findFirstByVisitIdAndIsDeletedIsFalse(long visitId);
+
+    List<VisitImage> findAllByVisitIdAndIsDeletedIsFalse(long visitId);
 }

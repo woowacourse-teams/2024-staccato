@@ -1,5 +1,7 @@
 package com.staccato.visit.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,4 +13,6 @@ public interface VisitLogRepository extends JpaRepository<VisitLog, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE VisitLog vl SET vl.isDeleted = true WHERE vl.visit.id = :visitId")
     void deleteByVisitId(@Param("visitId") Long visitId);
+
+    List<VisitLog> findAllByVisitIdAndIsDeletedIsFalse(long visitId);
 }

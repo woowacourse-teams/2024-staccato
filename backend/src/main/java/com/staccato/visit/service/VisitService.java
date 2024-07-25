@@ -16,6 +16,7 @@ import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitLogRepository;
 import com.staccato.visit.repository.VisitRepository;
 import com.staccato.visit.service.dto.request.VisitRequest;
+import com.staccato.visit.service.dto.response.VisitDetailResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,11 +42,14 @@ public class VisitService {
         return visit.getId();
     }
 
-    @Transactional
-    public void deleteById(Long visitId) {
-        visitLogRepository.deleteByVisitId(visitId);
-        visitImageRepository.deleteByVisitId(visitId);
-        visitRepository.deleteById(visitId);
+    private Pin getPinById(long pinId) {
+        return pinRepository.findById(pinId)
+                .orElseThrow(() -> new StaccatoException("요청하신 핀을 찾을 수 없어요."));
+    }
+
+    private Travel getTravelById(long travelId) {
+        return travelRepository.findById(travelId)
+                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 
     private List<VisitImage> makeVisitImages(List<String> visitedImages, Visit visit) {
@@ -57,13 +61,28 @@ public class VisitService {
                 .toList();
     }
 
-    private Pin getPinById(long pinId) {
-        return pinRepository.findById(pinId)
-                .orElseThrow(() -> new StaccatoException("요청하신 핀을 찾을 수 없어요."));
+    public VisitDetailResponse readVisitById(long visitId) {
+        Visit visit = getVisitById(visitId);
+        Pin pin = visit.getPin();
+        long visitedCountBefore = visitRepository.countByPinIdAndIsDeletedIsFalseAndVisitedAtBefore(
+                pin.getId(), visit.getVisitedAt());
+        return new VisitDetailResponse(
+                visit,
+                visitImageRepository.findAllByVisitIdAndIsDeletedIsFalse(visitId),
+                visitedCountBefore + 1,
+                visitLogRepository.findAllByVisitIdAndIsDeletedIsFalse(visitId)
+        );
     }
 
-    private Travel getTravelById(long travelId) {
-        return travelRepository.findById(travelId)
-                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
+    private Visit getVisitById(long visitId) {
+        return visitRepository.findById(visitId)
+                .orElseThrow(() -> new StaccatoException("요청하신 방문 기록을 찾을 수 없어요."));
+    }
+
+    @Transactional
+    public void deleteVisitById(Long visitId) {
+        visitLogRepository.deleteByVisitId(visitId);
+        visitImageRepository.deleteByVisitId(visitId);
+        visitRepository.deleteById(visitId);
     }
 }
