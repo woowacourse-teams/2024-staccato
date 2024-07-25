@@ -4,5 +4,5 @@ import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.travel.TravelResponse
 
 interface TravelDataSource {
-    suspend fun fetchTravel(): ResponseResult<TravelResponse>
+    suspend fun fetchTravel(travelId: Long): ResponseResult<TravelResponse>
 }

@@ -7,5 +7,6 @@ import com.woowacourse.staccato.data.dto.travel.TravelResponse
 class TravelRemoteDataSource(
     private val travelApiService: TravelApiService,
 ) : TravelDataSource {
-    override suspend fun fetchTravel(): ResponseResult<TravelResponse> = handleApiResponse { travelApiService.requestTravel() }
+    override suspend fun fetchTravel(travelId: Long): ResponseResult<TravelResponse> =
+        handleApiResponse { travelApiService.requestTravel(travelId) }
 }
