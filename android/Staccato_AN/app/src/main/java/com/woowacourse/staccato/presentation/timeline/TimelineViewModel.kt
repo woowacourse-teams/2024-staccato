@@ -12,6 +12,6 @@ class TimelineViewModel(private val repository: TimelineRepository) : ViewModel(
         get() = _travels
 
     fun loadTimeline() {
-        _travels.value = repository.loadTravels()
+        _travels.value = repository.loadTempTravels()
     }
 }

@@ -66,7 +66,11 @@ class TempTimelineRepository : TimelineRepository {
             ),
         )
 
-    override fun loadTravels(): List<TimelineTravelUiModel> {
+    override suspend fun loadTravels(): List<TimelineTravelUiModel> {
+        return emptyList()
+    }
+
+    override fun loadTempTravels(): List<TimelineTravelUiModel> {
         return travels
     }
 }
