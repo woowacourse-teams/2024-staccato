@@ -6,7 +6,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.member.service.dto.response.MemberResponse;
 import com.staccato.travel.domain.Travel;
-import com.staccato.visit.service.dto.response.VisitResponse;
 
 public record TravelDetailResponse(
         Long travelId,

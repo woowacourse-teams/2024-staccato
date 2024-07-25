@@ -10,7 +10,7 @@ import com.staccato.visit.domain.VisitLog;
 public record VisitDetailResponse(
         Long visitId,
         String placeName,
-        List<String> visitedImages,
+        List<String> visitImages,
         String address,
         LocalDate visitedAt,
         Long visitedCount,

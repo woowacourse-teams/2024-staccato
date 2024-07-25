@@ -14,7 +14,7 @@ import com.staccato.visit.domain.Visit;
 public record VisitRequest(
         @NotNull(message = "핀을 선택해주세요.")
         Long pinId,
-        List<String> visitedImages,
+        List<String> visitImages,
         @NotNull(message = "방문 날짜를 입력해주세요.")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate visitedAt,

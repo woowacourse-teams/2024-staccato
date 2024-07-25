@@ -20,7 +20,7 @@ import com.staccato.visit.domain.Visit;
 import com.staccato.visit.domain.VisitImage;
 import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitRepository;
-import com.staccato.visit.service.dto.response.VisitResponse;
+import com.staccato.travel.service.dto.response.VisitResponse;
 
 import lombok.RequiredArgsConstructor;
 

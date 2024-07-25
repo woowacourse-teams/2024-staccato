@@ -1,4 +1,4 @@
-package com.staccato.visit.service.dto.response;
+package com.staccato.travel.service.dto.response;
 
 import java.time.LocalDate;
 
