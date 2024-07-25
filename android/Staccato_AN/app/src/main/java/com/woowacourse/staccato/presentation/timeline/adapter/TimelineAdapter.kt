@@ -7,22 +7,22 @@ import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineFirstBindi
 import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineLastBinding
 import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineMiddleBinding
 import com.woowacourse.staccato.presentation.timeline.TimelineHandler
-import com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel
+import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
 
 class TimelineAdapter(private val eventHandler: TimelineHandler) :
     RecyclerView.Adapter<TimelineViewHolder>() {
     private var travels = emptyList<TimelineTravelUiModel>()
 
     override fun getItemViewType(position: Int): Int {
-        return TimelineViewType.fromPosition(position, itemCount).ordinal
+        return TimelineViewType.fromPosition(position, itemCount).viewType
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): TimelineViewHolder {
-        return when (viewType) {
-            TimelineViewType.FIRST_ITEM.ordinal -> {
+        return when (TimelineViewType.byViewType(viewType)) {
+            TimelineViewType.FIRST_ITEM -> {
                 val binding =
                     LayoutItemFragmentTimelineFirstBinding.inflate(
                         LayoutInflater.from(parent.context),
@@ -32,7 +32,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
                 FirstTravelViewHolder(binding, eventHandler)
             }
 
-            TimelineViewType.MIDDLE_ITEM.ordinal -> {
+            TimelineViewType.MIDDLE_ITEM -> {
                 val binding =
                     LayoutItemFragmentTimelineMiddleBinding.inflate(
                         LayoutInflater.from(parent.context),
@@ -42,7 +42,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
                 MiddleTravelViewHolder(binding, eventHandler)
             }
 
-            else -> {
+            TimelineViewType.LAST_ITEM -> {
                 val binding =
                     LayoutItemFragmentTimelineLastBinding.inflate(
                         LayoutInflater.from(parent.context),
@@ -64,7 +64,9 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
     }
 
     fun setTravels(newTravels: List<TimelineTravelUiModel>) {
-        travels = newTravels
-        notifyItemRangeInserted(0, newTravels.size)
+        if (travels.isEmpty()) {
+            travels = newTravels
+            notifyItemRangeInserted(0, newTravels.size)
+        }
     }
 }

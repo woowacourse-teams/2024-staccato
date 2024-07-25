@@ -11,6 +11,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
+import com.woowacourse.staccato.presentation.mapper.toTimelineTravelUiModel
 import com.woowacourse.staccato.presentation.mapper.toUiModel
 import com.woowacourse.staccato.presentation.travel.TravelHandler
 import com.woowacourse.staccato.presentation.travel.model.TravelUiModel

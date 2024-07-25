@@ -3,7 +3,8 @@ package com.woowacourse.staccato.presentation.timeline
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProvider
+import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentTimelineBinding
@@ -13,22 +14,16 @@ import com.woowacourse.staccato.presentation.timeline.adapter.TimelineAdapter
 class TimelineFragment :
     BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
     TimelineHandler {
-    private lateinit var viewModel: TimelineViewModel
+    private val viewModel: TimelineViewModel by viewModels { TimelineViewModelFactory() }
     private lateinit var adapter: TimelineAdapter
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        setUpViewModel()
         setUpAdapter()
         setUpObserving()
         viewModel.loadTimeline()
-    }
-
-    private fun setUpViewModel() {
-        val viewModelFactory = TimelineViewModelFactory(TempTimelineRepository())
-        viewModel = ViewModelProvider(this, viewModelFactory)[TimelineViewModel::class.java]
     }
 
     private fun setUpAdapter() {
@@ -39,6 +34,13 @@ class TimelineFragment :
     private fun setUpObserving() {
         viewModel.travels.observe(viewLifecycleOwner) { timeline ->
             adapter.setTravels(timeline)
+        }
+        viewModel.errorState.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { state ->
+                if (state) {
+                    showToastMessage(ERROR_MESSAGE)
+                }
+            }
         }
     }
 
@@ -52,7 +54,12 @@ class TimelineFragment :
         navigateToTravel(bundle)
     }
 
+    private fun showToastMessage(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
     companion object {
         const val TRAVEL_ID_KEY = "travelId"
+        const val ERROR_MESSAGE = "일시적인 오류가 발생했습니다.\n잠시 후 다시 시도해주세요."
     }
 }

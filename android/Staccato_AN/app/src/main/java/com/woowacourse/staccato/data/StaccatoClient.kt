@@ -3,6 +3,7 @@ package com.woowacourse.staccato.data
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.woowacourse.staccato.BuildConfig
 import com.woowacourse.staccato.data.travel.TravelApiService
+import com.woowacourse.staccato.data.apiservice.TimeLineApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -18,6 +19,10 @@ object StaccatoClient {
         )
     }
 
+    val timelineService: TimeLineApiService by lazy {
+        create(TimeLineApiService::class.java)
+    }
+
     private val provideLoggingInterceptor =
         HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
@@ -26,6 +31,7 @@ object StaccatoClient {
     private val provideHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(provideLoggingInterceptor)
+            .addInterceptor(HeaderInterceptor())
             .build()
 
     private val jsonBuilder = Json { coerceInputValues = true }
@@ -39,7 +45,7 @@ object StaccatoClient {
             )
             .build()
 
-    fun <T> create(service: Class<T>): T {
+    private fun <T> create(service: Class<T>): T {
         return provideRetrofit.create(service)
     }
 }
