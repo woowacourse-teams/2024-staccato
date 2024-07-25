@@ -12,6 +12,6 @@ data class TimelineTravelDto(
     @SerialName("travelThumbnail") val travelThumbnail: String? = null,
     @SerialName("startAt") val startAt: String,
     @SerialName("endAt") val endAt: String,
-    @SerialName("description") val description: String,
+    @SerialName("description") val description: String? = null,
     @SerialName("mates") val mates: MembersDto,
 )

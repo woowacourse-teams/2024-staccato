@@ -8,7 +8,7 @@ data class Travel(
     val travelTitle: String,
     val startAt: LocalDate,
     val endAt: LocalDate,
-    val description: String,
+    val description: String? = null,
     val mates: List<Member>,
     val visits: List<Visit>,
 )
