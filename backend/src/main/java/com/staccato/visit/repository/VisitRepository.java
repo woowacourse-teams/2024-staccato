@@ -12,8 +12,8 @@ import com.staccato.visit.domain.Visit;
 public interface VisitRepository extends JpaRepository<Visit, Long> {
     List<Visit> findAllByTravelIdAndIsDeletedIsFalse(@Param("travelId") long travelId);
 
+    long countByPinIdAndIsDeletedIsFalseAndVisitedAtBefore(Long pinId, LocalDate visitedAt);
+
     @Query("SELECT CASE WHEN COUNT(v) > 0 THEN true ELSE false END FROM Visit v WHERE v.travel.id = :travelId")
     boolean existsByTravelId(@Param("travelId") Long travelId);
-
-    long countByPinIdAndIsDeletedIsFalseAndVisitedAtBefore(Long pinId, LocalDate visitedAt);
 }
