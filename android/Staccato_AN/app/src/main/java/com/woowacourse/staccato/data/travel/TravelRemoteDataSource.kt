@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.data.travel
 
-import com.woowacourse.staccato.data.APiResponseHandler.handleApiResponse
+import com.woowacourse.staccato.data.ApiResponseHandler.handleApiResponse
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.travel.TravelResponse
 

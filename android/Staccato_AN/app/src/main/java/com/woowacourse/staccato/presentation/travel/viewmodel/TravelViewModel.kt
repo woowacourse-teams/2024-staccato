@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowacourse.staccato.data.APiResponseHandler.onException
-import com.woowacourse.staccato.data.APiResponseHandler.onServerError
-import com.woowacourse.staccato.data.APiResponseHandler.onSuccess
+import com.woowacourse.staccato.data.ApiResponseHandler.onException
+import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
+import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData

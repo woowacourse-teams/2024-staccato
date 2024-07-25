@@ -3,7 +3,7 @@ package com.woowacourse.staccato.data
 import retrofit2.HttpException
 import retrofit2.Response
 
-object APiResponseHandler {
+object ApiResponseHandler {
     suspend fun <T : Any> handleApiResponse(execute: suspend () -> Response<T>): ResponseResult<T> {
         return try {
             val response = execute()
