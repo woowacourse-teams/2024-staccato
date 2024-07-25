@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.visitupdate
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -29,12 +28,6 @@ class VisitUpdateActivity : BindingActivity<ActivityVisitUpdateBinding>(), Visit
         initToolbar()
         observeViewModelData()
         viewModel.fetchVisitUpdate()
-
-        binding.btnVisitUpdateDone.setOnClickListener {
-            val resultIntent = Intent()
-            setResult(Activity.RESULT_OK, resultIntent)
-            finish()
-        }
     }
 
     private fun initBinding() {
