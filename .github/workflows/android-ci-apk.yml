@@ -16,9 +16,6 @@ jobs:
         shell: bash
         working-directory: ./android/Staccato_AN
 
-    permissions:
-      contents: read
-
     steps:
       - uses: actions/checkout@v4
         with:
