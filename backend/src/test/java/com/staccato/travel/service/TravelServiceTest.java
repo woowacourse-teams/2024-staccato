@@ -56,7 +56,7 @@ class TravelServiceTest extends ServiceSliceTest {
     void createTravel() {
         // given
         TravelRequest travelRequest = createTravelRequest(2024);
-        Member member = memberRepository.save(Member.builder().nickname("staccato").build());
+        Member member = saveMember();
 
         // when
         long travelId = travelService.createTravel(travelRequest, member.getId());
@@ -74,7 +74,7 @@ class TravelServiceTest extends ServiceSliceTest {
     @ParameterizedTest
     void readAllTravels(Integer year, int expectedSize) {
         // given
-        Member member = memberRepository.save(Member.builder().nickname("staccato").build());
+        Member member = saveMember();
         travelService.createTravel(createTravelRequest(2023), member.getId());
         travelService.createTravel(createTravelRequest(2024), member.getId());
 
@@ -89,8 +89,8 @@ class TravelServiceTest extends ServiceSliceTest {
     @Test
     void readTravelById() {
         // given
-        Member member = memberRepository.save(Member.builder().nickname("staccato").build());
-        Pin pin = pinRepository.save(Pin.builder().place("장소").address("주소").build());
+        Member member = saveMember();
+        Pin pin = savePin(member);
 
         long targetId = travelService.createTravel(createTravelRequest(2023), member.getId());
         Visit visit = saveVisit(pin, targetId);
@@ -107,16 +107,6 @@ class TravelServiceTest extends ServiceSliceTest {
                 () -> assertThat(travelDetailResponse.mates()).hasSize(1),
                 () -> assertThat(travelDetailResponse.visits()).hasSize(1),
                 () -> assertThat(travelDetailResponse.visits().get(0).visitId()).isEqualTo(visit.getId())
-        );
-    }
-
-    private static TravelRequest createTravelRequest(int year) {
-        return new TravelRequest(
-                "https://example.com/travels/geumohrm.jpg",
-                year + " 여름 휴가",
-                "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(year, 7, 1),
-                LocalDate.of(2024, 7, 10)
         );
     }
 
@@ -157,17 +147,6 @@ class TravelServiceTest extends ServiceSliceTest {
         );
     }
 
-    private Travel createAndSaveTravel(int year) {
-        Travel travel = new Travel(
-                "https://example.com/travels/geumohrm.jpg",
-                year + " 여름 휴가",
-                "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(year, 7, 1),
-                LocalDate.of(year, 7, 10)
-        );
-        return travelRepository.save(travel);
-    }
-
     @DisplayName("존재하지 않는 여행 상세를 수정하려 할 경우 예외가 발생한다.")
     @Test
     void failUpdateTravel() {
@@ -178,6 +157,16 @@ class TravelServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> travelService.updateTravel(travelRequest, 1L))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 여행을 찾을 수 없어요.");
+    }
+
+    private TravelRequest createTravelRequest(int year) {
+        return new TravelRequest(
+                "https://example.com/travels/geumohrm.jpg",
+                year + " 여름 휴가",
+                "친구들과 함께한 여름 휴가 여행",
+                LocalDate.of(year, 7, 1),
+                LocalDate.of(2024, 7, 10)
+        );
     }
 
     @DisplayName("여행 식별값을 통해 여행 상세를 삭제한다.")
@@ -199,13 +188,33 @@ class TravelServiceTest extends ServiceSliceTest {
     void failDeleteTravel() {
         // given
         Travel travel = createAndSaveTravel(2023);
-        Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").build());
+        Member member = saveMember();
+        Pin pin = savePin(member);
         visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(travel).build());
 
         // when & then
         assertThatThrownBy(() -> travelService.deleteTravel(travel.getId()))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
+    }
+
+    private Travel createAndSaveTravel(int year) {
+        Travel travel = new Travel(
+                "https://example.com/travels/geumohrm.jpg",
+                year + " 여름 휴가",
+                "친구들과 함께한 여름 휴가 여행",
+                LocalDate.of(year, 7, 1),
+                LocalDate.of(year, 7, 10)
+        );
+        return travelRepository.save(travel);
+    }
+
+    private Member saveMember() {
+        return memberRepository.save(Member.builder().nickname("staccato").build());
+    }
+
+    private Pin savePin(Member member) {
+        return pinRepository.save(Pin.builder().place("장소").address("주소").member(member).build());
     }
 
     @DisplayName("존재하지 않는 여행 상세를 조회하려고 할 경우 예외가 발생한다.")

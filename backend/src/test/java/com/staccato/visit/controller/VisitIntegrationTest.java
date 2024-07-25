@@ -20,6 +20,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import com.staccato.IntegrationTest;
+import com.staccato.member.domain.Member;
+import com.staccato.member.repository.MemberRepository;
 import com.staccato.pin.domain.Pin;
 import com.staccato.pin.repository.PinRepository;
 import com.staccato.travel.domain.Travel;
@@ -36,6 +38,8 @@ class VisitIntegrationTest extends IntegrationTest {
     private PinRepository pinRepository;
     @Autowired
     private TravelRepository travelRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     static Stream<Arguments> invalidVisitRequestProvider() {
         return Stream.of(
@@ -56,7 +60,8 @@ class VisitIntegrationTest extends IntegrationTest {
 
     @BeforeEach
     void init() {
-        pinRepository.save(Pin.builder().place("장소").address("주소").build());
+        Member member = memberRepository.save(Member.builder().nickname("staccato").build());
+        pinRepository.save(Pin.builder().place("장소").address("주소").member(member).build());
         travelRepository.save(Travel.builder()
                 .thumbnailUrl("https://example1.com.jpg")
                 .title("2023 여름 휴가")

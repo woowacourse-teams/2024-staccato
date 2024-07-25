@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.staccato.exception.StaccatoException;
+import com.staccato.member.domain.Member;
 import com.staccato.pin.domain.Pin;
 import com.staccato.visit.domain.Visit;
 
@@ -55,9 +56,13 @@ class TravelTest {
                 .startAt(LocalDate.of(2023, 7, 20))
                 .endAt(LocalDate.of(2023, 7, 21))
                 .build();
+        Member member = Member.builder()
+                .nickname("staccato")
+                .build();
         Pin pin = Pin.builder()
                 .place("Sample Place")
                 .address("Sample Address")
+                .member(member)
                 .build();
         Visit visit = Visit.builder()
                 .visitedAt(LocalDate.of(2023, 7, 1))
