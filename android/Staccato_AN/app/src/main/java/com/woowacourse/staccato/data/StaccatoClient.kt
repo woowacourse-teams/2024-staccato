@@ -38,7 +38,7 @@ object StaccatoClient {
             )
             .build()
 
-    fun <T> create(service: Class<T>): T {
+    private fun <T> create(service: Class<T>): T {
         return provideRetrofit.create(service)
     }
 }
