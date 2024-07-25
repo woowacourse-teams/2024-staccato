@@ -2,10 +2,11 @@ package com.woowacourse.staccato.presentation.timeline
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.woowacourse.staccato.domain.repository.TimelineRepository
+import com.woowacourse.staccato.data.repository.TimelineRepository
 
-class TimelineViewModelFactory(private val repository: TimelineRepository) :
-    ViewModelProvider.Factory {
+class TimelineViewModelFactory : ViewModelProvider.Factory {
+    private val repository = TimelineRepository()
+
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TimelineViewModel::class.java)) {
             return TimelineViewModel(repository) as T
