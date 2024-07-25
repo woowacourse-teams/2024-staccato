@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DateTimeParseException.class)
     public ResponseEntity<ExceptionResponse> handleDateTimeParseException(DateTimeParseException e) {
         String errorMessage = "올바르지 않은 날짜 형식입니다.";
-        log.error("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
+        log.warn("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage));
     }
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
         String message = Optional.ofNullable(e.getBindingResult().getFieldError())
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .orElse("요청 형식이 잘못되었습니다.");
-        log.error("ExceptionType : {}, ExceptionMessage : {}", e, message);
+        log.warn("ExceptionType : {}, ExceptionMessage : {}", e, message);
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), message));
     }
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
                 .iterator()
                 .next()
                 .getMessage();
-        log.error("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
+        log.warn("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage));
     }
@@ -50,21 +50,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         String errorMessage = "요청 본문을 읽을 수 없습니다. 올바른 형식으로 데이터를 제공해주세요.";
-        log.error("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
+        log.warn("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage));
     }
 
     @ExceptionHandler(StaccatoException.class)
     public ResponseEntity<ExceptionResponse> handleStaccatoException(StaccatoException e) {
-        log.error("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
+        log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionResponse> handleInternalServerErrorException(RuntimeException e) {
-        log.error("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
+        log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
         return ResponseEntity.internalServerError()
                 .body(new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "예기치 못한 서버 오류입니다. 다시 시도해주세요."));
     }
