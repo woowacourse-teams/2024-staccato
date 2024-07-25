@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.staccato.presentation.timeline.TimelineHandler
 import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
 
-abstract class TimelineViewHolder(
+sealed class TimelineViewHolder(
     binding: ViewDataBinding,
     private val eventHandler: TimelineHandler,
 ) :
