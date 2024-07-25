@@ -7,7 +7,7 @@ import com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel
 class MiddleTravelViewHolder(
     private val binding: LayoutItemFragmentTimelineMiddleBinding,
     private val eventHandler: TimelineHandler,
-): TimelineViewHolder(binding, eventHandler) {
+) : TimelineViewHolder(binding, eventHandler) {
     override fun bind(item: TimelineTravelUiModel) {
         binding.travel = item
         binding.eventHandler = eventHandler

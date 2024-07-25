@@ -150,30 +150,38 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
 
     private fun setUpBottomSheetBehaviorAction() {
         behavior.apply {
-            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    when (newState) {
-                        STATE_COLLAPSED -> {
-                            binding.toolbarMain.visibility = View.INVISIBLE
-                        }
+            addBottomSheetCallback(
+                object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(
+                        bottomSheet: View,
+                        newState: Int,
+                    ) {
+                        when (newState) {
+                            STATE_COLLAPSED -> {
+                                binding.toolbarMain.visibility = View.INVISIBLE
+                            }
 
-                        STATE_EXPANDED -> {
-                            binding.btnTimeline.visibility = View.INVISIBLE
-                        }
+                            STATE_EXPANDED -> {
+                                binding.btnTimeline.visibility = View.INVISIBLE
+                            }
 
-                        else -> {
-                            binding.toolbarMain.visibility = View.VISIBLE
-                            binding.btnTimeline.visibility = View.VISIBLE
+                            else -> {
+                                binding.toolbarMain.visibility = View.VISIBLE
+                                binding.btnTimeline.visibility = View.VISIBLE
+                            }
                         }
                     }
-                }
 
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    binding.tvBottomSheetRemindYourMemories.alpha = 1 - slideOffset
-                    binding.btnTimeline.alpha = 1 - slideOffset
-                    binding.toolbarMain.alpha = slideOffset
-                }
-            })
+                    override fun onSlide(
+                        bottomSheet: View,
+                        slideOffset: Float,
+                    ) {
+                        binding.tvBottomSheetRemindYourMemories.alpha = 1 - slideOffset
+                        binding.btnTimeline.alpha = 1 - slideOffset
+                        binding.toolbarMain.alpha = slideOffset
+                    }
+                },
+            )
         }
     }
 }

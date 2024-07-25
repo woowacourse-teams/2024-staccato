@@ -9,7 +9,8 @@ import com.woowacourse.staccato.databinding.FragmentTimelineBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.timeline.adapter.TimelineAdapter
 
-class TimelineFragment : BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
+class TimelineFragment :
+    BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
     TimelineHandler {
     private lateinit var viewModel: TimelineViewModel
     private lateinit var adapter: TimelineAdapter

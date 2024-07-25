@@ -1,7 +1,9 @@
 package com.woowacourse.staccato.presentation.timeline.adapter
 
 enum class TimelineViewType {
-    FIRST_ITEM, MIDDLE_ITEM, LAST_ITEM;
+    FIRST_ITEM,
+    MIDDLE_ITEM,
+    LAST_ITEM, ;
 
     companion object {
         private const val FIRST_INDEX = 0

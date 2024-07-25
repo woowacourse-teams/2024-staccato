@@ -17,7 +17,10 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
         return TimelineViewType.fromPosition(position, itemCount).ordinal
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimelineViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): TimelineViewHolder {
         return when (viewType) {
             TimelineViewType.FIRST_ITEM.ordinal -> {
                 val binding =
@@ -53,7 +56,10 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
 
     override fun getItemCount(): Int = travels.size
 
-    override fun onBindViewHolder(holder: TimelineViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: TimelineViewHolder,
+        position: Int,
+    ) {
         holder.bind(travels[position])
     }
 
