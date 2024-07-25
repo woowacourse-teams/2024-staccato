@@ -27,6 +27,7 @@ import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelDetailResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
+import com.staccato.travel.service.dto.response.VisitResponse;
 import com.staccato.visit.domain.Visit;
 import com.staccato.visit.repository.VisitRepository;
 
@@ -85,7 +86,7 @@ class TravelServiceTest extends ServiceSliceTest {
         assertThat(travelResponses.travels()).hasSize(expectedSize);
     }
 
-    @DisplayName("특정 여행 상세 목록을 조회한다.")
+    @DisplayName("특정 여행 상세를 조회한다.")
     @Test
     void readTravelById() {
         // given
@@ -93,10 +94,10 @@ class TravelServiceTest extends ServiceSliceTest {
         Pin pin = savePin(member);
 
         long targetId = travelService.createTravel(createTravelRequest(2023), member.getId());
-        Visit visit = saveVisit(pin, targetId);
+        Visit visit = saveVisit(pin, LocalDate.of(2023, 7, 1), targetId);
 
         long otherId = travelService.createTravel(createTravelRequest(2023), member.getId());
-        saveVisit(pin, otherId);
+        saveVisit(pin, LocalDate.of(2023, 7, 1), otherId);
 
         // when
         TravelDetailResponse travelDetailResponse = travelService.readTravelById(targetId);
@@ -110,11 +111,34 @@ class TravelServiceTest extends ServiceSliceTest {
         );
     }
 
-    private Visit saveVisit(Pin pin, long otherId) {
+    @DisplayName("특정 여행 상세를 조회하면 방문 기록은 오래된 순으로 반환한다.")
+    @Test
+    void readTravelByIdOrderByVisitedAt() {
+        // given
+        Member member = saveMember();
+        Pin pin = savePin(member);
+
+        long visitId = travelService.createTravel(createTravelRequest(2023), member.getId());
+        Visit visit = saveVisit(pin, LocalDate.of(2023, 7, 1), visitId);
+        Visit nextVisit = saveVisit(pin, LocalDate.of(2023, 7, 5), visitId);
+
+        // when
+        TravelDetailResponse travelDetailResponse = travelService.readTravelById(visitId);
+
+        // then
+        assertAll(
+                () -> assertThat(travelDetailResponse.travelId()).isEqualTo(visitId),
+                () -> assertThat(travelDetailResponse.visits()).hasSize(2),
+                () -> assertThat(travelDetailResponse.visits().stream().map(VisitResponse::visitedAt).toList())
+                        .containsExactly(visit.getVisitedAt(), nextVisit.getVisitedAt())
+        );
+    }
+
+    private Visit saveVisit(Pin pin, LocalDate visitedAt, long visitId) {
         return visitRepository.save(
                 Visit.builder()
-                        .travel(travelRepository.findByIdAndIsDeletedIsFalse(otherId).get())
-                        .visitedAt(LocalDate.of(2023, 7, 1))
+                        .travel(travelRepository.findByIdAndIsDeletedIsFalse(visitId).get())
+                        .visitedAt(visitedAt)
                         .pin(pin)
                         .build());
     }

@@ -16,11 +16,11 @@ import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelDetailResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
+import com.staccato.travel.service.dto.response.VisitResponse;
 import com.staccato.visit.domain.Visit;
 import com.staccato.visit.domain.VisitImage;
 import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitRepository;
-import com.staccato.travel.service.dto.response.VisitResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -82,7 +82,7 @@ public class TravelService {
     public void updateTravel(TravelRequest travelRequest, Long travelId) {
         Travel updatedTravel = travelRequest.toTravel();
         Travel originTravel = getTravelById(travelId);
-        List<Visit> visits = visitRepository.findAllByTravelIdAndIsDeletedIsFalse(travelId);
+        List<Visit> visits = visitRepository.findAllByTravelIdAndIsDeletedIsFalseOrderByVisitedAt(travelId);
         originTravel.update(updatedTravel, visits);
     }
 
@@ -101,7 +101,7 @@ public class TravelService {
 
     public TravelDetailResponse readTravelById(long travelId) {
         Travel travel = getTravelById(travelId);
-        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdAndIsDeletedIsFalse(travelId));
+        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdAndIsDeletedIsFalseOrderByVisitedAt(travelId));
         return new TravelDetailResponse(travel, visitResponses);
     }
 

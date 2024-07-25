@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import com.staccato.visit.domain.Visit;
 
 public interface VisitRepository extends JpaRepository<Visit, Long> {
-    List<Visit> findAllByTravelIdAndIsDeletedIsFalse(@Param("travelId") long travelId);
+    List<Visit> findAllByTravelIdAndIsDeletedIsFalseOrderByVisitedAt(long travelId);
 
     long countByPinIdAndIsDeletedIsFalseAndVisitedAtBefore(Long pinId, LocalDate visitedAt);
 
