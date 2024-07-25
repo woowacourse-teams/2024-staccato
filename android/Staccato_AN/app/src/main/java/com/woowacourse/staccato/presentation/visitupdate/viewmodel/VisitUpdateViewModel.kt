@@ -29,6 +29,9 @@ class VisitUpdateViewModel(
     private val _isError = MutableSingleLiveData(false)
     val isError: SingleLiveData<Boolean> get() = _isError
 
+    private val _isUpdateCompleted = MutableSingleLiveData(false)
+    val isUpdateCompleted: SingleLiveData<Boolean> get() = _isUpdateCompleted
+
     fun fetchInitData(
         visitId: Long,
         travelId: Long,
@@ -66,7 +69,9 @@ class VisitUpdateViewModel(
         visitRepository.updateVisit(
             visitImages = listOf(""),
             visitedAt = selectedVisitedAt.value.toString(),
-        )
+        ).onSuccess {
+            _isUpdateCompleted.postValue(true)
+        }
     }
 
     fun updateVisitedAt(newSelectedVisitedAt: LocalDate?) {

@@ -12,6 +12,7 @@ import com.woowacourse.staccato.PhotoAttachFragment
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityVisitUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
+import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 import com.woowacourse.staccato.presentation.visitcreation.dialog.VisitedAtSelectionFragment
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModelFactory
@@ -31,8 +32,8 @@ class VisitUpdateActivity : BindingActivity<ActivityVisitUpdateBinding>(), Visit
 
     override fun initStartView(savedInstanceState: Bundle?) {
         visitId = intent.getLongExtra(EXTRA_VISIT_ID, 1L)
-//        travelId = intent.getLongExtra(EXTRA_TRAVEL_ID, 0L)
-        travelId = 0L
+        travelId = intent.getLongExtra(EXTRA_TRAVEL_ID, 1L)
+
         initBinding()
         initDialogHandler()
         initVisitUpdateDoneButton()
@@ -76,11 +77,27 @@ class VisitUpdateActivity : BindingActivity<ActivityVisitUpdateBinding>(), Visit
             visitedAtSelectionFragment.setItems(dates)
         }
         viewModel.isError.observe(this) { isError ->
-            if (isError) {
-                Toast.makeText(this, "방문을 불러올 수 없어요!", Toast.LENGTH_SHORT)
-                    .show()
-                finish()
-            }
+            handleError(isError)
+        }
+        viewModel.isUpdateCompleted.observe(this) { isUpdateCompleted ->
+            handleUpdateComplete(isUpdateCompleted)
+        }
+    }
+
+    private fun handleError(isError: Boolean) {
+        if (isError) {
+            Toast.makeText(this, "방문을 불러올 수 없어요!", Toast.LENGTH_SHORT)
+                .show()
+            finish()
+        }
+    }
+
+    private fun handleUpdateComplete(isUpdateCompleted: Boolean) {
+        if (isUpdateCompleted) {
+            val resultIntent = Intent()
+            resultIntent.putExtra(VisitCreationActivity.EXTRA_VISIT_ID, visitId)
+            setResult(RESULT_OK, resultIntent)
+            finish()
         }
     }
 
