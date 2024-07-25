@@ -76,7 +76,6 @@ class VisitServiceTest extends ServiceSliceTest {
 
         // when
         VisitDetailResponse visitDetailResponse = visitService.getById(visit.getId());
-        System.out.println(visitDetailResponse);
 
         // then
         assertAll(
