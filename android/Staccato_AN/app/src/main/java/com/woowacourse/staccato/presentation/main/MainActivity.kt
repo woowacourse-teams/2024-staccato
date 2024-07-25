@@ -1,6 +1,7 @@
 package com.woowacourse.staccato.presentation.main
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -69,6 +70,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         setupBottomSheetController()
         setupBottomSheetNavigation()
         setupBackPressedHandler()
+        setUpBottomSheetBehaviorAction()
+        setUpToolbar()
     }
 
     private fun setupBackPressedHandler() {
@@ -134,4 +137,51 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             .setLaunchSingleTop(true)
             .setPopUpTo(popUpToId, false)
             .build()
+
+    private fun setUpToolbar() {
+        binding.toolbarMain.setNavigationOnClickListener {
+            if (navController.currentDestination?.id == R.id.timelineFragment) {
+                behavior.state = STATE_COLLAPSED
+            } else {
+                navController.popBackStack()
+            }
+        }
+    }
+
+    private fun setUpBottomSheetBehaviorAction() {
+        behavior.apply {
+            addBottomSheetCallback(
+                object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(
+                        bottomSheet: View,
+                        newState: Int,
+                    ) {
+                        when (newState) {
+                            STATE_COLLAPSED -> {
+                                binding.toolbarMain.visibility = View.INVISIBLE
+                            }
+
+                            STATE_EXPANDED -> {
+                                binding.btnTimeline.visibility = View.INVISIBLE
+                            }
+
+                            else -> {
+                                binding.toolbarMain.visibility = View.VISIBLE
+                                binding.btnTimeline.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+
+                    override fun onSlide(
+                        bottomSheet: View,
+                        slideOffset: Float,
+                    ) {
+                        binding.tvBottomSheetRemindYourMemories.alpha = 1 - slideOffset
+                        binding.btnTimeline.alpha = 1 - slideOffset
+                        binding.toolbarMain.alpha = slideOffset
+                    }
+                },
+            )
+        }
+    }
 }

@@ -15,6 +15,7 @@
     <string name="all_image_content_description">사진</string>
 
     // fragment_timeline
+    <string name="timeline_my_timeline">나의 여행 타임라인 ✈️</string>
     <string name="timeline_year">%s년</string>
     <string name="timeline_title">✈️ 추억을 떠올려보세요 ✈️</string>
 
