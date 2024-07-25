@@ -2,6 +2,7 @@ package com.woowacourse.staccato.presentation.visitupdate.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.woowacourse.staccato.data.StaccatoClient
 import com.woowacourse.staccato.data.repository.VisitDefaultRepository
 import com.woowacourse.staccato.data.visit.RemoteVisitDataSource
 
@@ -10,7 +11,7 @@ class VisitUpdateViewModelFactory : ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(VisitUpdateViewModel::class.java)) {
             return VisitUpdateViewModel(
                 VisitDefaultRepository(
-                    remoteDataSource = RemoteVisitDataSource(),
+                    remoteDataSource = RemoteVisitDataSource(StaccatoClient.visitApiService),
                 ),
             ) as T
         }

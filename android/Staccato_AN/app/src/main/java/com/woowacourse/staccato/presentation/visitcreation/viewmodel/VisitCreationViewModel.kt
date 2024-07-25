@@ -28,28 +28,22 @@ class VisitCreationViewModel(private val visitRepository: VisitRepository) : Vie
     private val dummyTravels =
         listOf(
             VisitTravelUiModel(
-                id = 0,
-                title = "제주도",
-                startAt = LocalDate.of(2024, 3, 1),
-                endAt = LocalDate.of(2024, 3, 5),
-            ),
-            VisitTravelUiModel(
                 id = 1,
-                title = "평택",
-                startAt = LocalDate.of(2024, 4, 11),
-                endAt = LocalDate.of(2024, 4, 14),
-            ),
-            VisitTravelUiModel(
-                id = 2,
-                title = "강릉",
-                startAt = LocalDate.of(2024, 8, 29),
-                endAt = LocalDate.of(2024, 9, 5),
+                title = "Trip to Paris",
+                startAt = LocalDate.of(2024, 1, 1),
+                endAt = LocalDate.of(2024, 12, 31),
             ),
             VisitTravelUiModel(
                 id = 3,
-                title = "부산",
-                startAt = LocalDate.of(2024, 11, 25),
-                endAt = LocalDate.of(2024, 11, 29),
+                title = "2024 봄 휴가",
+                startAt = LocalDate.of(2024, 3, 1),
+                endAt = LocalDate.of(2024, 3, 10),
+            ),
+            VisitTravelUiModel(
+                id = 4,
+                title = "Journey through Japan",
+                startAt = LocalDate.of(2024, 8, 20),
+                endAt = LocalDate.of(2024, 8, 30),
             ),
         )
 

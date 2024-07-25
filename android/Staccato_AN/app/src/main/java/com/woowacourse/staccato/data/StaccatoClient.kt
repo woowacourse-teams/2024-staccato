@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.woowacourse.staccato.BuildConfig
 import com.woowacourse.staccato.data.apiservice.TimeLineApiService
 import com.woowacourse.staccato.data.travel.TravelApiService
+import com.woowacourse.staccato.data.visit.VisitApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -21,6 +22,10 @@ object StaccatoClient {
 
     val timelineService: TimeLineApiService by lazy {
         create(TimeLineApiService::class.java)
+    }
+
+    val visitApiService: VisitApiService by lazy {
+        create(VisitApiService::class.java)
     }
 
     private val provideLoggingInterceptor =

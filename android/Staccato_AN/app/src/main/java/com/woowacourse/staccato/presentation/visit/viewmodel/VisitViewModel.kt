@@ -12,7 +12,7 @@ import com.woowacourse.staccato.presentation.mapper.toVisitLogUiModel
 import com.woowacourse.staccato.presentation.visit.model.VisitDetailUiModel
 import kotlinx.coroutines.launch
 
-class VisitViewModel(private val repository: VisitRepository) : ViewModel() {
+class VisitViewModel(private val visitRepository: VisitRepository) : ViewModel() {
     private val _visitDefault = MutableLiveData<VisitDetailUiModel.VisitDefaultUiModel>()
     val visitDefault: LiveData<VisitDetailUiModel.VisitDefaultUiModel> get() = _visitDefault
 
@@ -28,9 +28,9 @@ class VisitViewModel(private val repository: VisitRepository) : ViewModel() {
 
     private fun fetchVisitData(visitId: Long) {
         viewModelScope.launch {
-            repository.loadVisit(visitId = visitId).onSuccess { visitDetail ->
-                _visitDefault.value = visitDetail.toVisitDefaultUiModel()
-                _visitLogs.value = visitDetail.visitLogs.map { it.toVisitLogUiModel() }
+            visitRepository.loadVisit(visitId).onSuccess { visit ->
+                _visitDefault.value = visit.toVisitDefaultUiModel()
+                _visitLogs.value = visit.visitLogs?.map { it.toVisitLogUiModel() }
             }.onFailure {
                 _isError.postValue(true)
             }
