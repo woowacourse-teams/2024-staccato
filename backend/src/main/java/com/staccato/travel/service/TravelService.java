@@ -21,7 +21,6 @@ import com.staccato.visit.domain.VisitImage;
 import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitRepository;
 import com.staccato.visit.service.dto.response.VisitResponse;
-import com.staccato.visit.service.dto.response.VisitResponses;
 
 import lombok.RequiredArgsConstructor;
 
@@ -89,7 +88,7 @@ public class TravelService {
 
     public TravelDetailResponse readTravelById(long travelId) {
         Travel travel = getTravelById(travelId);
-        VisitResponses visitResponses = getVisitResponses(visitRepository.findAllByTravelIdAndIsDeletedIsFalse(travelId));
+        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdAndIsDeletedIsFalse(travelId));
         return new TravelDetailResponse(travel, visitResponses);
     }
 
@@ -98,10 +97,10 @@ public class TravelService {
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 
-    private VisitResponses getVisitResponses(List<Visit> visits) {
-        return new VisitResponses(visits.stream()
+    private List<VisitResponse> getVisitResponses(List<Visit> visits) {
+        return visits.stream()
                 .map(visit -> new VisitResponse(visit, getFirstVisitImageUrl(visit)))
-                .toList());
+                .toList();
     }
 
     private String getFirstVisitImageUrl(Visit visit) {

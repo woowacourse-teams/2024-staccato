@@ -1,11 +1,12 @@
 package com.staccato.travel.service.dto.response;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.staccato.member.service.dto.response.MemberResponses;
+import com.staccato.member.service.dto.response.MemberResponse;
 import com.staccato.travel.domain.Travel;
-import com.staccato.visit.service.dto.response.VisitResponses;
+import com.staccato.visit.service.dto.response.VisitResponse;
 
 public record TravelDetailResponse(
         Long travelId,
@@ -14,10 +15,10 @@ public record TravelDetailResponse(
         @JsonInclude(JsonInclude.Include.NON_NULL) String description,
         LocalDate startAt,
         LocalDate endAt,
-        MemberResponses mates,
-        VisitResponses visits
+        List<MemberResponse> mates,
+        List<VisitResponse> visits
 ) {
-    public TravelDetailResponse(Travel travel, VisitResponses visitResponses) {
+    public TravelDetailResponse(Travel travel, List<VisitResponse> visitResponses) {
         this(
                 travel.getId(),
                 travel.getThumbnailUrl(),
@@ -25,8 +26,12 @@ public record TravelDetailResponse(
                 travel.getDescription(),
                 travel.getStartAt(),
                 travel.getEndAt(),
-                MemberResponses.from(travel.getMates()),
+                toMemberResponses(travel),
                 visitResponses
         );
+    }
+
+    private static List<MemberResponse> toMemberResponses(Travel travel) {
+        return travel.getMates().stream().map(MemberResponse::new).toList();
     }
 }

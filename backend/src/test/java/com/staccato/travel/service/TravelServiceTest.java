@@ -104,9 +104,9 @@ class TravelServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(travelDetailResponse.travelId()).isEqualTo(targetId),
-                () -> assertThat(travelDetailResponse.mates().members()).hasSize(1),
-                () -> assertThat(travelDetailResponse.visits().visits()).hasSize(1),
-                () -> assertThat(travelDetailResponse.visits().visits().get(0).visitId()).isEqualTo(visit.getId())
+                () -> assertThat(travelDetailResponse.mates()).hasSize(1),
+                () -> assertThat(travelDetailResponse.visits()).hasSize(1),
+                () -> assertThat(travelDetailResponse.visits().get(0).visitId()).isEqualTo(visit.getId())
         );
     }
 
