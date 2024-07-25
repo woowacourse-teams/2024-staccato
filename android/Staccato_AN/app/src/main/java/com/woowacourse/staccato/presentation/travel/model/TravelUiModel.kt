@@ -8,9 +8,9 @@ data class TravelUiModel(
     val thumbnail: String? = null,
     val startAt: LocalDate,
     val endAt: LocalDate,
-    val mates: List<MateUiModel>,
     val visits: List<VisitUiModel>,
     val description: String? = null,
+    val mates: List<MemberUiModel>,
 )
 
 val dummyTravel: TravelUiModel =

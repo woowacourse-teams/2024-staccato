@@ -2,12 +2,12 @@ package com.woowacourse.staccato.presentation.travel.adapter
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.woowacourse.staccato.databinding.ItemMatesBinding
-import com.woowacourse.staccato.presentation.travel.model.MateUiModel
+import com.woowacourse.staccato.presentation.MemberUiModel
 
 class MatesViewHolder(
     private val binding: ItemMatesBinding,
 ) : ViewHolder(binding.root) {
-    fun bind(mate: MateUiModel) {
+    fun bind(mate: MemberUiModel) {
         binding.mate = mate
     }
 }
