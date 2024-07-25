@@ -37,7 +37,7 @@ class TimelineFragment :
         viewModel.errorState.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { state ->
                 if (state) {
-                    showToastMessage("일시적인 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.")
+                    showToastMessage(ERROR_MESSAGE)
                 }
             }
         }
@@ -54,5 +54,9 @@ class TimelineFragment :
 
     private fun showToastMessage(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
+    companion object {
+        const val ERROR_MESSAGE = "일시적인 오류가 발생했습니다.\n잠시 후 다시 시도해주세요."
     }
 }
