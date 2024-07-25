@@ -50,8 +50,8 @@ class VisitLogRepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(visitLogRepository.findById(visitLog1.getId()).get().getIsDeleted()).isTrue(),
-                () -> assertThat(visitLogRepository.findById(visitLog2.getId()).get().getIsDeleted()).isTrue()
+                () -> assertThat(visitLogRepository.findById(visitLog1.getId())).isEmpty(),
+                () -> assertThat(visitLogRepository.findById(visitLog2.getId())).isEmpty()
         );
     }
 }

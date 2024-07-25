@@ -13,7 +13,6 @@ import com.staccato.travel.repository.TravelRepository;
 import com.staccato.visit.domain.Visit;
 import com.staccato.visit.domain.VisitImage;
 import com.staccato.visit.repository.VisitImageRepository;
-import com.staccato.visit.repository.VisitLogRepository;
 import com.staccato.visit.repository.VisitRepository;
 import com.staccato.visit.service.dto.request.VisitRequest;
 import com.staccato.visit.service.dto.response.VisitDetailResponse;
@@ -28,7 +27,6 @@ public class VisitService {
     private final PinRepository pinRepository;
     private final TravelRepository travelRepository;
     private final VisitImageRepository visitImageRepository;
-    private final VisitLogRepository visitLogRepository;
 
     @Transactional
     public long createVisit(VisitRequest visitRequest) {
@@ -64,13 +62,12 @@ public class VisitService {
     public VisitDetailResponse readVisitById(long visitId) {
         Visit visit = getVisitById(visitId);
         Pin pin = visit.getPin();
-        long visitedCountBefore = visitRepository.countByPinIdAndIsDeletedIsFalseAndVisitedAtBefore(
-                pin.getId(), visit.getVisitedAt());
+        long visitedCountBefore = visitRepository.countByPinIdAndIsDeletedIsFalseAndVisitedAtBefore(pin.getId(), visit.getVisitedAt());
         return new VisitDetailResponse(
                 visit,
-                visitImageRepository.findAllByVisitIdAndIsDeletedIsFalse(visitId),
+                visit.getVisitImages(),
                 visitedCountBefore + 1,
-                visitLogRepository.findAllByVisitIdAndIsDeletedIsFalse(visitId)
+                visit.getVisitLogs()
         );
     }
 
@@ -81,8 +78,6 @@ public class VisitService {
 
     @Transactional
     public void deleteVisitById(Long visitId) {
-        visitLogRepository.deleteByVisitId(visitId);
-        visitImageRepository.deleteByVisitId(visitId);
         visitRepository.deleteById(visitId);
     }
 }
