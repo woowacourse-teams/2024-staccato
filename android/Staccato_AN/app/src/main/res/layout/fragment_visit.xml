@@ -5,33 +5,37 @@
 
     <data>
 
+        <variable
+            name="toolbarHandler"
+            type="com.woowacourse.staccato.presentation.ToolbarHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_visit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#AAAAAA"
-        tools:context=".presentation.visit.VisitFragment">
+        android:background="@color/white"
+        tools:context=".presentation.ui.staccato.StaccatoActivity">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:gravity="center"
-            android:text="방문 상세 화면"
-            android:textSize="30sp"
+        <include
+            android:id="@+id/include_visit_toolbar"
+            layout="@layout/toolbar_detail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:toolbarHandler="@{toolbarHandler}"
+            />
 
-        <Button
-            android:id="@+id/btn_visit_update"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="내용 수정하기(방문 수정 화면으로)"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_visit_detail"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingBottom="15dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/include_visit_toolbar" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
