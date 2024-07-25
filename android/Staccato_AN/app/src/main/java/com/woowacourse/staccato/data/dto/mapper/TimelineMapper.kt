@@ -1,6 +1,7 @@
 package com.woowacourse.staccato.data.dto.mapper
 
 import com.woowacourse.staccato.data.dto.MemberDto
+import com.woowacourse.staccato.data.dto.MembersDto
 import com.woowacourse.staccato.data.dto.timeline.TimelineResponse
 import com.woowacourse.staccato.data.dto.timeline.TimelineTravelDto
 import com.woowacourse.staccato.domain.model.Member
@@ -29,8 +30,8 @@ fun TimelineTravelDto.toDomain(): Travel {
     )
 }
 
-fun List<MemberDto>.toDomain(): List<Member> {
-    return map { it.toDomain() }
+fun MembersDto.toDomain(): List<Member> {
+    return members.map { it.toDomain() }
 }
 
 fun MemberDto.toDomain(): Member {

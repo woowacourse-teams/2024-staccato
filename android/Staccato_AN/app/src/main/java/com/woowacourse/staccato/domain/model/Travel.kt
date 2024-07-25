@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 data class Travel(
     val travelId: Long,
-    val travelThumbnail: String,
+    val travelThumbnail: String? = null,
     val travelTitle: String,
     val startAt: LocalDate,
     val endAt: LocalDate,
