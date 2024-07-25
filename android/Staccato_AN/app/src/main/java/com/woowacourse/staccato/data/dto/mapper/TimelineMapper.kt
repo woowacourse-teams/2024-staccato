@@ -9,9 +9,10 @@ import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.toLocalDate
 
 fun TimelineResponse.toDomain(): Timeline {
-    val travels = travels.map { timelineTravelDto ->
-        timelineTravelDto.toDomain()
-    }
+    val travels =
+        travels.map { timelineTravelDto ->
+            timelineTravelDto.toDomain()
+        }
     return Timeline(travels)
 }
 

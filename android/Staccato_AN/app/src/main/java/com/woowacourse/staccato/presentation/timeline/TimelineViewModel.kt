@@ -21,10 +21,11 @@ class TimelineViewModel(private val repository: TimelineRepository) : ViewModel(
     val errorState: LiveData<Event<Boolean>>
         get() = _errorState
 
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        _errorState.value = Event(true)
-        Log.e("TimelineViewModel", "An error occurred: ${throwable.message}")
-    }
+    private val coroutineExceptionHandler =
+        CoroutineExceptionHandler { _, throwable ->
+            _errorState.value = Event(true)
+            Log.e("TimelineViewModel", "An error occurred: ${throwable.message}")
+        }
 
     fun loadTimeline() {
         viewModelScope.launch(coroutineExceptionHandler) {
