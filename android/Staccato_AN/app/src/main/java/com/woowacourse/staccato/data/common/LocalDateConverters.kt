@@ -1,4 +1,4 @@
-package com.woowacourse.staccato
+package com.woowacourse.staccato.data.common
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

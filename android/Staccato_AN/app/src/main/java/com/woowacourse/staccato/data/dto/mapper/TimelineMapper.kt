@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.data.dto.mapper
 
+import com.woowacourse.staccato.data.common.toLocalDate
 import com.woowacourse.staccato.data.dto.MemberDto
 import com.woowacourse.staccato.data.dto.MembersDto
 import com.woowacourse.staccato.data.dto.timeline.TimelineResponse
@@ -7,7 +8,6 @@ import com.woowacourse.staccato.data.dto.timeline.TimelineTravelDto
 import com.woowacourse.staccato.domain.model.Member
 import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.domain.model.Travel
-import com.woowacourse.staccato.toLocalDate
 
 fun TimelineResponse.toDomain(): Timeline {
     val travels =
