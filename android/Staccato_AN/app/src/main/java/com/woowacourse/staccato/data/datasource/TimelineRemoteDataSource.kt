@@ -6,7 +6,7 @@ import com.woowacourse.staccato.data.dto.timeline.TimelineResponse
 import org.json.JSONObject
 
 class TimelineRemoteDataSource(
-    private val service: TimeLineApiService = StaccatoClient.create(TimeLineApiService::class.java),
+    private val service: TimeLineApiService = StaccatoClient.timelineService,
 ) : TimelineDataSource {
     override suspend fun fetchAll(): Result<TimelineResponse> {
         return fetchTimeline()
