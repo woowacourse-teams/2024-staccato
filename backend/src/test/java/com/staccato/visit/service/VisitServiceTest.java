@@ -45,7 +45,7 @@ class VisitServiceTest extends ServiceSliceTest {
 
     @DisplayName("Visit을 삭제하면 이에 포함된 VisitLog들도 모두 삭제된다.")
     @Test
-    void deleteById() {
+    void deleteVisitById() {
         // given
         Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").build());
         Travel travel = travelRepository.save(
@@ -65,7 +65,7 @@ class VisitServiceTest extends ServiceSliceTest {
 
     @DisplayName("특정 방문 상세를 조회한다.")
     @Test
-    void getById() {
+    void readVisitById() {
         // given
         Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").build());
         Travel travel = travelRepository.save(Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build());
@@ -91,7 +91,7 @@ class VisitServiceTest extends ServiceSliceTest {
 
     @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
     @Test
-    void failGetByPin() {
+    void failReadVisitById() {
         assertThatThrownBy(() -> visitService.readVisitById(1L))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
