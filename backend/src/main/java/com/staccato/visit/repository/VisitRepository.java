@@ -8,4 +8,6 @@ import com.staccato.visit.domain.Visit;
 
 public interface VisitRepository extends JpaRepository<Visit, Long> {
     List<Visit> findAllByTravelId(Long travelId);
+
+    long countByPinId(Long pinId);
 }

@@ -16,6 +16,7 @@ import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitLogRepository;
 import com.staccato.visit.repository.VisitRepository;
 import com.staccato.visit.service.dto.request.VisitRequest;
+import com.staccato.visit.service.dto.response.VisitDetailResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -65,5 +66,17 @@ public class VisitService {
     private Travel getTravelById(long travelId) {
         return travelRepository.findById(travelId)
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
+    }
+
+    // TODO: Repository 조회시 논리적 삭제가 되지 않은 엔티티들만 가져오도록 변경
+    public VisitDetailResponse getById(long visitId) {
+        Visit visit = visitRepository.findById(visitId)
+                .orElseThrow(() -> new StaccatoException("요청하신 방문 기록을 찾을 수 없어요."));
+        return new VisitDetailResponse(
+                visit,
+                visitImageRepository.findAllByVisitId(visitId),
+                visitRepository.countByPinId(visit.getPin().getId()),
+                visitLogRepository.findAllByVisitId(visitId)
+        );
     }
 }
