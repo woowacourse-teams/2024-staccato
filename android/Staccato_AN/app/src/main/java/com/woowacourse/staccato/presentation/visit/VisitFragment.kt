@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.visit
 
-import android.app.ProgressDialog.show
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
