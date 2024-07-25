@@ -5,12 +5,12 @@ import java.time.LocalDate
 data class TravelUiModel(
     val id: Long,
     val title: String,
-    val thumbnail: String?,
+    val thumbnail: String? = null,
     val startAt: LocalDate,
     val endAt: LocalDate,
-    val description: String,
     val mates: List<MateUiModel>,
     val visits: List<VisitUiModel>,
+    val description: String? = null,
 )
 
 val dummyTravel: TravelUiModel =
