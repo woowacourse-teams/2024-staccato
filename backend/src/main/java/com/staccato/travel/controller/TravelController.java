@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +50,14 @@ public class TravelController {
             @Valid @RequestBody TravelRequest travelRequest,
             @MemberId Long memberId) {
         travelService.updateTravel(travelRequest, travelId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{travelId}")
+    public ResponseEntity<Void> deleteTravel(
+            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId,
+            @MemberId Long memberId) {
+        travelService.deleteTravel(travelId);
         return ResponseEntity.ok().build();
     }
 }
