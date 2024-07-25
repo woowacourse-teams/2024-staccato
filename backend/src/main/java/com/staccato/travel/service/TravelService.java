@@ -16,11 +16,11 @@ import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelDetailResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
+import com.staccato.travel.service.dto.response.VisitResponse;
 import com.staccato.visit.domain.Visit;
 import com.staccato.visit.domain.VisitImage;
 import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitRepository;
-import com.staccato.travel.service.dto.response.VisitResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -62,12 +62,12 @@ public class TravelService {
     }
 
     private TravelResponses readAll(long memberId) {
-        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndIsDeletedIsFalse(memberId);
+        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndIsDeletedIsFalseOrderByTravelStartAtDesc(memberId);
         return getTravelResponses(travelMembers);
     }
 
     private TravelResponses readAllByYear(long memberId, Integer year) {
-        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndTravelStartAtYear(memberId, year);
+        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndTravelStartAtYearOrderByStartAtDesc(memberId, year);
         return getTravelResponses(travelMembers);
     }
 
