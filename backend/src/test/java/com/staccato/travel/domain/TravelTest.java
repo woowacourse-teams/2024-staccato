@@ -30,7 +30,7 @@ class TravelTest {
 
     @DisplayName("특정 날짜가 여행 상세 날짜에 속하는지 알 수 있다.")
     @Test
-    void withinDuration() {
+    void withoutDuration() {
         // given
         Travel travel = Travel.builder()
                 .title("2023 여름 여행")
@@ -39,7 +39,7 @@ class TravelTest {
                 .build();
 
         // when & then
-        assertThat(travel.withinDuration(LocalDate.of(2023, 7, 11))).isFalse();
+        assertThat(travel.isWithoutDuration(LocalDate.of(2023, 7, 11))).isTrue();
     }
 
     @DisplayName("여행 상세를 수정 시 기존 방문 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
