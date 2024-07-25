@@ -1,13 +1,16 @@
 package com.woowacourse.staccato.presentation.travel
 
-import android.app.ProgressDialog.show
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.woowacourse.staccato.DeleteDialogFragment
 import com.woowacourse.staccato.R
+import com.woowacourse.staccato.data.StaccatoClient.travelApiService
+import com.woowacourse.staccato.data.travel.TravelDefaultRepository
+import com.woowacourse.staccato.data.travel.TravelRemoteDataSource
 import com.woowacourse.staccato.databinding.FragmentTravelBinding
 import com.woowacourse.staccato.presentation.ToolbarHandler
 import com.woowacourse.staccato.presentation.base.BindingFragment
@@ -22,7 +25,7 @@ class TravelFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
     ToolbarHandler {
     private val viewModel: TravelViewModel by viewModels {
-        TravelViewModelFactory()
+        TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))
     }
     private val deleteDialog = DeleteDialogFragment { findNavController().popBackStack() }
 
@@ -39,6 +42,7 @@ class TravelFragment :
         initVisitsAdapter()
         observeTravel()
         navigateToVisit()
+        showErrorToast()
     }
 
     private fun initBinding() {
@@ -75,6 +79,12 @@ class TravelFragment :
         viewModel.visitId.observe(viewLifecycleOwner) { visitId ->
             val bundle = bundleOf(VISIT_ID_KEY to visitId)
             findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
+        }
+    }
+
+    private fun showErrorToast() {
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
     }
 

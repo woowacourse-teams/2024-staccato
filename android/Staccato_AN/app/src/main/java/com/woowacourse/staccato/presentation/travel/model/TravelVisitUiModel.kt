@@ -9,7 +9,7 @@ data class TravelVisitUiModel(
     val visitedAt: LocalDate,
 )
 
- val dummyVisits: List<TravelVisitUiModel> =
+val dummyVisits: List<TravelVisitUiModel> =
     listOf(
         TravelVisitUiModel(
             id = 1L,
