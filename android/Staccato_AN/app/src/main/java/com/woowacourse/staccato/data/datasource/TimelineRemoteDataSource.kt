@@ -10,15 +10,15 @@ class TimelineRemoteDataSource(
         TimeLineApiService::class.java
     ),
 ) : TimelineDataSource {
-    override suspend fun loadAll(): Result<TimelineResponse> {
-        return loadTimeline()
+    override suspend fun fetchAll(): Result<TimelineResponse> {
+        return fetchTimeline()
     }
 
-    override suspend fun loadByYear(year: Int): Result<TimelineResponse> {
-        return loadTimeline(year)
+    override suspend fun fetchByYear(year: Int): Result<TimelineResponse> {
+        return fetchTimeline(year)
     }
 
-    private suspend fun loadTimeline(year: Int? = null): Result<TimelineResponse> {
+    private suspend fun fetchTimeline(year: Int? = null): Result<TimelineResponse> {
         val response = service.requestTimeline(year)
         val body = response.body()
         return if (response.isSuccessful && body != null) {
