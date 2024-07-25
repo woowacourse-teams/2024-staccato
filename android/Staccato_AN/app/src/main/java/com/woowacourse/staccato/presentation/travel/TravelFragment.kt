@@ -95,5 +95,6 @@ class TravelFragment :
 
     companion object {
         const val VISIT_ID_KEY = "visitId"
+        const val TRAVEL_ID_KEY = "travelId"
     }
 }

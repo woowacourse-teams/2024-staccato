@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/iv_thumbnail"
-            coilImageUrl="@{visitDefault.visitImage}"
+            coilImageUrl="@{visitDefault.visitImages}"
             coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -55,10 +55,11 @@
 
         <TextView
             android:id="@+id/tv_visited_at"
+            visitedAt="@{visitDefault.visitedAt}"
+            visitedCount="@{visitDefault.visitedCount}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@{visitDefault.visitedAt}"
             android:textAppearance="@style/Typography.Body2"
             app:layout_constraintStart_toStartOf="@id/tv_title"
             app:layout_constraintTop_toBottomOf="@id/tv_detail"
