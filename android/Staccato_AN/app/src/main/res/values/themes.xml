@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Staccato_AN" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Status bar color. -->
@@ -8,4 +8,8 @@
     </style>
 
     <style name="Theme.Staccato_AN" parent="Base.Theme.Staccato_AN" />
+
+    <style name="ThemeOverlay.NumberPicker" parent="Theme.Staccato_AN">
+        <item name="colorControlNormal">@color/gray2</item>
+    </style>
 </resources>
