@@ -1,16 +1,18 @@
 package com.woowacourse.staccato.presentation.travel.model
 
+import com.woowacourse.staccato.presentation.MemberUiModel
+import com.woowacourse.staccato.presentation.dummyMates
 import java.time.LocalDate
 
 data class TravelUiModel(
     val id: Long,
     val title: String,
-    val thumbnail: String?,
+    val thumbnail: String? = null,
     val startAt: LocalDate,
     val endAt: LocalDate,
-    val description: String,
-    val mates: List<MateUiModel>,
-    val visits: List<VisitUiModel>,
+    val description: String? = null,
+    val mates: List<MemberUiModel>,
+    val visits: List<TravelVisitUiModel>,
 )
 
 val dummyTravel: TravelUiModel =

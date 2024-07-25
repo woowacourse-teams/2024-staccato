@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.timeline
+package com.woowacourse.staccato.presentation.timeline.model
 
 data class TimelineTravelUiModel(
     val travelId: Long,

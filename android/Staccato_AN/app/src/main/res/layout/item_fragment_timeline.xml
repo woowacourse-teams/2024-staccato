@@ -9,7 +9,7 @@
 
         <variable
             name="travel"
-            type="com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel" />
+            type="com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel" />
 
         <variable
             name="eventHandler"
@@ -20,8 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_all_gray1_4dp"
-        android:padding="8dp"
-        android:onClickListener="@{() -> eventHandler.onTravelClicked(travel.travelId)}">
+        android:onClickListener="@{() -> eventHandler.onTravelClicked(travel.travelId)}"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/tv_travel_period"
@@ -35,11 +35,15 @@
 
         <TextView
             android:id="@+id/tv_travel_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:layout_marginEnd="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{travel.travelTitle}"
             android:textAppearance="@style/Typography.Title3"
+            app:layout_constraintEnd_toStartOf="@id/iv_travel_thumbnail"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_travel_period"
             tools:text="제주도 가족 여행" />
@@ -50,8 +54,8 @@
             android:layout_height="0dp"
             android:scaleType="centerCrop"
             android:visibility="@{travel.travelThumbnail == null ? View.GONE : View.VISIBLE}"
-            app:coilRoundedCornerImageUrl="@{travel.travelThumbnail}"
             app:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            app:coilRoundedCornerImageUrl="@{travel.travelThumbnail}"
             app:coilRoundingRadius="@{12f}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="8:5"

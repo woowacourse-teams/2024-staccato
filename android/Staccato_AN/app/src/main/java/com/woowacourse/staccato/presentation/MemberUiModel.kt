@@ -1,14 +1,14 @@
-package com.woowacourse.staccato.presentation.travel.model
+package com.woowacourse.staccato.presentation
 
-data class MateUiModel(
+data class MemberUiModel(
     val id: Long,
     val nickName: String,
     val memberImage: String,
 )
 
-val dummyMates: List<MateUiModel> =
+val dummyMates: List<MemberUiModel> =
     listOf(
-        MateUiModel(
+        MemberUiModel(
             id = 1L,
             nickName = "hxeyexn",
             memberImage =
@@ -17,36 +17,36 @@ val dummyMates: List<MateUiModel> =
                     "Sox0ZGog.JPEG.sinnam88/%EB%94%94%EC%A6%88%EB%8B%88_%EB%9D%BC%ED%91%BC%EC%A0%A4_%E" +
                     "B%B0%B0%EA%B2%BD%ED%99%94%EB%A9%B4_%EA%B3%A0%ED%99%94%EC%A7%88_%EB%AA%A8%EC%9D%8C_%283%29.jpg?type=w800",
         ),
-        MateUiModel(
+        MemberUiModel(
             id = 2L,
             nickName = "s6m1n",
             memberImage =
                 "https://search.pstatic.net/common/?src=http%3A%2F%2Fimage.nmv.nav" +
                     "er.net%2Fcafe_2023_09_19_1290%2Fd9bcfa00-56af-11ee-9ba4-a0369ffb3258_01.jpg&type=sc960_832",
         ),
-        MateUiModel(
+        MemberUiModel(
             id = 3L,
             nickName = "hodu",
             memberImage =
                 "https://mblogthumb-phinf.pstatic.net/20160314_83/siriusdhk_145788795704" +
                     "0ztVBc_PNG/nick_vector_by_simmeh-d9j99me.png?type=w420",
         ),
-        MateUiModel(
+        MemberUiModel(
             id = 4L,
             nickName = "linirini",
             memberImage = "",
         ),
-        MateUiModel(
+        MemberUiModel(
             id = 5L,
             nickName = "Ho-Tea",
             memberImage = "",
         ),
-        MateUiModel(
+        MemberUiModel(
             id = 6L,
             nickName = "카고",
             memberImage = "",
         ),
-        MateUiModel(
+        MemberUiModel(
             id = 7L,
             nickName = "폭포",
             memberImage = "",
