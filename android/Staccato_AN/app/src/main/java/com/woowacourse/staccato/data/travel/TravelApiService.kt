@@ -10,10 +10,5 @@ interface TravelApiService {
     @GET("/travels/{travelId}")
     suspend fun requestTravel(
         @Path("travelId") travelId: Long,
-        @Header("Authorization") authorization: String = TEMP_AUTHORIZATION,
     ): Response<TravelResponse>
-
-    companion object {
-        private const val TEMP_AUTHORIZATION = "1"
-    }
 }
