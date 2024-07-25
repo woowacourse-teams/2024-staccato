@@ -5,13 +5,13 @@ import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.presentation.converter.convertLocalDateToDatePeriodString
 import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
 
-fun Timeline.toUiModel(): List<TimelineTravelUiModel> {
+fun Timeline.toTimelineTravelUiModel(): List<TimelineTravelUiModel> {
     return travels.map { travel ->
-        travel.toUiModel()
+        travel.toTimelineTravelUiModel()
     }
 }
 
-fun Travel.toUiModel(): TimelineTravelUiModel {
+fun Travel.toTimelineTravelUiModel(): TimelineTravelUiModel {
     return TimelineTravelUiModel(
         travelId = travelId,
         travelThumbnail = travelThumbnail,
