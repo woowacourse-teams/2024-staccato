@@ -71,15 +71,15 @@ public class TravelService {
 
     private TravelResponses readAll(long memberId) {
         List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndIsDeletedIsFalse(memberId);
-        return getTravelDetailResponses(travelMembers);
+        return getTravelResponses(travelMembers);
     }
 
     private TravelResponses readAllByYear(long memberId, Integer year) {
         List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndTravelStartAtYear(memberId, year);
-        return getTravelDetailResponses(travelMembers);
+        return getTravelResponses(travelMembers);
     }
 
-    private TravelResponses getTravelDetailResponses(List<TravelMember> travelMembers) {
+    private TravelResponses getTravelResponses(List<TravelMember> travelMembers) {
         List<Travel> travels = travelMembers.stream()
                 .map(TravelMember::getTravel)
                 .toList();
