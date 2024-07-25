@@ -10,5 +10,5 @@ data class Travel(
     val endAt: LocalDate,
     val description: String? = null,
     val mates: List<Member>,
-    val visits: List<Visit>,
+    val visits: List<TravelVisit>,
 )

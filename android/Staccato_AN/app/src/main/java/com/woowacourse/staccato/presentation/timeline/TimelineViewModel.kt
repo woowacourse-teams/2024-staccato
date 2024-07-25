@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.domain.repository.TimelineRepository
 import com.woowacourse.staccato.presentation.common.Event
-import com.woowacourse.staccato.presentation.mapper.toUiModel
+import com.woowacourse.staccato.presentation.mapper.toTimelineTravelUiModel
 import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -30,7 +30,7 @@ class TimelineViewModel(private val repository: TimelineRepository) : ViewModel(
     fun loadTimeline() {
         viewModelScope.launch(coroutineExceptionHandler) {
             val timeline = repository.loadTravels()
-            _travels.value = timeline.toUiModel()
+            _travels.value = timeline.toTimelineTravelUiModel()
         }
     }
 }

@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.woowacourse.staccato.databinding.ItemVisitsBinding
 import com.woowacourse.staccato.presentation.travel.TravelHandler
-import com.woowacourse.staccato.presentation.travel.model.VisitUiModel
+import com.woowacourse.staccato.presentation.travel.model.TravelVisitUiModel
 
-class VisitsAdapter(private val handler: TravelHandler) : ListAdapter<VisitUiModel, VisitsViewHolder>(diffUtil) {
+class VisitsAdapter(private val handler: TravelHandler) : ListAdapter<TravelVisitUiModel, VisitsViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -25,21 +25,21 @@ class VisitsAdapter(private val handler: TravelHandler) : ListAdapter<VisitUiMod
         holder.bind(getItem(position))
     }
 
-    fun updateVisits(visits: List<VisitUiModel>) {
+    fun updateVisits(visits: List<TravelVisitUiModel>) {
         submitList(visits)
     }
 
     companion object {
         val diffUtil =
-            object : DiffUtil.ItemCallback<VisitUiModel>() {
+            object : DiffUtil.ItemCallback<TravelVisitUiModel>() {
                 override fun areItemsTheSame(
-                    oldItem: VisitUiModel,
-                    newItem: VisitUiModel,
+                    oldItem: TravelVisitUiModel,
+                    newItem: TravelVisitUiModel,
                 ): Boolean = oldItem.id == newItem.id
 
                 override fun areContentsTheSame(
-                    oldItem: VisitUiModel,
-                    newItem: VisitUiModel,
+                    oldItem: TravelVisitUiModel,
+                    newItem: TravelVisitUiModel,
                 ): Boolean = oldItem == newItem
             }
     }

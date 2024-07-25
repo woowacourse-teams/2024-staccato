@@ -7,7 +7,7 @@
 
         <variable
             name="mate"
-            type="com.woowacourse.staccato.presentation.travel.model.MateUiModel" />
+            type="com.woowacourse.staccato.presentation.MemberUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,28 +1,33 @@
 package com.woowacourse.staccato.presentation.travel
 
-import android.app.ProgressDialog.show
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.woowacourse.staccato.DeleteDialogFragment
 import com.woowacourse.staccato.R
+import com.woowacourse.staccato.data.StaccatoClient.travelApiService
+import com.woowacourse.staccato.data.travel.TravelDefaultRepository
+import com.woowacourse.staccato.data.travel.TravelRemoteDataSource
 import com.woowacourse.staccato.databinding.FragmentTravelBinding
 import com.woowacourse.staccato.presentation.ToolbarHandler
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.main.MainActivity
+import com.woowacourse.staccato.presentation.timeline.TimelineFragment.Companion.TRAVEL_ID_KEY
 import com.woowacourse.staccato.presentation.travel.adapter.MatesAdapter
 import com.woowacourse.staccato.presentation.travel.adapter.VisitsAdapter
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModelFactory
 import com.woowacourse.staccato.presentation.travelupdate.TravelUpdateActivity
+import kotlin.IllegalArgumentException
 
 class TravelFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
     ToolbarHandler {
     private val viewModel: TravelViewModel by viewModels {
-        TravelViewModelFactory()
+        TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)), getTravelId())
     }
     private val deleteDialog = DeleteDialogFragment { findNavController().popBackStack() }
 
@@ -39,7 +44,10 @@ class TravelFragment :
         initVisitsAdapter()
         observeTravel()
         navigateToVisit()
+        showErrorToast()
     }
+
+    private fun getTravelId(): Long = arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException(INVALID_TRAVEL_ID)
 
     private fun initBinding() {
         binding.lifecycleOwner = this
@@ -78,6 +86,12 @@ class TravelFragment :
         }
     }
 
+    private fun showErrorToast() {
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onUpdateClicked() {
         val travelUpdateLauncher = (activity as MainActivity).travelUpdateLauncher
         TravelUpdateActivity.startWithResultLauncher(
@@ -95,5 +109,6 @@ class TravelFragment :
 
     companion object {
         const val VISIT_ID_KEY = "visitId"
+        const val INVALID_TRAVEL_ID = "잘못된 여행 id 입니다"
     }
 }
