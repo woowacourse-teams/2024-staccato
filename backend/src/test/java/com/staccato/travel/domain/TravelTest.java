@@ -43,7 +43,7 @@ class TravelTest {
 
     @DisplayName("여행 상세를 수정 시 기존 방문 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
     @Test
-    void validateDuration(){
+    void validateDuration() {
         // given
         Travel travel = Travel.builder()
                 .title("2023 여름 여행")
