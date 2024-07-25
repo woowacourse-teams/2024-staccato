@@ -15,4 +15,7 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Visit vi SET vi.isDeleted = true WHERE vi.travel.id = :travelId")
     void deleteByTravelId(@Param("travelId") Long travelId);
+
+    @Query("SELECT CASE WHEN COUNT(v) > 0 THEN true ELSE false END FROM Visit v WHERE v.travel.id = :travelId")
+    boolean existsByTravelId(@Param("travelId") Long travelId);
 }

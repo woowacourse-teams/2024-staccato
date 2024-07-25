@@ -16,6 +16,8 @@ import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelResponses;
 import com.staccato.visit.domain.Visit;
+import com.staccato.visit.repository.VisitImageRepository;
+import com.staccato.visit.repository.VisitLogRepository;
 import com.staccato.visit.repository.VisitRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,8 @@ public class TravelService {
     private final TravelMemberRepository travelMemberRepository;
     private final VisitRepository visitRepository;
     private final MemberRepository memberRepository;
+    private final VisitImageRepository visitImageRepository;
+    private final VisitLogRepository visitLogRepository;
 
     @Transactional
     public long createTravel(TravelRequest travelRequest, Long memberId) {
@@ -88,10 +92,14 @@ public class TravelService {
 
     @Transactional
     public void deleteTravel(Long travelId) {
-        if (!visitRepository.findAllByTravelId(travelId).isEmpty()) {
-            throw new StaccatoException("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
-        }
+        validateVisitExistsByTravelId(travelId);
         visitRepository.deleteByTravelId(travelId);
         travelRepository.deleteById(travelId);
+    }
+
+    private void validateVisitExistsByTravelId(Long travelId) {
+        if (visitRepository.existsByTravelId(travelId)) {
+            throw new StaccatoException("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
+        }
     }
 }
