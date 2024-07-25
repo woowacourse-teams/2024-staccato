@@ -1,6 +1,7 @@
 package com.woowacourse.staccato.presentation.timeline
 
 import com.woowacourse.staccato.domain.repository.TimelineRepository
+import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
 
 class TempTimelineRepository : TimelineRepository {
     private val travels =

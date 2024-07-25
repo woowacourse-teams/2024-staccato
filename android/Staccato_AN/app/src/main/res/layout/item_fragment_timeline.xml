@@ -9,7 +9,7 @@
 
         <variable
             name="travel"
-            type="com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel" />
+            type="com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel" />
 
         <variable
             name="eventHandler"

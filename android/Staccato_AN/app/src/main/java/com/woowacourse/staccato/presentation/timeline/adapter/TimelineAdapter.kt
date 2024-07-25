@@ -7,7 +7,7 @@ import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineFirstBindi
 import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineLastBinding
 import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineMiddleBinding
 import com.woowacourse.staccato.presentation.timeline.TimelineHandler
-import com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel
+import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
 
 class TimelineAdapter(private val eventHandler: TimelineHandler) :
     RecyclerView.Adapter<TimelineViewHolder>() {

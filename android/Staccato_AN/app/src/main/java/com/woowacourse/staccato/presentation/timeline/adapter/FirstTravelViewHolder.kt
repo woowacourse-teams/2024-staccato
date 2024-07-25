@@ -2,7 +2,7 @@ package com.woowacourse.staccato.presentation.timeline.adapter
 
 import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineFirstBinding
 import com.woowacourse.staccato.presentation.timeline.TimelineHandler
-import com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel
+import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
 
 class FirstTravelViewHolder(
     private val binding: LayoutItemFragmentTimelineFirstBinding,
