@@ -60,7 +60,7 @@ class VisitServiceTest extends ServiceSliceTest {
 
         // then
         assertThat(visitRepository.findById(visit.getId()).get().getIsDeleted()).isTrue();
-        assertThat(visitLogRepository.findById(visitLog.getId()).get().getIsDeleted()).isTrue();
+        assertThat(visitLogRepository.findById(visitLog.getId())).isEmpty();
     }
 
     @DisplayName("특정 방문 상세를 조회하면, 이번이 몇 번째 방문인지까지 알 수 있다.")
@@ -69,7 +69,8 @@ class VisitServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(Member.builder().nickname("Sample Member").build());
         Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").member(member).build());
-        Travel travel = travelRepository.save(Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build());
+        Travel travel = travelRepository.save(Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1))
+                .build());
         Visit prevVisit = visitRepository.save(Visit.builder().visitedAt(LocalDate.now().minusDays(2)).pin(pin).travel(travel).build());
         Visit visit = visitRepository.save(Visit.builder().visitedAt(LocalDate.now().minusDays(1)).pin(pin).travel(travel).build());
         Visit nextVisit = visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(travel).build());

@@ -126,7 +126,7 @@ public class TravelService {
     }
 
     private String getFirstVisitImageUrl(Visit visit) {
-        return visitImageRepository.findFirstByVisitIdAndIsDeletedIsFalse(visit.getId())
+        return visitImageRepository.findFirstByVisitId(visit.getId())
                 .map(VisitImage::getImageUrl)
                 .orElse(null);
     }

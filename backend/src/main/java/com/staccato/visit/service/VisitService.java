@@ -68,9 +68,9 @@ public class VisitService {
                 pin.getId(), visit.getVisitedAt());
         return new VisitDetailResponse(
                 visit,
-                visitImageRepository.findAllByVisitIdAndIsDeletedIsFalse(visitId),
+                visitImageRepository.findAllByVisitId(visitId),
                 visitedCountBefore + 1,
-                visitLogRepository.findAllByVisitIdAndIsDeletedIsFalse(visitId)
+                visitLogRepository.findAllByVisitId(visitId)
         );
     }
 

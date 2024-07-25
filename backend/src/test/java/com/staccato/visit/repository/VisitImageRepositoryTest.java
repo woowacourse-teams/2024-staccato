@@ -51,8 +51,8 @@ class VisitImageRepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(visitImageRepository.findById(visitImage1.getId()).get().getIsDeleted()).isTrue(),
-                () -> assertThat(visitImageRepository.findById(visitImage2.getId()).get().getIsDeleted()).isTrue()
+                () -> assertThat(visitImageRepository.findById(visitImage1.getId())).isEmpty(),
+                () -> assertThat(visitImageRepository.findById(visitImage2.getId())).isEmpty()
         );
     }
 }

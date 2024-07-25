@@ -10,10 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-import org.hibernate.annotations.SQLDelete;
-
-import com.staccato.config.domain.BaseEntity;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,8 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE visit_image SET is_deleted = true WHERE id = ?")
-public class VisitImage extends BaseEntity {
+public class VisitImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
