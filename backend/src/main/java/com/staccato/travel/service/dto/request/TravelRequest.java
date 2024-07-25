@@ -24,6 +24,7 @@ public record TravelRequest(
         LocalDate endAt) {
     public Travel toTravel() {
         return Travel.builder()
+                .thumbnailUrl(travelThumbnail)
                 .title(travelTitle)
                 .description(description)
                 .startAt(startAt)

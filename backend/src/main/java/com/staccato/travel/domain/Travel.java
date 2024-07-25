@@ -76,15 +76,15 @@ public class Travel extends BaseEntity {
 
     private void validateDuration(Travel updatedTravel, List<Visit> visits) {
         visits.stream()
-                .filter(visit -> !updatedTravel.withinDuration(visit.getVisitedAt()))
+                .filter(visit -> updatedTravel.isWithoutDuration(visit.getVisitedAt()))
                 .findAny()
                 .ifPresent(visit -> {
                     throw new StaccatoException("변경하려는 여행 기간이 이미 존재하는 방문 기록을 포함하지 않습니다. 여행 기간을 다시 설정해주세요.");
                 });
     }
 
-    public boolean withinDuration(LocalDate date) {
-        return startAt.isBefore(date) && endAt.isAfter(date);
+    public boolean isWithoutDuration(LocalDate date) {
+        return startAt.isAfter(date) || endAt.isBefore(date);
     }
 
     public List<Member> getMates() {
