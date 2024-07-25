@@ -11,14 +11,14 @@ class TimelineRemoteDataSource(
     ),
 ) : TimelineDataSource {
     override suspend fun loadAll(): Result<TimelineResponse> {
-        return loadTimeline(null)
+        return loadTimeline()
     }
 
     override suspend fun loadByYear(year: Int): Result<TimelineResponse> {
         return loadTimeline(year)
     }
 
-    private suspend fun loadTimeline(year: Int?): Result<TimelineResponse> {
+    private suspend fun loadTimeline(year: Int? = null): Result<TimelineResponse> {
         val response = service.requestTimeline(year)
         val body = response.body()
         return if (response.isSuccessful && body != null) {

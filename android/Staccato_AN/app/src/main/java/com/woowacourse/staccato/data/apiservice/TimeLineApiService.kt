@@ -8,6 +8,6 @@ import retrofit2.http.Query
 interface TimeLineApiService {
     @GET("/travels")
     suspend fun requestTimeline(
-        @Query("year") year: Int?,
+        @Query("year") year: Int? = null,
     ): Response<TimelineResponse>
 }
