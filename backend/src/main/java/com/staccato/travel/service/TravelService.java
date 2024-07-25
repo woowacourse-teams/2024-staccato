@@ -54,7 +54,7 @@ public class TravelService {
     public void updateTravel(TravelRequest travelRequest, Long travelId) {
         Travel updatedTravel = travelRequest.toTravel();
         Travel originTravel = getTravelById(travelId);
-        List<Visit> visits = visitRepository.findAllByTravelId(travelId);
+        List<Visit> visits = visitRepository.findAllByTravelIdAndIsDeletedIsFalse(travelId);
         originTravel.update(updatedTravel, visits);
     }
 
