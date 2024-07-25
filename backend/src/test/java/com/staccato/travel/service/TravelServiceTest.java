@@ -181,4 +181,16 @@ class TravelServiceTest extends ServiceSliceTest {
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 여행을 찾을 수 없어요.");
     }
+
+    @DisplayName("존재하지 않는 여행 상세를 조회하려고 할 경우 예외가 발생한다.")
+    @Test
+    void failReadTravel() {
+        // given
+        long unknownId = 1;
+
+        // when & then
+        assertThatThrownBy(() -> travelService.readTravelById(unknownId))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("요청하신 여행을 찾을 수 없어요.");
+    }
 }
