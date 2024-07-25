@@ -254,4 +254,21 @@ class TravelIntegrationTest extends IntegrationTest {
                 LocalDate.of(year, 7, 1),
                 LocalDate.of(year, 7, 10));
     }
+
+    @DisplayName("사용자가 여행 상세 삭제를 요청하면, 여행 상세를 삭제한다.")
+    @Test
+    void deleteTravel() {
+        // given
+        Long travelId = 1L;
+        TravelRequest travelRequest = new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
+        createTravel(travelRequest);
+
+        // when & then
+        RestAssured.given().pathParam("travelId", travelId).log().all()
+                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .contentType(ContentType.JSON)
+                .when().delete("/travels/{travelId}")
+                .then().log().all()
+                .assertThat().statusCode(HttpStatus.OK.value());
+    }
 }

@@ -19,6 +19,7 @@ import com.staccato.travel.service.dto.response.TravelResponses;
 import com.staccato.visit.domain.Visit;
 import com.staccato.visit.domain.VisitImage;
 import com.staccato.visit.repository.VisitImageRepository;
+import com.staccato.visit.repository.VisitLogRepository;
 import com.staccato.visit.repository.VisitRepository;
 import com.staccato.visit.service.dto.response.VisitResponse;
 
@@ -31,6 +32,7 @@ public class TravelService {
     private final TravelRepository travelRepository;
     private final TravelMemberRepository travelMemberRepository;
     private final VisitRepository visitRepository;
+    private final VisitLogRepository visitLogRepository;
     private final MemberRepository memberRepository;
     private final VisitImageRepository visitImageRepository;
 
@@ -55,14 +57,6 @@ public class TravelService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Operation"));
     }
 
-    @Transactional
-    public void updateTravel(TravelRequest travelRequest, Long travelId) {
-        Travel updatedTravel = travelRequest.toTravel();
-        Travel originTravel = getTravelById(travelId);
-        List<Visit> visits = visitRepository.findAllByTravelIdAndIsDeletedIsFalse(travelId);
-        originTravel.update(updatedTravel, visits);
-    }
-
     public TravelResponses readAllTravels(long memberId, Integer year) {
         return Optional.ofNullable(year)
                 .map(y -> readAllByYear(memberId, y))
@@ -84,6 +78,34 @@ public class TravelService {
                 .map(TravelMember::getTravel)
                 .toList();
         return TravelResponses.from(travels);
+    }
+
+    @Transactional
+    public void updateTravel(TravelRequest travelRequest, Long travelId) {
+        Travel updatedTravel = travelRequest.toTravel();
+        Travel originTravel = getTravelById(travelId);
+        List<Visit> visits = visitRepository.findAllByTravelIdAndIsDeletedIsFalse(travelId);
+        originTravel.update(updatedTravel, visits);
+    }
+
+    @Transactional
+    public void deleteTravel(Long travelId) {
+        validateVisitExistsByTravelId(travelId);
+        visitRepository.findAllByTravelIdAndIsDeletedIsFalse(travelId)
+                .forEach(visit -> deleteVisits(visit.getId()));
+        travelRepository.deleteById(travelId);
+    }
+
+    private void validateVisitExistsByTravelId(Long travelId) {
+        if (visitRepository.existsByTravelId(travelId)) {
+            throw new StaccatoException("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
+        }
+    }
+
+    private void deleteVisits(long visitId) {
+        visitLogRepository.deleteByVisitId(visitId);
+        visitImageRepository.deleteByVisitId(visitId);
+        visitRepository.deleteById(visitId);
     }
 
     public TravelDetailResponse readTravelById(long travelId) {
