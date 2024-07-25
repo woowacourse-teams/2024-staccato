@@ -15,19 +15,20 @@ import com.woowacourse.staccato.databinding.FragmentTravelBinding
 import com.woowacourse.staccato.presentation.ToolbarHandler
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.main.MainActivity
-import com.woowacourse.staccato.presentation.timeline.TimelineFragment.Companion.TRAVEL_ID_KEY
 import com.woowacourse.staccato.presentation.travel.adapter.MatesAdapter
 import com.woowacourse.staccato.presentation.travel.adapter.VisitsAdapter
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModelFactory
 import com.woowacourse.staccato.presentation.travelupdate.TravelUpdateActivity
-import kotlin.IllegalArgumentException
 
 class TravelFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
     ToolbarHandler {
     private val viewModel: TravelViewModel by viewModels {
-        TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)), getTravelId())
+        TravelViewModelFactory(
+            TravelDefaultRepository(TravelRemoteDataSource(travelApiService)),
+            getTravelId(),
+        )
     }
     private val deleteDialog = DeleteDialogFragment { findNavController().popBackStack() }
 
@@ -109,6 +110,7 @@ class TravelFragment :
 
     companion object {
         const val VISIT_ID_KEY = "visitId"
+        const val TRAVEL_ID_KEY = "travelId"
         const val INVALID_TRAVEL_ID = "잘못된 여행 id 입니다"
     }
 }

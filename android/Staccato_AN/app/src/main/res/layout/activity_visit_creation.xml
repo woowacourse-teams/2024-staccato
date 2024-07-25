@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.visitcreation.VisitCreationViewModel" />
+            type="com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModel" />
 
         <variable
             name="visitCreationHandler"

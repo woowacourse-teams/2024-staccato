@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 data class TravelVisitDto(
     @SerialName("visitId") val visitId: Long,
     @SerialName("placeName") val placeName: String,
-    @SerialName("visitImage") val visitImage: String,
+    @SerialName("visitImage") val visitImage: String? = null,
     @SerialName("visitedAt") val visitedAt: String,
 )

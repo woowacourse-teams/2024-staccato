@@ -5,7 +5,7 @@ import java.time.LocalDate
 data class TravelVisitUiModel(
     val id: Long,
     val placeName: String,
-    val visitImage: String,
+    val visitImage: String? = null,
     val visitedAt: LocalDate,
 )
 

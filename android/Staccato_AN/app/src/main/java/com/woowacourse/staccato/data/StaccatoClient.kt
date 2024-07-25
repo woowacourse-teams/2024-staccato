@@ -4,11 +4,13 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.woowacourse.staccato.BuildConfig
 import com.woowacourse.staccato.data.apiservice.TimeLineApiService
 import com.woowacourse.staccato.data.travel.TravelApiService
+import com.woowacourse.staccato.data.visit.VisitApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object StaccatoClient {
     private val BASE_URL = BuildConfig.BASE_URL
@@ -21,6 +23,10 @@ object StaccatoClient {
 
     val timelineService: TimeLineApiService by lazy {
         create(TimeLineApiService::class.java)
+    }
+
+    val visitApiService: VisitApiService by lazy {
+        create(VisitApiService::class.java)
     }
 
     private val provideLoggingInterceptor =
@@ -40,6 +46,7 @@ object StaccatoClient {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(provideHttpClient)
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(
                 jsonBuilder.asConverterFactory("application/json".toMediaType()),
             )
