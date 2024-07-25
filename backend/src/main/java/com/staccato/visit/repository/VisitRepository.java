@@ -10,5 +10,5 @@ import com.staccato.visit.domain.Visit;
 public interface VisitRepository extends JpaRepository<Visit, Long> {
     List<Visit> findAllByTravelIdAndIsDeletedIsFalse(@Param("travelId") long travelId);
 
-    long countByPinId(Long pinId);
+    long countByPinIdAndIsDeletedIsFalse(Long pinId);
 }

@@ -14,5 +14,5 @@ public interface VisitLogRepository extends JpaRepository<VisitLog, Long> {
     @Query("UPDATE VisitLog vl SET vl.isDeleted = true WHERE vl.visit.id = :visitId")
     void deleteByVisitId(@Param("visitId") Long visitId);
 
-    List<VisitLog> findAllByVisitId(long visitId);
+    List<VisitLog> findAllByVisitIdAndIsDeletedIsFalse(long visitId);
 }
