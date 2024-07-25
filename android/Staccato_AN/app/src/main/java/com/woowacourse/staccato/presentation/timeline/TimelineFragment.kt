@@ -2,8 +2,8 @@ package com.woowacourse.staccato.presentation.timeline
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.woowacourse.staccato.R

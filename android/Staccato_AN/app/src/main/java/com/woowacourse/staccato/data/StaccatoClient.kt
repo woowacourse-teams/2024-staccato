@@ -2,8 +2,8 @@ package com.woowacourse.staccato.data
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.woowacourse.staccato.BuildConfig
-import com.woowacourse.staccato.data.travel.TravelApiService
 import com.woowacourse.staccato.data.apiservice.TimeLineApiService
+import com.woowacourse.staccato.data.travel.TravelApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
