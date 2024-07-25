@@ -10,28 +10,35 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#CCCCCC"
+        android:background="@color/white"
         tools:context=".presentation.timeline.TimelineFragment">
 
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/tv_timeline_my_timeline"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:gravity="center"
-            android:text="타임라인 화면"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/timeline_my_timeline"
+            android:textAppearance="@style/Typography.Title1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/btn_timeline"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="여행 상세로 이동"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_timeline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:clipToPadding="false"
+            android:paddingHorizontal="10dp"
+            android:paddingBottom="60dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline"
+            tools:listitem="@layout/layout_item_fragment_timeline_middle" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

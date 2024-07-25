@@ -1,8 +1,8 @@
 package com.woowacourse.staccato.presentation.travel
 
+import android.app.ProgressDialog.show
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,11 +18,13 @@ import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModelFactory
 import com.woowacourse.staccato.presentation.travelupdate.TravelUpdateActivity
 
-class TravelFragment : BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
+class TravelFragment :
+    BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
     ToolbarHandler {
     private val viewModel: TravelViewModel by viewModels {
         TravelViewModelFactory()
     }
+    private val deleteDialog = DeleteDialogFragment { findNavController().popBackStack() }
 
     private lateinit var matesAdapter: MatesAdapter
     private lateinit var visitsAdapter: VisitsAdapter
@@ -85,17 +87,8 @@ class TravelFragment : BindingFragment<FragmentTravelBinding>(R.layout.fragment_
     }
 
     override fun onDeleteClicked() {
-        val deleteDialog = DeleteDialogFragment()
         val fragmentManager = parentFragmentManager
         deleteDialog.apply {
-            setDialogHandler {
-                findNavController().popBackStack()
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.travel_delete_complete),
-                    Toast.LENGTH_SHORT,
-                ).show()
-            }
             show(fragmentManager, DeleteDialogFragment.TAG)
         }
     }

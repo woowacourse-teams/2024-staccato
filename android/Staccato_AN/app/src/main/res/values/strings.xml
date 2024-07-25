@@ -15,6 +15,7 @@
     <string name="all_image_content_description">사진</string>
 
     // fragment_timeline
+    <string name="timeline_my_timeline">나의 여행 타임라인 ✈️</string>
     <string name="timeline_year">%s년</string>
     <string name="timeline_title">✈️ 추억을 떠올려보세요 ✈️</string>
 
@@ -43,6 +44,11 @@
     // activity_visit_creation / activity_visit_update
     <string name="visit_creation_place_name">장소 이름</string>
     <string name="visit_creation_address">주소</string>
+    <string name="visit_creation_visited_at">방문 날짜</string>
+    <string name="visit_creation_visited_at_hint">방문 날짜를 선택해주세요</string>
+    <string name="visit_creation_travel_selection">여행 선택</string>
+    <string name="visit_creation_travel_selection_hint">여행을 선택해주세요</string>
+    <string name="visit_creation_travel_unselected_travel">여행에 해당하는 방문 날짜가 없습니다.\n여행을 먼저 선택해주세요!</string>
 
     // fragment_photo_attach
     <string name="photo_attach_title">사진을 등록해주세요</string>
