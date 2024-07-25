@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.data.dto.timeline
 
+import com.woowacourse.staccato.data.dto.MemberDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,5 +11,6 @@ data class TimelineTravelDto(
     @SerialName("travelThumbnail") val travelThumbnail: String,
     @SerialName("startAt") val startAt: String,
     @SerialName("endAt") val endAt: String,
-    @SerialName("mates") val mates: List<TimelineMemberDto>,
+    @SerialName("description") val description: String,
+    @SerialName("mates") val mates: List<MemberDto>,
 )
