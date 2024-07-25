@@ -64,7 +64,9 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
     }
 
     fun setTravels(newTravels: List<TimelineTravelUiModel>) {
-        travels = newTravels
-        notifyItemRangeInserted(0, newTravels.size)
+        if (travels.isEmpty()) {
+            travels = newTravels
+            notifyItemRangeInserted(0, newTravels.size)
+        }
     }
 }
