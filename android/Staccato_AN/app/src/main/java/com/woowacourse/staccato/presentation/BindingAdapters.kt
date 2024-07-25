@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.presentation.visitcreation.model.TravelUiModel
+import java.time.LocalDate
 
 @BindingAdapter(
     value = ["coilImageUrl", "coilPlaceHolder"],
@@ -104,6 +105,24 @@ fun ImageView.setRoundedCornerImageWithGlide(
         .into(this)
 }
 
+@BindingAdapter(
+    value = ["travelTitle", "startDate", "endDate"],
+)
+fun Button.setTravelSaveButtonActive(
+    title: String?,
+    startDate: LocalDate?,
+    endDate: LocalDate?,
+) {
+    isEnabled =
+        if (title.isNullOrEmpty() || startDate == null || endDate == null) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
 @BindingAdapter("bindSetSelectedTravel")
 fun TextView.setSelectedTravel(selectedTravel: TravelUiModel?) {
     if (selectedTravel == null) {
@@ -141,6 +160,21 @@ fun Button.setVisitUpdateButtonActive(
             setTextColor(resources.getColor(R.color.white, null))
             true
         }
+}
+
+@BindingAdapter(
+    value = ["startDate", "endDate"],
+)
+fun TextView.setTravelPeriod(
+    startDate: LocalDate?,
+    endDate: LocalDate?,
+) {
+    if (startDate == null || endDate == null) {
+        text = resources.getString(R.string.travel_creation_period_hint)
+    } else {
+        text = resources.getString(R.string.travel_creation_period_description).format(startDate, endDate)
+        setTextColor(resources.getColor(R.color.staccato_black, null))
+    }
 }
 
 @BindingAdapter("bindSetVisitedAtConfirmButtonActive")

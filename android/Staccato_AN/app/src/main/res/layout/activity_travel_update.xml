@@ -5,34 +5,152 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModel" />
+
+        <variable
+            name="handler"
+            type="com.woowacourse.staccato.presentation.travelcreation.TravelCreationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#999999"
+        android:background="@color/white"
         tools:context=".presentation.travelupdate.TravelUpdateActivity">
 
-        <TextView
-            android:id="@+id/tv_tmp_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:gravity="center"
-            android:text="여행 수정 화면"
-            android:textSize="30sp"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_travel_update"
+            style="@style/DefaultToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/btn_travel_update_done"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="수정 완료 (여행 상세로 이동)"
+        <ScrollView
+            android:id="@+id/sv_travel_update"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar_travel_update">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_travel_update_photo_attach"
+                    style="@style/PhotoAttachBoxStyle"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="12dp"
+                    android:contentDescription="@string/all_image_content_description"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <include
+                    android:id="@+id/include_travel_update_photo_attach"
+                    layout="@layout/layout_photo_attach"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_travel_update_photo_attach"
+                    app:layout_constraintEnd_toEndOf="@id/iv_travel_update_photo_attach"
+                    app:layout_constraintStart_toStartOf="@id/iv_travel_update_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_travel_update_photo_attach" />
+
+                <TextView
+                    android:id="@+id/tv_travel_update_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="36dp"
+                    android:text="@string/travel_creation_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_travel_update_photo_attach" />
+
+                <EditText
+                    android:id="@+id/et_travel_update"
+                    style="@style/EditTextStyle"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/travel_creation_title_hint"
+                    android:maxLength="30"
+                    android:text="@={viewModel.title}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_update_title" />
+
+                <TextView
+                    android:id="@+id/tv_travel_update_description"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/travel_creation_description"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_travel_update" />
+
+                <EditText
+                    android:id="@+id/et_travel_update_description"
+                    style="@style/EditTextStyle"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="top"
+                    android:hint="@string/travel_creation_description_hint"
+                    android:maxLength="500"
+                    android:minHeight="255dp"
+                    android:text="@={viewModel.description}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_update_description" />
+
+                <TextView
+                    android:id="@+id/tv_travel_update_period_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/travel_creation_period"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_travel_update_description" />
+
+                <TextView
+                    android:id="@+id/tv_travel_update_period_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/shape_all_gray1_8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="@{() -> handler.onPeriodSelectionClicked()}"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:textAppearance="@style/Typography.Body1"
+                    android:textColor="@color/gray3"
+                    app:endDate="@{viewModel.endDate}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_update_period_title"
+                    app:startDate="@{viewModel.startDate}" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_travel_update_save"
+                    style="@style/ButtonStyle.Save.Active"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="24dp"
+                    android:onClick="@{() -> handler.onSaveClicked()}"
+                    app:endDate="@{viewModel.endDate}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_update_period_description"
+                    app:startDate="@{viewModel.startDate}"
+                    app:travelTitle="@{viewModel.title}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

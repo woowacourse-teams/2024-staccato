@@ -5,45 +5,172 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel" />
+
+        <variable
+            name="toolbarHandler"
+            type="com.woowacourse.staccato.presentation.ToolbarHandler" />
+
+        <import type="java.time.LocalDate" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#AAAAAA"
+        android:background="@color/white"
         tools:context=".presentation.travel.TravelFragment">
 
-        <TextView
+        <include
+            android:id="@+id/include_travel_toolbar"
+            layout="@layout/toolbar_detail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:toolbarHandler="@{toolbarHandler}"/>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/sv_travel"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:gravity="center"
-            android:text="여행 상세 화면"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <Button
-            android:id="@+id/btn_visit"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="방문 상세"
-            app:layout_constraintBottom_toTopOf="@id/btn_travel_update"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/btn_travel_update"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="내용 수정하기(여행 수정 화면으로)"
+            android:layout_height="0dp"
+            android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_visit" />
+            app:layout_constraintTop_toBottomOf="@id/include_travel_toolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_travel_thumbnail"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/all_image_content_description"
+                    android:scaleType="centerCrop"
+                    app:coilImageUrl="@{viewModel.travel.thumbnail}"
+                    app:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/shape_place_holder_rectangle" />
+
+                <TextView
+                    android:id="@+id/tv_travel_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{viewModel.travel.title}"
+                    android:textAppearance="@style/Typography.Title1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_travel_thumbnail"
+                    tools:text="여행 제목" />
+
+                <TextView
+                    android:id="@+id/tv_travel_period"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@{@string/travel_period(viewModel.travel.startAt.year, viewModel.travel.startAt.monthValue, viewModel.travel.startAt.dayOfMonth, viewModel.travel.endAt.year, viewModel.travel.endAt.monthValue, viewModel.travel.endAt.dayOfMonth)}"
+                    android:textAppearance="@style/Typography.Body4"
+                    app:layout_constraintStart_toStartOf="@id/tv_travel_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_title"
+                    tools:text="2023년 7월 1일 ~ 7월 5일" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_travel_first"
+                    style="@style/DividerStyle"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_period" />
+
+                <TextView
+                    android:id="@+id/tv_travel_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="@{viewModel.travel.description}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider_travel_first"
+                    tools:text="(여행 소개) Lorem Ipsum is simply dummy text of the printing and typesetting industry. " />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_travel_second"
+                    style="@style/DividerStyle"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_description" />
+
+                <TextView
+                    android:id="@+id/tv_travel_mates"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/travel_mates"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider_travel_second" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_travel_mates"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_mates"
+                    tools:listitem="@layout/item_mates" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_travel_third"
+                    style="@style/DividerStyle"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_travel_mates" />
+
+                <TextView
+                    android:id="@+id/tv_travel_visits"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/visit_logs"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider_travel_third" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_travel_visits"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="12dp"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingBottom="48dp"
+                    android:scrollbars="none"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_visits"
+                    tools:listitem="@layout/item_visits" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>
