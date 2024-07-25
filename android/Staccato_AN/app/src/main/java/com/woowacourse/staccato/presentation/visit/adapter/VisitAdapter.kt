@@ -23,7 +23,7 @@ class VisitAdapter(private val items: MutableList<VisitDetailUiModel> = mutableL
         parent: ViewGroup,
         viewType: Int,
     ): VisitViewHolder {
-        return when (VisitViewHolderType.of(viewType)) {
+        return when (VisitViewHolderType.from(viewType)) {
             VisitViewHolderType.VISIT_DEFAULT -> {
                 val inflater = LayoutInflater.from(parent.context)
                 val binding = ItemVisitDefaultBinding.inflate(inflater, parent, false)

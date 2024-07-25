@@ -6,7 +6,7 @@ enum class VisitViewHolderType(val value: Int) {
     ;
 
     companion object {
-        fun of(value: Int): VisitViewHolderType {
+        fun from(value: Int): VisitViewHolderType {
             return when (value) {
                 0 -> {
                     VISIT_DEFAULT
