@@ -19,6 +19,9 @@ jobs:
     permissions:
       contents: read
 
+    env:
+      LOCAL_PROPERTIES_API_KEY: ${{ secrets.LOCAL_PROPERTIES_API_KEY }}
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,6 +33,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
+
+      - name: Create local.properties
+        run: |
+          echo "LOCAL_PROPERTIES_API_KEY=\"$LOCAL_PROPERTIES_API_KEY\"" > local.properties
+        shell: bash
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
