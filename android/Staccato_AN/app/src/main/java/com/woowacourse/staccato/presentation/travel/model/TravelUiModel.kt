@@ -1,5 +1,7 @@
 package com.woowacourse.staccato.presentation.travel.model
 
+import com.woowacourse.staccato.presentation.MemberUiModel
+import com.woowacourse.staccato.presentation.dummyMates
 import java.time.LocalDate
 
 data class TravelUiModel(
@@ -8,9 +10,9 @@ data class TravelUiModel(
     val thumbnail: String? = null,
     val startAt: LocalDate,
     val endAt: LocalDate,
-    val visits: List<VisitUiModel>,
     val description: String? = null,
     val mates: List<MemberUiModel>,
+    val visits: List<TravelVisitUiModel>,
 )
 
 val dummyTravel: TravelUiModel =
