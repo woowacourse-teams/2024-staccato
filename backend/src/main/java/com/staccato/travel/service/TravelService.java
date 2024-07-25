@@ -14,9 +14,14 @@ import com.staccato.travel.domain.TravelMember;
 import com.staccato.travel.repository.TravelMemberRepository;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
+import com.staccato.travel.service.dto.response.TravelDetailResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
 import com.staccato.visit.domain.Visit;
+import com.staccato.visit.domain.VisitImage;
+import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitRepository;
+import com.staccato.visit.service.dto.response.VisitResponse;
+import com.staccato.visit.service.dto.response.VisitResponses;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +33,7 @@ public class TravelService {
     private final TravelMemberRepository travelMemberRepository;
     private final VisitRepository visitRepository;
     private final MemberRepository memberRepository;
+    private final VisitImageRepository visitImageRepository;
 
     @Transactional
     public long createTravel(TravelRequest travelRequest, Long memberId) {
@@ -58,11 +64,6 @@ public class TravelService {
         originTravel.update(updatedTravel, visits);
     }
 
-    private Travel getTravelById(long travelId) {
-        return travelRepository.findById(travelId)
-                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
-    }
-
     public TravelResponses readAllTravels(long memberId, Integer year) {
         return Optional.ofNullable(year)
                 .map(y -> readAllByYear(memberId, y))
@@ -84,5 +85,28 @@ public class TravelService {
                 .map(TravelMember::getTravel)
                 .toList();
         return TravelResponses.from(travels);
+    }
+
+    public TravelDetailResponse readTravelById(long travelId) {
+        Travel travel = getTravelById(travelId);
+        VisitResponses visitResponses = getVisitResponses(visitRepository.findAllByTravelIdAndIsDeletedIsFalse(travelId));
+        return new TravelDetailResponse(travel, visitResponses);
+    }
+
+    private Travel getTravelById(long travelId) {
+        return travelRepository.findByIdAndIsDeletedIsFalse(travelId)
+                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
+    }
+
+    private VisitResponses getVisitResponses(List<Visit> visits) {
+        return new VisitResponses(visits.stream()
+                .map(visit -> new VisitResponse(visit, getFirstVisitImageUrl(visit)))
+                .toList());
+    }
+
+    private String getFirstVisitImageUrl(Visit visit) {
+        return visitImageRepository.findFirstByVisitIdAndIsDeletedIsFalse(visit.getId())
+                .map(VisitImage::getImageUrl)
+                .orElse(null);
     }
 }

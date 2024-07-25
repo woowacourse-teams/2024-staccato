@@ -1,5 +1,7 @@
 package com.staccato.visit.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,4 +13,6 @@ public interface VisitImageRepository extends JpaRepository<VisitImage, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE VisitImage vi SET vi.isDeleted = true WHERE vi.visit.id = :visitId")
     void deleteByVisitId(@Param("visitId") Long visitId);
+
+    Optional<VisitImage> findFirstByVisitIdAndIsDeletedIsFalse(long visitId);
 }
