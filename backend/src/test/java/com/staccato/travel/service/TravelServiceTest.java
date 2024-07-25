@@ -56,7 +56,7 @@ class TravelServiceTest extends ServiceSliceTest {
     void createTravel() {
         // given
         TravelRequest travelRequest = createTravelRequest(2024);
-        Member member = memberRepository.save(Member.builder().nickname("staccato").build());
+        Member member = saveMember();
 
         // when
         long travelId = travelService.createTravel(travelRequest, member.getId());
@@ -74,7 +74,7 @@ class TravelServiceTest extends ServiceSliceTest {
     @ParameterizedTest
     void readAllTravels(Integer year, int expectedSize) {
         // given
-        Member member = memberRepository.save(Member.builder().nickname("staccato").build());
+        Member member = saveMember();
         travelService.createTravel(createTravelRequest(2023), member.getId());
         travelService.createTravel(createTravelRequest(2024), member.getId());
 
@@ -85,12 +85,16 @@ class TravelServiceTest extends ServiceSliceTest {
         assertThat(travelResponses.travels()).hasSize(expectedSize);
     }
 
+    private Member saveMember(){
+        return memberRepository.save(Member.builder().nickname("staccato").build());
+    }
+
     @DisplayName("특정 여행 상세 목록을 조회한다.")
     @Test
     void readTravelById() {
         // given
-        Member member = memberRepository.save(Member.builder().nickname("staccato").build());
-        Pin pin = pinRepository.save(Pin.builder().place("장소").address("주소").build());
+        Member member = saveMember();
+        Pin pin = savePin(member);
 
         long targetId = travelService.createTravel(createTravelRequest(2023), member.getId());
         Visit visit = saveVisit(pin, targetId);
@@ -108,6 +112,10 @@ class TravelServiceTest extends ServiceSliceTest {
                 () -> assertThat(travelDetailResponse.visits()).hasSize(1),
                 () -> assertThat(travelDetailResponse.visits().get(0).visitId()).isEqualTo(visit.getId())
         );
+    }
+
+    private Pin savePin(Member member) {
+        return pinRepository.save(Pin.builder().place("장소").address("주소").member(member).build());
     }
 
     private static TravelRequest createTravelRequest(int year) {
@@ -199,7 +207,8 @@ class TravelServiceTest extends ServiceSliceTest {
     void failDeleteTravel() {
         // given
         Travel travel = createAndSaveTravel(2023);
-        Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").build());
+        Member member = saveMember();
+        Pin pin = savePin(member);
         visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(travel).build());
 
         // when & then

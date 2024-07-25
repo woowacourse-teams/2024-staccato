@@ -47,12 +47,12 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void deleteVisitById() {
         // given
-        Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").build());
+        Member member = memberRepository.save(Member.builder().nickname("Sample Member").build());
+        Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").member(member).build());
         Travel travel = travelRepository.save(
                 Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
         );
         Visit visit = visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(travel).build());
-        Member member = memberRepository.save(Member.builder().nickname("Sample Member").build());
         VisitLog visitLog = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log").visit(visit).member(member).build());
 
         // when
@@ -67,12 +67,12 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void readVisitById() {
         // given
-        Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").build());
+        Member member = memberRepository.save(Member.builder().nickname("Sample Member").build());
+        Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").member(member).build());
         Travel travel = travelRepository.save(Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build());
         Visit prevVisit = visitRepository.save(Visit.builder().visitedAt(LocalDate.now().minusDays(2)).pin(pin).travel(travel).build());
         Visit visit = visitRepository.save(Visit.builder().visitedAt(LocalDate.now().minusDays(1)).pin(pin).travel(travel).build());
         Visit nextVisit = visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(travel).build());
-        Member member = memberRepository.save(Member.builder().nickname("Sample Member").build());
         VisitLog visitLog = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log").visit(visit).member(member).build());
         VisitImage visitImage = visitImageRepository.save(VisitImage.builder().imageUrl("Sample URL").visit(visit).build());
 
