@@ -9,13 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.woowacourse.staccato.databinding.FragmentDeleteDialogBinding
 
-class DeleteDialogFragment : DialogFragment() {
-    private lateinit var dialogHandler: DialogHandler
-
-    fun setDialogHandler(newDialogHandler: DialogHandler) {
-        dialogHandler = newDialogHandler
-    }
-
+class DeleteDialogFragment(private val dialogHandler: DialogHandler) : DialogFragment() {
     private var _binding: FragmentDeleteDialogBinding? = null
     private val binding get() = _binding!!
 

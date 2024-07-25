@@ -19,6 +19,7 @@ class VisitFragment :
     BindingFragment<FragmentVisitBinding>(R.layout.fragment_visit), ToolbarHandler {
     private val viewModel: VisitViewModel by viewModels { VisitViewModelFactory() }
     private lateinit var visitAdapter: VisitAdapter
+    private val deleteDialog = DeleteDialogFragment { findNavController().popBackStack() }
 
     override fun onViewCreated(
         view: View,
@@ -53,9 +54,7 @@ class VisitFragment :
 
     override fun onDeleteClicked() {
         val fragmentManager = parentFragmentManager
-        val deleteDialog = DeleteDialogFragment()
         deleteDialog.apply {
-            setDialogHandler { findNavController().popBackStack() }
             show(fragmentManager, DeleteDialogFragment.TAG)
         }
     }
