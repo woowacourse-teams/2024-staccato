@@ -19,6 +19,7 @@ object StaccatoClient {
     private val provideHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(provideLoggingInterceptor)
+            .addInterceptor(HeaderInterceptor())
             .build()
 
     private val jsonBuilder = Json { coerceInputValues = true }
