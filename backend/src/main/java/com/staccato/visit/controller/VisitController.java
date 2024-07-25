@@ -34,17 +34,17 @@ public class VisitController {
         return ResponseEntity.created(URI.create("/visits/" + visitId)).build();
     }
 
-    @DeleteMapping("/{visitId}")
-    public ResponseEntity<Void> deleteById(
+    @GetMapping("/{visitId}")
+    public ResponseEntity<VisitDetailResponse> readVisitById(
             @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") Long visitId) {
-        visitService.deleteById(visitId);
-        return ResponseEntity.ok().build();
+        VisitDetailResponse visitDetailResponse = visitService.readVisitById(visitId);
+        return ResponseEntity.ok().body(visitDetailResponse);
     }
 
-    @GetMapping("/{visitId}")
-    public ResponseEntity<VisitDetailResponse> getVisitById(
+    @DeleteMapping("/{visitId}")
+    public ResponseEntity<Void> deleteVisitById(
             @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") Long visitId) {
-        VisitDetailResponse visitDetailResponse = visitService.getById(visitId);
-        return ResponseEntity.ok().body(visitDetailResponse);
+        visitService.deleteVisitById(visitId);
+        return ResponseEntity.ok().build();
     }
 }

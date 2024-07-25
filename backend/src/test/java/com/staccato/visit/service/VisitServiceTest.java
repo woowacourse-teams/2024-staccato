@@ -56,7 +56,7 @@ class VisitServiceTest extends ServiceSliceTest {
         VisitLog visitLog = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log").visit(visit).member(member).build());
 
         // when
-        visitService.deleteById(visit.getId());
+        visitService.deleteVisitById(visit.getId());
 
         // then
         assertThat(visitRepository.findById(visit.getId()).get().getIsDeleted()).isTrue();
@@ -75,7 +75,7 @@ class VisitServiceTest extends ServiceSliceTest {
         VisitImage visitImage = visitImageRepository.save(VisitImage.builder().imageUrl("Sample URL").visit(visit).build());
 
         // when
-        VisitDetailResponse visitDetailResponse = visitService.getById(visit.getId());
+        VisitDetailResponse visitDetailResponse = visitService.readVisitById(visit.getId());
 
         // then
         assertAll(
@@ -92,7 +92,7 @@ class VisitServiceTest extends ServiceSliceTest {
     @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
     @Test
     void failGetByPin() {
-        assertThatThrownBy(() -> visitService.getById(1L))
+        assertThatThrownBy(() -> visitService.readVisitById(1L))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
     }

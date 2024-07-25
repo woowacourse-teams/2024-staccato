@@ -42,11 +42,14 @@ public class VisitService {
         return visit.getId();
     }
 
-    @Transactional
-    public void deleteById(Long visitId) {
-        visitLogRepository.deleteByVisitId(visitId);
-        visitImageRepository.deleteByVisitId(visitId);
-        visitRepository.deleteById(visitId);
+    private Pin getPinById(long pinId) {
+        return pinRepository.findById(pinId)
+                .orElseThrow(() -> new StaccatoException("요청하신 핀을 찾을 수 없어요."));
+    }
+
+    private Travel getTravelById(long travelId) {
+        return travelRepository.findById(travelId)
+                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 
     private List<VisitImage> makeVisitImages(List<String> visitedImages, Visit visit) {
@@ -58,24 +61,25 @@ public class VisitService {
                 .toList();
     }
 
-    private Pin getPinById(long pinId) {
-        return pinRepository.findById(pinId)
-                .orElseThrow(() -> new StaccatoException("요청하신 핀을 찾을 수 없어요."));
-    }
-
-    private Travel getTravelById(long travelId) {
-        return travelRepository.findById(travelId)
-                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
-    }
-
-    public VisitDetailResponse getById(long visitId) {
-        Visit visit = visitRepository.findById(visitId)
-                .orElseThrow(() -> new StaccatoException("요청하신 방문 기록을 찾을 수 없어요."));
+    public VisitDetailResponse readVisitById(long visitId) {
+        Visit visit = getVisitById(visitId);
         return new VisitDetailResponse(
                 visit,
                 visitImageRepository.findAllByVisitIdAndIsDeletedIsFalse(visitId),
                 visitRepository.countByPinIdAndIsDeletedIsFalse(visit.getPin().getId()),
                 visitLogRepository.findAllByVisitIdAndIsDeletedIsFalse(visitId)
         );
+    }
+
+    private Visit getVisitById(long visitId) {
+        return visitRepository.findById(visitId)
+                .orElseThrow(() -> new StaccatoException("요청하신 방문 기록을 찾을 수 없어요."));
+    }
+
+    @Transactional
+    public void deleteVisitById(Long visitId) {
+        visitLogRepository.deleteByVisitId(visitId);
+        visitImageRepository.deleteByVisitId(visitId);
+        visitRepository.deleteById(visitId);
     }
 }
