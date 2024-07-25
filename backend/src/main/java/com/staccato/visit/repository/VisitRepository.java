@@ -1,5 +1,6 @@
 package com.staccato.visit.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +15,5 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
     @Query("SELECT CASE WHEN COUNT(v) > 0 THEN true ELSE false END FROM Visit v WHERE v.travel.id = :travelId")
     boolean existsByTravelId(@Param("travelId") Long travelId);
 
-    long countByPinIdAndIsDeletedIsFalse(Long pinId);
+    long countByPinIdAndIsDeletedIsFalseAndVisitedAtBefore(Long pinId, LocalDate visitedAt);
 }
