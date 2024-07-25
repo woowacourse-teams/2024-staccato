@@ -121,4 +121,17 @@
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:background">@drawable/shape_drag_handle</item>
     </style>
+
+    <style name="DatePickerStyle" parent="ThemeOverlay.Material3.MaterialCalendar">
+        <item name="colorPrimary">@color/staccato_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:background">@color/white</item>
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="materialCalendarHeaderSelection">@style/Typography.Title1</item>
+        <item name="materialCalendarStyle">@style/CustomMaterialCalendarStyle</item>
+    </style>
+
+    <style name="CustomMaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
+        <item name="rangeFillColor">@color/staccato_blue_30</item>
+    </style>
 </resources>
