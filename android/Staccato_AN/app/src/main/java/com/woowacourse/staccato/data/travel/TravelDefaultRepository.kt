@@ -10,9 +10,13 @@ class TravelDefaultRepository(
 ) : TravelRepository {
     override suspend fun loadTravel(travelId: Long): ResponseResult<Travel> {
         return when (val responseResult = travelDataSource.fetchTravel(travelId)) {
-            is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, "예기치 않은 오류가 발생했습니다")
+            is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.code, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
         }
+    }
+
+    companion object {
+        const val ERROR_MESSAGE = "예기치 않은 오류가 발생했습니다"
     }
 }
