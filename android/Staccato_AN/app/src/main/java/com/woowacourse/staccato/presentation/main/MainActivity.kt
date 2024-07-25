@@ -71,7 +71,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         setupBottomSheetNavigation()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
-        setUpToolbar()
     }
 
     private fun setupBackPressedHandler() {
@@ -138,16 +137,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             .setPopUpTo(popUpToId, false)
             .build()
 
-    private fun setUpToolbar() {
-        binding.toolbarMain.setNavigationOnClickListener {
-            if (navController.currentDestination?.id == R.id.timelineFragment) {
-                behavior.state = STATE_COLLAPSED
-            } else {
-                navController.popBackStack()
-            }
-        }
-    }
-
     private fun setUpBottomSheetBehaviorAction() {
         behavior.apply {
             addBottomSheetCallback(
@@ -157,16 +146,11 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                         newState: Int,
                     ) {
                         when (newState) {
-                            STATE_COLLAPSED -> {
-                                binding.toolbarMain.visibility = View.INVISIBLE
-                            }
-
                             STATE_EXPANDED -> {
                                 binding.btnTimeline.visibility = View.INVISIBLE
                             }
 
                             else -> {
-                                binding.toolbarMain.visibility = View.VISIBLE
                                 binding.btnTimeline.visibility = View.VISIBLE
                             }
                         }
@@ -178,7 +162,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     ) {
                         binding.tvBottomSheetRemindYourMemories.alpha = 1 - slideOffset
                         binding.btnTimeline.alpha = 1 - slideOffset
-                        binding.toolbarMain.alpha = slideOffset
                     }
                 },
             )

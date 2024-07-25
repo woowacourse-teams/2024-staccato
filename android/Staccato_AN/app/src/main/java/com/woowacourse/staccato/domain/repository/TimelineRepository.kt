@@ -1,7 +1,9 @@
 package com.woowacourse.staccato.domain.repository
 
-import com.woowacourse.staccato.presentation.timeline.TimelineTravelUiModel
+import com.woowacourse.staccato.domain.model.Timeline
 
 interface TimelineRepository {
-    fun loadTravels(): List<TimelineTravelUiModel>
+    suspend fun loadTravels(): Timeline
+
+    fun loadTempTravels(): Timeline
 }
