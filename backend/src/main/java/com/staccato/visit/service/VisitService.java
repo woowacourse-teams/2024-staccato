@@ -74,7 +74,7 @@ public class VisitService {
                 .orElseThrow(() -> new StaccatoException("요청하신 방문 기록을 찾을 수 없어요."));
         return new VisitDetailResponse(
                 visit,
-                visitImageRepository.findAllByVisitId(visitId),
+                visitImageRepository.findAllByVisitIdAndIsDeletedIsFalse(visitId),
                 visitRepository.countByPinId(visit.getPin().getId()),
                 visitLogRepository.findAllByVisitId(visitId)
         );

@@ -37,7 +37,9 @@ class VisitLogRepositoryTest {
     void deleteByVisitId() {
         // given
         Pin pin = pinRepository.save(Pin.builder().place("Sample Place").address("Sample Address").build());
-        Travel travel = travelRepository.save(Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build());
+        Travel travel = travelRepository.save(
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
+        );
         Visit visit = visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(travel).build());
         Member member = memberRepository.save(Member.builder().nickname("Sample Member").build());
         VisitLog visitLog1 = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log1").visit(visit).member(member).build());

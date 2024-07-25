@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.staccato.config.auth.MemberId;
 import com.staccato.travel.service.TravelService;
 import com.staccato.travel.service.dto.request.TravelRequest;
+import com.staccato.travel.service.dto.response.TravelDetailResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
 
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,13 @@ public class TravelController {
             @MemberId Long memberId,
             @RequestParam(value = "year", required = false) Integer year) {
         return ResponseEntity.ok(travelService.readAllTravels(memberId, year));
+    }
+
+    @GetMapping("/{travelId}")
+    public ResponseEntity<TravelDetailResponse> readTravel(
+            @MemberId Long memberId,
+            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId) {
+        return ResponseEntity.ok(travelService.readTravelById(travelId));
     }
 
     @PutMapping("/{travelId}")
