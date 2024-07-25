@@ -4,17 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowacourse.staccato.domain.repository.TimelineRepository
 import com.woowacourse.staccato.domain.repository.VisitRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
+import com.woowacourse.staccato.presentation.mapper.toTravels
 import com.woowacourse.staccato.presentation.visitcreation.model.VisitCreationUiModel
 import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class VisitCreationViewModel(private val visitRepository: VisitRepository) : ViewModel() {
+class VisitCreationViewModel(
+    private val visitRepository: VisitRepository,
+    private val timelineRepository: TimelineRepository,
+) : ViewModel() {
     private val _visitCreationData = MutableLiveData<VisitCreationUiModel>()
     val visitCreationData: LiveData<VisitCreationUiModel> get() = _visitCreationData
+
+    private val _travels = MutableLiveData<List<VisitTravelUiModel>>()
+    val travels: LiveData<List<VisitTravelUiModel>> get() = _travels
 
     private val _selectedTravel = MutableLiveData<VisitTravelUiModel>()
     val selectedTravel: LiveData<VisitTravelUiModel> get() = _selectedTravel
@@ -25,47 +33,23 @@ class VisitCreationViewModel(private val visitRepository: VisitRepository) : Vie
     private val _createdVisitId = MutableSingleLiveData<Long>()
     val createdVisitId: SingleLiveData<Long> get() = _createdVisitId
 
-    private val dummyTravels =
-        listOf(
-            VisitTravelUiModel(
-                id = 1,
-                title = "Trip to Paris",
-                startAt = LocalDate.of(2024, 1, 1),
-                endAt = LocalDate.of(2024, 12, 31),
-            ),
-            VisitTravelUiModel(
-                id = 3,
-                title = "2024 봄 휴가",
-                startAt = LocalDate.of(2024, 3, 1),
-                endAt = LocalDate.of(2024, 3, 10),
-            ),
-            VisitTravelUiModel(
-                id = 4,
-                title = "Journey through Japan",
-                startAt = LocalDate.of(2024, 8, 20),
-                endAt = LocalDate.of(2024, 8, 30),
-            ),
-        )
+    fun fetchInitData(pinId: Long) =
+        viewModelScope.launch {
+            loadAllTravels()
+            fetchVisitCreationData(pinId)
+        }
 
-    fun fetchInitData(pinId: Long) {
-        val travels = fetchTravels()
-        fetchVisitCreationData(pinId, travels)
+    private suspend fun loadAllTravels() {
+        _travels.value = timelineRepository.loadTravels().toTravels()
     }
 
-    private fun fetchTravels(): List<VisitTravelUiModel> {
-        return dummyTravels // TODO : travelRepository 연결해서 모든 여행 불러오기
-    }
-
-    private fun fetchVisitCreationData(
-        pinId: Long,
-        travels: List<VisitTravelUiModel>,
-    ) {
+    // TODO : 핀 정보들이 없어 임시 값을 넣었습니다
+    private fun fetchVisitCreationData(pinId: Long) {
         _visitCreationData.value =
             VisitCreationUiModel(
                 pinId = pinId,
-                placeName = "집에 보내줘요",
-                address = "서울특별시 강남구 선릉로 123길 성담빌딩 13층",
-                travels = travels,
+                placeName = "성담빌딩",
+                address = "서울특별시 강남구 테헤란로 411",
             )
     }
 
@@ -85,8 +69,11 @@ class VisitCreationViewModel(private val visitRepository: VisitRepository) : Vie
                     visitImages = listOf(),
                     visitedAt = selectedVisitedAt.value!!.toString(),
                     travelId = selectedTravel.value!!.id,
-                ).onSuccess {
-                    _createdVisitId.postValue(1L) // TODO: 헤더에서 생성된 VisitId 꺼내서 전달하기
+                ).onSuccess { response ->
+                    val createdId =
+                        response.headers()["Location"]?.split("/")?.last()?.toLong()
+                            ?: 0L // TODO:null처리
+                    _createdVisitId.postValue(createdId)
                 }
             }
         }

@@ -6,6 +6,7 @@ import com.woowacourse.staccato.data.dto.visit.VisitUpdateRequest
 import com.woowacourse.staccato.data.visit.RemoteVisitDataSource
 import com.woowacourse.staccato.domain.model.Visit
 import com.woowacourse.staccato.domain.repository.VisitRepository
+import retrofit2.Response
 
 class VisitDefaultRepository(private val remoteDataSource: RemoteVisitDataSource) :
     VisitRepository {
@@ -20,7 +21,7 @@ class VisitDefaultRepository(private val remoteDataSource: RemoteVisitDataSource
         visitImages: List<String>,
         visitedAt: String,
         travelId: Long,
-    ): Result<Unit> {
+    ): Result<Response<String>> {
         return runCatching {
             remoteDataSource.createVisit(
                 VisitCreationRequest(

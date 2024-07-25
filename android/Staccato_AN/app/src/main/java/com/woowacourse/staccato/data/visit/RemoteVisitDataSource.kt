@@ -3,6 +3,7 @@ package com.woowacourse.staccato.data.visit
 import com.woowacourse.staccato.data.dto.visit.VisitCreationRequest
 import com.woowacourse.staccato.data.dto.visit.VisitResponse
 import com.woowacourse.staccato.data.dto.visit.VisitUpdateRequest
+import retrofit2.Response
 
 class RemoteVisitDataSource(
     private val visitApiService: VisitApiService,
@@ -11,9 +12,9 @@ class RemoteVisitDataSource(
         return visitApiService.requestVisit(visitId = visitId)
     }
 
-    suspend fun createVisit(visitCreationRequest: VisitCreationRequest): Unit =
+    suspend fun createVisit(visitCreationRequest: VisitCreationRequest): Response<String> =
         visitApiService.requestCreateVisit(visitCreationRequest = visitCreationRequest)
 
-    suspend fun updateVisit(visitUpdateRequest: VisitUpdateRequest): Unit =
+    suspend fun updateVisit(visitUpdateRequest: VisitUpdateRequest) =
         visitApiService.requestUpdateVisit(visitUpdateRequest = visitUpdateRequest)
 }

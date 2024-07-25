@@ -65,8 +65,8 @@ class VisitCreationActivity :
     }
 
     private fun observeViewModelData() {
-        viewModel.visitCreationData.observe(this) { visitCreationData ->
-            travelSelectionFragment.setItems(visitCreationData.travels)
+        viewModel.travels.observe(this) { travels ->
+            travelSelectionFragment.setItems(travels)
         }
         viewModel.selectedTravel.observe(this) { selectedTravel ->
             val dates = selectedTravel.buildDatesInRange()
