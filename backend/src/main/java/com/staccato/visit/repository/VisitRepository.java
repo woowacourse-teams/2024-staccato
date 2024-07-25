@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import com.staccato.visit.domain.Visit;
 
 public interface VisitRepository extends JpaRepository<Visit, Long> {
-    List<Visit> findAllByTravelId(Long travelId);
+    List<Visit> findAllByTravelIdAndIsDeletedIsFalse(@Param("travelId") long travelId);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Visit vi SET vi.isDeleted = true WHERE vi.travel.id = :travelId")

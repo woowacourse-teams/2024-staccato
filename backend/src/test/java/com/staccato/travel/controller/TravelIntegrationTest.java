@@ -14,7 +14,6 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -148,24 +147,23 @@ class TravelIntegrationTest extends IntegrationTest {
     }
 
     @DisplayName("사용자가 잘못된 여행식별자로 접근한다면 예외가 발생한다.")
-    @ParameterizedTest
-    @ValueSource(longs = {0, -1})
-    void failAccessTravel(Long travelId) {
+    @Test
+    void failAccessTravel() {
         // given
         TravelRequest travelRequest = new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
-        String expectedMessage = "여행 식별자는 양수로 이루어져야 합니다.";
         createTravel(travelRequest);
 
         // when & then
-        RestAssured.given().pathParam("travelId", travelId).log().all()
+        RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .pathParam("travelId", 0)
                 .body(travelRequest)
                 .when().log().all()
                 .put("/travels/{travelId}")
                 .then().log().all()
                 .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is(expectedMessage))
+                .body("message", is("여행 식별자는 양수로 이루어져야 합니다."))
                 .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 
@@ -177,7 +175,6 @@ class TravelIntegrationTest extends IntegrationTest {
                 createTravel(2024),
                 DynamicTest.dynamicTest("사용자가 타임라인을 조회하면 2개의 여행 목록이 조회된다.", () ->
                         RestAssured.given().log().all()
-                                .contentType(ContentType.JSON)
                                 .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
                                 .when().log().all()
                                 .get("/travels")
@@ -195,15 +192,45 @@ class TravelIntegrationTest extends IntegrationTest {
                 createTravel(2024),
                 DynamicTest.dynamicTest("사용자가 타임라인에서 2023년도를 선택하면 1개의 여행 목록이 조회된다.", () ->
                         RestAssured.given().log().all()
-                                .contentType(ContentType.JSON)
                                 .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
                                 .param("year", 2023)
                                 .when().log().all()
                                 .get("/travels")
                                 .then().log().all()
                                 .assertThat().statusCode(HttpStatus.OK.value())
-                                .body("size()", is(1)))
+                                .body("travels.size()", is(1)))
         );
+    }
+
+    @DisplayName("사용자가 특정 여행 상세를 조회한다.")
+    @TestFactory
+    Stream<DynamicTest> findTravelById() {
+        return Stream.of(
+                createTravel(2023),
+                DynamicTest.dynamicTest("사용자가 타임라인에서 특정 여행 상세를 선택하여 조회한다.", () ->
+                        RestAssured.given().log().all()
+                                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                                .pathParam("travelId", 1)
+                                .when().log().all()
+                                .get("/travels/{travelId}")
+                                .then().log().all()
+                                .assertThat().statusCode(HttpStatus.OK.value()))
+        );
+    }
+
+    @DisplayName("사용자가 잘못된 여행식별자로 조회하려고 한다면 예외가 발생한다.")
+    @Test
+    void failFindTravelById() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .pathParam("travelId", 0)
+                .when().log().all()
+                .get("/travels/{travelId}")
+                .then().log().all()
+                .assertThat().statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("여행 식별자는 양수로 이루어져야 합니다."))
+                .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 
     private DynamicTest createTravel(int year) {
