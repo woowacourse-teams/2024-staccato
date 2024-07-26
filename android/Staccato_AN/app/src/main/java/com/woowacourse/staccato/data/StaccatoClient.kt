@@ -41,7 +41,6 @@ object StaccatoClient {
             .build()
 
     private val jsonBuilder = Json { coerceInputValues = true }
-
     private val provideRetrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)

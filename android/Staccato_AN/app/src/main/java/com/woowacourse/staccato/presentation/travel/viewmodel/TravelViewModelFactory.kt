@@ -6,11 +6,10 @@ import com.woowacourse.staccato.domain.repository.TravelRepository
 
 class TravelViewModelFactory(
     private val travelRepository: TravelRepository,
-    private val travelId: Long,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TravelViewModel::class.java)) {
-            return TravelViewModel(travelRepository, travelId) as T
+            return TravelViewModel(travelRepository) as T
         }
         throw IllegalArgumentException()
     }
