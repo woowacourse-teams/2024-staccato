@@ -171,9 +171,9 @@ class TravelIntegrationTest extends IntegrationTest {
     @TestFactory
     Stream<DynamicTest> findAllTravels() {
         return Stream.of(
+                createTravel(2023),
                 createTravel(2024),
-                createTravel(2024),
-                DynamicTest.dynamicTest("사용자가 타임라인을 조회하면 2개의 여행 목록이 조회된다.", () ->
+                DynamicTest.dynamicTest("사용자가 타임라인을 조회하면 2개의 여행 목록이 최신순으로 조회된다.", () ->
                         RestAssured.given().log().all()
                                 .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
                                 .when().log().all()
