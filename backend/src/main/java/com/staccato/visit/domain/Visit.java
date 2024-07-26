@@ -16,6 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.pin.domain.Pin;
@@ -31,6 +32,7 @@ import lombok.NonNull;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE visit SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 public class Visit extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

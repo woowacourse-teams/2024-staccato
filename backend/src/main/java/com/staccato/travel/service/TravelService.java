@@ -62,7 +62,7 @@ public class TravelService {
     }
 
     private TravelResponses readAll(long memberId) {
-        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndIsDeletedIsFalseOrderByTravelStartAtDesc(memberId);
+        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberId(memberId);
         return getTravelResponses(travelMembers);
     }
 
@@ -82,31 +82,31 @@ public class TravelService {
     public void updateTravel(TravelRequest travelRequest, Long travelId) {
         Travel updatedTravel = travelRequest.toTravel();
         Travel originTravel = getTravelById(travelId);
-        List<Visit> visits = visitRepository.findAllByTravelIdAndIsDeletedIsFalseOrderByVisitedAt(travelId);
+        List<Visit> visits = visitRepository.findAllByTravelIdOrderByVisitedAt(travelId);
         originTravel.update(updatedTravel, visits);
     }
 
     @Transactional
     public void deleteTravel(Long travelId) {
         validateVisitExistsByTravelId(travelId);
-        visitRepository.deleteAllByTravelIdAndIsDeletedIsFalse(travelId);
+        visitRepository.deleteAllByTravelId(travelId);
         travelRepository.deleteById(travelId);
     }
 
     private void validateVisitExistsByTravelId(Long travelId) {
-        if (visitRepository.existsByTravelIdAndIsDeletedIsFalse(travelId)) {
+        if (visitRepository.existsByTravelId(travelId)) {
             throw new StaccatoException("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
         }
     }
 
     public TravelDetailResponse readTravelById(long travelId) {
         Travel travel = getTravelById(travelId);
-        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdAndIsDeletedIsFalseOrderByVisitedAt(travelId));
+        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdOrderByVisitedAt(travelId));
         return new TravelDetailResponse(travel, visitResponses);
     }
 
     private Travel getTravelById(long travelId) {
-        return travelRepository.findByIdAndIsDeletedIsFalse(travelId)
+        return travelRepository.findById(travelId)
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 

@@ -59,7 +59,7 @@ class VisitServiceTest extends ServiceSliceTest {
         visitService.deleteVisitById(visit.getId());
 
         // then
-        assertThat(visitRepository.findById(visit.getId()).get().getIsDeleted()).isTrue();
+        assertThat(visitRepository.findById(visit.getId())).isEmpty();
         assertThat(visitLogRepository.findById(visitLog.getId())).isEmpty();
     }
 

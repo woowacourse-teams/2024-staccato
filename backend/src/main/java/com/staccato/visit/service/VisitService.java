@@ -62,7 +62,7 @@ public class VisitService {
     public VisitDetailResponse readVisitById(long visitId) {
         Visit visit = getVisitById(visitId);
         Pin pin = visit.getPin();
-        long visitedCountBefore = visitRepository.countByPinIdAndIsDeletedIsFalseAndVisitedAtBefore(pin.getId(), visit.getVisitedAt());
+        long visitedCountBefore = visitRepository.countByPinIdAndVisitedAtBefore(pin.getId(), visit.getVisitedAt());
         return new VisitDetailResponse(
                 visit,
                 visit.getVisitImages(),

@@ -61,7 +61,7 @@ class TravelServiceTest extends ServiceSliceTest {
 
         // when
         long travelId = travelService.createTravel(travelRequest, member.getId());
-        TravelMember travelMember = travelMemberRepository.findAllByMemberIdAndIsDeletedIsFalseOrderByTravelStartAtDesc(member.getId()).get(0);
+        TravelMember travelMember = travelMemberRepository.findAllByMemberId(member.getId()).get(0);
 
         // then
         assertAll(
@@ -137,7 +137,7 @@ class TravelServiceTest extends ServiceSliceTest {
     private Visit saveVisit(Pin pin, LocalDate visitedAt, long visitId) {
         return visitRepository.save(
                 Visit.builder()
-                        .travel(travelRepository.findByIdAndIsDeletedIsFalse(visitId).get())
+                        .travel(travelRepository.findById(visitId).get())
                         .visitedAt(visitedAt)
                         .pin(pin)
                         .build());
@@ -204,10 +204,9 @@ class TravelServiceTest extends ServiceSliceTest {
         travelService.deleteTravel(travelId);
 
         // then
-        Travel foundTravel = travelRepository.findById(travelId).get();
         assertAll(
-                () -> assertThat(foundTravel.getIsDeleted()).isTrue(),
-                () -> assertThat(travelMemberRepository.findAll().get(0).getIsDeleted()).isTrue()
+                () -> assertThat(travelRepository.findById(travelId)).isEmpty(),
+                () -> assertThat(travelMemberRepository.findAll()).hasSize(0)
         );
     }
 
@@ -218,7 +217,7 @@ class TravelServiceTest extends ServiceSliceTest {
         Member member = saveMember();
         Long travelId = travelService.createTravel(createTravelRequest(2023), member.getId());
         Pin pin = savePin(member);
-        Travel foundTravel = travelRepository.findByIdAndIsDeletedIsFalse(travelId).get();
+        Travel foundTravel = travelRepository.findById(travelId).get();
         visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(foundTravel).build());
 
         // when & then
