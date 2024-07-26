@@ -16,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDE
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityMainBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
+import com.woowacourse.staccato.presentation.timeline.TimelineFragment.Companion.TRAVEL_ID_KEY
 import com.woowacourse.staccato.presentation.travelcreation.TravelCreationActivity
 import com.woowacourse.staccato.presentation.visit.VisitFragment
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
@@ -34,7 +35,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     Toast.makeText(this, "새로운 여행을 만들었어요!", Toast.LENGTH_SHORT).show()
-                    navigateTo(R.id.travelFragment, R.id.timelineFragment, null)
+                    val createdTravelId = it.getLongExtra(TRAVEL_ID_KEY, 0L)
+                    val bundle = bundleOf(TRAVEL_ID_KEY to createdTravelId)
+                    navigateTo(R.id.travelFragment, R.id.timelineFragment, bundle)
                 }
             }
         }

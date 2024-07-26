@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 
 class TravelViewModel(
     private val travelRepository: TravelRepository,
-    private val travelId: Long,
 ) : ViewModel(), TravelHandler {
     private val _travel = MutableLiveData<TravelUiModel>()
     val travel: LiveData<TravelUiModel> get() = _travel
@@ -33,17 +32,17 @@ class TravelViewModel(
         _visitId.setValue(visitId)
     }
 
-    fun loadTravel() {
+    fun loadTravel(travelId: Long) {
         viewModelScope.launch {
             travelRepository.loadTravel(travelId).onSuccess { travel ->
                 _travel.value = travel.toUiModel()
-                Log.d("hye: 성공", "통신 성공! $travel")
+                Log.d("hye: 여행 조회 성공", "성공")
             }.onServerError { code, message ->
+                Log.d("hye: 여행 조회 실패", "$code : $message $TRAVEL_ERROR_MESSAGE")
                 _errorMessage.value = "$code : $TRAVEL_ERROR_MESSAGE"
-                Log.d("hye: 서버 에러", "$code , $message")
             }.onException { e, message ->
+                Log.d("hye: 여행 조회 실패 - 예외", "${e.message}")
                 _errorMessage.value = TRAVEL_ERROR_MESSAGE
-                Log.d("hye: 예외", "$e , $message")
             }
         }
     }

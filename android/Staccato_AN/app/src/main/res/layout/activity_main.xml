@@ -15,8 +15,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#888888">
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_map"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/btn_timeline"
@@ -28,23 +37,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_visit_create"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="30dp"
-                android:text="방문 기록 생성하기"
+                android:layout_width="50dp"
+                android:layout_height="80dp"
+                android:layout_marginEnd="150dp"
+                android:layout_marginBottom="100dp"
+                android:src="@drawable/icon_pin"
                 app:layout_constraintBottom_toTopOf="@id/btn_travel_create"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <Button
+            <ImageView
                 android:id="@+id/btn_travel_create"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="130dp"
-                android:text="여행 생성하기 버튼"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="85dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_floating_button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -55,7 +66,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/shape_bottom_sheet_20dp"
-            android:paddingTop="16dp"
             app:behavior_peekHeight="80dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             app:layout_constraintBottom_toBottomOf="parent"

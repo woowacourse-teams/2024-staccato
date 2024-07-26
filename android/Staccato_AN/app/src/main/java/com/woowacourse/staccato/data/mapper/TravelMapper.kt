@@ -1,10 +1,12 @@
 package com.woowacourse.staccato.data.mapper
 
 import com.woowacourse.staccato.data.dto.MemberDto
+import com.woowacourse.staccato.data.dto.travel.TravelRequest
 import com.woowacourse.staccato.data.dto.travel.TravelResponse
 import com.woowacourse.staccato.data.dto.travel.TravelVisitDto
 import com.woowacourse.staccato.domain.model.Member
 import com.woowacourse.staccato.domain.model.Travel
+import com.woowacourse.staccato.domain.model.TravelCreation
 import com.woowacourse.staccato.domain.model.TravelVisit
 import java.time.LocalDate
 
@@ -33,4 +35,13 @@ fun TravelVisitDto.toDomain() =
         placeName = placeName,
         visitImage = visitImage,
         visitedAt = LocalDate.parse(visitedAt),
+    )
+
+fun TravelCreation.toDto() =
+    TravelRequest(
+        travelThumbnail = travelThumbnail,
+        travelTitle = travelTitle,
+        description = description,
+        startAt = startAt.toString(),
+        endAt = endAt.toString(),
     )
