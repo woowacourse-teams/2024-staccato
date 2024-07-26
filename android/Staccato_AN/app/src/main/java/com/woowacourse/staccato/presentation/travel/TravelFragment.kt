@@ -21,13 +21,14 @@ import com.woowacourse.staccato.presentation.travel.adapter.VisitsAdapter
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModelFactory
 import com.woowacourse.staccato.presentation.travelupdate.TravelUpdateActivity
-import kotlin.IllegalArgumentException
+import kotlin.properties.Delegates
 
 class TravelFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
     ToolbarHandler {
+    private var travelId by Delegates.notNull<Long>()
     private val viewModel: TravelViewModel by viewModels {
-        TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)), getTravelId())
+        TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))
     }
     private val deleteDialog = DeleteDialogFragment { findNavController().popBackStack() }
 
@@ -38,6 +39,7 @@ class TravelFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
+        travelId = arguments?.getLong(TRAVEL_ID_KEY) ?: return
         initBinding()
         initToolbar()
         initMatesAdapter()
@@ -45,9 +47,8 @@ class TravelFragment :
         observeTravel()
         navigateToVisit()
         showErrorToast()
+        viewModel.loadTravel(travelId)
     }
-
-    private fun getTravelId(): Long = arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException(INVALID_TRAVEL_ID)
 
     private fun initBinding() {
         binding.lifecycleOwner = this
@@ -62,7 +63,6 @@ class TravelFragment :
     }
 
     private fun observeTravel() {
-        viewModel.loadTravel()
         viewModel.travel.observe(viewLifecycleOwner) { travel ->
             matesAdapter.updateMates(travel.mates)
             visitsAdapter.updateVisits(travel.visits)
@@ -109,6 +109,5 @@ class TravelFragment :
 
     companion object {
         const val VISIT_ID_KEY = "visitId"
-        const val INVALID_TRAVEL_ID = "잘못된 여행 id 입니다"
     }
 }

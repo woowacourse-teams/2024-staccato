@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.travel.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +17,6 @@ import kotlinx.coroutines.launch
 
 class TravelViewModel(
     private val travelRepository: TravelRepository,
-    private val travelId: Long,
 ) : ViewModel(), TravelHandler {
     private val _travel = MutableLiveData<TravelUiModel>()
     val travel: LiveData<TravelUiModel> get() = _travel
@@ -33,17 +31,14 @@ class TravelViewModel(
         _visitId.setValue(visitId)
     }
 
-    fun loadTravel() {
+    fun loadTravel(travelId: Long) {
         viewModelScope.launch {
             travelRepository.loadTravel(travelId).onSuccess { travel ->
                 _travel.value = travel.toUiModel()
-                Log.d("hye: 성공", "통신 성공! $travel")
             }.onServerError { code, message ->
                 _errorMessage.value = "$code : $TRAVEL_ERROR_MESSAGE"
-                Log.d("hye: 서버 에러", "$code , $message")
             }.onException { e, message ->
                 _errorMessage.value = TRAVEL_ERROR_MESSAGE
-                Log.d("hye: 예외", "$e , $message")
             }
         }
     }
