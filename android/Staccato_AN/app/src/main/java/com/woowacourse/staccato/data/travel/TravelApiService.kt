@@ -17,5 +17,5 @@ interface TravelApiService {
     @POST("/travels")
     suspend fun addTravel(
         @Body travelRequest: TravelRequest,
-    ): Response<Unit>
+    ): Response<String>
 }
