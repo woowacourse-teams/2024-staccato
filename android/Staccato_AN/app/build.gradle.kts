@@ -78,6 +78,7 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization.converter)
+    implementation(libs.converter.scalars)
 
     // Kotlinx-Serialization
     implementation(libs.kotlinx.serialization.json)
