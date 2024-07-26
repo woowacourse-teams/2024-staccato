@@ -14,8 +14,8 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
 
     long countByPinIdAndIsDeletedIsFalseAndVisitedAtBefore(Long pinId, LocalDate visitedAt);
 
-    @Query("SELECT CASE WHEN COUNT(v) > 0 THEN true ELSE false END FROM Visit v WHERE v.travel.id = :travelId")
-    boolean existsByTravelId(@Param("travelId") Long travelId);
+    @Query("SELECT CASE WHEN COUNT(v) > 0 THEN true ELSE false END FROM Visit v WHERE v.travel.id = :travelId AND v.isDeleted = false")
+    boolean existsByTravelIdAndIsDeleteIsFalse(@Param("travelId") Long travelId);
 
     void deleteAllByTravelIdAndIsDeletedIsFalse(long travelId);
 }
