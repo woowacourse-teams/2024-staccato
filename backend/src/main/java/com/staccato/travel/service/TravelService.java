@@ -94,7 +94,7 @@ public class TravelService {
     }
 
     private void validateVisitExistsByTravelId(Long travelId) {
-        if (visitRepository.existsByTravelId(travelId)) {
+        if (visitRepository.existsByTravelIdAndIsDeletedIsFalse(travelId)) {
             throw new StaccatoException("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
         }
     }

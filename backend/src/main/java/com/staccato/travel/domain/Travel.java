@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,7 +43,7 @@ public class Travel extends BaseEntity {
     private LocalDate startAt;
     @Column(nullable = false)
     private LocalDate endAt;
-    @OneToMany(mappedBy = "travel")
+    @OneToMany(mappedBy = "travel", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<TravelMember> travelMembers = new ArrayList<>();
 
     @Builder
