@@ -8,11 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.staccato.visit.domain.Visit;
 
 public interface VisitRepository extends JpaRepository<Visit, Long> {
-    List<Visit> findAllByTravelIdAndIsDeletedIsFalseOrderByVisitedAt(long travelId);
+    List<Visit> findAllByTravelIdOrderByVisitedAt(long travelId);
 
-    long countByPinIdAndIsDeletedIsFalseAndVisitedAtBefore(Long pinId, LocalDate visitedAt);
+    long countByPinIdAndVisitedAtBefore(Long pinId, LocalDate visitedAt);
 
-    boolean existsByTravelIdAndIsDeletedIsFalse(Long travelId);
+    boolean existsByTravelId(Long travelId);
 
-    void deleteAllByTravelIdAndIsDeletedIsFalse(long travelId);
+    void deleteAllByTravelId(long travelId);
 }

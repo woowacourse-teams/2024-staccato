@@ -43,7 +43,7 @@ class VisitServiceTest extends ServiceSliceTest {
     @Autowired
     private VisitImageRepository visitImageRepository;
 
-    @DisplayName("Visit을 삭제하면 이에 포함된 VisitLog들도 모두 삭제된다.")
+    @DisplayName("Visit을 삭제하면 이에 포함된 VisitLog도 모두 삭제된다.")
     @Test
     void deleteVisitById() {
         // given
@@ -59,7 +59,7 @@ class VisitServiceTest extends ServiceSliceTest {
         visitService.deleteVisitById(visit.getId());
 
         // then
-        assertThat(visitRepository.findById(visit.getId()).get().getIsDeleted()).isTrue();
+        assertThat(visitRepository.findById(visit.getId())).isEmpty();
         assertThat(visitLogRepository.findById(visitLog.getId())).isEmpty();
     }
 
