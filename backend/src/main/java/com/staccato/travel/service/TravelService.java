@@ -82,7 +82,7 @@ public class TravelService {
     public void updateTravel(TravelRequest travelRequest, Long travelId) {
         Travel updatedTravel = travelRequest.toTravel();
         Travel originTravel = getTravelById(travelId);
-        List<Visit> visits = visitRepository.findAllByTravelIdAndIsDeletedIsFalse(travelId);
+        List<Visit> visits = visitRepository.findAllByTravelIdAndIsDeletedIsFalseOrderByVisitedAt(travelId);
         originTravel.update(updatedTravel, visits);
     }
 
@@ -101,7 +101,7 @@ public class TravelService {
 
     public TravelDetailResponse readTravelById(long travelId) {
         Travel travel = getTravelById(travelId);
-        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdAndIsDeletedIsFalse(travelId));
+        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdAndIsDeletedIsFalseOrderByVisitedAt(travelId));
         return new TravelDetailResponse(travel, visitResponses);
     }
 
