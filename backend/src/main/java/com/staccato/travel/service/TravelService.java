@@ -67,7 +67,7 @@ public class TravelService {
     }
 
     private TravelResponses readAllByYear(long memberId, Integer year) {
-        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndTravelStartAtYearOrderByStartAtDesc(memberId, year);
+        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndStartAtYearDesc(memberId, year);
         return getTravelResponses(travelMembers);
     }
 

@@ -38,7 +38,7 @@ class TravelMemberRepositoryTest {
         travelMemberRepository.save(new TravelMember(member, travel3));
 
         // when
-        List<TravelMember> result = travelMemberRepository.findAllByMemberIdAndTravelStartAtYearOrderByStartAtDesc(member.getId(), 2023);
+        List<TravelMember> result = travelMemberRepository.findAllByMemberIdAndStartAtYearDesc(member.getId(), 2023);
 
         // then
         assertThat(result).hasSize(2);
@@ -57,7 +57,7 @@ class TravelMemberRepositoryTest {
         travelMemberRepository.deleteById(travel3.getId());
 
         // when
-        List<TravelMember> result = travelMemberRepository.findAllByMemberIdAndTravelStartAtYearOrderByStartAtDesc(member.getId(), 2023);
+        List<TravelMember> result = travelMemberRepository.findAllByMemberIdAndStartAtYearDesc(member.getId(), 2023);
 
         // then
         assertAll(

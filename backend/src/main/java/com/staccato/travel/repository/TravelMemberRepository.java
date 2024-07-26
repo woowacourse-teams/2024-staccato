@@ -12,5 +12,5 @@ public interface TravelMemberRepository extends JpaRepository<TravelMember, Long
     List<TravelMember> findAllByMemberIdAndIsDeletedIsFalseOrderByTravelStartAtDesc(long memberId);
 
     @Query("SELECT tm FROM TravelMember tm WHERE tm.member.id = :memberId AND YEAR(tm.travel.startAt) = :year AND tm.isDeleted IS FALSE ORDER BY tm.travel.startAt DESC")
-    List<TravelMember> findAllByMemberIdAndTravelStartAtYearOrderByStartAtDesc(@Param("memberId") long memberId, @Param("year") int year);
+    List<TravelMember> findAllByMemberIdAndStartAtYearDesc(@Param("memberId") long memberId, @Param("year") int year);
 }
