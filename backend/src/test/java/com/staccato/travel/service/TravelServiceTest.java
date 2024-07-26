@@ -147,8 +147,8 @@ class TravelServiceTest extends ServiceSliceTest {
     @Test
     void updateTravel() {
         // given
-        Travel travel = createAndSaveTravel(2023);
-        Long travelId = travel.getId();
+        Member member = saveMember();
+        Long travelId = travelService.createTravel(createTravelRequest(2023), member.getId());
         TravelRequest updatedTravel = new TravelRequest(
                 "https://example.com/travels/geumohrm.jpg",
                 "2023 신나는 여름 휴가",
@@ -197,40 +197,34 @@ class TravelServiceTest extends ServiceSliceTest {
     @Test
     void deleteTravel() {
         // given
-        Travel travel = createAndSaveTravel(2023);
+        Member member = saveMember();
+        Long travelId = travelService.createTravel(createTravelRequest(2023), member.getId());
 
         // when
-        travelService.deleteTravel(travel.getId());
+        travelService.deleteTravel(travelId);
 
         // then
-        Travel foundTravel = travelRepository.findById(travel.getId()).get();
-        assertThat(foundTravel.getIsDeleted()).isTrue();
+        Travel foundTravel = travelRepository.findById(travelId).get();
+        assertAll(
+                () -> assertThat(foundTravel.getIsDeleted()).isTrue(),
+                () -> assertThat(travelMemberRepository.findAll().get(0).getIsDeleted()).isTrue()
+        );
     }
 
     @DisplayName("방문기록이 존재하는 여행 상세에 삭제를 시도할 경우 예외가 발생한다.")
     @Test
     void failDeleteTravel() {
         // given
-        Travel travel = createAndSaveTravel(2023);
         Member member = saveMember();
+        Long travelId = travelService.createTravel(createTravelRequest(2023), member.getId());
         Pin pin = savePin(member);
-        visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(travel).build());
+        Travel foundTravel = travelRepository.findByIdAndIsDeletedIsFalse(travelId).get();
+        visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(foundTravel).build());
 
         // when & then
-        assertThatThrownBy(() -> travelService.deleteTravel(travel.getId()))
+        assertThatThrownBy(() -> travelService.deleteTravel(foundTravel.getId()))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
-    }
-
-    private Travel createAndSaveTravel(int year) {
-        Travel travel = new Travel(
-                "https://example.com/travels/geumohrm.jpg",
-                year + " 여름 휴가",
-                "친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(year, 7, 1),
-                LocalDate.of(year, 7, 10)
-        );
-        return travelRepository.save(travel);
     }
 
     private Member saveMember() {
