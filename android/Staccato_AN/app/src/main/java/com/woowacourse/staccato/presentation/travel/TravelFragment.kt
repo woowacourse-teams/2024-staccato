@@ -15,7 +15,6 @@ import com.woowacourse.staccato.databinding.FragmentTravelBinding
 import com.woowacourse.staccato.presentation.ToolbarHandler
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.main.MainActivity
-import com.woowacourse.staccato.presentation.timeline.TimelineFragment.Companion.TRAVEL_ID_KEY
 import com.woowacourse.staccato.presentation.travel.adapter.MatesAdapter
 import com.woowacourse.staccato.presentation.travel.adapter.VisitsAdapter
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel
@@ -109,5 +108,6 @@ class TravelFragment :
 
     companion object {
         const val VISIT_ID_KEY = "visitId"
+        const val TRAVEL_ID_KEY = "travelId"
     }
 }

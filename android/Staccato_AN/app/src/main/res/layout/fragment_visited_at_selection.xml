@@ -6,7 +6,7 @@
 
         <variable
             name="items"
-            type="java.util.List&lt;String&gt;" />
+            type="java.util.List&lt;java.time.LocalDate&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

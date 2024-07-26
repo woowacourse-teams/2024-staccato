@@ -13,7 +13,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.woowacourse.staccato.R
-import com.woowacourse.staccato.presentation.visitcreation.model.TravelUiModel
+import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
+import okhttp3.internal.format
 import java.time.LocalDate
 
 @BindingAdapter(
@@ -124,23 +125,23 @@ fun Button.setTravelSaveButtonActive(
 }
 
 @BindingAdapter("bindSetSelectedTravel")
-fun TextView.setSelectedTravel(selectedTravel: TravelUiModel?) {
+fun TextView.setSelectedTravel(selectedTravel: VisitTravelUiModel?) {
     if (selectedTravel == null) {
         text = resources.getString(R.string.visit_creation_travel_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
     } else {
-        text = selectedTravel.travelTitle
+        text = selectedTravel.title
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
 }
 
 @BindingAdapter("bindSetSelectedVisitedAt")
-fun TextView.setSelectedVisitedAt(selectedVisitedAt: String?) {
+fun TextView.setSelectedVisitedAt(selectedVisitedAt: LocalDate?) {
     if (selectedVisitedAt == null) {
         text = resources.getString(R.string.visit_creation_visited_at_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
     } else {
-        text = selectedVisitedAt
+        text = selectedVisitedAt.toString()
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
 }
@@ -149,8 +150,8 @@ fun TextView.setSelectedVisitedAt(selectedVisitedAt: String?) {
     value = ["selectedTravel", "visitedAt"],
 )
 fun Button.setVisitUpdateButtonActive(
-    travel: TravelUiModel?,
-    visitedAt: String?,
+    travel: VisitTravelUiModel?,
+    visitedAt: LocalDate?,
 ) {
     isEnabled =
         if (travel == null || visitedAt == null) {
@@ -172,13 +173,15 @@ fun TextView.setTravelPeriod(
     if (startDate == null || endDate == null) {
         text = resources.getString(R.string.travel_creation_period_hint)
     } else {
-        text = resources.getString(R.string.travel_creation_period_description).format(startDate, endDate)
+        text =
+            resources.getString(R.string.travel_creation_period_description)
+                .format(startDate, endDate)
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
 }
 
 @BindingAdapter("bindSetVisitedAtConfirmButtonActive")
-fun Button.setVisitedAtConfirmButtonActive(items: List<String>?) {
+fun Button.setVisitedAtConfirmButtonActive(items: List<LocalDate>?) {
     isEnabled =
         if (items.isNullOrEmpty()) {
             setTextColor(resources.getColor(R.color.gray4, null))
@@ -190,15 +193,42 @@ fun Button.setVisitedAtConfirmButtonActive(items: List<String>?) {
 }
 
 @BindingAdapter("bindSetVisitedAtNumberPickerItems")
-fun NumberPicker.setVisitedAtNumberPickerItems(items: List<String>?) {
+fun NumberPicker.setVisitedAtNumberPickerItems(items: List<LocalDate>?) {
     if (items.isNullOrEmpty()) {
         isGone = true
     } else {
-        displayedValues = items.toTypedArray()
+        displayedValues = items.map { it.toString() }.toTypedArray()
     }
 }
 
 @BindingAdapter("bindSetVisitedAtIsEmptyVisibility")
-fun TextView.setVisitedAtIsEmptyVisibility(items: List<String>?) {
+fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDate>?) {
     isGone = !items.isNullOrEmpty()
+}
+
+@BindingAdapter(
+    value = ["visitedAt", "visitedCount"],
+)
+fun TextView.combineVisitedAtWithVisitCount(
+    visitedAt: LocalDate,
+    visitedCount: Long,
+) {
+    val resultText =
+        if (visitedCount == 1L) {
+            format(
+                resources.getString(R.string.visit_history_first_time),
+                visitedAt.year,
+                visitedAt.monthValue,
+                visitedAt.dayOfMonth,
+            )
+        } else {
+            format(
+                resources.getString(R.string.visit_history_many_times),
+                visitedAt.year,
+                visitedAt.monthValue,
+                visitedAt.dayOfMonth,
+                visitedCount,
+            )
+        }
+    text = resultText
 }

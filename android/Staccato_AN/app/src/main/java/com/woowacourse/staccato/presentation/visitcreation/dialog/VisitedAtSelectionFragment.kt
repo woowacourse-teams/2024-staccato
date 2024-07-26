@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowacourse.staccato.databinding.FragmentVisitedAtSelectionBinding
+import java.time.LocalDate
 
 class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentVisitedAtSelectionBinding? = null
     private val binding get() = _binding!!
-    private val items = mutableListOf<String>()
+    private val items = mutableListOf<LocalDate>()
 
     private lateinit var handler: VisitedAtSelectionHandler
 
@@ -18,7 +19,7 @@ class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
         handler = newHandler
     }
 
-    fun setItems(newItems: List<String>) {
+    fun setItems(newItems: List<LocalDate>) {
         items.clear()
         items.addAll(newItems)
     }

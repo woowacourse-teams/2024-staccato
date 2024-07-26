@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.presentation.travel.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,9 +36,12 @@ class TravelViewModel(
         viewModelScope.launch {
             travelRepository.loadTravel(travelId).onSuccess { travel ->
                 _travel.value = travel.toUiModel()
+                Log.d("hye: 여행 조회 성공", "성공")
             }.onServerError { code, message ->
+                Log.d("hye: 여행 조회 실패", "$code : $message $TRAVEL_ERROR_MESSAGE")
                 _errorMessage.value = "$code : $TRAVEL_ERROR_MESSAGE"
             }.onException { e, message ->
+                Log.d("hye: 여행 조회 실패 - 예외", "${e.message}")
                 _errorMessage.value = TRAVEL_ERROR_MESSAGE
             }
         }
