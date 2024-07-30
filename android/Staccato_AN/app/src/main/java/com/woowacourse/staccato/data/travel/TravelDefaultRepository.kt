@@ -26,6 +26,17 @@ class TravelDefaultRepository(
         }
     }
 
+    override suspend fun updateTravel(
+        travelId: Long,
+        travelCreationUiModel: TravelCreationUiModel,
+    ): ResponseResult<String> {
+        return when (val responseResult = travelDataSource.updateTravel(travelId, travelCreationUiModel.toDomain())) {
+            is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.code, responseResult.message)
+            is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
+        }
+    }
+
     companion object {
         const val ERROR_MESSAGE = "예기치 않은 오류가 발생했습니다"
     }

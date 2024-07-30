@@ -8,4 +8,9 @@ interface TravelRepository {
     suspend fun loadTravel(travelId: Long): ResponseResult<Travel>
 
     suspend fun createTravel(travelCreationUiModel: TravelCreationUiModel): ResponseResult<String>
+
+    suspend fun updateTravel(
+        travelId: Long,
+        travelCreationUiModel: TravelCreationUiModel,
+    ): ResponseResult<String>
 }
