@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface TravelApiService {
@@ -16,6 +17,13 @@ interface TravelApiService {
 
     @POST("/travels")
     suspend fun addTravel(
+        @Body travelRequest: TravelRequest,
+    ): Response<String>
+
+    // TODO: 네이밍 고민해보기
+    @PUT("/travels/{travelId}")
+    suspend fun updateTravel(
+        @Path("travelId") travelId: Long,
         @Body travelRequest: TravelRequest,
     ): Response<String>
 }
