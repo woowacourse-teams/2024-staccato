@@ -16,4 +16,12 @@ class TravelRemoteDataSource(
         handleApiResponse {
             travelApiService.addTravel(travelCreation.toDto())
         }
+
+    override suspend fun updateTravel(
+        travelId: Long,
+        travelCreation: TravelCreation,
+    ): ResponseResult<String> =
+        handleApiResponse {
+            travelApiService.updateTravel(travelId, travelCreation.toDto())
+        }
 }

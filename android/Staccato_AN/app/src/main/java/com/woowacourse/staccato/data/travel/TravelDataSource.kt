@@ -8,4 +8,9 @@ interface TravelDataSource {
     suspend fun fetchTravel(travelId: Long): ResponseResult<TravelResponse>
 
     suspend fun saveTravel(travelCreation: TravelCreation): ResponseResult<String>
+
+    suspend fun updateTravel(
+        travelId: Long,
+        travelCreation: TravelCreation,
+    ): ResponseResult<String>
 }
