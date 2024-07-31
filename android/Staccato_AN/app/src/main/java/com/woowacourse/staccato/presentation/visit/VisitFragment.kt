@@ -2,7 +2,6 @@ package com.woowacourse.staccato.presentation.visit
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.woowacourse.staccato.R
@@ -12,6 +11,7 @@ import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
 import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.travel.TravelFragment
+import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.adapter.VisitAdapter
 import com.woowacourse.staccato.presentation.visit.viewmodel.VisitViewModel
 import com.woowacourse.staccato.presentation.visit.viewmodel.VisitViewModelFactory
@@ -59,8 +59,7 @@ class VisitFragment :
         }
         viewModel.isError.observe(viewLifecycleOwner) { isError ->
             if (isError) {
-                Toast.makeText(this.requireActivity(), "방문을 불러올 수 없어요!", Toast.LENGTH_SHORT)
-                    .show()
+                showToast("방문을 불러올 수 없어요!")
                 findNavController().popBackStack()
             }
         }

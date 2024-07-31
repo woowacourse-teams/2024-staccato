@@ -2,7 +2,6 @@ package com.woowacourse.staccato.presentation.travel
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -20,6 +19,7 @@ import com.woowacourse.staccato.presentation.travel.adapter.VisitsAdapter
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModelFactory
 import com.woowacourse.staccato.presentation.travelupdate.TravelUpdateActivity
+import com.woowacourse.staccato.presentation.util.showToast
 import kotlin.properties.Delegates
 
 class TravelFragment :
@@ -87,7 +87,7 @@ class TravelFragment :
 
     private fun showErrorToast() {
         viewModel.errorMessage.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            showToast(it)
         }
     }
 

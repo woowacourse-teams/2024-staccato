@@ -3,7 +3,6 @@ package com.woowacourse.staccato.presentation.visitupdate
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
@@ -12,6 +11,7 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityVisitUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
+import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 import com.woowacourse.staccato.presentation.visitcreation.dialog.VisitedAtSelectionFragment
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
@@ -86,8 +86,7 @@ class VisitUpdateActivity : BindingActivity<ActivityVisitUpdateBinding>(), Visit
 
     private fun handleError(isError: Boolean) {
         if (isError) {
-            Toast.makeText(this, "방문을 불러올 수 없어요!", Toast.LENGTH_SHORT)
-                .show()
+            showToast("방문을 불러올 수 없어요!")
             finish()
         }
     }
