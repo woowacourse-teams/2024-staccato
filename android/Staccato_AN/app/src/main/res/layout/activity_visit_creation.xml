@@ -149,7 +149,7 @@
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_travel_selection_title"
-                    bind:bindSetSelectedTravel="@{viewModel.selectedTravel}" />
+                    bind:selectedTravel="@{viewModel.selectedTravel}" />
 
                 <TextView
                     android:id="@+id/tv_visited_at_title"
@@ -175,7 +175,7 @@
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
-                    bind:bindSetSelectedVisitedAt="@{viewModel.selectedVisitedAt}" />
+                    bind:selectedVisitedAt="@{viewModel.selectedVisitedAt}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_visit_create_done"

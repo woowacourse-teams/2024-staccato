@@ -35,7 +35,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
-            bind:bindSetVisitedAtIsEmptyVisibility="@{items}" />
+            bind:visitedAtIsEmptyVisibility="@{items}" />
 
         <NumberPicker
             android:id="@+id/picker_visited_at"
@@ -49,7 +49,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
-            bind:bindSetVisitedAtNumberPickerItems="@{items}" />
+            bind:visitedAtNumberPickerItems="@{items}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_visited_at_confirm"
@@ -59,7 +59,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            bind:bindSetVisitedAtConfirmButtonActive="@{items}" />
+            bind:visitedAtConfirmButtonActive="@{items}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
