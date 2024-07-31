@@ -13,6 +13,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -56,6 +59,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(StaccatoException.class)
+    @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     public ResponseEntity<ExceptionResponse> handleStaccatoException(StaccatoException e) {
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
         return ResponseEntity.badRequest()
@@ -63,6 +67,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
+    @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     public ResponseEntity<ExceptionResponse> handleInternalServerErrorException(RuntimeException e) {
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
         return ResponseEntity.internalServerError()

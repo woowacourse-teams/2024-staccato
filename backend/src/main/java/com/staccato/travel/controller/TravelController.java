@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.staccato.config.auth.MemberId;
+import com.staccato.travel.controller.docs.TravelControllerDocs;
 import com.staccato.travel.service.TravelService;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelDetailResponse;
@@ -29,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/travels")
 @RequiredArgsConstructor
-public class TravelController {
+public class TravelController implements TravelControllerDocs {
     private final TravelService travelService;
 
     @PostMapping
