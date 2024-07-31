@@ -3,9 +3,9 @@ package com.woowacourse.staccato.presentation.timeline.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineFirstBinding
-import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineLastBinding
-import com.woowacourse.staccato.databinding.LayoutItemFragmentTimelineMiddleBinding
+import com.woowacourse.staccato.databinding.ItemTimelineFirstBinding
+import com.woowacourse.staccato.databinding.ItemTimelineLastBinding
+import com.woowacourse.staccato.databinding.ItemTimelineMiddleBinding
 import com.woowacourse.staccato.presentation.timeline.TimelineHandler
 import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
 
@@ -24,7 +24,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
         return when (TimelineViewType.byViewType(viewType)) {
             TimelineViewType.FIRST_ITEM -> {
                 val binding =
-                    LayoutItemFragmentTimelineFirstBinding.inflate(
+                    ItemTimelineFirstBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false,
@@ -34,7 +34,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
 
             TimelineViewType.MIDDLE_ITEM -> {
                 val binding =
-                    LayoutItemFragmentTimelineMiddleBinding.inflate(
+                    ItemTimelineMiddleBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false,
@@ -44,7 +44,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
 
             TimelineViewType.LAST_ITEM -> {
                 val binding =
-                    LayoutItemFragmentTimelineLastBinding.inflate(
+                    ItemTimelineLastBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false,

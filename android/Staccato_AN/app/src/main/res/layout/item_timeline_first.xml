@@ -41,7 +41,7 @@
 
         <include
             android:id="@+id/layout_item_fragment_timeline"
-            layout="@layout/item_fragment_timeline"
+            layout="@layout/layout_timeline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="8dp"
