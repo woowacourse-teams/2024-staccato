@@ -25,7 +25,7 @@ public interface TravelControllerDocs {
             Long memberId,
             @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId);
 
-    @Operation(summary = "여행 상세 수정", description = "여행 상세 정보(제목, 내용, 기간)를 수정합니다.")
+    @Operation(summary = "여행 상세 수정", description = "여행 상세 정보(썸네일, 제목, 내용, 기간)를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "여행 상세 수정 성공", responseCode = "200"),
             @ApiResponse(description = """
