@@ -124,7 +124,7 @@ fun Button.setTravelSaveButtonActive(
         }
 }
 
-@BindingAdapter("bindSetSelectedTravel")
+@BindingAdapter("selectedTravel")
 fun TextView.setSelectedTravel(selectedTravel: VisitTravelUiModel?) {
     if (selectedTravel == null) {
         text = resources.getString(R.string.visit_creation_travel_selection_hint)
@@ -135,7 +135,7 @@ fun TextView.setSelectedTravel(selectedTravel: VisitTravelUiModel?) {
     }
 }
 
-@BindingAdapter("bindSetSelectedVisitedAt")
+@BindingAdapter("selectedVisitedAt")
 fun TextView.setSelectedVisitedAt(selectedVisitedAt: LocalDate?) {
     if (selectedVisitedAt == null) {
         text = resources.getString(R.string.visit_creation_visited_at_hint)
@@ -180,7 +180,7 @@ fun TextView.setTravelPeriod(
     }
 }
 
-@BindingAdapter("bindSetVisitedAtConfirmButtonActive")
+@BindingAdapter("visitedAtConfirmButtonActive")
 fun Button.setVisitedAtConfirmButtonActive(items: List<LocalDate>?) {
     isEnabled =
         if (items.isNullOrEmpty()) {
@@ -192,7 +192,7 @@ fun Button.setVisitedAtConfirmButtonActive(items: List<LocalDate>?) {
         }
 }
 
-@BindingAdapter("bindSetVisitedAtNumberPickerItems")
+@BindingAdapter("visitedAtNumberPickerItems")
 fun NumberPicker.setVisitedAtNumberPickerItems(items: List<LocalDate>?) {
     if (items.isNullOrEmpty()) {
         isGone = true
@@ -201,7 +201,7 @@ fun NumberPicker.setVisitedAtNumberPickerItems(items: List<LocalDate>?) {
     }
 }
 
-@BindingAdapter("bindSetVisitedAtIsEmptyVisibility")
+@BindingAdapter("visitedAtIsEmptyVisibility")
 fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDate>?) {
     isGone = !items.isNullOrEmpty()
 }

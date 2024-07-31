@@ -7,21 +7,22 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface VisitApiService {
     @GET("/visits/{visitId}")
-    suspend fun requestVisit(
+    suspend fun getVisit(
         @Path(value = "visitId") visitId: Long,
     ): VisitResponse
 
     @POST("/visits")
-    suspend fun requestCreateVisit(
+    suspend fun postVisit(
         @Body visitCreationRequest: VisitCreationRequest,
     ): Response<String>
 
-    @POST("/visits")
-    suspend fun requestUpdateVisit(
+    @PUT("/visits")
+    suspend fun putVisit(
         @Body visitUpdateRequest: VisitUpdateRequest,
     )
 }

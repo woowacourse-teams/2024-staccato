@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -17,15 +18,16 @@
 
         <ImageView
             android:id="@+id/iv_profile"
-            coilCircleImageUrl="@{visitLog.memberImage}"
-            coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:layout_marginStart="19dp"
+            android:contentDescription="@string/all_image_content_description"
             android:elevation="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            bind:coilCircleImageUrl="@{visitLog.memberImage}"
+            bind:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -59,4 +61,5 @@
             tools:text="어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어엄청 긴 임시 방문 로그" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

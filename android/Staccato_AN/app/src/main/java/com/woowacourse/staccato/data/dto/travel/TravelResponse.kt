@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.data.dto.travel
 
-import com.woowacourse.staccato.data.dto.MemberDto
+import com.woowacourse.staccato.data.dto.member.MemberDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

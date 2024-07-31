@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.woowacourse.staccato.databinding.ItemMatesBinding
-import com.woowacourse.staccato.presentation.MemberUiModel
+import com.woowacourse.staccato.presentation.common.MemberUiModel
 
 class MatesAdapter : ListAdapter<MemberUiModel, MatesViewHolder>(diffUtil) {
     override fun onCreateViewHolder(

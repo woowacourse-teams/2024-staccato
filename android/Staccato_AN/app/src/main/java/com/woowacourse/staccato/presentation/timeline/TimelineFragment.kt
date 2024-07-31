@@ -2,7 +2,6 @@ package com.woowacourse.staccato.presentation.timeline
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -10,6 +9,7 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentTimelineBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.timeline.adapter.TimelineAdapter
+import com.woowacourse.staccato.presentation.util.showToast
 
 class TimelineFragment :
     BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
@@ -38,7 +38,7 @@ class TimelineFragment :
         viewModel.errorState.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { state ->
                 if (state) {
-                    showToastMessage(ERROR_MESSAGE)
+                    showToast(ERROR_MESSAGE)
                 }
             }
         }
@@ -52,10 +52,6 @@ class TimelineFragment :
         val bundle: Bundle = bundleOf(TRAVEL_ID_KEY to travelId)
         // Log.d("ㅌㅅㅌ", "clicked item: $travelId")
         navigateToTravel(bundle)
-    }
-
-    private fun showToastMessage(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
     companion object {

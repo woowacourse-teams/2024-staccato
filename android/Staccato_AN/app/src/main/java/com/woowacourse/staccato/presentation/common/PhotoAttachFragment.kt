@@ -1,4 +1,4 @@
-package com.woowacourse.staccato
+package com.woowacourse.staccato.presentation.common
 
 import android.os.Bundle
 import android.view.LayoutInflater

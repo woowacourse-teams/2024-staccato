@@ -42,7 +42,7 @@ class VisitUpdateViewModel(
 
     private fun fetchVisitUpdateData(visitId: Long) {
         viewModelScope.launch {
-            visitRepository.loadVisit(visitId = visitId).onSuccess { visit ->
+            visitRepository.getVisit(visitId = visitId).onSuccess { visit ->
                 _visitUpdateData.value =
                     visit.toVisitUpdateDefaultUiModel()
             }.onFailure {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -11,7 +12,7 @@
 
         <variable
             name="toolbarHandler"
-            type="com.woowacourse.staccato.presentation.ToolbarHandler" />
+            type="com.woowacourse.staccato.presentation.common.ToolbarHandler" />
 
         <import type="java.time.LocalDate" />
     </data>
@@ -28,7 +29,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:toolbarHandler="@{toolbarHandler}"/>
+            bind:toolbarHandler="@{toolbarHandler}" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/sv_travel"
@@ -50,12 +51,12 @@
                     android:layout_height="0dp"
                     android:contentDescription="@string/all_image_content_description"
                     android:scaleType="centerCrop"
-                    app:coilImageUrl="@{viewModel.travel.thumbnail}"
-                    app:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    bind:coilImageUrl="@{viewModel.travel.thumbnail}"
+                    bind:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
                     tools:src="@drawable/shape_place_holder_rectangle" />
 
                 <TextView

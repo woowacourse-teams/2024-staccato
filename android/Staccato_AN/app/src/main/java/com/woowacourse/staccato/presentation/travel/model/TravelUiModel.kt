@@ -1,7 +1,7 @@
 package com.woowacourse.staccato.presentation.travel.model
 
-import com.woowacourse.staccato.presentation.MemberUiModel
-import com.woowacourse.staccato.presentation.dummyMates
+import com.woowacourse.staccato.presentation.common.MemberUiModel
+import com.woowacourse.staccato.presentation.common.dummyMates
 import java.time.LocalDate
 
 data class TravelUiModel(
