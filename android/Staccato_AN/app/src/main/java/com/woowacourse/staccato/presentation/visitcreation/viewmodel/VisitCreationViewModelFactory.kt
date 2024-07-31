@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.woowacourse.staccato.data.StaccatoClient.timelineService
 import com.woowacourse.staccato.data.StaccatoClient.visitApiService
-import com.woowacourse.staccato.data.datasource.TimelineRemoteDataSource
-import com.woowacourse.staccato.data.repository.TimelineRepository
-import com.woowacourse.staccato.data.repository.VisitDefaultRepository
+import com.woowacourse.staccato.data.timeline.TimelineRemoteDataSource
+import com.woowacourse.staccato.data.timeline.TimelineRepository
 import com.woowacourse.staccato.data.visit.RemoteVisitDataSource
+import com.woowacourse.staccato.data.visit.VisitDefaultRepository
 
 class VisitCreationViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

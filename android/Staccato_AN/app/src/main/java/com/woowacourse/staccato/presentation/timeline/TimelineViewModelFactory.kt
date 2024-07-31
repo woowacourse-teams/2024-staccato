@@ -2,7 +2,7 @@ package com.woowacourse.staccato.presentation.timeline
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.woowacourse.staccato.data.repository.TimelineRepository
+import com.woowacourse.staccato.data.timeline.TimelineRepository
 
 class TimelineViewModelFactory : ViewModelProvider.Factory {
     private val repository = TimelineRepository()

@@ -1,7 +1,7 @@
 package com.woowacourse.staccato.data.travel
 
 import com.woowacourse.staccato.data.ResponseResult
-import com.woowacourse.staccato.data.mapper.toDomain
+import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.domain.mapper.toDomain
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.TravelRepository

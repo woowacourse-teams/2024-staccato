@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.data.apiservice
+package com.woowacourse.staccato.data.timeline
 
 import com.woowacourse.staccato.data.dto.timeline.TimelineResponse
 import retrofit2.Response

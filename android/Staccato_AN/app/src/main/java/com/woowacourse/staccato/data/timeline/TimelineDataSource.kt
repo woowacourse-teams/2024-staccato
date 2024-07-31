@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.data.datasource
+package com.woowacourse.staccato.data.timeline
 
 import com.woowacourse.staccato.data.dto.timeline.TimelineResponse
 

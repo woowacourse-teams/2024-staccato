@@ -1,7 +1,5 @@
-package com.woowacourse.staccato.data.repository
+package com.woowacourse.staccato.data.timeline
 
-import com.woowacourse.staccato.data.datasource.TimelineDataSource
-import com.woowacourse.staccato.data.datasource.TimelineRemoteDataSource
 import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.domain.repository.TimelineRepository

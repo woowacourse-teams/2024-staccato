@@ -2,8 +2,8 @@ package com.woowacourse.staccato.data.travel
 
 import com.woowacourse.staccato.data.ApiResponseHandler.handleApiResponse
 import com.woowacourse.staccato.data.ResponseResult
+import com.woowacourse.staccato.data.dto.mapper.toDto
 import com.woowacourse.staccato.data.dto.travel.TravelResponse
-import com.woowacourse.staccato.data.mapper.toDto
 import com.woowacourse.staccato.domain.model.TravelCreation
 
 class TravelRemoteDataSource(

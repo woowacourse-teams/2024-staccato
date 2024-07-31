@@ -1,7 +1,6 @@
-package com.woowacourse.staccato.data.datasource
+package com.woowacourse.staccato.data.timeline
 
 import com.woowacourse.staccato.data.StaccatoClient
-import com.woowacourse.staccato.data.apiservice.TimeLineApiService
 import com.woowacourse.staccato.data.dto.timeline.TimelineResponse
 import org.json.JSONObject
 
