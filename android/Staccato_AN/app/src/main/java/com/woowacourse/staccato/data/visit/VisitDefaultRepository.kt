@@ -1,16 +1,15 @@
-package com.woowacourse.staccato.data.repository
+package com.woowacourse.staccato.data.visit
 
 import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.data.dto.visit.VisitCreationRequest
 import com.woowacourse.staccato.data.dto.visit.VisitUpdateRequest
-import com.woowacourse.staccato.data.visit.RemoteVisitDataSource
 import com.woowacourse.staccato.domain.model.Visit
 import com.woowacourse.staccato.domain.repository.VisitRepository
 import retrofit2.Response
 
-class VisitDefaultRepository(private val remoteDataSource: RemoteVisitDataSource) :
+class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource) :
     VisitRepository {
-    override suspend fun loadVisit(visitId: Long): Result<Visit> {
+    override suspend fun getVisit(visitId: Long): Result<Visit> {
         return runCatching {
             remoteDataSource.fetchVisit(visitId).toDomain()
         }

@@ -28,7 +28,7 @@ class VisitViewModel(private val visitRepository: VisitRepository) : ViewModel()
 
     private fun fetchVisitData(visitId: Long) {
         viewModelScope.launch {
-            visitRepository.loadVisit(visitId).onSuccess { visit ->
+            visitRepository.getVisit(visitId).onSuccess { visit ->
                 _visitDefault.value = visit.toVisitDefaultUiModel()
                 _visitLogs.value = visit.visitLogs?.map { it.toVisitLogUiModel() }
             }.onFailure {

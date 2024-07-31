@@ -1,4 +1,4 @@
-package com.woowacourse.staccato
+package com.woowacourse.staccato.presentation.common
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable

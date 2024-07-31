@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -17,17 +18,18 @@
 
         <ImageView
             android:id="@+id/iv_thumbnail"
-            coilImageUrl="@{visitDefault.visitImage}"
-            coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/all_image_content_description"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            bind:coilImageUrl="@{visitDefault.visitImage}"
+            bind:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -55,22 +57,20 @@
 
         <TextView
             android:id="@+id/tv_visited_at"
-            visitedAt="@{visitDefault.visitedAt}"
-            visitedCount="@{visitDefault.visitedCount}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:textAppearance="@style/Typography.Body2"
             app:layout_constraintStart_toStartOf="@id/tv_title"
             app:layout_constraintTop_toBottomOf="@id/tv_detail"
+            bind:visitedAt="@{visitDefault.visitedAt}"
+            bind:visitedCount="@{visitDefault.visitedCount}"
             tools:text="2024년 7월 15일에 처음 방문했어요!" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="0.5dp"
+            style="@style/DividerStyle"
             android:layout_marginTop="17dp"
-            app:dividerColor="@color/gray2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_visited_at" />
@@ -86,4 +86,5 @@
             app:layout_constraintTop_toBottomOf="@id/divider" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

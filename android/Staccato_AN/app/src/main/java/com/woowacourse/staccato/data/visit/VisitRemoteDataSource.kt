@@ -5,16 +5,15 @@ import com.woowacourse.staccato.data.dto.visit.VisitResponse
 import com.woowacourse.staccato.data.dto.visit.VisitUpdateRequest
 import retrofit2.Response
 
-class RemoteVisitDataSource(
+class VisitRemoteDataSource(
     private val visitApiService: VisitApiService,
 ) {
     suspend fun fetchVisit(visitId: Long): VisitResponse {
-        return visitApiService.requestVisit(visitId = visitId)
+        return visitApiService.getVisit(visitId = visitId)
     }
 
     suspend fun createVisit(visitCreationRequest: VisitCreationRequest): Response<String> =
-        visitApiService.requestCreateVisit(visitCreationRequest = visitCreationRequest)
+        visitApiService.postVisit(visitCreationRequest = visitCreationRequest)
 
-    suspend fun updateVisit(visitUpdateRequest: VisitUpdateRequest) =
-        visitApiService.requestUpdateVisit(visitUpdateRequest = visitUpdateRequest)
+    suspend fun updateVisit(visitUpdateRequest: VisitUpdateRequest) = visitApiService.putVisit(visitUpdateRequest = visitUpdateRequest)
 }

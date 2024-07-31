@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -60,14 +61,14 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/all_image_content_description"
-            app:glidePlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            app:glideRoundedCornerImageUrl="@{visit.visitImage}"
-            app:glideRoundingRadius="@{12}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="8:5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/divider_visits"
             app:layout_constraintTop_toTopOf="parent"
+            bind:glidePlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            bind:glideRoundedCornerImageUrl="@{visit.visitImage}"
+            bind:glideRoundingRadius="@{12}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

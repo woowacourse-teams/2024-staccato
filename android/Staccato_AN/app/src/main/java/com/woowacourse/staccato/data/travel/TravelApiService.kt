@@ -10,12 +10,12 @@ import retrofit2.http.Path
 
 interface TravelApiService {
     @GET("/travels/{travelId}")
-    suspend fun requestTravel(
+    suspend fun getTravel(
         @Path("travelId") travelId: Long,
     ): Response<TravelResponse>
 
     @POST("/travels")
-    suspend fun addTravel(
+    suspend fun postTravel(
         @Body travelRequest: TravelRequest,
     ): Response<String>
 }

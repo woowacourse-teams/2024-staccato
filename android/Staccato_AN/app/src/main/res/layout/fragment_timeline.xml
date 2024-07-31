@@ -37,7 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline"
-            tools:listitem="@layout/layout_item_fragment_timeline_middle" />
+            tools:listitem="@layout/item_timeline_middle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

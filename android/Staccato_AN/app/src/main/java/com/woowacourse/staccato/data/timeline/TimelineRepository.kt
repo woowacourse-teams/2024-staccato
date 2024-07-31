@@ -1,25 +1,19 @@
-package com.woowacourse.staccato.data.repository
+package com.woowacourse.staccato.data.timeline
 
-import com.woowacourse.staccato.data.datasource.TimelineDataSource
-import com.woowacourse.staccato.data.datasource.TimelineRemoteDataSource
 import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.domain.repository.TimelineRepository
 
 class TimelineRepository(private val dataSource: TimelineDataSource = TimelineRemoteDataSource()) :
     TimelineRepository {
-    override suspend fun loadTravels(): Timeline {
+    override suspend fun getTimeline(): Timeline {
         var timeline: Timeline = Timeline(emptyList())
-        val result = dataSource.fetchAll()
+        val result = dataSource.getAllTimeline()
         result.onSuccess { timelineResponse ->
             timeline = timelineResponse.toDomain()
         }.onFailure {
             throw it
         }
         return timeline
-    }
-
-    override fun loadTempTravels(): Timeline {
-        return Timeline(emptyList())
     }
 }

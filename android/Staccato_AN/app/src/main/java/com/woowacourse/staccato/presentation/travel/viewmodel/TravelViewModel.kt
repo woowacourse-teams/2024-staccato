@@ -34,7 +34,7 @@ class TravelViewModel(
 
     fun loadTravel(travelId: Long) {
         viewModelScope.launch {
-            travelRepository.loadTravel(travelId).onSuccess { travel ->
+            travelRepository.getTravel(travelId).onSuccess { travel ->
                 _travel.value = travel.toUiModel()
                 Log.d("hye: 여행 조회 성공", "성공")
             }.onServerError { code, message ->

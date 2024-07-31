@@ -40,7 +40,7 @@ class VisitCreationViewModel(
         }
 
     private suspend fun loadAllTravels() {
-        _travels.value = timelineRepository.loadTravels().toTravels()
+        _travels.value = timelineRepository.getTimeline().toTravels()
     }
 
     // TODO : 핀 정보들이 없어 임시 값을 넣었습니다

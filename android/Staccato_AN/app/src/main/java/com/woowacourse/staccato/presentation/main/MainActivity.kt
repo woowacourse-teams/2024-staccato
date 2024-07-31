@@ -2,7 +2,6 @@ package com.woowacourse.staccato.presentation.main
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +17,7 @@ import com.woowacourse.staccato.databinding.ActivityMainBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.timeline.TimelineFragment.Companion.TRAVEL_ID_KEY
 import com.woowacourse.staccato.presentation.travelcreation.TravelCreationActivity
+import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.VisitFragment
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity.Companion.EXTRA_VISIT_ID
@@ -34,7 +34,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    Toast.makeText(this, "새로운 여행을 만들었어요!", Toast.LENGTH_SHORT).show()
+                    showToast("새로운 여행을 만들었어요!")
                     val createdTravelId = it.getLongExtra(TRAVEL_ID_KEY, 0L)
                     val bundle = bundleOf(TRAVEL_ID_KEY to createdTravelId)
                     navigateTo(R.id.travelFragment, R.id.timelineFragment, bundle)
@@ -46,7 +46,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    Toast.makeText(this, "여행을 수정했어요!", Toast.LENGTH_SHORT).show()
+                    showToast("여행을 수정했어요!")
                     navigateTo(R.id.travelFragment, R.id.timelineFragment, null)
                 }
             }
@@ -56,7 +56,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    Toast.makeText(this, "새로운 방문 기록을 만들었어요!", Toast.LENGTH_SHORT).show()
+                    showToast("새로운 방문 기록을 만들었어요!")
                     val createdVisitId = it.getLongExtra(EXTRA_VISIT_ID, 0L)
                     val bundle = bundleOf(VisitFragment.VISIT_ID_KEY to createdVisitId)
                     navigateTo(R.id.visitFragment, R.id.visitFragment, bundle)
@@ -68,7 +68,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    Toast.makeText(this, "방문 기록을 수정했어요!", Toast.LENGTH_SHORT).show()
+                    showToast("방문 기록을 수정했어요!")
                     navigateTo(R.id.visitFragment, R.id.visitFragment, null)
                 }
             }
@@ -97,8 +97,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     private fun handleBackPressedTwice(backPressedTime: Long): Long {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime >= 3000L) {
-            Toast.makeText(this@MainActivity, "버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT)
-                .show()
+            showToast("버튼을 한 번 더 누르면 종료됩니다.")
         } else {
             finish()
         }
