@@ -28,7 +28,9 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
-
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
 
 ---
 
@@ -54,3 +56,6 @@ spring:
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
