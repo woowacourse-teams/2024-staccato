@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
@@ -18,8 +19,6 @@ import com.staccato.ServiceSliceTest;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.pin.domain.Pin;
-import com.staccato.pin.repository.PinRepository;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.domain.TravelMember;
 import com.staccato.travel.repository.TravelMemberRepository;
@@ -42,8 +41,6 @@ class TravelServiceTest extends ServiceSliceTest {
     private TravelRepository travelRepository;
     @Autowired
     private VisitRepository visitRepository;
-    @Autowired
-    private PinRepository pinRepository;
 
     static Stream<Arguments> yearProvider() {
         return Stream.of(
@@ -91,13 +88,12 @@ class TravelServiceTest extends ServiceSliceTest {
     void readTravelById() {
         // given
         Member member = saveMember();
-        Pin pin = savePin(member);
 
         long targetId = travelService.createTravel(createTravelRequest(2023), member.getId());
-        Visit visit = saveVisit(pin, LocalDate.of(2023, 7, 1), targetId);
+        Visit visit = saveVisit(LocalDate.of(2023, 7, 1), targetId);
 
         long otherId = travelService.createTravel(createTravelRequest(2023), member.getId());
-        saveVisit(pin, LocalDate.of(2023, 7, 1), otherId);
+        saveVisit(LocalDate.of(2023, 7, 1), otherId);
 
         // when
         TravelDetailResponse travelDetailResponse = travelService.readTravelById(targetId);
@@ -116,11 +112,10 @@ class TravelServiceTest extends ServiceSliceTest {
     void readTravelByIdOrderByVisitedAt() {
         // given
         Member member = saveMember();
-        Pin pin = savePin(member);
 
         long visitId = travelService.createTravel(createTravelRequest(2023), member.getId());
-        Visit visit = saveVisit(pin, LocalDate.of(2023, 7, 1), visitId);
-        Visit nextVisit = saveVisit(pin, LocalDate.of(2023, 7, 5), visitId);
+        Visit visit = saveVisit(LocalDate.of(2023, 7, 1), visitId);
+        Visit nextVisit = saveVisit(LocalDate.of(2023, 7, 5), visitId);
 
         // when
         TravelDetailResponse travelDetailResponse = travelService.readTravelById(visitId);
@@ -134,12 +129,15 @@ class TravelServiceTest extends ServiceSliceTest {
         );
     }
 
-    private Visit saveVisit(Pin pin, LocalDate visitedAt, long visitId) {
+    private Visit saveVisit(LocalDate visitedAt, long travelId) {
         return visitRepository.save(
                 Visit.builder()
-                        .travel(travelRepository.findById(visitId).get())
                         .visitedAt(visitedAt)
-                        .pin(pin)
+                        .placeName("placeName")
+                        .latitude(BigDecimal.ONE)
+                        .longitude(BigDecimal.ONE)
+                        .address("address")
+                        .travel(travelRepository.findById(travelId).get())
                         .build());
     }
 
@@ -216,9 +214,15 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Long travelId = travelService.createTravel(createTravelRequest(2023), member.getId());
-        Pin pin = savePin(member);
         Travel foundTravel = travelRepository.findById(travelId).get();
-        visitRepository.save(Visit.builder().visitedAt(LocalDate.now()).pin(pin).travel(foundTravel).build());
+        visitRepository.save(Visit.builder()
+                .visitedAt(LocalDate.now())
+                .placeName("placeName")
+                .latitude(BigDecimal.ONE)
+                .longitude(BigDecimal.ONE)
+                .address("address")
+                .travel(foundTravel)
+                .build());
 
         // when & then
         assertThatThrownBy(() -> travelService.deleteTravel(foundTravel.getId()))
@@ -228,10 +232,6 @@ class TravelServiceTest extends ServiceSliceTest {
 
     private Member saveMember() {
         return memberRepository.save(Member.builder().nickname("staccato").build());
-    }
-
-    private Pin savePin(Member member) {
-        return pinRepository.save(Pin.builder().place("장소").address("주소").member(member).build());
     }
 
     @DisplayName("존재하지 않는 여행 상세를 조회하려고 할 경우 예외가 발생한다.")

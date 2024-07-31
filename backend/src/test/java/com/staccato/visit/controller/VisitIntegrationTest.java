@@ -3,6 +3,7 @@ package com.staccato.visit.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
@@ -20,10 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import com.staccato.IntegrationTest;
-import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.pin.domain.Pin;
-import com.staccato.pin.repository.PinRepository;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.visit.service.dto.request.VisitRequest;
@@ -35,8 +33,6 @@ class VisitIntegrationTest extends IntegrationTest {
     private static final String USER_AUTHORIZATION = "1";
 
     @Autowired
-    private PinRepository pinRepository;
-    @Autowired
     private TravelRepository travelRepository;
     @Autowired
     private MemberRepository memberRepository;
@@ -44,15 +40,11 @@ class VisitIntegrationTest extends IntegrationTest {
     static Stream<Arguments> invalidVisitRequestProvider() {
         return Stream.of(
                 Arguments.of(
-                        new VisitRequest(null, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
-                        "핀을 선택해주세요."
-                ),
-                Arguments.of(
-                        new VisitRequest(1L, List.of("https://example1.com.jpg"), null, 1L),
+                        getVisitRequest(null),
                         "방문 날짜를 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest(1L, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), null),
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), null),
                         "여행 상세를 선택해주세요."
                 )
         );
@@ -60,8 +52,6 @@ class VisitIntegrationTest extends IntegrationTest {
 
     @BeforeEach
     void init() {
-        Member member = memberRepository.save(Member.builder().nickname("staccato").build());
-        pinRepository.save(Pin.builder().place("장소").address("주소").member(member).build());
         travelRepository.save(Travel.builder()
                 .thumbnailUrl("https://example1.com.jpg")
                 .title("2023 여름 휴가")
@@ -75,8 +65,7 @@ class VisitIntegrationTest extends IntegrationTest {
     @Test
     void createVisit() {
         // given
-        VisitRequest visitRequest = new VisitRequest(1L, List.of("https://example1.com.jpg"),
-                LocalDate.of(2023, 7, 1), 1L);
+        VisitRequest visitRequest = getVisitRequest(LocalDate.of(2023, 7, 1));
 
         // when & then
         RestAssured.given().log().all()
@@ -166,8 +155,7 @@ class VisitIntegrationTest extends IntegrationTest {
 
     private DynamicTest createVisit(Long pinId, LocalDate visitedAt) {
         return DynamicTest.dynamicTest("새로운 방문 기록을 추가한다.", () -> {
-            VisitRequest visitRequest = new VisitRequest(pinId, List.of("https://example1.com.jpg"),
-                    visitedAt, 1L);
+            VisitRequest visitRequest = getVisitRequest(visitedAt);
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
@@ -179,5 +167,9 @@ class VisitIntegrationTest extends IntegrationTest {
                     .assertThat().statusCode(HttpStatus.CREATED.value())
                     .header(HttpHeaders.LOCATION, containsString("/visits/"));
         });
+    }
+
+    private static VisitRequest getVisitRequest(LocalDate visitedAt) {
+        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), visitedAt, 1L);
     }
 }

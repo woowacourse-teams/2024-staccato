@@ -42,7 +42,8 @@ public class TravelController implements TravelControllerDocs {
     @GetMapping
     public ResponseEntity<TravelResponses> readAllTravels(
             @MemberId Long memberId,
-            @RequestParam(value = "year", required = false) Integer year) {
+            @RequestParam(value = "year", required = false) Integer year
+    ) {
         return ResponseEntity.ok(travelService.readAllTravels(memberId, year));
     }
 

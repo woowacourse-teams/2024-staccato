@@ -13,17 +13,15 @@ public record VisitDetailResponse(
         List<String> visitImages,
         String address,
         LocalDate visitedAt,
-        Long visitedCount,
         List<VisitLogResponse> visitLogs
 ) {
-    public VisitDetailResponse(Visit visit, List<VisitImage> visitImages, Long visitedCount, List<VisitLog> visitLogs) {
+    public VisitDetailResponse(Visit visit, List<VisitImage> visitImages, List<VisitLog> visitLogs) {
         this(
                 visit.getId(),
-                visit.getPin().getPlace(),
+                visit.getPlaceName(),
                 visitImages.stream().map(VisitImage::getImageUrl).toList(),
-                visit.getPin().getAddress(),
+                visit.getSpot().getAddress(),
                 visit.getVisitedAt(),
-                visitedCount,
                 visitLogs.stream().map(VisitLogResponse::new).toList()
         );
     }
