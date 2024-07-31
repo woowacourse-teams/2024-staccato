@@ -12,6 +12,6 @@ public record VisitResponse(
         LocalDate visitedAt
 ) {
     public VisitResponse(Visit visit, String visitImage) {
-        this(visit.getId(), visit.getPin().getPlace(), visitImage, visit.getVisitedAt());
+        this(visit.getId(), visit.getPlaceName(), visitImage, visit.getVisitedAt());
     }
 }

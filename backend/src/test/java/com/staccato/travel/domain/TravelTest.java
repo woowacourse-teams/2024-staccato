@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.pin.domain.Pin;
 import com.staccato.visit.domain.Visit;
 
 class TravelTest {
@@ -59,14 +59,12 @@ class TravelTest {
         Member member = Member.builder()
                 .nickname("staccato")
                 .build();
-        Pin pin = Pin.builder()
-                .place("Sample Place")
-                .address("Sample Address")
-                .member(member)
-                .build();
         Visit visit = Visit.builder()
-                .visitedAt(LocalDate.of(2023, 7, 1))
-                .pin(pin)
+                .visitedAt(LocalDate.now())
+                .placeName("placeName")
+                .latitude(BigDecimal.ONE)
+                .longitude(BigDecimal.ONE)
+                .address("address")
                 .travel(travel)
                 .build();
 

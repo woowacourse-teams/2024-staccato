@@ -1,11 +1,13 @@
 package com.staccato.visit.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +21,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.staccato.config.domain.BaseEntity;
-import com.staccato.pin.domain.Pin;
 import com.staccato.travel.domain.Travel;
 
 import lombok.AccessLevel;
@@ -39,9 +40,11 @@ public class Visit extends BaseEntity {
     private Long id;
     @Column(nullable = false)
     private LocalDate visitedAt;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pin_id", nullable = false)
-    private Pin pin;
+    @Column(nullable = false)
+    private String placeName;
+    @Column(nullable = false)
+    @Embedded
+    private Spot spot;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_id", nullable = false)
     private Travel travel;
@@ -53,9 +56,17 @@ public class Visit extends BaseEntity {
     private List<VisitLog> visitLogs = new ArrayList<>();
 
     @Builder
-    public Visit(@NonNull LocalDate visitedAt, @NonNull Pin pin, @NonNull Travel travel) {
+    public Visit(
+            @NonNull LocalDate visitedAt,
+            @NonNull String placeName,
+            @NonNull String address,
+            @NonNull BigDecimal latitude,
+            @NonNull BigDecimal longitude,
+            @NonNull Travel travel
+    ) {
         this.visitedAt = visitedAt;
-        this.pin = pin;
+        this.placeName = placeName;
+        this.spot = new Spot(address, latitude, longitude);
         this.travel = travel;
     }
 
