@@ -3,7 +3,7 @@ package com.woowacourse.staccato.data.timeline
 import com.woowacourse.staccato.data.dto.timeline.TimelineResponse
 
 interface TimelineDataSource {
-    suspend fun fetchAll(): Result<TimelineResponse>
+    suspend fun getAllTimeline(): Result<TimelineResponse>
 
-    suspend fun fetchByYear(year: Int): Result<TimelineResponse>
+    suspend fun getTimeline(year: Int): Result<TimelineResponse>
 }

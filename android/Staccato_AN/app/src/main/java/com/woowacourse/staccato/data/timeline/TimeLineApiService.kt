@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface TimeLineApiService {
     @GET("/travels")
-    suspend fun requestTimeline(
+    suspend fun getTimeline(
         @Query("year") year: Int? = null,
     ): Response<TimelineResponse>
 }

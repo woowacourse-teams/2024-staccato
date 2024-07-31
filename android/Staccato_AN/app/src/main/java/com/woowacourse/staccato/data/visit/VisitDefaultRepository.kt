@@ -9,7 +9,7 @@ import retrofit2.Response
 
 class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource) :
     VisitRepository {
-    override suspend fun loadVisit(visitId: Long): Result<Visit> {
+    override suspend fun getVisit(visitId: Long): Result<Visit> {
         return runCatching {
             remoteDataSource.fetchVisit(visitId).toDomain()
         }

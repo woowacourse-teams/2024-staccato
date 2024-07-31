@@ -9,11 +9,11 @@ import com.woowacourse.staccato.domain.model.TravelCreation
 class TravelRemoteDataSource(
     private val travelApiService: TravelApiService,
 ) : TravelDataSource {
-    override suspend fun fetchTravel(travelId: Long): ResponseResult<TravelResponse> =
-        handleApiResponse { travelApiService.requestTravel(travelId) }
+    override suspend fun getTravel(travelId: Long): ResponseResult<TravelResponse> =
+        handleApiResponse { travelApiService.getTravel(travelId) }
 
-    override suspend fun saveTravel(travelCreation: TravelCreation): ResponseResult<String> =
+    override suspend fun createTravel(travelCreation: TravelCreation): ResponseResult<String> =
         handleApiResponse {
-            travelApiService.addTravel(travelCreation.toDto())
+            travelApiService.postTravel(travelCreation.toDto())
         }
 }
