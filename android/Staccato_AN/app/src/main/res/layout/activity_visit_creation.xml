@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -124,7 +125,6 @@
 
                 </FrameLayout>
 
-
                 <TextView
                     android:id="@+id/tv_travel_selection_title"
                     android:layout_width="0dp"
@@ -146,10 +146,10 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
-                    app:bindSetSelectedTravel="@{viewModel.selectedTravel}"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_travel_selection_title" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_selection_title"
+                    bind:bindSetSelectedTravel="@{viewModel.selectedTravel}" />
 
                 <TextView
                     android:id="@+id/tv_visited_at_title"
@@ -172,17 +172,14 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
-                    app:bindSetSelectedVisitedAt="@{viewModel.selectedVisitedAt}"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title" />
-
+                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
+                    bind:bindSetSelectedVisitedAt="@{viewModel.selectedVisitedAt}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_visit_create_done"
                     style="@style/ButtonStyle.Save.Active"
-                    selectedTravel="@{viewModel.selectedTravel}"
-                    visitedAt="@{viewModel.selectedVisitedAt}"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="36dp"
                     android:layout_marginBottom="24dp"
@@ -191,8 +188,14 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
+                    bind:selectedTravel="@{viewModel.selectedTravel}"
+                    bind:visitedAt="@{viewModel.selectedVisitedAt}" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.core.widget.NestedScrollView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>
