@@ -48,10 +48,8 @@ public class Visit extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_id", nullable = false)
     private Travel travel;
-
     @OneToMany(mappedBy = "visit", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<VisitImage> visitImages = new ArrayList<>();
-
     @OneToMany(mappedBy = "visit", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<VisitLog> visitLogs = new ArrayList<>();
 
