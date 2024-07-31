@@ -6,14 +6,14 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.woowacourse.staccato.DeleteDialogFragment
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.travelApiService
 import com.woowacourse.staccato.data.travel.TravelDefaultRepository
 import com.woowacourse.staccato.data.travel.TravelRemoteDataSource
 import com.woowacourse.staccato.databinding.FragmentTravelBinding
-import com.woowacourse.staccato.presentation.ToolbarHandler
 import com.woowacourse.staccato.presentation.base.BindingFragment
+import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
+import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.travel.adapter.MatesAdapter
 import com.woowacourse.staccato.presentation.travel.adapter.VisitsAdapter

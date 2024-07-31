@@ -8,7 +8,7 @@
 
         <variable
             name="toolbarHandler"
-            type="com.woowacourse.staccato.presentation.ToolbarHandler" />
+            type="com.woowacourse.staccato.presentation.common.ToolbarHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

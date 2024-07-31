@@ -5,11 +5,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.woowacourse.staccato.DeleteDialogFragment
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentVisitBinding
-import com.woowacourse.staccato.presentation.ToolbarHandler
 import com.woowacourse.staccato.presentation.base.BindingFragment
+import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
+import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.travel.TravelFragment
 import com.woowacourse.staccato.presentation.visit.adapter.VisitAdapter

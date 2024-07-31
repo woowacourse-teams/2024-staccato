@@ -8,10 +8,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
-import com.woowacourse.staccato.PhotoAttachFragment
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityVisitUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
+import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 import com.woowacourse.staccato.presentation.visitcreation.dialog.VisitedAtSelectionFragment
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel

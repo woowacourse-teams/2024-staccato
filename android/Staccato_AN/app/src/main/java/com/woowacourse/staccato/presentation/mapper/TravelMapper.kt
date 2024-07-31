@@ -3,7 +3,7 @@ package com.woowacourse.staccato.presentation.mapper
 import com.woowacourse.staccato.domain.model.Member
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.model.TravelVisit
-import com.woowacourse.staccato.presentation.MemberUiModel
+import com.woowacourse.staccato.presentation.common.MemberUiModel
 import com.woowacourse.staccato.presentation.travel.model.TravelUiModel
 import com.woowacourse.staccato.presentation.travel.model.TravelVisitUiModel
 
