@@ -7,7 +7,7 @@ import com.woowacourse.staccato.domain.model.Visit
 import com.woowacourse.staccato.domain.repository.VisitRepository
 import retrofit2.Response
 
-class VisitDefaultRepository(private val remoteDataSource: RemoteVisitDataSource) :
+class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource) :
     VisitRepository {
     override suspend fun loadVisit(visitId: Long): Result<Visit> {
         return runCatching {
