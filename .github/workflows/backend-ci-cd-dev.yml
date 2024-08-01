@@ -3,6 +3,8 @@ name: Backend CI/CD dev
 on:
   push:
     branches: [ "develop-be" ]
+  pull_request:
+    branches: [ "develop-be" ]
 
 jobs:
   ci:
@@ -52,6 +54,7 @@ jobs:
     steps:
       - name: Pull Docker image
         run: |
+          sudo docker image prune -af
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
           sudo docker pull hotea990/staccato
 
