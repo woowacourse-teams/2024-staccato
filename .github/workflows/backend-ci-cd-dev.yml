@@ -54,9 +54,10 @@ jobs:
     steps:
       - name: Pull Docker image
         run: |
-          sudo docker image prune -af
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
           sudo docker pull hotea990/staccato
 
       - name: Docker Compose up
-        run: sudo docker-compose -f /home/ubuntu/staccato/docker-compose.yml up -d
+        run: |
+          sudo docker-compose -f /home/ubuntu/staccato/docker-compose.yml up -d
+          sudo docker image prune -af
