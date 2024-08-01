@@ -56,4 +56,6 @@ jobs:
           sudo docker pull hotea990/staccato
 
       - name: Docker Compose up
-        run: sudo docker-compose -f /home/ubuntu/staccato/docker-compose.yml up -d
+        run: |
+          sudo docker-compose -f /home/ubuntu/staccato/docker-compose.yml up -d
+          sudo docker image prune -af
