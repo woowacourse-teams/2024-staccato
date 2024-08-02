@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.staccato.visit.controller.docs.VisitControllerDocs;
 import com.staccato.visit.service.VisitService;
 import com.staccato.visit.service.dto.request.VisitRequest;
 import com.staccato.visit.service.dto.response.VisitDetailResponse;
@@ -25,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/visits")
 @RequiredArgsConstructor
 @Validated
-public class VisitController {
+public class VisitController implements VisitControllerDocs {
     private final VisitService visitService;
 
     @PostMapping
@@ -36,7 +37,7 @@ public class VisitController {
 
     @GetMapping("/{visitId}")
     public ResponseEntity<VisitDetailResponse> readVisitById(
-            @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") Long visitId) {
+            @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId) {
         VisitDetailResponse visitDetailResponse = visitService.readVisitById(visitId);
         return ResponseEntity.ok().body(visitDetailResponse);
     }
