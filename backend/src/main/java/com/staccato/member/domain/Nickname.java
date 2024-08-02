@@ -22,7 +22,7 @@ public class Nickname {
     @Column(nullable = false, length = 20)
     private String nickname;
 
-    public Nickname(String nickname){
+    public Nickname(String nickname) {
         validate(nickname);
         this.nickname = nickname;
     }
@@ -33,7 +33,7 @@ public class Nickname {
     }
 
     private void validateLength(String nickname) {
-        if(nickname.isEmpty() || nickname.length()>MAX_LENGTH){
+        if (nickname.isEmpty() || nickname.length() > MAX_LENGTH) {
             throw new StaccatoException("20자 이내의 닉네임으로 설정해주세요.");
         }
     }

@@ -31,7 +31,7 @@ public class AuthService {
     }
 
     private void validateNickname(Nickname nickname) {
-        if(memberRepository.existsByNickname(nickname)){
+        if (memberRepository.existsByNickname(nickname)) {
             throw new StaccatoException("이미 존재하는 닉네임입니다. 다시 설정해주세요.");
         }
     }
