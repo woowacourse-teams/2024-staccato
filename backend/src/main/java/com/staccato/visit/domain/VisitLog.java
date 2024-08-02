@@ -10,6 +10,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
+import com.staccato.config.domain.BaseEntity;
 import com.staccato.member.domain.Member;
 
 import lombok.AccessLevel;
@@ -23,7 +27,9 @@ import lombok.NonNull;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class VisitLog {
+@SQLDelete(sql = "UPDATE visit_log SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
+public class VisitLog extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
