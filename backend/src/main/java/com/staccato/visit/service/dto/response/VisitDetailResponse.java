@@ -17,7 +17,7 @@ public record VisitDetailResponse(
         String placeName,
         @ArraySchema(
                 arraySchema = @Schema(example = "[\"https://example.com/images/namsan_tower.jpg\", \"https://example.com/images/namsan_tower2.jpg\"]"))
-        List<String> visitedImages,
+        List<String> visitImagesUrl,
         @Schema(example = "2021-11-08T11:58:20")
         LocalDate visitedAt,
         @Schema(example = "서울 용산구 남산공원길 105")
