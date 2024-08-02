@@ -16,8 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
-import com.staccato.auth.service.request.LoginRequest;
-import com.staccato.auth.service.response.LoginResponse;
+import com.staccato.auth.service.dto.request.LoginRequest;
+import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.exception.ExceptionResponse;
 
 @WebMvcTest(AuthController.class)

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.staccato.ServiceSliceTest;
-import com.staccato.auth.service.request.LoginRequest;
+import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;

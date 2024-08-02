@@ -2,8 +2,8 @@ package com.staccato.auth.service;
 
 import org.springframework.stereotype.Service;
 
-import com.staccato.auth.service.request.LoginRequest;
-import com.staccato.auth.service.response.LoginResponse;
+import com.staccato.auth.service.dto.request.LoginRequest;
+import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.config.auth.TokenProvider;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;

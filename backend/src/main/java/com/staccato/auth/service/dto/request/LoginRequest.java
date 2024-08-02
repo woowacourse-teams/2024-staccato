@@ -1,4 +1,4 @@
-package com.staccato.auth.service.request;
+package com.staccato.auth.service.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 
