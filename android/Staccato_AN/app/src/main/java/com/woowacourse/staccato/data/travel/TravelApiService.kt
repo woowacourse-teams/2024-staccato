@@ -20,9 +20,8 @@ interface TravelApiService {
         @Body travelRequest: TravelRequest,
     ): Response<String>
 
-    // TODO: 네이밍 고민해보기
     @PUT("/travels/{travelId}")
-    suspend fun updateTravel(
+    suspend fun putTravel(
         @Path("travelId") travelId: Long,
         @Body travelRequest: TravelRequest,
     ): Response<String>

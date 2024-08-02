@@ -22,6 +22,6 @@ class TravelRemoteDataSource(
         travelCreation: TravelCreation,
     ): ResponseResult<String> =
         handleApiResponse {
-            travelApiService.updateTravel(travelId, travelCreation.toDto())
+            travelApiService.putTravel(travelId, travelCreation.toDto())
         }
 }
