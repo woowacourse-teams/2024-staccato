@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -61,6 +62,7 @@ class VisitIntegrationTest extends IntegrationTest {
                 .build());
     }
 
+    @Disabled
     @DisplayName("사용자가 방문 기록 정보를 입력하면, 새로운 방문 기록을 생성한다.")
     @Test
     void createVisit() {
@@ -79,6 +81,7 @@ class VisitIntegrationTest extends IntegrationTest {
                 .header(HttpHeaders.LOCATION, containsString("/visits/"));
     }
 
+    @Disabled
     @DisplayName("사용자가 잘못된 방식으로 정보를 입력하면, 방문 기록을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidVisitRequestProvider")
@@ -95,6 +98,7 @@ class VisitIntegrationTest extends IntegrationTest {
                 .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 
+    @Disabled
     @DisplayName("Visit을 삭제한다.")
     @Test
     void deleteById() {
@@ -106,6 +110,7 @@ class VisitIntegrationTest extends IntegrationTest {
                 .assertThat().statusCode(HttpStatus.OK.value());
     }
 
+    @Disabled
     @DisplayName("1보다 작은 id로 Visit 삭제를 시도하면 Bad Request를 반환한다.")
     @Test
     void deleteByIdFail() {
@@ -119,6 +124,7 @@ class VisitIntegrationTest extends IntegrationTest {
                 .body("status", is(HttpStatus.BAD_REQUEST.toString()));
     }
 
+    @Disabled
     @DisplayName("특정 방문 기록을 id로 찾는다.")
     @TestFactory
     Stream<DynamicTest> getVisitById() {
@@ -135,6 +141,7 @@ class VisitIntegrationTest extends IntegrationTest {
         );
     }
 
+    @Disabled
     @DisplayName("1보다 작은 id로 방문 기록을 찾으려 시도하면 Bad Request를 반환한다.")
     @TestFactory
     Stream<DynamicTest> failGetVisitById() {

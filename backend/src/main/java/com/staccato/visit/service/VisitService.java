@@ -14,6 +14,7 @@ import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitRepository;
 import com.staccato.visit.service.dto.request.VisitRequest;
 import com.staccato.visit.service.dto.response.VisitDetailResponse;
+import com.staccato.visit.service.dto.response.VisitIdResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,14 +27,14 @@ public class VisitService {
     private final VisitImageRepository visitImageRepository;
 
     @Transactional
-    public long createVisit(VisitRequest visitRequest) {
+    public VisitIdResponse createVisit(VisitRequest visitRequest) {
         Travel travel = getTravelById(visitRequest.travelId());
         Visit visit = visitRepository.save(visitRequest.toVisit(travel));
 
         List<VisitImage> visitImages = makeVisitImages(visitRequest.visitImagesUrl(), visit);
         visitImageRepository.saveAll(visitImages);
 
-        return visit.getId();
+        return new VisitIdResponse(visit.getId());
     }
 
     private Travel getTravelById(long travelId) {

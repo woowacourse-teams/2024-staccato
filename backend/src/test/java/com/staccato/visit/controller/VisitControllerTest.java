@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.visit.service.VisitService;
 import com.staccato.visit.service.dto.request.VisitRequest;
+import com.staccato.visit.service.dto.response.VisitIdResponse;
 
 @WebMvcTest(controllers = VisitController.class)
 class VisitControllerTest {
@@ -34,7 +34,6 @@ class VisitControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Disabled
     @DisplayName("방문 기록을 생성한다.")
     @Test
     void createVisit() throws Exception {
@@ -53,7 +52,7 @@ class VisitControllerTest {
                 "image/jpeg",
                 "dummy image content".getBytes()
         );
-        when(visitService.createVisit(any(VisitRequest.class))).thenReturn(1L);
+        when(visitService.createVisit(any(VisitRequest.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.multipart("/visits")
