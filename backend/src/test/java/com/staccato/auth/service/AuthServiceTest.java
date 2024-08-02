@@ -35,13 +35,13 @@ class AuthServiceTest extends ServiceSliceTest {
 
     @DisplayName("입력받은 닉네임이 이미 존재하는 닉네임인 경우 예외가 발생한다.")
     @Test
-    void cannotLogin() {
+    void cannotLoginByDuplicated() {
         // given
         String nickname = "staccato";
         memberRepository.save(Member.builder().nickname(nickname).build());
         LoginRequest loginRequest = new LoginRequest(nickname);
 
-        // when
+        // when & then
         assertThatThrownBy(() -> authService.login(loginRequest))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("이미 존재하는 닉네임입니다. 다시 설정해주세요.");
