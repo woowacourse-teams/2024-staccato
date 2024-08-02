@@ -3,7 +3,6 @@ package com.staccato.auth.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ class AuthServiceTest extends ServiceSliceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Disabled
     @DisplayName("입력받은 닉네임으로 멤버를 저장하고, 토큰을 생성한다.")
     @Test
     void login() {
@@ -35,7 +33,6 @@ class AuthServiceTest extends ServiceSliceTest {
         assertThat(memberRepository.findAll()).hasSize(1);
     }
 
-    @Disabled
     @DisplayName("입력받은 닉네임이 이미 존재하는 닉네임인 경우 예외가 발생한다.")
     @Test
     void cannotLogin() {

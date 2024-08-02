@@ -8,4 +8,6 @@ import com.staccato.member.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByIdAndIsDeletedIsFalse(long memberId);
+
+    boolean existsByNickname(String nickname);
 }
