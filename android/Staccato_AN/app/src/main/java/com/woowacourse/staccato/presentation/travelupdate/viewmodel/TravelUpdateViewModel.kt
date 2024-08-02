@@ -37,7 +37,7 @@ class TravelUpdateViewModel(
 
     fun loadTravel() {
         viewModelScope.launch {
-            travelRepository.loadTravel(travelId)
+            travelRepository.getTravel(travelId)
                 .onSuccess { travel ->
                     _imageUrl.value = travel.travelThumbnail
                     title.set(travel.travelTitle)

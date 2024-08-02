@@ -5,9 +5,9 @@ import com.woowacourse.staccato.data.dto.travel.TravelResponse
 import com.woowacourse.staccato.domain.model.TravelCreation
 
 interface TravelDataSource {
-    suspend fun fetchTravel(travelId: Long): ResponseResult<TravelResponse>
+    suspend fun getTravel(travelId: Long): ResponseResult<TravelResponse>
 
-    suspend fun saveTravel(travelCreation: TravelCreation): ResponseResult<String>
+    suspend fun createTravel(travelCreation: TravelCreation): ResponseResult<String>
 
     suspend fun updateTravel(
         travelId: Long,

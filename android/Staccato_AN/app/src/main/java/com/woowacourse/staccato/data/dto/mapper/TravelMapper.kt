@@ -1,10 +1,8 @@
-package com.woowacourse.staccato.data.mapper
+package com.woowacourse.staccato.data.dto.mapper
 
-import com.woowacourse.staccato.data.dto.MemberDto
 import com.woowacourse.staccato.data.dto.travel.TravelRequest
 import com.woowacourse.staccato.data.dto.travel.TravelResponse
 import com.woowacourse.staccato.data.dto.travel.TravelVisitDto
-import com.woowacourse.staccato.domain.model.Member
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.model.TravelCreation
 import com.woowacourse.staccato.domain.model.TravelVisit
@@ -20,13 +18,6 @@ fun TravelResponse.toDomain() =
         description = description,
         mates = mates.map { it.toDomain() },
         visits = visits.map { it.toDomain() },
-    )
-
-fun MemberDto.toDomain() =
-    Member(
-        memberId = memberId,
-        nickName = nickName,
-        memberImage = memberImage,
     )
 
 fun TravelVisitDto.toDomain() =

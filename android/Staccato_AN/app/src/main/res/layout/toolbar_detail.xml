@@ -5,7 +5,7 @@
 
         <variable
             name="toolbarHandler"
-            type="com.woowacourse.staccato.presentation.ToolbarHandler" />
+            type="com.woowacourse.staccato.presentation.common.ToolbarHandler" />
     </data>
 
     <com.google.android.material.appbar.MaterialToolbar

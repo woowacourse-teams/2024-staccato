@@ -2,7 +2,7 @@ package com.woowacourse.staccato.data
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.woowacourse.staccato.BuildConfig
-import com.woowacourse.staccato.data.apiservice.TimeLineApiService
+import com.woowacourse.staccato.data.timeline.TimeLineApiService
 import com.woowacourse.staccato.data.travel.TravelApiService
 import com.woowacourse.staccato.data.visit.VisitApiService
 import kotlinx.serialization.json.Json

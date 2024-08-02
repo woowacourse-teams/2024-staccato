@@ -5,7 +5,7 @@ import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.presentation.travelcreation.TravelCreationUiModel
 
 interface TravelRepository {
-    suspend fun loadTravel(travelId: Long): ResponseResult<Travel>
+    suspend fun getTravel(travelId: Long): ResponseResult<Travel>
 
     suspend fun createTravel(travelCreationUiModel: TravelCreationUiModel): ResponseResult<String>
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -25,7 +26,6 @@
         <TextView
             android:id="@+id/tv_visited_at_is_empty"
             style="@style/Typography.Body2"
-            bindSetVisitedAtIsEmptyVisibility="@{items}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="50dp"
@@ -34,11 +34,11 @@
             app:layout_constraintBottom_toTopOf="@id/btn_visited_at_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title" />
+            app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
+            bind:visitedAtIsEmptyVisibility="@{items}" />
 
         <NumberPicker
             android:id="@+id/picker_visited_at"
-            bindSetVisitedAtNumberPickerItems="@{items}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="36dp"
@@ -48,17 +48,19 @@
             app:layout_constraintBottom_toTopOf="@id/btn_visited_at_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title" />
+            app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
+            bind:visitedAtNumberPickerItems="@{items}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_visited_at_confirm"
             style="@style/ButtonStyle.Save.Active"
-            bindSetVisitedAtConfirmButtonActive="@{items}"
             android:text="@string/all_confirm"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            bind:visitedAtConfirmButtonActive="@{items}" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

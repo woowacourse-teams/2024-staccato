@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation
+package com.woowacourse.staccato.presentation.common
 
 data class MemberUiModel(
     val id: Long,

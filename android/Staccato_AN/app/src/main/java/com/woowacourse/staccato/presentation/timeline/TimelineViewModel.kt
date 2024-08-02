@@ -29,7 +29,7 @@ class TimelineViewModel(private val repository: TimelineRepository) : ViewModel(
 
     fun loadTimeline() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            val timeline = repository.loadTravels()
+            val timeline = repository.getTimeline()
             _travels.value = timeline.toTimelineTravelUiModel()
         }
     }
