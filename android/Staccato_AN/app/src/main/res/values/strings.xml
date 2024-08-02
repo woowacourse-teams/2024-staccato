@@ -50,6 +50,10 @@
     <string name="visit_creation_travel_selection_hint">여행을 선택해주세요</string>
     <string name="visit_creation_travel_unselected_travel">여행에 해당하는 방문 날짜가 없습니다.\n여행을 먼저 선택해주세요!</string>
 
+    // activity_login
+    <string name="login_start">시작하기</string>
+    <string name="login_nickname_hint">닉네임을 입력해주세요</string>
+
     // fragment_photo_attach
     <string name="photo_attach_title">사진을 등록해주세요</string>
     <string name="photo_attach_camera">카메라 열기</string>
