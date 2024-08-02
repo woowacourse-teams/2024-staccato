@@ -16,12 +16,13 @@ public record VisitRequest(
         @NotNull String address,
         @NotNull BigDecimal latitude,
         @NotNull BigDecimal longitude,
-        List<String> visitImages,
+        List<String> visitImagesUrl,
         @NotNull(message = "방문 날짜를 입력해주세요.")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate visitedAt,
         @NotNull(message = "여행 상세를 선택해주세요.")
-        Long travelId) {
+        Long travelId
+) {
     public Visit toVisit(Travel travel) {
         return Visit.builder()
                 .visitedAt(visitedAt)
