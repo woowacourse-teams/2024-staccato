@@ -36,8 +36,4 @@ public class Member extends BaseEntity {
         this.nickname = new Nickname(nickname);
         this.imageUrl = imageUrl;
     }
-
-    public String getNickname() {
-        return nickname.getNickname();
-    }
 }

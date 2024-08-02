@@ -7,6 +7,7 @@ import com.staccato.auth.service.response.LoginResponse;
 import com.staccato.config.auth.TokenProvider;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
+import com.staccato.member.domain.Nickname;
 import com.staccato.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class AuthService {
         return memberRepository.save(member);
     }
 
-    private void validateNickname(String nickname) {
+    private void validateNickname(Nickname nickname) {
         if(memberRepository.existsByNickname(nickname)){
             throw new StaccatoException("이미 존재하는 닉네임입니다. 다시 설정해주세요.");
         }
