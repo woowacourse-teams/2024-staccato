@@ -9,19 +9,31 @@ import androidx.activity.viewModels
 import androidx.core.util.Pair
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.woowacourse.staccato.R
+import com.woowacourse.staccato.data.StaccatoClient.travelApiService
+import com.woowacourse.staccato.data.travel.TravelDefaultRepository
+import com.woowacourse.staccato.data.travel.TravelRemoteDataSource
+import com.woowacourse.staccato.databinding.ActivityTravelUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
+import com.woowacourse.staccato.presentation.travel.TravelFragment.Companion.TRAVEL_ID_KEY
 import com.woowacourse.staccato.presentation.travelcreation.TravelCreationHandler
 import com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModel
 import com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModelFactory
 
-class TravelUpdateActivity : BindingActivity<com.woowacourse.staccato.databinding.ActivityTravelUpdateBinding>(), TravelCreationHandler {
+class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), TravelCreationHandler {
     override val layoutResourceId = R.layout.activity_travel_update
-    private val viewModel: TravelUpdateViewModel by viewModels { TravelUpdateViewModelFactory() }
+    private val travelId by lazy { intent.getLongExtra(TRAVEL_ID_KEY, DEFAULT_TRAVEL_KEY) }
+    private val viewModel: TravelUpdateViewModel by viewModels {
+        TravelUpdateViewModelFactory(
+            travelId,
+            TravelDefaultRepository(TravelRemoteDataSource(travelApiService)),
+        )
+    }
     private val dateRangePicker = buildDateRangePicker()
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
         navigateToTravel()
+        fetchTravel()
         updateTravelPeriod()
     }
 
@@ -57,6 +69,10 @@ class TravelUpdateActivity : BindingActivity<com.woowacourse.staccato.databindin
         }
     }
 
+    private fun fetchTravel() {
+        viewModel.loadTravel()
+    }
+
     private fun updateTravelPeriod() {
         dateRangePicker.addOnPositiveButtonClickListener { selection ->
             val startDate: Long = selection.first
@@ -66,12 +82,15 @@ class TravelUpdateActivity : BindingActivity<com.woowacourse.staccato.databindin
     }
 
     companion object {
+        private const val DEFAULT_TRAVEL_KEY = -1L
+
         fun startWithResultLauncher(
+            travelId: Long,
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, TravelUpdateActivity::class.java).apply {
-                // putExtra(EXTRA_TRAVEL_ID, travelId)
+                putExtra(TRAVEL_ID_KEY, travelId)
                 activityLauncher.launch(this)
             }
         }
