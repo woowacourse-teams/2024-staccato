@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="30dp">
+    android:paddingHorizontal="36dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
@@ -13,23 +13,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <View
-            android:id="@+id/view_staccato_logo"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:background="@drawable/shape_place_holder_oval"
+        <ImageView
+            android:id="@+id/iv_staccato_logo"
+            android:layout_width="220dp"
+            android:layout_height="260dp"
+            android:src="@drawable/staccato_logo"
             android:backgroundTint="@color/staccato_blue_30"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/all_image_content_description" />
 
         <Space
             android:id="@+id/space_between_logo_nickname_et"
             android:layout_width="0dp"
-            android:layout_height="120dp"
+            android:layout_height="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_staccato_logo" />
+            app:layout_constraintTop_toBottomOf="@id/iv_staccato_logo" />
 
         <EditText
             android:id="@+id/et_user_nickname"
