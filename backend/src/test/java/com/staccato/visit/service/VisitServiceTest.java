@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +18,11 @@ import com.staccato.travel.domain.Travel;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.visit.domain.Visit;
 import com.staccato.visit.domain.VisitLog;
+import com.staccato.visit.fixture.VisitFixture;
+import com.staccato.visit.fixture.VisitLogFixture;
 import com.staccato.visit.repository.VisitLogRepository;
 import com.staccato.visit.repository.VisitRepository;
+import com.staccato.visit.service.dto.response.VisitDetailResponse;
 
 class VisitServiceTest extends ServiceSliceTest {
     @Autowired
@@ -42,15 +44,8 @@ class VisitServiceTest extends ServiceSliceTest {
         Travel travel = travelRepository.save(
                 Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
         );
-        Visit visit = visitRepository.save(Visit.builder()
-                .visitedAt(LocalDate.now())
-                .placeName("placeName")
-                .latitude(BigDecimal.ONE)
-                .longitude(BigDecimal.ONE)
-                .address("address")
-                .travel(travel)
-                .build());
-        VisitLog visitLog = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log").visit(visit).member(member).build());
+        Visit visit = visitRepository.save(VisitFixture.create(travel, LocalDate.now()));
+        VisitLog visitLog = visitLogRepository.save(VisitLogFixture.create(visit, member));
 
         // when
         visitService.deleteVisitById(visit.getId());
@@ -62,9 +57,23 @@ class VisitServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("특정 방문 기록 조회에 성공한다.")
+    @Test
+    void readVisitById() {
+        // given
+        Travel travel = travelRepository.save(
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
+        );
+        Visit visit = visitRepository.save(VisitFixture.create(travel, LocalDate.now()));
+
+        // when & then
+        assertThat(visitService.readVisitById(visit.getId())).isEqualTo(new VisitDetailResponse(visit));
+    }
+
     @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
     @Test
     void failReadVisitById() {
+        // given & when & then
         assertThatThrownBy(() -> visitService.readVisitById(1L))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");

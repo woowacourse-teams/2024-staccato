@@ -52,11 +52,7 @@ public class VisitService {
 
     public VisitDetailResponse readVisitById(long visitId) {
         Visit visit = getVisitById(visitId);
-        return new VisitDetailResponse(
-                visit,
-                visit.getVisitImages(),
-                visit.getVisitLogs()
-        );
+        return new VisitDetailResponse(visit);
     }
 
     private Visit getVisitById(long visitId) {
