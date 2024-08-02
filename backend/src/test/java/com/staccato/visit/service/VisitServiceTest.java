@@ -2,6 +2,7 @@ package com.staccato.visit.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,7 +19,6 @@ import com.staccato.travel.domain.Travel;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.visit.domain.Visit;
 import com.staccato.visit.domain.VisitLog;
-import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitLogRepository;
 import com.staccato.visit.repository.VisitRepository;
 
@@ -33,8 +33,6 @@ class VisitServiceTest extends ServiceSliceTest {
     private TravelRepository travelRepository;
     @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private VisitImageRepository visitImageRepository;
 
     @DisplayName("Visit을 삭제하면 이에 포함된 VisitLog도 모두 삭제된다.")
     @Test
@@ -58,8 +56,10 @@ class VisitServiceTest extends ServiceSliceTest {
         visitService.deleteVisitById(visit.getId());
 
         // then
-        assertThat(visitRepository.findById(visit.getId())).isEmpty();
-        assertThat(visitLogRepository.findById(visitLog.getId())).isEmpty();
+        assertAll(
+                () -> assertThat(visitRepository.findById(visit.getId())).isEmpty(),
+                () -> assertThat(visitLogRepository.findById(visitLog.getId())).isEmpty()
+        );
     }
 
     @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
