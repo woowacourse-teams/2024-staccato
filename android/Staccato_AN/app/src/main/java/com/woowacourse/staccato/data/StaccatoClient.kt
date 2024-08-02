@@ -2,6 +2,7 @@ package com.woowacourse.staccato.data
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.woowacourse.staccato.BuildConfig
+import com.woowacourse.staccato.data.login.LoginApiService
 import com.woowacourse.staccato.data.timeline.TimeLineApiService
 import com.woowacourse.staccato.data.travel.TravelApiService
 import com.woowacourse.staccato.data.visit.VisitApiService
@@ -14,6 +15,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object StaccatoClient {
     private val BASE_URL = BuildConfig.BASE_URL
+
+    val loginApiService: LoginApiService by lazy {
+        create(LoginApiService::class.java)
+    }
 
     val travelApiService: TravelApiService by lazy {
         create(
