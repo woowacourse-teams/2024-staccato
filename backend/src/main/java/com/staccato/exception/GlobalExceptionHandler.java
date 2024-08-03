@@ -67,7 +67,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+    @ApiResponse(description = """
+            <발생 가능한 케이스>
+            
+            (1) 사용자 인증이 되지 않았을 때
+            """,
+            responseCode = "401", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     public ResponseEntity<ExceptionResponse> handleUnauthorizedException(UnauthorizedException e) {
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -76,7 +81,12 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(ForbiddenException.class)
-    @ApiResponse(responseCode = "403", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+    @ApiResponse(description = """
+            <발생 가능한 케이스>
+            
+            (1) 해당 사용자가 권한을 가지고 있지 않은 작업을 시도했을 때
+            """,
+            responseCode = "403", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     public ResponseEntity<ExceptionResponse> handleForbiddenException(ForbiddenException e) {
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
