@@ -35,6 +35,11 @@ public class VisitService {
         return new VisitIdResponse(visit.getId());
     }
 
+    private Travel getTravelById(long travelId) {
+        return travelRepository.findById(travelId)
+                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
+    }
+
     private void saveVisitImages(List<String> visitImagesUrl, Visit visit) {
         if (visitImagesUrl == null) {
             return;
@@ -47,11 +52,6 @@ public class VisitService {
                 .toList();
 
         visitImageRepository.saveAll(visitImages);
-    }
-
-    private Travel getTravelById(long travelId) {
-        return travelRepository.findById(travelId)
-                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 
     public VisitDetailResponse readVisitById(long visitId) {
