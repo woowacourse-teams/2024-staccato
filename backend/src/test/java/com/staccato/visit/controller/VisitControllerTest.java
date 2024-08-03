@@ -41,6 +41,39 @@ class VisitControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    static Stream<Arguments> invalidVisitRequestProvider() {
+        return Stream.of(
+                Arguments.of(
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 0L),
+                        "여행 식별자는 양수로 이루어져야 합니다."
+                ),
+                Arguments.of(
+                        new VisitRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        "방문한 장소 이름을 입력해주세요."
+                ),
+                Arguments.of(
+                        new VisitRequest("placeName", "address", null, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        "방문한 장소의 위도를 입력해주세요."
+                ),
+                Arguments.of(
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, null, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        "방문한 장소의 경도를 입력해주세요."
+                ),
+                Arguments.of(
+                        new VisitRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        "방문한 장소의 주소를 입력해주세요."
+                ),
+                Arguments.of(
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), null),
+                        "여행 상세를 선택해주세요."
+                ),
+                Arguments.of(
+                        getVisitRequest(null),
+                        "방문 날짜를 입력해주세요."
+                )
+        );
+    }
+
     @DisplayName("방문 기록을 생성한다.")
     @Test
     void createVisit() throws Exception {
@@ -103,39 +136,6 @@ class VisitControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value("400 BAD_REQUEST"))
                 .andExpect(jsonPath("$.message").value("사진은 5장까지만 추가할 수 있어요."));
-    }
-
-    static Stream<Arguments> invalidVisitRequestProvider() {
-        return Stream.of(
-                Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 0L),
-                        "여행 식별자는 양수로 이루어져야 합니다."
-                ),
-                Arguments.of(
-                        new VisitRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
-                        "방문한 장소 이름을 입력해주세요."
-                ),
-                Arguments.of(
-                        new VisitRequest("placeName", "address", null, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
-                        "방문한 장소의 위도를 입력해주세요."
-                ),
-                Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, null, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
-                        "방문한 장소의 경도를 입력해주세요."
-                ),
-                Arguments.of(
-                        new VisitRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
-                        "방문한 장소의 주소를 입력해주세요."
-                ),
-                Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), null),
-                        "여행 상세를 선택해주세요."
-                ),
-                Arguments.of(
-                        getVisitRequest(null),
-                        "방문 날짜를 입력해주세요."
-                )
-        );
     }
 
     private static VisitRequest getVisitRequest(LocalDate visitedAt) {
