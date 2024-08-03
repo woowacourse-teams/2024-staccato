@@ -13,7 +13,7 @@ import com.staccato.travel.domain.Travel;
 import com.staccato.visit.domain.Visit;
 
 public record VisitRequest(
-        @NotNull(message = "방문한 장소 이름을 입력해주세요.")
+        @NotNull(message = "방문한 장소의 이름을 입력해주세요.")
         String placeName,
         @NotNull(message = "방문한 장소의 주소를 입력해주세요.")
         String address,

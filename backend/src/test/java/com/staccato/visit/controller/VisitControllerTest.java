@@ -49,7 +49,7 @@ class VisitControllerTest {
                 ),
                 Arguments.of(
                         new VisitRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
-                        "방문한 장소 이름을 입력해주세요."
+                        "방문한 장소의 이름을 입력해주세요."
                 ),
                 Arguments.of(
                         new VisitRequest("placeName", "address", null, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
