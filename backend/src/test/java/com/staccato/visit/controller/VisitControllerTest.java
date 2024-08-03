@@ -9,9 +9,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -64,7 +68,70 @@ class VisitControllerTest {
                 .andExpect(jsonPath("$.visitId").value(1));
     }
 
+    static Stream<Arguments> invalidVisitRequestProvider() {
+        return Stream.of(
+                Arguments.of(
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 0L),
+                        "여행 식별자는 양수로 이루어져야 합니다."
+                ),
+                Arguments.of(
+                        new VisitRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        "방문한 장소 이름을 입력해주세요."
+                ),
+                Arguments.of(
+                        new VisitRequest("placeName", "address", null, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        "방문한 장소의 위도를 입력해주세요."
+                ),
+                Arguments.of(
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, null, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        "방문한 장소의 경도를 입력해주세요."
+                ),
+                Arguments.of(
+                        new VisitRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        "방문한 장소의 주소를 입력해주세요."
+                ),
+                Arguments.of(
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), null),
+                        "여행 상세를 선택해주세요."
+                ),
+                Arguments.of(
+                        getVisitRequest(null),
+                        "방문 날짜를 입력해주세요."
+                )
+        );
+    }
+
     private static VisitRequest getVisitRequest(LocalDate visitedAt) {
         return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), visitedAt, 1L);
+    }
+
+    @DisplayName("사용자가 잘못된 방식으로 정보를 입력하면, 방문 기록을 생성할 수 없다.")
+    @ParameterizedTest
+    @MethodSource("invalidVisitRequestProvider")
+    void failCreateTravel(VisitRequest visitRequest, String expectedMessage) throws Exception {
+        // given
+        String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
+        MockMultipartFile visitRequestPart = new MockMultipartFile(
+                "visitRequest",
+                "visitRequest.json",
+                "application/json",
+                visitRequestJson.getBytes()
+        );
+        MockMultipartFile imageFilePart = new MockMultipartFile(
+                "visitImagesFile",
+                "test-image.jpg",
+                "image/jpeg",
+                "dummy image content".getBytes()
+        );
+        when(visitService.createVisit(any(VisitRequest.class))).thenReturn(new VisitIdResponse(1L));
+
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/visits")
+                        .file(visitRequestPart)
+                        .file(imageFilePart)
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value("400 BAD_REQUEST"))
+                .andExpect(jsonPath("$.message").value(expectedMessage));
     }
 }
