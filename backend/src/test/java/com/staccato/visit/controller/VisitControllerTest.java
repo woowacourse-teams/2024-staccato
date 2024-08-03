@@ -1,6 +1,8 @@
 package com.staccato.visit.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -168,5 +170,31 @@ class VisitControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value("400 BAD_REQUEST"))
                 .andExpect(jsonPath("$.message").value(expectedMessage));
+    }
+
+    @DisplayName("방문 기록을 삭제한다.")
+    @Test
+    void deleteVisitById() throws Exception {
+        // given
+        long visitId = 1L;
+        doNothing().when(visitService).deleteVisitById(anyLong());
+
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.delete("/visits/{id}", visitId))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("양수가 아닌 id로 방문 기록을 삭제할 수 없다.")
+    @Test
+    void failDeleteVisitById() throws Exception {
+        // given
+        long visitId = 0L;
+        doNothing().when(visitService).deleteVisitById(anyLong());
+
+        // when & then
+        mockMvc.perform(MockMvcRequestBuilders.delete("/visits/{id}", visitId))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value("400 BAD_REQUEST"))
+                .andExpect(jsonPath("$.message").value("방문 기록 식별자는 양수로 이루어져야 합니다."));
     }
 }
