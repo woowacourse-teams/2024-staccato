@@ -12,10 +12,14 @@ import com.staccato.travel.domain.Travel;
 import com.staccato.visit.domain.Visit;
 
 public record VisitRequest(
-        @NotNull String placeName,
-        @NotNull String address,
-        @NotNull BigDecimal latitude,
-        @NotNull BigDecimal longitude,
+        @NotNull
+        String placeName,
+        @NotNull
+        String address,
+        @NotNull
+        BigDecimal latitude,
+        @NotNull
+        BigDecimal longitude,
         List<String> visitImagesUrl,
         @NotNull(message = "방문 날짜를 입력해주세요.")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
