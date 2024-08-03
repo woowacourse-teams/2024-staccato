@@ -70,7 +70,7 @@ public class VisitService {
     }
 
     @Transactional
-    public void deleteVisitById(Long visitId) {
+    public void deleteVisitById(long visitId) {
         visitRepository.deleteById(visitId);
     }
 }
