@@ -21,8 +21,6 @@ import org.springframework.http.HttpStatus;
 import com.staccato.IntegrationTest;
 import com.staccato.auth.service.AuthService;
 import com.staccato.auth.service.dto.request.LoginRequest;
-import com.staccato.member.domain.Member;
-import com.staccato.member.repository.MemberRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 
 import io.restassured.RestAssured;

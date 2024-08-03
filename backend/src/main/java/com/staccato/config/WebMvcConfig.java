@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
     private final LoginMemberArgumentResolver loginMemberArgumentResolver;
+
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginMemberArgumentResolver);
