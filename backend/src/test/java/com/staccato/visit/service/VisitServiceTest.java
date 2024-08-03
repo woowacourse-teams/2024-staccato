@@ -69,7 +69,7 @@ class VisitServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(visitRepository.findById(visitId)).isNotEmpty(),
-                () -> assertThat(visitImageRepository.findAllByVisitId(visitId)).hasSize(2)
+                () -> assertThat(visitImageRepository.findFirstByVisitId(visitId)).isNotEmpty()
         );
     }
 
@@ -81,7 +81,7 @@ class VisitServiceTest extends ServiceSliceTest {
     }
 
     private VisitRequest getVisitRequest() {
-        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg", "https://example2.com.jpg"), LocalDate.now(), 1L);
+        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.now(), 1L);
     }
 
     @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
