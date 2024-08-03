@@ -42,10 +42,10 @@ public class VisitService {
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 
-    private List<VisitImage> makeVisitImages(List<String> visitedImages, Visit visit) {
-        return visitedImages.stream()
-                .map(visitImage -> VisitImage.builder()
-                        .imageUrl(visitImage)
+    private List<VisitImage> makeVisitImages(List<String> visitImagesUrl, Visit visit) {
+        return visitImagesUrl.stream()
+                .map(visitImageUrl -> VisitImage.builder()
+                        .imageUrl(visitImageUrl)
                         .visit(visit)
                         .build())
                 .toList();
