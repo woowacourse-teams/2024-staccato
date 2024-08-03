@@ -19,6 +19,7 @@ import com.staccato.member.repository.MemberRepository;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.visit.domain.Visit;
+import com.staccato.visit.domain.VisitImage;
 import com.staccato.visit.domain.VisitLog;
 import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitLogRepository;
@@ -83,7 +84,15 @@ class VisitServiceTest extends ServiceSliceTest {
         return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg", "https://example2.com.jpg"), LocalDate.now(), 1L);
     }
 
-    @DisplayName("Visit을 삭제하면 이에 포함된 VisitLog도 모두 삭제된다.")
+    @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
+    @Test
+    void failReadVisitById() {
+        assertThatThrownBy(() -> visitService.readVisitById(1L))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
+    }
+
+    @DisplayName("Visit을 삭제하면 이에 포함된 VisitImage와 VisitLog도 모두 삭제된다.")
     @Test
     void deleteVisitById() {
         // given
@@ -99,6 +108,8 @@ class VisitServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(Member.builder().nickname("Sample Member").build());
         VisitLog visitLog = visitLogRepository.save(VisitLog.builder().content("Sample Visit Log").visit(visit)
                 .member(member).build());
+        VisitImage visitImage = visitImageRepository.save(VisitImage.builder().imageUrl("https://example1.com.jpg")
+                .visit(visit).build());
 
         // when
         visitService.deleteVisitById(visit.getId());
@@ -106,7 +117,8 @@ class VisitServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(visitRepository.findById(visit.getId())).isEmpty(),
-                () -> assertThat(visitLogRepository.findById(visitLog.getId())).isEmpty()
+                () -> assertThat(visitLogRepository.findById(visitLog.getId())).isEmpty(),
+                () -> assertThat(visitImageRepository.findById(visitImage.getId())).isEmpty()
         );
     }
 
@@ -118,13 +130,5 @@ class VisitServiceTest extends ServiceSliceTest {
                 .build();
 
         return travelRepository.save(travel);
-    }
-
-    @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
-    @Test
-    void failReadVisitById() {
-        assertThatThrownBy(() -> visitService.readVisitById(1L))
-                .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
     }
 }
