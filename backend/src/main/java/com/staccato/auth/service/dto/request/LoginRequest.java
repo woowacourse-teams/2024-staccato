@@ -4,8 +4,14 @@ import jakarta.validation.constraints.NotNull;
 
 import com.staccato.member.domain.Member;
 
-public record LoginRequest(@NotNull(message = "닉네임을 입력해주세요.")
-                           String nickname) {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "여행 상세를 생성/수정하기 위한 요청 형식입니다.")
+public record LoginRequest(
+        @Schema(example = "hi_staccato")
+        @NotNull(message = "닉네임을 입력해주세요.")
+        String nickname
+) {
     public Member toMember() {
         return Member.builder()
                 .nickname(nickname)
