@@ -43,7 +43,7 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void createVisit() {
         // given
-        Travel travel = getTravel();
+        saveTravel();
 
         // when
         long visitId = visitService.createVisit(getVisitRequest()).visitId();
@@ -70,7 +70,7 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void deleteVisitById() {
         // given
-        Travel travel = getTravel();
+        Travel travel = saveTravel();
         Visit visit = visitRepository.save(Visit.builder()
                 .visitedAt(LocalDate.now())
                 .placeName("placeName")
@@ -93,11 +93,14 @@ class VisitServiceTest extends ServiceSliceTest {
         );
     }
 
-    private Travel getTravel() {
-        return travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1))
-                        .build()
-        );
+    private Travel saveTravel() {
+        Travel travel = Travel.builder()
+                .title("Sample Travel")
+                .startAt(LocalDate.now())
+                .endAt(LocalDate.now().plusDays(1))
+                .build();
+
+        return travelRepository.save(travel);
     }
 
     @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
