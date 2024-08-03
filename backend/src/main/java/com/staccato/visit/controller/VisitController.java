@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +35,7 @@ public class VisitController {
     @PostMapping
     public ResponseEntity<VisitIdResponse> createVisit(
             @Valid @RequestPart VisitRequest visitRequest,
-            @RequestPart List<MultipartFile> visitImagesFile
+            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart List<MultipartFile> visitImagesFile
     ) {
         VisitIdResponse visitIdResponse = visitService.createVisit(visitRequest);
         return ResponseEntity.created(URI.create("/visits/" + visitIdResponse.visitId()))

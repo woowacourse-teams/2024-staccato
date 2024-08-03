@@ -22,6 +22,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,6 +69,40 @@ class VisitControllerTest {
                 .andExpect(jsonPath("$.visitId").value(1));
     }
 
+    @DisplayName("사진이 5장을 초과하면 방문 기록 생성에 실패한다.")
+    @Test
+    void failCreateVisitByImageCount() throws Exception {
+        // given
+        VisitRequest visitRequest = getVisitRequest(LocalDate.now());
+        String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
+        MockMultipartFile visitRequestPart = new MockMultipartFile(
+                "visitRequest",
+                "visitRequest.json",
+                "application/json",
+                visitRequestJson.getBytes()
+        );
+
+        List<MockMultipartFile> imageFiles = List.of(
+                new MockMultipartFile("visitImagesFile", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes()),
+                new MockMultipartFile("visitImagesFile", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes()),
+                new MockMultipartFile("visitImagesFile", "test-image3.jpg", "image/jpeg", "dummy image content".getBytes()),
+                new MockMultipartFile("visitImagesFile", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes()),
+                new MockMultipartFile("visitImagesFile", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes()),
+                new MockMultipartFile("visitImagesFile", "test-image6.jpg", "image/jpeg", "dummy image content".getBytes())
+        );
+        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart("/visits");
+        builder.file(visitRequestPart);
+        for (MockMultipartFile imageFile : imageFiles) {
+            builder.file(imageFile);
+        }
+
+        // when & then
+        mockMvc.perform(builder.contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value("400 BAD_REQUEST"))
+                .andExpect(jsonPath("$.message").value("사진은 5장까지만 추가할 수 있어요."));
+    }
+
     static Stream<Arguments> invalidVisitRequestProvider() {
         return Stream.of(
                 Arguments.of(
@@ -108,7 +143,7 @@ class VisitControllerTest {
     @DisplayName("사용자가 잘못된 방식으로 정보를 입력하면, 방문 기록을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidVisitRequestProvider")
-    void failCreateTravel(VisitRequest visitRequest, String expectedMessage) throws Exception {
+    void failCreateVisit(VisitRequest visitRequest, String expectedMessage) throws Exception {
         // given
         String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
         MockMultipartFile visitRequestPart = new MockMultipartFile(
