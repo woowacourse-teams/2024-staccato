@@ -74,6 +74,15 @@ public class GlobalExceptionHandler {
                 .body(new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), e.getMessage()));
     }
 
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ApiResponse(responseCode = "403", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+    public ResponseEntity<ExceptionResponse> handleForbiddenErrorException(ForbiddenException e) {
+        log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), e.getMessage()));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     public ResponseEntity<ExceptionResponse> handleInternalServerErrorException(RuntimeException e) {
