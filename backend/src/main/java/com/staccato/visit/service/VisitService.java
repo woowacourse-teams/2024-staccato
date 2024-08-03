@@ -30,7 +30,6 @@ public class VisitService {
     public VisitIdResponse createVisit(VisitRequest visitRequest) {
         Travel travel = getTravelById(visitRequest.travelId());
         Visit visit = visitRepository.save(visitRequest.toVisit(travel));
-
         saveVisitImages(visitRequest.visitImagesUrl(), visit);
 
         return new VisitIdResponse(visit.getId());
