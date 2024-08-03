@@ -51,7 +51,8 @@ public class VisitController {
 
     @DeleteMapping("/{visitId}")
     public ResponseEntity<Void> deleteVisitById(
-            @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") Long visitId) {
+            @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId
+    ) {
         visitService.deleteVisitById(visitId);
         return ResponseEntity.ok().build();
     }
