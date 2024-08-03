@@ -31,24 +31,28 @@ public class VisitService {
         Travel travel = getTravelById(visitRequest.travelId());
         Visit visit = visitRepository.save(visitRequest.toVisit(travel));
 
-        List<VisitImage> visitImages = makeVisitImages(visitRequest.visitImagesUrl(), visit);
-        visitImageRepository.saveAll(visitImages);
+        saveVisitImages(visitRequest.visitImagesUrl(), visit);
 
         return new VisitIdResponse(visit.getId());
     }
 
-    private Travel getTravelById(long travelId) {
-        return travelRepository.findById(travelId)
-                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
-    }
-
-    private List<VisitImage> makeVisitImages(List<String> visitImagesUrl, Visit visit) {
-        return visitImagesUrl.stream()
+    private void saveVisitImages(List<String> visitImagesUrl, Visit visit) {
+        if (visitImagesUrl == null) {
+            return;
+        }
+        List<VisitImage> visitImages = visitImagesUrl.stream()
                 .map(visitImageUrl -> VisitImage.builder()
                         .imageUrl(visitImageUrl)
                         .visit(visit)
                         .build())
                 .toList();
+
+        visitImageRepository.saveAll(visitImages);
+    }
+
+    private Travel getTravelById(long travelId) {
+        return travelRepository.findById(travelId)
+                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 
     public VisitDetailResponse readVisitById(long visitId) {

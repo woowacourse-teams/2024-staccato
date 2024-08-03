@@ -39,9 +39,26 @@ class VisitServiceTest extends ServiceSliceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @DisplayName("방문 기록을 생성하면 Visit과 VisitImage들이 함께 저장되고 id를 반환한다.")
+    @DisplayName("사진 없이도 방문 기록을 생성할 수 있다.")
     @Test
     void createVisit() {
+        // given
+        saveTravel();
+
+        // when
+        long visitId = visitService.createVisit(getVisitRequestWithoutImage()).visitId();
+
+        // then
+        assertThat(visitRepository.findById(visitId)).isNotEmpty();
+    }
+
+    private VisitRequest getVisitRequestWithoutImage() {
+        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, null, LocalDate.now(), 1L);
+    }
+
+    @DisplayName("방문 기록을 생성하면 Visit과 VisitImage들이 함께 저장되고 id를 반환한다.")
+    @Test
+    void createVisitWithVisitImages() {
         // given
         saveTravel();
 
