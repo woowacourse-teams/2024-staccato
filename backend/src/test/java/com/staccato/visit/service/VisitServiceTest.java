@@ -76,7 +76,8 @@ class VisitServiceTest extends ServiceSliceTest {
     @DisplayName("존재하지 않는 여행에 방문 기록 생성을 시도하면 예외가 발생한다.")
     @Test
     void failCreateVisit() {
-        assertThatThrownBy(() -> visitService.createVisit(getVisitRequest())).isInstanceOf(StaccatoException.class)
+        assertThatThrownBy(() -> visitService.createVisit(getVisitRequest()))
+                .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 여행을 찾을 수 없어요.");
     }
 
