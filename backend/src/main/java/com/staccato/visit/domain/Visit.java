@@ -63,14 +63,14 @@ public class Visit extends BaseEntity {
             @NonNull BigDecimal longitude,
             @NonNull Travel travel
     ) {
-        validateVisitedAt(visitedAt, travel);
+        validateIsWithinTravelDuration(visitedAt, travel);
         this.visitedAt = visitedAt;
         this.placeName = placeName;
         this.spot = new Spot(address, latitude, longitude);
         this.travel = travel;
     }
 
-    private void validateVisitedAt(LocalDate visitedAt, Travel travel) {
+    private void validateIsWithinTravelDuration(LocalDate visitedAt, Travel travel) {
         if (travel.isWithoutDuration(visitedAt)) {
             throw new StaccatoException("여행에 포함되지 않는 날짜입니다.");
         }
