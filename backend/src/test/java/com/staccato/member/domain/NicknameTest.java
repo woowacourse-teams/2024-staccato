@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import com.staccato.exception.StaccatoException;
 
 class NicknameTest {
-    @DisplayName("유효한닉네임을 생성한다.")
+    @DisplayName("유효한 닉네임을 생성한다.")
     @Test
     void CreateNickname() {
         assertThatNoException().isThrownBy(() -> new Nickname("가ㄱㅏㅣㅎ.AZaz_"));
