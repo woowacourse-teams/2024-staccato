@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.staccato.config.auth.LoginMember;
+import com.staccato.member.domain.Member;
 import com.staccato.travel.controller.docs.TravelControllerDocs;
 import com.staccato.travel.service.TravelService;
 import com.staccato.travel.service.dto.request.TravelRequest;
@@ -34,22 +35,22 @@ public class TravelController implements TravelControllerDocs {
     private final TravelService travelService;
 
     @PostMapping
-    public ResponseEntity<Void> createTravel(@Valid @RequestBody TravelRequest travelRequest, @LoginMember Long memberId) {
-        long travelId = travelService.createTravel(travelRequest, memberId);
+    public ResponseEntity<Void> createTravel(@Valid @RequestBody TravelRequest travelRequest, @LoginMember Member member) {
+        long travelId = travelService.createTravel(travelRequest, member);
         return ResponseEntity.created(URI.create("/travels/" + travelId)).build();
     }
 
     @GetMapping
     public ResponseEntity<TravelResponses> readAllTravels(
-            @LoginMember Long memberId,
+            @LoginMember Member member,
             @RequestParam(value = "year", required = false) Integer year
     ) {
-        return ResponseEntity.ok(travelService.readAllTravels(memberId, year));
+        return ResponseEntity.ok(travelService.readAllTravels(member, year));
     }
 
     @GetMapping("/{travelId}")
     public ResponseEntity<TravelDetailResponse> readTravel(
-            @LoginMember Long memberId,
+            @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId) {
         return ResponseEntity.ok(travelService.readTravelById(travelId));
     }
@@ -58,7 +59,7 @@ public class TravelController implements TravelControllerDocs {
     public ResponseEntity<Void> updateTravel(
             @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId,
             @Valid @RequestBody TravelRequest travelRequest,
-            @LoginMember Long memberId) {
+            @LoginMember Member member) {
         travelService.updateTravel(travelRequest, travelId);
         return ResponseEntity.ok().build();
     }
@@ -66,7 +67,7 @@ public class TravelController implements TravelControllerDocs {
     @DeleteMapping("/{travelId}")
     public ResponseEntity<Void> deleteTravel(
             @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId,
-            @LoginMember Long memberId) {
+            @LoginMember Member member) {
         travelService.deleteTravel(travelId);
         return ResponseEntity.ok().build();
     }
