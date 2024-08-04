@@ -9,8 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
+import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.TravelRepository
-import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel.Companion.TRAVEL_ERROR_MESSAGE
+import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
+import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.travelcreation.DateConverter.convertLongToLocalDate
 import com.woowacourse.staccato.presentation.travelcreation.TravelCreationUiModel
 import kotlinx.coroutines.launch
@@ -35,22 +37,27 @@ class TravelUpdateViewModel(
     private val _endDate = MutableLiveData<LocalDate>(null)
     val endDate: LiveData<LocalDate> get() = _endDate
 
-    fun loadTravel() {
+    private val _isUpdateSuccess = MutableSingleLiveData<Boolean>(false)
+    val isUpdateSuccess: SingleLiveData<Boolean> get() = _isUpdateSuccess
+
+    fun fetchTravel() {
         viewModelScope.launch {
-            travelRepository.getTravel(travelId)
-                .onSuccess { travel ->
-                    _imageUrl.value = travel.travelThumbnail
-                    title.set(travel.travelTitle)
-                    description.set(travel.description)
-                    _startDate.value = travel.startAt
-                    _endDate.value = travel.endAt
-                }.onServerError { code, message ->
-                    // TODO: Error 핸들링
-                    Log.d("hye: 여행 조회 실패", "$code : $message $TRAVEL_ERROR_MESSAGE")
-                }.onException { e, message ->
-                    // TODO: Exception 핸들링
-                    Log.d("hye: 여행 조회 실패 - 예외", "${e.message}")
-                }
+            val result = travelRepository.getTravel(travelId)
+            result
+                .onSuccess(::initializeTravel)
+                .onServerError(::handleServerError)
+                .onException(::handelException)
+        }
+    }
+
+    fun updateTravel() {
+        viewModelScope.launch {
+            val newTravel = makeNewTravel()
+            val result = travelRepository.updateTravel(travelId, newTravel)
+            result
+                .onSuccess { updateSuccessStatus() }
+                .onServerError(::handleServerError)
+                .onException(::handelException)
         }
     }
 
@@ -60,5 +67,46 @@ class TravelUpdateViewModel(
     ) {
         _startDate.value = convertLongToLocalDate(startAt)
         _endDate.value = convertLongToLocalDate(endAt)
+    }
+
+    private fun initializeTravel(travel: Travel) {
+        _imageUrl.value = travel.travelThumbnail
+        title.set(travel.travelTitle)
+        description.set(travel.description)
+        _startDate.value = travel.startAt
+        _endDate.value = travel.endAt
+    }
+
+    private fun makeNewTravel() =
+        TravelCreationUiModel(
+            travelThumbnail = imageUrl.value,
+            travelTitle = title.get() ?: throw IllegalArgumentException(),
+            startAt = startDate.value ?: throw IllegalArgumentException(),
+            endAt = endDate.value ?: throw IllegalArgumentException(),
+            description = description.get(),
+        )
+
+    private fun updateSuccessStatus() {
+        _isUpdateSuccess.setValue(true)
+    }
+
+    private fun handleServerError(
+        code: Int,
+        message: String,
+    ) {
+        // TODO: Error 핸들링
+        Log.d("hye: 여행 수정 실패", "$code : $message $TRAVEL_UPDATE_ERROR_MESSAGE")
+    }
+
+    private fun handelException(
+        e: Throwable,
+        message: String,
+    ) {
+        // TODO: Exception 핸들링
+        Log.d("hye: 여행 수정 실패 - 예외", "${e.message}")
+    }
+
+    companion object {
+        private const val TRAVEL_UPDATE_ERROR_MESSAGE = "여행 수정에 실패했습니다"
     }
 }

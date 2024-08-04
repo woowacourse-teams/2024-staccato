@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.travelupdate
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -35,6 +34,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
         navigateToTravel()
         fetchTravel()
         updateTravelPeriod()
+        observeIsUpdateSuccess()
     }
 
     override fun onPeriodSelectionClicked() {
@@ -42,9 +42,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
     }
 
     override fun onSaveClicked() {
-        val resultIntent = Intent()
-        setResult(Activity.RESULT_OK, resultIntent)
-        finish()
+        viewModel.updateTravel()
     }
 
     private fun buildDateRangePicker() =
@@ -70,7 +68,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
     }
 
     private fun fetchTravel() {
-        viewModel.loadTravel()
+        viewModel.fetchTravel()
     }
 
     private fun updateTravelPeriod() {
@@ -78,6 +76,20 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
             val startDate: Long = selection.first
             val endDate: Long = selection.second
             viewModel.setTravelPeriod(startDate, endDate)
+        }
+    }
+
+    private fun observeIsUpdateSuccess() {
+        viewModel.isUpdateSuccess.observe(this) { isUpdateSuccess ->
+            navigateToTravel(isUpdateSuccess)
+        }
+    }
+
+    private fun navigateToTravel(isUpdateSuccess: Boolean) {
+        if (isUpdateSuccess) {
+            val intent = Intent().putExtra(TRAVEL_ID_KEY, travelId)
+            setResult(RESULT_OK, intent)
+            finish()
         }
     }
 
