@@ -1,4 +1,4 @@
-package com.staccato.config;
+package com.staccato.visit.controller.docs;
 
 import java.lang.reflect.Type;
 
