@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.staccato.visit.controller.docs.VisitControllerDocs;
 import com.staccato.visit.service.VisitService;
 import com.staccato.visit.service.dto.request.VisitRequest;
 import com.staccato.visit.service.dto.response.VisitDetailResponse;
@@ -29,10 +31,10 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/visits")
 @RequiredArgsConstructor
 @Validated
-public class VisitController {
+public class VisitController implements VisitControllerDocs {
     private final VisitService visitService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<VisitIdResponse> createVisit(
             @Valid @RequestPart VisitRequest visitRequest,
             @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart List<MultipartFile> visitImagesFile
