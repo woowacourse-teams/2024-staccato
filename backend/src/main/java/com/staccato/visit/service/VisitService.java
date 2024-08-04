@@ -4,15 +4,16 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.exception.StaccatoException;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.visit.domain.Visit;
-import com.staccato.visit.domain.VisitImage;
-import com.staccato.visit.repository.VisitImageRepository;
+import com.staccato.visit.domain.VisitImages;
 import com.staccato.visit.repository.VisitRepository;
 import com.staccato.visit.service.dto.request.VisitRequest;
+import com.staccato.visit.service.dto.request.VisitUpdateRequest;
 import com.staccato.visit.service.dto.response.VisitDetailResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -23,15 +24,15 @@ import lombok.RequiredArgsConstructor;
 public class VisitService {
     private final VisitRepository visitRepository;
     private final TravelRepository travelRepository;
-    private final VisitImageRepository visitImageRepository;
 
     @Transactional
     public long createVisit(VisitRequest visitRequest) {
         Travel travel = getTravelById(visitRequest.travelId());
-        Visit visit = visitRepository.save(visitRequest.toVisit(travel));
+        Visit visit = visitRequest.toVisit(travel);
+        VisitImages visitImages = new VisitImages(visitRequest.visitImages());
+        visit.addVisitImages(visitImages);
 
-        List<VisitImage> visitImages = makeVisitImages(visitRequest.visitImages(), visit);
-        visitImageRepository.saveAll(visitImages);
+        visitRepository.save(visit);
 
         return visit.getId();
     }
@@ -39,15 +40,6 @@ public class VisitService {
     private Travel getTravelById(long travelId) {
         return travelRepository.findById(travelId)
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
-    }
-
-    private List<VisitImage> makeVisitImages(List<String> visitedImages, Visit visit) {
-        return visitedImages.stream()
-                .map(visitImage -> VisitImage.builder()
-                        .imageUrl(visitImage)
-                        .visit(visit)
-                        .build())
-                .toList();
     }
 
     public VisitDetailResponse readVisitById(long visitId) {
@@ -63,5 +55,14 @@ public class VisitService {
     @Transactional
     public void deleteVisitById(Long visitId) {
         visitRepository.deleteById(visitId);
+    }
+
+    @Transactional
+    public void updateVisitById(long visitId, VisitUpdateRequest visitUpdateRequest, List<MultipartFile> images) {
+        Visit visit = getVisitById(visitId);
+        List<String> addedImages = List.of(images.get(0).getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
+        VisitImages visitImages = new VisitImages(visitUpdateRequest.visitImagesUrl(), addedImages);
+
+        visit.update(visitUpdateRequest.placeName(), visitImages);
     }
 }
