@@ -39,8 +39,16 @@ public interface VisitControllerDocs {
     })
     ResponseEntity<VisitIdResponse> createVisit(
             @Valid VisitRequest visitRequest,
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> visitImagesFile);
+            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> visitImagesFile
+    );
 
+    @Operation(summary = "방문 기록 삭제", description = "방문 기록을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "방문 기록 삭제에 성공했거나 해당 방문 기록이 존재하지 않는 경우", responseCode = "200"),
+            @ApiResponse(description = "방문 기록 식별자에 양수가 아닌 값을 기입했을 경우", responseCode = "400"),
+            @ApiResponse(description = "삭제할 권한이 없는 경우", responseCode = "403")
+    })
     ResponseEntity<Void> deleteVisitById(
-            @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId);
+            @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId
+    );
 }
