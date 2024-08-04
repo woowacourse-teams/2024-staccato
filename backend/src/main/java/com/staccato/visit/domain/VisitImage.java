@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -24,14 +25,13 @@ public class VisitImage {
     private Long id;
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
+    @Setter(AccessLevel.PROTECTED)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "visit_id", nullable = false)
     private Visit visit;
 
     @Builder
-    public VisitImage(@Nonnull String imageUrl, @Nonnull Visit visit) {
+    public VisitImage(@Nonnull String imageUrl) {
         this.imageUrl = imageUrl;
-        this.visit = visit;
-        visit.addVisitImage(this);
     }
 }

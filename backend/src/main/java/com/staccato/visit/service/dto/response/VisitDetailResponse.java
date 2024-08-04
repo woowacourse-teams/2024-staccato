@@ -28,7 +28,7 @@ public record VisitDetailResponse(
         this(
                 visit.getId(),
                 visit.getPlaceName(),
-                visit.getVisitImages().stream().map(VisitImage::getImageUrl).toList(),
+                visit.getVisitImages().getImages().stream().map(VisitImage::getImageUrl).toList(),
                 visit.getVisitedAt(),
                 visit.getSpot().getAddress(),
                 visit.getVisitLogs().stream().map(VisitLogResponse::new).toList()
