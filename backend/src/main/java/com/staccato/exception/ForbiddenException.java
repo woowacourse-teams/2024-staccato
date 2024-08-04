@@ -1,7 +1,6 @@
 package com.staccato.exception;
 
 public class ForbiddenException extends RuntimeException {
-
     public ForbiddenException() {
         super("요청하신 작업을 처리할 권한이 없습니다.");
     }
