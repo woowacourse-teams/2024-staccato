@@ -37,7 +37,7 @@ public class VisitController implements VisitControllerDocs {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<VisitIdResponse> createVisit(
             @Valid @RequestPart VisitRequest visitRequest,
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart List<MultipartFile> visitImagesFile
+            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart(required = false) List<MultipartFile> visitImagesFile
     ) {
         VisitIdResponse visitIdResponse = visitService.createVisit(visitRequest);
         return ResponseEntity.created(URI.create("/visits/" + visitIdResponse.visitId()))
