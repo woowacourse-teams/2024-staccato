@@ -2,6 +2,7 @@ package com.staccato.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.staccato.ServiceSliceTest;
 import com.staccato.auth.service.dto.request.LoginRequest;
+import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -27,10 +29,13 @@ class AuthServiceTest extends ServiceSliceTest {
         LoginRequest loginRequest = new LoginRequest(nickname);
 
         // when
-        authService.login(loginRequest);
+        LoginResponse loginResponse = authService.login(loginRequest);
 
         // then
-        assertThat(memberRepository.findAll()).hasSize(1);
+        assertAll(
+                () -> assertThat(memberRepository.findAll()).hasSize(1),
+                () -> assertThat(loginResponse.token()).isNotNull()
+        );
     }
 
     @DisplayName("입력받은 닉네임이 이미 존재하는 닉네임인 경우 예외가 발생한다.")
