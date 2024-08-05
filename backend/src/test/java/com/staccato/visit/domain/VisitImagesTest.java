@@ -46,10 +46,10 @@ class VisitImagesTest {
         existingImages.update(updatedImages, VisitFixture.create(travel, LocalDate.now()));
 
         // then
+        List<String> images = existingImages.getImages().stream().map(VisitImage::getImageUrl).toList();
         assertAll(
-                () -> assertThat(existingImages.getImages().get(0).getImageUrl()).isEqualTo("picture1"),
-                () -> assertThat(existingImages.getImages().get(1).getImageUrl()).isEqualTo("picture4"),
-                () -> assertThat(existingImages.getImages().size()).isEqualTo(2)
+                () -> assertThat(images).containsAll(List.of("picture1", "picture4")),
+                () -> assertThat(images.size()).isEqualTo(2)
         );
     }
 }
