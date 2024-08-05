@@ -31,7 +31,7 @@ public class VisitService {
         Travel travel = getTravelById(visitRequest.travelId());
         Visit visit = visitRepository.save(visitRequest.toVisit(travel));
 
-        List<VisitImage> visitImages = makeVisitImages(visitRequest.visitImagesUrl(), visit);
+        List<VisitImage> visitImages = makeVisitImages(visitRequest.visitImageUrls(), visit);
         visitImageRepository.saveAll(visitImages);
 
         return new VisitIdResponse(visit.getId());
