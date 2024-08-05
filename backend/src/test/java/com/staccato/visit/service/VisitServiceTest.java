@@ -73,8 +73,11 @@ class VisitServiceTest extends ServiceSliceTest {
         );
         Visit visit = visitRepository.save(VisitFixture.create(travel, LocalDate.now()));
 
-        // when & then
-        assertThat(visitService.readVisitById(visit.getId())).isEqualTo(new VisitDetailResponse(visit));
+        // when
+        VisitDetailResponse actual = visitService.readVisitById(visit.getId());
+
+        // then
+        assertThat(actual).isEqualTo(new VisitDetailResponse(visit));
     }
 
     @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
