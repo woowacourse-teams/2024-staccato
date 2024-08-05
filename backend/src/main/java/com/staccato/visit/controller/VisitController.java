@@ -5,7 +5,9 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,11 +56,11 @@ public class VisitController implements VisitControllerDocs {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{visitId}")
+    @PutMapping(path = "/{visitId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateVisitById(
             @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId,
-            @RequestPart("visitImagesFile") List<MultipartFile> file,
-            @Valid @RequestPart("data") VisitUpdateRequest request) {
+            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart("visitImagesFile") List<MultipartFile> file,
+            @Valid @RequestPart(value = "data", required = false) VisitUpdateRequest request) {
         visitService.updateVisitById(visitId, request, file);
         return ResponseEntity.ok().build();
     }

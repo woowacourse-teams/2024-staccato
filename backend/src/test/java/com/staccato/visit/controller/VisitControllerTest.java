@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +85,6 @@ public class VisitControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Disabled
     @DisplayName("추가하려는 사진이 5장이 넘는다면 방문 기록 수정에 실패한다.")
     @Test
     void failUpdateVisitByImagesSize() throws Exception {
@@ -99,6 +97,7 @@ public class VisitControllerTest {
         MockMultipartFile file3 = new MockMultipartFile("visitImagesFile", "namsan_tower3.jpg".getBytes());
         MockMultipartFile file4 = new MockMultipartFile("visitImagesFile", "namsan_tower4.jpg".getBytes());
         MockMultipartFile file5 = new MockMultipartFile("visitImagesFile", "namsan_tower5.jpg".getBytes());
+        MockMultipartFile file6 = new MockMultipartFile("visitImagesFile", "namsan_tower6.jpg".getBytes());
 
 
         // when & then
@@ -108,6 +107,7 @@ public class VisitControllerTest {
                         .file(file3)
                         .file(file4)
                         .file(file5)
+                        .file(file6)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(updateRequest)
                                 .getBytes()))
                         .with(request -> {

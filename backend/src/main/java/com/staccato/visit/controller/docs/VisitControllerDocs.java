@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,6 +61,6 @@ public interface VisitControllerDocs {
     })
     ResponseEntity<Void> updateVisitById(
             @Parameter(example = "1", required = true) @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId,
-            List<MultipartFile> file,
+            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> file,
             @Valid VisitUpdateRequest request);
 }
