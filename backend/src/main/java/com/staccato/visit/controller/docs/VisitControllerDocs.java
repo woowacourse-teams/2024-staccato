@@ -16,8 +16,6 @@ import com.staccato.visit.service.dto.response.VisitDetailResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,8 +26,7 @@ public interface VisitControllerDocs {
 
     @Operation(summary = "특정 방문 기록 조회", description = "특정 방문 기록을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "특정 방문 기록 조회 성공", responseCode = "200",
-                    content = @Content(schema = @Schema(implementation = VisitDetailResponse.class))),
+            @ApiResponse(description = "특정 방문 기록 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
