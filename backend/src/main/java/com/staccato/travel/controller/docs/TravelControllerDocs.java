@@ -29,9 +29,21 @@ public interface TravelControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "조회할 년도") Integer year);
 
+    @Operation(summary = "특정 여행 상세 조회", description = "사용자의 특정 여행 상세를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "특정 여행 상세 조회 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                                        
+                    (1) 존재하지 않는 여행을 조회하려고 했을 때
+                                        
+                    (2) Path Variable 형식이 잘못되었을 때
+                    """,
+                    responseCode = "400")
+    })
     ResponseEntity<TravelDetailResponse> readTravel(
-            Member member,
-            @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId);
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "여행 상세 ID") @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId);
 
     @Operation(summary = "여행 상세 수정", description = "여행 상세 정보(썸네일, 제목, 내용, 기간)를 수정합니다.")
     @ApiResponses(value = {
