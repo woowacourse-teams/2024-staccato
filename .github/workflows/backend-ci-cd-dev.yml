@@ -18,6 +18,12 @@ jobs:
     permissions:
       contents: read
 
+    env:
+      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
+      AWS_CLOUDFRONT_ENDPOINT: ${{ secrets.AWS_CLOUDFRONT_ENDPOINT }}
+      AWS_REGION_STATIC: ${{ secrets.AWS_REGION_STATIC }}
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
