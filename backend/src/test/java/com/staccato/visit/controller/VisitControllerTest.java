@@ -82,29 +82,24 @@ class VisitControllerTest {
         // given
         VisitRequest visitRequest = getVisitRequest(LocalDate.now());
         String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
-        MockMultipartFile visitRequestPart = new MockMultipartFile(
-                "visitRequest",
-                "visitRequest.json",
-                "application/json",
-                visitRequestJson.getBytes()
-        );
-        List<MockMultipartFile> imageFiles = List.of(
-                new MockMultipartFile("visitImagesFile", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes()),
-                new MockMultipartFile("visitImagesFile", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes()),
-                new MockMultipartFile("visitImagesFile", "test-image3.jpg", "image/jpeg", "dummy image content".getBytes()),
-                new MockMultipartFile("visitImagesFile", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes()),
-                new MockMultipartFile("visitImagesFile", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes())
-        );
-        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart("/visits");
-        builder.file(visitRequestPart);
-        for (MockMultipartFile imageFile : imageFiles) {
-            builder.file(imageFile);
-        }
+        MockMultipartFile visitRequestPart = new MockMultipartFile("visitRequest", "visitRequest.json", "application/json", visitRequestJson.getBytes());
+        MockMultipartFile file1 = new MockMultipartFile("visitImagesFile", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file2 = new MockMultipartFile("visitImagesFile", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file3 = new MockMultipartFile("visitImagesFile", "test-image3.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file4 = new MockMultipartFile("visitImagesFile", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file5 = new MockMultipartFile("visitImagesFile", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes());
         VisitIdResponse visitIdResponse = new VisitIdResponse(1L);
         when(visitService.createVisit(any(VisitRequest.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
-        mockMvc.perform(builder.contentType(MediaType.MULTIPART_FORM_DATA))
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/visits")
+                        .file(visitRequestPart)
+                        .file(file1)
+                        .file(file2)
+                        .file(file3)
+                        .file(file4)
+                        .file(file5)
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/visits/1"))
                 .andExpect(content().json(objectMapper.writeValueAsString(visitIdResponse)));
@@ -116,29 +111,27 @@ class VisitControllerTest {
         // given
         VisitRequest visitRequest = getVisitRequest(LocalDate.now());
         String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
-        MockMultipartFile visitRequestPart = new MockMultipartFile(
-                "visitRequest",
-                "visitRequest.json",
-                "application/json",
-                visitRequestJson.getBytes()
-        );
-        List<MockMultipartFile> imageFiles = List.of(
-                new MockMultipartFile("visitImagesFile", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes()),
-                new MockMultipartFile("visitImagesFile", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes()),
-                new MockMultipartFile("visitImagesFile", "test-image3.jpg", "image/jpeg", "dummy image content".getBytes()),
-                new MockMultipartFile("visitImagesFile", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes()),
-                new MockMultipartFile("visitImagesFile", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes()),
-                new MockMultipartFile("visitImagesFile", "test-image6.jpg", "image/jpeg", "dummy image content".getBytes())
-        );
+        MockMultipartFile visitRequestPart = new MockMultipartFile("visitRequest", "visitRequest.json", "application/json", visitRequestJson.getBytes());
+        MockMultipartFile file1 = new MockMultipartFile("visitImagesFile", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file2 = new MockMultipartFile("visitImagesFile", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file3 = new MockMultipartFile("visitImagesFile", "test-image3.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file4 = new MockMultipartFile("visitImagesFile", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file5 = new MockMultipartFile("visitImagesFile", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file6 = new MockMultipartFile("visitImagesFile", "test-image6.jpg", "image/jpeg", "dummy image content".getBytes());
         MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart("/visits");
         builder.file(visitRequestPart);
-        for (MockMultipartFile imageFile : imageFiles) {
-            builder.file(imageFile);
-        }
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
 
         // when & then
-        mockMvc.perform(builder.contentType(MediaType.MULTIPART_FORM_DATA))
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/visits")
+                        .file(visitRequestPart)
+                        .file(file1)
+                        .file(file2)
+                        .file(file3)
+                        .file(file4)
+                        .file(file5)
+                        .file(file6)
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -153,18 +146,8 @@ class VisitControllerTest {
     void failCreateVisit(VisitRequest visitRequest, String expectedMessage) throws Exception {
         // given
         String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
-        MockMultipartFile visitRequestPart = new MockMultipartFile(
-                "visitRequest",
-                "visitRequest.json",
-                "application/json",
-                visitRequestJson.getBytes()
-        );
-        MockMultipartFile imageFilePart = new MockMultipartFile(
-                "visitImagesFile",
-                "test-image.jpg",
-                "image/jpeg",
-                "dummy image content".getBytes()
-        );
+        MockMultipartFile visitRequestPart = new MockMultipartFile("visitRequest", "visitRequest.json", "application/json", visitRequestJson.getBytes());
+        MockMultipartFile imageFilePart = new MockMultipartFile("visitImagesFile", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
         when(visitService.createVisit(any(VisitRequest.class))).thenReturn(new VisitIdResponse(1L));
 
