@@ -4,8 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
@@ -21,6 +21,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.staccato.exception.ExceptionResponse;
 import com.staccato.visit.service.VisitService;
 import com.staccato.visit.service.dto.request.VisitRequest;
 import com.staccato.visit.service.dto.response.VisitIdResponse;
@@ -98,13 +100,14 @@ class VisitControllerTest {
         for (MockMultipartFile imageFile : imageFiles) {
             builder.file(imageFile);
         }
+        VisitIdResponse visitIdResponse = new VisitIdResponse(1L);
         when(visitService.createVisit(any(VisitRequest.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
         mockMvc.perform(builder.contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/visits/1"))
-                .andExpect(jsonPath("$.visitId").value(1));
+                .andExpect(content().json(objectMapper.writeValueAsString(visitIdResponse)));
     }
 
     @DisplayName("사진이 5장을 초과하면 방문 기록 생성에 실패한다.")
@@ -119,7 +122,6 @@ class VisitControllerTest {
                 "application/json",
                 visitRequestJson.getBytes()
         );
-
         List<MockMultipartFile> imageFiles = List.of(
                 new MockMultipartFile("visitImagesFile", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes()),
                 new MockMultipartFile("visitImagesFile", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes()),
@@ -133,12 +135,12 @@ class VisitControllerTest {
         for (MockMultipartFile imageFile : imageFiles) {
             builder.file(imageFile);
         }
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
 
         // when & then
         mockMvc.perform(builder.contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value("400 BAD_REQUEST"))
-                .andExpect(jsonPath("$.message").value("사진은 5장까지만 추가할 수 있어요."));
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     private static VisitRequest getVisitRequest(LocalDate visitedAt) {
@@ -163,6 +165,7 @@ class VisitControllerTest {
                 "image/jpeg",
                 "dummy image content".getBytes()
         );
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
         when(visitService.createVisit(any(VisitRequest.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
@@ -171,8 +174,7 @@ class VisitControllerTest {
                         .file(imageFilePart)
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value("400 BAD_REQUEST"))
-                .andExpect(jsonPath("$.message").value(expectedMessage));
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("방문 기록을 삭제한다.")
@@ -192,12 +194,12 @@ class VisitControllerTest {
     void failDeleteVisitById() throws Exception {
         // given
         long visitId = 0L;
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문 기록 식별자는 양수로 이루어져야 합니다.");
         doNothing().when(visitService).deleteVisitById(anyLong());
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.delete("/visits/{id}", visitId))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value("400 BAD_REQUEST"))
-                .andExpect(jsonPath("$.message").value("방문 기록 식별자는 양수로 이루어져야 합니다."));
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 }
