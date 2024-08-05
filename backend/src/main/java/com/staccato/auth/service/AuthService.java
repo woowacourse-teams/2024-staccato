@@ -1,6 +1,7 @@
 package com.staccato.auth.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
@@ -15,10 +16,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
 
+    @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
         Member member = createMember(loginRequest);
         String token = tokenProvider.create(member);
