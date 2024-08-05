@@ -42,6 +42,7 @@ spring:
   config:
     activate:
       on-profile: local
+    import: optional:file:.env[.properties]
   application:
     name: staccato
   sql:
