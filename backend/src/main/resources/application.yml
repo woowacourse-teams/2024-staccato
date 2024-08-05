@@ -36,6 +36,17 @@ security:
   jwt:
     token:
       secret-key: ${SECRET_KEY}
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+      endpoint: ${S3_ENDPOINT}
+    cloudfront:
+      endpoint: ${CLOUDFRONT_ENDPOINT}
+    region:
+      static: ${REGION_STATIC}
+    stack:
+      auto: false
 
 ---
 
