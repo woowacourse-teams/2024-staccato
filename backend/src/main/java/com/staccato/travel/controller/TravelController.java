@@ -45,7 +45,8 @@ public class TravelController implements TravelControllerDocs {
             @LoginMember Member member,
             @RequestParam(value = "year", required = false) Integer year
     ) {
-        return ResponseEntity.ok(travelService.readAllTravels(member, year));
+        TravelResponses travelResponses = travelService.readAllTravels(member, year);
+        return ResponseEntity.ok(travelResponses);
     }
 
     @GetMapping("/{travelId}")

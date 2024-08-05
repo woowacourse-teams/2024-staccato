@@ -20,7 +20,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface TravelControllerDocs {
     ResponseEntity<Void> createTravel(@Valid TravelRequest travelRequest, Member member);
 
-    ResponseEntity<TravelResponses> readAllTravels(Member member, Integer year);
+    @Operation(summary = "여행 상세 목록 조회", description = "사용자의 전체/년도별 여행 상세 목록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "여행 상세 목록 조회 성공", responseCode = "200"),
+            @ApiResponse(description = "입력받은 년도가 유효하지 않을 때 발생", responseCode = "400")
+    })
+    ResponseEntity<TravelResponses> readAllTravels(
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "조회할 년도") Integer year);
 
     ResponseEntity<TravelDetailResponse> readTravel(
             Member member,
