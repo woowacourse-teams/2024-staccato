@@ -95,4 +95,8 @@ public class Travel extends BaseEntity {
                 .map(TravelMember::getMember)
                 .toList();
     }
+
+    public void assignThumbnail(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
 }
