@@ -59,22 +59,22 @@ public class VisitImages {
     protected void update(VisitImages visitImages, Visit visit) {
         List<VisitImage> copyVisitImages = new ArrayList<>(this.images);
         copyVisitImages.stream()
-                .filter(image -> !visitImages.contains(image))
+                .filter(visitImages::withOut)
                 .forEach(this.images::remove);
         addAllWithoutExist(visitImages, visit);
     }
 
     private void addAllWithoutExist(VisitImages visitImages, Visit visit) {
         visitImages.images.stream()
-                .filter(image -> !contains(image))
+                .filter(this::withOut)
                 .forEach(image -> {
                     this.images.add(image);
                     image.setVisit(visit);
                 });
     }
 
-    private boolean contains(VisitImage image) {
+    private boolean withOut(VisitImage image) {
         return this.images.stream()
-                .anyMatch(visitImage -> visitImage.getImageUrl().equals(image.getImageUrl()));
+                .noneMatch(visitImage -> visitImage.getImageUrl().equals(image.getImageUrl()));
     }
 }
