@@ -60,7 +60,7 @@ public class VisitController implements VisitControllerDocs {
     public ResponseEntity<Void> updateVisitById(
             @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId,
             @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart("visitImagesFile") List<MultipartFile> file,
-            @Valid @RequestPart(value = "data", required = false) VisitUpdateRequest request) {
+            @Valid @RequestPart(value = "data") VisitUpdateRequest request) {
         visitService.updateVisitById(visitId, request, file);
         return ResponseEntity.ok().build();
     }
