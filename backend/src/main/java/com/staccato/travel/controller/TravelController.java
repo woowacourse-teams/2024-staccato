@@ -53,7 +53,7 @@ public class TravelController implements TravelControllerDocs {
     public ResponseEntity<TravelDetailResponse> readTravel(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId) {
-        TravelDetailResponse travelDetailResponse = travelService.readTravelById(travelId);
+        TravelDetailResponse travelDetailResponse = travelService.readTravelById(travelId, member);
         return ResponseEntity.ok(travelDetailResponse);
     }
 

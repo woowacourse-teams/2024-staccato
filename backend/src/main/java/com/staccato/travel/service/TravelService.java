@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -93,8 +94,9 @@ public class TravelService {
         }
     }
 
-    public TravelDetailResponse readTravelById(long travelId) {
+    public TravelDetailResponse readTravelById(long travelId, Member member) {
         Travel travel = getTravelById(travelId);
+        validateOwner(travel, member);
         List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdOrderByVisitedAt(travelId));
         return new TravelDetailResponse(travel, visitResponses);
     }
@@ -102,6 +104,12 @@ public class TravelService {
     private Travel getTravelById(long travelId) {
         return travelRepository.findById(travelId)
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
+    }
+
+    private void validateOwner(Travel travel, Member member) {
+        if (travel.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
     }
 
     private List<VisitResponse> getVisitResponses(List<Visit> visits) {

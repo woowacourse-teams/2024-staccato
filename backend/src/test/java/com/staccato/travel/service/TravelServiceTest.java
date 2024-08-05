@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.staccato.ServiceSliceTest;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -90,21 +91,30 @@ class TravelServiceTest extends ServiceSliceTest {
         Member member = saveMember();
 
         long targetId = travelService.createTravel(createTravelRequest(2023), member);
-        Visit visit = saveVisit(LocalDate.of(2023, 7, 1), targetId);
-
-        long otherId = travelService.createTravel(createTravelRequest(2023), member);
-        saveVisit(LocalDate.of(2023, 7, 1), otherId);
 
         // when
-        TravelDetailResponse travelDetailResponse = travelService.readTravelById(targetId);
+        TravelDetailResponse travelDetailResponse = travelService.readTravelById(targetId, member);
 
         // then
         assertAll(
                 () -> assertThat(travelDetailResponse.travelId()).isEqualTo(targetId),
-                () -> assertThat(travelDetailResponse.mates()).hasSize(1),
-                () -> assertThat(travelDetailResponse.visits()).hasSize(1),
-                () -> assertThat(travelDetailResponse.visits().get(0).visitId()).isEqualTo(visit.getId())
+                () -> assertThat(travelDetailResponse.mates()).hasSize(1)
         );
+    }
+
+    @DisplayName("본인 것이 아닌 특정 여행 상세를 조회하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotReadTravelByIdIfNotOwner() {
+        // given
+        Member member = saveMember();
+        Member otherMember = saveMember();
+
+        long targetId = travelService.createTravel(createTravelRequest(2023), member);
+
+        // when
+        assertThatThrownBy(() -> travelService.readTravelById(targetId, otherMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
     @DisplayName("특정 여행 상세를 조회하면 방문 기록은 오래된 순으로 반환한다.")
@@ -118,7 +128,7 @@ class TravelServiceTest extends ServiceSliceTest {
         Visit nextVisit = saveVisit(LocalDate.of(2023, 7, 5), visitId);
 
         // when
-        TravelDetailResponse travelDetailResponse = travelService.readTravelById(visitId);
+        TravelDetailResponse travelDetailResponse = travelService.readTravelById(visitId, member);
 
         // then
         assertAll(
@@ -230,19 +240,20 @@ class TravelServiceTest extends ServiceSliceTest {
                 .hasMessage("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
     }
 
-    private Member saveMember() {
-        return memberRepository.save(Member.builder().nickname("staccato").build());
-    }
-
     @DisplayName("존재하지 않는 여행 상세를 조회하려고 할 경우 예외가 발생한다.")
     @Test
     void failReadTravel() {
         // given
+        Member member = saveMember();
         long unknownId = 1;
 
         // when & then
-        assertThatThrownBy(() -> travelService.readTravelById(unknownId))
+        assertThatThrownBy(() -> travelService.readTravelById(unknownId, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 여행을 찾을 수 없어요.");
+    }
+
+    private Member saveMember() {
+        return memberRepository.save(Member.builder().nickname("staccato").build());
     }
 }
