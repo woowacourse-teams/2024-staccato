@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class VisitImages {
     private static final int MAX_COUNT = 5;
     @OneToMany(mappedBy = "visit", orphanRemoval = true, cascade = CascadeType.ALL)
