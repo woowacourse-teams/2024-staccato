@@ -36,4 +36,8 @@ public class VisitImage {
     protected void belongTo(Visit visit) {
         this.visit = visit;
     }
+
+    protected boolean isSameUrl(VisitImage visitImage) {
+        return this.imageUrl.equals(visitImage.imageUrl);
+    }
 }

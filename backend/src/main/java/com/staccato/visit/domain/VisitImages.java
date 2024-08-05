@@ -78,6 +78,6 @@ public class VisitImages {
 
     private boolean without(VisitImage image) {
         return this.images.stream()
-                .noneMatch(visitImage -> visitImage.getImageUrl().equals(image.getImageUrl()));
+                .noneMatch(visitImage -> visitImage.isSameUrl(image));
     }
 }
