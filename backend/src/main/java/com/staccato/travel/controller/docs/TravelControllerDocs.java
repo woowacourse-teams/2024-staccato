@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Travel", description = "Travel API")
 public interface TravelControllerDocs {
-    @Operation(summary = "여행 상세 생성", description = "여행 상세를(썸네일, 제목, 내용, 기간)를 생성합니다.")
+    @Operation(summary = "여행 상세 생성", description = "여행 상세(썸네일, 제목, 내용, 기간)를 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "여행 상세 생성 성공", responseCode = "200"),
             @ApiResponse(description = """
