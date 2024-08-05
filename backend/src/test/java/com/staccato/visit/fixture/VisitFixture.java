@@ -7,8 +7,8 @@ import com.staccato.travel.domain.Travel;
 import com.staccato.visit.domain.Visit;
 
 public class VisitFixture {
-    public static final BigDecimal latitude = new BigDecimal("37.7749");
-    public static final BigDecimal longitude = new BigDecimal("-122.4194");
+    private static final BigDecimal latitude = new BigDecimal("37.7749");
+    private static final BigDecimal longitude = new BigDecimal("-122.4194");
 
     public static Visit create(Travel travel, LocalDate visitedAt) {
         return Visit.builder()
