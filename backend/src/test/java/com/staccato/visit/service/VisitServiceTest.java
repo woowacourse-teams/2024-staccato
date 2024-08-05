@@ -38,7 +38,7 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void deleteVisitById() {
         // given
-        Member member = memberRepository.save(Member.builder().nickname("Sample Member").build());
+        Member member = memberRepository.save(Member.builder().nickname("SampleMember").build());
         Travel travel = travelRepository.save(
                 Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
         );

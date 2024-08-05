@@ -10,16 +10,24 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import com.staccato.auth.service.AuthService;
+
+import lombok.RequiredArgsConstructor;
+
 @Component
-public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
+@RequiredArgsConstructor
+public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
+    private final AuthService authService;
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(MemberId.class);
+        return parameter.hasParameterAnnotation(LoginMember.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        return Long.parseLong(request.getHeader(HttpHeaders.AUTHORIZATION));
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return authService.extractFromToken(token);
     }
 }

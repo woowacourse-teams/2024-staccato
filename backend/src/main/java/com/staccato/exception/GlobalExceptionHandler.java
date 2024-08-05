@@ -75,6 +75,23 @@ public class GlobalExceptionHandler {
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    @ApiResponse(description = "사용자 인증 실패", responseCode = "401", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+    public ResponseEntity<ExceptionResponse> handleUnauthorizedException(UnauthorizedException e) {
+        log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), e.getMessage()));
+    }
+
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ApiResponse(description = "사용자가 권한을 가지고 있지 않은 작업을 시도 시 발생", responseCode = "403", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+    public ResponseEntity<ExceptionResponse> handleForbiddenException(ForbiddenException e) {
+        log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), e.getMessage()));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     public ResponseEntity<ExceptionResponse> handleInternalServerErrorException(RuntimeException e) {

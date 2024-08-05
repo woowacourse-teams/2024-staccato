@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 
 import org.springframework.http.ResponseEntity;
 
+import com.staccato.member.domain.Member;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelDetailResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
@@ -17,12 +18,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Travel", description = "Travel API")
 public interface TravelControllerDocs {
-    ResponseEntity<Void> createTravel(@Valid TravelRequest travelRequest, Long memberId);
+    ResponseEntity<Void> createTravel(@Valid TravelRequest travelRequest, Member member);
 
-    ResponseEntity<TravelResponses> readAllTravels(Long memberId, Integer year);
+    ResponseEntity<TravelResponses> readAllTravels(Member member, Integer year);
 
     ResponseEntity<TravelDetailResponse> readTravel(
-            Long memberId,
+            Member member,
             @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId);
 
     @Operation(summary = "여행 상세 수정", description = "여행 상세 정보(썸네일, 제목, 내용, 기간)를 수정합니다.")
@@ -52,9 +53,9 @@ public interface TravelControllerDocs {
     ResponseEntity<Void> updateTravel(
             @Parameter(description = "여행 상세 ID") @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId,
             @Valid TravelRequest travelRequest,
-            @Parameter(hidden = true) Long memberId);
+            @Parameter(hidden = true) Member member);
 
     ResponseEntity<Void> deleteTravel(
             @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId,
-            Long memberId);
+            Member member);
 }
