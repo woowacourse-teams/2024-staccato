@@ -52,28 +52,31 @@ public class VisitImages {
     protected void addAll(VisitImages newVisitImages, Visit visit) {
         newVisitImages.images.forEach(image -> {
             this.images.add(image);
-            image.setVisit(visit);
+            image.belongTo(visit);
         });
     }
 
     protected void update(VisitImages visitImages, Visit visit) {
-        List<VisitImage> copyVisitImages = new ArrayList<>(this.images);
-        copyVisitImages.stream()
-                .filter(visitImages::withOut)
-                .forEach(this.images::remove);
-        addAllWithoutExist(visitImages, visit);
+        removeOnlyOldImages(visitImages, new ArrayList<>(this.images));
+        addOnlyNewImages(visitImages, visit);
     }
 
-    private void addAllWithoutExist(VisitImages visitImages, Visit visit) {
+    private void removeOnlyOldImages(VisitImages visitImages, List<VisitImage> originalImages) {
+        originalImages.stream()
+                .filter(visitImages::without)
+                .forEach(this.images::remove);
+    }
+
+    private void addOnlyNewImages(VisitImages visitImages, Visit visit) {
         visitImages.images.stream()
-                .filter(this::withOut)
+                .filter(this::without)
                 .forEach(image -> {
                     this.images.add(image);
-                    image.setVisit(visit);
+                    image.belongTo(visit);
                 });
     }
 
-    private boolean withOut(VisitImage image) {
+    private boolean without(VisitImage image) {
         return this.images.stream()
                 .noneMatch(visitImage -> visitImage.getImageUrl().equals(image.getImageUrl()));
     }
