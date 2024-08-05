@@ -10,6 +10,7 @@ import jakarta.persistence.OneToMany;
 import com.staccato.exception.StaccatoException;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,6 +29,7 @@ public class VisitImages {
                 .toList());
     }
 
+    @Builder
     public VisitImages(List<String> existingImages, List<String> addedImages) {
         validateNumberOfImages(existingImages, addedImages);
         this.images.addAll(combine(existingImages, addedImages));

@@ -61,7 +61,10 @@ public class VisitService {
     public void updateVisitById(long visitId, VisitUpdateRequest visitUpdateRequest, List<MultipartFile> images) {
         Visit visit = getVisitById(visitId);
         List<String> addedImages = List.of(images.get(0).getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
-        VisitImages visitImages = new VisitImages(visitUpdateRequest.visitImagesUrl(), addedImages);
+        VisitImages visitImages = VisitImages.builder()
+                .existingImages(visitUpdateRequest.visitImagesUrl())
+                .addedImages(addedImages)
+                .build();
 
         visit.update(visitUpdateRequest.placeName(), visitImages);
     }
