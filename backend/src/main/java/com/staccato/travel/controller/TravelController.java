@@ -70,7 +70,7 @@ public class TravelController implements TravelControllerDocs {
     public ResponseEntity<Void> deleteTravel(
             @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
             @LoginMember Member member) {
-        travelService.deleteTravel(travelId);
+        travelService.deleteTravel(travelId, member);
         return ResponseEntity.ok().build();
     }
 }

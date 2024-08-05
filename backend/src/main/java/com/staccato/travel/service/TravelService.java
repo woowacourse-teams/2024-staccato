@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.member.repository.MemberRepository;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.domain.TravelMember;
 import com.staccato.travel.repository.TravelMemberRepository;
@@ -32,7 +31,6 @@ public class TravelService {
     private final TravelRepository travelRepository;
     private final TravelMemberRepository travelMemberRepository;
     private final VisitRepository visitRepository;
-    private final MemberRepository memberRepository;
     private final VisitImageRepository visitImageRepository;
 
     @Transactional
@@ -82,14 +80,16 @@ public class TravelService {
     }
 
     @Transactional
-    public void deleteTravel(Long travelId) {
-        validateVisitExistsByTravelId(travelId);
+    public void deleteTravel(long travelId, Member member) {
+        Travel travel = getTravelById(travelId);
+        validateOwner(travel, member);
+        validateVisitExistsByTravel(travel);
         visitRepository.deleteAllByTravelId(travelId);
         travelRepository.deleteById(travelId);
     }
 
-    private void validateVisitExistsByTravelId(Long travelId) {
-        if (visitRepository.existsByTravelId(travelId)) {
+    private void validateVisitExistsByTravel(Travel travel) {
+        if (visitRepository.existsByTravel(travel)) {
             throw new StaccatoException("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
         }
     }

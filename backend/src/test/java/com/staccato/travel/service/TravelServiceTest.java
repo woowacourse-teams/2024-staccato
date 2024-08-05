@@ -111,7 +111,7 @@ class TravelServiceTest extends ServiceSliceTest {
 
         long targetId = travelService.createTravel(createTravelRequest(2023), member);
 
-        // when
+        // when & then
         assertThatThrownBy(() -> travelService.readTravelById(targetId, otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
@@ -209,13 +209,27 @@ class TravelServiceTest extends ServiceSliceTest {
         Long travelId = travelService.createTravel(createTravelRequest(2023), member);
 
         // when
-        travelService.deleteTravel(travelId);
+        travelService.deleteTravel(travelId, member);
 
         // then
         assertAll(
                 () -> assertThat(travelRepository.findById(travelId)).isEmpty(),
                 () -> assertThat(travelMemberRepository.findAll()).hasSize(0)
         );
+    }
+
+    @DisplayName("본인 것이 아닌 여행 상세를 삭제하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotDeleteTravelIfNotOwner() {
+        // given
+        Member member = saveMember();
+        Member otherMember = saveMember();
+        long travelId = travelService.createTravel(createTravelRequest(2023), member);
+
+        // when & then
+        assertThatThrownBy(() -> travelService.readTravelById(travelId, otherMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
     @DisplayName("방문기록이 존재하는 여행 상세에 삭제를 시도할 경우 예외가 발생한다.")
@@ -235,7 +249,7 @@ class TravelServiceTest extends ServiceSliceTest {
                 .build());
 
         // when & then
-        assertThatThrownBy(() -> travelService.deleteTravel(foundTravel.getId()))
+        assertThatThrownBy(() -> travelService.deleteTravel(foundTravel.getId(), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
     }
