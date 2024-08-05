@@ -147,6 +147,7 @@ public class VisitControllerTest {
     void failUpdateVisitByPlaceName() throws Exception {
         // given
         long visitId = 1L;
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문한 장소의 이름을 입력해주세요.");
         VisitUpdateRequest updateRequest = new VisitUpdateRequest(null, List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes());
 
@@ -160,6 +161,7 @@ public class VisitControllerTest {
                             return request;
                         })
                         .contentType(MediaType.MULTIPART_FORM_DATA))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 }
