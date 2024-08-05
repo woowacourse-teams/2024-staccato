@@ -54,7 +54,7 @@ class VisitServiceTest extends ServiceSliceTest {
     }
 
     private VisitRequest getVisitRequestWithoutImage() {
-        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, null, LocalDate.now(), 1L);
+        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of(), LocalDate.now(), 1L);
     }
 
     @DisplayName("방문 기록을 생성하면 Visit과 VisitImage들이 함께 저장되고 id를 반환한다.")

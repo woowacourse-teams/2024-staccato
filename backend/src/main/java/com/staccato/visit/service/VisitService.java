@@ -30,7 +30,9 @@ public class VisitService {
     public VisitIdResponse createVisit(VisitRequest visitRequest) {
         Travel travel = getTravelById(visitRequest.travelId());
         Visit visit = visitRepository.save(visitRequest.toVisit(travel));
-        saveVisitImages(visitRequest.visitImagesUrl(), visit);
+
+        List<VisitImage> visitImages = makeVisitImages(visitRequest.visitImagesUrl(), visit);
+        visitImageRepository.saveAll(visitImages);
 
         return new VisitIdResponse(visit.getId());
     }
@@ -40,18 +42,13 @@ public class VisitService {
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 
-    private void saveVisitImages(List<String> visitImagesUrl, Visit visit) {
-        if (visitImagesUrl == null) {
-            return;
-        }
-        List<VisitImage> visitImages = visitImagesUrl.stream()
-                .map(visitImageUrl -> VisitImage.builder()
-                        .imageUrl(visitImageUrl)
+    private List<VisitImage> makeVisitImages(List<String> visitedImages, Visit visit) {
+        return visitedImages.stream()
+                .map(visitImage -> VisitImage.builder()
+                        .imageUrl(visitImage)
                         .visit(visit)
                         .build())
                 .toList();
-
-        visitImageRepository.saveAll(visitImages);
     }
 
     public VisitDetailResponse readVisitById(long visitId) {
