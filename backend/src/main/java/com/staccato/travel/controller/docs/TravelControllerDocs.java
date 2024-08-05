@@ -4,10 +4,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.member.domain.Member;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelDetailResponse;
+import com.staccato.travel.service.dto.response.TravelIdResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +20,28 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Travel", description = "Travel API")
 public interface TravelControllerDocs {
-    ResponseEntity<Void> createTravel(@Valid TravelRequest travelRequest, Member member);
+    @Operation(summary = "여행 상세 생성", description = "여행 상세를(썸네일, 제목, 내용, 기간)를 생성합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "여행 상세 생성 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                                        
+                    (1) 필수 값(여행 제목, 기간)이 누락되었을 때
+                                        
+                    (2) 날짜 형식(yyyy-MM-dd)이 잘못되었을 때
+                                        
+                    (3) 제목이 공백 포함 30자를 초과했을 때
+                                        
+                    (4) 내용이 공백 포함 500자를 초과했을 때
+                                        
+                    (5) 기간 설정이 잘못되었을 때
+                    """,
+                    responseCode = "400")
+    })
+    ResponseEntity<TravelIdResponse> createTravel(
+            @Valid TravelRequest travelRequest,
+            @Parameter(description = "key = data") MultipartFile travelThumbnailFile,
+            @Parameter(hidden = true) Member member);
 
     ResponseEntity<TravelResponses> readAllTravels(Member member, Integer year);
 
