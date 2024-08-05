@@ -74,7 +74,7 @@ class VisitControllerTest {
         );
     }
 
-    @DisplayName("방문 기록을 생성한다.")
+    @DisplayName("방문 기록 생성 시 사진 5장까지는 첨부 가능하다.")
     @Test
     void createVisit() throws Exception {
         // given
@@ -86,19 +86,22 @@ class VisitControllerTest {
                 "application/json",
                 visitRequestJson.getBytes()
         );
-        MockMultipartFile imageFilePart = new MockMultipartFile(
-                "visitImagesFile",
-                "test-image.jpg",
-                "image/jpeg",
-                "dummy image content".getBytes()
+        List<MockMultipartFile> imageFiles = List.of(
+                new MockMultipartFile("visitImagesFile", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes()),
+                new MockMultipartFile("visitImagesFile", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes()),
+                new MockMultipartFile("visitImagesFile", "test-image3.jpg", "image/jpeg", "dummy image content".getBytes()),
+                new MockMultipartFile("visitImagesFile", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes()),
+                new MockMultipartFile("visitImagesFile", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes())
         );
+        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart("/visits");
+        builder.file(visitRequestPart);
+        for (MockMultipartFile imageFile : imageFiles) {
+            builder.file(imageFile);
+        }
         when(visitService.createVisit(any(VisitRequest.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/visits")
-                        .file(visitRequestPart)
-                        .file(imageFilePart)
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
+        mockMvc.perform(builder.contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/visits/1"))
                 .andExpect(jsonPath("$.visitId").value(1));
