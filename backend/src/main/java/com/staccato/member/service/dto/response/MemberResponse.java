@@ -9,6 +9,6 @@ public record MemberResponse(
         @JsonInclude(JsonInclude.Include.NON_NULL) String memberImage
 ) {
     public MemberResponse(Member member) {
-        this(member.getId(), member.getNickname(), member.getImageUrl());
+        this(member.getId(), member.getNickname().getNickname(), member.getImageUrl());
     }
 }

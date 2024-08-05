@@ -21,7 +21,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import com.staccato.IntegrationTest;
-import com.staccato.member.repository.MemberRepository;
+import com.staccato.auth.service.AuthService;
+import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.visit.service.dto.request.VisitRequest;
@@ -30,12 +31,12 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 class VisitIntegrationTest extends IntegrationTest {
-    private static final String USER_AUTHORIZATION = "1";
-
     @Autowired
     private TravelRepository travelRepository;
     @Autowired
-    private MemberRepository memberRepository;
+    private AuthService authService;
+
+    private String memberToken;
 
     static Stream<Arguments> invalidVisitRequestProvider() {
         return Stream.of(
@@ -59,6 +60,8 @@ class VisitIntegrationTest extends IntegrationTest {
                 .startAt(LocalDate.of(2023, 7, 1))
                 .endAt(LocalDate.of(2023, 7, 10))
                 .build());
+        LoginRequest loginRequest = new LoginRequest("staccato");
+        memberToken = authService.login(loginRequest).token();
     }
 
     @DisplayName("사용자가 방문 기록 정보를 입력하면, 새로운 방문 기록을 생성한다.")
@@ -70,7 +73,7 @@ class VisitIntegrationTest extends IntegrationTest {
         // when & then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .header(HttpHeaders.AUTHORIZATION, memberToken)
                 .body(visitRequest)
                 .when().log().all()
                 .post("/visits")
@@ -85,7 +88,7 @@ class VisitIntegrationTest extends IntegrationTest {
     void failCreateTravel(VisitRequest visitRequest, String expectedMessage) {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .header(HttpHeaders.AUTHORIZATION, memberToken)
                 .body(visitRequest)
                 .when().log().all()
                 .post("/visits")
@@ -127,7 +130,7 @@ class VisitIntegrationTest extends IntegrationTest {
                 DynamicTest.dynamicTest("특정 방문 기록을 id로 찾는다.", () ->
                         RestAssured.given().log().all()
                                 .contentType(ContentType.JSON)
-                                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                                .header(HttpHeaders.AUTHORIZATION, memberToken)
                                 .when().log().all()
                                 .get("/visits/1")
                                 .then().log().all()
@@ -143,7 +146,7 @@ class VisitIntegrationTest extends IntegrationTest {
                 DynamicTest.dynamicTest("1보다 작은 id로 방문 기록을 찾으려 시도하면 Bad Request를 반환한다.", () ->
                         RestAssured.given().log().all()
                                 .contentType(ContentType.JSON)
-                                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                                .header(HttpHeaders.AUTHORIZATION, memberToken)
                                 .when().log().all()
                                 .get("/visits/0")
                                 .then().log().all()
@@ -159,7 +162,7 @@ class VisitIntegrationTest extends IntegrationTest {
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
-                    .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                    .header(HttpHeaders.AUTHORIZATION, memberToken)
                     .body(visitRequest)
                     .when().log().all()
                     .post("/visits")
