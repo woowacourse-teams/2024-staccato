@@ -70,7 +70,7 @@ public class VisitControllerTest {
         // given
         long visitId = 1L;
         VisitUpdateRequest updateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
-        MockMultipartFile file = new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("visitImageFiles", "namsan_tower.jpg".getBytes());
 
         // when & then
         mockMvc.perform(multipart("/visits/{visitId}", visitId)
@@ -92,12 +92,12 @@ public class VisitControllerTest {
         long visitId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
         VisitUpdateRequest updateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
-        MockMultipartFile file1 = new MockMultipartFile("visitImagesFile", "namsan_tower1.jpg".getBytes());
-        MockMultipartFile file2 = new MockMultipartFile("visitImagesFile", "namsan_tower2.jpg".getBytes());
-        MockMultipartFile file3 = new MockMultipartFile("visitImagesFile", "namsan_tower3.jpg".getBytes());
-        MockMultipartFile file4 = new MockMultipartFile("visitImagesFile", "namsan_tower4.jpg".getBytes());
-        MockMultipartFile file5 = new MockMultipartFile("visitImagesFile", "namsan_tower5.jpg".getBytes());
-        MockMultipartFile file6 = new MockMultipartFile("visitImagesFile", "namsan_tower6.jpg".getBytes());
+        MockMultipartFile file1 = new MockMultipartFile("visitImageFiles", "namsan_tower1.jpg".getBytes());
+        MockMultipartFile file2 = new MockMultipartFile("visitImageFiles", "namsan_tower2.jpg".getBytes());
+        MockMultipartFile file3 = new MockMultipartFile("visitImageFiles", "namsan_tower3.jpg".getBytes());
+        MockMultipartFile file4 = new MockMultipartFile("visitImageFiles", "namsan_tower4.jpg".getBytes());
+        MockMultipartFile file5 = new MockMultipartFile("visitImageFiles", "namsan_tower5.jpg".getBytes());
+        MockMultipartFile file6 = new MockMultipartFile("visitImageFiles", "namsan_tower6.jpg".getBytes());
 
 
         // when & then
@@ -126,7 +126,7 @@ public class VisitControllerTest {
         long visitId = 0L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문 기록 식별자는 양수로 이루어져야 합니다.");
         VisitUpdateRequest updateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
-        MockMultipartFile file = new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("visitImageFiles", "namsan_tower.jpg".getBytes());
 
         // when & then
         mockMvc.perform(multipart("/visits/{visitId}", visitId)
@@ -149,7 +149,7 @@ public class VisitControllerTest {
         long visitId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문한 장소의 이름을 입력해주세요.");
         VisitUpdateRequest updateRequest = new VisitUpdateRequest(null, List.of("https://example1.com.jpg"));
-        MockMultipartFile file = new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("visitImageFiles", "namsan_tower.jpg".getBytes());
 
         // when & then
         mockMvc.perform(multipart("/visits/{visitId}", visitId)

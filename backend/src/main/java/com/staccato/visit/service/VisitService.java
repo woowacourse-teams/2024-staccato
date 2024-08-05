@@ -58,11 +58,11 @@ public class VisitService {
     }
 
     @Transactional
-    public void updateVisitById(long visitId, VisitUpdateRequest visitUpdateRequest, List<MultipartFile> images) {
+    public void updateVisitById(long visitId, VisitUpdateRequest visitUpdateRequest, List<MultipartFile> visitImageFiles) {
         Visit visit = getVisitById(visitId);
-        List<String> addedImages = List.of(images.get(0).getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
+        List<String> addedImages = List.of(visitImageFiles.get(0).getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
         VisitImages visitImages = VisitImages.builder()
-                .existingImages(visitUpdateRequest.visitImagesUrl())
+                .existingImages(visitUpdateRequest.visitImageUrls())
                 .addedImages(addedImages)
                 .build();
 

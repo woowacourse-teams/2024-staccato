@@ -59,9 +59,9 @@ public class VisitController implements VisitControllerDocs {
     @PutMapping(path = "/{visitId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateVisitById(
             @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId,
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart("visitImagesFile") List<MultipartFile> file,
+            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart("visitImageFiles") List<MultipartFile> visitImageFiles,
             @Valid @RequestPart(value = "data") VisitUpdateRequest request) {
-        visitService.updateVisitById(visitId, request, file);
+        visitService.updateVisitById(visitId, request, visitImageFiles);
         return ResponseEntity.ok().build();
     }
 }

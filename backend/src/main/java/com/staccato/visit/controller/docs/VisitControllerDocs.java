@@ -37,7 +37,7 @@ public interface VisitControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<VisitDetailResponse> readVisitById(
-            @Parameter(example = "1", required = true) @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId);
+            @Parameter(description = "방문 기록 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId);
 
     ResponseEntity<Void> deleteVisitById(
             @Parameter @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") Long visitId);
@@ -57,7 +57,7 @@ public interface VisitControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<Void> updateVisitById(
-            @Parameter(example = "1", required = true) @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId,
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> file,
-            @Valid VisitUpdateRequest request);
+            @Parameter(description = "방문 기록 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId,
+            @Parameter(description = "key = visitImageFiles") @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> visitImageFiles,
+            @Parameter(description = "key = data", required = true) @Valid VisitUpdateRequest request);
 }
