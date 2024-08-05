@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.kotlinKapt) apply false
     alias(libs.plugins.kotlinSerialization) apply false
+    alias(libs.plugins.googleServices) apply false
+    alias(libs.plugins.firebaseCrashlytics) apply false
 }
 
 buildscript {
