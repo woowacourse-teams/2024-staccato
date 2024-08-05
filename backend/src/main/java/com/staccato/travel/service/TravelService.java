@@ -71,6 +71,25 @@ public class TravelService {
         return TravelResponses.from(travels);
     }
 
+    public TravelDetailResponse readTravelById(long travelId, Member member) {
+        Travel travel = getTravelById(travelId);
+        validateOwner(travel, member);
+        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdOrderByVisitedAt(travelId));
+        return new TravelDetailResponse(travel, visitResponses);
+    }
+
+    private List<VisitResponse> getVisitResponses(List<Visit> visits) {
+        return visits.stream()
+                .map(visit -> new VisitResponse(visit, getFirstVisitImageUrl(visit)))
+                .toList();
+    }
+
+    private String getFirstVisitImageUrl(Visit visit) {
+        return visitImageRepository.findFirstByVisitId(visit.getId())
+                .map(VisitImage::getImageUrl)
+                .orElse(null);
+    }
+
     @Transactional
     public void updateTravel(TravelRequest travelRequest, Long travelId) {
         Travel updatedTravel = travelRequest.toTravel();
@@ -88,19 +107,6 @@ public class TravelService {
         travelRepository.deleteById(travelId);
     }
 
-    private void validateVisitExistsByTravel(Travel travel) {
-        if (visitRepository.existsByTravel(travel)) {
-            throw new StaccatoException("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
-        }
-    }
-
-    public TravelDetailResponse readTravelById(long travelId, Member member) {
-        Travel travel = getTravelById(travelId);
-        validateOwner(travel, member);
-        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdOrderByVisitedAt(travelId));
-        return new TravelDetailResponse(travel, visitResponses);
-    }
-
     private Travel getTravelById(long travelId) {
         return travelRepository.findById(travelId)
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
@@ -112,15 +118,9 @@ public class TravelService {
         }
     }
 
-    private List<VisitResponse> getVisitResponses(List<Visit> visits) {
-        return visits.stream()
-                .map(visit -> new VisitResponse(visit, getFirstVisitImageUrl(visit)))
-                .toList();
-    }
-
-    private String getFirstVisitImageUrl(Visit visit) {
-        return visitImageRepository.findFirstByVisitId(visit.getId())
-                .map(VisitImage::getImageUrl)
-                .orElse(null);
+    private void validateVisitExistsByTravel(Travel travel) {
+        if (visitRepository.existsByTravel(travel)) {
+            throw new StaccatoException("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
+        }
     }
 }

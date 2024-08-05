@@ -151,6 +151,19 @@ class TravelServiceTest extends ServiceSliceTest {
                         .build());
     }
 
+    @DisplayName("존재하지 않는 여행 상세를 조회하려고 할 경우 예외가 발생한다.")
+    @Test
+    void failReadTravel() {
+        // given
+        Member member = saveMember();
+        long unknownId = 1;
+
+        // when & then
+        assertThatThrownBy(() -> travelService.readTravelById(unknownId, member))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("요청하신 여행을 찾을 수 없어요.");
+    }
+
     @DisplayName("여행 상세 정보를 기반으로, 여행 상세를 수정한다.")
     @Test
     void updateTravel() {
@@ -252,19 +265,6 @@ class TravelServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> travelService.deleteTravel(foundTravel.getId(), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
-    }
-
-    @DisplayName("존재하지 않는 여행 상세를 조회하려고 할 경우 예외가 발생한다.")
-    @Test
-    void failReadTravel() {
-        // given
-        Member member = saveMember();
-        long unknownId = 1;
-
-        // when & then
-        assertThatThrownBy(() -> travelService.readTravelById(unknownId, member))
-                .isInstanceOf(StaccatoException.class)
-                .hasMessage("요청하신 여행을 찾을 수 없어요.");
     }
 
     private Member saveMember() {
