@@ -49,6 +49,22 @@ class TravelFragment :
         viewModel.loadTravel(travelId)
     }
 
+    override fun onUpdateClicked() {
+        val travelUpdateLauncher = (activity as MainActivity).travelUpdateLauncher
+        TravelUpdateActivity.startWithResultLauncher(
+            travelId,
+            requireActivity(),
+            travelUpdateLauncher,
+        )
+    }
+
+    override fun onDeleteClicked() {
+        val fragmentManager = parentFragmentManager
+        deleteDialog.apply {
+            show(fragmentManager, DeleteDialogFragment.TAG)
+        }
+    }
+
     override fun onVisitClicked(visitId: Long) {
         val bundle = bundleOf(VISIT_ID_KEY to visitId, TRAVEL_ID_KEY to travelId)
         findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
@@ -86,22 +102,6 @@ class TravelFragment :
     private fun showErrorToast() {
         viewModel.errorMessage.observe(viewLifecycleOwner) {
             showToast(it)
-        }
-    }
-
-    override fun onUpdateClicked() {
-        val travelUpdateLauncher = (activity as MainActivity).travelUpdateLauncher
-        TravelUpdateActivity.startWithResultLauncher(
-            travelId,
-            requireActivity(),
-            travelUpdateLauncher,
-        )
-    }
-
-    override fun onDeleteClicked() {
-        val fragmentManager = parentFragmentManager
-        deleteDialog.apply {
-            show(fragmentManager, DeleteDialogFragment.TAG)
         }
     }
 
