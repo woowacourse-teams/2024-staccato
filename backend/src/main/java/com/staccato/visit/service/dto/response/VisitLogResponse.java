@@ -12,7 +12,7 @@ public record VisitLogResponse(
         @Schema(example = "1")
         Long memberId,
         @Schema(example = "카고")
-        String nickName,
+        String nickname,
         @Schema(example = "https://example.com/images/kargo.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String memberImage,
