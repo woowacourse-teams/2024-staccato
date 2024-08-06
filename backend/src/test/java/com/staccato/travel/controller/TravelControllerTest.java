@@ -144,12 +144,13 @@ class TravelControllerTest {
     @Test
     void readTravel() throws Exception {
         // given
+        long travelId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         TravelDetailResponse travelDetailResponse = new TravelDetailResponse(createTravel(), List.of());
         when(travelService.readTravelById(anyLong(), any(Member.class))).thenReturn(travelDetailResponse);
 
         // when & then
-        mockMvc.perform(get("/travels/1")
+        mockMvc.perform(get("/travels/{travelId}", travelId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(travelDetailResponse)));
@@ -169,10 +170,11 @@ class TravelControllerTest {
     @Test
     void deleteTravel() throws Exception {
         // given
+        long travelId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(delete("/travels/1")
+        mockMvc.perform(delete("/travels/{travelId}", travelId)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
@@ -182,11 +184,11 @@ class TravelControllerTest {
     @Test
     void cannotDeleteTravelByInvalidId() throws Exception {
         // given
-        long invalidId = -1;
+        long invalidId = 0;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "여행 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(delete("/travels/" + invalidId)
+        mockMvc.perform(delete("/travels/{travelId}", invalidId)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
