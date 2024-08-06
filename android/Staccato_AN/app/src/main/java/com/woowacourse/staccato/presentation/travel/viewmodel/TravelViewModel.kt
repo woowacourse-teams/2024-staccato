@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
+import com.woowacourse.staccato.data.ResponseResult
+import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
@@ -34,17 +36,32 @@ class TravelViewModel(
 
     fun loadTravel(travelId: Long) {
         viewModelScope.launch {
-            travelRepository.getTravel(travelId).onSuccess { travel ->
-                _travel.value = travel.toUiModel()
-                Log.d("hye: 여행 조회 성공", "성공")
-            }.onServerError { code, message ->
-                Log.d("hye: 여행 조회 실패", "$code : $message $TRAVEL_ERROR_MESSAGE")
-                _errorMessage.value = "$code : $TRAVEL_ERROR_MESSAGE"
-            }.onException { e, message ->
-                Log.d("hye: 여행 조회 실패 - 예외", "${e.message}")
-                _errorMessage.value = TRAVEL_ERROR_MESSAGE
-            }
+            val result: ResponseResult<Travel> = travelRepository.getTravel(travelId)
+            result
+                .onSuccess(::setTravel)
+                .onServerError(::handleServerError)
+                .onException(::handelException)
         }
+    }
+
+    private fun setTravel(travel: Travel) {
+        _travel.value = travel.toUiModel()
+    }
+
+    private fun handleServerError(
+        code: Int,
+        message: String,
+    ) {
+        Log.d("hye: 여행 조회 실패", "$code : $message $TRAVEL_ERROR_MESSAGE")
+        _errorMessage.value = "$code : $TRAVEL_ERROR_MESSAGE"
+    }
+
+    private fun handelException(
+        e: Throwable,
+        message: String,
+    ) {
+        Log.d("hye: 여행 생성 실패 - 예외", "${e.message}")
+        _errorMessage.value = TRAVEL_ERROR_MESSAGE
     }
 
     companion object {
