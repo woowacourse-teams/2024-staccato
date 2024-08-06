@@ -1,7 +1,5 @@
 package com.staccato.s3.domain;
 
-import java.net.URI;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +25,6 @@ public class CloudStorageClient {
         this.s3Client = S3Client.builder()
                 .region(Region.AP_NORTHEAST_2)
                 .credentialsProvider(InstanceProfileCredentialsProvider.create())
-                .endpointOverride(URI.create(endPoint))
-                .forcePathStyle(true)
                 .build();
         this.bucketName = bucketName;
         this.endPoint = endPoint;
