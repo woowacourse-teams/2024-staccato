@@ -33,7 +33,7 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{visitLog.nickName}"
+            android:text="@{visitLog.nickname}"
             android:textAppearance="@style/Typography.Body4"
             app:layout_constraintStart_toStartOf="@id/tv_chat"
             app:layout_constraintTop_toTopOf="@id/iv_profile"

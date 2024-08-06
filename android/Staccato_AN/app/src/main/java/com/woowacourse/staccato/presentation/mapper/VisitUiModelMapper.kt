@@ -30,7 +30,7 @@ fun VisitLog.toVisitLogUiModel() =
     VisitDetailUiModel.VisitLogUiModel(
         id = visitLogId,
         memberId = memberId,
-        nickName = nickName,
+        nickname = nickname,
         memberImage = memberImage,
         content = content,
     )

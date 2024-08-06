@@ -15,7 +15,7 @@ sealed class VisitDetailUiModel {
     data class VisitLogUiModel(
         val id: Long = 0,
         val memberId: Long = 0,
-        val nickName: String,
+        val nickname: String,
         val memberImage: String,
         val content: String,
     ) : VisitDetailUiModel()
