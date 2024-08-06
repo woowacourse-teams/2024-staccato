@@ -29,9 +29,15 @@ public class VisitImage {
     private Visit visit;
 
     @Builder
-    public VisitImage(@Nonnull String imageUrl, @Nonnull Visit visit) {
+    public VisitImage(@Nonnull String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    protected void belongTo(Visit visit) {
         this.visit = visit;
-        visit.addVisitImage(this);
+    }
+
+    protected boolean isSameUrl(VisitImage visitImage) {
+        return this.imageUrl.equals(visitImage.imageUrl);
     }
 }

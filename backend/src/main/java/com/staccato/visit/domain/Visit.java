@@ -48,8 +48,8 @@ public class Visit extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_id", nullable = false)
     private Travel travel;
-    @OneToMany(mappedBy = "visit", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<VisitImage> visitImages = new ArrayList<>();
+    @Embedded
+    private VisitImages visitImages = new VisitImages();
     @OneToMany(mappedBy = "visit", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<VisitLog> visitLogs = new ArrayList<>();
 
@@ -68,11 +68,16 @@ public class Visit extends BaseEntity {
         this.travel = travel;
     }
 
-    public void addVisitImage(VisitImage visitImage) {
-        visitImages.add(visitImage);
+    public void addVisitImages(VisitImages visitImages) {
+        this.visitImages.addAll(visitImages, this);
     }
 
     public void addVisitLog(VisitLog visitLog) {
-        visitLogs.add(visitLog);
+        this.visitLogs.add(visitLog);
+    }
+
+    public void update(String placeName, VisitImages newVisitImages) {
+        this.placeName = placeName;
+        this.visitImages.update(newVisitImages, this);
     }
 }
