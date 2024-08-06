@@ -10,7 +10,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.domain.model.Travel
-import com.woowacourse.staccato.domain.model.TravelCreation
+import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
@@ -22,8 +22,8 @@ class TravelUpdateViewModel(
     private val travelId: Long,
     private val travelRepository: TravelRepository,
 ) : ViewModel() {
-    private val _travel = MutableLiveData<TravelCreation>()
-    val travel: LiveData<TravelCreation> get() = _travel
+    private val _travel = MutableLiveData<NewTravel>()
+    val travel: LiveData<NewTravel> get() = _travel
 
     private val _imageUrl = MutableLiveData<String?>()
     val imageUrl: LiveData<String?> get() = _imageUrl
@@ -78,7 +78,7 @@ class TravelUpdateViewModel(
     }
 
     private fun makeNewTravel() =
-        TravelCreation(
+        NewTravel(
             travelThumbnail = imageUrl.value,
             travelTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
