@@ -10,11 +10,12 @@ class HeaderInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         return runBlocking {
             val token = StaccatoApplication.userInfoPrefsManager.getToken()
-            val request = if (!token.isNullOrEmpty()) {
-                chain.request().addTokenHeader(token)
-            } else {
-                chain.request()
-            }
+            val request =
+                if (!token.isNullOrEmpty()) {
+                    chain.request().addTokenHeader(token)
+                } else {
+                    chain.request()
+                }
             chain.proceed(request)
         }
     }
