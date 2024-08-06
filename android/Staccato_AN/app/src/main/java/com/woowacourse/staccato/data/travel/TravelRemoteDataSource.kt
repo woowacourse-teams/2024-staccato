@@ -24,4 +24,6 @@ class TravelRemoteDataSource(
         handleApiResponse {
             travelApiService.putTravel(travelId, newTravel.toDto())
         }
+
+    override suspend fun deleteTravel(travelId: Long): ResponseResult<Unit> = handleApiResponse { travelApiService.deleteTravel(travelId) }
 }
