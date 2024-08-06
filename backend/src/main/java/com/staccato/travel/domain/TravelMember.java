@@ -42,4 +42,8 @@ public class TravelMember extends BaseEntity {
         this.travel = travel;
         travel.addTravelMember(this);
     }
+
+    public boolean isMember(Member member) {
+        return this.member.getId().equals(member.getId());
+    }
 }

@@ -110,6 +110,6 @@ public class Travel extends BaseEntity {
 
     public boolean isNotOwnedBy(Member member) {
         return travelMembers.stream()
-                .noneMatch(travelMember -> travelMember.getMember().getId() == member.getId());
+                .noneMatch(travelMember -> travelMember.isMember(member));
     }
 }
