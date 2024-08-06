@@ -80,7 +80,7 @@ class TravelFragment :
 
     private fun navigateToVisit() {
         viewModel.visitId.observe(viewLifecycleOwner) { visitId ->
-            val bundle = bundleOf(VISIT_ID_KEY to visitId)
+            val bundle = bundleOf(VISIT_ID_KEY to visitId, TRAVEL_ID_KEY to travelId)
             findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
         }
     }
