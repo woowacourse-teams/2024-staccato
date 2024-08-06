@@ -10,6 +10,8 @@ import androidx.databinding.DataBindingUtil
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.StaccatoApplication
 import com.woowacourse.staccato.databinding.ActivityLoginBinding
+import com.woowacourse.staccato.presentation.login.viewmodel.LoginViewModel
+import com.woowacourse.staccato.presentation.login.viewmodel.LoginViewModelFactory
 import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.util.showToast
 

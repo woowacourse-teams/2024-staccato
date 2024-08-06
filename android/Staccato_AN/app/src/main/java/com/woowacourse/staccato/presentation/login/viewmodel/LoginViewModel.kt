@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.login
+package com.woowacourse.staccato.presentation.login.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +11,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.domain.repository.LoginRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
+import com.woowacourse.staccato.presentation.login.LoginHandler
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: LoginRepository) : ViewModel(), LoginHandler {

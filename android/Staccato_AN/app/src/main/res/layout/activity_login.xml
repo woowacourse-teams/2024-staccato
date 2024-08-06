@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.login.LoginViewModel" />
+            type="com.woowacourse.staccato.presentation.login.viewmodel.LoginViewModel" />
 
         <variable
             name="handler"
