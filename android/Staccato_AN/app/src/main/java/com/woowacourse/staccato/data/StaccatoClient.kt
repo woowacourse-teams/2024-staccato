@@ -14,15 +14,14 @@ import retrofit2.Retrofit
 
 object StaccatoClient {
     private val BASE_URL = BuildConfig.BASE_URL
+    private val tokenManager = TokenManager()
 
     val loginApiService: LoginApiService by lazy {
         create(LoginApiService::class.java)
     }
 
     val travelApiService: TravelApiService by lazy {
-        create(
-            TravelApiService::class.java,
-        )
+        create(TravelApiService::class.java)
     }
 
     val timelineService: TimeLineApiService by lazy {
@@ -41,7 +40,7 @@ object StaccatoClient {
     private val provideHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(provideLoggingInterceptor)
-            .addInterceptor(HeaderInterceptor())
+            .addInterceptor(HeaderInterceptor(tokenManager))
             .build()
 
     private val jsonBuilder = Json { coerceInputValues = true }
