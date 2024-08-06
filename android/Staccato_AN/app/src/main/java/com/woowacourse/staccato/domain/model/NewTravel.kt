@@ -1,8 +1,8 @@
-package com.woowacourse.staccato.presentation.travelcreation
+package com.woowacourse.staccato.domain.model
 
 import java.time.LocalDate
 
-data class TravelCreationUiModel(
+data class NewTravel(
     val travelThumbnail: String? = null,
     val travelTitle: String,
     val startAt: LocalDate,
