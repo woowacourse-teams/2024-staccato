@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
+import com.woowacourse.staccato.domain.model.TravelCreation
 import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.travelcreation.DateConverter.convertLongToLocalDate
-import com.woowacourse.staccato.presentation.travelcreation.TravelCreationUiModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -43,7 +43,7 @@ class TravelCreationViewModel(
     fun createTravel() {
         viewModelScope.launch {
             val travel =
-                TravelCreationUiModel(
+                TravelCreation(
                     travelThumbnail = imageUrl.value,
                     travelTitle = title.get() ?: return@launch,
                     startAt = startDate.value ?: return@launch,
