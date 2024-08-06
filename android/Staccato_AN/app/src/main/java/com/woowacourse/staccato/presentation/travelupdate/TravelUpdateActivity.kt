@@ -16,6 +16,7 @@ import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.travel.TravelFragment.Companion.TRAVEL_ID_KEY
 import com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModel
 import com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModelFactory
+import com.woowacourse.staccato.presentation.util.showToast
 
 class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), TravelUpdateHandler {
     override val layoutResourceId = R.layout.activity_travel_update
@@ -34,6 +35,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
         fetchTravel()
         updateTravelPeriod()
         observeIsUpdateSuccess()
+        showErrorToast()
     }
 
     override fun onPeriodSelectionClicked() {
@@ -89,6 +91,12 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
             val intent = Intent().putExtra(TRAVEL_ID_KEY, travelId)
             setResult(RESULT_OK, intent)
             finish()
+        }
+    }
+
+    private fun showErrorToast() {
+        viewModel.errorMessage.observe(this) {
+            showToast(it)
         }
     }
 

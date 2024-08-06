@@ -34,6 +34,9 @@ class TravelCreationViewModel(
     private val _createdTravelId = MutableLiveData<Long>()
     val createdTravelId: LiveData<Long> get() = _createdTravelId
 
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> get() = _errorMessage
+
     fun setTravelPeriod(
         startAt: Long,
         endAt: Long,
@@ -70,7 +73,7 @@ class TravelCreationViewModel(
         code: Int,
         message: String,
     ) {
-        // TODO: Error 핸들링
+        _errorMessage.value = "$code : $TRAVEL_CREATION_ERROR_MESSAGE"
         Log.d("hye: 여행 생성 실패", "$code : $message $TRAVEL_CREATION_ERROR_MESSAGE")
     }
 
@@ -78,7 +81,7 @@ class TravelCreationViewModel(
         e: Throwable,
         message: String,
     ) {
-        // TODO: Exception 핸들링
+        _errorMessage.value = TRAVEL_CREATION_ERROR_MESSAGE
         Log.d("hye: 여행 생성 실패 - 예외", "${e.message}")
     }
 
