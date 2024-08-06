@@ -1,53 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingHorizontal="36dp">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.woowacourse.staccato.presentation.login.LoginViewModel" />
+
+        <variable
+            name="handler"
+            type="com.woowacourse.staccato.presentation.login.LoginHandler" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="36dp">
 
-        <ImageView
-            android:id="@+id/iv_staccato_logo"
-            android:layout_width="220dp"
-            android:layout_height="260dp"
-            android:src="@drawable/staccato_logo"
-            android:backgroundTint="@color/staccato_blue_30"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/all_image_content_description" />
-
-        <Space
-            android:id="@+id/space_between_logo_nickname_et"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_staccato_logo" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/et_user_nickname"
-            style="@style/EditTextStyle"
-            android:hint="@string/login_nickname_hint"
-            android:maxLength="20"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/space_between_logo_nickname_et" />
+            <ImageView
+                android:id="@+id/iv_staccato_logo"
+                android:layout_width="220dp"
+                android:layout_height="260dp"
+                android:backgroundTint="@color/staccato_blue_30"
+                android:contentDescription="@string/all_image_content_description"
+                android:src="@drawable/staccato_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_start_staccato"
-            style="@style/ButtonStyle.Login"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_user_nickname" />
+            <Space
+                android:id="@+id/space_between_logo_nickname_et"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_staccato_logo" />
+
+            <EditText
+                android:id="@+id/et_user_nickname"
+                style="@style/EditTextStyle"
+                android:hint="@string/login_nickname_hint"
+                android:maxLength="20"
+                android:maxLines="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_between_logo_nickname_et"
+                android:text="@={viewModel.nickname}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_start_staccato"
+                style="@style/ButtonStyle.Login"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_user_nickname"
+                android:onClick="@{() -> handler.onStartClicked()}"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
