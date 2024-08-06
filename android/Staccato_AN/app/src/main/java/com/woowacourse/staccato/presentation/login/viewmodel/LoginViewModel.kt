@@ -26,7 +26,6 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel(), Log
         get() = _errorMessage
 
     override fun onStartClicked() {
-        Log.d("hodu", "nickname: ${nickname.value}")
         val nickname = nickname.value ?: ""
         viewModelScope.launch {
             repository.loginWithNickname(nickname)
@@ -37,23 +36,28 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel(), Log
     }
 
     private fun saveUserToken(newToken: String) {
-        StaccatoApplication.userInfoPrefsManager.setToken(newToken)
-        _isLoginSuccess.setValue(true)
+        viewModelScope.launch {
+            StaccatoApplication.userInfoPrefsManager.setToken(newToken)
+            _isLoginSuccess.postValue(true)
+        }
     }
 
     private fun handleError(
         code: Int,
         errorMessage: String,
     ) {
+        _errorMessage.postValue(errorMessage)
         Log.e(this::class.java.simpleName, "Error Occurred | code: $code, message: $errorMessage")
-        _errorMessage.setValue(errorMessage)
     }
 
     private fun handleException(
         e: Throwable,
         errorMessage: String,
     ) {
-        Log.e(this::class.java.simpleName, "Exception Caught | throwable: $e, message: $errorMessage")
-        _errorMessage.setValue(errorMessage)
+        _errorMessage.postValue(errorMessage)
+        Log.e(
+            this::class.java.simpleName,
+            "Exception Caught | throwable: $e, message: $errorMessage",
+        )
     }
 }

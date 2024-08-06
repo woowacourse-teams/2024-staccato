@@ -2,17 +2,23 @@ package com.woowacourse.staccato.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class UserInfoPreferencesManager(context: Context) {
     private val mUserInfoPrefs: SharedPreferences =
         context.getSharedPreferences(USER_INFO_PREF_NAME, Context.MODE_PRIVATE)
 
-    fun getToken(): String? {
-        return mUserInfoPrefs.getString(TOKEN_KEY_NAME, "")
+    suspend fun getToken(): String? {
+        return withContext(Dispatchers.IO) {
+            mUserInfoPrefs.getString(TOKEN_KEY_NAME, "")
+        }
     }
 
-    fun setToken(newToken: String) {
-        mUserInfoPrefs.edit().putString(TOKEN_KEY_NAME, newToken).apply()
+    suspend fun setToken(newToken: String) {
+        withContext(Dispatchers.IO) {
+            mUserInfoPrefs.edit().putString(TOKEN_KEY_NAME, newToken).apply()
+        }
     }
 
     companion object {

@@ -4,16 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.woowacourse.staccato.R
-import com.woowacourse.staccato.StaccatoApplication
+import com.woowacourse.staccato.StaccatoApplication.Companion.userInfoPrefsManager
 import com.woowacourse.staccato.databinding.ActivityLoginBinding
 import com.woowacourse.staccato.presentation.login.viewmodel.LoginViewModel
 import com.woowacourse.staccato.presentation.login.viewmodel.LoginViewModelFactory
 import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.util.showToast
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -25,18 +29,20 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val splashScreen = installSplashScreen()
-        setSplashScreenContinuation(splashScreen)
-        routeToNextScreenByCheckingToken()
+        checkIfLoggedIn(splashScreen)
         setBinding()
         observeLoginState()
         observeErrorEvent()
     }
 
-    private fun setSplashScreenContinuation(splashScreen: SplashScreen) {
-        splashScreen.setKeepOnScreenCondition {
-            val token = StaccatoApplication.userInfoPrefsManager.getToken()
+    private fun checkIfLoggedIn(splashScreen: SplashScreen) {
+        splashScreen.setKeepOnScreenCondition { true }
+        lifecycleScope.launch {
+            val token = userInfoPrefsManager.getToken()
             isLoggedIn = !token.isNullOrEmpty()
-            false
+            routeToNextScreenByCheckingToken()
+            delay(SPLASH_SCREEN_DURATION)
+            splashScreen.setKeepOnScreenCondition { false }
         }
     }
 
@@ -49,7 +55,12 @@ class LoginActivity : AppCompatActivity() {
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        val options = ActivityOptionsCompat.makeCustomAnimation(
+            this,
+            android.R.anim.fade_in,
+            android.R.anim.fade_out
+        )
+        startActivity(intent, options.toBundle())
         finish()
     }
 
@@ -77,5 +88,6 @@ class LoginActivity : AppCompatActivity() {
 
     companion object {
         private const val LOGIN_SUCCESS_MESSAGE = "스타카토에 찾아오신걸 환영해요!"
+        private const val SPLASH_SCREEN_DURATION = 1500L
     }
 }
