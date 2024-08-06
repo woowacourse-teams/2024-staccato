@@ -1,9 +1,13 @@
 package com.staccato.s3.domain;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -16,12 +20,16 @@ public class CloudStorageClient {
     private final String cloudFrontEndPoint;
 
     public CloudStorageClient(
-            S3Client s3Client,
             @Value("${cloud.aws.s3.bucket}") String bucketName,
             @Value("${cloud.aws.s3.endpoint}") String endPoint,
             @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint
     ) {
-        this.s3Client = s3Client;
+        this.s3Client = S3Client.builder()
+                .region(Region.AP_NORTHEAST_2)
+                .credentialsProvider(InstanceProfileCredentialsProvider.create())
+                .endpointOverride(URI.create(endPoint))
+                .forcePathStyle(true)
+                .build();
         this.bucketName = bucketName;
         this.endPoint = endPoint;
         this.cloudFrontEndPoint = cloudFrontEndPoint;
