@@ -9,14 +9,13 @@ import com.woowacourse.staccato.presentation.visitupdate.model.VisitUpdateUiMode
 
 fun Visit.toVisitDefaultUiModel(): VisitDetailUiModel.VisitDefaultUiModel {
     // TODO: visitImages 빈 배열일 때 처리
-    val visitImage = if (visitImages.isEmpty()) "" else visitImages[0]
+    val visitImage = if (visitImageUrls.isEmpty()) "" else visitImageUrls[0]
     return VisitDetailUiModel.VisitDefaultUiModel(
         id = visitId,
         placeName = placeName,
         visitImage = visitImage,
         address = address,
         visitedAt = visitedAt,
-        visitedCount = visitedCount,
     )
 }
 

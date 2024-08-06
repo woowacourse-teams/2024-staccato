@@ -64,7 +64,6 @@
             app:layout_constraintStart_toStartOf="@id/tv_title"
             app:layout_constraintTop_toBottomOf="@id/tv_detail"
             bind:visitedAt="@{visitDefault.visitedAt}"
-            bind:visitedCount="@{visitDefault.visitedCount}"
             tools:text="2024년 7월 15일에 처음 방문했어요!" />
 
         <com.google.android.material.divider.MaterialDivider

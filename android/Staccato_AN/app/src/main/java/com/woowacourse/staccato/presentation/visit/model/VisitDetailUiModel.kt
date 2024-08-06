@@ -9,7 +9,6 @@ sealed class VisitDetailUiModel {
         val visitImage: String,
         val address: String,
         val visitedAt: LocalDate,
-        val visitedCount: Long,
     ) : VisitDetailUiModel()
 
     data class VisitLogUiModel(
