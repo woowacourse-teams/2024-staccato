@@ -39,8 +39,8 @@ public class TravelService {
         Travel travel = travelRequest.toTravel();
         String thumbnailUrl = travelRequest.travelThumbnail(); //썸네일 url을 가져오는 임시 로직
         travel.assignThumbnail(thumbnailUrl);
-        travelRepository.save(travel);
         travel.addTravelMember(member);
+        travelRepository.save(travel);
         return new TravelIdResponse(travel.getId());
     }
 
