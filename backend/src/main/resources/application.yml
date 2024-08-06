@@ -43,9 +43,9 @@ cloud:
   aws:
     s3:
       bucket: techcourse-project-2024
-      endpoint: https://techcourse-project-2024.s3.ap-northeast-2.amazonaws.com
+      endpoint: https://techcourse-project-2024.s3.ap-northeast-2.amazonaws.com/techcourse-project-2024
     cloudfront:
-      endpoint: https://d25aribbn0gp8k.cloudfront.net
+      endpoint: https://d25aribbn0gp8k.cloudfront.net/staccato
     region:
       static: ap-northeast-2
     stack:
