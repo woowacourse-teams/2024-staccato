@@ -57,8 +57,9 @@ class TravelServiceTest extends ServiceSliceTest {
         Member member = saveMember();
 
         // when
-        long travelId = travelService.createTravel(travelRequest, member.getId());
-        TravelMember travelMember = travelMemberRepository.findAllByMemberIdOrderByTravelStartAtDesc(member.getId()).get(0);
+        long travelId = travelService.createTravel(travelRequest, member);
+        TravelMember travelMember = travelMemberRepository.findAllByMemberIdOrderByTravelStartAtDesc(member.getId())
+                .get(0);
 
         // then
         assertAll(
@@ -73,11 +74,11 @@ class TravelServiceTest extends ServiceSliceTest {
     void readAllTravels(Integer year, int expectedSize) {
         // given
         Member member = saveMember();
-        travelService.createTravel(createTravelRequest(2023), member.getId());
-        travelService.createTravel(createTravelRequest(2024), member.getId());
+        travelService.createTravel(createTravelRequest(2023), member);
+        travelService.createTravel(createTravelRequest(2024), member);
 
         // when
-        TravelResponses travelResponses = travelService.readAllTravels(member.getId(), year);
+        TravelResponses travelResponses = travelService.readAllTravels(member, year);
 
         // then
         assertThat(travelResponses.travels()).hasSize(expectedSize);
@@ -89,10 +90,10 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
 
-        long targetId = travelService.createTravel(createTravelRequest(2023), member.getId());
+        long targetId = travelService.createTravel(createTravelRequest(2023), member);
         Visit visit = saveVisit(LocalDate.of(2023, 7, 1), targetId);
 
-        long otherId = travelService.createTravel(createTravelRequest(2023), member.getId());
+        long otherId = travelService.createTravel(createTravelRequest(2023), member);
         saveVisit(LocalDate.of(2023, 7, 1), otherId);
 
         // when
@@ -113,7 +114,7 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
 
-        long visitId = travelService.createTravel(createTravelRequest(2023), member.getId());
+        long visitId = travelService.createTravel(createTravelRequest(2023), member);
         Visit visit = saveVisit(LocalDate.of(2023, 7, 1), visitId);
         Visit nextVisit = saveVisit(LocalDate.of(2023, 7, 5), visitId);
 
@@ -146,7 +147,7 @@ class TravelServiceTest extends ServiceSliceTest {
     void updateTravel() {
         // given
         Member member = saveMember();
-        Long travelId = travelService.createTravel(createTravelRequest(2023), member.getId());
+        Long travelId = travelService.createTravel(createTravelRequest(2023), member);
         TravelRequest updatedTravel = new TravelRequest(
                 "https://example.com/travels/geumohrm.jpg",
                 "2023 신나는 여름 휴가",
@@ -196,7 +197,7 @@ class TravelServiceTest extends ServiceSliceTest {
     void deleteTravel() {
         // given
         Member member = saveMember();
-        Long travelId = travelService.createTravel(createTravelRequest(2023), member.getId());
+        Long travelId = travelService.createTravel(createTravelRequest(2023), member);
 
         // when
         travelService.deleteTravel(travelId);
@@ -213,7 +214,7 @@ class TravelServiceTest extends ServiceSliceTest {
     void failDeleteTravel() {
         // given
         Member member = saveMember();
-        Long travelId = travelService.createTravel(createTravelRequest(2023), member.getId());
+        Long travelId = travelService.createTravel(createTravelRequest(2023), member);
         Travel foundTravel = travelRepository.findById(travelId).get();
         visitRepository.save(Visit.builder()
                 .visitedAt(LocalDate.of(2024, 7, 10))

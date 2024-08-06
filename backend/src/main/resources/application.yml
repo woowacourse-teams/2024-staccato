@@ -31,6 +31,10 @@ spring:
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+security:
+  jwt:
+    token:
+      secret-key: ${SECRET_KEY}
 
 ---
 
@@ -59,3 +63,7 @@ spring:
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+security:
+  jwt:
+    token:
+      secret-key: ${SECRET_KEY}

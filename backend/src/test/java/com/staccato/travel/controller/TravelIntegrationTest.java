@@ -19,18 +19,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import com.staccato.IntegrationTest;
-import com.staccato.member.domain.Member;
-import com.staccato.member.repository.MemberRepository;
+import com.staccato.auth.service.AuthService;
+import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.travel.service.dto.request.TravelRequest;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 class TravelIntegrationTest extends IntegrationTest {
-    private static final String USER_AUTHORIZATION = "1";
-
     @Autowired
-    private MemberRepository memberRepository;
+    private AuthService authService;
+
+    private String memberToken;
 
     static Stream<TravelRequest> travelRequestProvider() {
         return Stream.of(
@@ -71,7 +71,8 @@ class TravelIntegrationTest extends IntegrationTest {
 
     @BeforeEach
     void init() {
-        memberRepository.save(Member.builder().nickname("staccato").build());
+        LoginRequest loginRequest = new LoginRequest("staccato");
+        memberToken = authService.login(loginRequest).token();
     }
 
     @DisplayName("사용자가 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")
@@ -80,7 +81,7 @@ class TravelIntegrationTest extends IntegrationTest {
     void createTravel(TravelRequest travelRequest) {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .header(HttpHeaders.AUTHORIZATION, memberToken)
                 .body(travelRequest)
                 .when().log().all()
                 .post("/travels")
@@ -95,7 +96,7 @@ class TravelIntegrationTest extends IntegrationTest {
     void failCreateTravel(TravelRequest travelRequest, String expectedMessage) {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .header(HttpHeaders.AUTHORIZATION, memberToken)
                 .body(travelRequest)
                 .when().log().all()
                 .post("/travels")
@@ -116,7 +117,7 @@ class TravelIntegrationTest extends IntegrationTest {
         // when & then
         RestAssured.given().pathParam("travelId", travelId).log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .header(HttpHeaders.AUTHORIZATION, memberToken)
                 .body(travelRequest)
                 .when().log().all()
                 .put("/travels/{travelId}")
@@ -136,7 +137,7 @@ class TravelIntegrationTest extends IntegrationTest {
         // when & then
         RestAssured.given().pathParam("travelId", travelId).log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .header(HttpHeaders.AUTHORIZATION, memberToken)
                 .body(invalidTravelRequest)
                 .when().log().all()
                 .put("/travels/{travelId}")
@@ -156,7 +157,7 @@ class TravelIntegrationTest extends IntegrationTest {
         // when & then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .header(HttpHeaders.AUTHORIZATION, memberToken)
                 .pathParam("travelId", 0)
                 .body(travelRequest)
                 .when().log().all()
@@ -175,7 +176,7 @@ class TravelIntegrationTest extends IntegrationTest {
                 createTravel(2024),
                 DynamicTest.dynamicTest("사용자가 타임라인을 조회하면 2개의 여행 목록이 최신순으로 조회된다.", () ->
                         RestAssured.given().log().all()
-                                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                                .header(HttpHeaders.AUTHORIZATION, memberToken)
                                 .when().log().all()
                                 .get("/travels")
                                 .then().log().all()
@@ -192,7 +193,7 @@ class TravelIntegrationTest extends IntegrationTest {
                 createTravel(2024),
                 DynamicTest.dynamicTest("사용자가 타임라인에서 2023년도를 선택하면 1개의 여행 목록이 조회된다.", () ->
                         RestAssured.given().log().all()
-                                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                                .header(HttpHeaders.AUTHORIZATION, memberToken)
                                 .param("year", 2023)
                                 .when().log().all()
                                 .get("/travels")
@@ -209,7 +210,7 @@ class TravelIntegrationTest extends IntegrationTest {
                 createTravel(2023),
                 DynamicTest.dynamicTest("사용자가 타임라인에서 특정 여행 상세를 선택하여 조회한다.", () ->
                         RestAssured.given().log().all()
-                                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                                .header(HttpHeaders.AUTHORIZATION, memberToken)
                                 .pathParam("travelId", 1)
                                 .when().log().all()
                                 .get("/travels/{travelId}")
@@ -223,7 +224,7 @@ class TravelIntegrationTest extends IntegrationTest {
     void failFindTravelById() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .header(HttpHeaders.AUTHORIZATION, memberToken)
                 .pathParam("travelId", 0)
                 .when().log().all()
                 .get("/travels/{travelId}")
@@ -237,7 +238,7 @@ class TravelIntegrationTest extends IntegrationTest {
         return DynamicTest.dynamicTest("사용자가 새로운 여행 상세를 추가한다.", () ->
                 RestAssured.given().log().all()
                         .contentType(ContentType.JSON)
-                        .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                        .header(HttpHeaders.AUTHORIZATION, memberToken)
                         .body(createTravelRequest(year))
                         .when().log().all()
                         .post("/travels")
@@ -265,7 +266,7 @@ class TravelIntegrationTest extends IntegrationTest {
 
         // when & then
         RestAssured.given().pathParam("travelId", travelId).log().all()
-                .header(HttpHeaders.AUTHORIZATION, USER_AUTHORIZATION)
+                .header(HttpHeaders.AUTHORIZATION, memberToken)
                 .contentType(ContentType.JSON)
                 .when().delete("/travels/{travelId}")
                 .then().log().all()
