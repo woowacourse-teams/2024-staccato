@@ -50,8 +50,7 @@ class VisitServiceTest extends ServiceSliceTest {
     void createVisit() {
         // given
         travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1))
-                        .build()
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
         );
 
         // when
@@ -70,8 +69,7 @@ class VisitServiceTest extends ServiceSliceTest {
     void createVisitWithVisitImages() {
         // given
         travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1))
-                        .build()
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
         );
 
         // when
@@ -101,8 +99,7 @@ class VisitServiceTest extends ServiceSliceTest {
     void readVisitById() {
         // given
         Travel travel = travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1))
-                        .build()
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
         );
         Visit visit = visitRepository.save(VisitFixture.create(travel, LocalDate.now()));
 
@@ -127,8 +124,7 @@ class VisitServiceTest extends ServiceSliceTest {
     void updateVisitById() {
         // given
         Travel travel = travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now().minusDays(1))
-                        .endAt(LocalDate.now().plusDays(1)).build()
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now().minusDays(1)).endAt(LocalDate.now().plusDays(1)).build()
         );
         Visit visit = VisitFixture.create(travel, LocalDate.now());
         visit.addVisitImages(new VisitImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
@@ -144,13 +140,10 @@ class VisitServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(foundedVisit.getPlaceName()).isEqualTo("newPlaceName"),
                 () -> assertThat(visitImageRepository.findById(1L)).isEmpty(),
-                () -> assertThat(visitImageRepository.findById(2L).get()
-                        .getImageUrl()).isEqualTo("https://existExample.com.jpg"),
+                () -> assertThat(visitImageRepository.findById(2L).get().getImageUrl()).isEqualTo("https://existExample.com.jpg"),
                 () -> assertThat(visitImageRepository.findById(3L).get().getImageUrl()).isEqualTo("visitImagesFile"),
-                () -> assertThat(visitImageRepository.findById(2L).get().getVisit()
-                        .getId()).isEqualTo(foundedVisit.getId()),
-                () -> assertThat(visitImageRepository.findById(3L).get().getVisit()
-                        .getId()).isEqualTo(foundedVisit.getId()),
+                () -> assertThat(visitImageRepository.findById(2L).get().getVisit().getId()).isEqualTo(foundedVisit.getId()),
+                () -> assertThat(visitImageRepository.findById(3L).get().getVisit().getId()).isEqualTo(foundedVisit.getId()),
                 () -> assertThat(visitImageRepository.findAll().size()).isEqualTo(2)
         );
     }
@@ -173,8 +166,7 @@ class VisitServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(Member.builder().nickname("SampleMember").build());
         Travel travel = travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1))
-                        .build()
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
         );
         Visit visit = visitRepository.save(VisitFixture.create(travel, LocalDate.now()));
         VisitLog visitLog = visitLogRepository.save(VisitLogFixture.create(visit, member));

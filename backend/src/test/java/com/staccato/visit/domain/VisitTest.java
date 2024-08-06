@@ -15,7 +15,6 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.travel.domain.Travel;
 
 class VisitTest {
-
     @DisplayName("여행 날짜 안에 방문 기록 날짜가 포함되면 Visit을 생성할 수 있다.")
     @Test
     void createVisit() {

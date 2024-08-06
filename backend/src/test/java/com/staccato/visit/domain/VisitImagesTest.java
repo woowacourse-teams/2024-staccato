@@ -15,7 +15,6 @@ import com.staccato.travel.domain.Travel;
 import com.staccato.visit.fixture.VisitFixture;
 
 class VisitImagesTest {
-
     @DisplayName("생성하려는 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
     @Test
     void failAddVisitImages() {

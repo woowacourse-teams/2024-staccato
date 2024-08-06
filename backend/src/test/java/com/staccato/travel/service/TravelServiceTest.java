@@ -58,8 +58,7 @@ class TravelServiceTest extends ServiceSliceTest {
 
         // when
         long travelId = travelService.createTravel(travelRequest, member);
-        TravelMember travelMember = travelMemberRepository.findAllByMemberIdOrderByTravelStartAtDesc(member.getId())
-                .get(0);
+        TravelMember travelMember = travelMemberRepository.findAllByMemberIdOrderByTravelStartAtDesc(member.getId()).get(0);
 
         // then
         assertAll(
