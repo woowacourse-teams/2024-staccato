@@ -42,12 +42,12 @@ security:
 cloud:
   aws:
     s3:
-      bucket: ${AWS_S3_BUCKET}
-      endpoint: ${AWS_S3_ENDPOINT}
+      bucket: techcourse-project-2024
+      endpoint: https://techcourse-project-2024.s3.ap-northeast-2.amazonaws.com
     cloudfront:
-      endpoint: ${AWS_CLOUDFRONT_ENDPOINT}
+      endpoint: https://d25aribbn0gp8k.cloudfront.net
     region:
-      static: ${AWS_REGION_STATIC}
+      static: ap-northeast-2
     stack:
       auto: false
 
