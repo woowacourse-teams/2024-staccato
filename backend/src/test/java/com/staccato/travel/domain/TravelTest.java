@@ -48,13 +48,13 @@ class TravelTest {
         // given
         Travel travel = Travel.builder()
                 .title("2023 여름 여행")
-                .startAt(LocalDate.of(2023, 7, 1))
-                .endAt(LocalDate.of(2023, 7, 10))
+                .startAt(LocalDate.now())
+                .endAt(LocalDate.now().plusDays(1))
                 .build();
         Travel updatedTravel = Travel.builder()
                 .title("2023 여름 여행")
-                .startAt(LocalDate.of(2023, 7, 20))
-                .endAt(LocalDate.of(2023, 7, 21))
+                .startAt(LocalDate.now().plusDays(1))
+                .endAt(LocalDate.now().plusDays(2))
                 .build();
         Member member = Member.builder()
                 .nickname("staccato")

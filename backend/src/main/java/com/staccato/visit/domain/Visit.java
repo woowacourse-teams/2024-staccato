@@ -21,6 +21,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.staccato.config.domain.BaseEntity;
+import com.staccato.exception.StaccatoException;
 import com.staccato.travel.domain.Travel;
 
 import lombok.AccessLevel;
@@ -48,8 +49,8 @@ public class Visit extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_id", nullable = false)
     private Travel travel;
-    @OneToMany(mappedBy = "visit", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<VisitImage> visitImages = new ArrayList<>();
+    @Embedded
+    private VisitImages visitImages = new VisitImages();
     @OneToMany(mappedBy = "visit", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<VisitLog> visitLogs = new ArrayList<>();
 
@@ -62,17 +63,29 @@ public class Visit extends BaseEntity {
             @NonNull BigDecimal longitude,
             @NonNull Travel travel
     ) {
+        validateIsWithinTravelDuration(visitedAt, travel);
         this.visitedAt = visitedAt;
         this.placeName = placeName;
         this.spot = new Spot(address, latitude, longitude);
         this.travel = travel;
     }
 
-    public void addVisitImage(VisitImage visitImage) {
-        visitImages.add(visitImage);
+    private void validateIsWithinTravelDuration(LocalDate visitedAt, Travel travel) {
+        if (travel.isWithoutDuration(visitedAt)) {
+            throw new StaccatoException("여행에 포함되지 않는 날짜입니다.");
+        }
+    }
+
+    public void addVisitImages(VisitImages visitImages) {
+        this.visitImages.addAll(visitImages, this);
     }
 
     public void addVisitLog(VisitLog visitLog) {
-        visitLogs.add(visitLog);
+        this.visitLogs.add(visitLog);
+    }
+
+    public void update(String placeName, VisitImages newVisitImages) {
+        this.placeName = placeName;
+        this.visitImages.update(newVisitImages, this);
     }
 }

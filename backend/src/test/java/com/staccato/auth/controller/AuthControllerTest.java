@@ -35,11 +35,9 @@ class AuthControllerTest {
         // given
         LoginRequest loginRequest = new LoginRequest("staccato");
         LoginResponse loginResponse = new LoginResponse("staccatotoken");
-
-        // when
         when(authService.login(loginRequest)).thenReturn(loginResponse);
 
-        // then
+        // when & then
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))

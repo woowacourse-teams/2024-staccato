@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
@@ -15,6 +16,7 @@ import com.staccato.travel.repository.TravelMemberRepository;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelDetailResponse;
+import com.staccato.travel.service.dto.response.TravelIdResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
 import com.staccato.travel.service.dto.response.VisitResponse;
 import com.staccato.visit.domain.Visit;
@@ -34,18 +36,13 @@ public class TravelService {
     private final VisitImageRepository visitImageRepository;
 
     @Transactional
-    public long createTravel(TravelRequest travelRequest, Member member) {
-        Travel travel = travelRepository.save(travelRequest.toTravel());
-        saveTravelMember(member, travel);
-        return travel.getId();
-    }
-
-    private void saveTravelMember(Member member, Travel travel) {
-        TravelMember mate = TravelMember.builder()
-                .travel(travel)
-                .member(member)
-                .build();
-        travelMemberRepository.save(mate);
+    public TravelIdResponse createTravel(TravelRequest travelRequest, MultipartFile thumbnailFile, Member member) {
+        Travel travel = travelRequest.toTravel();
+        String thumbnailUrl = travelRequest.travelThumbnail(); //썸네일 url을 가져오는 임시 로직
+        travel.assignThumbnail(thumbnailUrl);
+        travel.addTravelMember(member);
+        travelRepository.save(travel);
+        return new TravelIdResponse(travel.getId());
     }
 
     public TravelResponses readAllTravels(Member member, Integer year) {

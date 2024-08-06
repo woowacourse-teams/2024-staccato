@@ -26,6 +26,7 @@ import com.staccato.travel.repository.TravelMemberRepository;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.travel.service.dto.request.TravelRequest;
 import com.staccato.travel.service.dto.response.TravelDetailResponse;
+import com.staccato.travel.service.dto.response.TravelIdResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
 import com.staccato.travel.service.dto.response.VisitResponse;
 import com.staccato.visit.domain.Visit;
@@ -58,13 +59,13 @@ class TravelServiceTest extends ServiceSliceTest {
         Member member = saveMember();
 
         // when
-        long travelId = travelService.createTravel(travelRequest, member);
+        TravelIdResponse travelIdResponse = travelService.createTravel(travelRequest, null, member);
         TravelMember travelMember = travelMemberRepository.findAllByMemberIdOrderByTravelStartAtDesc(member.getId()).get(0);
 
         // then
         assertAll(
                 () -> assertThat(travelMember.getMember().getId()).isEqualTo(member.getId()),
-                () -> assertThat(travelMember.getTravel().getId()).isEqualTo(travelId)
+                () -> assertThat(travelMember.getTravel().getId()).isEqualTo(travelIdResponse.travelId())
         );
     }
 
@@ -74,8 +75,8 @@ class TravelServiceTest extends ServiceSliceTest {
     void readAllTravels(Integer year, int expectedSize) {
         // given
         Member member = saveMember();
-        travelService.createTravel(createTravelRequest(2023), member);
-        travelService.createTravel(createTravelRequest(2024), member);
+        travelService.createTravel(createTravelRequest(2023), null, member);
+        travelService.createTravel(createTravelRequest(2024), null, member);
 
         // when
         TravelResponses travelResponses = travelService.readAllTravels(member, year);
@@ -90,14 +91,14 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
 
-        long targetId = travelService.createTravel(createTravelRequest(2023), member);
+        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
 
         // when
-        TravelDetailResponse travelDetailResponse = travelService.readTravelById(targetId, member);
+        TravelDetailResponse travelDetailResponse = travelService.readTravelById(travelIdResponse.travelId(), member);
 
         // then
         assertAll(
-                () -> assertThat(travelDetailResponse.travelId()).isEqualTo(targetId),
+                () -> assertThat(travelDetailResponse.travelId()).isEqualTo(travelIdResponse.travelId()),
                 () -> assertThat(travelDetailResponse.mates()).hasSize(1)
         );
     }
@@ -109,10 +110,10 @@ class TravelServiceTest extends ServiceSliceTest {
         Member member = saveMember();
         Member otherMember = saveMember();
 
-        long targetId = travelService.createTravel(createTravelRequest(2023), member);
+        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
 
         // when & then
-        assertThatThrownBy(() -> travelService.readTravelById(targetId, otherMember))
+        assertThatThrownBy(() -> travelService.readTravelById(travelIdResponse.travelId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -123,16 +124,16 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
 
-        long visitId = travelService.createTravel(createTravelRequest(2023), member);
-        Visit visit = saveVisit(LocalDate.of(2023, 7, 1), visitId);
-        Visit nextVisit = saveVisit(LocalDate.of(2023, 7, 5), visitId);
+        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
+        Visit visit = saveVisit(LocalDate.of(2023, 7, 1), travelIdResponse.travelId());
+        Visit nextVisit = saveVisit(LocalDate.of(2023, 7, 5), travelIdResponse.travelId());
 
         // when
-        TravelDetailResponse travelDetailResponse = travelService.readTravelById(visitId, member);
+        TravelDetailResponse travelDetailResponse = travelService.readTravelById(travelIdResponse.travelId(), member);
 
         // then
         assertAll(
-                () -> assertThat(travelDetailResponse.travelId()).isEqualTo(visitId),
+                () -> assertThat(travelDetailResponse.travelId()).isEqualTo(travelIdResponse.travelId()),
                 () -> assertThat(travelDetailResponse.visits()).hasSize(2),
                 () -> assertThat(travelDetailResponse.visits().stream().map(VisitResponse::visitedAt).toList())
                         .containsExactly(visit.getVisitedAt(), nextVisit.getVisitedAt())
@@ -169,7 +170,7 @@ class TravelServiceTest extends ServiceSliceTest {
     void updateTravel() {
         // given
         Member member = saveMember();
-        Long travelId = travelService.createTravel(createTravelRequest(2023), member);
+        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
         TravelRequest updatedTravel = new TravelRequest(
                 "https://example.com/travels/geumohrm.jpg",
                 "2023 신나는 여름 휴가",
@@ -179,12 +180,12 @@ class TravelServiceTest extends ServiceSliceTest {
         );
 
         // when
-        travelService.updateTravel(updatedTravel, travelId);
-        Travel foundedTravel = travelRepository.findById(travelId).get();
+        travelService.updateTravel(updatedTravel, travelIdResponse.travelId());
+        Travel foundedTravel = travelRepository.findById(travelIdResponse.travelId()).get();
 
         // then
         assertAll(
-                () -> assertThat(foundedTravel.getId()).isEqualTo(travelId),
+                () -> assertThat(foundedTravel.getId()).isEqualTo(travelIdResponse.travelId()),
                 () -> assertThat(foundedTravel.getTitle()).isEqualTo(updatedTravel.travelTitle()),
                 () -> assertThat(foundedTravel.getDescription()).isEqualTo(updatedTravel.description()),
                 () -> assertThat(foundedTravel.getStartAt()).isEqualTo(updatedTravel.startAt()),
@@ -219,14 +220,14 @@ class TravelServiceTest extends ServiceSliceTest {
     void deleteTravel() {
         // given
         Member member = saveMember();
-        Long travelId = travelService.createTravel(createTravelRequest(2023), member);
+        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
 
         // when
-        travelService.deleteTravel(travelId, member);
+        travelService.deleteTravel(travelIdResponse.travelId(), member);
 
         // then
         assertAll(
-                () -> assertThat(travelRepository.findById(travelId)).isEmpty(),
+                () -> assertThat(travelRepository.findById(travelIdResponse.travelId())).isEmpty(),
                 () -> assertThat(travelMemberRepository.findAll()).hasSize(0)
         );
     }
@@ -237,23 +238,23 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        long travelId = travelService.createTravel(createTravelRequest(2023), member);
+        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
 
         // when & then
-        assertThatThrownBy(() -> travelService.readTravelById(travelId, otherMember))
+        assertThatThrownBy(() -> travelService.readTravelById(travelIdResponse.travelId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
     @DisplayName("방문기록이 존재하는 여행 상세에 삭제를 시도할 경우 예외가 발생한다.")
     @Test
-    void failDeleteTravel() {
+    void failDeleteTravelByExistingVisits() {
         // given
         Member member = saveMember();
-        Long travelId = travelService.createTravel(createTravelRequest(2023), member);
-        Travel foundTravel = travelRepository.findById(travelId).get();
+        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
+        Travel foundTravel = travelRepository.findById(travelIdResponse.travelId()).get();
         visitRepository.save(Visit.builder()
-                .visitedAt(LocalDate.now())
+                .visitedAt(LocalDate.of(2024, 7, 10))
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)
@@ -265,6 +266,19 @@ class TravelServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> travelService.deleteTravel(foundTravel.getId(), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
+    }
+
+    @DisplayName("존재하지 않는 여행 상세를 삭제하려고 할 경우 예외가 발생한다.")
+    @Test
+    void failDeleteTravelByUnknownTravel() {
+        // given
+        Member member = saveMember();
+        long unknownId = 1;
+
+        // when & then
+        assertThatThrownBy(() -> travelService.readTravelById(unknownId, member))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("요청하신 여행을 찾을 수 없어요.");
     }
 
     private Member saveMember() {
