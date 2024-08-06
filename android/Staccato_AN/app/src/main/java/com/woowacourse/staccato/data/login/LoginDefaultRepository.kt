@@ -10,7 +10,7 @@ class LoginDefaultRepository(
         return when (val result = loginDataSource.requestLoginWithNickname(nickname)) {
             is ResponseResult.Exception -> ResponseResult.Exception(result.e, EXCEPTION_ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(result.code, result.message)
-            is ResponseResult.Success -> ResponseResult.Success(result.data)
+            is ResponseResult.Success -> ResponseResult.Success(result.data.token)
         }
     }
 
