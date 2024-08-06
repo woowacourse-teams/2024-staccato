@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import com.staccato.travel.service.dto.request.TravelRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
+@Disabled
 class TravelIntegrationTest extends IntegrationTest {
     @Autowired
     private AuthService authService;

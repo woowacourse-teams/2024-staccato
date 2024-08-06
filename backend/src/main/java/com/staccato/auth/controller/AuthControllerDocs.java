@@ -8,8 +8,6 @@ import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface AuthControllerDocs {
     @Operation(summary = "등록 및 로그인", description = "애플리케이션을 최초 실행할 때 한 번만 닉네임 입력을 받고, 식별 코드를 발급합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "등록 및 로그인 성공", responseCode = "200", content = @Content(schema = @Schema(implementation = LoginResponse.class))),
+            @ApiResponse(description = "등록 및 로그인 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
