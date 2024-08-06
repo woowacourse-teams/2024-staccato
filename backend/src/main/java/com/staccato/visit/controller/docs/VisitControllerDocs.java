@@ -42,8 +42,8 @@ public interface VisitControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<VisitIdResponse> createVisit(
-            @Valid VisitRequest visitRequest,
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> visitImagesFile
+            @Parameter(description = "key = data", required = true) @Valid VisitRequest visitRequest,
+            @Parameter(description = "key = visitImageFiles") @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> visitImagesFile
     );
 
     @Operation(summary = "특정 방문 기록 조회", description = "특정 방문 기록을 조회합니다.")
@@ -86,6 +86,6 @@ public interface VisitControllerDocs {
             @ApiResponse(description = "방문 기록 식별자에 양수가 아닌 값을 기입했을 경우", responseCode = "400")
     })
     ResponseEntity<Void> deleteVisitById(
-            @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId
+            @Parameter(description = "방문 기록 ID", example = "1", required = true) @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId
     );
 }
