@@ -216,7 +216,7 @@ class TravelServiceTest extends ServiceSliceTest {
         Long travelId = travelService.createTravel(createTravelRequest(2023), member);
         Travel foundTravel = travelRepository.findById(travelId).get();
         visitRepository.save(Visit.builder()
-                .visitedAt(LocalDate.now())
+                .visitedAt(LocalDate.of(2024, 7, 10))
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)

@@ -15,6 +15,7 @@ import com.staccato.visit.repository.VisitRepository;
 import com.staccato.visit.service.dto.request.VisitRequest;
 import com.staccato.visit.service.dto.request.VisitUpdateRequest;
 import com.staccato.visit.service.dto.response.VisitDetailResponse;
+import com.staccato.visit.service.dto.response.VisitIdResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,15 +27,15 @@ public class VisitService {
     private final TravelRepository travelRepository;
 
     @Transactional
-    public long createVisit(VisitRequest visitRequest) {
+    public VisitIdResponse createVisit(VisitRequest visitRequest) {
         Travel travel = getTravelById(visitRequest.travelId());
         Visit visit = visitRequest.toVisit(travel);
-        VisitImages visitImages = new VisitImages(visitRequest.visitImages());
+        VisitImages visitImages = new VisitImages(visitRequest.visitImageUrls());
         visit.addVisitImages(visitImages);
 
         visitRepository.save(visit);
 
-        return visit.getId();
+        return new VisitIdResponse(visit.getId());
     }
 
     private Travel getTravelById(long travelId) {
@@ -47,16 +48,6 @@ public class VisitService {
         return new VisitDetailResponse(visit);
     }
 
-    private Visit getVisitById(long visitId) {
-        return visitRepository.findById(visitId)
-                .orElseThrow(() -> new StaccatoException("요청하신 방문 기록을 찾을 수 없어요."));
-    }
-
-    @Transactional
-    public void deleteVisitById(Long visitId) {
-        visitRepository.deleteById(visitId);
-    }
-
     @Transactional
     public void updateVisitById(long visitId, VisitUpdateRequest visitUpdateRequest, List<MultipartFile> visitImageFiles) {
         Visit visit = getVisitById(visitId);
@@ -67,5 +58,15 @@ public class VisitService {
                 .build();
 
         visit.update(visitUpdateRequest.placeName(), visitImages);
+    }
+
+    private Visit getVisitById(long visitId) {
+        return visitRepository.findById(visitId)
+                .orElseThrow(() -> new StaccatoException("요청하신 방문 기록을 찾을 수 없어요."));
+    }
+
+    @Transactional
+    public void deleteVisitById(long visitId) {
+        visitRepository.deleteById(visitId);
     }
 }

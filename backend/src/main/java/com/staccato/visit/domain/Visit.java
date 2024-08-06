@@ -21,6 +21,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.staccato.config.domain.BaseEntity;
+import com.staccato.exception.StaccatoException;
 import com.staccato.travel.domain.Travel;
 
 import lombok.AccessLevel;
@@ -62,10 +63,17 @@ public class Visit extends BaseEntity {
             @NonNull BigDecimal longitude,
             @NonNull Travel travel
     ) {
+        validateIsWithinTravelDuration(visitedAt, travel);
         this.visitedAt = visitedAt;
         this.placeName = placeName;
         this.spot = new Spot(address, latitude, longitude);
         this.travel = travel;
+    }
+
+    private void validateIsWithinTravelDuration(LocalDate visitedAt, Travel travel) {
+        if (travel.isWithoutDuration(visitedAt)) {
+            throw new StaccatoException("여행에 포함되지 않는 날짜입니다.");
+        }
     }
 
     public void addVisitImages(VisitImages visitImages) {

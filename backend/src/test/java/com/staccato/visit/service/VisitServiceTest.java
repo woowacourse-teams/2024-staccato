@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import com.staccato.visit.fixture.VisitLogFixture;
 import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitLogRepository;
 import com.staccato.visit.repository.VisitRepository;
+import com.staccato.visit.service.dto.request.VisitRequest;
 import com.staccato.visit.service.dto.request.VisitUpdateRequest;
 import com.staccato.visit.service.dto.response.VisitDetailResponse;
 
@@ -43,25 +45,53 @@ class VisitServiceTest extends ServiceSliceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @DisplayName("Visit을 삭제하면 이에 포함된 VisitLog도 모두 삭제된다.")
+    @DisplayName("사진 없이도 방문 기록을 생성할 수 있다.")
     @Test
-    void deleteVisitById() {
+    void createVisit() {
         // given
-        Member member = memberRepository.save(Member.builder().nickname("SampleMember").build());
-        Travel travel = travelRepository.save(
+        travelRepository.save(
                 Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
         );
-        Visit visit = visitRepository.save(VisitFixture.create(travel, LocalDate.now()));
-        VisitLog visitLog = visitLogRepository.save(VisitLogFixture.create(visit, member));
 
         // when
-        visitService.deleteVisitById(visit.getId());
+        long visitId = visitService.createVisit(getVisitRequestWithoutImage()).visitId();
+
+        // then
+        assertThat(visitRepository.findById(visitId)).isNotEmpty();
+    }
+
+    private VisitRequest getVisitRequestWithoutImage() {
+        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of(), LocalDate.now(), 1L);
+    }
+
+    @DisplayName("방문 기록을 생성하면 Visit과 VisitImage들이 함께 저장되고 id를 반환한다.")
+    @Test
+    void createVisitWithVisitImages() {
+        // given
+        travelRepository.save(
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
+        );
+
+        // when
+        long visitId = visitService.createVisit(getVisitRequest()).visitId();
 
         // then
         assertAll(
-                () -> assertThat(visitRepository.findById(visit.getId())).isEmpty(),
-                () -> assertThat(visitLogRepository.findById(visitLog.getId())).isEmpty()
+                () -> assertThat(visitRepository.findById(visitId)).isNotEmpty(),
+                () -> assertThat(visitImageRepository.findFirstByVisitId(visitId)).isNotEmpty()
         );
+    }
+
+    @DisplayName("존재하지 않는 여행에 방문 기록 생성을 시도하면 예외가 발생한다.")
+    @Test
+    void failCreateVisit() {
+        assertThatThrownBy(() -> visitService.createVisit(getVisitRequest()))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessageContaining("요청하신 여행을 찾을 수 없어요.");
+    }
+
+    private VisitRequest getVisitRequest() {
+        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.now(), 1L);
     }
 
     @DisplayName("특정 방문 기록 조회에 성공한다.")
@@ -128,5 +158,29 @@ class VisitServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> visitService.updateVisitById(1L, visitUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes()))))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
+    }
+
+    @DisplayName("Visit을 삭제하면 이에 포함된 VisitImage와 VisitLog도 모두 삭제된다.")
+    @Test
+    void deleteVisitById() {
+        // given
+        Member member = memberRepository.save(Member.builder().nickname("SampleMember").build());
+        Travel travel = travelRepository.save(
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
+        );
+        Visit visit = visitRepository.save(VisitFixture.create(travel, LocalDate.now()));
+        VisitLog visitLog = visitLogRepository.save(VisitLogFixture.create(visit, member));
+        visit.addVisitImages(new VisitImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
+
+        // when
+        visitService.deleteVisitById(visit.getId());
+
+        // then
+        assertAll(
+                () -> assertThat(visitRepository.findById(visit.getId())).isEmpty(),
+                () -> assertThat(visitLogRepository.findById(visitLog.getId())).isEmpty(),
+                () -> assertThat(visitImageRepository.findById(0L)).isEmpty(),
+                () -> assertThat(visitImageRepository.findById(1L)).isEmpty()
+        );
     }
 }
