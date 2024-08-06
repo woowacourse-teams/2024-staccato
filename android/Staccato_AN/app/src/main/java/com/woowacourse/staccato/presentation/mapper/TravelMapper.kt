@@ -22,7 +22,7 @@ fun Travel.toUiModel() =
 fun Member.toUiModel() =
     MemberUiModel(
         id = memberId,
-        nickName = nickName,
+        nickname = nickname,
         memberImage = memberImage,
     )
 

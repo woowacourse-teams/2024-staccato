@@ -36,8 +36,7 @@
     <string name="travel_creation_period_description">%s ~ %s</string>
 
     // fragment_visit
-    <string name="visit_history_first_time">%s년 %s월 %s일에 처음 방문했어요</string>
-    <string name="visit_history_many_times">%s년 %s월 %s일에 %d번째 방문했어요</string>
+    <string name="visit_history">%s년 %s월 %s일에 방문했어요</string>
     <string name="visit_logs">방문 로그</string>
     <string name="visit_enter_log">로그 입력하기</string>
 

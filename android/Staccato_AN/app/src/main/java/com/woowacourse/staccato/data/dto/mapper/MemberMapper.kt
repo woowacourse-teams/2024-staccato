@@ -6,6 +6,6 @@ import com.woowacourse.staccato.domain.model.Member
 fun MemberDto.toDomain() =
     Member(
         memberId = memberId,
-        nickName = nickName,
+        nickname = nickname,
         memberImage = memberImage,
     )

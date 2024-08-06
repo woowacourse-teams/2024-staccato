@@ -9,13 +9,12 @@ sealed class VisitDetailUiModel {
         val visitImage: String,
         val address: String,
         val visitedAt: LocalDate,
-        val visitedCount: Long,
     ) : VisitDetailUiModel()
 
     data class VisitLogUiModel(
         val id: Long = 0,
         val memberId: Long = 0,
-        val nickName: String,
+        val nickname: String,
         val memberImage: String,
         val content: String,
     ) : VisitDetailUiModel()
