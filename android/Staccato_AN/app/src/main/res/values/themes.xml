@@ -12,7 +12,7 @@
 
     <style name="Theme.Staccato_AN.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/staccato_logo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_staccato_symbol</item>
         <!-- Required for animated icons. -->
         <item name="windowSplashScreenAnimationDuration">200</item>
         <!-- Set the theme of the Activity that directly follows your splash
