@@ -21,6 +21,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.visit.fixture.VisitDetailResponseFixture;
 import com.staccato.visit.service.VisitService;
@@ -33,6 +34,8 @@ public class VisitControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+    @MockBean
+    private AuthService authService;
     @MockBean
     private VisitService visitService;
 
