@@ -84,15 +84,28 @@ class TravelControllerTest {
                 .build();
     }
 
-    @DisplayName("사용자가 잘못된 여행 식별자로 조회하려고 하면 예외가 발생한다.")
+    @DisplayName("사용자가 여행 식별자로 여행을 삭제한다.")
     @Test
-    void cannotReadTravelByInvalidId() throws Exception {
+    void deleteTravel() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+
+        // when & then
+        mockMvc.perform(delete("/travels/1")
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("사용자가 잘못된 여행 식별자로 삭제하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotDeleteTravelByInvalidId() throws Exception {
         // given
         long invalidId = -1;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "여행 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(get("/travels/" + invalidId)
+        mockMvc.perform(delete("/travels/" + invalidId)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
