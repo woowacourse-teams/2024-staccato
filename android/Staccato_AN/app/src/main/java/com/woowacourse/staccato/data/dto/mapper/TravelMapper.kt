@@ -3,8 +3,8 @@ package com.woowacourse.staccato.data.dto.mapper
 import com.woowacourse.staccato.data.dto.travel.TravelRequest
 import com.woowacourse.staccato.data.dto.travel.TravelResponse
 import com.woowacourse.staccato.data.dto.travel.TravelVisitDto
-import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.model.NewTravel
+import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.model.TravelVisit
 import java.time.LocalDate
 

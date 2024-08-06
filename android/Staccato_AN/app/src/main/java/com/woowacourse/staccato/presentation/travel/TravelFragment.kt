@@ -20,12 +20,12 @@ import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModelFactory
 import com.woowacourse.staccato.presentation.travelupdate.TravelUpdateActivity
 import com.woowacourse.staccato.presentation.util.showToast
-import kotlin.properties.Delegates
 
 class TravelFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
-    ToolbarHandler {
-    private var travelId by Delegates.notNull<Long>()
+    ToolbarHandler,
+    TravelHandler {
+    private val travelId by lazy { arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException() }
     private val viewModel: TravelViewModel by viewModels {
         TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))
     }
@@ -38,15 +38,34 @@ class TravelFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        travelId = arguments?.getLong(TRAVEL_ID_KEY) ?: return
         initBinding()
         initToolbar()
         initMatesAdapter()
         initVisitsAdapter()
         observeTravel()
-        navigateToVisit()
         showErrorToast()
         viewModel.loadTravel(travelId)
+    }
+
+    override fun onUpdateClicked() {
+        val travelUpdateLauncher = (activity as MainActivity).travelUpdateLauncher
+        TravelUpdateActivity.startWithResultLauncher(
+            travelId,
+            requireActivity(),
+            travelUpdateLauncher,
+        )
+    }
+
+    override fun onDeleteClicked() {
+        val fragmentManager = parentFragmentManager
+        deleteDialog.apply {
+            show(fragmentManager, DeleteDialogFragment.TAG)
+        }
+    }
+
+    override fun onVisitClicked(visitId: Long) {
+        val bundle = bundleOf(VISIT_ID_KEY to visitId, TRAVEL_ID_KEY to travelId)
+        findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
     }
 
     private fun initBinding() {
@@ -74,36 +93,13 @@ class TravelFragment :
     }
 
     private fun initVisitsAdapter() {
-        visitsAdapter = VisitsAdapter(handler = viewModel)
+        visitsAdapter = VisitsAdapter(handler = this)
         binding.rvTravelVisits.adapter = visitsAdapter
-    }
-
-    private fun navigateToVisit() {
-        viewModel.visitId.observe(viewLifecycleOwner) { visitId ->
-            val bundle = bundleOf(VISIT_ID_KEY to visitId)
-            findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
-        }
     }
 
     private fun showErrorToast() {
         viewModel.errorMessage.observe(viewLifecycleOwner) {
             showToast(it)
-        }
-    }
-
-    override fun onUpdateClicked() {
-        val travelUpdateLauncher = (activity as MainActivity).travelUpdateLauncher
-        TravelUpdateActivity.startWithResultLauncher(
-            travelId,
-            requireActivity(),
-            travelUpdateLauncher,
-        )
-    }
-
-    override fun onDeleteClicked() {
-        val fragmentManager = parentFragmentManager
-        deleteDialog.apply {
-            show(fragmentManager, DeleteDialogFragment.TAG)
         }
     }
 

@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class VisitLogDto(
     @SerialName("visitLogId") val visitLogId: Long,
     @SerialName("memberId") val memberId: Long,
-    @SerialName("nickName") val nickName: String,
+    @SerialName("nickname") val nickname: String,
     @SerialName("memberImage") val memberImage: String,
     @SerialName("content") val content: String,
 )

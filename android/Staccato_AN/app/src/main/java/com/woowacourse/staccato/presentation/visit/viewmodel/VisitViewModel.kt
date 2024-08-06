@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.presentation.visit.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,6 +33,7 @@ class VisitViewModel(private val visitRepository: VisitRepository) : ViewModel()
                 _visitDefault.value = visit.toVisitDefaultUiModel()
                 _visitLogs.value = visit.visitLogs?.map { it.toVisitLogUiModel() }
             }.onFailure {
+                Log.d("hye", it.message.toString())
                 _isError.postValue(true)
             }
         }
