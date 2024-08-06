@@ -24,7 +24,8 @@ import kotlin.properties.Delegates
 
 class TravelFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
-    ToolbarHandler {
+    ToolbarHandler,
+    TravelHandler {
     private var travelId by Delegates.notNull<Long>()
     private val viewModel: TravelViewModel by viewModels {
         TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))
@@ -44,9 +45,13 @@ class TravelFragment :
         initMatesAdapter()
         initVisitsAdapter()
         observeTravel()
-        navigateToVisit()
         showErrorToast()
         viewModel.loadTravel(travelId)
+    }
+
+    override fun onVisitClicked(visitId: Long) {
+        val bundle = bundleOf(VISIT_ID_KEY to visitId, TRAVEL_ID_KEY to travelId)
+        findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
     }
 
     private fun initBinding() {
@@ -74,15 +79,8 @@ class TravelFragment :
     }
 
     private fun initVisitsAdapter() {
-        visitsAdapter = VisitsAdapter(handler = viewModel)
+        visitsAdapter = VisitsAdapter(handler = this)
         binding.rvTravelVisits.adapter = visitsAdapter
-    }
-
-    private fun navigateToVisit() {
-        viewModel.visitId.observe(viewLifecycleOwner) { visitId ->
-            val bundle = bundleOf(VISIT_ID_KEY to visitId, TRAVEL_ID_KEY to travelId)
-            findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
-        }
     }
 
     private fun showErrorToast() {

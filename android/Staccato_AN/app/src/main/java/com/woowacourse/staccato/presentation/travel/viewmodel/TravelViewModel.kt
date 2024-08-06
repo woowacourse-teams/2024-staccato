@@ -11,28 +11,18 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.TravelRepository
-import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
-import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toUiModel
-import com.woowacourse.staccato.presentation.travel.TravelHandler
 import com.woowacourse.staccato.presentation.travel.model.TravelUiModel
 import kotlinx.coroutines.launch
 
 class TravelViewModel(
     private val travelRepository: TravelRepository,
-) : ViewModel(), TravelHandler {
+) : ViewModel() {
     private val _travel = MutableLiveData<TravelUiModel>()
     val travel: LiveData<TravelUiModel> get() = _travel
 
-    private val _visitId = MutableSingleLiveData<Long>()
-    val visitId: SingleLiveData<Long> = _visitId
-
     private val _errorMessage: MutableLiveData<String> = MutableLiveData()
     val errorMessage: LiveData<String> get() = _errorMessage
-
-    override fun onVisitClicked(visitId: Long) {
-        _visitId.setValue(visitId)
-    }
 
     fun loadTravel(travelId: Long) {
         viewModelScope.launch {
