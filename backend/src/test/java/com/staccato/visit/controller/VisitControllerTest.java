@@ -21,6 +21,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -97,7 +98,7 @@ class VisitControllerTest {
                         .file(file5)
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/visits/1"))
+                .andExpect(header().string(HttpHeaders.LOCATION, "/visits/1"))
                 .andExpect(content().json(objectMapper.writeValueAsString(visitIdResponse)));
     }
 
