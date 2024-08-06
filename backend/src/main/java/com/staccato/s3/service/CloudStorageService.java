@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CloudStorageService {
+    private static final String TEAM_FOLDER = "staccato/";
     private static final String IMAGE_FOLDER = "image/";
 
     private final CloudStorageClient cloudStorageClient;
@@ -24,6 +25,6 @@ public class CloudStorageService {
     }
 
     private String makeImagePath(String fileName) {
-        return IMAGE_FOLDER + fileName;
+        return TEAM_FOLDER + IMAGE_FOLDER + fileName;
     }
 }

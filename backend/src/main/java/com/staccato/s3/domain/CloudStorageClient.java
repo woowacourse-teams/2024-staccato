@@ -37,7 +37,6 @@ public class CloudStorageClient {
 
     public void putS3Object(String objectKey, String contentType, byte[] imageBytes) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
                 .key(objectKey)
                 .contentType(contentType)
                 .build();
@@ -47,7 +46,6 @@ public class CloudStorageClient {
 
     public String getUrl(String keyName) {
         GetUrlRequest request = GetUrlRequest.builder()
-                .bucket(bucketName)
                 .key(keyName)
                 .build();
 
