@@ -117,7 +117,7 @@ class TravelControllerTest {
                 .andExpect(jsonPath("$.travelId").value(1));
     }
 
-    @DisplayName("사용자가 잘못된 방식으로 정보를 입력하면, 여행 상세를 생성할 수 없다.")
+    @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 여행 상세를 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidTravelRequestProvider")
     void failCreateTravel(TravelRequest travelRequest, String expectedMessage) throws Exception {
