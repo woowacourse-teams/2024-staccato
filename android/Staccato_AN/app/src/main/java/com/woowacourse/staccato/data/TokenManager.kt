@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.data
 
-import android.util.Log
 import com.woowacourse.staccato.StaccatoApplication
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

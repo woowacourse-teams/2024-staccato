@@ -55,11 +55,12 @@ class LoginActivity : AppCompatActivity() {
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val options = ActivityOptionsCompat.makeCustomAnimation(
-            this,
-            android.R.anim.fade_in,
-            android.R.anim.fade_out
-        )
+        val options =
+            ActivityOptionsCompat.makeCustomAnimation(
+                this,
+                android.R.anim.fade_in,
+                android.R.anim.fade_out,
+            )
         startActivity(intent, options.toBundle())
         finish()
     }
