@@ -9,6 +9,8 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentTimelineBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.timeline.adapter.TimelineAdapter
+import com.woowacourse.staccato.presentation.timeline.viewmodel.TimelineViewModel
+import com.woowacourse.staccato.presentation.timeline.viewmodel.TimelineViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
 
 class TimelineFragment :

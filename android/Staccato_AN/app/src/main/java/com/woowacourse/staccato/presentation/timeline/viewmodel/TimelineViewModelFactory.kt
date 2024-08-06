@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.timeline
+package com.woowacourse.staccato.presentation.timeline.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
