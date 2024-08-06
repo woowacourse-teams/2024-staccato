@@ -20,16 +20,12 @@ public class CloudStorageClient {
     private final String cloudFrontEndPoint;
 
     public CloudStorageClient(
+            S3Client s3Client,
             @Value("${cloud.aws.s3.bucket}") String bucketName,
             @Value("${cloud.aws.s3.endpoint}") String endPoint,
             @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint
     ) {
-        this.s3Client = S3Client.builder()
-                .region(Region.AP_NORTHEAST_2)
-                .credentialsProvider(InstanceProfileCredentialsProvider.create())
-                .endpointOverride(URI.create(endPoint))
-                .forcePathStyle(true)
-                .build();
+        this.s3Client = s3Client;
         this.bucketName = bucketName;
         this.endPoint = endPoint;
         this.cloudFrontEndPoint = cloudFrontEndPoint;
