@@ -45,7 +45,7 @@ public class Travel extends BaseEntity {
     private LocalDate startAt;
     @Column(nullable = false)
     private LocalDate endAt;
-    @OneToMany(mappedBy = "travel", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "travel", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<TravelMember> travelMembers = new ArrayList<>();
 
     @Builder
@@ -65,6 +65,14 @@ public class Travel extends BaseEntity {
     }
 
     public void addTravelMember(TravelMember travelMember) {
+        travelMembers.add(travelMember);
+    }
+
+    public void addTravelMember(Member member) {
+        TravelMember travelMember = TravelMember.builder()
+                .travel(this)
+                .member(member)
+                .build();
         travelMembers.add(travelMember);
     }
 

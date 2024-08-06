@@ -39,17 +39,9 @@ public class TravelService {
         Travel travel = travelRequest.toTravel();
         String thumbnailUrl = travelRequest.travelThumbnail(); //썸네일 url을 가져오는 임시 로직
         travel.assignThumbnail(thumbnailUrl);
-        Travel savedTravel = travelRepository.save(travel);
-        saveTravelMember(member, savedTravel);
-        return new TravelIdResponse(savedTravel.getId());
-    }
-
-    private void saveTravelMember(Member member, Travel travel) {
-        TravelMember mate = TravelMember.builder()
-                .travel(travel)
-                .member(member)
-                .build();
-        travelMemberRepository.save(mate);
+        travelRepository.save(travel);
+        travel.addTravelMember(member);
+        return new TravelIdResponse(travel.getId());
     }
 
     public TravelResponses readAllTravels(Member member, Integer year) {
