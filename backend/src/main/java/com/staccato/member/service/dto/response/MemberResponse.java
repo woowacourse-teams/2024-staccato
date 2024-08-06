@@ -10,7 +10,7 @@ public record MemberResponse(
         @Schema(example = "1")
         Long memberId,
         @Schema(example = "staccato")
-        String nickName,
+        String nickname,
         @Schema(example = "https://example.com/members/profile.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String memberImage
