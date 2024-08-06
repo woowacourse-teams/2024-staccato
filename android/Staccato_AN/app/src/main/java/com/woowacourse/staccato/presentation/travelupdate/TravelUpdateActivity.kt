@@ -18,7 +18,7 @@ import com.woowacourse.staccato.presentation.travelcreation.TravelCreationHandle
 import com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModel
 import com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModelFactory
 
-class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), TravelCreationHandler {
+class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), TravelUpdateHandler {
     override val layoutResourceId = R.layout.activity_travel_update
     private val travelId by lazy { intent.getLongExtra(TRAVEL_ID_KEY, DEFAULT_TRAVEL_KEY) }
     private val viewModel: TravelUpdateViewModel by viewModels {

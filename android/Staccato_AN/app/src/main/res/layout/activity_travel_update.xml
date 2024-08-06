@@ -12,7 +12,7 @@
 
         <variable
             name="handler"
-            type="com.woowacourse.staccato.presentation.travelcreation.TravelCreationHandler" />
+            type="com.woowacourse.staccato.presentation.travelupdate.TravelUpdateHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
