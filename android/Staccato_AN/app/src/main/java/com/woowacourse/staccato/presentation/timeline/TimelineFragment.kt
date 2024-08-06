@@ -52,7 +52,6 @@ class TimelineFragment :
 
     override fun onTravelClicked(travelId: Long) {
         val bundle: Bundle = bundleOf(TRAVEL_ID_KEY to travelId)
-        // Log.d("ㅌㅅㅌ", "clicked item: $travelId")
         navigateToTravel(bundle)
     }
 
