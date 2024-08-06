@@ -28,10 +28,6 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
@@ -39,17 +35,6 @@ security:
   jwt:
     token:
       secret-key: ${SECRET_KEY}
-cloud:
-  aws:
-    s3:
-      bucket: ${AWS_S3_BUCKET}
-      endpoint: ${AWS_S3_ENDPOINT}
-    cloudfront:
-      endpoint: ${AWS_CLOUDFRONT_ENDPOINT}
-    region:
-      static: ${AWS_REGION_STATIC}
-    stack:
-      auto: false
 
 ---
 
@@ -57,7 +42,6 @@ spring:
   config:
     activate:
       on-profile: local
-    import: optional:file:.env[.properties]
   application:
     name: staccato
   sql:
@@ -76,10 +60,6 @@ spring:
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
@@ -87,14 +67,3 @@ security:
   jwt:
     token:
       secret-key: ${SECRET_KEY}
-cloud:
-  aws:
-    s3:
-      bucket: ${AWS_S3_BUCKET}
-      endpoint: ${AWS_S3_ENDPOINT}
-    cloudfront:
-      endpoint: ${AWS_CLOUDFRONT_ENDPOINT}
-    region:
-      static: ${AWS_REGION_STATIC}
-    stack:
-      auto: false
