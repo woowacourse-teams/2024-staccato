@@ -47,7 +47,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     showToast("여행을 수정했어요!")
-                    navigateTo(R.id.travelFragment, R.id.timelineFragment, null)
+                    val updatedTravelId = it.getLongExtra(TRAVEL_ID_KEY, 0L)
+                    val bundle = bundleOf(TRAVEL_ID_KEY to updatedTravelId)
+                    navigateTo(R.id.travelFragment, R.id.timelineFragment, bundle)
                 }
             }
         }

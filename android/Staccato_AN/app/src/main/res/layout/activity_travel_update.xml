@@ -47,6 +47,10 @@
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="12dp"
                     android:contentDescription="@string/all_image_content_description"
+                    android:scaleType="fitXY"
+                    app:glidePlaceHolder="@{@drawable/shape_place_holder_rectangle}"
+                    app:glideRoundedCornerImageUrl="@{viewModel.imageUrl}"
+                    app:glideRoundingRadius="@{12}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

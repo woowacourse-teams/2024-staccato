@@ -2,11 +2,15 @@ package com.woowacourse.staccato.presentation.travelupdate.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.woowacourse.staccato.domain.repository.TravelRepository
 
-class TravelUpdateViewModelFactory : ViewModelProvider.Factory {
+class TravelUpdateViewModelFactory(
+    private val travelId: Long,
+    private val travelRepository: TravelRepository,
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TravelUpdateViewModel::class.java)) {
-            return TravelUpdateViewModel() as T
+            return TravelUpdateViewModel(travelId, travelRepository) as T
         }
         throw IllegalArgumentException()
     }
