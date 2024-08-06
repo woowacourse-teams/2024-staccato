@@ -22,7 +22,7 @@ fun TimelineTravelDto.toDomain(): Travel {
         startAt = LocalDate.parse(startAt),
         endAt = LocalDate.parse(endAt),
         description = description,
-        mates = mates.toDomain(),
+        mates = mates.map { it.toDomain() },
         visits = emptyList(),
     )
 }

@@ -2,10 +2,9 @@ package com.woowacourse.staccato.data.travel
 
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.mapper.toDomain
-import com.woowacourse.staccato.domain.mapper.toDomain
 import com.woowacourse.staccato.domain.model.Travel
+import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.repository.TravelRepository
-import com.woowacourse.staccato.presentation.travelcreation.TravelCreationUiModel
 
 class TravelDefaultRepository(
     private val travelDataSource: TravelDataSource,
@@ -18,8 +17,19 @@ class TravelDefaultRepository(
         }
     }
 
-    override suspend fun createTravel(travelCreationUiModel: TravelCreationUiModel): ResponseResult<String> {
-        return when (val responseResult = travelDataSource.createTravel(travelCreationUiModel.toDomain())) {
+    override suspend fun createTravel(newTravel: NewTravel): ResponseResult<String> {
+        return when (val responseResult = travelDataSource.createTravel(newTravel)) {
+            is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.code, responseResult.message)
+            is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
+        }
+    }
+
+    override suspend fun updateTravel(
+        travelId: Long,
+        newTravel: NewTravel,
+    ): ResponseResult<String> {
+        return when (val responseResult = travelDataSource.updateTravel(travelId, newTravel)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.code, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)

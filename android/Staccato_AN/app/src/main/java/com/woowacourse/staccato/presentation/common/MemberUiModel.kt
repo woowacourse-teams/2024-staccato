@@ -3,7 +3,7 @@ package com.woowacourse.staccato.presentation.common
 data class MemberUiModel(
     val id: Long,
     val nickName: String,
-    val memberImage: String,
+    val memberImage: String? = null,
 )
 
 val dummyMates: List<MemberUiModel> =

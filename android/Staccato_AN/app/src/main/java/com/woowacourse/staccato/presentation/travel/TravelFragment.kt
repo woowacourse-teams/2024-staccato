@@ -94,6 +94,7 @@ class TravelFragment :
     override fun onUpdateClicked() {
         val travelUpdateLauncher = (activity as MainActivity).travelUpdateLauncher
         TravelUpdateActivity.startWithResultLauncher(
+            travelId,
             requireActivity(),
             travelUpdateLauncher,
         )
