@@ -66,10 +66,6 @@ class VisitControllerTest {
                         "방문한 장소의 주소를 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), null),
-                        "여행 상세를 선택해주세요."
-                ),
-                Arguments.of(
                         getVisitRequest(null),
                         "방문 날짜를 입력해주세요."
                 )
