@@ -11,7 +11,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object StaccatoClient {
     private val BASE_URL = BuildConfig.BASE_URL
@@ -50,7 +49,6 @@ object StaccatoClient {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(provideHttpClient)
-            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(
                 jsonBuilder.asConverterFactory("application/json".toMediaType()),
             )
