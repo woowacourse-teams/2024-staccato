@@ -24,7 +24,7 @@ public record VisitLogResponse(
         this(
                 visitLog.getId(),
                 visitLog.getMember().getId(),
-                visitLog.getMember().getNickname(),
+                visitLog.getMember().getNickname().getNickname(),
                 visitLog.getMember().getImageUrl(),
                 visitLog.getContent()
         );

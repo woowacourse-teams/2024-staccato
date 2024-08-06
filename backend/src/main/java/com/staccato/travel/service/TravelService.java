@@ -35,14 +35,13 @@ public class TravelService {
     private final VisitImageRepository visitImageRepository;
 
     @Transactional
-    public long createTravel(TravelRequest travelRequest, Long memberId) {
+    public long createTravel(TravelRequest travelRequest, Member member) {
         Travel travel = travelRepository.save(travelRequest.toTravel());
-        saveTravelMember(memberId, travel);
+        saveTravelMember(member, travel);
         return travel.getId();
     }
 
-    private void saveTravelMember(Long memberId, Travel travel) {
-        Member member = getMemberById(memberId);
+    private void saveTravelMember(Member member, Travel travel) {
         TravelMember mate = TravelMember.builder()
                 .travel(travel)
                 .member(member)
@@ -50,24 +49,19 @@ public class TravelService {
         travelMemberRepository.save(mate);
     }
 
-    private Member getMemberById(long memberId) {
-        return memberRepository.findByIdAndIsDeletedIsFalse(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Operation"));
-    }
-
-    public TravelResponses readAllTravels(long memberId, Integer year) {
+    public TravelResponses readAllTravels(Member member, Integer year) {
         return Optional.ofNullable(year)
-                .map(y -> readAllByYear(memberId, y))
-                .orElseGet(() -> readAll(memberId));
+                .map(y -> readAllByYear(member, y))
+                .orElseGet(() -> readAll(member));
     }
 
-    private TravelResponses readAll(long memberId) {
-        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdOrderByTravelStartAtDesc(memberId);
+    private TravelResponses readAllByYear(Member member, Integer year) {
+        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndStartAtYearDesc(member.getId(), year);
         return getTravelResponses(travelMembers);
     }
 
-    private TravelResponses readAllByYear(long memberId, Integer year) {
-        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndStartAtYearDesc(memberId, year);
+    private TravelResponses readAll(Member member) {
+        List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdOrderByTravelStartAtDesc(member.getId());
         return getTravelResponses(travelMembers);
     }
 
