@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.presentation.travelcreation.viewmodel
 
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
+import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.travelcreation.DateConverter.convertLongToLocalDate
@@ -42,21 +44,45 @@ class TravelCreationViewModel(
 
     fun createTravel() {
         viewModelScope.launch {
-            val travel =
-                NewTravel(
-                    travelThumbnail = imageUrl.value,
-                    travelTitle = title.get() ?: return@launch,
-                    startAt = startDate.value ?: return@launch,
-                    endAt = endDate.value ?: return@launch,
-                    description = description.get() ?: return@launch,
-                )
-            travelRepository.createTravel(travel).onSuccess {
-                _createdTravelId.value = it.split("/").last().toLong()
-            }.onServerError { code, message ->
-                // TODO: Error 핸들링
-            }.onException { e, message ->
-                // TODO: Exception 핸들링
-            }
+            val travel = makeNewTravel()
+            val result: ResponseResult<String> = travelRepository.createTravel(travel)
+            result
+                .onSuccess(::setCreatedTravelId)
+                .onServerError(::handleServerError)
+                .onException(::handelException)
         }
+    }
+
+    private fun setCreatedTravelId(it: String) {
+        _createdTravelId.value = it.split("/").last().toLong()
+    }
+
+    private fun makeNewTravel(): NewTravel =
+        NewTravel(
+            travelThumbnail = imageUrl.value,
+            travelTitle = title.get() ?: throw IllegalArgumentException(),
+            startAt = startDate.value ?: throw IllegalArgumentException(),
+            endAt = endDate.value ?: throw IllegalArgumentException(),
+            description = description.get() ?: throw IllegalArgumentException(),
+        )
+
+    private fun handleServerError(
+        code: Int,
+        message: String,
+    ) {
+        // TODO: Error 핸들링
+        Log.d("hye: 여행 생성 실패", "$code : $message $TRAVEL_CREATION_ERROR_MESSAGE")
+    }
+
+    private fun handelException(
+        e: Throwable,
+        message: String,
+    ) {
+        // TODO: Exception 핸들링
+        Log.d("hye: 여행 생성 실패 - 예외", "${e.message}")
+    }
+
+    companion object {
+        private const val TRAVEL_CREATION_ERROR_MESSAGE = "여행 생성에 실패했습니다"
     }
 }
