@@ -136,7 +136,7 @@ class VisitControllerTest {
         return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), visitedAt, 1L);
     }
 
-    @DisplayName("사용자가 잘못된 방식으로 정보를 입력하면, 방문 기록을 생성할 수 없다.")
+    @DisplayName("사용자가 잘못된 요청 형식으로 정보를 입력하면, 방문 기록을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidVisitRequestProvider")
     void failCreateVisit(VisitRequest visitRequest, String expectedMessage) throws Exception {
