@@ -16,6 +16,7 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @BindingAdapter(
     value = ["coilImageUrl", "coilPlaceHolder"],
@@ -231,4 +232,28 @@ fun TextView.combineVisitedAtWithVisitCount(
             )
         }
     text = resultText
+}
+
+@BindingAdapter(
+    value = ["startAt", "endAt"],
+)
+fun TextView.convertLocalDateToDatePeriodString(
+    startAt: LocalDate,
+    endAt: LocalDate,
+) {
+    val fullFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+    val monthFormatter = DateTimeFormatter.ofPattern("MM.dd")
+    val dayFormatter = DateTimeFormatter.ofPattern("dd")
+
+    val datePeriod =
+        if (startAt.year != endAt.year) {
+            "${startAt.format(fullFormatter)} - ${endAt.format(fullFormatter)}"
+        } else if (startAt.monthValue != endAt.monthValue) {
+            "${startAt.format(fullFormatter)} - ${endAt.format(monthFormatter)}"
+        } else if (startAt.dayOfMonth != endAt.dayOfMonth) {
+            "${startAt.format(fullFormatter)} - ${endAt.format(dayFormatter)}"
+        } else {
+            startAt.format(fullFormatter)
+        }
+    text = datePeriod
 }

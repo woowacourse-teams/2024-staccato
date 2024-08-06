@@ -21,17 +21,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_all_gray1_4dp"
-        android:onClickListener="@{() -> eventHandler.onTravelClicked(travel.travelId)}"
+        android:onClickListener="@{() -> eventHandler.onTravelClicked(travel.id)}"
         android:padding="8dp">
 
         <TextView
             android:id="@+id/tv_travel_period"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{travel.travelPeriod}"
             android:textAppearance="@style/Typography.Body4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            bind:endAt="@{travel.endAt}"
+            bind:startAt="@{travel.startAt}"
             tools:text="2024.07.23" />
 
         <TextView
@@ -42,7 +43,7 @@
             android:layout_marginEnd="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{travel.travelTitle}"
+            android:text="@{travel.title}"
             android:textAppearance="@style/Typography.Title3"
             app:layout_constraintEnd_toStartOf="@id/iv_travel_thumbnail"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,14 +56,14 @@
             android:layout_height="0dp"
             android:contentDescription="@string/all_image_content_description"
             android:scaleType="centerCrop"
-            android:visibility="@{travel.travelThumbnail == null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{travel.thumbnail == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="8:5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.527"
             bind:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            bind:coilRoundedCornerImageUrl="@{travel.travelThumbnail}"
+            bind:coilRoundedCornerImageUrl="@{travel.thumbnail}"
             bind:coilRoundingRadius="@{12f}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
