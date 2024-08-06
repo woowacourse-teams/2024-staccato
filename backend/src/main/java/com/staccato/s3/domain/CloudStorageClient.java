@@ -47,6 +47,7 @@ public class CloudStorageClient {
 
     public String getUrl(String keyName) {
         GetUrlRequest request = GetUrlRequest.builder()
+                .bucket(bucketName)
                 .key(keyName)
                 .build();
 
