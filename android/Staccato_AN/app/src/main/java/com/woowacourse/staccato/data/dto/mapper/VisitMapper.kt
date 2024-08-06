@@ -10,10 +10,9 @@ fun VisitResponse.toDomain() =
     Visit(
         visitId = visitId,
         placeName = placeName,
-        visitImages = visitImages,
+        visitImageUrls = visitImageUrls,
         address = address,
         visitedAt = LocalDate.parse(visitedAt),
-        visitedCount = visitedCount,
         visitLogs = visitLogs.map { it.toDomain() },
     )
 
@@ -21,7 +20,7 @@ fun VisitLogDto.toDomain() =
     VisitLog(
         visitLogId = visitLogId,
         memberId = memberId,
-        nickName = nickName,
+        nickname = nickname,
         memberImage = memberImage,
         content = content,
     )

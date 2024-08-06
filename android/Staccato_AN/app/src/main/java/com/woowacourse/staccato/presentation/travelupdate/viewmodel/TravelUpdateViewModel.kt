@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
-import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.model.NewTravel
+import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
@@ -39,6 +39,9 @@ class TravelUpdateViewModel(
 
     private val _isUpdateSuccess = MutableSingleLiveData<Boolean>(false)
     val isUpdateSuccess: SingleLiveData<Boolean> get() = _isUpdateSuccess
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> get() = _errorMessage
 
     fun fetchTravel() {
         viewModelScope.launch {
@@ -94,7 +97,7 @@ class TravelUpdateViewModel(
         code: Int,
         message: String,
     ) {
-        // TODO: Error 핸들링
+        _errorMessage.value = "$code: $TRAVEL_UPDATE_ERROR_MESSAGE"
         Log.d("hye: 여행 수정 실패", "$code : $message $TRAVEL_UPDATE_ERROR_MESSAGE")
     }
 
@@ -102,7 +105,7 @@ class TravelUpdateViewModel(
         e: Throwable,
         message: String,
     ) {
-        // TODO: Exception 핸들링
+        _errorMessage.value = TRAVEL_UPDATE_ERROR_MESSAGE
         Log.d("hye: 여행 수정 실패 - 예외", "${e.message}")
     }
 

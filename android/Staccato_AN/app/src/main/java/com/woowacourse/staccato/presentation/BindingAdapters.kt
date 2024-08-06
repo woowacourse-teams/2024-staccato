@@ -207,28 +207,14 @@ fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDate>?) {
 }
 
 @BindingAdapter(
-    value = ["visitedAt", "visitedCount"],
+    value = ["visitedAt"],
 )
-fun TextView.combineVisitedAtWithVisitCount(
-    visitedAt: LocalDate,
-    visitedCount: Long,
-) {
-    val resultText =
-        if (visitedCount == 1L) {
-            format(
-                resources.getString(R.string.visit_history_first_time),
-                visitedAt.year,
-                visitedAt.monthValue,
-                visitedAt.dayOfMonth,
-            )
-        } else {
-            format(
-                resources.getString(R.string.visit_history_many_times),
-                visitedAt.year,
-                visitedAt.monthValue,
-                visitedAt.dayOfMonth,
-                visitedCount,
-            )
-        }
-    text = resultText
+fun TextView.combineVisitedAt(visitedAt: LocalDate) {
+    text =
+        format(
+            resources.getString(R.string.visit_history),
+            visitedAt.year,
+            visitedAt.monthValue,
+            visitedAt.dayOfMonth,
+        )
 }
