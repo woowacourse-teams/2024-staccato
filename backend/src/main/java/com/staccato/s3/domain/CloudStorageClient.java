@@ -37,6 +37,7 @@ public class CloudStorageClient {
 
     public void putS3Object(String objectKey, String contentType, byte[] imageBytes) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
                 .key(objectKey)
                 .contentType(contentType)
                 .build();
