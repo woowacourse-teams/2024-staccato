@@ -14,13 +14,12 @@ import com.woowacourse.staccato.data.travel.TravelRemoteDataSource
 import com.woowacourse.staccato.databinding.ActivityTravelUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.travel.TravelFragment.Companion.TRAVEL_ID_KEY
-import com.woowacourse.staccato.presentation.travelcreation.TravelCreationHandler
 import com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModel
 import com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModelFactory
 
 class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), TravelUpdateHandler {
     override val layoutResourceId = R.layout.activity_travel_update
-    private val travelId by lazy { intent.getLongExtra(TRAVEL_ID_KEY, DEFAULT_TRAVEL_KEY) }
+    private val travelId by lazy { intent.getLongExtra(TRAVEL_ID_KEY, DEFAULT_TRAVEL_ID) }
     private val viewModel: TravelUpdateViewModel by viewModels {
         TravelUpdateViewModelFactory(
             travelId,
@@ -94,7 +93,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
     }
 
     companion object {
-        private const val DEFAULT_TRAVEL_KEY = -1L
+        private const val DEFAULT_TRAVEL_ID = 0L
 
         fun startWithResultLauncher(
             travelId: Long,
