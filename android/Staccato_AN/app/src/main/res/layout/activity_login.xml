@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -53,20 +51,21 @@
                 android:hint="@string/login_nickname_hint"
                 android:maxLength="20"
                 android:maxLines="1"
+                android:text="@={viewModel.nickname}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/space_between_logo_nickname_et"
-                android:text="@={viewModel.nickname}" />
+                app:layout_constraintTop_toBottomOf="@id/space_between_logo_nickname_et" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_start_staccato"
                 style="@style/ButtonStyle.Login"
+                android:onClick="@{() -> handler.onStartClicked()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_user_nickname"
-                android:onClick="@{() -> handler.onStartClicked()}"/>
+                app:layout_constraintTop_toBottomOf="@id/et_user_nickname" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>
