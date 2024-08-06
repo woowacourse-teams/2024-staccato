@@ -20,13 +20,12 @@ import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModelFactory
 import com.woowacourse.staccato.presentation.travelupdate.TravelUpdateActivity
 import com.woowacourse.staccato.presentation.util.showToast
-import kotlin.properties.Delegates
 
 class TravelFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
     ToolbarHandler,
     TravelHandler {
-    private var travelId by Delegates.notNull<Long>()
+    private val travelId by lazy { arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException() }
     private val viewModel: TravelViewModel by viewModels {
         TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))
     }
@@ -39,7 +38,6 @@ class TravelFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        travelId = arguments?.getLong(TRAVEL_ID_KEY) ?: return
         initBinding()
         initToolbar()
         initMatesAdapter()
