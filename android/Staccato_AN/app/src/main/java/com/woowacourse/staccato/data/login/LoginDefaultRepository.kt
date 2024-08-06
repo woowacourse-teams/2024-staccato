@@ -4,7 +4,7 @@ import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.domain.repository.LoginRepository
 
 class LoginDefaultRepository(
-    private val loginDataSource: LoginDataSource,
+    private val loginDataSource: LoginDataSource = LoginRemoteDataSource(),
 ) : LoginRepository {
     override suspend fun loginWithNickname(nickname: String): ResponseResult<String> {
         return when (val result = loginDataSource.requestLoginWithNickname(nickname)) {
