@@ -4,7 +4,7 @@ import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.domain.repository.TimelineRepository
 
-class TimelineRepository(private val dataSource: TimelineDataSource = TimelineRemoteDataSource()) :
+class TimelineDefaultRepository(private val dataSource: TimelineDataSource = TimelineRemoteDataSource()) :
     TimelineRepository {
     override suspend fun getTimeline(): Timeline {
         var timeline: Timeline = Timeline(emptyList())
