@@ -64,10 +64,10 @@ public class VisitService {
     ) {
         Visit visit = getVisitById(visitId);
         validateOwner(visit.getTravel(), member);
-        List<String> addedImages = List.of(visitImageFiles.get(0).getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
+        List<String> addedImageUrls = cloudStorageService.uploadFiles(visitImageFiles);
         VisitImages visitImages = VisitImages.builder()
                 .existingImages(visitUpdateRequest.visitImageUrls())
-                .addedImages(addedImages)
+                .addedImages(addedImageUrls)
                 .build();
 
         visit.update(visitUpdateRequest.placeName(), visitImages);
