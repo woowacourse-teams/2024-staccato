@@ -54,14 +54,14 @@ class VisitServiceTest extends ServiceSliceTest {
         saveTravel(member);
 
         // when
-        long visitId = visitService.createVisit(getVisitRequestWithoutImage(), member).visitId();
+        long visitId = visitService.createVisit(getVisitRequestWithoutImage(), List.of(), member).visitId();
 
         // then
         assertThat(visitRepository.findById(visitId)).isNotEmpty();
     }
 
     private VisitRequest getVisitRequestWithoutImage() {
-        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of(), LocalDate.now(), 1L);
+        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDate.now(), 1L);
     }
 
     @DisplayName("방문 기록을 생성하면 Visit과 VisitImage들이 함께 저장되고 id를 반환한다.")
@@ -72,7 +72,7 @@ class VisitServiceTest extends ServiceSliceTest {
         saveTravel(member);
 
         // when
-        long visitId = visitService.createVisit(getVisitRequest(), member).visitId();
+        long visitId = visitService.createVisit(getVisitRequest(), List.of(new MockMultipartFile("visitImageFiles", "example.jpg".getBytes())), member).visitId();
 
         // then
         assertAll(
@@ -91,7 +91,7 @@ class VisitServiceTest extends ServiceSliceTest {
         VisitRequest visitRequest = getVisitRequest();
 
         // when & then
-        assertThatThrownBy(() -> visitService.createVisit(visitRequest, otherMember))
+        assertThatThrownBy(() -> visitService.createVisit(visitRequest, List.of(new MockMultipartFile("visitImageFiles", "example.jpg".getBytes())), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -103,13 +103,13 @@ class VisitServiceTest extends ServiceSliceTest {
         Member member = saveMember();
 
         // when & then
-        assertThatThrownBy(() -> visitService.createVisit(getVisitRequest(), member))
+        assertThatThrownBy(() -> visitService.createVisit(getVisitRequest(), List.of(new MockMultipartFile("visitImageFiles", "example.jpg".getBytes())), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 여행을 찾을 수 없어요.");
     }
 
     private VisitRequest getVisitRequest() {
-        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.now(), 1L);
+        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDate.now(), 1L);
     }
 
     @DisplayName("특정 방문 기록 조회에 성공한다.")

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
+import com.staccato.s3.service.CloudStorageService;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.visit.domain.Visit;
@@ -27,13 +28,15 @@ import lombok.RequiredArgsConstructor;
 public class VisitService {
     private final VisitRepository visitRepository;
     private final TravelRepository travelRepository;
+    private final CloudStorageService cloudStorageService;
 
     @Transactional
-    public VisitIdResponse createVisit(VisitRequest visitRequest, Member member) {
+    public VisitIdResponse createVisit(VisitRequest visitRequest, List<MultipartFile> visitImageFiles, Member member) {
         Travel travel = getTravelById(visitRequest.travelId());
         validateOwner(travel, member);
         Visit visit = visitRequest.toVisit(travel);
-        VisitImages visitImages = new VisitImages(visitRequest.visitImageUrls());
+        List<String> visitImageUrls = cloudStorageService.uploadFiles(visitImageFiles);
+        VisitImages visitImages = new VisitImages(visitImageUrls);
         visit.addVisitImages(visitImages);
 
         visitRepository.save(visit);

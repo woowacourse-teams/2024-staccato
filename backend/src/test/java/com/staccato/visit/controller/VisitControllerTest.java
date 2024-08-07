@@ -56,23 +56,23 @@ class VisitControllerTest {
     static Stream<Arguments> invalidVisitRequestProvider() {
         return Stream.of(
                 Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 0L),
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 0L),
                         "여행 식별자는 양수로 이루어져야 합니다."
                 ),
                 Arguments.of(
-                        new VisitRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 1L),
                         "방문한 장소의 이름을 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", "address", null, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest("placeName", "address", null, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 1L),
                         "방문한 장소의 위도를 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, null, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, null, LocalDate.of(2023, 7, 1), 1L),
                         "방문한 장소의 경도를 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 1L),
                         "방문한 장소의 주소를 입력해주세요."
                 ),
                 Arguments.of(
@@ -96,7 +96,7 @@ class VisitControllerTest {
         MockMultipartFile file5 = new MockMultipartFile("visitImageFiles", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes());
         VisitIdResponse visitIdResponse = new VisitIdResponse(1L);
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(visitService.createVisit(any(VisitRequest.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
+        when(visitService.createVisit(any(VisitRequest.class), any(List.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
         mockMvc.perform(multipart("/visits")
@@ -147,7 +147,7 @@ class VisitControllerTest {
     }
 
     private static VisitRequest getVisitRequest(LocalDate visitedAt) {
-        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, List.of("https://example1.com.jpg"), visitedAt, 1L);
+        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, visitedAt, 1L);
     }
 
     @DisplayName("사용자가 잘못된 요청 형식으로 정보를 입력하면, 방문 기록을 생성할 수 없다.")
@@ -160,7 +160,7 @@ class VisitControllerTest {
         MockMultipartFile imageFilePart = new MockMultipartFile("visitImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(visitService.createVisit(any(VisitRequest.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
+        when(visitService.createVisit(any(VisitRequest.class), any(List.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
         mockMvc.perform(multipart("/visits")

@@ -28,8 +28,6 @@ public record VisitRequest(
         @Schema(example = "-0.12712788587027796")
         @NotNull(message = "방문한 장소의 경도를 입력해주세요.")
         BigDecimal longitude,
-        @Schema(example = "[\"http://example.com/image1.jpg\"]")
-        List<String> visitImageUrls,
         @Schema(example = "2024-07-27")
         @NotNull(message = "방문 날짜를 입력해주세요.")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
