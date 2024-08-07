@@ -56,7 +56,7 @@ class TravelServiceTest extends ServiceSliceTest {
         return Stream.of(
                 Arguments.of(
                         new TravelRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
-                        new MockMultipartFile("travelThumbnail", "example.jpg".getBytes()), "travelThumbnail"),
+                        new MockMultipartFile("travelThumbnail", "example.jpg".getBytes()), "fakeUrl"),
                 Arguments.of(
                         new TravelRequest(null, "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
                         null, null),

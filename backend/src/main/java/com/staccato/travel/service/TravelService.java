@@ -103,8 +103,8 @@ public class TravelService {
         Travel originTravel = getTravelById(travelId);
         validateOwner(originTravel, member);
         if (!Objects.isNull(thumbnailFile)) {
-            // thumbnailFile을 Url로 변환해 가져오는 로직 추가 예정
-            updatedTravel.assignThumbnail(thumbnailFile.getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
+            String thumbnailUrl = uploadFile(thumbnailFile);
+            updatedTravel.assignThumbnail(thumbnailUrl);
         }
         List<Visit> visits = visitRepository.findAllByTravelIdOrderByVisitedAt(travelId);
         originTravel.update(updatedTravel, visits);
