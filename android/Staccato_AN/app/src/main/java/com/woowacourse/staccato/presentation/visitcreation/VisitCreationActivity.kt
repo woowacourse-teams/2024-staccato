@@ -2,6 +2,7 @@ package com.woowacourse.staccato.presentation.visitcreation
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
@@ -17,6 +18,7 @@ import com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreati
 
 class VisitCreationActivity :
     BindingActivity<ActivityVisitCreationBinding>(),
+    OnUrisSelectedListener,
     VisitCreationHandler {
     override val layoutResourceId = R.layout.activity_visit_creation
     private val viewModel: VisitCreationViewModel by viewModels { VisitCreationViewModelFactory() }
@@ -79,6 +81,10 @@ class VisitCreationActivity :
             setResult(RESULT_OK, resultIntent)
             finish()
         }
+    }
+
+    override fun onUrisSelected(uris: List<Uri>) {
+        viewModel.setImageUris(uris)
     }
 
     override fun onTravelSelectionClicked() {

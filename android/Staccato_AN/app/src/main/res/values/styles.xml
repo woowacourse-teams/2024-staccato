@@ -93,6 +93,7 @@
     <style name="PhotoAttachMenuStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:clickable">true</item>
+        <item name="android:paddingVertical">16dp</item>
         <item name="android:focusable">true</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@style/Typography.Body1</item>
@@ -141,4 +142,5 @@
     <style name="CustomMaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
         <item name="rangeFillColor">@color/staccato_blue_30</item>
     </style>
+
 </resources>
