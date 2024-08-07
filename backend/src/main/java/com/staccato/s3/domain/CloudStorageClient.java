@@ -1,5 +1,7 @@
 package com.staccato.s3.domain;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -7,7 +9,11 @@ import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvide
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.Delete;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
+import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Component
@@ -50,5 +56,35 @@ public class CloudStorageClient {
         String url = s3Client.utilities().getUrl(request).toString();
 
         return url.replace(endPoint, cloudFrontEndPoint);
+    }
+
+    public void deleteS3Object(String objectKey) {
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(objectKey)
+                .build();
+
+        s3Client.deleteObject(deleteObjectRequest);
+    }
+
+    public void deleteMultipleS3Object(List<String> objectKeys) {
+        Delete delete = getDelete(objectKeys);
+
+        DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder()
+                .bucket(bucketName)
+                .delete(delete)
+                .build();
+
+        s3Client.deleteObjects(deleteObjectsRequest);
+    }
+
+    private Delete getDelete(List<String> objectKeys) {
+        List<ObjectIdentifier> objectsToDelete = objectKeys.stream()
+                .map(objectKey -> ObjectIdentifier.builder().key(objectKey).build())
+                .toList();
+
+        return Delete.builder()
+                .objects(objectsToDelete)
+                .build();
     }
 }
