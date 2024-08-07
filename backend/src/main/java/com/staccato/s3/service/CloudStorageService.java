@@ -1,6 +1,7 @@
 package com.staccato.s3.service;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,29 @@ public class CloudStorageService {
     }
 
     private String makeImagePath(String fileName) {
-        return TEAM_FOLDER + IMAGE_FOLDER + fileName;
+        String uniqueFileName = generateUniqueFileName(fileName);
+        return TEAM_FOLDER + IMAGE_FOLDER + uniqueFileName;
+    }
+
+    private String generateUniqueFileName(String fileName) {
+        String fileExtension = getFileExtension(fileName);
+        String baseName = getBaseName(fileName);
+        return baseName + "_" + UUID.randomUUID() + fileExtension;
+    }
+
+    private String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex == -1) {
+            return "";
+        }
+        return fileName.substring(dotIndex);
+    }
+
+    private String getBaseName(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex == -1) {
+            return fileName;
+        }
+        return fileName.substring(0, dotIndex);
     }
 }
