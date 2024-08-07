@@ -50,7 +50,7 @@ public interface TravelControllerDocs {
     })
     ResponseEntity<TravelResponses> readAllTravels(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "조회할 년도") Integer year);
+            @Parameter(description = "조회할 년도", example = "2024") Integer year);
 
     @Operation(summary = "특정 여행 상세 조회", description = "사용자의 특정 여행 상세를 조회합니다.")
     @ApiResponses(value = {
@@ -66,7 +66,7 @@ public interface TravelControllerDocs {
     })
     ResponseEntity<TravelDetailResponse> readTravel(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "여행 상세 ID") @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId);
+            @Parameter(description = "여행 상세 ID", example = "1") @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId);
 
     @Operation(summary = "여행 상세 수정", description = "여행 상세 정보(썸네일, 제목, 내용, 기간)를 수정합니다.")
     @ApiResponses(value = {
@@ -94,7 +94,8 @@ public interface TravelControllerDocs {
     })
     ResponseEntity<Void> updateTravel(
             @Parameter(description = "여행 상세 ID") @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
-            @Valid TravelRequest travelRequest,
+            @Parameter(description = "key = data", required = true) @Valid TravelRequest travelRequest,
+            @Parameter(description = "key = travelThumbnailFile") MultipartFile travelThumbnailFile,
             @Parameter(hidden = true) Member member);
 
     @Operation(summary = "특정 여행 상세 삭제", description = "사용자의 특정 여행 상세를 삭제합니다.")
@@ -110,6 +111,6 @@ public interface TravelControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<Void> deleteTravel(
-            @Parameter(description = "여행 상세 ID") @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
+            @Parameter(description = "여행 상세 ID", example = "1") @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
             @Parameter(hidden = true) Member member);
 }
