@@ -4,6 +4,9 @@
 
     <data>
 
+        <variable
+            name="handler"
+            type="com.woowacourse.staccato.presentation.common.PhotoAttachHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,6 +26,7 @@
             android:id="@+id/tv_photo_attach_camera"
             style="@style/PhotoAttachMenuStyle"
             android:layout_marginTop="24dp"
+            android:onClick="@{()->handler.onCameraClicked()}"
             android:text="@string/photo_attach_camera"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +35,6 @@
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider_photo_attach"
             style="@style/DividerStyle"
-            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_photo_attach_camera" />
@@ -39,7 +42,7 @@
         <TextView
             android:id="@+id/tv_photo_attach_album"
             style="@style/PhotoAttachMenuStyle"
-            android:layout_marginTop="16dp"
+            android:onClick="@{()->handler.onGalleryClicked()}"
             android:text="@string/photo_attach_album"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
