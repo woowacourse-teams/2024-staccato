@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.member.domain.Member;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.visit.domain.Visit;
@@ -43,8 +45,9 @@ public class VisitService {
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 
-    public VisitDetailResponse readVisitById(long visitId) {
+    public VisitDetailResponse readVisitById(long visitId, Member member) {
         Visit visit = getVisitById(visitId);
+        validateOwner(visit.getTravel(), member);
         return new VisitDetailResponse(visit);
     }
 
@@ -68,5 +71,11 @@ public class VisitService {
     @Transactional
     public void deleteVisitById(long visitId) {
         visitRepository.deleteById(visitId);
+    }
+
+    private void validateOwner(Travel travel, Member member) {
+        if (travel.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
     }
 }

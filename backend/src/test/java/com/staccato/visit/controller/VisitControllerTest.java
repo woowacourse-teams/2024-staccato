@@ -2,6 +2,7 @@ package com.staccato.visit.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,6 +35,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
+import com.staccato.member.domain.Member;
 import com.staccato.visit.fixture.VisitDetailResponseFixture;
 import com.staccato.visit.service.VisitService;
 import com.staccato.visit.service.dto.request.VisitRequest;
@@ -170,13 +172,13 @@ class VisitControllerTest {
     void readVisitById() throws Exception {
         // given
         long visitId = 1L;
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         VisitDetailResponse response = VisitDetailResponseFixture.create(visitId, LocalDate.now());
+        when(visitService.readVisitById(anyLong(), any(Member.class))).thenReturn(response);
 
-        // when
-        when(visitService.readVisitById(visitId)).thenReturn(response);
-
-        // then
-        mockMvc.perform(get("/visits/{visitId}", 1))
+        // when & then
+        mockMvc.perform(get("/visits/{visitId}", visitId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
     }

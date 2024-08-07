@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.staccato.member.domain.Member;
 import com.staccato.visit.service.dto.request.VisitRequest;
 import com.staccato.visit.service.dto.request.VisitUpdateRequest;
 import com.staccato.visit.service.dto.response.VisitDetailResponse;
@@ -59,6 +60,7 @@ public interface VisitControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<VisitDetailResponse> readVisitById(
+            @Parameter(hidden = true) Member member,
             @Parameter(description = "방문 기록 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId);
 
     @Operation(summary = "특정 방문 기록 수정", description = "특정 방문 기록을 수정합니다.")

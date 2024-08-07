@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 
 import com.staccato.ServiceSliceTest;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -50,7 +51,8 @@ class VisitServiceTest extends ServiceSliceTest {
     void createVisit() {
         // given
         travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1))
+                        .build()
         );
 
         // when
@@ -69,7 +71,8 @@ class VisitServiceTest extends ServiceSliceTest {
     void createVisitWithVisitImages() {
         // given
         travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1))
+                        .build()
         );
 
         // when
@@ -98,23 +101,45 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void readVisitById() {
         // given
-        Travel travel = travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
-        );
+        Member member = memberRepository.save(Member.builder().nickname("member").build());
+        Travel travel = Travel.builder().title("Sample Travel").startAt(LocalDate.now())
+                .endAt(LocalDate.now().plusDays(1)).build();
+        travel.addTravelMember(member);
+        travelRepository.save(travel);
         Visit visit = visitRepository.save(VisitFixture.create(travel, LocalDate.now()));
 
         // when
-        VisitDetailResponse actual = visitService.readVisitById(visit.getId());
+        VisitDetailResponse actual = visitService.readVisitById(visit.getId(), member);
 
         // then
         assertThat(actual).isEqualTo(new VisitDetailResponse(visit));
+    }
+
+    @DisplayName("본인 것이 아닌 특정 방문 기록을 조회하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotReadVisitByIdIfNotOwner() {
+        // given
+        Member member = memberRepository.save(Member.builder().nickname("member").build());
+        Travel travel = Travel.builder().title("Sample Travel").startAt(LocalDate.now())
+                .endAt(LocalDate.now().plusDays(1)).build();
+        travel.addTravelMember(member);
+        Visit visit = VisitFixture.create(travel, LocalDate.now());
+        travelRepository.save(travel);
+        Visit savedVisit = visitRepository.save(visit);
+
+        Member otherMember = memberRepository.save(Member.builder().nickname("otherMember").build());
+
+        // when & then
+        assertThatThrownBy(() -> visitService.readVisitById(savedVisit.getId(), otherMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
     @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
     @Test
     void failReadVisitById() {
         // given & when & then
-        assertThatThrownBy(() -> visitService.readVisitById(1L))
+        assertThatThrownBy(() -> visitService.readVisitById(1L, null))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
     }
@@ -124,7 +149,8 @@ class VisitServiceTest extends ServiceSliceTest {
     void updateVisitById() {
         // given
         Travel travel = travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now().minusDays(1)).endAt(LocalDate.now().plusDays(1)).build()
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now().minusDays(1))
+                        .endAt(LocalDate.now().plusDays(1)).build()
         );
         Visit visit = VisitFixture.create(travel, LocalDate.now());
         visit.addVisitImages(new VisitImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
@@ -140,10 +166,13 @@ class VisitServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(foundedVisit.getPlaceName()).isEqualTo("newPlaceName"),
                 () -> assertThat(visitImageRepository.findById(1L)).isEmpty(),
-                () -> assertThat(visitImageRepository.findById(2L).get().getImageUrl()).isEqualTo("https://existExample.com.jpg"),
+                () -> assertThat(visitImageRepository.findById(2L).get()
+                        .getImageUrl()).isEqualTo("https://existExample.com.jpg"),
                 () -> assertThat(visitImageRepository.findById(3L).get().getImageUrl()).isEqualTo("visitImagesFile"),
-                () -> assertThat(visitImageRepository.findById(2L).get().getVisit().getId()).isEqualTo(foundedVisit.getId()),
-                () -> assertThat(visitImageRepository.findById(3L).get().getVisit().getId()).isEqualTo(foundedVisit.getId()),
+                () -> assertThat(visitImageRepository.findById(2L).get().getVisit()
+                        .getId()).isEqualTo(foundedVisit.getId()),
+                () -> assertThat(visitImageRepository.findById(3L).get().getVisit()
+                        .getId()).isEqualTo(foundedVisit.getId()),
                 () -> assertThat(visitImageRepository.findAll().size()).isEqualTo(2)
         );
     }
@@ -166,7 +195,8 @@ class VisitServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(Member.builder().nickname("SampleMember").build());
         Travel travel = travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
+                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1))
+                        .build()
         );
         Visit visit = visitRepository.save(VisitFixture.create(travel, LocalDate.now()));
         VisitLog visitLog = visitLogRepository.save(VisitLogFixture.create(visit, member));

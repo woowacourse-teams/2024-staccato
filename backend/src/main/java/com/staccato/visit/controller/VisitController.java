@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.staccato.config.auth.LoginMember;
+import com.staccato.member.domain.Member;
 import com.staccato.visit.controller.docs.VisitControllerDocs;
 import com.staccato.visit.service.VisitService;
 import com.staccato.visit.service.dto.request.VisitRequest;
@@ -48,8 +50,9 @@ public class VisitController implements VisitControllerDocs {
 
     @GetMapping("/{visitId}")
     public ResponseEntity<VisitDetailResponse> readVisitById(
+            @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId) {
-        VisitDetailResponse visitDetailResponse = visitService.readVisitById(visitId);
+        VisitDetailResponse visitDetailResponse = visitService.readVisitById(visitId, member);
         return ResponseEntity.ok().body(visitDetailResponse);
     }
 
