@@ -4,7 +4,7 @@ import com.woowacourse.staccato.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class HeaderInterceptor(private val headerValue: String = DEFAULT_VALUE) : Interceptor {
+class HeaderInterceptor(private val headerValue: String = BuildConfig.TOKEN) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request =
             chain.request()
@@ -16,6 +16,5 @@ class HeaderInterceptor(private val headerValue: String = DEFAULT_VALUE) : Inter
 
     companion object {
         const val AUTHORIZATION_HEADER = "Authorization"
-        const val DEFAULT_VALUE = BuildConfig.TOKEN
     }
 }
