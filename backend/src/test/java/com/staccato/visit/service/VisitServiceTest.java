@@ -145,8 +145,11 @@ class VisitServiceTest extends ServiceSliceTest {
     @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
     @Test
     void failReadVisitById() {
-        // given & when & then
-        assertThatThrownBy(() -> visitService.readVisitById(1L, null))
+        // given
+        Member member = saveMember();
+
+        // when & then
+        assertThatThrownBy(() -> visitService.readVisitById(1L, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
     }
@@ -185,7 +188,6 @@ class VisitServiceTest extends ServiceSliceTest {
         Member otherMember = saveMember();
         Travel travel = saveTravel(member);
         Visit visit = saveVisitWithImages(travel);
-
         VisitUpdateRequest visitUpdateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
 
         // when & then
@@ -198,10 +200,11 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void failUpdateVisitById() {
         // given
+        Member member = saveMember();
         VisitUpdateRequest visitUpdateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
 
         // when & then
-        assertThatThrownBy(() -> visitService.updateVisitById(1L, visitUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes())), null))
+        assertThatThrownBy(() -> visitService.updateVisitById(1L, visitUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes())), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
     }
