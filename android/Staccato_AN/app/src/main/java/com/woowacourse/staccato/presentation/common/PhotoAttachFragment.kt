@@ -60,10 +60,9 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
 
     private fun launchGallery() {
         val intent =
-            Intent(Intent.ACTION_PICK).apply {
-                setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            }
+            Intent(Intent.ACTION_PICK)
+                .setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+                .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         galleryLauncher.launch(intent)
     }
 
@@ -77,7 +76,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
         snackBar.setAction(R.string.snack_bar_move_to_setting) {
             val intent = Intent()
             intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-            val uri = Uri.fromParts(SCHEME, requireContext().packageName, null)
+            val uri = Uri.fromParts(PACKAGE_SCHEME, requireContext().packageName, null)
             intent.data = uri
             startActivity(intent)
         }
@@ -161,6 +160,6 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
 
     companion object {
         const val TAG = "PhotoAttachModalBottomSheet"
-        const val SCHEME = "package"
+        const val PACKAGE_SCHEME = "package"
     }
 }
