@@ -36,7 +36,7 @@ public class TravelService {
     @Transactional
     public TravelIdResponse createTravel(TravelRequest travelRequest, MultipartFile thumbnailFile, Member member) {
         Travel travel = travelRequest.toTravel();
-        String thumbnailUrl = thumbnailFile.getName(); //썸네일 url을 가져오는 임시 로직
+        String thumbnailUrl = travelRequest.travelThumbnail(); //썸네일 url을 가져오는 임시 로직
         travel.assignThumbnail(thumbnailUrl);
         travel.addTravelMember(member);
         travelRepository.save(travel);
