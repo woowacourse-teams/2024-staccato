@@ -27,7 +27,7 @@ public class CloudStorageService {
                 .toList();
     }
 
-    private String uploadFile(MultipartFile image) {
+    public String uploadFile(MultipartFile image) {
         String key = makeImagePath(image.getOriginalFilename());
         try {
             cloudStorageClient.putS3Object(key, image.getContentType(), image.getBytes());
