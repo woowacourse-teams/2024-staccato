@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -65,12 +64,13 @@ public class TravelController implements TravelControllerDocs {
         return ResponseEntity.ok(travelDetailResponse);
     }
 
-    @PutMapping("/{travelId}")
+    @PutMapping(path = "/{travelId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateTravel(
             @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
-            @Valid @RequestBody TravelRequest travelRequest,
+            @Valid @RequestPart(value = "data") TravelRequest travelRequest,
+            @RequestPart(value = "travelThumbnailFile", required = false) MultipartFile travelThumbnailFile,
             @LoginMember Member member) {
-        travelService.updateTravel(travelRequest, travelId);
+        travelService.updateTravel(travelRequest, travelId, travelThumbnailFile, member);
         return ResponseEntity.ok().build();
     }
 

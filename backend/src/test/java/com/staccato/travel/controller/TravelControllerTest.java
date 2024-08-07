@@ -166,6 +166,72 @@ class TravelControllerTest {
                 .build();
     }
 
+    @DisplayName("적합한 경로변수와 데이터를 통해 방문 기록 수정에 성공한다.")
+    @ParameterizedTest
+    @MethodSource("travelRequestProvider")
+    void updateTravel(TravelRequest travelRequest) throws Exception {
+        // given
+        long travelId = 1L;
+        MockMultipartFile file = new MockMultipartFile("travelThumbnail", "example.jpg".getBytes());
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+
+        // when & then
+        mockMvc.perform(multipart("/travels/{travelId}", travelId)
+                        .file(file)
+                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        })
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 여행 상세를 수정할 수 없다.")
+    @ParameterizedTest
+    @MethodSource("invalidTravelRequestProvider")
+    void failUpdateTravel(TravelRequest travelRequest, String expectedMessage) throws Exception {
+        // given
+        long travelId = 1L;
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
+
+        // when & then
+        mockMvc.perform(multipart("/travels/{travelId}", travelId)
+                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        })
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("적합하지 않은 경로변수의 경우 여행 상세 수정에 실패한다.")
+    @Test
+    void failUpdateTravelByInvalidPath() throws Exception {
+        // given
+        long travelId = 0L;
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "여행 식별자는 양수로 이루어져야 합니다.");
+        TravelRequest travelRequest = new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
+
+        // when & then
+        mockMvc.perform(multipart("/travels/{travelId}", travelId)
+                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        })
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
     @DisplayName("사용자가 여행 식별자로 여행을 삭제한다.")
     @Test
     void deleteTravel() throws Exception {
