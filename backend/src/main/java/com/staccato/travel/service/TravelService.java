@@ -20,7 +20,6 @@ import com.staccato.travel.service.dto.response.TravelIdResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
 import com.staccato.travel.service.dto.response.VisitResponse;
 import com.staccato.visit.domain.Visit;
-import com.staccato.visit.domain.VisitImage;
 import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitRepository;
 
@@ -77,14 +76,15 @@ public class TravelService {
 
     private List<VisitResponse> getVisitResponses(List<Visit> visits) {
         return visits.stream()
-                .map(visit -> new VisitResponse(visit, getFirstVisitImageUrl(visit)))
+                .map(visit -> new VisitResponse(visit, getVisitThumbnail(visit)))
                 .toList();
     }
 
-    private String getFirstVisitImageUrl(Visit visit) {
-        return visitImageRepository.findFirstByVisitId(visit.getId())
-                .map(VisitImage::getImageUrl)
-                .orElse(null);
+    private String getVisitThumbnail(Visit visit) {
+        if (visit.hasImage()) {
+            return visit.getThumbnailUrl();
+        }
+        return null;
     }
 
     @Transactional
