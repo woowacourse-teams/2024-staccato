@@ -12,6 +12,7 @@ import com.woowacourse.staccato.data.travel.TravelRemoteDataSource
 import com.woowacourse.staccato.databinding.FragmentTravelBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
+import com.woowacourse.staccato.presentation.common.DialogHandler
 import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.travel.adapter.MatesAdapter
@@ -24,12 +25,13 @@ import com.woowacourse.staccato.presentation.util.showToast
 class TravelFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
     ToolbarHandler,
-    TravelHandler {
+    TravelHandler,
+    DialogHandler {
     private val travelId by lazy { arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException() }
     private val viewModel: TravelViewModel by viewModels {
         TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))
     }
-    private val deleteDialog = DeleteDialogFragment { findNavController().popBackStack() }
+    private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
 
     private lateinit var matesAdapter: MatesAdapter
     private lateinit var visitsAdapter: VisitsAdapter
@@ -43,6 +45,7 @@ class TravelFragment :
         initMatesAdapter()
         initVisitsAdapter()
         observeTravel()
+        observeIsDeleteSuccess()
         showErrorToast()
         viewModel.loadTravel(travelId)
     }
@@ -68,6 +71,10 @@ class TravelFragment :
         findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
     }
 
+    override fun onConfirmClicked() {
+        viewModel.deleteTravel(travelId)
+    }
+
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -84,6 +91,15 @@ class TravelFragment :
         viewModel.travel.observe(viewLifecycleOwner) { travel ->
             matesAdapter.updateMates(travel.mates)
             visitsAdapter.updateVisits(travel.visits)
+        }
+    }
+
+    private fun observeIsDeleteSuccess() {
+        viewModel.isDeleteSuccess.observe(viewLifecycleOwner) { isDeleteSuccess ->
+            if (isDeleteSuccess) {
+                findNavController().popBackStack()
+                showToast(getString(R.string.travel_delete_complete))
+            }
         }
     }
 
