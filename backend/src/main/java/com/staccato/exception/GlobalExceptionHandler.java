@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(S3Exception.class)
     public ResponseEntity<ExceptionResponse> handleS3Exception(S3Exception e) {
-        String errorMessage = "이미지를 불러오는데 실패했습니다.";
+        String errorMessage = "이미지 처리에 실패했습니다.";
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage));
