@@ -17,9 +17,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import com.staccato.travel.domain.Travel;
@@ -33,8 +30,6 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE visit SET is_deleted = true WHERE id = ?")
-@SQLRestriction("is_deleted = false")
 public class Visit extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,5 +82,13 @@ public class Visit extends BaseEntity {
     public void update(String placeName, VisitImages newVisitImages) {
         this.placeName = placeName;
         this.visitImages.update(newVisitImages, this);
+    }
+
+    public String getThumbnailUrl() {
+        return visitImages.getImages().get(0).getImageUrl();
+    }
+
+    public boolean hasImage() {
+        return visitImages.isNotEmpty();
     }
 }

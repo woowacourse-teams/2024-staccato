@@ -44,17 +44,18 @@ class TravelMemberRepositoryTest {
         assertThat(result).hasSize(2);
     }
 
-    @DisplayName("사용자 식별자와 년도로 삭제 되지 않은 여행 상세 목록만 최신순으로 조회한다.")
+    @DisplayName("사용자 식별자와 년도로 해당하는 삭제되지 않은 여행 상세 목록만 최신순으로 조회한다.")
     @Test
     void findAllByMemberIdAndTravelStartAtYearWithoutDeleted() {
         // given
         Member member = memberRepository.save(Member.builder().nickname("staccato").build());
         Travel travel = travelRepository.save(createTravel(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)));
         Travel travel2 = travelRepository.save(createTravel(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Travel travel3 = travelRepository.save(createTravel(LocalDate.of(2023, 12, 30), LocalDate.of(2024, 1, 10)));
+        Travel travel3 = travelRepository.save(createTravel(LocalDate.of(2023, 1, 10), LocalDate.of(2024, 1, 10)));
         travelMemberRepository.save(new TravelMember(member, travel));
         travelMemberRepository.save(new TravelMember(member, travel2));
-        travelMemberRepository.deleteById(travel3.getId());
+        travelMemberRepository.save(new TravelMember(member, travel3));
+        travelRepository.deleteById(travel3.getId());
 
         // when
         List<TravelMember> result = travelMemberRepository.findAllByMemberIdAndStartAtYearDesc(member.getId(), 2023);

@@ -8,9 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.member.domain.Member;
 
@@ -23,8 +20,6 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE travel_member SET is_deleted = true WHERE id = ?")
-@SQLRestriction("is_deleted = false")
 public class TravelMember extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +36,9 @@ public class TravelMember extends BaseEntity {
         this.member = member;
         this.travel = travel;
         travel.addTravelMember(this);
+    }
+
+    public boolean isMember(Member member) {
+        return this.member.getId().equals(member.getId());
     }
 }

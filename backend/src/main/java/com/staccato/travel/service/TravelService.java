@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.travel.domain.Travel;
@@ -19,7 +20,6 @@ import com.staccato.travel.service.dto.response.TravelIdResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
 import com.staccato.travel.service.dto.response.VisitResponse;
 import com.staccato.visit.domain.Visit;
-import com.staccato.visit.domain.VisitImage;
 import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitRepository;
 
@@ -67,6 +67,26 @@ public class TravelService {
         return TravelResponses.from(travels);
     }
 
+    public TravelDetailResponse readTravelById(long travelId, Member member) {
+        Travel travel = getTravelById(travelId);
+        validateOwner(travel, member);
+        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdOrderByVisitedAt(travelId));
+        return new TravelDetailResponse(travel, visitResponses);
+    }
+
+    private List<VisitResponse> getVisitResponses(List<Visit> visits) {
+        return visits.stream()
+                .map(visit -> new VisitResponse(visit, getVisitThumbnail(visit)))
+                .toList();
+    }
+
+    private String getVisitThumbnail(Visit visit) {
+        if (visit.hasImage()) {
+            return visit.getThumbnailUrl();
+        }
+        return null;
+    }
+
     @Transactional
     public void updateTravel(TravelRequest travelRequest, Long travelId) {
         Travel updatedTravel = travelRequest.toTravel();
@@ -75,39 +95,29 @@ public class TravelService {
         originTravel.update(updatedTravel, visits);
     }
 
-    @Transactional
-    public void deleteTravel(Long travelId) {
-        validateVisitExistsByTravelId(travelId);
-        visitRepository.deleteAllByTravelId(travelId);
-        travelRepository.deleteById(travelId);
-    }
-
-    private void validateVisitExistsByTravelId(Long travelId) {
-        if (visitRepository.existsByTravelId(travelId)) {
-            throw new StaccatoException("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
-        }
-    }
-
-    public TravelDetailResponse readTravelById(long travelId) {
-        Travel travel = getTravelById(travelId);
-        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdOrderByVisitedAt(travelId));
-        return new TravelDetailResponse(travel, visitResponses);
-    }
-
     private Travel getTravelById(long travelId) {
         return travelRepository.findById(travelId)
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 
-    private List<VisitResponse> getVisitResponses(List<Visit> visits) {
-        return visits.stream()
-                .map(visit -> new VisitResponse(visit, getFirstVisitImageUrl(visit)))
-                .toList();
+    @Transactional
+    public void deleteTravel(long travelId, Member member) {
+        travelRepository.findById(travelId).ifPresent(travel -> {
+            validateOwner(travel, member);
+            validateVisitExistsByTravel(travel);
+            travelRepository.deleteById(travelId);
+        });
     }
 
-    private String getFirstVisitImageUrl(Visit visit) {
-        return visitImageRepository.findFirstByVisitId(visit.getId())
-                .map(VisitImage::getImageUrl)
-                .orElse(null);
+    private void validateOwner(Travel travel, Member member) {
+        if (travel.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private void validateVisitExistsByTravel(Travel travel) {
+        if (visitRepository.existsByTravel(travel)) {
+            throw new StaccatoException("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
+        }
     }
 }

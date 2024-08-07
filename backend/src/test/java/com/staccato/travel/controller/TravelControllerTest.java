@@ -1,8 +1,11 @@
 package com.staccato.travel.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -10,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -31,9 +35,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.member.domain.Member;
+import com.staccato.travel.domain.Travel;
 import com.staccato.travel.service.TravelService;
 import com.staccato.travel.service.dto.request.TravelRequest;
+import com.staccato.travel.service.dto.response.TravelDetailResponse;
 import com.staccato.travel.service.dto.response.TravelIdResponse;
+import com.staccato.travel.service.dto.response.TravelResponse;
+import com.staccato.travel.service.dto.response.TravelResponses;
 
 @WebMvcTest(TravelController.class)
 class TravelControllerTest {
@@ -99,24 +107,6 @@ class TravelControllerTest {
                 .andExpect(jsonPath("$.travelId").value(1));
     }
 
-    @DisplayName("사용자가 썸네일 사진 없이 새로운 여행 상세를 생성한다.")
-    @Test
-    void createTravel() throws Exception {
-        // given
-        TravelRequest travelRequest = new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(travelService.createTravel(any(), any(), any())).thenReturn(new TravelIdResponse(1));
-
-        // when & then
-        mockMvc.perform(multipart("/travels")
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isCreated())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/travels/1"))
-                .andExpect(jsonPath("$.travelId").value(1));
-    }
-
     @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 여행 상세를 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidTravelRequestProvider")
@@ -129,6 +119,76 @@ class TravelControllerTest {
         // when & then
         mockMvc.perform(multipart("/travels")
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("사용자가 모든 여행 상세 목록을 조회한다.")
+    @Test
+    void readAllTravel() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        TravelResponses travelResponses = new TravelResponses(List.of(new TravelResponse(createTravel())));
+        when(travelService.readAllTravels(any(Member.class), any())).thenReturn(travelResponses);
+
+        // when & then
+        mockMvc.perform(get("/travels")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(travelResponses)));
+    }
+
+    @DisplayName("사용자가 특정 여행 상세를 조회한다.")
+    @Test
+    void readTravel() throws Exception {
+        // given
+        long travelId = 1;
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        TravelDetailResponse travelDetailResponse = new TravelDetailResponse(createTravel(), List.of());
+        when(travelService.readTravelById(anyLong(), any(Member.class))).thenReturn(travelDetailResponse);
+
+        // when & then
+        mockMvc.perform(get("/travels/{travelId}", travelId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(travelDetailResponse)));
+    }
+
+    private Travel createTravel() {
+        return Travel.builder()
+                .thumbnailUrl("https://example.com/travels/geumohrm.jpg")
+                .title("2024 여름 휴가")
+                .description("친구들과 함께한 여름 휴가 여행")
+                .startAt(LocalDate.of(2024, 7, 1))
+                .endAt(LocalDate.of(2024, 7, 10))
+                .build();
+    }
+
+    @DisplayName("사용자가 여행 식별자로 여행을 삭제한다.")
+    @Test
+    void deleteTravel() throws Exception {
+        // given
+        long travelId = 1;
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+
+        // when & then
+        mockMvc.perform(delete("/travels/{travelId}", travelId)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("사용자가 잘못된 여행 식별자로 삭제하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotDeleteTravelByInvalidId() throws Exception {
+        // given
+        long invalidId = 0;
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "여행 식별자는 양수로 이루어져야 합니다.");
+
+        // when & then
+        mockMvc.perform(delete("/travels/{travelId}", invalidId)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())

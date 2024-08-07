@@ -80,4 +80,8 @@ public class VisitImages {
         return this.images.stream()
                 .noneMatch(visitImage -> visitImage.isSameUrl(image));
     }
+
+    public boolean isNotEmpty() {
+        return !images.isEmpty();
+    }
 }

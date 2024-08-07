@@ -53,19 +53,21 @@ public class TravelController implements TravelControllerDocs {
             @LoginMember Member member,
             @RequestParam(value = "year", required = false) Integer year
     ) {
-        return ResponseEntity.ok(travelService.readAllTravels(member, year));
+        TravelResponses travelResponses = travelService.readAllTravels(member, year);
+        return ResponseEntity.ok(travelResponses);
     }
 
     @GetMapping("/{travelId}")
     public ResponseEntity<TravelDetailResponse> readTravel(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId) {
-        return ResponseEntity.ok(travelService.readTravelById(travelId));
+            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId) {
+        TravelDetailResponse travelDetailResponse = travelService.readTravelById(travelId, member);
+        return ResponseEntity.ok(travelDetailResponse);
     }
 
     @PutMapping("/{travelId}")
     public ResponseEntity<Void> updateTravel(
-            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId,
+            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
             @Valid @RequestBody TravelRequest travelRequest,
             @LoginMember Member member) {
         travelService.updateTravel(travelRequest, travelId);
@@ -74,9 +76,9 @@ public class TravelController implements TravelControllerDocs {
 
     @DeleteMapping("/{travelId}")
     public ResponseEntity<Void> deleteTravel(
-            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") Long travelId,
+            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
             @LoginMember Member member) {
-        travelService.deleteTravel(travelId);
+        travelService.deleteTravel(travelId, member);
         return ResponseEntity.ok().build();
     }
 }

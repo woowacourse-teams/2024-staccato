@@ -12,9 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
@@ -29,8 +26,6 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE travel SET is_deleted = true WHERE id = ?")
-@SQLRestriction("is_deleted = false")
 public class Travel extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -106,5 +101,10 @@ public class Travel extends BaseEntity {
 
     public void assignThumbnail(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public boolean isNotOwnedBy(Member member) {
+        return travelMembers.stream()
+                .noneMatch(travelMember -> travelMember.isMember(member));
     }
 }

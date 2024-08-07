@@ -11,6 +11,6 @@ import com.staccato.travel.domain.TravelMember;
 public interface TravelMemberRepository extends JpaRepository<TravelMember, Long> {
     List<TravelMember> findAllByMemberIdOrderByTravelStartAtDesc(long memberId);
 
-    @Query("SELECT tm FROM TravelMember tm WHERE tm.member.id = :memberId AND YEAR(tm.travel.startAt) = :year AND tm.isDeleted IS FALSE ORDER BY tm.travel.startAt DESC")
+    @Query("SELECT tm FROM TravelMember tm WHERE tm.member.id = :memberId AND YEAR(tm.travel.startAt) = :year ORDER BY tm.travel.startAt DESC")
     List<TravelMember> findAllByMemberIdAndStartAtYearDesc(@Param("memberId") long memberId, @Param("year") int year);
 }
