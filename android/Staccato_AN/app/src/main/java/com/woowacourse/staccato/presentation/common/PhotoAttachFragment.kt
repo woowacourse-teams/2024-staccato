@@ -67,12 +67,20 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     }
 
     private fun showPermissionSnackBar() {
-        val snackBar =
-            Snackbar.make(
-                binding.root,
-                R.string.snack_bar_require_photo_album_permission,
-                Snackbar.LENGTH_LONG,
-            )
+        val snackBar = makeSnackBar()
+        setSnackBarAction(snackBar)
+        snackBar.show()
+    }
+
+    private fun makeSnackBar(): Snackbar {
+        return Snackbar.make(
+            binding.root,
+            R.string.snack_bar_require_photo_album_permission,
+            Snackbar.LENGTH_LONG,
+        )
+    }
+
+    private fun setSnackBarAction(snackBar: Snackbar) {
         snackBar.setAction(R.string.snack_bar_move_to_setting) {
             val intent = Intent()
             intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
@@ -80,7 +88,6 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
             intent.data = uri
             startActivity(intent)
         }
-        snackBar.show()
     }
 
     private fun initGalleryLauncher() {
