@@ -95,18 +95,18 @@ public class TravelService {
         originTravel.update(updatedTravel, visits);
     }
 
-    @Transactional
-    public void deleteTravel(long travelId, Member member) {
-        Travel travel = getTravelById(travelId);
-        validateOwner(travel, member);
-        validateVisitExistsByTravel(travel);
-        visitRepository.deleteAllByTravelId(travelId);
-        travelRepository.deleteById(travelId);
-    }
-
     private Travel getTravelById(long travelId) {
         return travelRepository.findById(travelId)
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
+    }
+
+    @Transactional
+    public void deleteTravel(long travelId, Member member) {
+        travelRepository.findById(travelId).ifPresent(travel -> {
+            validateOwner(travel, member);
+            validateVisitExistsByTravel(travel);
+            travelRepository.deleteById(travelId);
+        });
     }
 
     private void validateOwner(Travel travel, Member member) {
