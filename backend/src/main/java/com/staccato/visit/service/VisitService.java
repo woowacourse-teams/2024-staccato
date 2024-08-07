@@ -52,8 +52,14 @@ public class VisitService {
     }
 
     @Transactional
-    public void updateVisitById(long visitId, VisitUpdateRequest visitUpdateRequest, List<MultipartFile> visitImageFiles) {
+    public void updateVisitById(
+            long visitId,
+            VisitUpdateRequest visitUpdateRequest,
+            List<MultipartFile> visitImageFiles,
+            Member member
+    ) {
         Visit visit = getVisitById(visitId);
+        validateOwner(visit.getTravel(), member);
         List<String> addedImages = List.of(visitImageFiles.get(0).getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
         VisitImages visitImages = VisitImages.builder()
                 .existingImages(visitUpdateRequest.visitImageUrls())
@@ -69,8 +75,11 @@ public class VisitService {
     }
 
     @Transactional
-    public void deleteVisitById(long visitId) {
-        visitRepository.deleteById(visitId);
+    public void deleteVisitById(long visitId, Member member) {
+        visitRepository.findById(visitId).ifPresent(visit -> {
+            validateOwner(visit.getTravel(), member);
+            visitRepository.deleteById(visitId);
+        });
     }
 
     private void validateOwner(Travel travel, Member member) {
