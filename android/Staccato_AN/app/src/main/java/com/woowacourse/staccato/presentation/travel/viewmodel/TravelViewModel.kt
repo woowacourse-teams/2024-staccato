@@ -9,6 +9,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.ResponseResult
+import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
@@ -57,22 +58,21 @@ class TravelViewModel(
     }
 
     private fun handleServerError(
-        code: Int,
+        status: Status,
         message: String,
     ) {
-        Log.d("hye: 여행 조회 실패", "$code : $message $TRAVEL_ERROR_MESSAGE")
-        _errorMessage.value = "$code : $TRAVEL_ERROR_MESSAGE"
+        _errorMessage.value = message
     }
 
     private fun handelException(
         e: Throwable,
         message: String,
     ) {
-        Log.d("hye: 여행 생성 실패 - 예외", "${e.message}")
+        Log.d("hye", e.message.toString())
         _errorMessage.value = TRAVEL_ERROR_MESSAGE
     }
 
     companion object {
-        const val TRAVEL_ERROR_MESSAGE = "여행을 조회할 수 없습니다"
+        private const val TRAVEL_ERROR_MESSAGE = "여행을 조회할 수 없습니다"
     }
 }

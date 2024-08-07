@@ -12,7 +12,7 @@ class TravelDefaultRepository(
     override suspend fun getTravel(travelId: Long): ResponseResult<Travel> {
         return when (val responseResult = travelDataSource.getTravel(travelId)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
-            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.code, responseResult.message)
+            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
         }
     }
@@ -20,7 +20,7 @@ class TravelDefaultRepository(
     override suspend fun createTravel(newTravel: NewTravel): ResponseResult<String> {
         return when (val responseResult = travelDataSource.createTravel(newTravel)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
-            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.code, responseResult.message)
+            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
         }
     }
@@ -31,7 +31,7 @@ class TravelDefaultRepository(
     ): ResponseResult<String> {
         return when (val responseResult = travelDataSource.updateTravel(travelId, newTravel)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
-            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.code, responseResult.message)
+            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
         }
     }
@@ -39,7 +39,7 @@ class TravelDefaultRepository(
     override suspend fun deleteTravel(travelId: Long): ResponseResult<Unit> {
         return when (val responseResult = travelDataSource.deleteTravel(travelId)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
-            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.code, responseResult.message)
+            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(Unit)
         }
     }
