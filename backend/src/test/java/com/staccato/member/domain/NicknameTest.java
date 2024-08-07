@@ -14,7 +14,7 @@ class NicknameTest {
     @DisplayName("유효한 닉네임을 생성한다.")
     @Test
     void CreateNickname() {
-        assertThatNoException().isThrownBy(() -> new Nickname("가ㄱㅏㅣㅎ.AZaz_"));
+        assertThatNoException().isThrownBy(() -> new Nickname("가ㄱㅏㅣㅎ.AZ1az_"));
     }
 
     @DisplayName("닉네임의 길이가 잘못되었을 경우 예외를 발생시킨다.")
