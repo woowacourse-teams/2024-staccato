@@ -1,6 +1,9 @@
 package com.staccato.s3.service;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -18,9 +21,19 @@ public class CloudStorageService {
 
     private final CloudStorageClient cloudStorageClient;
 
-    public String uploadFile(MultipartFile image) throws IOException {
+    public List<String> uploadFiles(List<MultipartFile> images) {
+        return images.stream()
+                .map(this::uploadFile)
+                .toList();
+    }
+
+    private String uploadFile(MultipartFile image) {
         String key = makeImagePath(image.getOriginalFilename());
-        cloudStorageClient.putS3Object(key, image.getContentType(), image.getBytes());
+        try {
+            cloudStorageClient.putS3Object(key, image.getContentType(), image.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         return cloudStorageClient.getUrl(key);
     }
@@ -50,5 +63,37 @@ public class CloudStorageService {
             return fileName;
         }
         return fileName.substring(0, dotIndex);
+    }
+
+    public void deleteFiles(List<String> imageUrls) {
+        List<String> objectKeys = imageUrls.stream()
+                .map(this::getObjectKeyFromUrl)
+                .toList();
+
+        if (imageUrls.size() == 1) {
+            cloudStorageClient.deleteS3Object(objectKeys.get(0));
+            return;
+        }
+
+        cloudStorageClient.deleteMultipleS3Object(objectKeys);
+    }
+
+    private String getObjectKeyFromUrl(String imageUrl) {
+        URI uri = createUri(imageUrl);
+        String path = uri.getPath();
+
+        if (path != null && path.startsWith("/")) {
+            return path.substring(1);
+        }
+
+        throw new IllegalArgumentException("S3 URL 형식이 올바르지 않습니다.");
+    }
+
+    private URI createUri(String uri) {
+        try {
+            return new URI(uri);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("URL 형식이 올바르지 않습니다.");
+        }
     }
 }

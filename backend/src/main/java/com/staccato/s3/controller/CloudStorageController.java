@@ -1,6 +1,6 @@
 package com.staccato.s3.controller;
 
-import java.io.IOException;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +21,8 @@ public class CloudStorageController {
     private final CloudStorageService cloudStorageService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-        try {
-            String fileUrl = cloudStorageService.uploadFile(file);
-            return ResponseEntity.status(HttpStatus.CREATED).body(fileUrl);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드에 실패했습니다.");
-        }
+    public ResponseEntity<List<String>> uploadFiles(@RequestParam("file") List<MultipartFile> images) {
+        List<String> fileUrl = cloudStorageService.uploadFiles(images);
+        return ResponseEntity.status(HttpStatus.CREATED).body(fileUrl);
     }
 }
