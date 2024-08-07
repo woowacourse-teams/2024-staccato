@@ -19,9 +19,6 @@ jobs:
     permissions:
       contents: read
 
-    env:
-      LOCAL_PROPERTIES_API_KEY: ${{ secrets.LOCAL_PROPERTIES_API_KEY }}
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -36,7 +33,21 @@ jobs:
 
       - name: Create local.properties
         run: |
-          echo "LOCAL_PROPERTIES_API_KEY=\"$LOCAL_PROPERTIES_API_KEY\"" > local.properties
+          touch local.properties
+        shell: bash
+
+      - name: Set Base Url in local.properties
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+        run: |
+          echo "base_url=\"$BASE_URL\"" >> local.properties
+        shell: bash
+
+      - name: Create google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          echo '${{GOOGLE_SERVICES_JSON}}' > ./app/google-services.json
         shell: bash
 
       - name: Grant execute permission for gradlew
@@ -61,9 +72,6 @@ jobs:
     permissions:
       contents: read
 
-    env:
-      LOCAL_PROPERTIES_API_KEY: ${{ secrets.LOCAL_PROPERTIES_API_KEY }}
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -78,7 +86,21 @@ jobs:
 
       - name: Create local.properties
         run: |
-          echo "LOCAL_PROPERTIES_API_KEY=\"$LOCAL_PROPERTIES_API_KEY\"" > local.properties
+          touch local.properties
+        shell: bash
+
+      - name: Set Base Url in local.properties
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+        run: |
+          echo "base_url=\"$BASE_URL\"" >> local.properties
+        shell: bash
+
+      - name: Create google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          echo '${{GOOGLE_SERVICES_JSON}}' > ./app/google-services.json
         shell: bash
 
       - name: Grant execute permission for gradlew
