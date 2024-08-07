@@ -3,6 +3,7 @@ package com.staccato.travel.domain;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -105,7 +106,9 @@ public class Travel extends BaseEntity {
     }
 
     public void assignThumbnail(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
+        if (!Objects.isNull(thumbnailUrl)) {
+            this.thumbnailUrl = thumbnailUrl;
+        }
     }
 
     public boolean isNotOwnedBy(Member member) {
