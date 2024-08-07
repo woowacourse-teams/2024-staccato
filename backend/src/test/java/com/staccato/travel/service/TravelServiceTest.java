@@ -52,6 +52,19 @@ class TravelServiceTest extends ServiceSliceTest {
         );
     }
 
+    static Stream<Arguments> updateTravelProvider() {
+        return Stream.of(
+                Arguments.of(
+                        new TravelRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
+                        new MockMultipartFile("travelThumbnail", "example.jpg".getBytes()), "travelThumbnail"),
+                Arguments.of(
+                        new TravelRequest(null, "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
+                        null, null),
+                Arguments.of(
+                        new TravelRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
+                        null, "imageUrl"));
+    }
+
     @DisplayName("여행 상세 정보를 기반으로, 여행 상세를 생성하고 작성자를 저장한다.")
     @Test
     void createTravel() {
@@ -159,26 +172,26 @@ class TravelServiceTest extends ServiceSliceTest {
     }
 
     @DisplayName("여행 상세 정보를 기반으로, 여행 상세를 수정한다.")
-    @Test
-    void updateTravel() {
+    @MethodSource("updateTravelProvider")
+    @ParameterizedTest
+    void updateTravel(TravelRequest updatedTravel, MockMultipartFile updatedFile, String expected) {
         // given
         Member member = saveMember();
-        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
-        TravelRequest updatedTravel = createTravelRequest(2023);
         MockMultipartFile file = new MockMultipartFile("travelThumbnail", "example.jpg".getBytes());
+        TravelIdResponse travelResponse = travelService.createTravel(createTravelRequest(2024), file, member);
 
         // when
-        travelService.updateTravel(updatedTravel, travelIdResponse.travelId(), file, member);
-        Travel foundedTravel = travelRepository.findById(travelIdResponse.travelId()).get();
+        travelService.updateTravel(updatedTravel, travelResponse.travelId(), updatedFile, member);
+        Travel foundedTravel = travelRepository.findById(travelResponse.travelId()).get();
 
         // then
         assertAll(
-                () -> assertThat(foundedTravel.getId()).isEqualTo(travelIdResponse.travelId()),
+                () -> assertThat(foundedTravel.getId()).isEqualTo(travelResponse.travelId()),
                 () -> assertThat(foundedTravel.getTitle()).isEqualTo(updatedTravel.travelTitle()),
                 () -> assertThat(foundedTravel.getDescription()).isEqualTo(updatedTravel.description()),
                 () -> assertThat(foundedTravel.getStartAt()).isEqualTo(updatedTravel.startAt()),
                 () -> assertThat(foundedTravel.getEndAt()).isEqualTo(updatedTravel.endAt()),
-                () -> assertThat(foundedTravel.getThumbnailUrl()).isEqualTo(file.getName())
+                () -> assertThat(foundedTravel.getThumbnailUrl()).isEqualTo(expected)
         );
     }
 

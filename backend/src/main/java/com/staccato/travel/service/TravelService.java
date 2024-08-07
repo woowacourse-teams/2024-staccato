@@ -1,6 +1,7 @@
 package com.staccato.travel.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -91,7 +92,10 @@ public class TravelService {
         Travel updatedTravel = travelRequest.toTravel();
         Travel originTravel = getTravelById(travelId);
         validateOwner(originTravel, member);
-        updatedTravel.assignThumbnail(thumbnailFile.getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
+        if (!Objects.isNull(thumbnailFile)) {
+            // thumbnailFile을 Url로 변환해 가져오는 로직 추가 예정
+            updatedTravel.assignThumbnail(thumbnailFile.getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
+        }
         List<Visit> visits = visitRepository.findAllByTravelIdOrderByVisitedAt(travelId);
         originTravel.update(updatedTravel, visits);
     }
