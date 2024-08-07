@@ -107,4 +107,9 @@ public class Travel extends BaseEntity {
     public void assignThumbnail(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
     }
+
+    public boolean isNotOwnedBy(Member member) {
+        return travelMembers.stream()
+                .noneMatch(travelMember -> travelMember.isMember(member));
+    }
 }

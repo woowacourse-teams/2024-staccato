@@ -13,8 +13,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,7 +57,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(StaccatoException.class)
-    @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     public ResponseEntity<ExceptionResponse> handleStaccatoException(StaccatoException e) {
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
         return ResponseEntity.badRequest()
@@ -67,7 +64,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    @ApiResponse(description = "사용자 인증 실패", responseCode = "401", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+    @ApiResponse(description = "사용자 인증 실패", responseCode = "401")
     public ResponseEntity<ExceptionResponse> handleUnauthorizedException(UnauthorizedException e) {
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -76,7 +73,7 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(ForbiddenException.class)
-    @ApiResponse(description = "사용자가 권한을 가지고 있지 않은 작업을 시도 시 발생", responseCode = "403", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+    @ApiResponse(description = "사용자가 권한을 가지고 있지 않은 작업을 시도 시 발생", responseCode = "403")
     public ResponseEntity<ExceptionResponse> handleForbiddenException(ForbiddenException e) {
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -84,7 +81,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
+    @ApiResponse(responseCode = "500")
     public ResponseEntity<ExceptionResponse> handleInternalServerErrorException(RuntimeException e) {
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
         return ResponseEntity.internalServerError()

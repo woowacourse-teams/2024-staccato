@@ -88,4 +88,12 @@ public class Visit extends BaseEntity {
         this.placeName = placeName;
         this.visitImages.update(newVisitImages, this);
     }
+
+    public String getThumbnailUrl() {
+        return visitImages.getImages().get(0).getImageUrl();
+    }
+
+    public boolean hasImage() {
+        return visitImages.isNotEmpty();
+    }
 }
