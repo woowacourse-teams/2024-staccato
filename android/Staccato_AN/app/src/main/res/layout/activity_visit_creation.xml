@@ -113,6 +113,7 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:onClick="@{()->visitCreationHandler.onPhotoAttachClicked()}"
+                    bind:setAttachedPhotoVisibility="@{viewModel.selectedImages}"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_photo_title">
@@ -124,6 +125,16 @@
                         android:layout_gravity="center" />
 
                 </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/iv_attached_photo"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
+                    bind:setAttachedPhotoVisibility="@{viewModel.selectedImages}" />
 
                 <TextView
                     android:id="@+id/tv_travel_selection_title"

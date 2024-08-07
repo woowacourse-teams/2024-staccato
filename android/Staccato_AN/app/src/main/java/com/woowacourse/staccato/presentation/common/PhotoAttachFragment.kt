@@ -22,18 +22,29 @@ import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentPhotoAttachBinding
 import com.woowacourse.staccato.presentation.util.showToast
+import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
 class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private var _binding: FragmentPhotoAttachBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var uriSelectedListener: OnUrisSelectedListener
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        initUriSelectedListner(context)
         initRequestPermissionLauncher()
         initGalleryLauncher()
+    }
+
+    private fun initUriSelectedListner(context: Context) {
+        if (context is OnUrisSelectedListener) {
+            uriSelectedListener = context
+        } else {
+            throw RuntimeException()
+        }
     }
 
     private fun initRequestPermissionLauncher() {
@@ -79,7 +90,8 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
                 if (result.resultCode == RESULT_OK) {
                     val imageUris = extractImageUris(result.data)
                     if (imageUris.isNotEmpty()) {
-                        // URI 전달
+                        uriSelectedListener.onUrisSelected(imageUris)
+                        dismiss()
                     } else {
                         showToast("사진을 불러올 수 없습니다.")
                     }

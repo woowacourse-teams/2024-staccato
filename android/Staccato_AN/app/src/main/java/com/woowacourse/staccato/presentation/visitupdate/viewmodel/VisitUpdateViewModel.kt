@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.presentation.visitupdate.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,6 +32,9 @@ class VisitUpdateViewModel(
 
     private val _isUpdateCompleted = MutableSingleLiveData(false)
     val isUpdateCompleted: SingleLiveData<Boolean> get() = _isUpdateCompleted
+
+    private val _selectedImages = MutableLiveData<List<Uri>>()
+    val selectedImages: LiveData<List<Uri>> get() = _selectedImages
 
     fun fetchInitData(
         visitId: Long,
@@ -76,5 +80,9 @@ class VisitUpdateViewModel(
 
     fun updateVisitedAt(newSelectedVisitedAt: LocalDate?) {
         _selectedVisitedAt.value = newSelectedVisitedAt
+    }
+
+    fun setImageUris(uris: List<Uri>) {
+        _selectedImages.value = uris
     }
 }
