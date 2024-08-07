@@ -1,0 +1,7 @@
+<included>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] [%thread] %-5level [%C.%M.-%L] - %msg%n</pattern>
+        </encoder>
+    </appender>
+</included>
