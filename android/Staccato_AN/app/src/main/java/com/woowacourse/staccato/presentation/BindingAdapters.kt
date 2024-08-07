@@ -1,11 +1,15 @@
 package com.woowacourse.staccato.presentation
 
 import android.graphics.drawable.Drawable
+import android.net.Uri
+import android.view.View
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.core.view.isGone
+import androidx.core.view.isInvisible
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -217,4 +221,22 @@ fun TextView.combineVisitedAt(visitedAt: LocalDate) {
             visitedAt.monthValue,
             visitedAt.dayOfMonth,
         )
+}
+
+@BindingAdapter("setAttachedPhotoVisibility")
+fun ImageView.setAttachedPhotoVisibility(items: List<Uri>?) {
+    if (items.isNullOrEmpty()) {
+        visibility = View.GONE
+    } else {
+        visibility = View.VISIBLE
+        Glide.with(context)
+            .load(items[0])
+            .centerCrop()
+            .into(this)
+    }
+}
+
+@BindingAdapter("setAttachedPhotoVisibility")
+fun FrameLayout.setAttachedPhotoVisibility(items: List<Uri>?) {
+    isInvisible = !items.isNullOrEmpty()
 }

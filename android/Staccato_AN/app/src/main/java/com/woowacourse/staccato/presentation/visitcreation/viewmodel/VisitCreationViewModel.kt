@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.presentation.visitcreation.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,6 +34,10 @@ class VisitCreationViewModel(
     private val _createdVisitId = MutableSingleLiveData<Long>()
     val createdVisitId: SingleLiveData<Long> get() = _createdVisitId
 
+    private val _selectedImages = MutableLiveData<List<Uri>>()
+
+    val selectedImages: LiveData<List<Uri>> get() = _selectedImages
+
     fun fetchInitData(pinId: Long) =
         viewModelScope.launch {
             loadAllTravels()
@@ -53,14 +58,6 @@ class VisitCreationViewModel(
             )
     }
 
-    fun updateSelectedTravel(newSelectedTravel: VisitTravelUiModel) {
-        _selectedTravel.value = newSelectedTravel
-    }
-
-    fun updateSelectedVisitedAt(newSelectedVisitedAt: LocalDate?) {
-        _selectedVisitedAt.value = newSelectedVisitedAt
-    }
-
     fun createVisit(pinId: Long) =
         viewModelScope.launch {
             if (selectedVisitedAt.value != null && selectedTravel.value != null) {
@@ -77,4 +74,16 @@ class VisitCreationViewModel(
                 }
             }
         }
+
+    fun updateSelectedTravel(newSelectedTravel: VisitTravelUiModel) {
+        _selectedTravel.value = newSelectedTravel
+    }
+
+    fun updateSelectedVisitedAt(newSelectedVisitedAt: LocalDate?) {
+        _selectedVisitedAt.value = newSelectedVisitedAt
+    }
+
+    fun setImageUris(uris: List<Uri>) {
+        _selectedImages.value = uris
+    }
 }
