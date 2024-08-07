@@ -11,17 +11,17 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface TravelApiService {
-    @GET("/travels/{travelId}")
+    @GET(TRAVEL_PATH_WITH_ID)
     suspend fun getTravel(
         @Path("travelId") travelId: Long,
     ): Response<TravelResponse>
 
-    @POST("/travels")
+    @POST(TRAVELS_PATH)
     suspend fun postTravel(
         @Body travelRequest: TravelRequest,
     ): Response<String>
 
-    @PUT("/travels/{travelId}")
+    @PUT(TRAVEL_PATH_WITH_ID)
     suspend fun putTravel(
         @Path("travelId") travelId: Long,
         @Body travelRequest: TravelRequest,
