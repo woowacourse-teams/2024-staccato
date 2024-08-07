@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(DateTimeParseException.class)
+    @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleDateTimeParseException(DateTimeParseException e) {
         String errorMessage = "올바르지 않은 날짜 형식입니다.";
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
@@ -28,6 +29,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleValidationException(MethodArgumentNotValidException e) {
         String message = Optional.ofNullable(e.getBindingResult().getFieldError())
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
@@ -38,6 +40,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
+    @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleConstraintViolationException(ConstraintViolationException e) {
         String errorMessage = e.getConstraintViolations()
                 .iterator()
@@ -49,6 +52,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         String errorMessage = "요청 본문을 읽을 수 없습니다. 올바른 형식으로 데이터를 제공해주세요.";
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
@@ -57,6 +61,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(StaccatoException.class)
+    @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleStaccatoException(StaccatoException e) {
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, e.getMessage());
         return ResponseEntity.badRequest()
