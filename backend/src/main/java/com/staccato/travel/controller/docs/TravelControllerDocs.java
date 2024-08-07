@@ -93,7 +93,7 @@ public interface TravelControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<Void> updateTravel(
-            @Parameter(description = "여행 상세 ID") @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
+            @Parameter(description = "여행 상세 ID", example = "1") @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
             @Parameter(description = "key = data", required = true) @Valid TravelRequest travelRequest,
             @Parameter(description = "key = travelThumbnailFile") MultipartFile travelThumbnailFile,
             @Parameter(hidden = true) Member member);
