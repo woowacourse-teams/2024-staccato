@@ -29,7 +29,7 @@ class TravelFragment :
     private val viewModel: TravelViewModel by viewModels {
         TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))
     }
-    private val deleteDialog = DeleteDialogFragment { findNavController().popBackStack() }
+    private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
 
     private lateinit var matesAdapter: MatesAdapter
     private lateinit var visitsAdapter: VisitsAdapter
@@ -43,6 +43,7 @@ class TravelFragment :
         initMatesAdapter()
         initVisitsAdapter()
         observeTravel()
+        observeIsDeleteSuccess()
         showErrorToast()
         viewModel.loadTravel(travelId)
     }
@@ -68,6 +69,10 @@ class TravelFragment :
         findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
     }
 
+    override fun onConfirmClicked() {
+        viewModel.deleteTravel(travelId)
+    }
+
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -84,6 +89,15 @@ class TravelFragment :
         viewModel.travel.observe(viewLifecycleOwner) { travel ->
             matesAdapter.updateMates(travel.mates)
             visitsAdapter.updateVisits(travel.visits)
+        }
+    }
+
+    private fun observeIsDeleteSuccess() {
+        viewModel.isDeleteSuccess.observe(viewLifecycleOwner) { isDeleteSuccess ->
+            if (isDeleteSuccess) {
+                findNavController().popBackStack()
+                showToast(getString(R.string.travel_delete_complete))
+            }
         }
     }
 
