@@ -50,10 +50,11 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void createVisit() {
         // given
-        saveTravel();
+        Member member = saveMember();
+        saveTravel(member);
 
         // when
-        long visitId = visitService.createVisit(getVisitRequestWithoutImage()).visitId();
+        long visitId = visitService.createVisit(getVisitRequestWithoutImage(), member).visitId();
 
         // then
         assertThat(visitRepository.findById(visitId)).isNotEmpty();
@@ -67,10 +68,11 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void createVisitWithVisitImages() {
         // given
-        saveTravel();
+        Member member = saveMember();
+        saveTravel(member);
 
         // when
-        long visitId = visitService.createVisit(getVisitRequest()).visitId();
+        long visitId = visitService.createVisit(getVisitRequest(), member).visitId();
 
         // then
         assertAll(
@@ -79,10 +81,29 @@ class VisitServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("본인 것이 아닌 여행에 방문 기록을 생성하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotCreateVisitIfNotOwner() {
+        // given
+        Member member = saveMember();
+        Member otherMember = saveMember();
+        saveTravel(member);
+        VisitRequest visitRequest = getVisitRequest();
+
+        // when & then
+        assertThatThrownBy(() -> visitService.createVisit(visitRequest, otherMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
     @DisplayName("존재하지 않는 여행에 방문 기록 생성을 시도하면 예외가 발생한다.")
     @Test
     void failCreateVisit() {
-        assertThatThrownBy(() -> visitService.createVisit(getVisitRequest()))
+        // given
+        Member member = saveMember();
+
+        // when & then
+        assertThatThrownBy(() -> visitService.createVisit(getVisitRequest(), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 여행을 찾을 수 없어요.");
     }
@@ -226,12 +247,6 @@ class VisitServiceTest extends ServiceSliceTest {
 
     private Member saveMember() {
         return memberRepository.save(Member.builder().nickname("staccato").build());
-    }
-
-    private Travel saveTravel() {
-        return travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
-        );
     }
 
     private Travel saveTravel(Member member) {

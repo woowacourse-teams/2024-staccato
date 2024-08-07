@@ -29,8 +29,9 @@ public class VisitService {
     private final TravelRepository travelRepository;
 
     @Transactional
-    public VisitIdResponse createVisit(VisitRequest visitRequest) {
+    public VisitIdResponse createVisit(VisitRequest visitRequest, Member member) {
         Travel travel = getTravelById(visitRequest.travelId());
+        validateOwner(travel, member);
         Visit visit = visitRequest.toVisit(travel);
         VisitImages visitImages = new VisitImages(visitRequest.visitImageUrls());
         visit.addVisitImages(visitImages);

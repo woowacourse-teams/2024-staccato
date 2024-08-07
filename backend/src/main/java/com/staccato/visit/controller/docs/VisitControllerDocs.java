@@ -43,6 +43,7 @@ public interface VisitControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<VisitIdResponse> createVisit(
+            @Parameter(hidden = true) Member member,
             @Parameter(description = "key = data", required = true) @Valid VisitRequest visitRequest,
             @Parameter(description = "key = visitImageFiles") @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> visitImagesFile
     );

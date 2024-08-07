@@ -95,7 +95,8 @@ class VisitControllerTest {
         MockMultipartFile file4 = new MockMultipartFile("visitImageFiles", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes());
         MockMultipartFile file5 = new MockMultipartFile("visitImageFiles", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes());
         VisitIdResponse visitIdResponse = new VisitIdResponse(1L);
-        when(visitService.createVisit(any(VisitRequest.class))).thenReturn(new VisitIdResponse(1L));
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(visitService.createVisit(any(VisitRequest.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
         mockMvc.perform(multipart("/visits")
@@ -105,6 +106,7 @@ class VisitControllerTest {
                         .file(file3)
                         .file(file4)
                         .file(file5)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/visits/1"))
@@ -127,6 +129,7 @@ class VisitControllerTest {
         MockMultipartHttpServletRequestBuilder builder = multipart("/visits");
         builder.file(visitRequestPart);
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
         mockMvc.perform(multipart("/visits")
@@ -137,6 +140,7 @@ class VisitControllerTest {
                         .file(file4)
                         .file(file5)
                         .file(file6)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
@@ -155,12 +159,14 @@ class VisitControllerTest {
         MockMultipartFile visitRequestPart = new MockMultipartFile("data", "visitRequest.json", "application/json", visitRequestJson.getBytes());
         MockMultipartFile imageFilePart = new MockMultipartFile("visitImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
-        when(visitService.createVisit(any(VisitRequest.class))).thenReturn(new VisitIdResponse(1L));
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(visitService.createVisit(any(VisitRequest.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
         mockMvc.perform(multipart("/visits")
                         .file(visitRequestPart)
                         .file(imageFilePart)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
