@@ -207,7 +207,6 @@ class VisitControllerTest {
         long visitId = 1L;
         VisitUpdateRequest updateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("visitImageFiles", "namsan_tower.jpg".getBytes());
-
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
@@ -237,7 +236,6 @@ class VisitControllerTest {
         MockMultipartFile file4 = new MockMultipartFile("visitImageFiles", "namsan_tower4.jpg".getBytes());
         MockMultipartFile file5 = new MockMultipartFile("visitImageFiles", "namsan_tower5.jpg".getBytes());
         MockMultipartFile file6 = new MockMultipartFile("visitImageFiles", "namsan_tower6.jpg".getBytes());
-
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
@@ -268,7 +266,6 @@ class VisitControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문 기록 식별자는 양수로 이루어져야 합니다.");
         VisitUpdateRequest updateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("visitImageFiles", "namsan_tower.jpg".getBytes());
-
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
@@ -294,7 +291,6 @@ class VisitControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문한 장소의 이름을 입력해주세요.");
         VisitUpdateRequest updateRequest = new VisitUpdateRequest(null, List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("visitImageFiles", "namsan_tower.jpg".getBytes());
-
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then

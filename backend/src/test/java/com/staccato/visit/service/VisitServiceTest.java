@@ -169,13 +169,10 @@ class VisitServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(foundedVisit.getPlaceName()).isEqualTo("newPlaceName"),
                 () -> assertThat(visitImageRepository.findById(1L)).isEmpty(),
-                () -> assertThat(visitImageRepository.findById(2L).get()
-                        .getImageUrl()).isEqualTo("https://existExample.com.jpg"),
+                () -> assertThat(visitImageRepository.findById(2L).get().getImageUrl()).isEqualTo("https://existExample.com.jpg"),
                 () -> assertThat(visitImageRepository.findById(3L).get().getImageUrl()).isEqualTo("visitImagesFile"),
-                () -> assertThat(visitImageRepository.findById(2L).get().getVisit()
-                        .getId()).isEqualTo(foundedVisit.getId()),
-                () -> assertThat(visitImageRepository.findById(3L).get().getVisit()
-                        .getId()).isEqualTo(foundedVisit.getId()),
+                () -> assertThat(visitImageRepository.findById(2L).get().getVisit().getId()).isEqualTo(foundedVisit.getId()),
+                () -> assertThat(visitImageRepository.findById(3L).get().getVisit().getId()).isEqualTo(foundedVisit.getId()),
                 () -> assertThat(visitImageRepository.findAll().size()).isEqualTo(2)
         );
     }
