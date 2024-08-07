@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.travelcreation.viewmodel
 
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +9,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.ResponseResult
+import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.travelcreation.DateConverter.convertLongToLocalDate
@@ -70,11 +70,10 @@ class TravelCreationViewModel(
         )
 
     private fun handleServerError(
-        code: Int,
+        status: Status,
         message: String,
     ) {
-        _errorMessage.value = "$code : $TRAVEL_CREATION_ERROR_MESSAGE"
-        Log.d("hye: 여행 생성 실패", "$code : $message $TRAVEL_CREATION_ERROR_MESSAGE")
+        _errorMessage.value = message
     }
 
     private fun handelException(
@@ -82,7 +81,6 @@ class TravelCreationViewModel(
         message: String,
     ) {
         _errorMessage.value = TRAVEL_CREATION_ERROR_MESSAGE
-        Log.d("hye: 여행 생성 실패 - 예외", "${e.message}")
     }
 
     companion object {
