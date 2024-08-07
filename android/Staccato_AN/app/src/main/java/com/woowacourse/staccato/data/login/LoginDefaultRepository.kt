@@ -9,7 +9,7 @@ class LoginDefaultRepository(
     override suspend fun loginWithNickname(nickname: String): ResponseResult<String> {
         return when (val result = loginDataSource.requestLoginWithNickname(nickname)) {
             is ResponseResult.Exception -> ResponseResult.Exception(result.e, EXCEPTION_ERROR_MESSAGE)
-            is ResponseResult.ServerError -> ResponseResult.ServerError(result.code, result.message)
+            is ResponseResult.ServerError -> ResponseResult.ServerError(result.status, result.message)
             is ResponseResult.Success -> ResponseResult.Success(result.data.token)
         }
     }

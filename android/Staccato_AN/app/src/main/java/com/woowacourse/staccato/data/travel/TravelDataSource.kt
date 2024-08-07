@@ -13,4 +13,6 @@ interface TravelDataSource {
         travelId: Long,
         newTravel: NewTravel,
     ): ResponseResult<String>
+
+    suspend fun deleteTravel(travelId: Long): ResponseResult<Unit>
 }

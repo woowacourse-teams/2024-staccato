@@ -8,6 +8,7 @@ import com.woowacourse.staccato.StaccatoApplication
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
+import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.domain.repository.LoginRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
@@ -43,11 +44,14 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel(), Log
     }
 
     private fun handleError(
-        code: Int,
+        status: Status,
         errorMessage: String,
     ) {
         _errorMessage.postValue(errorMessage)
-        Log.e(this::class.java.simpleName, "Error Occurred | code: $code, message: $errorMessage")
+        when (status) {
+            is Status.Message -> Log.e(this::class.java.simpleName, "Error Occurred | status: ${status.message}, message: $errorMessage")
+            is Status.Code -> Log.e(this::class.java.simpleName, "Error Occurred | status: ${status.code}, message: $errorMessage")
+        }
     }
 
     private fun handleException(

@@ -1,14 +1,18 @@
 package com.woowacourse.staccato.data
 
+import com.woowacourse.staccato.data.StaccatoClient.getErrorResponse
+import com.woowacourse.staccato.data.dto.ErrorResponse
+import com.woowacourse.staccato.data.dto.Status
+import okhttp3.ResponseBody
 import retrofit2.HttpException
 import retrofit2.Response
 
 object ApiResponseHandler {
     suspend fun <T : Any> handleApiResponse(execute: suspend () -> Response<T>): ResponseResult<T> {
-        return try {
-            val response = execute()
-            val body = response.body()
+        val response: Response<T> = execute()
+        val body: T? = response.body()
 
+        return try {
             when {
                 response.isSuccessful && response.code() == 201 -> {
                     val locationHeader = response.headers()["Location"].toString()
@@ -16,14 +20,17 @@ object ApiResponseHandler {
                 }
                 response.isSuccessful && body != null -> ResponseResult.Success(body)
                 response.isSuccessful && response.code() == 204 -> ResponseResult.Success(Unit as T)
-                else ->
+                else -> {
+                    val errorBody: ResponseBody = response.errorBody() ?: throw IllegalArgumentException("errorBody를 찾을 수 없습니다.")
+                    val errorResponse: ErrorResponse = getErrorResponse(errorBody)
                     ResponseResult.ServerError(
-                        code = response.code(),
-                        message = response.message(),
+                        status = Status.Message(errorResponse.status),
+                        message = errorResponse.message,
                     )
+                }
             }
         } catch (e: HttpException) {
-            ResponseResult.ServerError(code = e.code(), message = e.message())
+            ResponseResult.ServerError(status = Status.Code(e.code()), message = e.message())
         } catch (e: Throwable) {
             ResponseResult.Exception(e, message = e.message.toString())
         }
@@ -36,10 +43,12 @@ object ApiResponseHandler {
             }
         }
 
-    suspend fun <T : Any> ResponseResult<T>.onServerError(executable: suspend (code: Int, message: String) -> Unit): ResponseResult<T> =
+    suspend fun <T : Any> ResponseResult<T>.onServerError(
+        executable: suspend (status: Status, message: String) -> Unit,
+    ): ResponseResult<T> =
         apply {
             if (this is ResponseResult.ServerError<T>) {
-                executable(code, message)
+                executable(status, message)
             }
         }
 
