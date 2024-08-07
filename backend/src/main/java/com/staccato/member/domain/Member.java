@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import com.staccato.config.domain.BaseEntity;
 
@@ -21,6 +22,7 @@ import lombok.NonNull;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +32,7 @@ public class Member extends BaseEntity {
     private Nickname nickname;
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
+    private Boolean isDeleted = false;
 
     @Builder
     public Member(@NonNull String nickname, String imageUrl) {
