@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.member.domain.Member;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.repository.TravelRepository;
 import com.staccato.visit.domain.Visit;
@@ -27,8 +29,9 @@ public class VisitService {
     private final TravelRepository travelRepository;
 
     @Transactional
-    public VisitIdResponse createVisit(VisitRequest visitRequest) {
+    public VisitIdResponse createVisit(VisitRequest visitRequest, Member member) {
         Travel travel = getTravelById(visitRequest.travelId());
+        validateOwner(travel, member);
         Visit visit = visitRequest.toVisit(travel);
         VisitImages visitImages = new VisitImages(visitRequest.visitImageUrls());
         visit.addVisitImages(visitImages);
@@ -43,14 +46,21 @@ public class VisitService {
                 .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
     }
 
-    public VisitDetailResponse readVisitById(long visitId) {
+    public VisitDetailResponse readVisitById(long visitId, Member member) {
         Visit visit = getVisitById(visitId);
+        validateOwner(visit.getTravel(), member);
         return new VisitDetailResponse(visit);
     }
 
     @Transactional
-    public void updateVisitById(long visitId, VisitUpdateRequest visitUpdateRequest, List<MultipartFile> visitImageFiles) {
+    public void updateVisitById(
+            long visitId,
+            VisitUpdateRequest visitUpdateRequest,
+            List<MultipartFile> visitImageFiles,
+            Member member
+    ) {
         Visit visit = getVisitById(visitId);
+        validateOwner(visit.getTravel(), member);
         List<String> addedImages = List.of(visitImageFiles.get(0).getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
         VisitImages visitImages = VisitImages.builder()
                 .existingImages(visitUpdateRequest.visitImageUrls())
@@ -66,7 +76,16 @@ public class VisitService {
     }
 
     @Transactional
-    public void deleteVisitById(long visitId) {
-        visitRepository.deleteById(visitId);
+    public void deleteVisitById(long visitId, Member member) {
+        visitRepository.findById(visitId).ifPresent(visit -> {
+            validateOwner(visit.getTravel(), member);
+            visitRepository.deleteById(visitId);
+        });
+    }
+
+    private void validateOwner(Travel travel, Member member) {
+        if (travel.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
     }
 }

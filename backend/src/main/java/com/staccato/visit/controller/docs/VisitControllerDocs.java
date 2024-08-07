@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.staccato.member.domain.Member;
 import com.staccato.visit.service.dto.request.VisitRequest;
 import com.staccato.visit.service.dto.request.VisitUpdateRequest;
 import com.staccato.visit.service.dto.response.VisitDetailResponse;
@@ -42,6 +43,7 @@ public interface VisitControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<VisitIdResponse> createVisit(
+            @Parameter(hidden = true) Member member,
             @Parameter(description = "key = data", required = true) @Valid VisitRequest visitRequest,
             @Parameter(description = "key = visitImageFiles") @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> visitImagesFile
     );
@@ -59,6 +61,7 @@ public interface VisitControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<VisitDetailResponse> readVisitById(
+            @Parameter(hidden = true) Member member,
             @Parameter(description = "방문 기록 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId);
 
     @Operation(summary = "특정 방문 기록 수정", description = "특정 방문 기록을 수정합니다.")
@@ -76,6 +79,7 @@ public interface VisitControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<Void> updateVisitById(
+            @Parameter(hidden = true) Member member,
             @Parameter(description = "방문 기록 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId,
             @Parameter(description = "key = visitImageFiles") @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> visitImageFiles,
             @Parameter(description = "key = data", required = true) @Valid VisitUpdateRequest request);
@@ -86,6 +90,7 @@ public interface VisitControllerDocs {
             @ApiResponse(description = "방문 기록 식별자에 양수가 아닌 값을 기입했을 경우", responseCode = "400")
     })
     ResponseEntity<Void> deleteVisitById(
+            @Parameter(hidden = true) Member member,
             @Parameter(description = "방문 기록 ID", example = "1", required = true) @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId
     );
 }

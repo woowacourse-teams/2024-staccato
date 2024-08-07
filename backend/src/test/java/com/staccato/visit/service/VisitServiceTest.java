@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 
 import com.staccato.ServiceSliceTest;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -49,12 +50,11 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void createVisit() {
         // given
-        travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
-        );
+        Member member = saveMember();
+        saveTravel(member);
 
         // when
-        long visitId = visitService.createVisit(getVisitRequestWithoutImage()).visitId();
+        long visitId = visitService.createVisit(getVisitRequestWithoutImage(), member).visitId();
 
         // then
         assertThat(visitRepository.findById(visitId)).isNotEmpty();
@@ -68,12 +68,11 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void createVisitWithVisitImages() {
         // given
-        travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
-        );
+        Member member = saveMember();
+        saveTravel(member);
 
         // when
-        long visitId = visitService.createVisit(getVisitRequest()).visitId();
+        long visitId = visitService.createVisit(getVisitRequest(), member).visitId();
 
         // then
         assertAll(
@@ -82,10 +81,29 @@ class VisitServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("본인 것이 아닌 여행에 방문 기록을 생성하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotCreateVisitIfNotOwner() {
+        // given
+        Member member = saveMember();
+        Member otherMember = saveMember();
+        saveTravel(member);
+        VisitRequest visitRequest = getVisitRequest();
+
+        // when & then
+        assertThatThrownBy(() -> visitService.createVisit(visitRequest, otherMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
     @DisplayName("존재하지 않는 여행에 방문 기록 생성을 시도하면 예외가 발생한다.")
     @Test
     void failCreateVisit() {
-        assertThatThrownBy(() -> visitService.createVisit(getVisitRequest()))
+        // given
+        Member member = saveMember();
+
+        // when & then
+        assertThatThrownBy(() -> visitService.createVisit(getVisitRequest(), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 여행을 찾을 수 없어요.");
     }
@@ -98,23 +116,40 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void readVisitById() {
         // given
-        Travel travel = travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
-        );
-        Visit visit = visitRepository.save(VisitFixture.create(travel, LocalDate.now()));
+        Member member = saveMember();
+        Travel travel = saveTravel(member);
+        Visit visit = saveVisitWithImages(travel);
 
         // when
-        VisitDetailResponse actual = visitService.readVisitById(visit.getId());
+        VisitDetailResponse actual = visitService.readVisitById(visit.getId(), member);
 
         // then
         assertThat(actual).isEqualTo(new VisitDetailResponse(visit));
     }
 
+    @DisplayName("본인 것이 아닌 특정 방문 기록을 조회하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotReadVisitByIdIfNotOwner() {
+        // given
+        Member member = saveMember();
+        Member otherMember = saveMember();
+        Travel travel = saveTravel(member);
+        Visit visit = saveVisitWithImages(travel);
+
+        // when & then
+        assertThatThrownBy(() -> visitService.readVisitById(visit.getId(), otherMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
     @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
     @Test
     void failReadVisitById() {
-        // given & when & then
-        assertThatThrownBy(() -> visitService.readVisitById(1L))
+        // given
+        Member member = saveMember();
+
+        // when & then
+        assertThatThrownBy(() -> visitService.readVisitById(1L, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
     }
@@ -123,17 +158,14 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void updateVisitById() {
         // given
-        Travel travel = travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now().minusDays(1)).endAt(LocalDate.now().plusDays(1)).build()
-        );
-        Visit visit = VisitFixture.create(travel, LocalDate.now());
-        visit.addVisitImages(new VisitImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
-        visitRepository.save(visit);
+        Member member = saveMember();
+        Travel travel = saveTravel(member);
+        Visit visit = saveVisitWithImages(travel);
 
         // when
         VisitUpdateRequest visitUpdateRequest = new VisitUpdateRequest("newPlaceName", List.of("https://existExample.com.jpg"));
         MockMultipartFile mockMultipartFile = new MockMultipartFile("visitImagesFile", "newExample.jpg".getBytes());
-        visitService.updateVisitById(visit.getId(), visitUpdateRequest, List.of(mockMultipartFile));
+        visitService.updateVisitById(visit.getId(), visitUpdateRequest, List.of(mockMultipartFile), member);
 
         // then
         Visit foundedVisit = visitRepository.findById(visit.getId()).get();
@@ -148,14 +180,31 @@ class VisitServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("본인 것이 아닌 특정 방문 기록을 수정하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotUpdateVisitByIdIfNotOwner() {
+        // given
+        Member member = saveMember();
+        Member otherMember = saveMember();
+        Travel travel = saveTravel(member);
+        Visit visit = saveVisitWithImages(travel);
+        VisitUpdateRequest visitUpdateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
+
+        // when & then
+        assertThatThrownBy(() -> visitService.updateVisitById(visit.getId(), visitUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes())), otherMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
     @DisplayName("존재하지 않는 방문 기록을 수정하면 예외가 발생한다.")
     @Test
     void failUpdateVisitById() {
         // given
+        Member member = saveMember();
         VisitUpdateRequest visitUpdateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
 
         // when & then
-        assertThatThrownBy(() -> visitService.updateVisitById(1L, visitUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes()))))
+        assertThatThrownBy(() -> visitService.updateVisitById(1L, visitUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes())), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
     }
@@ -164,16 +213,13 @@ class VisitServiceTest extends ServiceSliceTest {
     @Test
     void deleteVisitById() {
         // given
-        Member member = memberRepository.save(Member.builder().nickname("SampleMember").build());
-        Travel travel = travelRepository.save(
-                Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build()
-        );
-        Visit visit = visitRepository.save(VisitFixture.create(travel, LocalDate.now()));
+        Member member = saveMember();
+        Travel travel = saveTravel(member);
+        Visit visit = saveVisitWithImages(travel);
         VisitLog visitLog = visitLogRepository.save(VisitLogFixture.create(visit, member));
-        visit.addVisitImages(new VisitImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
 
         // when
-        visitService.deleteVisitById(visit.getId());
+        visitService.deleteVisitById(visit.getId(), member);
 
         // then
         assertAll(
@@ -182,5 +228,37 @@ class VisitServiceTest extends ServiceSliceTest {
                 () -> assertThat(visitImageRepository.findById(0L)).isEmpty(),
                 () -> assertThat(visitImageRepository.findById(1L)).isEmpty()
         );
+    }
+
+    @DisplayName("본인 것이 아닌 특정 방문 기록을 삭제하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotDeleteVisitByIdIfNotOwner() {
+        // given
+        Member member = saveMember();
+        Member otherMember = saveMember();
+        Travel travel = saveTravel(member);
+        Visit visit = saveVisitWithImages(travel);
+
+        // when & then
+        assertThatThrownBy(() -> visitService.deleteVisitById(visit.getId(), otherMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    private Member saveMember() {
+        return memberRepository.save(Member.builder().nickname("staccato").build());
+    }
+
+    private Travel saveTravel(Member member) {
+        Travel travel = Travel.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build();
+        travel.addTravelMember(member);
+
+        return travelRepository.save(travel);
+    }
+
+    private Visit saveVisitWithImages(Travel travel) {
+        Visit visit = VisitFixture.create(travel, LocalDate.now());
+        visit.addVisitImages(new VisitImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
+        return visitRepository.save(visit);
     }
 }
