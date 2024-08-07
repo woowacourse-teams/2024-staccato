@@ -28,6 +28,10 @@ spring:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
@@ -35,6 +39,17 @@ security:
   jwt:
     token:
       secret-key: ${SECRET_KEY}
+cloud:
+  aws:
+    s3:
+      bucket: techcourse-project-2024
+      endpoint: https://techcourse-project-2024.s3.ap-northeast-2.amazonaws.com
+    cloudfront:
+      endpoint: https://d25aribbn0gp8k.cloudfront.net
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 
 ---
 
@@ -60,6 +75,10 @@ spring:
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
@@ -67,3 +86,14 @@ security:
   jwt:
     token:
       secret-key: ${SECRET_KEY}
+cloud:
+  aws:
+    s3:
+      bucket: techcourse-project-2024
+      endpoint: https://techcourse-project-2024.s3.ap-northeast-2.amazonaws.com
+    cloudfront:
+      endpoint: https://d25aribbn0gp8k.cloudfront.net
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 @Slf4j
 @RestControllerAdvice
@@ -51,6 +52,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         String errorMessage = "요청 본문을 읽을 수 없습니다. 올바른 형식으로 데이터를 제공해주세요.";
+        log.warn("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage));
+    }
+
+    @ExceptionHandler(S3Exception.class)
+    public ResponseEntity<ExceptionResponse> handleS3Exception(S3Exception e) {
+        String errorMessage = "이미지 처리에 실패했습니다.";
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage));
