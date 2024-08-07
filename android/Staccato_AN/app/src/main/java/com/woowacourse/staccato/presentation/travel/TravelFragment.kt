@@ -12,6 +12,7 @@ import com.woowacourse.staccato.data.travel.TravelRemoteDataSource
 import com.woowacourse.staccato.databinding.FragmentTravelBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
+import com.woowacourse.staccato.presentation.common.DialogHandler
 import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.travel.adapter.MatesAdapter
@@ -24,7 +25,8 @@ import com.woowacourse.staccato.presentation.util.showToast
 class TravelFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
     ToolbarHandler,
-    TravelHandler {
+    TravelHandler,
+    DialogHandler {
     private val travelId by lazy { arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException() }
     private val viewModel: TravelViewModel by viewModels {
         TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))

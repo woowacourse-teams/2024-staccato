@@ -1,7 +1,5 @@
 package com.woowacourse.staccato.presentation.travel
 
-import com.woowacourse.staccato.presentation.common.DialogHandler
-
-interface TravelHandler : DialogHandler {
+interface TravelHandler {
     fun onVisitClicked(visitId: Long)
 }
