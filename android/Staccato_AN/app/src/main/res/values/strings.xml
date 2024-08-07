@@ -53,6 +53,8 @@
     <string name="photo_attach_title">사진을 등록해주세요</string>
     <string name="photo_attach_camera">카메라 열기</string>
     <string name="photo_attach_album">앨범에서 가져오기</string>
+    <string name="snack_bar_require_photo_album_permission">사진 및 동영상 액세스 권한을 허용해주세요.</string>
+    <string name="snack_bar_move_to_setting">설정으로 이동하기</string>
 
     // fragment_travel_selection
     <string name="travel_selection_period">%s.%s.%s - %s.%s.%s</string>

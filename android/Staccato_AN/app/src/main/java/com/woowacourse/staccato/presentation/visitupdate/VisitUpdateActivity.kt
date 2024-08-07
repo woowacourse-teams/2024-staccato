@@ -2,6 +2,7 @@ package com.woowacourse.staccato.presentation.visitupdate
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
@@ -12,6 +13,7 @@ import com.woowacourse.staccato.databinding.ActivityVisitUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.util.showToast
+import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 import com.woowacourse.staccato.presentation.visitcreation.dialog.VisitedAtSelectionFragment
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
@@ -19,7 +21,10 @@ import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateVi
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
-class VisitUpdateActivity : BindingActivity<ActivityVisitUpdateBinding>(), VisitUpdateHandler {
+class VisitUpdateActivity :
+    BindingActivity<ActivityVisitUpdateBinding>(),
+    OnUrisSelectedListener,
+    VisitUpdateHandler {
     override val layoutResourceId = R.layout.activity_visit_update
     private val viewModel: VisitUpdateViewModel by viewModels { VisitUpdateViewModelFactory() }
 
@@ -98,6 +103,10 @@ class VisitUpdateActivity : BindingActivity<ActivityVisitUpdateBinding>(), Visit
             setResult(RESULT_OK, resultIntent)
             finish()
         }
+    }
+
+    override fun onUrisSelected(uris: List<Uri>) {
+        viewModel.setImageUris(uris)
     }
 
     override fun onVisitedAtClicked() {
