@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
@@ -14,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 
 import com.staccato.ServiceSliceTest;
 import com.staccato.exception.ForbiddenException;
@@ -30,6 +30,7 @@ import com.staccato.travel.service.dto.response.TravelIdResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
 import com.staccato.travel.service.dto.response.VisitResponse;
 import com.staccato.visit.domain.Visit;
+import com.staccato.visit.fixture.VisitFixture;
 import com.staccato.visit.repository.VisitRepository;
 
 class TravelServiceTest extends ServiceSliceTest {
@@ -141,15 +142,7 @@ class TravelServiceTest extends ServiceSliceTest {
     }
 
     private Visit saveVisit(LocalDate visitedAt, long travelId) {
-        return visitRepository.save(
-                Visit.builder()
-                        .visitedAt(visitedAt)
-                        .placeName("placeName")
-                        .latitude(BigDecimal.ONE)
-                        .longitude(BigDecimal.ONE)
-                        .address("address")
-                        .travel(travelRepository.findById(travelId).get())
-                        .build());
+        return visitRepository.save(VisitFixture.create(travelRepository.findById(travelId).get(), visitedAt));
     }
 
     @DisplayName("존재하지 않는 여행 상세를 조회하려고 할 경우 예외가 발생한다.")
@@ -171,16 +164,11 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
-        TravelRequest updatedTravel = new TravelRequest(
-                "https://example.com/travels/geumohrm.jpg",
-                "2023 신나는 여름 휴가",
-                "친한 친구들과 함께한 여름 휴가 여행",
-                LocalDate.of(2023, 7, 1),
-                LocalDate.of(2023, 7, 10)
-        );
+        TravelRequest updatedTravel = createTravelRequest(2023);
+        MockMultipartFile file = new MockMultipartFile("travelThumbnail", "example.jpg".getBytes());
 
         // when
-        travelService.updateTravel(updatedTravel, travelIdResponse.travelId());
+        travelService.updateTravel(updatedTravel, travelIdResponse.travelId(), file, member);
         Travel foundedTravel = travelRepository.findById(travelIdResponse.travelId()).get();
 
         // then
@@ -189,7 +177,8 @@ class TravelServiceTest extends ServiceSliceTest {
                 () -> assertThat(foundedTravel.getTitle()).isEqualTo(updatedTravel.travelTitle()),
                 () -> assertThat(foundedTravel.getDescription()).isEqualTo(updatedTravel.description()),
                 () -> assertThat(foundedTravel.getStartAt()).isEqualTo(updatedTravel.startAt()),
-                () -> assertThat(foundedTravel.getEndAt()).isEqualTo(updatedTravel.endAt())
+                () -> assertThat(foundedTravel.getEndAt()).isEqualTo(updatedTravel.endAt()),
+                () -> assertThat(foundedTravel.getThumbnailUrl()).isEqualTo(file.getName())
         );
     }
 
@@ -197,10 +186,12 @@ class TravelServiceTest extends ServiceSliceTest {
     @Test
     void failUpdateTravel() {
         // given
+        Member member = saveMember();
         TravelRequest travelRequest = createTravelRequest(2023);
+        MockMultipartFile file = new MockMultipartFile("travelThumbnail", "example.jpg".getBytes());
 
         // when & then
-        assertThatThrownBy(() -> travelService.updateTravel(travelRequest, 1L))
+        assertThatThrownBy(() -> travelService.updateTravel(travelRequest, 1L, file, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 여행을 찾을 수 없어요.");
     }
@@ -213,6 +204,22 @@ class TravelServiceTest extends ServiceSliceTest {
                 LocalDate.of(year, 7, 1),
                 LocalDate.of(2024, 7, 10)
         );
+    }
+
+    @DisplayName("본인 것이 아닌 여행 상세를 수정하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotUpdateTravelIfNotOwner() {
+        // given
+        Member member = saveMember();
+        Member otherMember = saveMember();
+        TravelRequest updatedTravel = createTravelRequest(2023);
+        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
+        MockMultipartFile file = new MockMultipartFile("travelThumbnail", "example.jpg".getBytes());
+
+        // when & then
+        assertThatThrownBy(() -> travelService.updateTravel(updatedTravel, travelIdResponse.travelId(), file, otherMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
     @DisplayName("여행 식별값을 통해 여행 상세를 삭제한다.")
@@ -241,7 +248,7 @@ class TravelServiceTest extends ServiceSliceTest {
         TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
 
         // when & then
-        assertThatThrownBy(() -> travelService.readTravelById(travelIdResponse.travelId(), otherMember))
+        assertThatThrownBy(() -> travelService.deleteTravel(travelIdResponse.travelId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -252,33 +259,12 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
-        Travel foundTravel = travelRepository.findById(travelIdResponse.travelId()).get();
-        visitRepository.save(Visit.builder()
-                .visitedAt(LocalDate.of(2024, 7, 10))
-                .placeName("placeName")
-                .latitude(BigDecimal.ONE)
-                .longitude(BigDecimal.ONE)
-                .address("address")
-                .travel(foundTravel)
-                .build());
+        saveVisit(LocalDate.of(2024, 7, 10), travelIdResponse.travelId());
 
         // when & then
-        assertThatThrownBy(() -> travelService.deleteTravel(foundTravel.getId(), member))
+        assertThatThrownBy(() -> travelService.deleteTravel(travelIdResponse.travelId(), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
-    }
-
-    @DisplayName("존재하지 않는 여행 상세를 삭제하려고 할 경우 예외가 발생한다.")
-    @Test
-    void failDeleteTravelByUnknownTravel() {
-        // given
-        Member member = saveMember();
-        long unknownId = 1;
-
-        // when & then
-        assertThatThrownBy(() -> travelService.readTravelById(unknownId, member))
-                .isInstanceOf(StaccatoException.class)
-                .hasMessage("요청하신 여행을 찾을 수 없어요.");
     }
 
     private Member saveMember() {

@@ -32,12 +32,11 @@ public class TravelService {
     private final TravelRepository travelRepository;
     private final TravelMemberRepository travelMemberRepository;
     private final VisitRepository visitRepository;
-    private final VisitImageRepository visitImageRepository;
 
     @Transactional
     public TravelIdResponse createTravel(TravelRequest travelRequest, MultipartFile thumbnailFile, Member member) {
         Travel travel = travelRequest.toTravel();
-        String thumbnailUrl = travelRequest.travelThumbnail(); //썸네일 url을 가져오는 임시 로직
+        String thumbnailUrl = thumbnailFile.getName(); //썸네일 url을 가져오는 임시 로직
         travel.assignThumbnail(thumbnailUrl);
         travel.addTravelMember(member);
         travelRepository.save(travel);
@@ -88,9 +87,11 @@ public class TravelService {
     }
 
     @Transactional
-    public void updateTravel(TravelRequest travelRequest, Long travelId) {
+    public void updateTravel(TravelRequest travelRequest, Long travelId, MultipartFile thumbnailFile, Member member) {
         Travel updatedTravel = travelRequest.toTravel();
         Travel originTravel = getTravelById(travelId);
+        validateOwner(originTravel, member);
+        updatedTravel.assignThumbnail(thumbnailFile.getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
         List<Visit> visits = visitRepository.findAllByTravelIdOrderByVisitedAt(travelId);
         originTravel.update(updatedTravel, visits);
     }
