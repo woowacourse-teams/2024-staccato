@@ -78,7 +78,7 @@ class TravelCreationViewModel(
             travelTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
             endAt = endDate.value ?: throw IllegalArgumentException(),
-            description = description.get() ?: throw IllegalArgumentException(),
+            description = description.get(),
         )
 
     private fun handleServerError(
