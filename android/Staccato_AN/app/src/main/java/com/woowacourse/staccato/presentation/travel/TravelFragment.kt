@@ -6,6 +6,13 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+import com.woowacourse.staccato.EventLoggingManager
+import com.woowacourse.staccato.EventLoggingManager.Companion.CONTENT_TYPE_BUTTON
+import com.woowacourse.staccato.EventLoggingManager.Companion.CONTENT_TYPE_TRAVEL
+import com.woowacourse.staccato.EventLoggingManager.Companion.NAME_TRAVEL_DELETE
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.travelApiService
 import com.woowacourse.staccato.data.travel.TravelDefaultRepository
@@ -13,6 +20,7 @@ import com.woowacourse.staccato.data.travel.TravelRemoteDataSource
 import com.woowacourse.staccato.databinding.FragmentTravelBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
+import com.woowacourse.staccato.presentation.common.DeleteDialogFragment.Companion.CONFIRM_BUTTON_ID
 import com.woowacourse.staccato.presentation.common.DialogHandler
 import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
@@ -39,6 +47,9 @@ class TravelFragment :
     private lateinit var matesAdapter: MatesAdapter
     private lateinit var visitsAdapter: VisitsAdapter
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private lateinit var eventLoggingManager: EventLoggingManager
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -53,6 +64,16 @@ class TravelFragment :
         viewModel.loadTravel(travelId)
     }
 
+    override fun onResume() {
+        super.onResume()
+        firebaseAnalytics = Firebase.analytics
+        eventLoggingManager = EventLoggingManager(firebaseAnalytics)
+        eventLoggingManager.apply {
+            startScreenLogging(SCREEN_NAME, this::class.java.simpleName)
+            logReadingCountEvent(itemId = travelId, nickname = "Staccato", contentType = CONTENT_TYPE_TRAVEL)
+        }
+    }
+
     override fun onUpdateClicked() {
         val travelUpdateLauncher = (activity as MainActivity).travelUpdateLauncher
         TravelUpdateActivity.startWithResultLauncher(
@@ -64,9 +85,7 @@ class TravelFragment :
 
     override fun onDeleteClicked() {
         val fragmentManager = parentFragmentManager
-        deleteDialog.apply {
-            show(fragmentManager, DeleteDialogFragment.TAG)
-        }
+        deleteDialog.show(fragmentManager, DeleteDialogFragment.TAG)
     }
 
     override fun onVisitClicked(visitId: Long) {
@@ -103,6 +122,7 @@ class TravelFragment :
                 sharedViewModel.setTimelineHasUpdated()
                 findNavController().popBackStack()
                 showToast(getString(R.string.travel_delete_complete))
+                eventLoggingManager.logEvent(CONFIRM_BUTTON_ID, NAME_TRAVEL_DELETE, CONTENT_TYPE_BUTTON)
             }
         }
     }
@@ -126,5 +146,6 @@ class TravelFragment :
     companion object {
         const val VISIT_ID_KEY = "visitId"
         const val TRAVEL_ID_KEY = "travelId"
+        private const val SCREEN_NAME = "특정 여행 상세 조회"
     }
 }

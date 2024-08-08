@@ -9,6 +9,12 @@ import androidx.activity.viewModels
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+import com.woowacourse.staccato.EventLoggingManager
+import com.woowacourse.staccato.EventLoggingManager.Companion.CONTENT_TYPE_BUTTON
+import com.woowacourse.staccato.EventLoggingManager.Companion.NAME_TRAVEL_CREATION
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.travelApiService
 import com.woowacourse.staccato.data.travel.TravelDefaultRepository
@@ -31,12 +37,21 @@ class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
     private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private lateinit var eventLoggingManager: EventLoggingManager
+
     override fun initStartView(savedInstanceState: Bundle?) {
+        setEventLoggingManager()
         initBinding()
         navigateToMap()
         updateTravelPeriod()
         observeCreatedTravelId()
         showErrorToast()
+    }
+
+    private fun setEventLoggingManager() {
+        firebaseAnalytics = Firebase.analytics
+        eventLoggingManager = EventLoggingManager(firebaseAnalytics)
     }
 
     override fun onPeriodSelectionClicked() {
@@ -46,6 +61,11 @@ class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
     override fun onSaveClicked() {
         showToast(getString(R.string.travel_creation_posting))
         viewModel.createTravel(this)
+        eventLoggingManager.logEvent(
+            binding.btnTravelCreationSave.id.toString(),
+            NAME_TRAVEL_CREATION,
+            CONTENT_TYPE_BUTTON,
+        )
     }
 
     override fun onPhotoAttachClicked() {

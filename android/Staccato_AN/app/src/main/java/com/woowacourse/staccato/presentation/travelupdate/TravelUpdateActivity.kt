@@ -9,6 +9,12 @@ import androidx.activity.viewModels
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+import com.woowacourse.staccato.EventLoggingManager
+import com.woowacourse.staccato.EventLoggingManager.Companion.CONTENT_TYPE_BUTTON
+import com.woowacourse.staccato.EventLoggingManager.Companion.NAME_TRAVEL_UPDATE
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.travelApiService
 import com.woowacourse.staccato.data.travel.TravelDefaultRepository
@@ -35,7 +41,11 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
     private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private lateinit var eventLoggingManager: EventLoggingManager
+
     override fun initStartView(savedInstanceState: Bundle?) {
+        setEventLoggingManager()
         initBinding()
         navigateToTravel()
         fetchTravel()
@@ -51,6 +61,11 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
     override fun onSaveClicked() {
         showToast(getString(R.string.travel_update_posting))
         viewModel.updateTravel(this)
+        eventLoggingManager.logEvent(
+            binding.btnTravelUpdateSave.id.toString(),
+            NAME_TRAVEL_UPDATE,
+            CONTENT_TYPE_BUTTON,
+        )
     }
 
     override fun onPhotoAttachClicked() {
@@ -70,6 +85,11 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
                     MaterialDatePicker.todayInUtcMilliseconds(),
                 ),
             ).build()
+
+    private fun setEventLoggingManager() {
+        firebaseAnalytics = Firebase.analytics
+        eventLoggingManager = EventLoggingManager(firebaseAnalytics)
+    }
 
     private fun initBinding() {
         binding.lifecycleOwner = this

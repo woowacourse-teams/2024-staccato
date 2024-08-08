@@ -50,6 +50,7 @@ class DeleteDialogFragment(private val dialogHandler: DialogHandler) : DialogFra
 
     companion object {
         const val TAG = "DeleteDialogFragment"
+        const val CONFIRM_BUTTON_ID = "btnDeleteConfirm"
     }
 }
 
