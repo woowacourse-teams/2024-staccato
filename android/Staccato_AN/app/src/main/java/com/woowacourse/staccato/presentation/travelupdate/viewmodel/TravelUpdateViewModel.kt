@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.presentation.travelupdate.viewmodel
 
+import android.content.Context
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
@@ -16,7 +17,9 @@ import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.travelcreation.DateConverter.convertLongToLocalDate
+import com.woowacourse.staccato.presentation.util.convertTravelUriToFile
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import java.time.LocalDate
 
 class TravelUpdateViewModel(
@@ -44,8 +47,8 @@ class TravelUpdateViewModel(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
-    private val _imageUri = MutableLiveData<Uri>()
-    val imageUri: LiveData<Uri> get() = _imageUri
+    private val _imageUri = MutableLiveData<Uri?>()
+    val imageUri: LiveData<Uri?> get() = _imageUri
 
     fun fetchTravel() {
         viewModelScope.launch {
@@ -62,10 +65,11 @@ class TravelUpdateViewModel(
         _imageUrl.value = null
     }
 
-    fun updateTravel() {
+    fun updateTravel(context: Context) {
         viewModelScope.launch {
-            val newTravel = makeNewTravel()
-            val result = travelRepository.updateTravel(travelId, newTravel)
+            val newTravel: NewTravel = makeNewTravel()
+            val thumbnailFile: MultipartBody.Part? = convertTravelUriToFile(context, _imageUri.value, TRAVEL_FILE_NAME)
+            val result = travelRepository.updateTravel(travelId, newTravel, thumbnailFile)
             result
                 .onSuccess { updateSuccessStatus() }
                 .onServerError(::handleServerError)
@@ -117,6 +121,7 @@ class TravelUpdateViewModel(
     }
 
     companion object {
+        private const val TRAVEL_FILE_NAME = "travelThumbnailFile"
         private const val TRAVEL_UPDATE_ERROR_MESSAGE = "여행 수정에 실패했습니다"
     }
 }

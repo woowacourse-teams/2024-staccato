@@ -2,6 +2,7 @@ package com.woowacourse.staccato.data.dto.mapper
 
 import com.woowacourse.staccato.data.dto.travel.TravelRequest
 import com.woowacourse.staccato.data.dto.travel.TravelResponse
+import com.woowacourse.staccato.data.dto.travel.TravelUpdateRequest
 import com.woowacourse.staccato.data.dto.travel.TravelVisitDto
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.model.Travel
@@ -30,6 +31,15 @@ fun TravelVisitDto.toDomain() =
 
 fun NewTravel.toDto() =
     TravelRequest(
+        travelTitle = travelTitle,
+        description = description,
+        startAt = startAt.toString(),
+        endAt = endAt.toString(),
+    )
+
+fun NewTravel.toTravelUpdateRequest() =
+    TravelUpdateRequest(
+        travelThumbnailUrl = travelThumbnail,
         travelTitle = travelTitle,
         description = description,
         startAt = startAt.toString(),

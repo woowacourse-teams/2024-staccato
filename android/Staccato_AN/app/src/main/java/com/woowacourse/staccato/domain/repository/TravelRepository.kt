@@ -16,6 +16,7 @@ interface TravelRepository {
     suspend fun updateTravel(
         travelId: Long,
         newTravel: NewTravel,
+        thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<String>
 
     suspend fun deleteTravel(travelId: Long): ResponseResult<Unit>

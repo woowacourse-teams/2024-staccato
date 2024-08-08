@@ -49,7 +49,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
     }
 
     override fun onSaveClicked() {
-        viewModel.updateTravel()
+        viewModel.updateTravel(this)
     }
 
     override fun onPhotoAttachClicked() {
