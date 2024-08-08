@@ -1,7 +1,7 @@
 package com.staccato.visit.domain;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class Visit extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private LocalDate visitedAt;
+    private LocalDateTime visitedAt;
     @Column(nullable = false)
     private String placeName;
     @Column(nullable = false)
@@ -51,7 +51,7 @@ public class Visit extends BaseEntity {
 
     @Builder
     public Visit(
-            @NonNull LocalDate visitedAt,
+            @NonNull LocalDateTime visitedAt,
             @NonNull String placeName,
             @NonNull String address,
             @NonNull BigDecimal latitude,
@@ -65,8 +65,8 @@ public class Visit extends BaseEntity {
         this.travel = travel;
     }
 
-    private void validateIsWithinTravelDuration(LocalDate visitedAt, Travel travel) {
-        if (travel.isWithoutDuration(visitedAt)) {
+    private void validateIsWithinTravelDuration(LocalDateTime visitedAt, Travel travel) {
+        if (travel.isWithoutDuration(visitedAt.toLocalDate())) {
             throw new StaccatoException("여행에 포함되지 않는 날짜입니다.");
         }
     }

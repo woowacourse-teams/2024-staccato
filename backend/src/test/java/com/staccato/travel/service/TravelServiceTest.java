@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -139,8 +140,9 @@ class TravelServiceTest extends ServiceSliceTest {
         Member member = saveMember();
 
         TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
-        Visit visit = saveVisit(LocalDate.of(2023, 7, 1), travelIdResponse.travelId());
-        Visit nextVisit = saveVisit(LocalDate.of(2023, 7, 5), travelIdResponse.travelId());
+        Visit firstVisit = saveVisit(LocalDateTime.of(2023, 7, 1, 10, 0), travelIdResponse.travelId());
+        Visit secondVisit = saveVisit(LocalDateTime.of(2023, 7, 1, 10, 10), travelIdResponse.travelId());
+        Visit lastVisit = saveVisit(LocalDateTime.of(2023, 7, 5, 9, 0), travelIdResponse.travelId());
 
         // when
         TravelDetailResponse travelDetailResponse = travelService.readTravelById(travelIdResponse.travelId(), member);
@@ -148,13 +150,13 @@ class TravelServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(travelDetailResponse.travelId()).isEqualTo(travelIdResponse.travelId()),
-                () -> assertThat(travelDetailResponse.visits()).hasSize(2),
-                () -> assertThat(travelDetailResponse.visits().stream().map(VisitResponse::visitedAt).toList())
-                        .containsExactly(visit.getVisitedAt(), nextVisit.getVisitedAt())
+                () -> assertThat(travelDetailResponse.visits()).hasSize(3),
+                () -> assertThat(travelDetailResponse.visits().stream().map(VisitResponse::visitId).toList())
+                        .containsExactly(firstVisit.getId(), secondVisit.getId(), lastVisit.getId())
         );
     }
 
-    private Visit saveVisit(LocalDate visitedAt, long travelId) {
+    private Visit saveVisit(LocalDateTime visitedAt, long travelId) {
         return visitRepository.save(VisitFixture.create(travelRepository.findById(travelId).get(), visitedAt));
     }
 
@@ -272,7 +274,7 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
-        saveVisit(LocalDate.of(2024, 7, 10), travelIdResponse.travelId());
+        saveVisit(LocalDateTime.of(2024, 7, 10, 10, 0), travelIdResponse.travelId());
 
         // when & then
         assertThatThrownBy(() -> travelService.deleteTravel(travelIdResponse.travelId(), member))

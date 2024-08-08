@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +46,7 @@ class VisitImagesTest {
         VisitImages updatedImages = new VisitImages(List.of("picture1", "picture4"));
 
         // when
-        existingImages.update(updatedImages, VisitFixture.create(travel, LocalDate.now()));
+        existingImages.update(updatedImages, VisitFixture.create(travel, LocalDateTime.now()));
 
         // then
         List<String> images = existingImages.getImages().stream().map(VisitImage::getImageUrl).toList();

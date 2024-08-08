@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class VisitTest {
 
         // when & then
         assertThatCode(() -> Visit.builder()
-                .visitedAt(LocalDate.now().plusDays(1))
+                .visitedAt(LocalDateTime.now().plusDays(1))
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)
@@ -49,7 +50,7 @@ class VisitTest {
 
         // when & then
         assertThatThrownBy(() -> Visit.builder()
-                .visitedAt(LocalDate.now().plusDays(plusDays))
+                .visitedAt(LocalDateTime.now().plusDays(plusDays))
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)

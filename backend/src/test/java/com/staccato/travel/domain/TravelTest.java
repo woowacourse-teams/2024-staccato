@@ -6,6 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -60,7 +61,7 @@ class TravelTest {
                 .nickname("staccato")
                 .build();
         Visit visit = Visit.builder()
-                .visitedAt(LocalDate.now())
+                .visitedAt(LocalDateTime.now())
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)

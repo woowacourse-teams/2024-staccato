@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -56,23 +57,23 @@ class VisitControllerTest {
     static Stream<Arguments> invalidVisitRequestProvider() {
         return Stream.of(
                 Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 0L),
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 0L),
                         "여행 식별자는 양수로 이루어져야 합니다."
                 ),
                 Arguments.of(
-                        new VisitRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 이름을 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", "address", null, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest("placeName", "address", null, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 위도를 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, null, LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, null, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 경도를 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 주소를 입력해주세요."
                 ),
                 Arguments.of(
@@ -86,7 +87,7 @@ class VisitControllerTest {
     @Test
     void createVisit() throws Exception {
         // given
-        VisitRequest visitRequest = getVisitRequest(LocalDate.now());
+        VisitRequest visitRequest = getVisitRequest(LocalDateTime.now());
         String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
         MockMultipartFile visitRequestPart = new MockMultipartFile("data", "visitRequest.json", "application/json", visitRequestJson.getBytes());
         MockMultipartFile file1 = new MockMultipartFile("visitImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
@@ -117,7 +118,7 @@ class VisitControllerTest {
     @Test
     void failCreateVisitByImageCount() throws Exception {
         // given
-        VisitRequest visitRequest = getVisitRequest(LocalDate.now());
+        VisitRequest visitRequest = getVisitRequest(LocalDateTime.now());
         String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
         MockMultipartFile visitRequestPart = new MockMultipartFile("data", "visitRequest.json", "application/json", visitRequestJson.getBytes());
         MockMultipartFile file1 = new MockMultipartFile("visitImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
@@ -146,7 +147,7 @@ class VisitControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    private static VisitRequest getVisitRequest(LocalDate visitedAt) {
+    private static VisitRequest getVisitRequest(LocalDateTime visitedAt) {
         return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, visitedAt, 1L);
     }
 

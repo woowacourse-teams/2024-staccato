@@ -29,7 +29,7 @@ public record VisitDetailResponse(
                 visit.getId(),
                 visit.getPlaceName(),
                 visit.getVisitImages().getImages().stream().map(VisitImage::getImageUrl).toList(),
-                visit.getVisitedAt(),
+                visit.getVisitedAt().toLocalDate(),
                 visit.getSpot().getAddress(),
                 visit.getVisitLogs().stream().map(VisitLogResponse::new).toList()
         );
