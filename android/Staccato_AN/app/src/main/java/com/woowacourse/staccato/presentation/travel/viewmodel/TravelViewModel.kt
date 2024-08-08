@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.travel.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,8 +23,8 @@ class TravelViewModel(
     private val _travel = MutableLiveData<TravelUiModel>()
     val travel: LiveData<TravelUiModel> get() = _travel
 
-    private val _errorMessage: MutableLiveData<String> = MutableLiveData()
-    val errorMessage: LiveData<String> get() = _errorMessage
+    private val _errorMessage = MutableSingleLiveData<String>()
+    val errorMessage: SingleLiveData<String> get() = _errorMessage
 
     private val _isDeleteSuccess = MutableSingleLiveData<Boolean>(false)
     val isDeleteSuccess: SingleLiveData<Boolean> get() = _isDeleteSuccess
@@ -61,15 +60,14 @@ class TravelViewModel(
         status: Status,
         message: String,
     ) {
-        _errorMessage.value = message
+        _errorMessage.setValue(message)
     }
 
     private fun handelException(
         e: Throwable,
         message: String,
     ) {
-        Log.d("hye", e.message.toString())
-        _errorMessage.value = TRAVEL_ERROR_MESSAGE
+        _errorMessage.setValue(TRAVEL_ERROR_MESSAGE)
     }
 
     companion object {

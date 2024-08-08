@@ -2,10 +2,12 @@ package com.woowacourse.staccato.presentation.travelupdate
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.core.util.Pair
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.travelApiService
@@ -13,12 +15,14 @@ import com.woowacourse.staccato.data.travel.TravelDefaultRepository
 import com.woowacourse.staccato.data.travel.TravelRemoteDataSource
 import com.woowacourse.staccato.databinding.ActivityTravelUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
+import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.travel.TravelFragment.Companion.TRAVEL_ID_KEY
 import com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModel
 import com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
+import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
-class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), TravelUpdateHandler {
+class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), TravelUpdateHandler, OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_travel_update
     private val travelId by lazy { intent.getLongExtra(TRAVEL_ID_KEY, DEFAULT_TRAVEL_ID) }
     private val viewModel: TravelUpdateViewModel by viewModels {
@@ -27,6 +31,8 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
             TravelDefaultRepository(TravelRemoteDataSource(travelApiService)),
         )
     }
+    private val photoAttachFragment = PhotoAttachFragment()
+    private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
 
     override fun initStartView(savedInstanceState: Bundle?) {
@@ -43,7 +49,16 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
     }
 
     override fun onSaveClicked() {
-        viewModel.updateTravel()
+        showToast(getString(R.string.travel_update_posting))
+        viewModel.updateTravel(this)
+    }
+
+    override fun onPhotoAttachClicked() {
+        photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+    }
+
+    override fun onUrisSelected(vararg uris: Uri) {
+        viewModel.setImage(uris.first())
     }
 
     private fun buildDateRangePicker() =

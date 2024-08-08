@@ -2,9 +2,9 @@ package com.woowacourse.staccato.data.travel
 
 import com.woowacourse.staccato.data.dto.travel.TravelRequest
 import com.woowacourse.staccato.data.dto.travel.TravelResponse
+import com.woowacourse.staccato.data.dto.travel.TravelUpdateRequest
 import okhttp3.MultipartBody
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
@@ -26,10 +26,12 @@ interface TravelApiService {
         @Part thumbnailFile: MultipartBody.Part?,
     ): Response<String>
 
+    @Multipart
     @PUT(TRAVEL_PATH_WITH_ID)
     suspend fun putTravel(
         @Path("travelId") travelId: Long,
-        @Body travelRequest: TravelRequest,
+        @Part("data") data: TravelUpdateRequest,
+        @Part travelThumbnailFile: MultipartBody.Part?,
     ): Response<String>
 
     @DELETE(TRAVEL_PATH_WITH_ID)
