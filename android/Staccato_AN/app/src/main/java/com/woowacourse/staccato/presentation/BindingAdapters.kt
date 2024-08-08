@@ -170,16 +170,17 @@ fun Button.setVisitedAtConfirmButtonActive(items: List<LocalDate>?) {
 }
 
 @BindingAdapter("setDateTimeWithAmPm")
-fun TextView.setDateTimeWithAmPm(setNowDateTime: LocalDateTime) {
-    val year = setNowDateTime.year
-    val month = setNowDateTime.monthValue
-    val day = setNowDateTime.dayOfMonth
-    val hour = if (setNowDateTime.hour % 12 == 0) 12 else setNowDateTime.hour % 12
-    val minute = setNowDateTime.minute
-    val noonText = if (setNowDateTime.hour < 12) "오전" else "오후"
-    text =
+fun TextView.setDateTimeWithAmPm(setNowDateTime: LocalDateTime?) {
+    text = setNowDateTime?.let {
+        val year = setNowDateTime.year
+        val month = setNowDateTime.monthValue
+        val day = setNowDateTime.dayOfMonth
+        val hour = if (setNowDateTime.hour % 12 == 0) 12 else setNowDateTime.hour % 12
+        val minute = setNowDateTime.minute
+        val noonText = if (setNowDateTime.hour < 12) "오전" else "오후"
         resources.getString(R.string.all_date_time_am_pm_kr_format)
             .format(year, month, day, noonText, hour)
+    } ?: ""
 }
 
 @BindingAdapter("visitedAtNumberPickerItems")
@@ -225,4 +226,9 @@ fun ImageView.setAttachedPhotoVisibility(items: Array<Uri>?) {
 @BindingAdapter("setAttachedPhotoVisibility")
 fun FrameLayout.setAttachedPhotoVisibility(items: Array<Uri>?) {
     isInvisible = !items.isNullOrEmpty()
+}
+
+@BindingAdapter("setEnabled")
+fun Button.setEnabled(isUpdateCompleted: Boolean?) {
+    isEnabled = !(isUpdateCompleted ?: true)
 }

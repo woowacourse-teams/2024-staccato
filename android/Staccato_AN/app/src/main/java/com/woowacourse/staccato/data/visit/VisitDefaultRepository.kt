@@ -3,7 +3,6 @@ package com.woowacourse.staccato.data.visit
 import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.data.dto.visit.VisitCreationRequest
 import com.woowacourse.staccato.data.dto.visit.VisitCreationResponse
-import com.woowacourse.staccato.data.dto.visit.VisitUpdateRequest
 import com.woowacourse.staccato.domain.model.Visit
 import com.woowacourse.staccato.domain.repository.VisitRepository
 import okhttp3.MultipartBody
@@ -42,16 +41,24 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
     }
 
     override suspend fun updateVisit(
+        visitId: Long,
+        placeName: String,
         visitImageUrls: List<String>,
-        visitedAt: String,
+        visitImageMultiParts: List<MultipartBody.Part>,
     ): Result<Unit> {
         return runCatching {
             remoteDataSource.updateVisit(
-                VisitUpdateRequest(
-                    visitImageUrls = visitImageUrls,
-                    visitedAt = visitedAt,
-                ),
+                visitId = visitId,
+                placeName = placeName,
+                visitImageUrls = visitImageUrls,
+                visitImageFiles = visitImageMultiParts,
             )
+        }
+    }
+
+    override suspend fun deleteVisit(visitId: Long): Result<Unit> {
+        return runCatching {
+            remoteDataSource.deleteVisit(visitId)
         }
     }
 }

@@ -31,10 +31,10 @@ class VisitCreationViewModel(
     private val _selectedImages = MutableLiveData<Array<out Uri>>()
     val selectedImages: LiveData<Array<out Uri>> get() = _selectedImages
 
-    private val _latitude = MutableLiveData<String>()
+    private val _latitude = MutableLiveData<String>("32.123456")
     private val latitude: LiveData<String> get() = _latitude
 
-    private val _longitude = MutableLiveData<String>()
+    private val _longitude = MutableLiveData<String>("32.123456")
     private val longitude: LiveData<String> get() = _longitude
 
     val nowDateTime: LocalDateTime = LocalDateTime.now()
@@ -66,7 +66,6 @@ class VisitCreationViewModel(
             visitedAt = nowDateTime,
             visitImageMultiParts = convertUrisToMultiParts(context),
         ).onSuccess { response ->
-            Log.d("ㅌㅅㅌ", "$response")
             _createdVisitId.postValue(response.visitId)
         }.onFailure {
             Log.d("ㅌㅅㅌ", "onFailure : ${it.message}")

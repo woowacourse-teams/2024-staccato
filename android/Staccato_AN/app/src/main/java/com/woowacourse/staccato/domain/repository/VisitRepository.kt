@@ -19,7 +19,11 @@ interface VisitRepository {
     ): Result<VisitCreationResponse>
 
     suspend fun updateVisit(
-        visitImages: List<String>,
-        visitedAt: String,
+        visitId: Long,
+        placeName: String,
+        visitImageUrls: List<String>,
+        visitImageMultiParts: List<MultipartBody.Part>,
     ): Result<Unit>
+
+    suspend fun deleteVisit(visitId: Long): Result<Unit>
 }

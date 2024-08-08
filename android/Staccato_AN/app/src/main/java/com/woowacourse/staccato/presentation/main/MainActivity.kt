@@ -18,9 +18,9 @@ import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.timeline.TimelineFragment.Companion.TRAVEL_ID_KEY
 import com.woowacourse.staccato.presentation.travelcreation.TravelCreationActivity
 import com.woowacourse.staccato.presentation.util.showToast
-import com.woowacourse.staccato.presentation.visit.VisitFragment
+import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
-import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity.Companion.EXTRA_CREATED_VISIT_ID
+import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity.Companion.TRAVEL_TITLE_KEY
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     override val layoutResourceId: Int
@@ -37,7 +37,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     showToast("새로운 여행을 만들었어요!")
                     val createdTravelId = it.getLongExtra(TRAVEL_ID_KEY, 0L)
                     val bundle = bundleOf(TRAVEL_ID_KEY to createdTravelId)
-                    navigateTo(R.id.travelFragment, R.id.timelineFragment, bundle)
+                    navigateTo(R.id.travelFragment, R.id.timelineFragment, bundle, false)
                 }
             }
         }
@@ -49,19 +49,26 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     showToast("여행을 수정했어요!")
                     val updatedTravelId = it.getLongExtra(TRAVEL_ID_KEY, 0L)
                     val bundle = bundleOf(TRAVEL_ID_KEY to updatedTravelId)
-                    navigateTo(R.id.travelFragment, R.id.timelineFragment, bundle)
+                    navigateTo(R.id.travelFragment, R.id.timelineFragment, bundle, false)
                 }
             }
         }
 
-    private val visitCreationLauncher =
+    val visitCreationLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     showToast("새로운 방문 기록을 만들었어요!")
-                    val createdVisitId = it.getLongExtra(EXTRA_CREATED_VISIT_ID, 0L)
-                    val bundle = bundleOf(VisitFragment.VISIT_ID_KEY to createdVisitId)
-                    navigateTo(R.id.visitFragment, R.id.visitFragment, bundle)
+                    val createdVisitId = it.getLongExtra(VISIT_ID_KEY, 0L)
+                    val travelId = it.getLongExtra(TRAVEL_ID_KEY, 0L)
+                    val travelTitle = it.getStringExtra(TRAVEL_TITLE_KEY)
+                    val bundle =
+                        bundleOf(
+                            VISIT_ID_KEY to createdVisitId,
+                            TRAVEL_ID_KEY to travelId,
+                            TRAVEL_TITLE_KEY to travelTitle,
+                        )
+                    navigateTo(R.id.visitFragment, R.id.visitFragment, bundle, true)
                 }
             }
         }
@@ -71,7 +78,16 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     showToast("방문 기록을 수정했어요!")
-                    navigateTo(R.id.visitFragment, R.id.visitFragment, null)
+                    val updatedVisitId = it.getLongExtra(VISIT_ID_KEY, 0L)
+                    val travelId = it.getLongExtra(TRAVEL_ID_KEY, 0L)
+                    val travelTitle = it.getStringExtra(TRAVEL_TITLE_KEY)
+                    val bundle =
+                        bundleOf(
+                            VISIT_ID_KEY to updatedVisitId,
+                            TRAVEL_TITLE_KEY to travelTitle,
+                            TRAVEL_ID_KEY to travelId,
+                        )
+                    navigateTo(R.id.visitFragment, R.id.visitFragment, bundle, true)
                 }
             }
         }
@@ -130,7 +146,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             )
         }
         binding.btnTimeline.setOnClickListener {
-            navigateTo(R.id.timelineFragment, R.id.timelineFragment, null)
+            navigateTo(R.id.timelineFragment, R.id.timelineFragment, null, false)
         }
     }
 
@@ -138,17 +154,20 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         navigateToId: Int,
         popUpToId: Int,
         bundle: Bundle?,
+        inclusive: Boolean,
     ) {
-        val navOptions = buildNavOptions(popUpToId)
+        val navOptions = buildNavOptions(popUpToId, inclusive)
         navController.navigate(navigateToId, bundle, navOptions)
         behavior.state = STATE_EXPANDED
     }
 
-    private fun buildNavOptions(popUpToId: Int) =
-        NavOptions.Builder()
-            .setLaunchSingleTop(true)
-            .setPopUpTo(popUpToId, false)
-            .build()
+    private fun buildNavOptions(
+        popUpToId: Int,
+        inclusive: Boolean,
+    ) = NavOptions.Builder()
+        .setLaunchSingleTop(true)
+        .setPopUpTo(popUpToId, inclusive)
+        .build()
 
     private fun setUpBottomSheetBehaviorAction() {
         behavior.apply {

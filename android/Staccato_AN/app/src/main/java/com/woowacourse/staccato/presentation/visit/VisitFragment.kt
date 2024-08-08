@@ -1,6 +1,7 @@
 package com.woowacourse.staccato.presentation.visit
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -10,7 +11,8 @@ import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
 import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
-import com.woowacourse.staccato.presentation.travel.TravelFragment
+import com.woowacourse.staccato.presentation.travel.TravelFragment.Companion.TRAVEL_ID_KEY
+import com.woowacourse.staccato.presentation.travel.TravelFragment.Companion.TRAVEL_TITLE_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.adapter.VisitAdapter
 import com.woowacourse.staccato.presentation.visit.viewmodel.VisitViewModel
@@ -24,14 +26,19 @@ class VisitFragment :
     private lateinit var visitAdapter: VisitAdapter
     private var visitId by Delegates.notNull<Long>()
     private var travelId by Delegates.notNull<Long>()
-    private val deleteDialog = DeleteDialogFragment { findNavController().popBackStack() }
+    private var travelTitle by Delegates.notNull<String>()
+    private val deleteDialog =
+        DeleteDialogFragment {
+            viewModel.deleteVisit(visitId)
+        }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         visitId = arguments?.getLong(VISIT_ID_KEY) ?: return
-        travelId = arguments?.getLong(TravelFragment.TRAVEL_ID_KEY) ?: return
+        travelId = arguments?.getLong(TRAVEL_ID_KEY) ?: return
+        travelTitle = arguments?.getString(TRAVEL_TITLE_KEY) ?: return
         initAdapter()
         initToolbarHandler()
         observeData()
@@ -63,6 +70,9 @@ class VisitFragment :
                 findNavController().popBackStack()
             }
         }
+        viewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
+            if (isDeleted) findNavController().popBackStack()
+        }
     }
 
     override fun onDeleteClicked() {
@@ -75,10 +85,11 @@ class VisitFragment :
     override fun onUpdateClicked() {
         val visitUpdateLauncher = (activity as MainActivity).visitUpdateLauncher
         VisitUpdateActivity.startWithResultLauncher(
-            travelId,
-            visitId,
-            this.requireActivity(),
-            visitUpdateLauncher,
+            visitId = visitId,
+            travelId = travelId,
+            travelTitle = travelTitle,
+            context = requireContext(),
+            activityLauncher = visitUpdateLauncher,
         )
     }
 

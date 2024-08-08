@@ -57,3 +57,4 @@ fun convertExcretaFile(
 
     val requestFile = file.asRequestBody(contentType)
     return MultipartBody.Part.createFormData(name, file.name, requestFile)
+}

@@ -5,7 +5,7 @@ import com.woowacourse.staccato.data.dto.visit.VisitCreationResponse
 import com.woowacourse.staccato.data.dto.visit.VisitResponse
 import com.woowacourse.staccato.data.dto.visit.VisitUpdateRequest
 import okhttp3.MultipartBody
-import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -26,8 +26,16 @@ interface VisitApiService {
         @Part visitImageFiles: List<MultipartBody.Part>,
     ): VisitCreationResponse
 
-    @PUT("/visits")
+    @Multipart
+    @PUT("/visits/{visitId}")
     suspend fun putVisit(
-        @Body visitUpdateRequest: VisitUpdateRequest,
+        @Path(value = "visitId") visitId: Long,
+        @Part("data") data: VisitUpdateRequest,
+        @Part visitImageFiles: List<MultipartBody.Part>,
+    )
+
+    @DELETE("/visits/{visitId}")
+    suspend fun deleteVisit(
+        @Path(value = "visitId") visitId: Long,
     )
 }

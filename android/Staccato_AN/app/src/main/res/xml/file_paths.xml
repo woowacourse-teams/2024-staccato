@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <files-path
+        name="internal_path"
+        path="." />
+    : 내부저장소 / Context.getFilesDir()
+    <cache-path
+        name="internal_cache_path"
+        path="." />
+    : 내부저장소 / getCacheDir()
+    <external-path
+        name="external_path"
+        path="Android/data/com.woowacourse.staccato/files/Pictures" />
+    : 외부저장소 / Environment.getExternalStorageDirectory()
+    <external-files-path
+        name="external_file_path"
+        path="." />
+    : 외부저장소 / Context.getExternalFilesDir()
+    <external-cache-path
+        name="external_cache_path"
+        path="." />
+    : 외부캐시영역 / Context.getExternalCacheDir()
+</paths>

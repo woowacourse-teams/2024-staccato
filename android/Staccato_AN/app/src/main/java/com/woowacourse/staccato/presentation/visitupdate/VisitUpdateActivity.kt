@@ -13,12 +13,11 @@ import com.woowacourse.staccato.databinding.ActivityVisitUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.util.showToast
+import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
 import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
-import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModelFactory
 import kotlinx.coroutines.launch
-import kotlin.properties.Delegates
 
 class VisitUpdateActivity :
     BindingActivity<ActivityVisitUpdateBinding>(),
@@ -30,17 +29,15 @@ class VisitUpdateActivity :
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
 
-    private var visitId by Delegates.notNull<Long>()
-    private var travelId by Delegates.notNull<Long>()
+    private val visitId by lazy { intent.getLongExtra(VISIT_ID_KEY, 0L) }
+    private val travelId by lazy { intent.getLongExtra(TRAVEL_ID_KEY, 0L) }
+    private val travelTitle by lazy { intent.getStringExtra(TRAVEL_TITLE_KEY) ?: "" }
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        visitId = intent.getLongExtra(EXTRA_VISIT_ID, 1L)
-        travelId = intent.getLongExtra(EXTRA_TRAVEL_ID, 1L)
-
         initBinding()
         initToolbar()
         observeViewModelData()
-        viewModel.fetchInitData(visitId, travelId)
+        viewModel.initViewModelData(visitId, travelId, travelTitle)
     }
 
     private fun initBinding() {
@@ -73,15 +70,18 @@ class VisitUpdateActivity :
 
     private fun handleUpdateComplete(isUpdateCompleted: Boolean) {
         if (isUpdateCompleted) {
-            val resultIntent = Intent()
-            resultIntent.putExtra(VisitCreationActivity.EXTRA_TRAVEL_ID, visitId)
-            setResult(RESULT_OK, resultIntent)
+            val intent =
+                Intent()
+                    .putExtra(VISIT_ID_KEY, visitId)
+                    .putExtra(TRAVEL_ID_KEY, travelId)
+                    .putExtra(TRAVEL_TITLE_KEY, travelTitle)
+            setResult(RESULT_OK, intent)
             finish()
         }
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
-        viewModel.setImageUris(uris)
+        viewModel.setImageUris(arrayOf(*uris))
     }
 
     override fun onPhotoAttachClicked() {
@@ -92,24 +92,25 @@ class VisitUpdateActivity :
         val resultIntent = Intent()
         setResult(RESULT_OK, resultIntent)
         lifecycleScope.launch {
-            viewModel.updateVisit()
-            finish() // 여기 있어도 됨?
+            viewModel.updateVisit(this@VisitUpdateActivity)
         }
     }
 
     companion object {
-        private const val EXTRA_VISIT_ID = "visitId"
-        private const val EXTRA_TRAVEL_ID = "travelId"
+        private const val TRAVEL_ID_KEY = "travelId"
+        private const val TRAVEL_TITLE_KEY = "travelTitle"
 
         fun startWithResultLauncher(
-            travelId: Long,
             visitId: Long,
+            travelId: Long,
+            travelTitle: String,
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, VisitUpdateActivity::class.java).apply {
-                putExtra(EXTRA_TRAVEL_ID, travelId)
-                putExtra(EXTRA_VISIT_ID, visitId)
+                putExtra(VISIT_ID_KEY, visitId)
+                putExtra(TRAVEL_ID_KEY, travelId)
+                putExtra(TRAVEL_TITLE_KEY, travelTitle)
                 activityLauncher.launch(this)
             }
         }

@@ -22,5 +22,22 @@ class VisitRemoteDataSource(
             visitImageFiles = visitImageFiles,
         )
 
-    suspend fun updateVisit(visitUpdateRequest: VisitUpdateRequest) = visitApiService.putVisit(visitUpdateRequest = visitUpdateRequest)
+    suspend fun updateVisit(
+        visitId: Long,
+        placeName: String,
+        visitImageUrls: List<String>,
+        visitImageFiles: List<MultipartBody.Part>,
+    ) = visitApiService.putVisit(
+        visitId = visitId,
+        data =
+            VisitUpdateRequest(
+                placeName = placeName,
+                visitImageUrls = visitImageUrls,
+            ),
+        visitImageFiles = visitImageFiles,
+    )
+
+    suspend fun deleteVisit(visitId: Long) {
+        visitApiService.deleteVisit(visitId)
+    }
 }

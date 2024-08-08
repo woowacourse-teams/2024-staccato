@@ -11,9 +11,9 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityVisitCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
+import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
 import com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModel
 import com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModelFactory
-import kotlin.properties.Delegates
 
 class VisitCreationActivity :
     BindingActivity<ActivityVisitCreationBinding>(),
@@ -25,8 +25,8 @@ class VisitCreationActivity :
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
 
-    private var travelId by Delegates.notNull<Long>()
-    private lateinit var travelTitle: String
+    private val travelId by lazy { intent.getLongExtra(TRAVEL_ID_KEY, 0L) }
+    private val travelTitle by lazy { intent.getStringExtra(TRAVEL_TITLE_KEY) ?: "" }
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initTravelInfo()
@@ -36,8 +36,6 @@ class VisitCreationActivity :
     }
 
     private fun initTravelInfo() {
-        travelId = intent.getLongExtra(EXTRA_TRAVEL_ID, 0L)
-        travelTitle = intent.getStringExtra(EXTRA_TRAVEL_TITLE) ?: return
         viewModel.initTravelInfo(travelId, travelTitle)
     }
 
@@ -55,8 +53,11 @@ class VisitCreationActivity :
 
     private fun observeViewModelData() {
         viewModel.createdVisitId.observe(this) { createdVisitId ->
-            val resultIntent = Intent()
-            resultIntent.putExtra(EXTRA_CREATED_VISIT_ID, createdVisitId)
+            val resultIntent =
+                Intent()
+                    .putExtra(VISIT_ID_KEY, createdVisitId)
+                    .putExtra(TRAVEL_ID_KEY, travelId)
+                    .putExtra(TRAVEL_TITLE_KEY, travelTitle)
             setResult(RESULT_OK, resultIntent)
             finish()
         }
@@ -75,9 +76,8 @@ class VisitCreationActivity :
     }
 
     companion object {
-        const val EXTRA_TRAVEL_ID = "travelId"
-        const val EXTRA_TRAVEL_TITLE = "travelTitle"
-        const val EXTRA_CREATED_VISIT_ID = "visitId"
+        const val TRAVEL_ID_KEY = "travelId"
+        const val TRAVEL_TITLE_KEY = "travelTitle"
 
         fun startWithResultLauncher(
             travelId: Long,
@@ -86,8 +86,8 @@ class VisitCreationActivity :
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, VisitCreationActivity::class.java).apply {
-                putExtra(EXTRA_TRAVEL_ID, travelId)
-                putExtra(EXTRA_TRAVEL_TITLE, travelTitle)
+                putExtra(TRAVEL_ID_KEY, travelId)
+                putExtra(TRAVEL_TITLE_KEY, travelTitle)
                 activityLauncher.launch(this)
             }
         }

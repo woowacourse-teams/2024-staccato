@@ -180,6 +180,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_travel_visits"
+                    app:layout_constraintVertical_bias="0.0"
                     tools:listitem="@layout/item_visits" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
