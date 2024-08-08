@@ -6,7 +6,7 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -60,6 +60,7 @@
                     layout="@layout/layout_photo_attach"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.imageUri == null ? View.VISIBLE : View.GONE }"
                     app:layout_constraintBottom_toBottomOf="@id/iv_travel_creation_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_travel_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_travel_creation_photo_attach"
