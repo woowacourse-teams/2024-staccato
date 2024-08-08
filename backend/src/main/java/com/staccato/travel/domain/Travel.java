@@ -1,6 +1,8 @@
 package com.staccato.travel.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,15 +84,15 @@ public class Travel extends BaseEntity {
 
     private void validateDuration(Travel updatedTravel, List<Visit> visits) {
         visits.stream()
-                .filter(visit -> updatedTravel.isWithoutDuration(visit.getVisitedAt().toLocalDate()))
+                .filter(visit -> updatedTravel.isWithoutDuration(visit.getVisitedAt()))
                 .findAny()
                 .ifPresent(visit -> {
                     throw new StaccatoException("변경하려는 여행 기간이 이미 존재하는 방문 기록을 포함하지 않습니다. 여행 기간을 다시 설정해주세요.");
                 });
     }
 
-    public boolean isWithoutDuration(LocalDate date) {
-        return startAt.isAfter(date) || endAt.isBefore(date);
+    public boolean isWithoutDuration(LocalDateTime date) {
+        return startAt.isAfter(ChronoLocalDate.from(date)) || endAt.isBefore(ChronoLocalDate.from(date));
     }
 
     public List<Member> getMates() {

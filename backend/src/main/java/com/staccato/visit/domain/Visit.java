@@ -66,7 +66,7 @@ public class Visit extends BaseEntity {
     }
 
     private void validateIsWithinTravelDuration(LocalDateTime visitedAt, Travel travel) {
-        if (travel.isWithoutDuration(visitedAt.toLocalDate())) {
+        if (travel.isWithoutDuration(visitedAt)) {
             throw new StaccatoException("여행에 포함되지 않는 날짜입니다.");
         }
     }

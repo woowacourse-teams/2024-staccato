@@ -40,7 +40,7 @@ class TravelTest {
                 .build();
 
         // when & then
-        assertThat(travel.isWithoutDuration(LocalDate.of(2023, 7, 11))).isTrue();
+        assertThat(travel.isWithoutDuration(LocalDateTime.of(2023, 7, 11, 10, 0))).isTrue();
     }
 
     @DisplayName("여행 상세를 수정 시 기존 방문 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
