@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityVisitCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
+import com.woowacourse.staccato.presentation.common.PhotoAttachAdapter
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
@@ -25,13 +26,14 @@ class VisitCreationActivity :
 
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
-
+    private lateinit var adapter: PhotoAttachAdapter
     private val travelId by lazy { intent.getLongExtra(TRAVEL_ID_KEY, 0L) }
     private val travelTitle by lazy { intent.getStringExtra(TRAVEL_TITLE_KEY) ?: "" }
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initTravelInfo()
         initBinding()
+        initAdapter()
         initToolbar()
         observeViewModelData()
     }
@@ -44,6 +46,14 @@ class VisitCreationActivity :
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.visitCreationHandler = this
+    }
+
+    private fun initAdapter() {
+        adapter = PhotoAttachAdapter(viewModel)
+        binding.rvPhotoAttach.adapter = adapter
+        viewModel.selectedImages.observe(this) { uris ->
+            adapter.submitList(uris.toList())
+        }
     }
 
     private fun initToolbar() {
@@ -68,7 +78,7 @@ class VisitCreationActivity :
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
-        viewModel.setImageUris(uris)
+        viewModel.setImageUris(arrayOf(*uris))
     }
 
     override fun onPhotoAttachClicked() {

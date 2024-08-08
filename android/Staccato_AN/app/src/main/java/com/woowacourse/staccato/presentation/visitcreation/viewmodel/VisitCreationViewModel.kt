@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.domain.repository.VisitRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
+import com.woowacourse.staccato.presentation.common.SelectedPhotoHandler
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
 import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
@@ -18,7 +19,7 @@ import java.time.LocalDateTime
 
 class VisitCreationViewModel(
     private val visitRepository: VisitRepository,
-) : ViewModel() {
+) : SelectedPhotoHandler, ViewModel() {
     val placeName = ObservableField<String>()
 
     private val _address = MutableLiveData<String>("서울특별시 강남구 테헤란로 411")
@@ -27,8 +28,8 @@ class VisitCreationViewModel(
     private val _travel = MutableLiveData<VisitTravelUiModel>()
     val travel: LiveData<VisitTravelUiModel> get() = _travel
 
-    private val _selectedImages = MutableLiveData<Array<out Uri>>()
-    val selectedImages: LiveData<Array<out Uri>> get() = _selectedImages
+    private val _selectedImages = MutableLiveData<Array<Uri>>()
+    val selectedImages: LiveData<Array<Uri>> get() = _selectedImages
 
     private val _latitude = MutableLiveData<String>("32.123456")
     private val latitude: LiveData<String> get() = _latitude
@@ -79,7 +80,13 @@ class VisitCreationViewModel(
             convertExcretaFile(context = context, uri = uri, name = "visitImageFiles")
         } ?: emptyList()
 
-    fun setImageUris(uris: Array<out Uri>) {
+    fun setImageUris(uris: Array<Uri>) {
         _selectedImages.value = uris
+    }
+
+    override fun onDeleteClicked(deletedUri: Uri) {
+        _selectedImages.value =
+            _selectedImages.value?.toMutableList()?.filterNot { it == deletedUri }?.toTypedArray()
+                ?: emptyArray()
     }
 }
