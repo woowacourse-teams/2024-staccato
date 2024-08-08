@@ -1,10 +1,15 @@
 package com.woowacourse.staccato.presentation.visitcreation.viewmodel
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowacourse.staccato.data.ApiResponseHandler.onException
+import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
+import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
+import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.domain.repository.TimelineRepository
 import com.woowacourse.staccato.domain.repository.VisitRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
@@ -45,7 +50,16 @@ class VisitCreationViewModel(
         }
 
     private suspend fun loadAllTravels() {
-        _travels.value = timelineRepository.getTimeline().toTravels()
+        timelineRepository.getTimeline().onSuccess { timeline ->
+            _travels.value = timeline.toTravels()
+        }.onServerError { status, message ->
+            when (status) {
+                is Status.Code -> Log.e("VisitCreationViewModel", "${status.code}, $message")
+                is Status.Message -> Log.e("VisitCreationViewModel", "${status.message}, $message")
+            }
+        }.onException { e, message ->
+            Log.e("VisitCreationViewModel", "$e, $message")
+        }
     }
 
     // TODO : 핀 정보들이 없어 임시 값을 넣었습니다

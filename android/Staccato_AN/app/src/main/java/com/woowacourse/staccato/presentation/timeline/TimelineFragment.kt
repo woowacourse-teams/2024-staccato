@@ -38,12 +38,8 @@ class TimelineFragment :
             adapter.updateTimeline(timeline)
         }
 
-        timelineViewModel.errorState.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { state ->
-                if (state) {
-                    showToast(ERROR_MESSAGE)
-                }
-            }
+        timelineViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+            showToast(message)
         }
 
         sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) { isUpdated ->
@@ -64,6 +60,5 @@ class TimelineFragment :
 
     companion object {
         const val TRAVEL_ID_KEY = "travelId"
-        const val ERROR_MESSAGE = "일시적인 오류가 발생했습니다.\n잠시 후 다시 시도해주세요."
     }
 }
