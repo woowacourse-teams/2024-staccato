@@ -46,7 +46,7 @@ class TimelineViewModel(private val timelineRepository: TimelineRepository) : Vi
     }
 
     private fun setTimelineTravelUiModels(timeline: Timeline) {
-        _travels.postValue(timeline.toTimelineTravelUiModel())
+        _travels.value = timeline.toTimelineTravelUiModel()
     }
 
     private fun handleServerError(
