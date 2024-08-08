@@ -43,9 +43,8 @@ class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
         dateRangePicker.show(supportFragmentManager, dateRangePicker.toString())
     }
 
-    // TODO: viewModel 이 핸들러 가지도록 수정
     override fun onSaveClicked() {
-        viewModel.createTravel()
+        viewModel.createTravel(this)
     }
 
     override fun onPhotoAttachClicked() {
