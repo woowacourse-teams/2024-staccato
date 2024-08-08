@@ -29,7 +29,7 @@ public record VisitRequest(
         BigDecimal longitude,
         @Schema(example = "2024-07-27")
         @NotNull(message = "방문 날짜를 입력해주세요.")
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime visitedAt,
         @Schema(example = "1")
         @NotNull(message = "여행 상세를 선택해주세요.")
