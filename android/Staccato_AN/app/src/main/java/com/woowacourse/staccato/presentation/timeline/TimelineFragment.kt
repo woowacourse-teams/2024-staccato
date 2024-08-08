@@ -6,6 +6,10 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+import com.woowacourse.staccato.EventLoggingManager
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentTimelineBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
@@ -19,6 +23,7 @@ class TimelineFragment :
     private val timelineViewModel: TimelineViewModel by viewModels { TimelineViewModelFactory() }
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private lateinit var adapter: TimelineAdapter
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onViewCreated(
         view: View,
@@ -26,6 +31,16 @@ class TimelineFragment :
     ) {
         setUpAdapter()
         setUpObserving()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        firebaseAnalytics = Firebase.analytics
+        val eventLoggingManager = EventLoggingManager(firebaseAnalytics)
+        eventLoggingManager.startScreenLogging(
+            SCREEN_NAME,
+            this::class.java.simpleName,
+        )
     }
 
     private fun setUpAdapter() {
@@ -60,5 +75,6 @@ class TimelineFragment :
 
     companion object {
         const val TRAVEL_ID_KEY = "travelId"
+        private const val SCREEN_NAME = "타임라인"
     }
 }
