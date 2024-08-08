@@ -12,8 +12,6 @@ import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiMode
 
 class TimelineAdapter(private val eventHandler: TimelineHandler) :
     ListAdapter<TimelineTravelUiModel, TimelineViewHolder>(diffUtil) {
-    private var travels = emptyList<TimelineTravelUiModel>()
-
     override fun getItemViewType(position: Int): Int {
         return TimelineViewType.fromPosition(position, itemCount).viewType
     }
@@ -55,13 +53,11 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
         }
     }
 
-    override fun getItemCount(): Int = travels.size
-
     override fun onBindViewHolder(
         holder: TimelineViewHolder,
         position: Int,
     ) {
-        holder.bind(travels[position])
+        holder.bind(currentList[position])
     }
 
     fun updateTimeline(newTravels: List<TimelineTravelUiModel>) {
