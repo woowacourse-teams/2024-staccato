@@ -96,7 +96,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
                 if (result.resultCode == RESULT_OK) {
                     val imageUris = extractImageUris(result.data)
                     if (imageUris.isNotEmpty()) {
-                        uriSelectedListener.onUrisSelected(imageUris)
+                        uriSelectedListener.onUrisSelected(*imageUris.toTypedArray())
                         dismiss()
                     } else {
                         showToast("사진을 불러올 수 없습니다.")
