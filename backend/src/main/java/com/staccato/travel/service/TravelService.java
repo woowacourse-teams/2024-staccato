@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
+import com.staccato.s3.service.CloudStorageService;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.domain.TravelMember;
 import com.staccato.travel.repository.TravelMemberRepository;
@@ -21,7 +22,6 @@ import com.staccato.travel.service.dto.response.TravelIdResponse;
 import com.staccato.travel.service.dto.response.TravelResponses;
 import com.staccato.travel.service.dto.response.VisitResponse;
 import com.staccato.visit.domain.Visit;
-import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -33,11 +33,12 @@ public class TravelService {
     private final TravelRepository travelRepository;
     private final TravelMemberRepository travelMemberRepository;
     private final VisitRepository visitRepository;
+    private final CloudStorageService cloudStorageService;
 
     @Transactional
     public TravelIdResponse createTravel(TravelRequest travelRequest, MultipartFile thumbnailFile, Member member) {
         Travel travel = travelRequest.toTravel();
-        String thumbnailUrl = travelRequest.travelThumbnail(); //썸네일 url을 가져오는 임시 로직
+        String thumbnailUrl = uploadFile(thumbnailFile);
         travel.assignThumbnail(thumbnailUrl);
         travel.addTravelMember(member);
         travelRepository.save(travel);
@@ -93,11 +94,20 @@ public class TravelService {
         Travel originTravel = getTravelById(travelId);
         validateOwner(originTravel, member);
         if (!Objects.isNull(thumbnailFile)) {
-            // thumbnailFile을 Url로 변환해 가져오는 로직 추가 예정
-            updatedTravel.assignThumbnail(thumbnailFile.getName()); // 새롭게 추가된 이미지 파일의 url을 가지고 오는 임시 로직
+            String thumbnailUrl = uploadFile(thumbnailFile);
+            updatedTravel.assignThumbnail(thumbnailUrl);
         }
         List<Visit> visits = visitRepository.findAllByTravelIdOrderByVisitedAt(travelId);
         originTravel.update(updatedTravel, visits);
+    }
+
+    private String uploadFile(MultipartFile thumbnailFile) {
+        if (Objects.isNull(thumbnailFile)) {
+            return null;
+        }
+        String thumbnailUrl = cloudStorageService.uploadFile(thumbnailFile);
+
+        return thumbnailUrl;
     }
 
     private Travel getTravelById(long travelId) {

@@ -44,7 +44,7 @@ public class VisitController implements VisitControllerDocs {
             @Valid @RequestPart(value = "data") VisitRequest visitRequest,
             @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart(value = "visitImageFiles") List<MultipartFile> visitImageFiles
     ) {
-        VisitIdResponse visitIdResponse = visitService.createVisit(visitRequest, member);
+        VisitIdResponse visitIdResponse = visitService.createVisit(visitRequest, visitImageFiles, member);
         return ResponseEntity.created(URI.create("/visits/" + visitIdResponse.visitId()))
                 .body(visitIdResponse);
     }
