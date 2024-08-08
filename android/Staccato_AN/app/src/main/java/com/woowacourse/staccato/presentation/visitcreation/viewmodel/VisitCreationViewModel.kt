@@ -2,7 +2,7 @@ package com.woowacourse.staccato.presentation.visitcreation.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,8 +19,7 @@ import java.time.LocalDateTime
 class VisitCreationViewModel(
     private val visitRepository: VisitRepository,
 ) : ViewModel() {
-    private val _placeName = MutableLiveData<String>("성담빌딩")
-    val placeName: LiveData<String> get() = _placeName
+    val placeName = ObservableField<String>()
 
     private val _address = MutableLiveData<String>("서울특별시 강남구 테헤란로 411")
     val address: LiveData<String> get() = _address
@@ -42,6 +41,9 @@ class VisitCreationViewModel(
     private val _createdVisitId = MutableSingleLiveData<Long>()
     val createdVisitId: SingleLiveData<Long> get() = _createdVisitId
 
+    private val _errorMessage = MutableSingleLiveData<String>()
+    val errorMessage: SingleLiveData<String> get() = _errorMessage
+
     fun initTravelInfo(
         travelId: Long,
         travelTitle: String,
@@ -59,7 +61,7 @@ class VisitCreationViewModel(
     ) = viewModelScope.launch {
         visitRepository.createVisit(
             travelId = travelId,
-            placeName = placeName.value ?: "",
+            placeName = placeName.get() ?: "",
             latitude = latitude.value ?: "",
             longitude = longitude.value ?: "",
             address = address.value ?: "",
@@ -68,7 +70,7 @@ class VisitCreationViewModel(
         ).onSuccess { response ->
             _createdVisitId.postValue(response.visitId)
         }.onFailure {
-            Log.d("ㅌㅅㅌ", "onFailure : ${it.message}")
+            _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")
         }
     }
 

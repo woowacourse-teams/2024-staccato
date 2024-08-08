@@ -11,6 +11,7 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityVisitCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
+import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
 import com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModel
 import com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModelFactory
@@ -60,6 +61,9 @@ class VisitCreationActivity :
                     .putExtra(TRAVEL_TITLE_KEY, travelTitle)
             setResult(RESULT_OK, resultIntent)
             finish()
+        }
+        viewModel.errorMessage.observe(this) {
+            showToast(it)
         }
     }
 

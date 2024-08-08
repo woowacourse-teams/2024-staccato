@@ -2,6 +2,7 @@ package com.woowacourse.staccato.presentation.visitupdate.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,8 +20,7 @@ import okhttp3.MultipartBody
 class VisitUpdateViewModel(
     private val visitRepository: VisitRepository,
 ) : ViewModel() {
-    private val _placeName = MutableLiveData<String>()
-    val placeName: LiveData<String> get() = _placeName
+    val placeName = ObservableField<String>()
 
     private val _existVisitImageUrls = MutableLiveData<List<String>>()
     private val existVisitImageUrls: LiveData<List<String>> get() = _existVisitImageUrls
@@ -34,7 +34,7 @@ class VisitUpdateViewModel(
     private val _travel = MutableLiveData<VisitTravelUiModel>()
     val travel: LiveData<VisitTravelUiModel> get() = _travel
 
-    private val _isError = MutableSingleLiveData(false)
+    private val _isError = MutableSingleLiveData<Boolean>()
     val isError: SingleLiveData<Boolean> get() = _isError
 
     private val _isUpdateCompleted = MutableLiveData(false)
@@ -55,7 +55,7 @@ class VisitUpdateViewModel(
                 .onSuccess { visit ->
                     _visitUpdateDefault.value = visit.toVisitUpdateDefaultUiModel()
                     _existVisitImageUrls.value = visit.visitImageUrls
-                    _placeName.value = visit.placeName
+                    placeName.set(visit.placeName)
                 }.onFailure {
                     _isError.postValue(true)
                 }
@@ -74,16 +74,16 @@ class VisitUpdateViewModel(
     }
 
     suspend fun updateVisit(context: Context) {
-        if (placeName.value != null && visitUpdateDefault.value != null) {
+        if (placeName.get() != null && visitUpdateDefault.value != null) {
             visitRepository.updateVisit(
                 visitId = visitUpdateDefault.value!!.id,
-                placeName = placeName.value!!,
+                placeName = placeName.get()!!,
                 visitImageUrls = existVisitImageUrls.value ?: emptyList(),
                 visitImageMultiParts = convertUrisToMultiParts(context),
             ).onSuccess {
                 _isUpdateCompleted.postValue(true)
             }.onFailure {
-                _isUpdateCompleted.postValue(false)
+                _isError.postValue(true)
             }
         }
     }

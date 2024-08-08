@@ -63,7 +63,7 @@ class VisitUpdateActivity :
 
     private fun handleError(isError: Boolean) {
         if (isError) {
-            showToast("방문을 불러올 수 없어요!")
+            showToast("방문을 수정할 수 없어요!")
             finish()
         }
     }
@@ -89,8 +89,6 @@ class VisitUpdateActivity :
     }
 
     override fun onUpdateDoneClicked() {
-        val resultIntent = Intent()
-        setResult(RESULT_OK, resultIntent)
         lifecycleScope.launch {
             viewModel.updateVisit(this@VisitUpdateActivity)
         }

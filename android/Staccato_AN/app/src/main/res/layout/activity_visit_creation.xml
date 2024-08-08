@@ -53,20 +53,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
+                <EditText
+                    android:imeOptions="actionSearch"
                     android:id="@+id/tv_place_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    style="@style/EditTextStyle"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
-                    android:text="@{viewModel.placeName}"
-                    android:textAppearance="@style/Typography.Body1"
+                    android:hint="@string/visit_creation_place_name_hint"
+                    android:inputType="text"
+                    android:maxLength="30"
+                    android:maxLines="1"
+                    android:text="@={viewModel.placeName}"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visit_creation_place_name_title"
-                    tools:text="장소 이름 (고정)" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_visit_creation_place_name_title" />
 
                 <TextView
                     android:id="@+id/tv_place_address_title"
