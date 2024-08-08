@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VisitUpdateRequest(
-    @SerialName("visitImages") val visitImages: List<String>,
+    @SerialName("visitImageUrls") val visitImageUrls: List<String>,
     @SerialName("visitedAt") val visitedAt: String,
 )

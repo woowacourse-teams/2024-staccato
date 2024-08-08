@@ -26,7 +26,7 @@
             android:elevation="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:coilCircleImageUrl="@{visitLog.memberImage}"
+            bind:coilCircleImageUrl="@{visitLog.memberImageUrl}"
             bind:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}" />
 
         <TextView

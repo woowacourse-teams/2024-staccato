@@ -2,10 +2,12 @@ package com.woowacourse.staccato.presentation.travelcreation
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.core.util.Pair
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.travelApiService
@@ -13,16 +15,20 @@ import com.woowacourse.staccato.data.travel.TravelDefaultRepository
 import com.woowacourse.staccato.data.travel.TravelRemoteDataSource
 import com.woowacourse.staccato.databinding.ActivityTravelCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
+import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.timeline.TimelineFragment.Companion.TRAVEL_ID_KEY
 import com.woowacourse.staccato.presentation.travelcreation.viewmodel.TravelCreationViewModel
 import com.woowacourse.staccato.presentation.travelcreation.viewmodel.TravelCreationViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
+import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
-class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(), TravelCreationHandler {
+class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(), TravelCreationHandler, OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_travel_creation
     private val viewModel: TravelCreationViewModel by viewModels {
         TravelCreationViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))
     }
+    private val photoAttachFragment = PhotoAttachFragment()
+    private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
 
     override fun initStartView(savedInstanceState: Bundle?) {
@@ -37,9 +43,17 @@ class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
         dateRangePicker.show(supportFragmentManager, dateRangePicker.toString())
     }
 
-    // TODO: viewModel 이 핸들러 가지도록 수정
     override fun onSaveClicked() {
-        viewModel.createTravel()
+        showToast(getString(R.string.travel_creation_posting))
+        viewModel.createTravel(this)
+    }
+
+    override fun onPhotoAttachClicked() {
+        photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+    }
+
+    override fun onUrisSelected(vararg uris: Uri) {
+        viewModel.setImageUri(uris.first())
     }
 
     private fun buildDateRangePicker() =

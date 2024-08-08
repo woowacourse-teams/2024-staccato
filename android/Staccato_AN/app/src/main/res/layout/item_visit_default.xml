@@ -28,7 +28,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:coilImageUrl="@{visitDefault.visitImage}"
+            bind:coilImageUrl="@{visitDefault.visitImageUrls}"
             bind:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}" />
 
         <TextView

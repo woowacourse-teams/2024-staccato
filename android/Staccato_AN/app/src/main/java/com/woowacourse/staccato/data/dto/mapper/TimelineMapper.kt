@@ -17,7 +17,7 @@ fun TimelineResponse.toDomain(): Timeline {
 fun TimelineTravelDto.toDomain(): Travel {
     return Travel(
         travelId = travelId,
-        travelThumbnail = travelThumbnail,
+        travelThumbnailUrl = travelThumbnailUrl,
         travelTitle = travelTitle,
         startAt = LocalDate.parse(startAt),
         endAt = LocalDate.parse(endAt),

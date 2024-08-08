@@ -6,7 +6,7 @@ sealed class VisitDetailUiModel {
     data class VisitDefaultUiModel(
         val id: Long,
         val placeName: String,
-        val visitImage: String,
+        val visitImageUrls: String,
         val address: String,
         val visitedAt: LocalDate,
     ) : VisitDetailUiModel()
@@ -15,7 +15,7 @@ sealed class VisitDetailUiModel {
         val id: Long = 0,
         val memberId: Long = 0,
         val nickname: String,
-        val memberImage: String,
+        val memberImageUrl: String,
         val content: String,
     ) : VisitDetailUiModel()
 }

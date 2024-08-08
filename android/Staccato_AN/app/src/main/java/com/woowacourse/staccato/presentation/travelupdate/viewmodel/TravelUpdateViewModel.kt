@@ -73,7 +73,7 @@ class TravelUpdateViewModel(
     }
 
     private fun initializeTravel(travel: Travel) {
-        _imageUrl.value = travel.travelThumbnail
+        _imageUrl.value = travel.travelThumbnailUrl
         title.set(travel.travelTitle)
         description.set(travel.description)
         _startDate.value = travel.startAt
