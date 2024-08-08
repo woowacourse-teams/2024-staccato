@@ -44,6 +44,7 @@ class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
     }
 
     override fun onSaveClicked() {
+        showToast(getString(R.string.travel_creation_posting))
         viewModel.createTravel(this)
     }
 
