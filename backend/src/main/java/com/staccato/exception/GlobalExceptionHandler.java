@@ -58,17 +58,16 @@ public class GlobalExceptionHandler {
     @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         String errorMessage = "요청 본문을 읽을 수 없습니다. 올바른 형식으로 데이터를 제공해주세요.";
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), errorMessage);
-        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage());
-        return ResponseEntity.internalServerError().body(exceptionResponse);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage);
+        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse);
+        return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
     @ExceptionHandler(S3Exception.class)
     public ResponseEntity<ExceptionResponse> handleS3Exception(S3Exception e) {
         String errorMessage = "이미지 처리에 실패했습니다.";
         log.warn("ExceptionType : {}, ExceptionMessage : {}", e, errorMessage);
-        return ResponseEntity.badRequest()
-                .body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage));
+        return ResponseEntity.badRequest().body(new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage));
     }
 
     @ExceptionHandler(StaccatoException.class)
