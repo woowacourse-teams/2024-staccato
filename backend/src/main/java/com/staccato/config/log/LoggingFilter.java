@@ -27,8 +27,12 @@ public class LoggingFilter extends OncePerRequestFilter {
         log.info(LogForm.REQUEST_LOGGING_FORM,
                 request.getMethod(),
                 request.getRequestURI(),
-                token,
+                tokenExists(token),
                 response.getStatus(),
                 duration);
+    }
+
+    private boolean tokenExists(String token) {
+        return !token.isBlank();
     }
 }
