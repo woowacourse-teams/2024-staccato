@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
     @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleDateTimeParseException(DateTimeParseException e) {
         String errorMessage = "올바르지 않은 날짜 형식입니다.";
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage);
-        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), errorMessage);
+        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage());
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
