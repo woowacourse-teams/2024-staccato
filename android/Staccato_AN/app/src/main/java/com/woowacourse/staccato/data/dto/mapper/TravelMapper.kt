@@ -11,7 +11,7 @@ import java.time.LocalDate
 fun TravelResponse.toDomain() =
     Travel(
         travelId = travelId,
-        travelThumbnail = travelThumbnail,
+        travelThumbnailUrl = travelThumbnail,
         travelTitle = travelTitle,
         startAt = LocalDate.parse(startAt),
         endAt = LocalDate.parse(endAt),

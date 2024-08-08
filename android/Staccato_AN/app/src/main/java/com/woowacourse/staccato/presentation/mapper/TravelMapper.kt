@@ -11,7 +11,7 @@ fun Travel.toUiModel() =
     TravelUiModel(
         id = travelId,
         title = travelTitle,
-        thumbnail = travelThumbnail,
+        travelThumbnailUrl = travelThumbnailUrl,
         startAt = startAt,
         endAt = endAt,
         description = description,

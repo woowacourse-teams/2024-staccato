@@ -55,14 +55,14 @@
             android:layout_height="0dp"
             android:contentDescription="@string/all_image_content_description"
             android:scaleType="centerCrop"
-            android:visibility="@{travel.travelThumbnail == null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{travel.travelThumbnailUrl == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="8:5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.527"
             bind:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            bind:coilRoundedCornerImageUrl="@{travel.travelThumbnail}"
+            bind:coilRoundedCornerImageUrl="@{travel.travelThumbnailUrl}"
             bind:coilRoundingRadius="@{12f}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
