@@ -34,12 +34,12 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        initUriSelectedListner(context)
+        initUrisSelectedListener(context)
         initRequestPermissionLauncher()
         initGalleryLauncher()
     }
 
-    private fun initUriSelectedListner(context: Context) {
+    private fun initUrisSelectedListener(context: Context) {
         if (context is OnUrisSelectedListener) {
             uriSelectedListener = context
         } else {
