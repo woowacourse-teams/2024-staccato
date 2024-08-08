@@ -82,10 +82,8 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
 
     private fun setSnackBarAction(snackBar: Snackbar) {
         snackBar.setAction(R.string.snack_bar_move_to_setting) {
-            val intent = Intent()
-            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
             val uri = Uri.fromParts(PACKAGE_SCHEME, requireContext().packageName, null)
-            intent.data = uri
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri)
             startActivity(intent)
         }
     }
