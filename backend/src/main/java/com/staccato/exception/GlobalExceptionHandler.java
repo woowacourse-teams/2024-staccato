@@ -51,6 +51,7 @@ public class GlobalExceptionHandler {
                 .getMessage();
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage);
         log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse);
+        return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
