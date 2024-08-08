@@ -2,6 +2,8 @@ package com.woowacourse.staccato.presentation.travel
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -20,12 +22,16 @@ import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModelFactory
 import com.woowacourse.staccato.presentation.travelupdate.TravelUpdateActivity
 import com.woowacourse.staccato.presentation.util.showToast
+import com.woowacourse.staccato.presentation.visit.VisitFragment
+import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 
 class TravelFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
     ToolbarHandler,
     TravelHandler {
-    private val travelId by lazy { arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException() }
+    private val travelId by lazy {
+        arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException()
+    }
     private val viewModel: TravelViewModel by viewModels {
         TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))
     }
@@ -33,6 +39,18 @@ class TravelFragment :
 
     private lateinit var matesAdapter: MatesAdapter
     private lateinit var visitsAdapter: VisitsAdapter
+
+    private val visitCreationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                result.data?.let {
+                    showToast("새로운 방문 기록을 만들었어요!")
+                    val createdVisitId = it.getLongExtra(VisitCreationActivity.EXTRA_TRAVEL_ID, 0L)
+                    val bundle = bundleOf(VisitFragment.VISIT_ID_KEY to createdVisitId)
+                    findNavController().navigate(R.id.visitFragment, bundle)
+                }
+            }
+        }
 
     override fun onViewCreated(
         view: View,
@@ -68,10 +86,26 @@ class TravelFragment :
         findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
     }
 
+    override fun onVisitCreationClicked() {
+        if (viewModel.isTraveling()) {
+            viewModel.travel.value?.let {
+                VisitCreationActivity.startWithResultLauncher(
+                    travelId,
+                    it.title,
+                    requireContext(),
+                    visitCreationLauncher,
+                )
+            }
+        } else {
+            showToast("지금은 여행 기간이 아니에요!")
+        }
+    }
+
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.toolbarHandler = this
+        binding.travelHandler = this
     }
 
     private fun initToolbar() {

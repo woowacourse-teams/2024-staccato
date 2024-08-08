@@ -20,7 +20,7 @@ import com.woowacourse.staccato.presentation.travelcreation.TravelCreationActivi
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.VisitFragment
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
-import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity.Companion.EXTRA_VISIT_ID
+import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity.Companion.EXTRA_CREATED_VISIT_ID
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     override val layoutResourceId: Int
@@ -59,7 +59,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     showToast("새로운 방문 기록을 만들었어요!")
-                    val createdVisitId = it.getLongExtra(EXTRA_VISIT_ID, 0L)
+                    val createdVisitId = it.getLongExtra(EXTRA_CREATED_VISIT_ID, 0L)
                     val bundle = bundleOf(VisitFragment.VISIT_ID_KEY to createdVisitId)
                     navigateTo(R.id.visitFragment, R.id.visitFragment, bundle)
                 }
@@ -121,7 +121,10 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             )
         }
         binding.btnVisitCreate.setOnClickListener {
+            // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
             VisitCreationActivity.startWithResultLauncher(
+                1,
+                "임시 여행",
                 this,
                 visitCreationLauncher,
             )

@@ -12,6 +12,7 @@
     <string name="all_visited_date">방문 날짜</string>
     <string name="all_date_dots_format">%s. %s. %s</string>
     <string name="all_date_kr_format">%s년 %s월 %s일</string>
+    <string name="all_date_time_am_pm_kr_format">%s년 %s월 %s일  %s %s시</string>
     <string name="all_image_content_description">사진</string>
 
     // fragment_timeline
@@ -38,6 +39,7 @@
     // fragment_visit
     <string name="visit_history">%s년 %s월 %s일에 방문했어요</string>
     <string name="visit_logs">방문 로그</string>
+    <string name="add_visit">추가하기</string>
     <string name="visit_enter_log">로그 입력하기</string>
 
     // activity_visit_creation / activity_visit_update

@@ -14,10 +14,9 @@ import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.mapper.toUiModel
 import com.woowacourse.staccato.presentation.travel.model.TravelUiModel
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
-class TravelViewModel(
-    private val travelRepository: TravelRepository,
-) : ViewModel() {
+class TravelViewModel(private val travelRepository: TravelRepository) : ViewModel() {
     private val _travel = MutableLiveData<TravelUiModel>()
     val travel: LiveData<TravelUiModel> get() = _travel
 
@@ -32,6 +31,13 @@ class TravelViewModel(
                 .onServerError(::handleServerError)
                 .onException(::handelException)
         }
+    }
+
+    fun isTraveling(): Boolean {
+        return travel.value?.let { travel ->
+            val nowDate = LocalDate.now()
+            travel.startAt <= nowDate && nowDate <= travel.endAt
+        } ?: false
     }
 
     private fun setTravel(travel: Travel) {

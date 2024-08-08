@@ -2,10 +2,12 @@ package com.woowacourse.staccato.data.visit
 
 import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.data.dto.visit.VisitCreationRequest
+import com.woowacourse.staccato.data.dto.visit.VisitCreationResponse
 import com.woowacourse.staccato.data.dto.visit.VisitUpdateRequest
 import com.woowacourse.staccato.domain.model.Visit
 import com.woowacourse.staccato.domain.repository.VisitRepository
-import retrofit2.Response
+import okhttp3.MultipartBody
+import java.time.LocalDateTime
 
 class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource) :
     VisitRepository {
@@ -16,19 +18,25 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
     }
 
     override suspend fun createVisit(
-        pinId: Long,
-        visitImages: List<String>,
-        visitedAt: String,
         travelId: Long,
-    ): Result<Response<String>> {
+        placeName: String,
+        latitude: String,
+        longitude: String,
+        address: String,
+        visitedAt: LocalDateTime,
+        visitImageMultiParts: List<MultipartBody.Part>,
+    ): Result<VisitCreationResponse> {
         return runCatching {
             remoteDataSource.createVisit(
                 VisitCreationRequest(
-                    pinId = pinId,
-                    visitImages = visitImages,
-                    visitedAt = visitedAt,
                     travelId = travelId,
+                    placeName = placeName,
+                    latitude = latitude,
+                    longitude = longitude,
+                    address = address,
+                    visitedAt = visitedAt.toString(),
                 ),
+                visitImageMultiParts,
             )
         }
     }

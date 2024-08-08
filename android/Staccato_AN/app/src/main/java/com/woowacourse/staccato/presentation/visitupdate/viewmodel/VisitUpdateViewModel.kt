@@ -12,11 +12,10 @@ import com.woowacourse.staccato.presentation.mapper.toVisitUpdateDefaultUiModel
 import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
 import com.woowacourse.staccato.presentation.visitupdate.model.VisitUpdateUiModel
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 class VisitUpdateViewModel(
     private val visitRepository: VisitRepository,
-//    private val travelRepository: TravelRepository,
 ) : ViewModel() {
     private val _visitUpdateData = MutableLiveData<VisitUpdateUiModel>()
     val visitUpdateData: LiveData<VisitUpdateUiModel> get() = _visitUpdateData
@@ -24,8 +23,8 @@ class VisitUpdateViewModel(
     private val _travel = MutableLiveData<VisitTravelUiModel>()
     val travel: LiveData<VisitTravelUiModel> get() = _travel
 
-    private val _selectedVisitedAt = MutableLiveData<LocalDate?>()
-    val selectedVisitedAt: LiveData<LocalDate?> get() = _selectedVisitedAt
+    private val _visitedAt = MutableLiveData<LocalDateTime?>()
+    val visitedAt: LiveData<LocalDateTime?> get() = _visitedAt
 
     private val _isError = MutableSingleLiveData(false)
     val isError: SingleLiveData<Boolean> get() = _isError
@@ -57,29 +56,21 @@ class VisitUpdateViewModel(
 
     private fun fetchTravel(travelId: Long) {
         viewModelScope.launch {
-            // travelRepository.loadTravel(travelId).onSuccess { travel ->
             _travel.value =
                 VisitTravelUiModel(
                     id = travelId,
                     title = "praesent",
-                    startAt = LocalDate.now(),
-                    endAt = LocalDate.now().plusDays(2),
                 )
-            // }
         }
     }
 
     suspend fun updateVisit() {
         visitRepository.updateVisit(
             visitImages = listOf(""),
-            visitedAt = selectedVisitedAt.value.toString(),
+            visitedAt = visitedAt.value.toString(),
         ).onSuccess {
             _isUpdateCompleted.postValue(true)
         }
-    }
-
-    fun updateVisitedAt(newSelectedVisitedAt: LocalDate?) {
-        _selectedVisitedAt.value = newSelectedVisitedAt
     }
 
     fun setImageUris(uris: List<Uri>) {
