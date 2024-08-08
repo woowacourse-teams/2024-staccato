@@ -32,8 +32,9 @@ class TravelDefaultRepository(
     override suspend fun updateTravel(
         travelId: Long,
         newTravel: NewTravel,
+        thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<String> {
-        return when (val responseResult = travelDataSource.updateTravel(travelId, newTravel)) {
+        return when (val responseResult = travelDataSource.updateTravel(travelId, newTravel, thumbnailFile)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)

@@ -4,4 +4,6 @@ interface TravelUpdateHandler {
     fun onPeriodSelectionClicked()
 
     fun onSaveClicked()
+
+    fun onPhotoAttachClicked()
 }

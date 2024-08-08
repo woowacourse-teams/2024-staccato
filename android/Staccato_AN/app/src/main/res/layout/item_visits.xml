@@ -64,11 +64,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="8:5"
             app:layout_constraintEnd_toEndOf="parent"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toEndOf="@id/divider_visits"
             app:layout_constraintTop_toTopOf="parent"
-            bind:glidePlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            bind:glideRoundedCornerImageUrl="@{visit.visitImageUrl}"
-            bind:glideRoundingRadius="@{12}"
+            bind:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            bind:coilRoundedCornerImageUrl="@{visit.visitImageUrl}"
+            bind:coilRoundingRadius="@{12}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
