@@ -11,15 +11,17 @@ class TimelineDefaultRepository(
     override suspend fun getTimeline(): ResponseResult<Timeline> {
         return when (val responseResult = timelineDataSource.getAllTimeline()) {
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
-            is ResponseResult.ServerError -> ResponseResult.ServerError(
-                responseResult.status,
-                responseResult.message,
-            )
+            is ResponseResult.ServerError ->
+                ResponseResult.ServerError(
+                    responseResult.status,
+                    responseResult.message,
+                )
 
-            is ResponseResult.Exception -> ResponseResult.Exception(
-                responseResult.e,
-                EXCEPTION_ERROR_MESSAGE,
-            )
+            is ResponseResult.Exception ->
+                ResponseResult.Exception(
+                    responseResult.e,
+                    EXCEPTION_ERROR_MESSAGE,
+                )
         }
     }
 

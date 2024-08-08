@@ -65,16 +65,17 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
     }
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<TimelineTravelUiModel>() {
-            override fun areContentsTheSame(
-                oldItem: TimelineTravelUiModel,
-                newItem: TimelineTravelUiModel,
-            ): Boolean = oldItem == newItem
+        val diffUtil =
+            object : DiffUtil.ItemCallback<TimelineTravelUiModel>() {
+                override fun areContentsTheSame(
+                    oldItem: TimelineTravelUiModel,
+                    newItem: TimelineTravelUiModel,
+                ): Boolean = oldItem == newItem
 
-            override fun areItemsTheSame(
-                oldItem: TimelineTravelUiModel,
-                newItem: TimelineTravelUiModel,
-            ): Boolean = oldItem.travelId == newItem.travelId
-        }
+                override fun areItemsTheSame(
+                    oldItem: TimelineTravelUiModel,
+                    newItem: TimelineTravelUiModel,
+                ): Boolean = oldItem.travelId == newItem.travelId
+            }
     }
 }

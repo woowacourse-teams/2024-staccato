@@ -55,17 +55,18 @@ class TimelineViewModel(private val timelineRepository: TimelineRepository) : Vi
     ) {
         _errorMessage.postValue(errorMessage)
         when (status) {
-            is Status.Code -> Log.e(
-                "TimelineViewModel",
-                "An error occurred: ${status.code}, $errorMessage",
-            )
+            is Status.Code ->
+                Log.e(
+                    "TimelineViewModel",
+                    "An error occurred: ${status.code}, $errorMessage",
+                )
 
-            is Status.Message -> Log.e(
-                "TimelineViewModel",
-                "An error occurred: ${status.message}, $errorMessage",
-            )
+            is Status.Message ->
+                Log.e(
+                    "TimelineViewModel",
+                    "An error occurred: ${status.message}, $errorMessage",
+                )
         }
-
     }
 
     private fun handleException(
