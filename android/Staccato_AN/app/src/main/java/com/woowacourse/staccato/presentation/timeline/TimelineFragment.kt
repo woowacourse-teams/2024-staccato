@@ -1,20 +1,24 @@
 package com.woowacourse.staccato.presentation.timeline
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentTimelineBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
+import com.woowacourse.staccato.presentation.main.SharedViewModel
 import com.woowacourse.staccato.presentation.timeline.adapter.TimelineAdapter
 import com.woowacourse.staccato.presentation.util.showToast
 
 class TimelineFragment :
     BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
     TimelineHandler {
-    private val viewModel: TimelineViewModel by viewModels { TimelineViewModelFactory() }
+    private val timelineViewModel: TimelineViewModel by viewModels { TimelineViewModelFactory() }
+    private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private lateinit var adapter: TimelineAdapter
 
     override fun onViewCreated(
@@ -23,7 +27,7 @@ class TimelineFragment :
     ) {
         setUpAdapter()
         setUpObserving()
-        viewModel.loadTimeline()
+        timelineViewModel.loadTimeline()
     }
 
     private fun setUpAdapter() {
@@ -32,14 +36,20 @@ class TimelineFragment :
     }
 
     private fun setUpObserving() {
-        viewModel.travels.observe(viewLifecycleOwner) { timeline ->
+        timelineViewModel.travels.observe(viewLifecycleOwner) { timeline ->
             adapter.setTravels(timeline)
         }
-        viewModel.errorState.observe(viewLifecycleOwner) { event ->
+        timelineViewModel.errorState.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { state ->
                 if (state) {
                     showToast(ERROR_MESSAGE)
                 }
+            }
+        }
+        sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) { isUpdated ->
+            if (isUpdated) {
+                Log.d("hodu", "updated")
+                timelineViewModel.loadTimeline()
             }
         }
     }
