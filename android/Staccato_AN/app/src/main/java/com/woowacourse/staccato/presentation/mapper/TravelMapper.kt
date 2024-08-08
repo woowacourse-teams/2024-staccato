@@ -30,6 +30,6 @@ fun TravelVisit.toUiModel() =
     TravelVisitUiModel(
         id = visitId,
         placeName = placeName,
-        visitImage = visitImage,
+        visitImageUrl = visitImageUrl,
         visitedAt = visitedAt,
     )

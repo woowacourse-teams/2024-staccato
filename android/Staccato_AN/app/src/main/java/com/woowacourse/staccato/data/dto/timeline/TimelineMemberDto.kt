@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TimelineMemberDto(
     @SerialName("memberId") val memberId: Long,
-    @SerialName("memberImage") val memberImage: String,
+    @SerialName("memberImageUrl") val memberImageUrl: String,
 )
