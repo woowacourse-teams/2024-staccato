@@ -50,6 +50,9 @@ class TravelUpdateViewModel(
     private val _imageUri = MutableLiveData<Uri?>()
     val imageUri: LiveData<Uri?> get() = _imageUri
 
+    private val _isPosting = MutableLiveData<Boolean>()
+    val isPosting: LiveData<Boolean> get() = _isPosting
+
     fun fetchTravel() {
         viewModelScope.launch {
             val result = travelRepository.getTravel(travelId)
@@ -66,6 +69,7 @@ class TravelUpdateViewModel(
     }
 
     fun updateTravel(context: Context) {
+        _isPosting.value = true
         viewModelScope.launch {
             val newTravel: NewTravel = makeNewTravel()
             val thumbnailFile: MultipartBody.Part? = convertTravelUriToFile(context, _imageUri.value, TRAVEL_FILE_NAME)

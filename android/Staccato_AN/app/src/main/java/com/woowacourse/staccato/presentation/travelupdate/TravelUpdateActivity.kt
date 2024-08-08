@@ -49,6 +49,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
     }
 
     override fun onSaveClicked() {
+        showToast(getString(R.string.travel_update_posting))
         viewModel.updateTravel(this)
     }
 
