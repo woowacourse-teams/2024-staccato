@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.presentation.travelupdate.viewmodel
 
+import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -43,6 +44,9 @@ class TravelUpdateViewModel(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
+    private val _imageUri = MutableLiveData<Uri>()
+    val imageUri: LiveData<Uri> get() = _imageUri
+
     fun fetchTravel() {
         viewModelScope.launch {
             val result = travelRepository.getTravel(travelId)
@@ -51,6 +55,11 @@ class TravelUpdateViewModel(
                 .onServerError(::handleServerError)
                 .onException(::handelException)
         }
+    }
+
+    fun setImage(uri: Uri) {
+        _imageUri.value = uri
+        _imageUrl.value = null
     }
 
     fun updateTravel() {
