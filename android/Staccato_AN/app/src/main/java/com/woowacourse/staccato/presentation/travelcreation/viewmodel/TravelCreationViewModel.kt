@@ -23,9 +23,6 @@ import java.time.LocalDate
 class TravelCreationViewModel(
     private val travelRepository: TravelRepository,
 ) : ViewModel() {
-    private val _imageUrl = MutableLiveData<String>()
-    val imageUrl: LiveData<String> get() = _imageUrl
-
     val title = ObservableField<String>()
     val description = ObservableField<String>()
 
@@ -78,7 +75,6 @@ class TravelCreationViewModel(
 
     private fun makeNewTravel(): NewTravel =
         NewTravel(
-            travelThumbnail = imageUrl.value,
             travelTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
             endAt = endDate.value ?: throw IllegalArgumentException(),
