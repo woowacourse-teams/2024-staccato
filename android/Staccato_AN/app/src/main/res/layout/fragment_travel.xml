@@ -55,7 +55,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:coilImageUrl="@{viewModel.travel.thumbnail}"
+                    bind:coilImageUrl="@{viewModel.travel.travelThumbnailUrl}"
                     bind:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
                     tools:src="@drawable/shape_place_holder_rectangle" />
 

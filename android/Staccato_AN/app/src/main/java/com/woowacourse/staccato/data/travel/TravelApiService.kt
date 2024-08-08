@@ -2,12 +2,15 @@ package com.woowacourse.staccato.data.travel
 
 import com.woowacourse.staccato.data.dto.travel.TravelRequest
 import com.woowacourse.staccato.data.dto.travel.TravelResponse
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface TravelApiService {
@@ -16,9 +19,11 @@ interface TravelApiService {
         @Path("travelId") travelId: Long,
     ): Response<TravelResponse>
 
+    @Multipart
     @POST(TRAVELS_PATH)
     suspend fun postTravel(
-        @Body travelRequest: TravelRequest,
+        @Part("data") data: TravelRequest,
+        @Part thumbnailFile: MultipartBody.Part?,
     ): Response<String>
 
     @PUT(TRAVEL_PATH_WITH_ID)

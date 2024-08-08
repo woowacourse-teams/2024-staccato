@@ -17,7 +17,7 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
 
     override suspend fun createVisit(
         pinId: Long,
-        visitImages: List<String>,
+        visitImageUrls: List<String>,
         visitedAt: String,
         travelId: Long,
     ): Result<Response<String>> {
@@ -25,7 +25,7 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
             remoteDataSource.createVisit(
                 VisitCreationRequest(
                     pinId = pinId,
-                    visitImages = visitImages,
+                    visitImageUrls = visitImageUrls,
                     visitedAt = visitedAt,
                     travelId = travelId,
                 ),
@@ -34,13 +34,13 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
     }
 
     override suspend fun updateVisit(
-        visitImages: List<String>,
+        visitImageUrls: List<String>,
         visitedAt: String,
     ): Result<Unit> {
         return runCatching {
             remoteDataSource.updateVisit(
                 VisitUpdateRequest(
-                    visitImages = visitImages,
+                    visitImageUrls = visitImageUrls,
                     visitedAt = visitedAt,
                 ),
             )

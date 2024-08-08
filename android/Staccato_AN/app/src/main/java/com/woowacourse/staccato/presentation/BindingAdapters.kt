@@ -249,7 +249,7 @@ fun TextView.convertLocalDateToDatePeriodString(
 }
 
 @BindingAdapter("setAttachedPhotoVisibility")
-fun ImageView.setAttachedPhotoVisibility(items: List<Uri>?) {
+fun ImageView.setAttachedPhotoVisibility(items: Array<Uri>?) {
     if (items.isNullOrEmpty()) {
         visibility = View.GONE
     } else {
@@ -262,6 +262,6 @@ fun ImageView.setAttachedPhotoVisibility(items: List<Uri>?) {
 }
 
 @BindingAdapter("setAttachedPhotoVisibility")
-fun FrameLayout.setAttachedPhotoVisibility(items: List<Uri>?) {
+fun FrameLayout.setAttachedPhotoVisibility(items: Array<Uri>?) {
     isInvisible = !items.isNullOrEmpty()
 }

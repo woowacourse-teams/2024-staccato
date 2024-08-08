@@ -21,6 +21,6 @@ fun VisitLogDto.toDomain() =
         visitLogId = visitLogId,
         memberId = memberId,
         nickname = nickname,
-        memberImage = memberImage,
+        memberImageUrl = memberImageUrl,
         content = content,
     )

@@ -34,6 +34,7 @@
     <string name="travel_creation_period">여행 기간</string>
     <string name="travel_creation_period_hint">여행 기간을 선택해주세요</string>
     <string name="travel_creation_period_description">%s ~ %s</string>
+    <string name="travel_creation_posting">여행을 생성하는 중이예요.. ✈️</string>
 
     // fragment_visit
     <string name="visit_history">%s년 %s월 %s일에 방문했어요</string>

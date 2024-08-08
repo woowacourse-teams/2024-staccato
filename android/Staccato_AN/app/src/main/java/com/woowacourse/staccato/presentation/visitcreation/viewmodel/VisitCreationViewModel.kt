@@ -34,9 +34,9 @@ class VisitCreationViewModel(
     private val _createdVisitId = MutableSingleLiveData<Long>()
     val createdVisitId: SingleLiveData<Long> get() = _createdVisitId
 
-    private val _selectedImages = MutableLiveData<List<Uri>>()
+    private val _selectedImages = MutableLiveData<Array<out Uri>>()
 
-    val selectedImages: LiveData<List<Uri>> get() = _selectedImages
+    val selectedImages: LiveData<Array<out Uri>> get() = _selectedImages
 
     fun fetchInitData(pinId: Long) =
         viewModelScope.launch {
@@ -83,7 +83,7 @@ class VisitCreationViewModel(
         _selectedVisitedAt.value = newSelectedVisitedAt
     }
 
-    fun setImageUris(uris: List<Uri>) {
+    fun setImageUris(uris: Array<out Uri>) {
         _selectedImages.value = uris
     }
 }

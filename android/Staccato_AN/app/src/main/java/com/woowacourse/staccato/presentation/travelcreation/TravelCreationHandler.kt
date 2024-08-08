@@ -4,4 +4,6 @@ interface TravelCreationHandler {
     fun onPeriodSelectionClicked()
 
     fun onSaveClicked()
+
+    fun onPhotoAttachClicked()
 }

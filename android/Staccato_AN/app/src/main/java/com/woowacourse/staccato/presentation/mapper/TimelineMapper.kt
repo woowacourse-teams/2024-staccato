@@ -12,9 +12,9 @@ fun Timeline.toTimelineTravelUiModel(): List<TimelineTravelUiModel> {
 
 fun Travel.toTimelineTravelUiModel(): TimelineTravelUiModel {
     return TimelineTravelUiModel(
-        id = travelId,
-        title = travelTitle,
-        thumbnail = travelThumbnail,
+        travelId = travelId,
+        travelTitle = travelTitle,
+        travelThumbnailUrl = travelThumbnailUrl,
         startAt = startAt,
         endAt = endAt,
     )

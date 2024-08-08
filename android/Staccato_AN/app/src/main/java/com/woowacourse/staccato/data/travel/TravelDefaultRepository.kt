@@ -5,6 +5,7 @@ import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.TravelRepository
+import okhttp3.MultipartBody
 
 class TravelDefaultRepository(
     private val travelDataSource: TravelDataSource,
@@ -17,8 +18,11 @@ class TravelDefaultRepository(
         }
     }
 
-    override suspend fun createTravel(newTravel: NewTravel): ResponseResult<String> {
-        return when (val responseResult = travelDataSource.createTravel(newTravel)) {
+    override suspend fun createTravel(
+        newTravel: NewTravel,
+        thumbnailFile: MultipartBody.Part?,
+    ): ResponseResult<String> {
+        return when (val responseResult = travelDataSource.createTravel(newTravel, thumbnailFile)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)

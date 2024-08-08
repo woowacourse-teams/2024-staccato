@@ -5,6 +5,6 @@ import java.time.LocalDate
 data class TravelVisit(
     val visitId: Long,
     val placeName: String,
-    val visitImage: String? = null,
+    val visitImageUrl: String? = null,
     val visitedAt: LocalDate,
 )

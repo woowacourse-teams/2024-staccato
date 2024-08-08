@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data class TimelineTravelDto(
     @SerialName("travelId") val travelId: Long,
     @SerialName("travelTitle") val travelTitle: String,
-    @SerialName("travelThumbnail") val travelThumbnail: String? = null,
+    @SerialName("travelThumbnailUrl") val travelThumbnailUrl: String? = null,
     @SerialName("startAt") val startAt: String,
     @SerialName("endAt") val endAt: String,
     @SerialName("description") val description: String? = null,
