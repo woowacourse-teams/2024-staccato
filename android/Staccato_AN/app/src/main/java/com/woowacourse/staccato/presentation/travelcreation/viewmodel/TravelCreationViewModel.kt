@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.presentation.travelcreation.viewmodel
 
+import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -36,6 +37,13 @@ class TravelCreationViewModel(
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
+
+    private val _imageUri = MutableLiveData<Uri>()
+    val imageUri: LiveData<Uri> get() = _imageUri
+
+    fun setImageUri(uri: Uri) {
+        _imageUri.value = uri
+    }
 
     fun setTravelPeriod(
         startAt: Long,
