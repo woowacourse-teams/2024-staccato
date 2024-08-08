@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -61,7 +62,7 @@ class VisitServiceTest extends ServiceSliceTest {
     }
 
     private VisitRequest getVisitRequestWithoutImage() {
-        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDate.now(), 1L);
+        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
     @DisplayName("방문 기록을 생성하면 Visit과 VisitImage들이 함께 저장되고 id를 반환한다.")
@@ -109,7 +110,7 @@ class VisitServiceTest extends ServiceSliceTest {
     }
 
     private VisitRequest getVisitRequest() {
-        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDate.now(), 1L);
+        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
     @DisplayName("특정 방문 기록 조회에 성공한다.")
@@ -257,7 +258,7 @@ class VisitServiceTest extends ServiceSliceTest {
     }
 
     private Visit saveVisitWithImages(Travel travel) {
-        Visit visit = VisitFixture.create(travel, LocalDate.now());
+        Visit visit = VisitFixture.create(travel, LocalDateTime.now());
         visit.addVisitImages(new VisitImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
         return visitRepository.save(visit);
     }

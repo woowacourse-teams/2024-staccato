@@ -1,8 +1,7 @@
 package com.staccato.visit.service.dto.request;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -30,8 +29,8 @@ public record VisitRequest(
         BigDecimal longitude,
         @Schema(example = "2024-07-27")
         @NotNull(message = "방문 날짜를 입력해주세요.")
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
-        LocalDate visitedAt,
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+        LocalDateTime visitedAt,
         @Schema(example = "1")
         @NotNull(message = "여행 상세를 선택해주세요.")
         @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.")

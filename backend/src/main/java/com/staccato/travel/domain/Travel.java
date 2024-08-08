@@ -1,6 +1,8 @@
 package com.staccato.travel.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,8 +91,8 @@ public class Travel extends BaseEntity {
                 });
     }
 
-    public boolean isWithoutDuration(LocalDate date) {
-        return startAt.isAfter(date) || endAt.isBefore(date);
+    public boolean isWithoutDuration(LocalDateTime date) {
+        return startAt.isAfter(ChronoLocalDate.from(date)) || endAt.isBefore(ChronoLocalDate.from(date));
     }
 
     public List<Member> getMates() {

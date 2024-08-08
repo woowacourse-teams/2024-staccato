@@ -15,7 +15,7 @@ public record TravelDetailResponse(
         Long travelId,
         @Schema(example = "https://example.com/travels/geumohrm.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        String travelThumbnail,
+        String travelThumbnailUrl,
         @Schema(example = "런던 여행")
         String travelTitle,
         @Schema(example = "런던 시내 탐방")

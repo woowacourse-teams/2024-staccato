@@ -6,6 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +40,7 @@ class TravelTest {
                 .build();
 
         // when & then
-        assertThat(travel.isWithoutDuration(LocalDate.of(2023, 7, 11))).isTrue();
+        assertThat(travel.isWithoutDuration(LocalDateTime.of(2023, 7, 11, 10, 0))).isTrue();
     }
 
     @DisplayName("여행 상세를 수정 시 기존 방문 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
@@ -60,7 +61,7 @@ class TravelTest {
                 .nickname("staccato")
                 .build();
         Visit visit = Visit.builder()
-                .visitedAt(LocalDate.now())
+                .visitedAt(LocalDateTime.now())
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)

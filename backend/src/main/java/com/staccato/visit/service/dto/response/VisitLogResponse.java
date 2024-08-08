@@ -15,7 +15,7 @@ public record VisitLogResponse(
         String nickname,
         @Schema(example = "https://example.com/images/kargo.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        String memberImage,
+        String memberImageUrl,
         @Schema(example = "즐거운 여행")
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String content

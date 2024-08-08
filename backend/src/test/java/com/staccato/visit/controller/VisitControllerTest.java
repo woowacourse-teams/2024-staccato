@@ -9,10 +9,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -56,23 +58,23 @@ class VisitControllerTest {
     static Stream<Arguments> invalidVisitRequestProvider() {
         return Stream.of(
                 Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 0L),
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 0L),
                         "여행 식별자는 양수로 이루어져야 합니다."
                 ),
                 Arguments.of(
-                        new VisitRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 이름을 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", "address", null, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest("placeName", "address", null, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 위도를 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, null, LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest("placeName", "address", BigDecimal.ONE, null, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 경도를 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, LocalDate.of(2023, 7, 1), 1L),
+                        new VisitRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 주소를 입력해주세요."
                 ),
                 Arguments.of(
@@ -86,7 +88,7 @@ class VisitControllerTest {
     @Test
     void createVisit() throws Exception {
         // given
-        VisitRequest visitRequest = getVisitRequest(LocalDate.now());
+        VisitRequest visitRequest = getVisitRequest(LocalDateTime.now());
         String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
         MockMultipartFile visitRequestPart = new MockMultipartFile("data", "visitRequest.json", "application/json", visitRequestJson.getBytes());
         MockMultipartFile file1 = new MockMultipartFile("visitImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
@@ -113,11 +115,50 @@ class VisitControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(visitIdResponse)));
     }
 
+    @DisplayName("올바르지 않은 날짜 형식으로 방문 기록 생성을 요청하면 예외가 발생한다.")
+    @Test
+    void failCreateVisitWithInvalidVistedAt() throws Exception {
+        // given
+        String visitRequestJson = """
+            {
+                "placeName": "런던 박물관",
+                "address": "Great Russell St, London WC1B 3DG",
+                "latitude": 51.51978412729915,
+                "longitude": -0.12712788587027796,
+                "visitedAt": "2024/07/27T10:00:00",
+                "travelId": 1
+            }
+        """;
+        MockMultipartFile visitRequestPart = new MockMultipartFile(
+                "data",
+                "",
+                "application/json",
+                visitRequestJson.getBytes()
+        );
+        MockMultipartFile visitImageFiles = new MockMultipartFile(
+                "visitImageFiles",
+                "",
+                "application/json",
+                objectMapper.writeValueAsString(List.of()).getBytes()
+        );
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(visitService.createVisit(any(VisitRequest.class), any(List.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
+
+        // when & then
+        mockMvc.perform(multipart("/visits")
+                        .file(visitRequestPart)
+                        .file(visitImageFiles)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("요청 본문을 읽을 수 없습니다. 올바른 형식으로 데이터를 제공해주세요."));
+    }
+
     @DisplayName("사진이 5장을 초과하면 방문 기록 생성에 실패한다.")
     @Test
     void failCreateVisitByImageCount() throws Exception {
         // given
-        VisitRequest visitRequest = getVisitRequest(LocalDate.now());
+        VisitRequest visitRequest = getVisitRequest(LocalDateTime.now());
         String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
         MockMultipartFile visitRequestPart = new MockMultipartFile("data", "visitRequest.json", "application/json", visitRequestJson.getBytes());
         MockMultipartFile file1 = new MockMultipartFile("visitImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
@@ -146,7 +187,7 @@ class VisitControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    private static VisitRequest getVisitRequest(LocalDate visitedAt) {
+    private static VisitRequest getVisitRequest(LocalDateTime visitedAt) {
         return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, visitedAt, 1L);
     }
 

@@ -15,11 +15,11 @@ public record VisitResponse(
         String placeName,
         @Schema(example = "https://example.com/travels/london_eye.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        String visitImage,
+        String visitImageUrl,
         @Schema(example = "2024-07-27")
         LocalDate visitedAt
 ) {
     public VisitResponse(Visit visit, String visitImage) {
-        this(visit.getId(), visit.getPlaceName(), visitImage, visit.getVisitedAt());
+        this(visit.getId(), visit.getPlaceName(), visitImage, visit.getVisitedAt().toLocalDate());
     }
 }
