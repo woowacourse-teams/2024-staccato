@@ -45,8 +45,7 @@ public class CloudStorageService {
 
     private String generateUniqueFileName(String fileName) {
         String fileExtension = getFileExtension(fileName);
-        String baseName = getBaseName(fileName);
-        return baseName + "_" + UUID.randomUUID() + fileExtension;
+        return UUID.randomUUID() + fileExtension;
     }
 
     private String getFileExtension(String fileName) {
@@ -55,14 +54,6 @@ public class CloudStorageService {
             return "";
         }
         return fileName.substring(dotIndex);
-    }
-
-    private String getBaseName(String fileName) {
-        int dotIndex = fileName.lastIndexOf('.');
-        if (dotIndex == -1) {
-            return fileName;
-        }
-        return fileName.substring(0, dotIndex);
     }
 
     public void deleteFiles(List<String> imageUrls) {
