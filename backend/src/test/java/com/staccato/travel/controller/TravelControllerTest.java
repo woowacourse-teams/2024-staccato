@@ -92,7 +92,7 @@ class TravelControllerTest {
     @MethodSource("travelRequestProvider")
     void createTravel(TravelRequest travelRequest) throws Exception {
         // given
-        MockMultipartFile file = new MockMultipartFile("travelThumbnail", "example.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("travelThumbnailUrl", "example.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         when(travelService.createTravel(any(), any(), any())).thenReturn(new TravelIdResponse(1));
 
@@ -172,7 +172,7 @@ class TravelControllerTest {
     void updateTravel(TravelRequest travelRequest) throws Exception {
         // given
         long travelId = 1L;
-        MockMultipartFile file = new MockMultipartFile("travelThumbnail", "example.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("travelThumbnailUrl", "example.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then

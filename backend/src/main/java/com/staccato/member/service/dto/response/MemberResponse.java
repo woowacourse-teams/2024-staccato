@@ -13,7 +13,7 @@ public record MemberResponse(
         String nickname,
         @Schema(example = "https://example.com/members/profile.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        String memberImage
+        String memberImageUrl
 ) {
     public MemberResponse(Member member) {
         this(member.getId(), member.getNickname().getNickname(), member.getImageUrl());

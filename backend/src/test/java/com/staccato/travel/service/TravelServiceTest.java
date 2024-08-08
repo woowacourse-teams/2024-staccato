@@ -57,7 +57,7 @@ class TravelServiceTest extends ServiceSliceTest {
         return Stream.of(
                 Arguments.of(
                         new TravelRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
-                        new MockMultipartFile("travelThumbnail", "example.jpg".getBytes()), "fakeUrl"),
+                        new MockMultipartFile("travelThumbnailUrl", "example.jpg".getBytes()), "fakeUrl"),
                 Arguments.of(
                         new TravelRequest(null, "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
                         null, null),
@@ -179,7 +179,7 @@ class TravelServiceTest extends ServiceSliceTest {
     void updateTravel(TravelRequest updatedTravel, MockMultipartFile updatedFile, String expected) {
         // given
         Member member = saveMember();
-        MockMultipartFile file = new MockMultipartFile("travelThumbnail", "example.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("travelThumbnailUrl", "example.jpg".getBytes());
         TravelIdResponse travelResponse = travelService.createTravel(createTravelRequest(2024), file, member);
 
         // when
@@ -203,7 +203,7 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         TravelRequest travelRequest = createTravelRequest(2023);
-        MockMultipartFile file = new MockMultipartFile("travelThumbnail", "example.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("travelThumbnailUrl", "example.jpg".getBytes());
 
         // when & then
         assertThatThrownBy(() -> travelService.updateTravel(travelRequest, 1L, file, member))
@@ -229,7 +229,7 @@ class TravelServiceTest extends ServiceSliceTest {
         Member otherMember = saveMember();
         TravelRequest updatedTravel = createTravelRequest(2023);
         TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
-        MockMultipartFile file = new MockMultipartFile("travelThumbnail", "example.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("travelThumbnailUrl", "example.jpg".getBytes());
 
         // when & then
         assertThatThrownBy(() -> travelService.updateTravel(updatedTravel, travelIdResponse.travelId(), file, otherMember))
