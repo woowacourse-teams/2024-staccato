@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
     @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleDateTimeParseException(DateTimeParseException e) {
         String errorMessage = "올바르지 않은 날짜 형식입니다.";
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), errorMessage);
-        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage);
+        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse);
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
@@ -51,16 +51,15 @@ public class GlobalExceptionHandler {
                 .getMessage();
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage);
         log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse);
-        return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         String errorMessage = "요청 본문을 읽을 수 없습니다. 올바른 형식으로 데이터를 제공해주세요.";
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage);
-        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse);
-        return ResponseEntity.badRequest().body(exceptionResponse);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), errorMessage);
+        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage());
+        return ResponseEntity.internalServerError().body(exceptionResponse);
     }
 
     @ExceptionHandler(S3Exception.class)
