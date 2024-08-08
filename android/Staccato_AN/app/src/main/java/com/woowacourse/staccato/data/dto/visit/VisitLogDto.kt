@@ -8,6 +8,6 @@ data class VisitLogDto(
     @SerialName("visitLogId") val visitLogId: Long,
     @SerialName("memberId") val memberId: Long,
     @SerialName("nickname") val nickname: String,
-    @SerialName("memberImage") val memberImage: String,
+    @SerialName("memberImageUrl") val memberImageUrl: String,
     @SerialName("content") val content: String,
 )

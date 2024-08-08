@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TravelRequest(
-    @SerialName("travelThumbnail") val travelThumbnail: String? = null,
     @SerialName("travelTitle") val travelTitle: String,
     @SerialName("description") val description: String? = null,
     @SerialName("startAt") val startAt: String,

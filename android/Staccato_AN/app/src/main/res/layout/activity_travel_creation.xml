@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.woowacourse.staccato.presentation.travelcreation.viewmodel.TravelCreationViewModel" />
@@ -47,6 +49,8 @@
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="12dp"
                     android:contentDescription="@string/all_image_content_description"
+                    android:onClick="@{() -> handler.onPhotoAttachClicked()}"
+                    android:src="@{viewModel.imageUri}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -56,6 +60,7 @@
                     layout="@layout/layout_photo_attach"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.imageUri == null ? View.VISIBLE : View.GONE }"
                     app:layout_constraintBottom_toBottomOf="@id/iv_travel_creation_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_travel_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_travel_creation_photo_attach"
@@ -151,6 +156,18 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/progress_bar_travel_creation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progress="30"
+            android:visibility="@{viewModel.isPosting == true ? View.VISIBLE : View.GONE }"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

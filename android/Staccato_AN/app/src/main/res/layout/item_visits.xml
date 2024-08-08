@@ -67,7 +67,7 @@
             app:layout_constraintStart_toEndOf="@id/divider_visits"
             app:layout_constraintTop_toTopOf="parent"
             bind:glidePlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            bind:glideRoundedCornerImageUrl="@{visit.visitImage}"
+            bind:glideRoundedCornerImageUrl="@{visit.visitImageUrl}"
             bind:glideRoundingRadius="@{12}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 

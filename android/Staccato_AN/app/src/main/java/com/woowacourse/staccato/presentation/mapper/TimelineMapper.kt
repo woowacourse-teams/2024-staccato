@@ -14,7 +14,7 @@ fun Timeline.toTimelineTravelUiModel(): List<TimelineTravelUiModel> {
 fun Travel.toTimelineTravelUiModel(): TimelineTravelUiModel {
     return TimelineTravelUiModel(
         travelId = travelId,
-        travelThumbnail = travelThumbnail,
+        travelThumbnailUrl = travelThumbnailUrl,
         travelPeriod = convertLocalDateToDatePeriodString(startAt, endAt),
         travelTitle = travelTitle,
     )

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VisitCreationRequest(
     @SerialName("pinId") val pinId: Long,
-    @SerialName("visitImages") val visitImages: List<String>,
+    @SerialName("visitImageUrls") val visitImageUrls: List<String>,
     @SerialName("visitedAt") val visitedAt: String,
     @SerialName("travelId") val travelId: Long,
 )
