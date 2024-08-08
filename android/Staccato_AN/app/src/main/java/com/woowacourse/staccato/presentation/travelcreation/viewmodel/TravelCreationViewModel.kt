@@ -1,6 +1,7 @@
 package com.woowacourse.staccato.presentation.travelcreation.viewmodel
 
-import android.util.Log
+import android.content.Context
+import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,10 +11,13 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.ResponseResult
+import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.travelcreation.DateConverter.convertLongToLocalDate
+import com.woowacourse.staccato.presentation.util.convertTravelUriToFile
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import java.time.LocalDate
 
 class TravelCreationViewModel(
@@ -37,6 +41,16 @@ class TravelCreationViewModel(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
+    private val _imageUri = MutableLiveData<Uri>()
+    val imageUri: LiveData<Uri> get() = _imageUri
+
+    private val _isPosting = MutableLiveData<Boolean>(false)
+    val isPosting: LiveData<Boolean> get() = _isPosting
+
+    fun setImageUri(uri: Uri) {
+        _imageUri.value = uri
+    }
+
     fun setTravelPeriod(
         startAt: Long,
         endAt: Long,
@@ -45,10 +59,12 @@ class TravelCreationViewModel(
         _endDate.value = convertLongToLocalDate(endAt)
     }
 
-    fun createTravel() {
+    fun createTravel(context: Context) {
+        _isPosting.value = true
         viewModelScope.launch {
-            val travel = makeNewTravel()
-            val result: ResponseResult<String> = travelRepository.createTravel(travel)
+            val travel: NewTravel = makeNewTravel()
+            val thumbnailFile: MultipartBody.Part? = convertTravelUriToFile(context, _imageUri.value, name = TRAVEL_FILE_NAME)
+            val result: ResponseResult<String> = travelRepository.createTravel(travel, thumbnailFile)
             result
                 .onSuccess(::setCreatedTravelId)
                 .onServerError(::handleServerError)
@@ -70,11 +86,10 @@ class TravelCreationViewModel(
         )
 
     private fun handleServerError(
-        code: Int,
+        status: Status,
         message: String,
     ) {
-        _errorMessage.value = "$code : $TRAVEL_CREATION_ERROR_MESSAGE"
-        Log.d("hye: 여행 생성 실패", "$code : $message $TRAVEL_CREATION_ERROR_MESSAGE")
+        _errorMessage.value = message
     }
 
     private fun handelException(
@@ -82,10 +97,10 @@ class TravelCreationViewModel(
         message: String,
     ) {
         _errorMessage.value = TRAVEL_CREATION_ERROR_MESSAGE
-        Log.d("hye: 여행 생성 실패 - 예외", "${e.message}")
     }
 
     companion object {
+        private const val TRAVEL_FILE_NAME = "travelThumbnailFile"
         private const val TRAVEL_CREATION_ERROR_MESSAGE = "여행 생성에 실패했습니다"
     }
 }

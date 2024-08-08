@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TravelResponse(
     @SerialName("travelId") val travelId: Long,
-    @SerialName("travelThumbnail") val travelThumbnail: String? = null,
+    @SerialName("travelThumbnailUrl") val travelThumbnailUrl: String? = null,
     @SerialName("travelTitle") val travelTitle: String,
     @SerialName("startAt") val startAt: String,
     @SerialName("endAt") val endAt: String,

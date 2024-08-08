@@ -42,13 +42,13 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
     }
 
     override suspend fun updateVisit(
-        visitImages: List<String>,
+        visitImageUrls: List<String>,
         visitedAt: String,
     ): Result<Unit> {
         return runCatching {
             remoteDataSource.updateVisit(
                 VisitUpdateRequest(
-                    visitImages = visitImages,
+                    visitImageUrls = visitImageUrls,
                     visitedAt = visitedAt,
                 ),
             )

@@ -11,7 +11,7 @@ fun Visit.toVisitDefaultUiModel(): VisitDetailUiModel.VisitDefaultUiModel {
     return VisitDetailUiModel.VisitDefaultUiModel(
         id = visitId,
         placeName = placeName,
-        visitImage = visitImage,
+        visitImageUrls = visitImage,
         address = address,
         visitedAt = visitedAt,
     )
@@ -28,6 +28,6 @@ fun VisitLog.toVisitLogUiModel() =
         id = visitLogId,
         memberId = memberId,
         nickname = nickname,
-        memberImage = memberImage,
+        memberImageUrl = memberImageUrl,
         content = content,
     )

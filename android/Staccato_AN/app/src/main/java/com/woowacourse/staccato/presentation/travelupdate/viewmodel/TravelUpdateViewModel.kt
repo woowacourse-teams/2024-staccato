@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.travelupdate.viewmodel
 
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
+import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.TravelRepository
@@ -73,7 +73,7 @@ class TravelUpdateViewModel(
     }
 
     private fun initializeTravel(travel: Travel) {
-        _imageUrl.value = travel.travelThumbnail
+        _imageUrl.value = travel.travelThumbnailUrl
         title.set(travel.travelTitle)
         description.set(travel.description)
         _startDate.value = travel.startAt
@@ -94,11 +94,10 @@ class TravelUpdateViewModel(
     }
 
     private fun handleServerError(
-        code: Int,
+        status: Status,
         message: String,
     ) {
-        _errorMessage.value = "$code: $TRAVEL_UPDATE_ERROR_MESSAGE"
-        Log.d("hye: 여행 수정 실패", "$code : $message $TRAVEL_UPDATE_ERROR_MESSAGE")
+        _errorMessage.value = message
     }
 
     private fun handelException(
@@ -106,7 +105,6 @@ class TravelUpdateViewModel(
         message: String,
     ) {
         _errorMessage.value = TRAVEL_UPDATE_ERROR_MESSAGE
-        Log.d("hye: 여행 수정 실패 - 예외", "${e.message}")
     }
 
     companion object {

@@ -28,8 +28,8 @@ class VisitCreationViewModel(
     private val _travel = MutableLiveData<VisitTravelUiModel>()
     val travel: LiveData<VisitTravelUiModel> get() = _travel
 
-    private val _selectedImages = MutableLiveData<List<Uri>>()
-    val selectedImages: LiveData<List<Uri>> get() = _selectedImages
+    private val _selectedImages = MutableLiveData<Array<out Uri>>()
+    val selectedImages: LiveData<Array<out Uri>> get() = _selectedImages
 
     private val _latitude = MutableLiveData<String>()
     private val latitude: LiveData<String> get() = _latitude
@@ -78,7 +78,7 @@ class VisitCreationViewModel(
             convertExcretaFile(context = context, uri = uri, name = "visitImageFiles")
         } ?: emptyList()
 
-    fun setImageUris(uris: List<Uri>) {
+    fun setImageUris(uris: Array<out Uri>) {
         _selectedImages.value = uris
     }
 }

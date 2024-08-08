@@ -32,8 +32,8 @@ class VisitUpdateViewModel(
     private val _isUpdateCompleted = MutableSingleLiveData(false)
     val isUpdateCompleted: SingleLiveData<Boolean> get() = _isUpdateCompleted
 
-    private val _selectedImages = MutableLiveData<List<Uri>>()
-    val selectedImages: LiveData<List<Uri>> get() = _selectedImages
+    private val _selectedImages = MutableLiveData<Array<out Uri>>()
+    val selectedImages: LiveData<Array<out Uri>> get() = _selectedImages
 
     fun fetchInitData(
         visitId: Long,

@@ -34,12 +34,12 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        initUriSelectedListner(context)
+        initUrisSelectedListener(context)
         initRequestPermissionLauncher()
         initGalleryLauncher()
     }
 
-    private fun initUriSelectedListner(context: Context) {
+    private fun initUrisSelectedListener(context: Context) {
         if (context is OnUrisSelectedListener) {
             uriSelectedListener = context
         } else {
@@ -82,10 +82,8 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
 
     private fun setSnackBarAction(snackBar: Snackbar) {
         snackBar.setAction(R.string.snack_bar_move_to_setting) {
-            val intent = Intent()
-            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
             val uri = Uri.fromParts(PACKAGE_SCHEME, requireContext().packageName, null)
-            intent.data = uri
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri)
             startActivity(intent)
         }
     }
@@ -96,7 +94,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
                 if (result.resultCode == RESULT_OK) {
                     val imageUris = extractImageUris(result.data)
                     if (imageUris.isNotEmpty()) {
-                        uriSelectedListener.onUrisSelected(imageUris)
+                        uriSelectedListener.onUrisSelected(*imageUris.toTypedArray())
                         dismiss()
                     } else {
                         showToast("사진을 불러올 수 없습니다.")

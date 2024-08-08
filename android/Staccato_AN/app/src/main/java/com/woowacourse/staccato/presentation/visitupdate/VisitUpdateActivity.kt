@@ -80,7 +80,7 @@ class VisitUpdateActivity :
         }
     }
 
-    override fun onUrisSelected(uris: List<Uri>) {
+    override fun onUrisSelected(vararg uris: Uri) {
         viewModel.setImageUris(uris)
     }
 

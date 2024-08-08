@@ -29,6 +29,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "BASE_URL", "${localProperties["base_url"]}")
+        buildConfigField("String", "TOKEN", "${localProperties["token"]}")
     }
 
     buildFeatures {
