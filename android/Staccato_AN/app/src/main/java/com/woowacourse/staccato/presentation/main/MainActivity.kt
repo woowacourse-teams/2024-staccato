@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
@@ -29,11 +30,13 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+    private val sharedViewModel: SharedViewModel by viewModels()
 
     private val travelCreationLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
+                    sharedViewModel.setTimelineHasUpdated()
                     showToast("새로운 여행을 만들었어요!")
                     val createdTravelId = it.getLongExtra(TRAVEL_ID_KEY, 0L)
                     val bundle = bundleOf(TRAVEL_ID_KEY to createdTravelId)
@@ -46,6 +49,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
+                    sharedViewModel.setTimelineHasUpdated()
                     showToast("여행을 수정했어요!")
                     val updatedTravelId = it.getLongExtra(TRAVEL_ID_KEY, 0L)
                     val bundle = bundleOf(TRAVEL_ID_KEY to updatedTravelId)

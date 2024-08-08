@@ -65,6 +65,23 @@ fun ImageView.setRoundedCornerImageWithCoil(
 }
 
 @BindingAdapter(
+    value = ["coilImageUrl", "coilImageUri", "coilPlaceHolder", "coilRoundingRadius"],
+)
+fun ImageView.setRoundedCornerUpdateImageWithCoil(
+    url: String?,
+    uri: Uri?,
+    placeHolder: Drawable? = null,
+    roundingRadius: Float,
+) {
+    val image = url ?: uri
+    load(image) {
+        placeholder(placeHolder)
+        transformations(RoundedCornersTransformation(roundingRadius))
+        error(placeHolder)
+    }
+}
+
+@BindingAdapter(
     value = ["glideImageUrl", "glidePlaceHolder"],
 )
 fun ImageView.loadImageWithGlide(

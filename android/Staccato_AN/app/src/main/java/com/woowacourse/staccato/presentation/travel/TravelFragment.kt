@@ -3,6 +3,7 @@ package com.woowacourse.staccato.presentation.travel
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.woowacourse.staccato.R
@@ -15,6 +16,7 @@ import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
 import com.woowacourse.staccato.presentation.common.DialogHandler
 import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
+import com.woowacourse.staccato.presentation.main.SharedViewModel
 import com.woowacourse.staccato.presentation.travel.adapter.MatesAdapter
 import com.woowacourse.staccato.presentation.travel.adapter.VisitsAdapter
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel
@@ -35,6 +37,7 @@ class TravelFragment :
     private val viewModel: TravelViewModel by viewModels {
         TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))
     }
+    private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
 
     private lateinit var matesAdapter: MatesAdapter
@@ -125,6 +128,7 @@ class TravelFragment :
     private fun observeIsDeleteSuccess() {
         viewModel.isDeleteSuccess.observe(viewLifecycleOwner) { isDeleteSuccess ->
             if (isDeleteSuccess) {
+                sharedViewModel.setTimelineHasUpdated()
                 findNavController().popBackStack()
                 showToast(getString(R.string.travel_delete_complete))
             }

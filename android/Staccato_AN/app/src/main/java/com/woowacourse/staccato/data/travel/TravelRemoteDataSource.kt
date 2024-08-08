@@ -3,6 +3,7 @@ package com.woowacourse.staccato.data.travel
 import com.woowacourse.staccato.data.ApiResponseHandler.handleApiResponse
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.mapper.toDto
+import com.woowacourse.staccato.data.dto.mapper.toTravelUpdateRequest
 import com.woowacourse.staccato.data.dto.travel.TravelResponse
 import com.woowacourse.staccato.domain.model.NewTravel
 import okhttp3.MultipartBody
@@ -24,9 +25,10 @@ class TravelRemoteDataSource(
     override suspend fun updateTravel(
         travelId: Long,
         newTravel: NewTravel,
+        thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<String> =
         handleApiResponse {
-            travelApiService.putTravel(travelId, newTravel.toDto())
+            travelApiService.putTravel(travelId, newTravel.toTravelUpdateRequest(), thumbnailFile)
         }
 
     override suspend fun deleteTravel(travelId: Long): ResponseResult<Unit> = handleApiResponse { travelApiService.deleteTravel(travelId) }
