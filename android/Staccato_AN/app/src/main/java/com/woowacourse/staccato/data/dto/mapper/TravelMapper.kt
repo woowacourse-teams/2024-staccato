@@ -30,7 +30,6 @@ fun TravelVisitDto.toDomain() =
 
 fun NewTravel.toDto() =
     TravelRequest(
-        travelThumbnail = travelThumbnail,
         travelTitle = travelTitle,
         description = description,
         startAt = startAt.toString(),
