@@ -1,6 +1,7 @@
 package com.staccato.config.log;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,6 +34,6 @@ public class LoggingFilter extends OncePerRequestFilter {
     }
 
     private boolean tokenExists(String token) {
-        return !token.isBlank();
+        return !(Objects.isNull(token) || token.isBlank());
     }
 }
