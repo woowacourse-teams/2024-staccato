@@ -1,32 +1,22 @@
 package com.woowacourse.staccato.data.timeline
 
+import com.woowacourse.staccato.data.ApiResponseHandler.handleApiResponse
+import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.StaccatoClient
 import com.woowacourse.staccato.data.dto.timeline.TimelineResponse
-import org.json.JSONObject
 
 class TimelineRemoteDataSource(
-    private val service: TimeLineApiService = StaccatoClient.timelineService,
+    private val timelineApiService: TimeLineApiService = StaccatoClient.timelineService,
 ) : TimelineDataSource {
-    override suspend fun getAllTimeline(): Result<TimelineResponse> {
+    override suspend fun getAllTimeline(): ResponseResult<TimelineResponse> {
         return fetchTimeline()
     }
 
-    override suspend fun getTimeline(year: Int): Result<TimelineResponse> {
+    override suspend fun getTimeline(year: Int): ResponseResult<TimelineResponse> {
         return fetchTimeline(year)
     }
 
-    private suspend fun fetchTimeline(year: Int? = null): Result<TimelineResponse> {
-        val response = service.getTimeline(year)
-        val body = response.body()
-        return if (response.isSuccessful && body != null) {
-            Result.success(body)
-        } else {
-            val errorBody = JSONObject(response.errorBody()?.string()!!)
-            Result.failure(
-                IllegalStateException(
-                    "${errorBody.getString("status")} : ${errorBody.getString("message")}",
-                ),
-            )
-        }
+    private suspend fun fetchTimeline(year: Int? = null): ResponseResult<TimelineResponse> {
+        return handleApiResponse { timelineApiService.getTimeline(year) }
     }
 }
