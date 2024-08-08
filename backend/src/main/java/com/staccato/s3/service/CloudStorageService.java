@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CloudStorageService {
+    private static final String CONTENT_TYPE = "multipart/formed-data";
     private static final String TEAM_FOLDER = "staccato/";
     private static final String IMAGE_FOLDER = "image/";
 
@@ -30,7 +31,7 @@ public class CloudStorageService {
     public String uploadFile(MultipartFile image) {
         String key = makeImagePath(image.getOriginalFilename());
         try {
-            cloudStorageClient.putS3Object(key, image.getContentType(), image.getBytes());
+            cloudStorageClient.putS3Object(key, CONTENT_TYPE, image.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -45,8 +46,7 @@ public class CloudStorageService {
 
     private String generateUniqueFileName(String fileName) {
         String fileExtension = getFileExtension(fileName);
-        String baseName = getBaseName(fileName);
-        return baseName + "_" + UUID.randomUUID() + fileExtension;
+        return UUID.randomUUID() + fileExtension;
     }
 
     private String getFileExtension(String fileName) {
@@ -55,14 +55,6 @@ public class CloudStorageService {
             return "";
         }
         return fileName.substring(dotIndex);
-    }
-
-    private String getBaseName(String fileName) {
-        int dotIndex = fileName.lastIndexOf('.');
-        if (dotIndex == -1) {
-            return fileName;
-        }
-        return fileName.substring(0, dotIndex);
     }
 
     public void deleteFiles(List<String> imageUrls) {
