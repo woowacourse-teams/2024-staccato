@@ -1,7 +1,6 @@
 package com.woowacourse.staccato.presentation.timeline
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
@@ -37,8 +36,9 @@ class TimelineFragment :
 
     private fun setUpObserving() {
         timelineViewModel.travels.observe(viewLifecycleOwner) { timeline ->
-            adapter.setTravels(timeline)
+            adapter.updateTimeline(timeline)
         }
+
         timelineViewModel.errorState.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { state ->
                 if (state) {
@@ -46,9 +46,9 @@ class TimelineFragment :
                 }
             }
         }
+
         sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) { isUpdated ->
             if (isUpdated) {
-                Log.d("hodu", "updated")
                 timelineViewModel.loadTimeline()
             }
         }
@@ -60,7 +60,6 @@ class TimelineFragment :
 
     override fun onTravelClicked(travelId: Long) {
         val bundle: Bundle = bundleOf(TRAVEL_ID_KEY to travelId)
-        // Log.d("ㅌㅅㅌ", "clicked item: $travelId")
         navigateToTravel(bundle)
     }
 

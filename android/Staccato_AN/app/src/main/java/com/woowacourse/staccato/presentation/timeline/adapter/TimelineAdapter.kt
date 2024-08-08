@@ -2,7 +2,8 @@ package com.woowacourse.staccato.presentation.timeline.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.woowacourse.staccato.databinding.ItemTimelineFirstBinding
 import com.woowacourse.staccato.databinding.ItemTimelineLastBinding
 import com.woowacourse.staccato.databinding.ItemTimelineMiddleBinding
@@ -10,7 +11,7 @@ import com.woowacourse.staccato.presentation.timeline.TimelineHandler
 import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
 
 class TimelineAdapter(private val eventHandler: TimelineHandler) :
-    RecyclerView.Adapter<TimelineViewHolder>() {
+    ListAdapter<TimelineTravelUiModel, TimelineViewHolder>(diffUtil) {
     private var travels = emptyList<TimelineTravelUiModel>()
 
     override fun getItemViewType(position: Int): Int {
@@ -63,10 +64,21 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
         holder.bind(travels[position])
     }
 
-    fun setTravels(newTravels: List<TimelineTravelUiModel>) {
-        if (travels.isEmpty()) {
-            travels = newTravels
-            notifyItemRangeInserted(0, newTravels.size)
+    fun updateTimeline(newTravels: List<TimelineTravelUiModel>) {
+        submitList(newTravels)
+    }
+
+    companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<TimelineTravelUiModel>() {
+            override fun areContentsTheSame(
+                oldItem: TimelineTravelUiModel,
+                newItem: TimelineTravelUiModel,
+            ): Boolean = oldItem == newItem
+
+            override fun areItemsTheSame(
+                oldItem: TimelineTravelUiModel,
+                newItem: TimelineTravelUiModel,
+            ): Boolean = oldItem.travelId == newItem.travelId
         }
     }
 }
