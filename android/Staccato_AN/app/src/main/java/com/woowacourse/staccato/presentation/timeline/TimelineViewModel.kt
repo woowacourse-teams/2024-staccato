@@ -27,6 +27,10 @@ class TimelineViewModel(private val repository: TimelineRepository) : ViewModel(
             Log.e("TimelineViewModel", "An error occurred: ${throwable.message}")
         }
 
+    init {
+        loadTimeline()
+    }
+
     fun loadTimeline() {
         viewModelScope.launch(coroutineExceptionHandler) {
             val timeline = repository.getTimeline()

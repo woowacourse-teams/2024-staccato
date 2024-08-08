@@ -26,7 +26,6 @@ class TimelineFragment :
     ) {
         setUpAdapter()
         setUpObserving()
-        timelineViewModel.loadTimeline()
     }
 
     private fun setUpAdapter() {
