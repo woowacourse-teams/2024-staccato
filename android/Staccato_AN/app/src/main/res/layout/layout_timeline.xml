@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_all_gray1_4dp"
-        android:onClickListener="@{() -> eventHandler.onTravelClicked(travel.id)}"
+        android:onClickListener="@{() -> eventHandler.onTravelClicked(travel.travelId)}"
         android:padding="8dp">
 
         <TextView
@@ -43,7 +43,7 @@
             android:layout_marginEnd="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{travel.title}"
+            android:text="@{travel.travelTitle}"
             android:textAppearance="@style/Typography.Title3"
             app:layout_constraintEnd_toStartOf="@id/iv_travel_thumbnail"
             app:layout_constraintStart_toStartOf="parent"
