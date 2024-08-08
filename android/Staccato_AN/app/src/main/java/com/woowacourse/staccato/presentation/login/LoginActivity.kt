@@ -102,7 +102,7 @@ class LoginActivity : AppCompatActivity() {
                 this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(
                 this.currentFocus?.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS
+                InputMethodManager.HIDE_NOT_ALWAYS,
             )
         }
     }
