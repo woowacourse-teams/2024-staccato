@@ -45,15 +45,6 @@ public class TravelService {
         return new TravelIdResponse(travel.getId());
     }
 
-    private String uploadFile(MultipartFile thumbnailFile) {
-        if (thumbnailFile == null) {
-            return null;
-        }
-        String thumbnailUrl = cloudStorageService.uploadFile(thumbnailFile);
-
-        return thumbnailUrl;
-    }
-
     public TravelResponses readAllTravels(Member member, Integer year) {
         return Optional.ofNullable(year)
                 .map(y -> readAllByYear(member, y))
@@ -108,6 +99,15 @@ public class TravelService {
         }
         List<Visit> visits = visitRepository.findAllByTravelIdOrderByVisitedAt(travelId);
         originTravel.update(updatedTravel, visits);
+    }
+
+    private String uploadFile(MultipartFile thumbnailFile) {
+        if (Objects.isNull(thumbnailFile)) {
+            return null;
+        }
+        String thumbnailUrl = cloudStorageService.uploadFile(thumbnailFile);
+
+        return thumbnailUrl;
     }
 
     private Travel getTravelById(long travelId) {
