@@ -62,7 +62,7 @@ class AuthControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("닉네임을 입력하지 않으면 400을 반환한다.")
+    @DisplayName("닉네임을 입력하지 않거나 20자를 초과하면 400을 반환한다.")
     @ParameterizedTest
     @ValueSource(ints = {0, 30})
     void cannotLoginIfBadRequest(int count) throws Exception {
