@@ -23,13 +23,17 @@ import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel
 import com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModelFactory
 import com.woowacourse.staccato.presentation.travelupdate.TravelUpdateActivity
 import com.woowacourse.staccato.presentation.util.showToast
+import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
+import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 
 class TravelFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
     ToolbarHandler,
     TravelHandler,
     DialogHandler {
-    private val travelId by lazy { arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException() }
+    private val travelId by lazy {
+        arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException()
+    }
     private val viewModel: TravelViewModel by viewModels {
         TravelViewModelFactory(TravelDefaultRepository(TravelRemoteDataSource(travelApiService)))
     }
@@ -70,18 +74,42 @@ class TravelFragment :
     }
 
     override fun onVisitClicked(visitId: Long) {
-        val bundle = bundleOf(VISIT_ID_KEY to visitId, TRAVEL_ID_KEY to travelId)
-        findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
+        viewModel.travel.value?.let {
+            val bundle =
+                bundleOf(
+                    VISIT_ID_KEY to visitId,
+                    TRAVEL_ID_KEY to travelId,
+                    TRAVEL_TITLE_KEY to it.title,
+                )
+            findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
+        }
     }
 
     override fun onConfirmClicked() {
         viewModel.deleteTravel(travelId)
     }
 
+    override fun onVisitCreationClicked() {
+        if (viewModel.isTraveling()) {
+            viewModel.travel.value?.let {
+                val visitCreationLauncher = (activity as MainActivity).visitCreationLauncher
+                VisitCreationActivity.startWithResultLauncher(
+                    travelId,
+                    it.title,
+                    requireContext(),
+                    visitCreationLauncher,
+                )
+            }
+        } else {
+            showToast("지금은 여행 기간이 아니에요!")
+        }
+    }
+
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.toolbarHandler = this
+        binding.travelHandler = this
     }
 
     private fun initToolbar() {
@@ -124,7 +152,7 @@ class TravelFragment :
     }
 
     companion object {
-        const val VISIT_ID_KEY = "visitId"
         const val TRAVEL_ID_KEY = "travelId"
+        const val TRAVEL_TITLE_KEY = "travelTitle"
     }
 }

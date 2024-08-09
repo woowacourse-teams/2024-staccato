@@ -20,6 +20,7 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @BindingAdapter(
     value = ["coilImageUrl", "coilPlaceHolder"],
@@ -29,6 +30,19 @@ fun ImageView.loadImageWithCoil(
     placeHolder: Drawable? = null,
 ) {
     load(url) {
+        placeholder(placeHolder)
+        error(placeHolder)
+    }
+}
+
+@BindingAdapter(
+    value = ["coilImageUri", "coilPlaceHolder"],
+)
+fun ImageView.loadImageByUriWithCoil(
+    uri: Uri?,
+    placeHolder: Drawable? = null,
+) {
+    load(uri) {
         placeholder(placeHolder)
         error(placeHolder)
     }
@@ -127,6 +141,20 @@ fun ImageView.setRoundedCornerImageWithGlide(
         .into(this)
 }
 
+@BindingAdapter(value = ["glideUriRoundedCornerImageUri", "glideUriPlaceHolder", "glideUriRoundingRadius"])
+fun ImageView.setRoundedCornerImageByUriWithGlide(
+    uri: Uri?,
+    placeHolder: Drawable? = null,
+    roundingRadius: Int,
+) {
+    Glide.with(context)
+        .load(uri)
+        .centerCrop()
+        .apply(RequestOptions.bitmapTransform(RoundedCorners(roundingRadius)))
+        .error(placeHolder)
+        .into(this)
+}
+
 @BindingAdapter(
     value = ["travelTitle", "startDate", "endDate"],
 )
@@ -156,34 +184,6 @@ fun TextView.setSelectedTravel(selectedTravel: VisitTravelUiModel?) {
     }
 }
 
-@BindingAdapter("selectedVisitedAt")
-fun TextView.setSelectedVisitedAt(selectedVisitedAt: LocalDate?) {
-    if (selectedVisitedAt == null) {
-        text = resources.getString(R.string.visit_creation_visited_at_hint)
-        setTextColor(resources.getColor(R.color.gray3, null))
-    } else {
-        text = selectedVisitedAt.toString()
-        setTextColor(resources.getColor(R.color.staccato_black, null))
-    }
-}
-
-@BindingAdapter(
-    value = ["selectedTravel", "visitedAt"],
-)
-fun Button.setVisitUpdateButtonActive(
-    travel: VisitTravelUiModel?,
-    visitedAt: LocalDate?,
-) {
-    isEnabled =
-        if (travel == null || visitedAt == null) {
-            setTextColor(resources.getColor(R.color.gray4, null))
-            false
-        } else {
-            setTextColor(resources.getColor(R.color.white, null))
-            true
-        }
-}
-
 @BindingAdapter(
     value = ["startDate", "endDate"],
 )
@@ -211,6 +211,19 @@ fun Button.setVisitedAtConfirmButtonActive(items: List<LocalDate>?) {
             setTextColor(resources.getColor(R.color.white, null))
             true
         }
+}
+
+@BindingAdapter("setDateTimeWithAmPm")
+fun TextView.setDateTimeWithAmPm(setNowDateTime: LocalDateTime?) {
+    text = setNowDateTime?.let {
+        val year = setNowDateTime.year
+        val month = setNowDateTime.monthValue
+        val day = setNowDateTime.dayOfMonth
+        val hour = if (setNowDateTime.hour % 12 == 0) 12 else setNowDateTime.hour % 12
+        val noonText = if (setNowDateTime.hour < 12) "오전" else "오후"
+        resources.getString(R.string.all_date_time_am_pm_kr_format)
+            .format(year, month, day, noonText, hour)
+    } ?: ""
 }
 
 @BindingAdapter("visitedAtNumberPickerItems")
@@ -256,4 +269,9 @@ fun ImageView.setAttachedPhotoVisibility(items: Array<Uri>?) {
 @BindingAdapter("setAttachedPhotoVisibility")
 fun FrameLayout.setAttachedPhotoVisibility(items: Array<Uri>?) {
     isInvisible = !items.isNullOrEmpty()
+}
+
+@BindingAdapter("setEnabled")
+fun Button.setEnabled(isUpdateCompleted: Boolean?) {
+    isEnabled = !(isUpdateCompleted ?: true)
 }

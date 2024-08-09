@@ -11,6 +11,10 @@
             type="com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel" />
 
         <variable
+            name="travelHandler"
+            type="com.woowacourse.staccato.presentation.travel.TravelHandler" />
+
+        <variable
             name="toolbarHandler"
             type="com.woowacourse.staccato.presentation.common.ToolbarHandler" />
 
@@ -152,6 +156,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_travel_third" />
 
+                <TextView
+                    android:id="@+id/tv_travel_add_visits"
+                    style="@style/ToolbarMenuStyle"
+                    android:layout_marginEnd="20dp"
+                    android:onClick="@{()->travelHandler.onVisitCreationClicked()}"
+                    android:text="@string/add_visit"
+                    android:textColor="@color/gray5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider_travel_third" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_travel_visits"
                     android:layout_width="0dp"
@@ -166,6 +180,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_travel_visits"
+                    app:layout_constraintVertical_bias="0.0"
                     tools:listitem="@layout/item_visits" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,8 @@
 package com.woowacourse.staccato.presentation.visitupdate.viewmodel
 
+import android.content.Context
 import android.net.Uri
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,80 +11,92 @@ import com.woowacourse.staccato.domain.repository.VisitRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toVisitUpdateDefaultUiModel
+import com.woowacourse.staccato.presentation.util.convertExcretaFile
 import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
-import com.woowacourse.staccato.presentation.visitupdate.model.VisitUpdateUiModel
+import com.woowacourse.staccato.presentation.visitupdate.model.VisitUpdateDefaultUiModel
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import okhttp3.MultipartBody
 
 class VisitUpdateViewModel(
     private val visitRepository: VisitRepository,
-//    private val travelRepository: TravelRepository,
 ) : ViewModel() {
-    private val _visitUpdateData = MutableLiveData<VisitUpdateUiModel>()
-    val visitUpdateData: LiveData<VisitUpdateUiModel> get() = _visitUpdateData
+    val placeName = ObservableField<String>()
+
+    private val _existVisitImageUrls = MutableLiveData<List<String>>()
+    private val existVisitImageUrls: LiveData<List<String>> get() = _existVisitImageUrls
+
+    private val _newVisitImageUrls = MutableLiveData<Array<Uri>>()
+    val newVisitImageUrls: LiveData<Array<Uri>> get() = _newVisitImageUrls
+
+    private val _visitUpdateDefault = MutableLiveData<VisitUpdateDefaultUiModel>()
+    val visitUpdateDefault: LiveData<VisitUpdateDefaultUiModel> get() = _visitUpdateDefault
 
     private val _travel = MutableLiveData<VisitTravelUiModel>()
     val travel: LiveData<VisitTravelUiModel> get() = _travel
 
-    private val _selectedVisitedAt = MutableLiveData<LocalDate?>()
-    val selectedVisitedAt: LiveData<LocalDate?> get() = _selectedVisitedAt
-
-    private val _isError = MutableSingleLiveData(false)
+    private val _isError = MutableSingleLiveData<Boolean>()
     val isError: SingleLiveData<Boolean> get() = _isError
 
-    private val _isUpdateCompleted = MutableSingleLiveData(false)
-    val isUpdateCompleted: SingleLiveData<Boolean> get() = _isUpdateCompleted
+    private val _isUpdateCompleted = MutableLiveData(false)
+    val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
 
-    private val _selectedImages = MutableLiveData<Array<out Uri>>()
-    val selectedImages: LiveData<Array<out Uri>> get() = _selectedImages
+    private val _isPosting = MutableLiveData<Boolean>(false)
+    val isPosting: LiveData<Boolean> get() = _isPosting
 
-    fun fetchInitData(
+    fun initViewModelData(
         visitId: Long,
         travelId: Long,
+        travelTitle: String,
     ) {
-        fetchVisitUpdateData(visitId)
-        fetchTravel(travelId)
+        fetchVisitData(visitId)
+        initTravelData(travelId, travelTitle)
     }
 
-    private fun fetchVisitUpdateData(visitId: Long) {
+    private fun fetchVisitData(visitId: Long) {
         viewModelScope.launch {
-            visitRepository.getVisit(visitId = visitId).onSuccess { visit ->
-                _visitUpdateData.value =
-                    visit.toVisitUpdateDefaultUiModel()
+            visitRepository.getVisit(visitId = visitId)
+                .onSuccess { visit ->
+                    _visitUpdateDefault.value = visit.toVisitUpdateDefaultUiModel()
+                    _existVisitImageUrls.value = visit.visitImageUrls
+                    placeName.set(visit.placeName)
+                }.onFailure {
+                    _isError.postValue(true)
+                }
+        }
+    }
+
+    private fun initTravelData(
+        travelId: Long,
+        travelTitle: String,
+    ) {
+        _travel.value =
+            VisitTravelUiModel(
+                id = travelId,
+                title = travelTitle,
+            )
+    }
+
+    suspend fun updateVisit(context: Context) {
+        if (placeName.get() != null && visitUpdateDefault.value != null) {
+            visitRepository.updateVisit(
+                visitId = visitUpdateDefault.value!!.id,
+                placeName = placeName.get()!!,
+                visitImageUrls = existVisitImageUrls.value ?: emptyList(),
+                visitImageMultiParts = convertUrisToMultiParts(context),
+            ).onSuccess {
+                _isUpdateCompleted.postValue(true)
             }.onFailure {
                 _isError.postValue(true)
             }
         }
     }
 
-    private fun fetchTravel(travelId: Long) {
-        viewModelScope.launch {
-            // travelRepository.loadTravel(travelId).onSuccess { travel ->
-            _travel.value =
-                VisitTravelUiModel(
-                    id = travelId,
-                    title = "praesent",
-                    startAt = LocalDate.now(),
-                    endAt = LocalDate.now().plusDays(2),
-                )
-            // }
-        }
-    }
+    private fun convertUrisToMultiParts(context: Context): List<MultipartBody.Part> =
+        newVisitImageUrls.value?.map { uri ->
+            convertExcretaFile(context = context, uri = uri, name = "visitImageFiles")
+        } ?: emptyList()
 
-    suspend fun updateVisit() {
-        visitRepository.updateVisit(
-            visitImages = listOf(""),
-            visitedAt = selectedVisitedAt.value.toString(),
-        ).onSuccess {
-            _isUpdateCompleted.postValue(true)
-        }
-    }
-
-    fun updateVisitedAt(newSelectedVisitedAt: LocalDate?) {
-        _selectedVisitedAt.value = newSelectedVisitedAt
-    }
-
-    fun setImageUris(uris: Array<out Uri>) {
-        _selectedImages.value = uris
+    fun setImageUris(uris: Array<Uri>) {
+        _newVisitImageUrls.value = uris
     }
 }
