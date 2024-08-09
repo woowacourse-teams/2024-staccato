@@ -15,18 +15,16 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .addSecurityItem(new SecurityRequirement().addList("Auth"))
                 .components(attachBearerAuthScheme());
     }
 
     private Components attachBearerAuthScheme() {
-        return new Components().addSecuritySchemes("bearerAuth",
+        return new Components().addSecuritySchemes("Auth",
                 new SecurityScheme()
-                        .name("bearerAuth")
-                        .type(Type.HTTP)
-                        .scheme("bearer")
-                        .bearerFormat("JWT")
+                        .name("Authorization")
+                        .type(Type.APIKEY)
                         .in(In.HEADER)
-                        .description("Enter the Bearer token in the format: 'Bearer <token>'"));
+                        .description("Enter your token in the Authorization header"));
     }
 }
