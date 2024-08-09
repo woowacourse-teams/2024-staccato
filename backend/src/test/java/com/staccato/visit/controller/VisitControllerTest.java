@@ -4,7 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -66,6 +66,14 @@ class VisitControllerTest {
                         "방문한 장소의 이름을 입력해주세요."
                 ),
                 Arguments.of(
+                        new VisitRequest("  ", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
+                        "방문한 장소의 이름을 입력해주세요."
+                ),
+                Arguments.of(
+                        new VisitRequest("가".repeat(31), "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
+                        "방문한 장소의 이름은 공백 포함 1자 이상 30자 이하로 설정해주세요."
+                ),
+                Arguments.of(
                         new VisitRequest("placeName", "address", null, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 위도를 입력해주세요."
                 ),
@@ -120,15 +128,15 @@ class VisitControllerTest {
     void failCreateVisitWithInvalidVistedAt() throws Exception {
         // given
         String visitRequestJson = """
-            {
-                "placeName": "런던 박물관",
-                "address": "Great Russell St, London WC1B 3DG",
-                "latitude": 51.51978412729915,
-                "longitude": -0.12712788587027796,
-                "visitedAt": "2024/07/27T10:00:00",
-                "travelId": 1
-            }
-        """;
+                    {
+                        "placeName": "런던 박물관",
+                        "address": "Great Russell St, London WC1B 3DG",
+                        "latitude": 51.51978412729915,
+                        "longitude": -0.12712788587027796,
+                        "visitedAt": "2024/07/27T10:00:00",
+                        "travelId": 1
+                    }
+                """;
         MockMultipartFile visitRequestPart = new MockMultipartFile(
                 "data",
                 "",
