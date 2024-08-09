@@ -45,6 +45,9 @@ class VisitCreationViewModel(
     private val _errorMessage = MutableSingleLiveData<String>()
     val errorMessage: SingleLiveData<String> get() = _errorMessage
 
+    private val _isPosting = MutableLiveData<Boolean>(false)
+    val isPosting: LiveData<Boolean> get() = _isPosting
+
     fun initTravelInfo(
         travelId: Long,
         travelTitle: String,
@@ -60,6 +63,7 @@ class VisitCreationViewModel(
         travelId: Long,
         context: Context,
     ) = viewModelScope.launch {
+        _isPosting.value = true
         visitRepository.createVisit(
             travelId = travelId,
             placeName = placeName.get() ?: "",

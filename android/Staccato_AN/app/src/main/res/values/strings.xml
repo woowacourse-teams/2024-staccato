@@ -53,6 +53,8 @@
     <string name="visit_creation_travel_selection">여행 선택</string>
     <string name="visit_creation_travel_selection_hint">여행을 선택해주세요</string>
     <string name="visit_creation_travel_unselected_travel">여행에 해당하는 방문 날짜가 없습니다.\n여행을 먼저 선택해주세요!</string>
+    <string name="visit_creation_posting">방문 기록을 생성하는 중이예요.. ✈️</string>
+    <string name="visit_update_posting">방문 기록을 수정하는 중이예요.. 🧳️</string>
 
     // fragment_photo_attach
     <string name="photo_attach_title">사진을 등록해주세요</string>
