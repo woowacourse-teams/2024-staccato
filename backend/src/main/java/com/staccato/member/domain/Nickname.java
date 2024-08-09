@@ -23,19 +23,8 @@ public class Nickname {
     private String nickname;
 
     public Nickname(String nickname) {
-        validate(nickname);
-        this.nickname = nickname;
-    }
-
-    private void validate(String nickname) {
-        validateLength(nickname);
         validateRegex(nickname);
-    }
-
-    private void validateLength(String nickname) {
-        if (nickname.isEmpty() || nickname.length() > MAX_LENGTH) {
-            throw new StaccatoException(MAX_LENGTH + "자 이내의 닉네임으로 설정해주세요.");
-        }
+        this.nickname = nickname;
     }
 
     private static void validateRegex(String nickname) {
