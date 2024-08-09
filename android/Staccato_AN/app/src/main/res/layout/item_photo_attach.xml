@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="selectedPhotoHandler"
+            type="com.woowacourse.staccato.presentation.common.SelectedPhotoHandler" />
+
+        <variable
+            name="attachedPhoto"
+            type="android.net.Uri" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp">
+
+        <ImageView
+            android:id="@+id/iv_attached_photo"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:contentDescription="@string/all_image_content_description"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            bind:glideUriPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            bind:glideUriRoundedCornerImageUri="@{attachedPhoto}"
+            bind:glideUriRoundingRadius="@{12}"
+            tools:src="@drawable/shape_all_gray2_4dp" />
+
+        <ImageView
+            android:id="@+id/iv_delete_attached_photo"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="130dp"
+            android:layout_marginBottom="130dp"
+            android:onClick="@{()->selectedPhotoHandler.onDeleteClicked(attachedPhoto)}"
+            android:src="@drawable/icon_delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

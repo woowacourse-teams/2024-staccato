@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.travel.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,15 +16,14 @@ import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toUiModel
 import com.woowacourse.staccato.presentation.travel.model.TravelUiModel
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
-class TravelViewModel(
-    private val travelRepository: TravelRepository,
-) : ViewModel() {
+class TravelViewModel(private val travelRepository: TravelRepository) : ViewModel() {
     private val _travel = MutableLiveData<TravelUiModel>()
     val travel: LiveData<TravelUiModel> get() = _travel
 
-    private val _errorMessage: MutableLiveData<String> = MutableLiveData()
-    val errorMessage: LiveData<String> get() = _errorMessage
+    private val _errorMessage = MutableSingleLiveData<String>()
+    val errorMessage: SingleLiveData<String> get() = _errorMessage
 
     private val _isDeleteSuccess = MutableSingleLiveData<Boolean>(false)
     val isDeleteSuccess: SingleLiveData<Boolean> get() = _isDeleteSuccess
@@ -38,6 +36,13 @@ class TravelViewModel(
                 .onServerError(::handleServerError)
                 .onException(::handelException)
         }
+    }
+
+    fun isTraveling(): Boolean {
+        return travel.value?.let { travel ->
+            val nowDate = LocalDate.now()
+            travel.startAt <= nowDate && nowDate <= travel.endAt
+        } ?: false
     }
 
     fun deleteTravel(travelId: Long) {
@@ -61,15 +66,14 @@ class TravelViewModel(
         status: Status,
         message: String,
     ) {
-        _errorMessage.value = message
+        _errorMessage.setValue(message)
     }
 
     private fun handelException(
         e: Throwable,
         message: String,
     ) {
-        Log.d("hye", e.message.toString())
-        _errorMessage.value = TRAVEL_ERROR_MESSAGE
+        _errorMessage.setValue(TRAVEL_ERROR_MESSAGE)
     }
 
     companion object {

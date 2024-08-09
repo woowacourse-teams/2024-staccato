@@ -6,9 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.BuildConfig
 import com.woowacourse.staccato.StaccatoApplication
-import com.woowacourse.staccato.data.ApiResponseHandler.onException
-import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
-import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.domain.repository.LoginRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
@@ -51,15 +48,17 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel(), Log
     ) {
         _errorMessage.postValue(errorMessage)
         when (status) {
-            is Status.Message -> Log.e(
-                this::class.java.simpleName,
-                "Error Occurred | status: ${status.message}, message: $errorMessage"
-            )
+            is Status.Message ->
+                Log.e(
+                    this::class.java.simpleName,
+                    "Error Occurred | status: ${status.message}, message: $errorMessage",
+                )
 
-            is Status.Code -> Log.e(
-                this::class.java.simpleName,
-                "Error Occurred | status: ${status.code}, message: $errorMessage"
-            )
+            is Status.Code ->
+                Log.e(
+                    this::class.java.simpleName,
+                    "Error Occurred | status: ${status.code}, message: $errorMessage",
+                )
         }
     }
 

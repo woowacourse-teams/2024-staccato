@@ -23,9 +23,6 @@ import java.time.LocalDate
 class TravelCreationViewModel(
     private val travelRepository: TravelRepository,
 ) : ViewModel() {
-    private val _imageUrl = MutableLiveData<String>()
-    val imageUrl: LiveData<String> get() = _imageUrl
-
     val title = ObservableField<String>()
     val description = ObservableField<String>()
 
@@ -63,8 +60,10 @@ class TravelCreationViewModel(
         _isPosting.value = true
         viewModelScope.launch {
             val travel: NewTravel = makeNewTravel()
-            val thumbnailFile: MultipartBody.Part? = convertTravelUriToFile(context, _imageUri.value, name = TRAVEL_FILE_NAME)
-            val result: ResponseResult<String> = travelRepository.createTravel(travel, thumbnailFile)
+            val thumbnailFile: MultipartBody.Part? =
+                convertTravelUriToFile(context, _imageUri.value, name = TRAVEL_FILE_NAME)
+            val result: ResponseResult<String> =
+                travelRepository.createTravel(travel, thumbnailFile)
             result
                 .onSuccess(::setCreatedTravelId)
                 .onServerError(::handleServerError)
@@ -78,11 +77,10 @@ class TravelCreationViewModel(
 
     private fun makeNewTravel(): NewTravel =
         NewTravel(
-            travelThumbnail = imageUrl.value,
             travelTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
             endAt = endDate.value ?: throw IllegalArgumentException(),
-            description = description.get() ?: throw IllegalArgumentException(),
+            description = description.get(),
         )
 
     private fun handleServerError(

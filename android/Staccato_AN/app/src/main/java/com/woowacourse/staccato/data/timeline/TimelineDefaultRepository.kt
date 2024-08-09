@@ -1,20 +1,31 @@
 package com.woowacourse.staccato.data.timeline
 
+import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.domain.repository.TimelineRepository
 
 class TimelineDefaultRepository(
-    private val dataSource: TimelineDataSource = TimelineRemoteDataSource(),
+    private val timelineDataSource: TimelineDataSource = TimelineRemoteDataSource(),
 ) : TimelineRepository {
-    override suspend fun getTimeline(): Timeline {
-        var timeline: Timeline = Timeline(emptyList())
-        val result = dataSource.getAllTimeline()
-        result.onSuccess { timelineResponse ->
-            timeline = timelineResponse.toDomain()
-        }.onFailure {
-            throw it
+    override suspend fun getTimeline(): ResponseResult<Timeline> {
+        return when (val responseResult = timelineDataSource.getAllTimeline()) {
+            is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
+            is ResponseResult.ServerError ->
+                ResponseResult.ServerError(
+                    responseResult.status,
+                    responseResult.message,
+                )
+
+            is ResponseResult.Exception ->
+                ResponseResult.Exception(
+                    responseResult.e,
+                    EXCEPTION_ERROR_MESSAGE,
+                )
         }
-        return timeline
+    }
+
+    companion object {
+        private const val EXCEPTION_ERROR_MESSAGE = "예기치 못한 오류입니다.\n잠시 후에 다시 시도해주세요."
     }
 }
