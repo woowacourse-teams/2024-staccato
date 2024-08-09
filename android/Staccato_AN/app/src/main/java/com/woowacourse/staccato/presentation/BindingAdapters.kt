@@ -36,6 +36,19 @@ fun ImageView.loadImageWithCoil(
 }
 
 @BindingAdapter(
+    value = ["coilImageUri", "coilPlaceHolder"],
+)
+fun ImageView.loadImageByUriWithCoil(
+    uri: Uri?,
+    placeHolder: Drawable? = null,
+) {
+    load(uri) {
+        placeholder(placeHolder)
+        error(placeHolder)
+    }
+}
+
+@BindingAdapter(
     value = ["coilCircleImageUrl", "coilPlaceHolder"],
 )
 fun ImageView.setCircleImageWithCoil(

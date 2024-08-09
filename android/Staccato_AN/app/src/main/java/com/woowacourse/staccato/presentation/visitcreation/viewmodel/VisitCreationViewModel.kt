@@ -75,10 +75,11 @@ class VisitCreationViewModel(
         }
     }
 
-    private fun convertUrisToMultiParts(context: Context): List<MultipartBody.Part> =
-        selectedImages.value?.map { uri ->
+    private fun convertUrisToMultiParts(context: Context): List<MultipartBody.Part> {
+        return selectedImages.value?.map { uri ->
             convertExcretaFile(context = context, uri = uri, name = "visitImageFiles")
         } ?: emptyList()
+    }
 
     fun setImageUris(uris: Array<Uri>) {
         _selectedImages.value = uris

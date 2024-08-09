@@ -23,7 +23,7 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
         longitude: String,
         address: String,
         visitedAt: LocalDateTime,
-        visitImageMultiParts: List<MultipartBody.Part>,
+        visitImageFiles: List<MultipartBody.Part>,
     ): Result<VisitCreationResponse> {
         return runCatching {
             remoteDataSource.createVisit(
@@ -35,7 +35,7 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
                     address = address,
                     visitedAt = visitedAt.toString(),
                 ),
-                visitImageMultiParts,
+                visitImageFiles,
             )
         }
     }

@@ -30,10 +30,10 @@ class VisitRemoteDataSource(
     ) = visitApiService.putVisit(
         visitId = visitId,
         data =
-        VisitUpdateRequest(
-            placeName = placeName,
-            visitImageUrls = visitImageUrls,
-        ),
+            VisitUpdateRequest(
+                placeName = placeName,
+                visitImageUrls = visitImageUrls,
+            ),
         visitImageFiles = visitImageFiles,
     )
 
