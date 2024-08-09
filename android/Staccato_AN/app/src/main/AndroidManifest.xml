@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".StaccatoApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -31,15 +32,20 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.main.MainActivity"
+            android:name=".presentation.login.LoginActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Staccato_AN.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".presentation.main.MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.visitupdate.VisitUpdateActivity"
             android:exported="false" />

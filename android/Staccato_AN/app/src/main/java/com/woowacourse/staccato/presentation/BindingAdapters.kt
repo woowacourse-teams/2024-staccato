@@ -21,6 +21,7 @@ import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiMo
 import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @BindingAdapter(
     value = ["coilImageUrl", "coilPlaceHolder"],
@@ -185,6 +186,23 @@ fun TextView.setSelectedTravel(selectedTravel: VisitTravelUiModel?) {
 }
 
 @BindingAdapter(
+    value = ["selectedTravel", "visitedAt"],
+)
+fun Button.setVisitUpdateButtonActive(
+    travel: VisitTravelUiModel?,
+    visitedAt: LocalDate?,
+) {
+    isEnabled =
+        if (travel == null || visitedAt == null) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
+@BindingAdapter(
     value = ["startDate", "endDate"],
 )
 fun TextView.setTravelPeriod(
@@ -251,6 +269,30 @@ fun TextView.combineVisitedAt(visitedAt: LocalDate) {
             visitedAt.monthValue,
             visitedAt.dayOfMonth,
         )
+}
+
+@BindingAdapter(
+    value = ["startAt", "endAt"],
+)
+fun TextView.convertLocalDateToDatePeriodString(
+    startAt: LocalDate,
+    endAt: LocalDate,
+) {
+    val fullFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+    val monthFormatter = DateTimeFormatter.ofPattern("MM.dd")
+    val dayFormatter = DateTimeFormatter.ofPattern("dd")
+
+    val datePeriod =
+        if (startAt.year != endAt.year) {
+            "${startAt.format(fullFormatter)} - ${endAt.format(fullFormatter)}"
+        } else if (startAt.monthValue != endAt.monthValue) {
+            "${startAt.format(fullFormatter)} - ${endAt.format(monthFormatter)}"
+        } else if (startAt.dayOfMonth != endAt.dayOfMonth) {
+            "${startAt.format(fullFormatter)} - ${endAt.format(dayFormatter)}"
+        } else {
+            startAt.format(fullFormatter)
+        }
+    text = datePeriod
 }
 
 @BindingAdapter("setAttachedPhotoVisibility")

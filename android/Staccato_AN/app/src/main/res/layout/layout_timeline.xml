@@ -28,10 +28,11 @@
             android:id="@+id/tv_travel_period"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{travel.travelPeriod}"
             android:textAppearance="@style/Typography.Body4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            bind:endAt="@{travel.endAt}"
+            bind:startAt="@{travel.startAt}"
             tools:text="2024.07.23" />
 
         <TextView

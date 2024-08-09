@@ -10,6 +10,16 @@
 
     <style name="Theme.Staccato_AN" parent="Base.Theme.Staccato_AN" />
 
+    <style name="Theme.Staccato_AN.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_staccato_symbol</item>
+        <!-- Required for animated icons. -->
+        <item name="windowSplashScreenAnimationDuration">200</item>
+        <!-- Set the theme of the Activity that directly follows your splash
+        screen. This is required. -->
+        <item name="postSplashScreenTheme">@style/Theme.Staccato_AN</item>
+    </style>
+
     <style name="ThemeOverlay.NumberPicker" parent="Theme.Staccato_AN">
         <item name="colorControlNormal">@color/gray2</item>
     </style>
