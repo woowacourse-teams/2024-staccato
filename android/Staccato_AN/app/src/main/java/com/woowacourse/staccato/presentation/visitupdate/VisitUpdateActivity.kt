@@ -90,6 +90,7 @@ class VisitUpdateActivity :
 
     override fun onUpdateDoneClicked() {
         lifecycleScope.launch {
+            showToast(getString(R.string.visit_update_posting))
             viewModel.updateVisit(this@VisitUpdateActivity)
         }
     }

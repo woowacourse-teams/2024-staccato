@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModel" />
@@ -124,7 +126,7 @@
                     android:layout_height="150dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{()->visitCreationHandler.onPhotoAttachClicked()}"
+                    android:onClick="@{()-> visitCreationHandler.onPhotoAttachClicked()}"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
@@ -206,6 +208,18 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+        <ProgressBar
+            android:id="@+id/progress_bar_visit_creation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progress="30"
+            android:visibility="@{viewModel.isPosting ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

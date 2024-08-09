@@ -40,6 +40,9 @@ class VisitUpdateViewModel(
     private val _isUpdateCompleted = MutableLiveData(false)
     val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
 
+    private val _isPosting = MutableLiveData<Boolean>(false)
+    val isPosting: LiveData<Boolean> get() = _isPosting
+
     fun initViewModelData(
         visitId: Long,
         travelId: Long,

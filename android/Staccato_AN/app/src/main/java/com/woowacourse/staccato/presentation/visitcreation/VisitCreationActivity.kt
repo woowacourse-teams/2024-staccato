@@ -86,6 +86,7 @@ class VisitCreationActivity :
     }
 
     override fun onCreateDoneClicked() {
+        showToast(getString(R.string.visit_creation_posting))
         viewModel.createVisit(travelId, this)
     }
 
