@@ -6,6 +6,7 @@
 
     <data>
 
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -54,20 +55,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
+                <EditText
                     android:id="@+id/tv_place_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    style="@style/EditTextStyle"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
-                    android:text="@{viewModel.visitCreationData.placeName}"
-                    android:textAppearance="@style/Typography.Body1"
+                    android:hint="@string/visit_creation_place_name_hint"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLength="30"
+                    android:maxLines="1"
+                    android:text="@={viewModel.placeName}"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visit_creation_place_name_title"
-                    tools:text="장소 이름 (고정)" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_visit_creation_place_name_title" />
 
                 <TextView
                     android:id="@+id/tv_place_address_title"
@@ -88,7 +89,7 @@
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
-                    android:text="@{viewModel.visitCreationData.address}"
+                    android:text="@{viewModel.address}"
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
@@ -106,17 +107,30 @@
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_photo_horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:foregroundGravity="left"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
+                    tools:listitem="@layout/item_photo_attach" />
+
                 <FrameLayout
                     android:id="@+id/frame_photo_attach"
                     android:layout_width="0dp"
-                    android:layout_height="200dp"
+                    android:layout_height="150dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{()->visitCreationHandler.onPhotoAttachClicked()}"
-                    bind:setAttachedPhotoVisibility="@{viewModel.selectedImages}"
+                    android:onClick="@{()-> visitCreationHandler.onPhotoAttachClicked()}"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_photo_title">
+                    app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
+                    bind:setAttachedPhotoVisibility="@{viewModel.selectedImages}">
 
                     <include
                         layout="@layout/layout_photo_attach"
@@ -125,16 +139,6 @@
                         android:layout_gravity="center" />
 
                 </FrameLayout>
-
-                <ImageView
-                    android:id="@+id/iv_attached_photo"
-                    android:layout_width="0dp"
-                    android:layout_height="200dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
-                    bind:setAttachedPhotoVisibility="@{viewModel.selectedImages}" />
 
                 <TextView
                     android:id="@+id/tv_travel_selection_title"
@@ -153,14 +157,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{()->visitCreationHandler.onTravelSelectionClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
+                    android:text="@{viewModel.travel.title}"
                     android:textAppearance="@style/Typography.Body1"
+                    android:textColor="@color/staccato_black"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_travel_selection_title"
-                    bind:selectedTravel="@{viewModel.selectedTravel}" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_selection_title" />
 
                 <TextView
                     android:id="@+id/tv_visited_at_title"
@@ -179,14 +183,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{()->visitCreationHandler.onVisitedAtClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
-                    bind:selectedVisitedAt="@{viewModel.selectedVisitedAt}" />
+                    bind:setDateTimeWithAmPm="@{viewModel.nowDateTime}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_visit_create_done"
@@ -194,18 +197,29 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="36dp"
                     android:layout_marginBottom="24dp"
+                    android:onClick="@{()->visitCreationHandler.onCreateDoneClicked()}"
                     android:text="@string/all_save"
                     android:textAppearance="@style/Typography.Title3"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
-                    bind:selectedTravel="@{viewModel.selectedTravel}"
-                    bind:visitedAt="@{viewModel.selectedVisitedAt}" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+        <ProgressBar
+            android:id="@+id/progress_bar_visit_creation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progress="30"
+            android:visibility="@{viewModel.isPosting ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

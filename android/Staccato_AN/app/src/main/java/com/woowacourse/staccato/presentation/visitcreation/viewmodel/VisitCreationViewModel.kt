@@ -1,119 +1,97 @@
 package com.woowacourse.staccato.presentation.visitcreation.viewmodel
 
+import android.content.Context
 import android.net.Uri
-import android.util.Log
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowacourse.staccato.data.ApiResponseHandler.onException
-import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
-import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
-import com.woowacourse.staccato.data.dto.Status
-import com.woowacourse.staccato.domain.model.Timeline
-import com.woowacourse.staccato.domain.repository.TimelineRepository
 import com.woowacourse.staccato.domain.repository.VisitRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
+import com.woowacourse.staccato.presentation.common.SelectedPhotoHandler
 import com.woowacourse.staccato.presentation.common.SingleLiveData
-import com.woowacourse.staccato.presentation.mapper.toTravels
-import com.woowacourse.staccato.presentation.visitcreation.model.VisitCreationUiModel
+import com.woowacourse.staccato.presentation.util.convertExcretaFile
 import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import okhttp3.MultipartBody
+import java.time.LocalDateTime
 
 class VisitCreationViewModel(
     private val visitRepository: VisitRepository,
-    private val timelineRepository: TimelineRepository,
-) : ViewModel() {
-    private val _visitCreationData = MutableLiveData<VisitCreationUiModel>()
-    val visitCreationData: LiveData<VisitCreationUiModel> get() = _visitCreationData
+) : SelectedPhotoHandler, ViewModel() {
+    val placeName = ObservableField<String>()
 
-    private val _travels = MutableLiveData<List<VisitTravelUiModel>>()
-    val travels: LiveData<List<VisitTravelUiModel>> get() = _travels
+    private val _address = MutableLiveData<String>("서울특별시 강남구 테헤란로 411")
+    val address: LiveData<String> get() = _address
 
-    private val _selectedTravel = MutableLiveData<VisitTravelUiModel>()
-    val selectedTravel: LiveData<VisitTravelUiModel> get() = _selectedTravel
+    private val _travel = MutableLiveData<VisitTravelUiModel>()
+    val travel: LiveData<VisitTravelUiModel> get() = _travel
 
-    private val _selectedVisitedAt = MutableLiveData<LocalDate?>()
-    val selectedVisitedAt: LiveData<LocalDate?> get() = _selectedVisitedAt
+    private val _selectedImages = MutableLiveData<Array<Uri>>()
+    val selectedImages: LiveData<Array<Uri>> get() = _selectedImages
+
+    private val _latitude = MutableLiveData<String>("32.123456")
+    private val latitude: LiveData<String> get() = _latitude
+
+    private val _longitude = MutableLiveData<String>("32.123456")
+    private val longitude: LiveData<String> get() = _longitude
+
+    val nowDateTime: LocalDateTime = LocalDateTime.now()
 
     private val _createdVisitId = MutableSingleLiveData<Long>()
     val createdVisitId: SingleLiveData<Long> get() = _createdVisitId
 
-    private val _selectedImages = MutableLiveData<Array<out Uri>>()
+    private val _errorMessage = MutableSingleLiveData<String>()
+    val errorMessage: SingleLiveData<String> get() = _errorMessage
 
-    val selectedImages: LiveData<Array<out Uri>> get() = _selectedImages
+    private val _isPosting = MutableLiveData<Boolean>(false)
+    val isPosting: LiveData<Boolean> get() = _isPosting
 
-    fun fetchInitData(pinId: Long) =
-        viewModelScope.launch {
-            loadAllTravels()
-            fetchVisitCreationData(pinId)
-        }
-
-    private suspend fun loadAllTravels() {
-        timelineRepository.getTimeline()
-            .onSuccess(::setVisitTravelUiModels)
-            .onServerError(::handleServerError)
-            .onException(::handleException)
-    }
-
-    private fun setVisitTravelUiModels(timeline: Timeline) {
-        _travels.value = timeline.toTravels()
-    }
-
-    private fun handleServerError(
-        status: Status,
-        errorMessage: String,
+    fun initTravelInfo(
+        travelId: Long,
+        travelTitle: String,
     ) {
-        when (status) {
-            is Status.Code -> Log.e("VisitCreationViewModel", "${status.code}, $errorMessage")
-            is Status.Message -> Log.e("VisitCreationViewModel", "${status.message}, $errorMessage")
-        }
-    }
-
-    private fun handleException(
-        e: Throwable,
-        errorMessage: String,
-    ) {
-        Log.e("VisitCreationViewModel", "$e, $errorMessage")
-    }
-
-    // TODO : 핀 정보들이 없어 임시 값을 넣었습니다
-    private fun fetchVisitCreationData(pinId: Long) {
-        _visitCreationData.value =
-            VisitCreationUiModel(
-                pinId = pinId,
-                placeName = "성담빌딩",
-                address = "서울특별시 강남구 테헤란로 411",
+        _travel.value =
+            VisitTravelUiModel(
+                id = travelId,
+                title = travelTitle,
             )
     }
 
-    fun createVisit(pinId: Long) =
-        viewModelScope.launch {
-            if (selectedVisitedAt.value != null && selectedTravel.value != null) {
-                visitRepository.createVisit(
-                    pinId = pinId,
-                    visitImages = listOf(),
-                    visitedAt = selectedVisitedAt.value!!.toString(),
-                    travelId = selectedTravel.value!!.id,
-                ).onSuccess { response ->
-                    val createdId =
-                        response.headers()["Location"]?.split("/")?.last()?.toLong()
-                            ?: 0L // TODO:null처리
-                    _createdVisitId.postValue(createdId)
-                }
-            }
+    fun createVisit(
+        travelId: Long,
+        context: Context,
+    ) = viewModelScope.launch {
+        _isPosting.value = true
+        visitRepository.createVisit(
+            travelId = travelId,
+            placeName = placeName.get() ?: "",
+            latitude = latitude.value ?: "",
+            longitude = longitude.value ?: "",
+            address = address.value ?: "",
+            visitedAt = nowDateTime,
+            visitImageMultiParts = convertUrisToMultiParts(context),
+        ).onSuccess { response ->
+            _createdVisitId.postValue(response.visitId)
+        }.onFailure {
+            _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")
         }
-
-    fun updateSelectedTravel(newSelectedTravel: VisitTravelUiModel) {
-        _selectedTravel.value = newSelectedTravel
     }
 
-    fun updateSelectedVisitedAt(newSelectedVisitedAt: LocalDate?) {
-        _selectedVisitedAt.value = newSelectedVisitedAt
+    private fun convertUrisToMultiParts(context: Context): List<MultipartBody.Part> {
+        return selectedImages.value?.map { uri ->
+            convertExcretaFile(context = context, uri = uri, name = "visitImageFiles")
+        } ?: emptyList()
     }
 
-    fun setImageUris(uris: Array<out Uri>) {
+    fun setImageUris(uris: Array<Uri>) {
         _selectedImages.value = uris
+    }
+
+    override fun onDeleteClicked(deletedUri: Uri) {
+        _selectedImages.value =
+            _selectedImages.value?.toMutableList()?.filterNot { it == deletedUri }?.toTypedArray()
+                ?: emptyArray()
     }
 }

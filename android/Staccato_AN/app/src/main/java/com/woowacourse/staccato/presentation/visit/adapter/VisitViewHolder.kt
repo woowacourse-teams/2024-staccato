@@ -9,8 +9,13 @@ import com.woowacourse.staccato.presentation.visit.model.VisitDetailUiModel
 sealed class VisitViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
     class VisitDefaultViewHolder(private val binding: ItemVisitDefaultBinding) :
         VisitViewHolder(binding) {
+        val adapter = HorizontalPhotoAdapter()
+
         fun bind(item: VisitDetailUiModel.VisitDefaultUiModel) {
             binding.visitDefault = item
+            val urls = item.visitImageUrls
+            adapter.submitList(urls)
+            binding.rvPhotoHorizontal.adapter = adapter
         }
     }
 
