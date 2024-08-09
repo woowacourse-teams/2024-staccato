@@ -2,6 +2,7 @@ package com.staccato.travel.service.dto.request;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -16,8 +17,8 @@ public record TravelRequest(
         @Schema(example = "http://example.com/london.png")
         String travelThumbnailUrl,
         @Schema(example = "런던 여행")
-        @NotNull(message = "여행 제목을 입력해주세요.")
-        @Size(max = 30, message = "제목의 최대 허용 글자수는 공백 포함 30자입니다.")
+        @NotBlank(message = "여행 제목을 입력해주세요.")
+        @Size(min = 1, max = 30, message = "제목은 공백 포함 1자 이상 30자 이하로 설정해주세요.")
         String travelTitle,
         @Schema(example = "런던 시내 탐방")
         @Size(max = 500, message = "내용의 최대 허용 글자수는 공백 포함 500자입니다.")

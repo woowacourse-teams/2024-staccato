@@ -69,6 +69,10 @@ class TravelControllerTest {
                         "여행 제목을 입력해주세요."
                 ),
                 Arguments.of(
+                        new TravelRequest("https://example.com/travels/geumohrm.jpg", "  ", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        "여행 제목을 입력해주세요."
+                ),
+                Arguments.of(
                         new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", null, LocalDate.of(2023, 7, 10)),
                         "여행 시작 날짜를 입력해주세요."
                 ),
@@ -78,7 +82,7 @@ class TravelControllerTest {
                 ),
                 Arguments.of(
                         new TravelRequest("https://example.com/travels/geumohrm.jpg", "가".repeat(31), "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                        "제목의 최대 허용 글자수는 공백 포함 30자입니다."
+                        "제목은 공백 포함 1자 이상 30자 이하로 설정해주세요."
                 ),
                 Arguments.of(
                         new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "가".repeat(501), LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
