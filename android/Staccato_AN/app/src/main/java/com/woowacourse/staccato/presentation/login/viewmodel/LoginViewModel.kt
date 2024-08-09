@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowacourse.staccato.BuildConfig
 import com.woowacourse.staccato.StaccatoApplication
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
@@ -27,13 +28,14 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel(), Log
         get() = _errorMessage
 
     override fun onStartClicked() {
-        val nickname = nickname.value ?: ""
-        viewModelScope.launch {
-            repository.loginWithNickname(nickname)
-                .onSuccess(::saveUserToken)
-                .onServerError(::handleError)
-                .onException(::handleException)
-        }
+//        val nickname = nickname.value ?: ""
+//        viewModelScope.launch {
+//            repository.loginWithNickname(nickname)
+//                .onSuccess(::saveUserToken)
+//                .onServerError(::handleError)
+//                .onException(::handleException)
+//        }
+        saveUserToken(BuildConfig.TOKEN)
     }
 
     private fun saveUserToken(newToken: String) {
@@ -49,8 +51,15 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel(), Log
     ) {
         _errorMessage.postValue(errorMessage)
         when (status) {
-            is Status.Message -> Log.e(this::class.java.simpleName, "Error Occurred | status: ${status.message}, message: $errorMessage")
-            is Status.Code -> Log.e(this::class.java.simpleName, "Error Occurred | status: ${status.code}, message: $errorMessage")
+            is Status.Message -> Log.e(
+                this::class.java.simpleName,
+                "Error Occurred | status: ${status.message}, message: $errorMessage"
+            )
+
+            is Status.Code -> Log.e(
+                this::class.java.simpleName,
+                "Error Occurred | status: ${status.code}, message: $errorMessage"
+            )
         }
     }
 

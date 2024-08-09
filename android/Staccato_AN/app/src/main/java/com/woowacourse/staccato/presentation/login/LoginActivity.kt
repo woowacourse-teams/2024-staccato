@@ -109,6 +109,6 @@ class LoginActivity : AppCompatActivity() {
 
     companion object {
         private const val LOGIN_SUCCESS_MESSAGE = "스타카토에 찾아오신걸 환영해요!"
-        private const val SPLASH_SCREEN_DURATION = 1500L
+        private const val SPLASH_SCREEN_DURATION = 2000L
     }
 }
