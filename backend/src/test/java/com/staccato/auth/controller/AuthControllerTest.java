@@ -64,7 +64,7 @@ class AuthControllerTest {
 
     @DisplayName("닉네임을 입력하지 않거나 20자를 초과하면 400을 반환한다.")
     @ParameterizedTest
-    @ValueSource(ints = {0, 30})
+    @ValueSource(ints = {0, 21})
     void cannotLoginIfBadRequest(int count) throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest("가".repeat(count));
