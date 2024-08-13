@@ -48,7 +48,7 @@ fun convertExcretaFile(
 
     // Uri로부터 InputStream을 얻고, 임시 파일로 복사
     val inputStream = context.contentResolver.openInputStream(uri)
-    val file = File(context.cacheDir, "tempFile")
+    val file = File(context.cacheDir, "tempFile_${System.currentTimeMillis()}")
     inputStream.use { input ->
         file.outputStream().use { output ->
             input?.copyTo(output)

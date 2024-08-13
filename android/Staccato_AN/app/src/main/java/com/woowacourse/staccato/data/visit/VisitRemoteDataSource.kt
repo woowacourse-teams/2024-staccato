@@ -16,11 +16,12 @@ class VisitRemoteDataSource(
     suspend fun createVisit(
         visitCreationRequest: VisitCreationRequest,
         visitImageFiles: List<MultipartBody.Part>,
-    ): VisitCreationResponse =
-        visitApiService.postVisit(
+    ): VisitCreationResponse {
+        return visitApiService.postVisit(
             data = visitCreationRequest,
             visitImageFiles = visitImageFiles,
         )
+    }
 
     suspend fun updateVisit(
         visitId: Long,

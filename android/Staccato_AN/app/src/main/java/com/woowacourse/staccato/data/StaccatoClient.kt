@@ -3,6 +3,7 @@ package com.woowacourse.staccato.data
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.woowacourse.staccato.BuildConfig
 import com.woowacourse.staccato.data.dto.ErrorResponse
+import com.woowacourse.staccato.data.login.LoginApiService
 import com.woowacourse.staccato.data.timeline.TimeLineApiService
 import com.woowacourse.staccato.data.travel.TravelApiService
 import com.woowacourse.staccato.data.visit.VisitApiService
@@ -12,15 +13,17 @@ import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object StaccatoClient {
     private val BASE_URL = BuildConfig.BASE_URL
+    private val tokenManager = TokenManager()
+
+    val loginApiService: LoginApiService by lazy {
+        create(LoginApiService::class.java)
+    }
 
     val travelApiService: TravelApiService by lazy {
-        create(
-            TravelApiService::class.java,
-        )
+        create(TravelApiService::class.java)
     }
 
     val timelineService: TimeLineApiService by lazy {
@@ -39,15 +42,15 @@ object StaccatoClient {
     private val provideHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(provideLoggingInterceptor)
-            .addInterceptor(HeaderInterceptor())
+            .addInterceptor(HeaderInterceptor(tokenManager))
             .build()
 
     private val jsonBuilder = Json { coerceInputValues = true }
+
     private val provideRetrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(provideHttpClient)
-            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(
                 jsonBuilder.asConverterFactory("application/json".toMediaType()),
             )
