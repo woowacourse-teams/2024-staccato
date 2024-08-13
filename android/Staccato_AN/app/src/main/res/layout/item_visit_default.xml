@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingVertical="60dp"
-            android:text="@string/visit_default_not_supported"
+            android:text="@string/all_default_not_supported"
             android:textAppearance="@style/Typography.Body2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
