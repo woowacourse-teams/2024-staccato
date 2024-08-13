@@ -26,6 +26,6 @@ class TimelineDefaultRepository(
     }
 
     companion object {
-        private const val EXCEPTION_ERROR_MESSAGE = "예기치 않은 오류가 발생했습니다.\n잠시 후에 다시 시도해 주세요."
+        private const val EXCEPTION_ERROR_MESSAGE = "예기치 못한 오류입니다.\n잠시 후에 다시 시도해주세요."
     }
 }

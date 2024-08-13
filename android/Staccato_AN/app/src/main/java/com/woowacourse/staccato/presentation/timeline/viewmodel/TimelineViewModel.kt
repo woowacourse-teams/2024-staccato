@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.timeline
+package com.woowacourse.staccato.presentation.timeline.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
