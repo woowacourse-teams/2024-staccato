@@ -1,7 +1,7 @@
 name: Backend CI/CD dev
 
 on:
-  push:
+  pull_request:
     branches: [ "develop-be" ]
 
 jobs:
