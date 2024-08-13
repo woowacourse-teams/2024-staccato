@@ -44,7 +44,9 @@ jobs:
           sudo docker build --platform linux/arm64 -t staccato/staccato:stage -f Dockerfile.stage .
 
       - name: Docker Hub Push
-        run: sudo docker push staccato/staccato:stage
+        run: |
+          sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
+          sudo docker push staccato/staccato:stage
 
   cd:
     needs: ci
