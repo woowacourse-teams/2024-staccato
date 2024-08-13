@@ -45,7 +45,7 @@ jobs:
 
       - name: Docker Hub Push
         run: |
-          sudo docker image tag staccato:latest hotea/990staccato:dev
+          sudo docker image tag hotea990/staccato hotea/990staccato:dev
           sudo docker push hotea990/staccato:dev
 
   cd:
