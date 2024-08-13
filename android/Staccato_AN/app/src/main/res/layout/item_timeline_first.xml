@@ -24,7 +24,7 @@
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="18dp"
             android:background="@drawable/shape_timeline_dot_gray2"
-            app:layout_constraintEnd_toStartOf="@id/layout_item_fragment_timeline"
+            app:layout_constraintEnd_toStartOf="@id/layout_item_timeline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,7 +40,7 @@
             app:layout_constraintTop_toTopOf="@id/view_timeline_point" />
 
         <include
-            android:id="@+id/layout_item_fragment_timeline"
+            android:id="@+id/layout_item_timeline"
             layout="@layout/layout_timeline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
