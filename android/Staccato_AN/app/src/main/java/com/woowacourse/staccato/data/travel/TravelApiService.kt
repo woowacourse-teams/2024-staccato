@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.data.travel
 
+import com.woowacourse.staccato.data.dto.travel.TravelCreationResponse
 import com.woowacourse.staccato.data.dto.travel.TravelRequest
 import com.woowacourse.staccato.data.dto.travel.TravelResponse
 import com.woowacourse.staccato.data.dto.travel.TravelUpdateRequest
@@ -24,7 +25,7 @@ interface TravelApiService {
     suspend fun postTravel(
         @Part("data") data: TravelRequest,
         @Part thumbnailFile: MultipartBody.Part?,
-    ): Response<String>
+    ): Response<TravelCreationResponse>
 
     @Multipart
     @PUT(TRAVEL_PATH_WITH_ID)
