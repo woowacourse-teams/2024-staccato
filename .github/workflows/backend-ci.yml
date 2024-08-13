@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted, dev]
+    runs-on: ubuntu-latest
 
     defaults:
       run:
