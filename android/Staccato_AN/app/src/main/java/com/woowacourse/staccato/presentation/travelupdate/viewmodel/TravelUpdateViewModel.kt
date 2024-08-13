@@ -114,6 +114,7 @@ class TravelUpdateViewModel(
         status: Status,
         message: String,
     ) {
+        _isPosting.value = false
         _errorMessage.value = message
     }
 
@@ -121,6 +122,7 @@ class TravelUpdateViewModel(
         e: Throwable,
         message: String,
     ) {
+        _isPosting.value = false
         _errorMessage.value = TRAVEL_UPDATE_ERROR_MESSAGE
     }
 

@@ -87,6 +87,7 @@ class TravelCreationViewModel(
         status: Status,
         message: String,
     ) {
+        _isPosting.value = false
         _errorMessage.value = message
     }
 
@@ -94,6 +95,7 @@ class TravelCreationViewModel(
         e: Throwable,
         message: String,
     ) {
+        _isPosting.value = false
         _errorMessage.value = TRAVEL_CREATION_ERROR_MESSAGE
     }
 

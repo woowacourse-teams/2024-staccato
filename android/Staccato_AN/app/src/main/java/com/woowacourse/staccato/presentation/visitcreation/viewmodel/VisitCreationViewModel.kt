@@ -75,6 +75,7 @@ class VisitCreationViewModel(
         ).onSuccess { response ->
             _createdVisitId.postValue(response.visitId)
         }.onFailure {
+            _isPosting.value = false
             _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")
         }
     }
