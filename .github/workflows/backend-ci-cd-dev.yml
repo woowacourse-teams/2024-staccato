@@ -41,12 +41,12 @@ jobs:
 
       - name: Docker Image Build
         run: |
-          sudo docker build --platform linux/arm64 -t hotea990/staccato:dev -f Dockerfile.dev .
+          sudo docker build --platform linux/arm64 -t staccato/staccato:dev -f Dockerfile.dev .
 
       - name: Docker Hub Push
         run: |
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
-          sudo docker push hotea990/staccato:dev
+          sudo docker push staccato/staccato:dev
 
   cd:
     needs: ci
@@ -55,7 +55,7 @@ jobs:
       - name: Pull Docker image
         run: |
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
-          sudo docker pull hotea990/staccato:dev
+          sudo docker pull staccato/staccato:dev
 
       - name: Docker Compose up
         run: |
