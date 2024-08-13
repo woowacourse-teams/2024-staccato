@@ -41,11 +41,11 @@ jobs:
 
       - name: Docker Image Build
         run: |
-          sudo docker build --platform linux/arm64 -t hotea990/staccato:dev -f Dockerfile.dev .
+          sudo docker build --platform linux/arm64 -t hotea990/staccato -f Dockerfile.dev .
 
       - name: Docker Hub Push
-        run: |
-          sudo docker tag hotea990/staccato:dev hotea990/staccato:dev
+        run:
+          sudo docker image tag staccato:lates hotea/990staccato:dev
           sudo docker push hotea990/staccato:dev
 
   cd:
