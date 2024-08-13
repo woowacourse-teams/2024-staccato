@@ -1,4 +1,4 @@
-name: Backend CI/CD stage
+name: Backend CI/CD dev
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   ci:
-    runs-on: [self-hosted, stage]
+    runs-on: [self-hosted, dev]
 
     defaults:
       run:
@@ -48,7 +48,7 @@ jobs:
 
   cd:
     needs: ci
-    runs-on: [self-hosted, stage]
+    runs-on: [self-hosted, dev]
     steps:
       - name: Pull Docker image
         run: |
