@@ -9,7 +9,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.staccato.exception.StaccatoException;
 import com.staccato.s3.domain.CloudStorageClient;
 import com.staccato.s3.domain.FileExtension;
 
@@ -36,7 +35,7 @@ public class CloudStorageService {
         try {
             cloudStorageClient.putS3Object(key, contentType, image.getBytes());
         } catch (IOException e) {
-            throw new StaccatoException(e);
+            throw new RuntimeException(e);
         }
 
         return cloudStorageClient.getUrl(key);
