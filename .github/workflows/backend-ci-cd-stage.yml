@@ -1,4 +1,4 @@
-name: Backend CI/CD dev
+name: Backend CI/CD stage
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   ci:
-    runs-on: [self-hosted, dev]
+    runs-on: [self-hosted, stage]
 
     defaults:
       run:
@@ -41,23 +41,23 @@ jobs:
 
       - name: Docker Image Build
         run: |
-          sudo docker build --platform linux/arm64 -t staccato/staccato:dev -f Dockerfile.dev .
+          sudo docker build --platform linux/arm64 -t staccato/staccato:stage -f Dockerfile.stage .
 
       - name: Docker Hub Push
         run: |
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
-          sudo docker push staccato/staccato:dev
+          sudo docker push staccato/staccato:stage
 
   cd:
     needs: ci
-    runs-on: [self-hosted, dev]
+    runs-on: [self-hosted, stage]
     steps:
       - name: Pull Docker image
         run: |
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
-          sudo docker pull staccato/staccato:dev
+          sudo docker pull staccato/staccato:stage
 
       - name: Docker Compose up
         run: |
-          sudo docker compose -f /home/ubuntu/staccato/docker-compose.yml up -d
+          sudo docker-compose -f /home/ubuntu/staccato/docker-compose.yml up -d
           sudo docker image prune -af
