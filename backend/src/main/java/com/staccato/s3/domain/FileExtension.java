@@ -8,10 +8,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum FileExtension {
-    PNG("png", "image/png"),
-    JPG("jpg", "image/jpg"),
-    JPEG("jpeg", "image/jpeg"),
-    WEBP("webp", "image/webp");
+    PNG(".png", "image/png"),
+    JPG(".jpg", "image/jpg"),
+    JPEG(".jpeg", "image/jpeg"),
+    WEBP(".webp", "image/webp");
 
     private final String extension;
     private final String contentType;
@@ -21,6 +21,6 @@ public enum FileExtension {
                 .filter(fileExtension -> fileExtension.getExtension().equalsIgnoreCase(extension))
                 .map(FileExtension::getContentType)
                 .findFirst()
-                .orElse("application/octet-stream");
+                .orElse("multipart/form-data");
     }
 }
