@@ -33,7 +33,7 @@ public class CloudStorageService {
         String key = makeImagePath(fileName);
         String contentType = getContentType(fileName);
         try {
-            cloudStorageClient.putS3Object(key, contentType, image.getBytes());
+            cloudStorageClient.putS3Object(key, image.getContentType(), image.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
