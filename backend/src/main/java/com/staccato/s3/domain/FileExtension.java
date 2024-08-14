@@ -21,6 +21,6 @@ public enum FileExtension {
                 .filter(fileExtension -> fileExtension.getExtension().equalsIgnoreCase(extension))
                 .map(FileExtension::getContentType)
                 .findFirst()
-                .orElse("multipart/form-data");
+                .orElse("application/octet-stream");
     }
 }
