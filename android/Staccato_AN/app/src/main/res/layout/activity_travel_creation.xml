@@ -76,6 +76,13 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_travel_creation_photo_attach" />
 
+                <TextView
+                    android:id="@+id/tv_travel_creation_required_mark_first"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_travel_creation_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_travel_creation_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_travel_creation_title" />
+
                 <EditText
                     android:id="@+id/et_travel_creation"
                     style="@style/EditTextStyle"
@@ -119,6 +126,13 @@
                     android:text="@string/travel_creation_period"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_travel_creation_description" />
+
+                <TextView
+                    android:id="@+id/tv_travel_creation_required_mark_second"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_travel_creation_period_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_travel_creation_period_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_travel_creation_period_title" />
 
                 <TextView
                     android:id="@+id/tv_travel_creation_period_description"
