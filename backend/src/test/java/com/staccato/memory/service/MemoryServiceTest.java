@@ -254,6 +254,25 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("추억을 삭제하면 속한 순간들도 함께 삭제된다.")
+    @Test
+    void deleteMemoryWithMoment() {
+        // given
+        Member member = saveMember();
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createMemoryRequest(2023), null, member);
+        saveMoment(LocalDateTime.of(2023, 7, 2, 10, 10), memoryIdResponse.memoryId());
+
+        // when
+        memoryService.deleteMemory(memoryIdResponse.memoryId(), member);
+
+        // then
+        assertAll(
+                () -> assertThat(memoryRepository.findById(memoryIdResponse.memoryId())).isEmpty(),
+                () -> assertThat(memoryMemberRepository.findAll()).hasSize(0),
+                () -> assertThat(momentRepository.findAll()).isEmpty()
+        );
+    }
+
     @DisplayName("본인 것이 아닌 추억 상세를 삭제하려고 하면 예외가 발생한다.")
     @Test
     void cannotDeleteMemoryIfNotOwner() {

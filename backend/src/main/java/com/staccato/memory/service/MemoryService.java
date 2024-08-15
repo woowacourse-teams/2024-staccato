@@ -119,6 +119,7 @@ public class MemoryService {
     public void deleteMemory(long memoryId, Member member) {
         memoryRepository.findById(memoryId).ifPresent(memory -> {
             validateOwner(memory, member);
+            momentRepository.deleteAllByMemoryId(memoryId);
             memoryRepository.deleteById(memoryId);
         });
     }
