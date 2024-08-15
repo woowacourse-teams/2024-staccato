@@ -3,14 +3,18 @@ package com.staccato.comment.controller;
 import static org.mockito.ArgumentMatchers.any;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -28,6 +32,8 @@ import com.staccato.auth.service.AuthService;
 import com.staccato.comment.controller.CommentController;
 import com.staccato.comment.service.CommentService;
 import com.staccato.comment.service.dto.request.CommentRequest;
+import com.staccato.comment.service.dto.response.CommentResponse;
+import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.member.domain.Member;
 
@@ -111,5 +117,25 @@ public class CommentControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @Disabled
+    @DisplayName("올바른 형식으로 댓글 읽기를 시도하면 성공한다.")
+    @Test
+    void readCommentsByMomentId() throws Exception {
+        // given
+        when(authService.extractFromToken(any())).thenReturn(Member.builder().nickname("member").build());
+        CommentResponses commentResponses = new CommentResponses(List.of(
+                new CommentResponse(1L, 1L, "member", "image.jpg", "내용")
+        ));
+        when(commentService.readAllCommentsByMomentId(any(), any())).thenReturn(commentResponses);
+
+        // when & then
+        mockMvc.perform(get("/comments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("momentId", "1")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(commentResponses)));
     }
 }
