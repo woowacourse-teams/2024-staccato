@@ -225,10 +225,10 @@ fun TextView.setTravelPeriod(
     endDate: LocalDate?,
 ) {
     if (startDate == null || endDate == null) {
-        text = resources.getString(R.string.travel_creation_period_hint)
+        text = resources.getString(R.string.memory_creation_period_hint)
     } else {
         text =
-            resources.getString(R.string.travel_creation_period_description)
+            resources.getString(R.string.memory_creation_period_description)
                 .format(startDate, endDate)
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }

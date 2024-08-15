@@ -14,7 +14,7 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.memoryApiService
 import com.woowacourse.staccato.data.memory.MemoryDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
-import com.woowacourse.staccato.databinding.ActivityTravelCreationBinding
+import com.woowacourse.staccato.databinding.ActivityMemoryCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
@@ -23,8 +23,8 @@ import com.woowacourse.staccato.presentation.memorycreation.viewmodel.MemoryCrea
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
-class MemoryCreationActivity : BindingActivity<ActivityTravelCreationBinding>(), MemoryCreationHandler, OnUrisSelectedListener {
-    override val layoutResourceId = R.layout.activity_travel_creation
+class MemoryCreationActivity : BindingActivity<ActivityMemoryCreationBinding>(), MemoryCreationHandler, OnUrisSelectedListener {
+    override val layoutResourceId = R.layout.activity_memory_creation
     private val viewModel: MemoryCreationViewModel by viewModels {
         MemoryCreationViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
     }
@@ -46,7 +46,7 @@ class MemoryCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
 
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        showToast(getString(R.string.travel_creation_posting))
+        showToast(getString(R.string.memory_creation_posting))
         viewModel.createMemory(this)
     }
 
@@ -75,7 +75,7 @@ class MemoryCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
     }
 
     private fun navigateToMap() {
-        binding.toolbarTravelCreation.setNavigationOnClickListener {
+        binding.toolbarMemoryCreation.setNavigationOnClickListener {
             finish()
         }
     }

@@ -29,19 +29,19 @@
     <string name="memory_mates">함께 간 사람들</string>
     <string name="memory_visits">방문 기록</string>
     <string name="memory_daily_visits">%s월 %s일의 방문 기록</string>
-    <string name="memory_delete_complete">여행이 삭제 되었습니다.</string>
+    <string name="memory_delete_complete">추억이 삭제 되었습니다.</string>
     <string name="memory_visit_empty">방문 기록을 아직 기록하지 않으셨군요!\n방문 기록을 생성해보세요.</string>
 
-    // activity_travel_creation / activity_travel_update
-    <string name="travel_creation_title">여행 제목</string>
-    <string name="travel_creation_title_hint">여행 제목을 입력해주세요</string>
-    <string name="travel_creation_description">여행 소개</string>
-    <string name="travel_creation_description_hint">여행 소개를 입력해주세요</string>
-    <string name="travel_creation_period">여행 기간</string>
-    <string name="travel_creation_period_hint">여행 기간을 선택해주세요</string>
-    <string name="travel_creation_period_description">%s ~ %s</string>
-    <string name="travel_creation_posting">여행을 생성하는 중이예요.. ✈️</string>
-    <string name="travel_update_posting">여행을 수정하는 중이예요.. 🧳️</string>
+    // activity_memory_creation / activity_memory_update
+    <string name="memory_creation_title">추억 제목</string>
+    <string name="memory_creation_title_hint">추억 제목을 입력해주세요</string>
+    <string name="memory_creation_description">추억 소개</string>
+    <string name="memory_creation_description_hint">추억 소개를 입력해주세요</string>
+    <string name="memory_creation_period">추억 기간</string>
+    <string name="memory_creation_period_hint">추억 기간을 선택해주세요</string>
+    <string name="memory_creation_period_description">%s ~ %s</string>
+    <string name="memory_creation_posting">추억을 생성하는 중이예요.. ✈️</string>
+    <string name="memory_update_posting">추억을 수정하는 중이예요.. 🧳️</string>
 
     // fragment_visit
     <string name="visit_history">%s년 %s월 %s일에 방문했어요</string>

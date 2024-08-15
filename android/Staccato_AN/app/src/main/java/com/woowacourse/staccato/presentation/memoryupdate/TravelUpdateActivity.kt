@@ -14,7 +14,7 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.memoryApiService
 import com.woowacourse.staccato.data.memory.MemoryDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
-import com.woowacourse.staccato.databinding.ActivityTravelUpdateBinding
+import com.woowacourse.staccato.databinding.ActivityMemoryUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
@@ -23,8 +23,8 @@ import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.TravelUpdate
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
-class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), TravelUpdateHandler, OnUrisSelectedListener {
-    override val layoutResourceId = R.layout.activity_travel_update
+class TravelUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), TravelUpdateHandler, OnUrisSelectedListener {
+    override val layoutResourceId = R.layout.activity_memory_update
     private val travelId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_TRAVEL_ID) }
     private val viewModel: TravelUpdateViewModel by viewModels {
         TravelUpdateViewModelFactory(
@@ -51,7 +51,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
 
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        showToast(getString(R.string.travel_update_posting))
+        showToast(getString(R.string.memory_update_posting))
         viewModel.updateTravel(this)
     }
 
@@ -80,7 +80,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
     }
 
     private fun navigateToTravel() {
-        binding.toolbarTravelUpdate.setNavigationOnClickListener {
+        binding.toolbarMemoryUpdate.setNavigationOnClickListener {
             finish()
         }
     }
