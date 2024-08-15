@@ -119,7 +119,6 @@ public class MemoryService {
     public void deleteMemory(long memoryId, Member member) {
         memoryRepository.findById(memoryId).ifPresent(memory -> {
             validateOwner(memory, member);
-            validateMomentExistsByMemory(memory);
             memoryRepository.deleteById(memoryId);
         });
     }
@@ -127,12 +126,6 @@ public class MemoryService {
     private void validateOwner(Memory memory, Member member) {
         if (memory.isNotOwnedBy(member)) {
             throw new ForbiddenException();
-        }
-    }
-
-    private void validateMomentExistsByMemory(Memory memory) {
-        if (momentRepository.existsByMemory(memory)) {
-            throw new StaccatoException("해당 추억 상세에 순간 기록이 남아있어 삭제할 수 없습니다.");
         }
     }
 }

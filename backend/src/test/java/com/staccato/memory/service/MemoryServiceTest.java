@@ -268,20 +268,6 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("순간기록이 존재하는 추억 상세에 삭제를 시도할 경우 예외가 발생한다.")
-    @Test
-    void failDeleteMemoryByExistingMoments() {
-        // given
-        Member member = saveMember();
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createMemoryRequest(2023), null, member);
-        saveMoment(LocalDateTime.of(2024, 7, 10, 10, 0), memoryIdResponse.memoryId());
-
-        // when & then
-        assertThatThrownBy(() -> memoryService.deleteMemory(memoryIdResponse.memoryId(), member))
-                .isInstanceOf(StaccatoException.class)
-                .hasMessage("해당 추억 상세에 순간 기록이 남아있어 삭제할 수 없습니다.");
-    }
-
     private Member saveMember() {
         return memberRepository.save(Member.builder().nickname("staccato").build());
     }
