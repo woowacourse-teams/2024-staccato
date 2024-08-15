@@ -22,11 +22,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Visit", description = "Visit API")
+@Tag(name = "Moment", description = "Moment API")
 public interface MomentControllerDocs {
-    @Operation(summary = "순간 기록 생성", description = "순간 기록을 생성합니다.")
+    @Operation(summary = "순간 생성", description = "순간을 생성합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "순간 기록 생성 성공", responseCode = "201"),
+            @ApiResponse(description = "순간 생성 성공", responseCode = "201"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
@@ -44,8 +44,7 @@ public interface MomentControllerDocs {
     })
     ResponseEntity<MomentIdResponse> createMoment(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "key = data", required = true) @Valid MomentRequest momentRequest,
-            @Parameter(description = "key = momentImageFiles") @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> momentImagesFile
+            @Parameter(required = true) @Valid MomentRequest momentRequest
     );
 
     @Operation(summary = "특정 순간 기록 조회", description = "특정 순간 기록을 조회합니다.")

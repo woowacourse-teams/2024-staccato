@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,13 +39,12 @@ import lombok.RequiredArgsConstructor;
 public class MomentController implements MomentControllerDocs {
     private final MomentService momentService;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     public ResponseEntity<MomentIdResponse> createMoment(
             @LoginMember Member member,
-            @Valid @RequestPart(value = "data") MomentRequest momentRequest,
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart(value = "momentImageFiles") List<MultipartFile> momentImageFiles
+            @Valid @RequestBody MomentRequest momentRequest
     ) {
-        MomentIdResponse momentIdResponse = momentService.createMoment(momentRequest, momentImageFiles, member);
+        MomentIdResponse momentIdResponse = momentService.createMoment(momentRequest, member);
         return ResponseEntity.created(URI.create("/moments/" + momentIdResponse.momentId()))
                 .body(momentIdResponse);
     }
