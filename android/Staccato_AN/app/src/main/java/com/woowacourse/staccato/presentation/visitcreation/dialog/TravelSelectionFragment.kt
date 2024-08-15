@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.woowacourse.staccato.databinding.FragmentTravelSelectionBinding
+import com.woowacourse.staccato.databinding.FragmentMemorySelectionBinding
 import com.woowacourse.staccato.presentation.visitcreation.model.VisitMemoryUiModel
 
 class TravelSelectionFragment : BottomSheetDialogFragment() {
-    private var _binding: FragmentTravelSelectionBinding? = null
+    private var _binding: FragmentMemorySelectionBinding? = null
     private val binding get() = _binding!!
     private val items = mutableListOf<VisitMemoryUiModel>()
 
@@ -29,7 +29,7 @@ class TravelSelectionFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentTravelSelectionBinding.inflate(inflater, container, false)
+        _binding = FragmentMemorySelectionBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -42,7 +42,7 @@ class TravelSelectionFragment : BottomSheetDialogFragment() {
     }
 
     private fun initNumberPicker() {
-        binding.pickerTravelSelection.apply {
+        binding.pickerMemorySelection.apply {
             minValue = 0
             maxValue = (items.size - 1).coerceAtLeast(0)
             displayedValues = items.map { it.title }.toTypedArray()
@@ -51,8 +51,8 @@ class TravelSelectionFragment : BottomSheetDialogFragment() {
     }
 
     private fun initConfirmButton() {
-        binding.btnTravelSelectionConfirm.setOnClickListener {
-            handler.onConfirmClicked(items[binding.pickerTravelSelection.value])
+        binding.btnMemorySelectionConfirm.setOnClickListener {
+            handler.onConfirmClicked(items[binding.pickerMemorySelection.value])
             dismiss()
         }
     }
