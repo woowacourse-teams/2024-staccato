@@ -1,4 +1,4 @@
-package com.staccato.comment;
+package com.staccato.comment.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 
