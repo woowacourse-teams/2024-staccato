@@ -167,7 +167,7 @@
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
-                    android:text="@{viewModel.travel.title}"
+                    android:text="@{viewModel.memory.title}"
                     android:textAppearance="@style/Typography.Body1"
                     android:textColor="@color/staccato_black"
                     app:layout_constraintEnd_toEndOf="parent"

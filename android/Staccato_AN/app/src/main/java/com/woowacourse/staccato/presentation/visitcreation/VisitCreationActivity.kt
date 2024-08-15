@@ -41,7 +41,7 @@ class VisitCreationActivity :
     }
 
     private fun initMemoryInfo() {
-        viewModel.initTravelInfo(memoryId, memoryTitle)
+        viewModel.initMemoryInfo(memoryId, memoryTitle)
     }
 
     private fun initBinding() {

@@ -25,8 +25,8 @@ class VisitCreationViewModel(
     private val _address = MutableLiveData<String>("서울특별시 강남구 테헤란로 411")
     val address: LiveData<String> get() = _address
 
-    private val _travel = MutableLiveData<VisitMemoryUiModel>()
-    val travel: LiveData<VisitMemoryUiModel> get() = _travel
+    private val _memory = MutableLiveData<VisitMemoryUiModel>()
+    val memory: LiveData<VisitMemoryUiModel> get() = _memory
 
     private val _selectedImages = MutableLiveData<Set<Uri>>()
     val selectedImages: LiveData<Set<Uri>> get() = _selectedImages
@@ -64,14 +64,14 @@ class VisitCreationViewModel(
         if (currentUris.contains(deletedUri)) _selectedImages.value = currentUris - deletedUri
     }
 
-    fun initTravelInfo(
-        travelId: Long,
-        travelTitle: String,
+    fun initMemoryInfo(
+        memoryId: Long,
+        memoryTitle: String,
     ) {
-        _travel.value =
+        _memory.value =
             VisitMemoryUiModel(
-                id = travelId,
-                title = travelTitle,
+                id = memoryId,
+                title = memoryTitle,
             )
     }
 
@@ -88,12 +88,12 @@ class VisitCreationViewModel(
     }
 
     fun createVisit(
-        travelId: Long,
+        memoryId: Long,
         context: Context,
     ) = viewModelScope.launch {
         _isPosting.value = true
         visitRepository.createVisit(
-            memoryId = travelId,
+            memoryId = memoryId,
             placeName = placeName.get() ?: "",
             latitude = latitude.value ?: "",
             longitude = longitude.value ?: "",
