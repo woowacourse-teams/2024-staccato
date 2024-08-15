@@ -6,7 +6,7 @@ import com.woowacourse.staccato.data.dto.memory.MemoryResponse
 import com.woowacourse.staccato.domain.model.NewTravel
 import okhttp3.MultipartBody
 
-interface TravelDataSource {
+interface MemoryDataSource {
     suspend fun getTravel(travelId: Long): ResponseResult<MemoryResponse>
 
     suspend fun createTravel(

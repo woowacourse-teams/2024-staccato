@@ -9,10 +9,10 @@ import com.woowacourse.staccato.domain.repository.TravelRepository
 import okhttp3.MultipartBody
 
 class TravelDefaultRepository(
-    private val travelDataSource: TravelDataSource,
+    private val memoryDataSource: MemoryDataSource,
 ) : TravelRepository {
     override suspend fun getTravel(travelId: Long): ResponseResult<Travel> {
-        return when (val responseResult = travelDataSource.getTravel(travelId)) {
+        return when (val responseResult = memoryDataSource.getTravel(travelId)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
@@ -23,7 +23,7 @@ class TravelDefaultRepository(
         newTravel: NewTravel,
         thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<MemoryCreationResponse> {
-        return when (val responseResult = travelDataSource.createTravel(newTravel, thumbnailFile)) {
+        return when (val responseResult = memoryDataSource.createTravel(newTravel, thumbnailFile)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
@@ -35,7 +35,7 @@ class TravelDefaultRepository(
         newTravel: NewTravel,
         thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<String> {
-        return when (val responseResult = travelDataSource.updateTravel(travelId, newTravel, thumbnailFile)) {
+        return when (val responseResult = memoryDataSource.updateTravel(travelId, newTravel, thumbnailFile)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
@@ -43,7 +43,7 @@ class TravelDefaultRepository(
     }
 
     override suspend fun deleteTravel(travelId: Long): ResponseResult<Unit> {
-        return when (val responseResult = travelDataSource.deleteTravel(travelId)) {
+        return when (val responseResult = memoryDataSource.deleteTravel(travelId)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(Unit)
