@@ -8,8 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.domain.repository.VisitRepository
+import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
-import com.woowacourse.staccato.presentation.common.SelectedPhotoHandler
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
 import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 
 class VisitCreationViewModel(
     private val visitRepository: VisitRepository,
-) : SelectedPhotoHandler, ViewModel() {
+) : AttachedPhotoHandler, ViewModel() {
     val placeName = ObservableField<String>()
 
     private val _address = MutableLiveData<String>("서울특별시 강남구 테헤란로 411")
@@ -28,8 +28,8 @@ class VisitCreationViewModel(
     private val _travel = MutableLiveData<VisitTravelUiModel>()
     val travel: LiveData<VisitTravelUiModel> get() = _travel
 
-    private val _selectedImages = MutableLiveData<Array<Uri>>()
-    val selectedImages: LiveData<Array<Uri>> get() = _selectedImages
+    private val _selectedImages = MutableLiveData<Set<Uri>>()
+    val selectedImages: LiveData<Set<Uri>> get() = _selectedImages
 
     private val _latitude = MutableLiveData<String>("32.123456")
     private val latitude: LiveData<String> get() = _latitude
@@ -48,6 +48,22 @@ class VisitCreationViewModel(
     private val _isPosting = MutableLiveData<Boolean>(false)
     val isPosting: LiveData<Boolean> get() = _isPosting
 
+    private val _isAddPhotoClicked = MutableSingleLiveData(false)
+    val isAddPhotoClicked: SingleLiveData<Boolean> get() = _isAddPhotoClicked
+
+    override fun onAddClicked() {
+        if (selectedImages.value.orEmpty().size == MAX_PHOTO_NUMBER) {
+            _errorMessage.postValue(MAX_PHOTO_NUMBER_MESSAGE)
+        } else {
+            _isAddPhotoClicked.postValue(true)
+        }
+    }
+
+    override fun onDeleteClicked(deletedUri: Uri) {
+        val currentUris = _selectedImages.value.orEmpty()
+        if (currentUris.contains(deletedUri)) _selectedImages.value = currentUris - deletedUri
+    }
+
     fun initTravelInfo(
         travelId: Long,
         travelTitle: String,
@@ -57,6 +73,18 @@ class VisitCreationViewModel(
                 id = travelId,
                 title = travelTitle,
             )
+    }
+
+    fun updateSelectedImageUris(newUris: Array<Uri>) {
+        val currentUris = selectedImages.value.orEmpty().toSet()
+        val combinedUris = currentUris + newUris
+        _selectedImages.value =
+            if (combinedUris.size > MAX_PHOTO_NUMBER) {
+                _errorMessage.postValue(MAX_PHOTO_NUMBER_MESSAGE)
+                combinedUris.take(MAX_PHOTO_NUMBER).toSet()
+            } else {
+                combinedUris
+            }
     }
 
     fun createVisit(
@@ -75,23 +103,20 @@ class VisitCreationViewModel(
         ).onSuccess { response ->
             _createdVisitId.postValue(response.visitId)
         }.onFailure {
+            _isPosting.value = false
             _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")
         }
     }
 
     private fun convertUrisToMultiParts(context: Context): List<MultipartBody.Part> {
         return selectedImages.value?.map { uri ->
-            convertExcretaFile(context = context, uri = uri, name = "visitImageFiles")
+            convertExcretaFile(context = context, uri = uri, name = FORM_DATA_NAME)
         } ?: emptyList()
     }
 
-    fun setImageUris(uris: Array<Uri>) {
-        _selectedImages.value = uris
-    }
-
-    override fun onDeleteClicked(deletedUri: Uri) {
-        _selectedImages.value =
-            _selectedImages.value?.toMutableList()?.filterNot { it == deletedUri }?.toTypedArray()
-                ?: emptyArray()
+    companion object {
+        private const val MAX_PHOTO_NUMBER = 5
+        const val MAX_PHOTO_NUMBER_MESSAGE = "사진은 최대 ${MAX_PHOTO_NUMBER}장만 첨부할 수 있어요!"
+        const val FORM_DATA_NAME = "visitImageFiles"
     }
 }

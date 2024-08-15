@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.core.util.Pair
@@ -49,6 +50,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
     }
 
     override fun onSaveClicked() {
+        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.travel_update_posting))
         viewModel.updateTravel(this)
     }
@@ -105,12 +107,14 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
         if (isUpdateSuccess) {
             val intent = Intent().putExtra(TRAVEL_ID_KEY, travelId)
             setResult(RESULT_OK, intent)
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
     }
 
     private fun showErrorToast() {
         viewModel.errorMessage.observe(this) {
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
     }

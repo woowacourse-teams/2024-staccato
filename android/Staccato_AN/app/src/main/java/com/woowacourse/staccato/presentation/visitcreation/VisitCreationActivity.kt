@@ -4,16 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityVisitCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
-import com.woowacourse.staccato.presentation.common.PhotoAttachAdapter
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
+import com.woowacourse.staccato.presentation.visitcreation.adapter.PhotoAttachAdapter
 import com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModel
 import com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModelFactory
 
@@ -50,9 +51,9 @@ class VisitCreationActivity :
 
     private fun initAdapter() {
         adapter = PhotoAttachAdapter(viewModel)
-        binding.rvPhotoHorizontal.adapter = adapter
+        binding.rvPhotoAttach.adapter = adapter
         viewModel.selectedImages.observe(this) { uris ->
-            adapter.submitList(uris.toList())
+            adapter.submitList(listOf(Uri.parse("TEMP_URI_STRING")).plus(uris.toList()))
         }
     }
 
@@ -63,6 +64,9 @@ class VisitCreationActivity :
     }
 
     private fun observeViewModelData() {
+        viewModel.isAddPhotoClicked.observe(this) {
+            if (it) photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+        }
         viewModel.createdVisitId.observe(this) { createdVisitId ->
             val resultIntent =
                 Intent()
@@ -70,22 +74,21 @@ class VisitCreationActivity :
                     .putExtra(TRAVEL_ID_KEY, travelId)
                     .putExtra(TRAVEL_TITLE_KEY, travelTitle)
             setResult(RESULT_OK, resultIntent)
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
         viewModel.errorMessage.observe(this) {
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
-        viewModel.setImageUris(arrayOf(*uris))
-    }
-
-    override fun onPhotoAttachClicked() {
-        photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+        viewModel.updateSelectedImageUris(arrayOf(*uris))
     }
 
     override fun onCreateDoneClicked() {
+        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.visit_creation_posting))
         viewModel.createVisit(travelId, this)
     }

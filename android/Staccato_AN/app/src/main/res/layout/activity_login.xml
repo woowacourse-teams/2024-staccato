@@ -28,7 +28,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/iv_staccato_logo"
+                android:id="@+id/iv_login_staccato_logo"
                 android:layout_width="220dp"
                 android:layout_height="260dp"
                 android:backgroundTint="@color/staccato_blue_30"
@@ -39,15 +39,15 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Space
-                android:id="@+id/space_between_logo_nickname_et"
+                android:id="@+id/space_login_separating_logo_and_nickname_et"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_staccato_logo" />
+                app:layout_constraintTop_toBottomOf="@id/iv_login_staccato_logo" />
 
             <EditText
-                android:id="@+id/et_user_nickname"
+                android:id="@+id/et_login_user_nickname"
                 style="@style/EditTextStyle"
                 android:hint="@string/login_nickname_hint"
                 android:maxLength="20"
@@ -55,7 +55,7 @@
                 android:text="@={viewModel.nickname}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/space_between_logo_nickname_et" />
+                app:layout_constraintTop_toBottomOf="@id/space_login_separating_logo_and_nickname_et" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_start_staccato"
@@ -63,7 +63,7 @@
                 android:onClick="@{() -> handler.onStartClicked()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_user_nickname" />
+                app:layout_constraintTop_toBottomOf="@id/et_login_user_nickname" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

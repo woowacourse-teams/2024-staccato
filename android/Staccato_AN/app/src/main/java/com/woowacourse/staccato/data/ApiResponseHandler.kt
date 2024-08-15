@@ -14,10 +14,7 @@ object ApiResponseHandler {
 
         return try {
             when {
-                response.isSuccessful && response.code() == 201 -> {
-                    val locationHeader = response.headers()["Location"].toString()
-                    ResponseResult.Success(locationHeader as T)
-                }
+                response.isSuccessful && response.code() == 201 -> ResponseResult.Success(body as T)
                 response.isSuccessful && body != null -> ResponseResult.Success(body)
                 response.isSuccessful && response.code() == 204 -> ResponseResult.Success(Unit as T)
                 else -> {
