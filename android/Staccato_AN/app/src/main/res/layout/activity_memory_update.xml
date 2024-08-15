@@ -168,8 +168,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_period_description"
                     bind:endDate="@{viewModel.endDate}"
-                    bind:startDate="@{viewModel.startDate}"
-                    bind:travelTitle="@{viewModel.title}" />
+                    bind:memoryTitle="@{viewModel.title}"
+                    bind:startDate="@{viewModel.startDate}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

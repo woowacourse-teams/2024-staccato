@@ -172,9 +172,9 @@ fun ImageView.setRoundedCornerImageByUriWithGlide(
 }
 
 @BindingAdapter(
-    value = ["travelTitle", "startDate", "endDate"],
+    value = ["memoryTitle", "startDate", "endDate"],
 )
-fun Button.setTravelSaveButtonActive(
+fun Button.setMemorySaveButtonActive(
     title: String?,
     startDate: LocalDate?,
     endDate: LocalDate?,
@@ -189,26 +189,26 @@ fun Button.setTravelSaveButtonActive(
         }
 }
 
-@BindingAdapter("selectedTravel")
-fun TextView.setSelectedTravel(selectedTravel: VisitMemoryUiModel?) {
-    if (selectedTravel == null) {
+@BindingAdapter("selectedMemory")
+fun TextView.setSelectedMemory(selectedMemory: VisitMemoryUiModel?) {
+    if (selectedMemory == null) {
         text = resources.getString(R.string.visit_creation_travel_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
     } else {
-        text = selectedTravel.title
+        text = selectedMemory.title
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
 }
 
 @BindingAdapter(
-    value = ["selectedTravel", "visitedAt"],
+    value = ["selectedMemory", "visitedAt"],
 )
 fun Button.setVisitUpdateButtonActive(
-    travel: VisitMemoryUiModel?,
+    memory: VisitMemoryUiModel?,
     visitedAt: LocalDate?,
 ) {
     isEnabled =
-        if (travel == null || visitedAt == null) {
+        if (memory == null || visitedAt == null) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -220,7 +220,7 @@ fun Button.setVisitUpdateButtonActive(
 @BindingAdapter(
     value = ["startDate", "endDate"],
 )
-fun TextView.setTravelPeriod(
+fun TextView.setMemoryPeriod(
     startDate: LocalDate?,
     endDate: LocalDate?,
 ) {
