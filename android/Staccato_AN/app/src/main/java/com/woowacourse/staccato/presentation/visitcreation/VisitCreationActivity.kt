@@ -50,7 +50,7 @@ class VisitCreationActivity :
 
     private fun initAdapter() {
         adapter = PhotoAttachAdapter(viewModel)
-        binding.rvPhotoHorizontal.adapter = adapter
+        binding.rvPhotoAttach.adapter = adapter
         viewModel.selectedImages.observe(this) { uris ->
             adapter.submitList(listOf(Uri.parse("TEMP_URI_STRING")).plus(uris.toList()))
         }
