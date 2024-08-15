@@ -1,5 +1,8 @@
 package com.staccato.comment.controller.docs;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+
 import org.springframework.http.ResponseEntity;
 
 import com.staccato.comment.service.dto.request.CommentRequest;
@@ -34,7 +37,7 @@ public interface CommentControllerDocs {
     })
     ResponseEntity<Void> createComment(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "댓글 생성 시 요구 형식") CommentRequest commentRequest);
+            @Parameter(description = "댓글 생성 시 요구 형식") @Valid CommentRequest commentRequest);
 
     @Operation(summary = "댓글 조회", description = "특정 순간에 속한 모든 댓글을 생성 순으로 조회합니다.")
     @ApiResponses(value = {
@@ -43,5 +46,5 @@ public interface CommentControllerDocs {
     })
     ResponseEntity<CommentResponses> readCommentsByMomentId(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "댓글이 속한 순간 식별자", example = "1") long momentId);
+            @Parameter(description = "댓글이 속한 순간 식별자", example = "1") @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId);
 }
