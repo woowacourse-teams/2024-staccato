@@ -225,13 +225,13 @@ class VisitControllerTest {
     @Test
     void readVisitById() throws Exception {
         // given
-        long visitId = 1L;
+        long momentId = 1L;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        MomentDetailResponse response = VisitDetailResponseFixture.create(visitId, LocalDate.now());
+        MomentDetailResponse response = VisitDetailResponseFixture.create(momentId, LocalDate.now());
         when(visitService.readVisitById(anyLong(), any(Member.class))).thenReturn(response);
 
         // when & then
-        mockMvc.perform(get("/moments/{visitId}", visitId)
+        mockMvc.perform(get("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
@@ -244,7 +244,7 @@ class VisitControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문 기록 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(get("/moments/{visitId}", 0))
+        mockMvc.perform(get("/moments/{momentId}", 0))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -253,13 +253,13 @@ class VisitControllerTest {
     @Test
     void updateVisitById() throws Exception {
         // given
-        long visitId = 1L;
+        long momentId = 1L;
         MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/moments/{momentId}", visitId)
+        mockMvc.perform(multipart("/moments/{momentId}", momentId)
                         .file(file)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(updateRequest)
                                 .getBytes()))
@@ -276,7 +276,7 @@ class VisitControllerTest {
     @Test
     void failUpdateVisitByImagesSize() throws Exception {
         // given
-        long visitId = 1L;
+        long momentId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
         MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         MockMultipartFile file1 = new MockMultipartFile("momentImageFiles", "namsan_tower1.jpg".getBytes());
@@ -288,7 +288,7 @@ class VisitControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/moments/{visitId}", visitId)
+        mockMvc.perform(multipart("/moments/{momentId}", momentId)
                         .file(file1)
                         .file(file2)
                         .file(file3)
@@ -311,14 +311,14 @@ class VisitControllerTest {
     @Test
     void failUpdateVisitById() throws Exception {
         // given
-        long visitId = 0L;
+        long momentId = 0L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문 기록 식별자는 양수로 이루어져야 합니다.");
         MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/moments/{visitId}", visitId)
+        mockMvc.perform(multipart("/moments/{momentId}", momentId)
                         .file(file)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(updateRequest)
                                 .getBytes()))
@@ -336,14 +336,14 @@ class VisitControllerTest {
     @Test
     void failUpdateVisitByPlaceName() throws Exception {
         // given
-        long visitId = 1L;
+        long momentId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문한 장소의 이름을 입력해주세요.");
         MomentUpdateRequest updateRequest = new MomentUpdateRequest(null, List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/moments/{visitId}", visitId)
+        mockMvc.perform(multipart("/moments/{momentId}", momentId)
                         .file(file)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(updateRequest)
                                 .getBytes()))
@@ -361,11 +361,11 @@ class VisitControllerTest {
     @Test
     void deleteVisitById() throws Exception {
         // given
-        long visitId = 1L;
+        long momentId = 1L;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(delete("/moments/{id}", visitId)
+        mockMvc.perform(delete("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
     }
@@ -374,11 +374,11 @@ class VisitControllerTest {
     @Test
     void failDeleteVisitById() throws Exception {
         // given
-        long visitId = 0L;
+        long momentId = 0L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문 기록 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(delete("/moments/{id}", visitId)
+        mockMvc.perform(delete("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));

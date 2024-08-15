@@ -148,13 +148,13 @@ class TravelControllerTest {
     @Test
     void readTravel() throws Exception {
         // given
-        long travelId = 1;
+        long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(createTravel(), List.of());
         when(travelService.readTravelById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
 
         // when & then
-        mockMvc.perform(get("/memories/{travelId}", travelId)
+        mockMvc.perform(get("/memories/{memoryId}", memoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(memoryDetailResponse)));
@@ -175,12 +175,12 @@ class TravelControllerTest {
     @MethodSource("travelRequestProvider")
     void updateTravel(MemoryRequest memoryRequest) throws Exception {
         // given
-        long travelId = 1L;
+        long memoryId = 1L;
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/memories/{travelId}", travelId)
+        mockMvc.perform(multipart("/memories/{memoryId}", memoryId)
                         .file(file)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
                         .with(request -> {
@@ -197,12 +197,12 @@ class TravelControllerTest {
     @MethodSource("invalidTravelRequestProvider")
     void failUpdateTravel(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
         // given
-        long travelId = 1L;
+        long memoryId = 1L;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
-        mockMvc.perform(multipart("/memories/{travelId}", travelId)
+        mockMvc.perform(multipart("/memories/{memoryId}", memoryId)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
                         .with(request -> {
                             request.setMethod("PUT");
@@ -218,13 +218,13 @@ class TravelControllerTest {
     @Test
     void failUpdateTravelByInvalidPath() throws Exception {
         // given
-        long travelId = 0L;
+        long memoryId = 0L;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "여행 식별자는 양수로 이루어져야 합니다.");
         MemoryRequest memoryRequest = new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
 
         // when & then
-        mockMvc.perform(multipart("/memories/{travelId}", travelId)
+        mockMvc.perform(multipart("/memories/{memoryId}", memoryId)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
                         .with(request -> {
                             request.setMethod("PUT");
@@ -240,11 +240,11 @@ class TravelControllerTest {
     @Test
     void deleteTravel() throws Exception {
         // given
-        long travelId = 1;
+        long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(delete("/memories/{travelId}", travelId)
+        mockMvc.perform(delete("/memories/{memoryId}", memoryId)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
@@ -258,7 +258,7 @@ class TravelControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "여행 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(delete("/memories/{travelId}", invalidId)
+        mockMvc.perform(delete("/memories/{memoryId}", invalidId)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
