@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
@@ -70,9 +71,11 @@ class VisitCreationActivity :
                     .putExtra(TRAVEL_ID_KEY, travelId)
                     .putExtra(TRAVEL_TITLE_KEY, travelTitle)
             setResult(RESULT_OK, resultIntent)
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
         viewModel.errorMessage.observe(this) {
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
     }
@@ -86,6 +89,7 @@ class VisitCreationActivity :
     }
 
     override fun onCreateDoneClicked() {
+        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.visit_creation_posting))
         viewModel.createVisit(travelId, this)
     }

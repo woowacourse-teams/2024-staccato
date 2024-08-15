@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.core.util.Pair
@@ -44,6 +46,7 @@ class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
     }
 
     override fun onSaveClicked() {
+        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.travel_creation_posting))
         viewModel.createTravel(this)
     }
@@ -91,12 +94,14 @@ class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
             val resultIntent = Intent()
             resultIntent.putExtra(TRAVEL_ID_KEY, travelId)
             setResult(RESULT_OK, resultIntent)
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
     }
 
     private fun showErrorToast() {
         viewModel.errorMessage.observe(this) {
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
     }

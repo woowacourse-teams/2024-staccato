@@ -12,10 +12,9 @@ import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.domain.repository.LoginRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
-import com.woowacourse.staccato.presentation.login.LoginHandler
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val repository: LoginRepository) : ViewModel(), LoginHandler {
+class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
     val nickname = MutableLiveData("")
 
     private val _isLoginSuccess = MutableSingleLiveData(false)
@@ -26,7 +25,7 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel(), Log
     val errorMessage: SingleLiveData<String>
         get() = _errorMessage
 
-    override fun onStartClicked() {
+    fun requestLogin() {
         val nickname = nickname.value ?: ""
         viewModelScope.launch {
             repository.loginWithNickname(nickname)
