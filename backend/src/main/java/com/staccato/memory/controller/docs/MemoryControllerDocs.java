@@ -98,19 +98,12 @@ public interface MemoryControllerDocs {
             @Parameter(description = "key = memoryThumbnailFile") MultipartFile memoryThumbnailFile,
             @Parameter(hidden = true) Member member);
 
-    @Operation(summary = "특정 추억 상세 삭제", description = "사용자의 특정 추억 상세를 삭제합니다.")
+    @Operation(summary = "특정 추억 삭제", description = "사용자의 특정 추억을 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "특정 추억 상세 삭제 성공", responseCode = "200"),
-            @ApiResponse(description = """
-                    <발생 가능한 케이스>
-                                        
-                    (1) 순간 기록이 존재하는 추억 상세를 삭제하려고 했을 때
-                                        
-                    (2) Path Variable 형식이 잘못되었을 때
-                    """,
-                    responseCode = "400")
+            @ApiResponse(description = "특정 추억 삭제 성공", responseCode = "200"),
+            @ApiResponse(description = "Path Variable 형식이 잘못되었을 때 발생", responseCode = "400")
     })
     ResponseEntity<Void> deleteMemory(
-            @Parameter(description = "추억 상세 ID", example = "1") @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId,
+            @Parameter(description = "추억 ID", example = "1") @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId,
             @Parameter(hidden = true) Member member);
 }
