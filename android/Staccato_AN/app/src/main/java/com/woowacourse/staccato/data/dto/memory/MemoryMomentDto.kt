@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MemoryVisitDto(
-    @SerialName("visitId") val visitId: Long,
+data class MemoryMomentDto(
+    @SerialName("momentId") val momentId: Long,
     @SerialName("placeName") val placeName: String,
-    @SerialName("visitImageUrl") val visitImageUrl: String? = null,
+    @SerialName("momentImageUrl") val momentImageUrl: String? = null,
     @SerialName("visitedAt") val visitedAt: String,
 )
