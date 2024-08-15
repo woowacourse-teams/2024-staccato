@@ -24,8 +24,8 @@ class VisitFragment :
     private val viewModel: VisitViewModel by viewModels { VisitViewModelFactory() }
     private lateinit var visitAdapter: VisitAdapter
     private var visitId by Delegates.notNull<Long>()
-    private var travelId by Delegates.notNull<Long>()
-    private var travelTitle by Delegates.notNull<String>()
+    private var memoryId by Delegates.notNull<Long>()
+    private var memoryTitle by Delegates.notNull<String>()
     private val deleteDialog =
         DeleteDialogFragment {
             viewModel.deleteVisit(visitId)
@@ -36,8 +36,8 @@ class VisitFragment :
         savedInstanceState: Bundle?,
     ) {
         visitId = arguments?.getLong(VISIT_ID_KEY) ?: return
-        travelId = arguments?.getLong(MEMORY_ID_KEY) ?: return
-        travelTitle = arguments?.getString(MEMORY_TITLE_KEY) ?: return
+        memoryId = arguments?.getLong(MEMORY_ID_KEY) ?: return
+        memoryTitle = arguments?.getString(MEMORY_TITLE_KEY) ?: return
         initAdapter()
         initToolbarHandler()
         observeData()
@@ -85,8 +85,8 @@ class VisitFragment :
         val visitUpdateLauncher = (activity as MainActivity).visitUpdateLauncher
         VisitUpdateActivity.startWithResultLauncher(
             visitId = visitId,
-            travelId = travelId,
-            travelTitle = travelTitle,
+            travelId = memoryId,
+            travelTitle = memoryTitle,
             context = requireContext(),
             activityLauncher = visitUpdateLauncher,
         )
