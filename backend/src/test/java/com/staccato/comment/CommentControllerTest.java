@@ -10,9 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -80,7 +78,6 @@ public class CommentControllerTest {
         );
     }
 
-    @Disabled
     @DisplayName("올바른 형식으로 댓글을 생성하면 성공한다.")
     @ParameterizedTest
     @MethodSource("commentRequestProvider")
@@ -93,12 +90,11 @@ public class CommentControllerTest {
         mockMvc.perform(post("/comments")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequest))
-                        .header("token"))
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/comments/1"));
     }
 
-    @Disabled
     @DisplayName("올바르지 않은 형식으로 정보를 입력하면, 댓글을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidCommentRequestProvider")
@@ -112,7 +108,7 @@ public class CommentControllerTest {
         mockMvc.perform(post("/comments")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequest))
-                        .header("token"))
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
