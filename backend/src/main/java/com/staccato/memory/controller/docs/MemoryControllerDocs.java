@@ -52,9 +52,9 @@ public interface MemoryControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "조회할 년도", example = "2024") Integer year);
 
-    @Operation(summary = "특정 추억 상세 조회", description = "사용자의 특정 추억 상세를 조회합니다.")
+    @Operation(summary = "특정 추억 조회", description = "사용자의 특정 추억을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "특정 추억 상세 조회 성공", responseCode = "200"),
+            @ApiResponse(description = "특정 추억 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
@@ -66,7 +66,7 @@ public interface MemoryControllerDocs {
     })
     ResponseEntity<MemoryDetailResponse> readMemory(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "추억 상세 ID", example = "1") @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId);
+            @Parameter(description = "추억 ID", example = "1") @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId);
 
     @Operation(summary = "추억 상세 수정", description = "추억 상세 정보(썸네일, 제목, 내용, 기간)를 수정합니다.")
     @ApiResponses(value = {
