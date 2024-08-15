@@ -4,13 +4,13 @@ import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.presentation.timeline.model.TimelineUiModel
 
-fun Timeline.toTimelineTravelUiModel(): List<TimelineUiModel> {
-    return memories.map { travel ->
-        travel.toTimelineTravelUiModel()
+fun Timeline.toTimelineUiModel(): List<TimelineUiModel> {
+    return memories.map { memory ->
+        memory.toTimelineUiModel()
     }
 }
 
-fun Memory.toTimelineTravelUiModel(): TimelineUiModel {
+fun Memory.toTimelineUiModel(): TimelineUiModel {
     return TimelineUiModel(
         memoryId = memoryId,
         memoryTitle = memoryTitle,

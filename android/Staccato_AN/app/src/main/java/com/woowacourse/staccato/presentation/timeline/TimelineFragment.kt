@@ -62,7 +62,7 @@ class TimelineFragment :
         findNavController().navigate(R.id.action_timelineFragment_to_travelFragment, bundle)
     }
 
-    override fun onTravelClicked(memoryId: Long) {
+    override fun onMemoryClicked(memoryId: Long) {
         val bundle: Bundle = bundleOf(MEMORY_ID_KEY to memoryId)
         navigateToMemory(bundle)
     }

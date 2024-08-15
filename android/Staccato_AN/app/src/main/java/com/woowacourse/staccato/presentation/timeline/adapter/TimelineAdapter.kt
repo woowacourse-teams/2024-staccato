@@ -28,7 +28,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
                         parent,
                         false,
                     )
-                FirstTravelViewHolder(binding, eventHandler)
+                FirstTimelineViewHolder(binding, eventHandler)
             }
 
             TimelineViewType.MIDDLE_ITEM -> {
@@ -38,7 +38,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
                         parent,
                         false,
                     )
-                MiddleTravelViewHolder(binding, eventHandler)
+                MiddleTimelineViewHolder(binding, eventHandler)
             }
 
             TimelineViewType.LAST_ITEM -> {
@@ -48,7 +48,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
                         parent,
                         false,
                     )
-                LastTravelViewHolder(binding, eventHandler)
+                LastTimelineViewHolder(binding, eventHandler)
             }
         }
     }
@@ -60,8 +60,8 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
         holder.bind(currentList[position])
     }
 
-    fun updateTimeline(newTravels: List<TimelineUiModel>) {
-        submitList(newTravels)
+    fun updateTimeline(newTimeline: List<TimelineUiModel>) {
+        submitList(newTimeline)
     }
 
     companion object {

@@ -13,7 +13,7 @@ import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.domain.repository.TimelineRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
-import com.woowacourse.staccato.presentation.mapper.toTimelineTravelUiModel
+import com.woowacourse.staccato.presentation.mapper.toTimelineUiModel
 import com.woowacourse.staccato.presentation.timeline.model.TimelineUiModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -39,14 +39,14 @@ class TimelineViewModel(private val timelineRepository: TimelineRepository) : Vi
     fun loadTimeline() {
         viewModelScope.launch(coroutineExceptionHandler) {
             timelineRepository.getTimeline()
-                .onSuccess(::setTimelineTravelUiModels)
+                .onSuccess(::setTimelineUiModels)
                 .onServerError(::handleServerError)
                 .onException(::handleException)
         }
     }
 
-    private fun setTimelineTravelUiModels(timeline: Timeline) {
-        _timeline.value = timeline.toTimelineTravelUiModel()
+    private fun setTimelineUiModels(timeline: Timeline) {
+        _timeline.value = timeline.toTimelineUiModel()
     }
 
     private fun handleServerError(
