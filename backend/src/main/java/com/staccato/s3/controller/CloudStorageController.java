@@ -27,7 +27,7 @@ public class CloudStorageController {
 
     @PostMapping
     public ResponseEntity<List<String>> uploadFiles(
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart(value = "imagefiles") List<MultipartFile> files
+            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart(value = "imageFiles") List<MultipartFile> files
     ) {
         List<String> fileUrls = new ArrayList<>();
         if (!files.isEmpty()) {
