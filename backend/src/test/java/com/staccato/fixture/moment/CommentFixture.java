@@ -1,4 +1,4 @@
-package com.staccato.moment.fixture;
+package com.staccato.fixture.moment;
 
 import com.staccato.member.domain.Member;
 import com.staccato.moment.domain.Comment;

@@ -19,6 +19,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import com.staccato.ServiceSliceTest;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
@@ -31,7 +32,6 @@ import com.staccato.memory.service.dto.response.MemoryIdResponse;
 import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
-import com.staccato.moment.fixture.MomentFixture;
 import com.staccato.moment.repository.MomentRepository;
 
 class MemoryServiceTest extends ServiceSliceTest {
