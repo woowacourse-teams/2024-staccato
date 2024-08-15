@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.s3.domain.CloudStorageClient;
+import com.staccato.s3.domain.FileExtension;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class CloudStorageService {
-    private static final String CONTENT_TYPE = "multipart/form-data";
     private static final String TEAM_FOLDER = "staccato/";
     private static final String IMAGE_FOLDER = "image/";
 
@@ -29,9 +29,11 @@ public class CloudStorageService {
     }
 
     public String uploadFile(MultipartFile image) {
-        String key = makeImagePath(image.getOriginalFilename());
+        String fileName = image.getOriginalFilename();
+        String key = makeImagePath(fileName);
+        String contentType = getContentType(fileName);
         try {
-            cloudStorageClient.putS3Object(key, CONTENT_TYPE, image.getBytes());
+            cloudStorageClient.putS3Object(key, contentType, image.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -47,6 +49,11 @@ public class CloudStorageService {
     private String generateUniqueFileName(String fileName) {
         String fileExtension = getFileExtension(fileName);
         return UUID.randomUUID() + fileExtension;
+    }
+
+    private String getContentType(String fileName) {
+        String fileExtension = getFileExtension(fileName);
+        return FileExtension.getContentType(fileExtension);
     }
 
     private String getFileExtension(String fileName) {
