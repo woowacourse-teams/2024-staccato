@@ -1,8 +1,8 @@
 package com.woowacourse.staccato.data.moment
 
 import com.woowacourse.staccato.data.dto.mapper.toDomain
-import com.woowacourse.staccato.data.dto.visit.VisitCreationRequest
-import com.woowacourse.staccato.data.dto.visit.VisitCreationResponse
+import com.woowacourse.staccato.data.dto.moment.VisitCreationRequest
+import com.woowacourse.staccato.data.dto.moment.VisitCreationResponse
 import com.woowacourse.staccato.domain.model.Visit
 import com.woowacourse.staccato.domain.repository.VisitRepository
 import okhttp3.MultipartBody

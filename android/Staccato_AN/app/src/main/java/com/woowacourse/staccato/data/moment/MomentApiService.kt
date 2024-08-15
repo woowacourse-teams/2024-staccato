@@ -1,9 +1,9 @@
 package com.woowacourse.staccato.data.moment
 
-import com.woowacourse.staccato.data.dto.visit.VisitCreationRequest
-import com.woowacourse.staccato.data.dto.visit.VisitCreationResponse
-import com.woowacourse.staccato.data.dto.visit.VisitResponse
-import com.woowacourse.staccato.data.dto.visit.VisitUpdateRequest
+import com.woowacourse.staccato.data.dto.moment.VisitCreationRequest
+import com.woowacourse.staccato.data.dto.moment.VisitCreationResponse
+import com.woowacourse.staccato.data.dto.moment.VisitResponse
+import com.woowacourse.staccato.data.dto.moment.VisitUpdateRequest
 import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.GET

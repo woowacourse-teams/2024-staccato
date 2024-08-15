@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.domain.repository
 
-import com.woowacourse.staccato.data.dto.visit.VisitCreationResponse
+import com.woowacourse.staccato.data.dto.moment.VisitCreationResponse
 import com.woowacourse.staccato.domain.model.Visit
 import okhttp3.MultipartBody
 import java.time.LocalDateTime

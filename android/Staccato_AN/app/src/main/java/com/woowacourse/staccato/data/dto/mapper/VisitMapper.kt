@@ -1,7 +1,7 @@
 package com.woowacourse.staccato.data.dto.mapper
 
-import com.woowacourse.staccato.data.dto.visit.VisitLogDto
-import com.woowacourse.staccato.data.dto.visit.VisitResponse
+import com.woowacourse.staccato.data.dto.moment.VisitLogDto
+import com.woowacourse.staccato.data.dto.moment.VisitResponse
 import com.woowacourse.staccato.domain.model.Visit
 import com.woowacourse.staccato.domain.model.VisitLog
 import java.time.LocalDate
