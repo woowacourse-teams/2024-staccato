@@ -15,34 +15,34 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface MemoryApiService {
-    @GET(TRAVEL_PATH_WITH_ID)
+    @GET(MEMORY_PATH_WITH_ID)
     suspend fun getTravel(
-        @Path("travelId") travelId: Long,
+        @Path("memoryId") memoryId: Long,
     ): Response<MemoryResponse>
 
     @Multipart
-    @POST(TRAVELS_PATH)
+    @POST(MEMORIES_PATH)
     suspend fun postTravel(
         @Part("data") data: MemoryRequest,
         @Part thumbnailFile: MultipartBody.Part?,
     ): Response<MemoryCreationResponse>
 
     @Multipart
-    @PUT(TRAVEL_PATH_WITH_ID)
+    @PUT(MEMORY_PATH_WITH_ID)
     suspend fun putTravel(
-        @Path("travelId") travelId: Long,
+        @Path("memoryId") memoryId: Long,
         @Part("data") data: MemoryUpdateRequest,
-        @Part travelThumbnailFile: MultipartBody.Part?,
+        @Part memoryThumbnailFile: MultipartBody.Part?,
     ): Response<String>
 
-    @DELETE(TRAVEL_PATH_WITH_ID)
+    @DELETE(MEMORY_PATH_WITH_ID)
     suspend fun deleteTravel(
-        @Path("travelId") travelId: Long,
+        @Path("memoryId") memoryId: Long,
     ): Response<Unit>
 
     companion object {
-        private const val TRAVELS_PATH = "/travels"
-        private const val TRAVEL_ID = "/{travelId}"
-        private const val TRAVEL_PATH_WITH_ID = "$TRAVELS_PATH$TRAVEL_ID"
+        private const val MEMORIES_PATH = "/memories"
+        private const val MEMORY_ID = "/{memoryId}"
+        private const val MEMORY_PATH_WITH_ID = "$MEMORIES_PATH$MEMORY_ID"
     }
 }
