@@ -13,7 +13,7 @@
         tools:context=".presentation.main.MainActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_map"
+            android:id="@+id/constraint_main_map"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -28,7 +28,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/btn_timeline"
+                android:id="@+id/btn_main_timeline"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginEnd="30dp"
@@ -38,17 +38,17 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/btn_visit_create"
+                android:id="@+id/btn_main_visit_creation"
                 android:layout_width="50dp"
                 android:layout_height="80dp"
                 android:layout_marginEnd="150dp"
                 android:layout_marginBottom="100dp"
                 android:src="@drawable/icon_pin"
-                app:layout_constraintBottom_toTopOf="@id/btn_travel_create"
+                app:layout_constraintBottom_toTopOf="@id/btn_main_travel_creation"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView
-                android:id="@+id/btn_travel_create"
+                android:id="@+id/btn_main_travel_creation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
@@ -62,7 +62,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_bottom_sheet"
+            android:id="@+id/constraint_main_bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/shape_bottom_sheet_20dp"
@@ -73,25 +73,25 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <View
-                android:id="@+id/view_drag_bar"
+                android:id="@+id/view_main_drag_bar"
                 style="@style/DragHandleStyle"
-                app:layout_constraintEnd_toEndOf="@id/constraint_bottom_sheet"
-                app:layout_constraintStart_toStartOf="@id/constraint_bottom_sheet"
-                app:layout_constraintTop_toTopOf="@id/constraint_bottom_sheet" />
+                app:layout_constraintEnd_toEndOf="@id/constraint_main_bottom_sheet"
+                app:layout_constraintStart_toStartOf="@id/constraint_main_bottom_sheet"
+                app:layout_constraintTop_toTopOf="@id/constraint_main_bottom_sheet" />
 
             <TextView
-                android:id="@+id/tv_bottom_sheet_remind_your_memories"
+                android:id="@+id/tv_main_bottom_sheet_remind_your_memories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/timeline_title"
                 android:textAppearance="@style/Typography.Body4"
-                app:layout_constraintEnd_toEndOf="@id/view_drag_bar"
-                app:layout_constraintStart_toStartOf="@id/view_drag_bar"
-                app:layout_constraintTop_toBottomOf="@id/view_drag_bar" />
+                app:layout_constraintEnd_toEndOf="@id/view_main_drag_bar"
+                app:layout_constraintStart_toStartOf="@id/view_main_drag_bar"
+                app:layout_constraintTop_toBottomOf="@id/view_main_drag_bar" />
 
             <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragment_container"
+                android:id="@+id/fragment_container_view_main_bottom_sheet"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
