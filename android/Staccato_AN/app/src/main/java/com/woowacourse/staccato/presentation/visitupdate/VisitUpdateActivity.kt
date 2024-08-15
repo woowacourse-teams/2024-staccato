@@ -13,6 +13,8 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityVisitUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
+import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
+import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
 import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
@@ -31,8 +33,8 @@ class VisitUpdateActivity :
     private val fragmentManager: FragmentManager = supportFragmentManager
 
     private val visitId by lazy { intent.getLongExtra(VISIT_ID_KEY, 0L) }
-    private val travelId by lazy { intent.getLongExtra(TRAVEL_ID_KEY, 0L) }
-    private val travelTitle by lazy { intent.getStringExtra(TRAVEL_TITLE_KEY) ?: "" }
+    private val travelId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
+    private val travelTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
@@ -75,8 +77,8 @@ class VisitUpdateActivity :
             val intent =
                 Intent()
                     .putExtra(VISIT_ID_KEY, visitId)
-                    .putExtra(TRAVEL_ID_KEY, travelId)
-                    .putExtra(TRAVEL_TITLE_KEY, travelTitle)
+                    .putExtra(MEMORY_ID_KEY, travelId)
+                    .putExtra(MEMORY_TITLE_KEY, travelTitle)
             setResult(RESULT_OK, intent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -100,9 +102,6 @@ class VisitUpdateActivity :
     }
 
     companion object {
-        private const val TRAVEL_ID_KEY = "travelId"
-        private const val TRAVEL_TITLE_KEY = "travelTitle"
-
         fun startWithResultLauncher(
             visitId: Long,
             travelId: Long,
@@ -112,8 +111,8 @@ class VisitUpdateActivity :
         ) {
             Intent(context, VisitUpdateActivity::class.java).apply {
                 putExtra(VISIT_ID_KEY, visitId)
-                putExtra(TRAVEL_ID_KEY, travelId)
-                putExtra(TRAVEL_TITLE_KEY, travelTitle)
+                putExtra(MEMORY_ID_KEY, travelId)
+                putExtra(MEMORY_TITLE_KEY, travelTitle)
                 activityLauncher.launch(this)
             }
         }
