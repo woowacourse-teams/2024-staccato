@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.presentation.memorycreation
 
-interface TravelCreationHandler {
+interface MemoryCreationHandler {
     fun onPeriodSelectionClicked()
 
     fun onSaveClicked()

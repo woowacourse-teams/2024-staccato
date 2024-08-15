@@ -17,13 +17,13 @@ import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
 import com.woowacourse.staccato.databinding.ActivityTravelCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
+import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memorycreation.viewmodel.TravelCreationViewModel
 import com.woowacourse.staccato.presentation.memorycreation.viewmodel.TravelCreationViewModelFactory
-import com.woowacourse.staccato.presentation.timeline.TimelineFragment.Companion.TRAVEL_ID_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
-class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(), TravelCreationHandler, OnUrisSelectedListener {
+class MemoryCreationActivity : BindingActivity<ActivityTravelCreationBinding>(), MemoryCreationHandler, OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_travel_creation
     private val viewModel: TravelCreationViewModel by viewModels {
         TravelCreationViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
@@ -91,7 +91,7 @@ class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
     private fun observeCreatedTravelId() {
         viewModel.createdTravelId.observe(this) { travelId ->
             val resultIntent = Intent()
-            resultIntent.putExtra(TRAVEL_ID_KEY, travelId)
+            resultIntent.putExtra(MEMORY_ID_KEY, travelId)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -110,7 +110,7 @@ class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
-            Intent(context, TravelCreationActivity::class.java).apply {
+            Intent(context, MemoryCreationActivity::class.java).apply {
                 activityLauncher.launch(this)
             }
         }

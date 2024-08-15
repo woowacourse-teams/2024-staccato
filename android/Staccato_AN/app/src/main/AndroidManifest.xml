@@ -56,7 +56,7 @@
             android:name=".presentation.visitcreation.VisitCreationActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.memorycreation.TravelCreationActivity"
+            android:name=".presentation.memorycreation.MemoryCreationActivity"
             android:exported="false" />
     </application>
 
