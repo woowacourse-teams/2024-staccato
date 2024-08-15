@@ -133,7 +133,7 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("특정 추억 상세를 조회하면 순간 기록은 오래된 순으로 반환한다.")
+    @DisplayName("특정 추억 상세를 조회하면 순간은 오래된 순으로 반환한다.")
     @Test
     void readMemoryByIdOrderByVisitedAt() {
         // given
@@ -279,7 +279,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> memoryService.deleteMemory(memoryIdResponse.memoryId(), member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("해당 추억 상세에 순간 기록이 남아있어 삭제할 수 없습니다.");
+                .hasMessage("해당 추억 상세에 순간이 남아있어 삭제할 수 없습니다.");
     }
 
     private Member saveMember() {

@@ -132,7 +132,7 @@ public class MemoryService {
 
     private void validateMomentExistsByMemory(Memory memory) {
         if (momentRepository.existsByMemory(memory)) {
-            throw new StaccatoException("해당 추억 상세에 순간 기록이 남아있어 삭제할 수 없습니다.");
+            throw new StaccatoException("해당 추억 상세에 순간이 남아있어 삭제할 수 없습니다.");
         }
     }
 }

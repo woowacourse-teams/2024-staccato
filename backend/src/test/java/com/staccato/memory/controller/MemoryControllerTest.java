@@ -170,7 +170,7 @@ class MemoryControllerTest {
                 .build();
     }
 
-    @DisplayName("적합한 경로변수와 데이터를 통해 순간 기록 수정에 성공한다.")
+    @DisplayName("적합한 경로변수와 데이터를 통해 순간 수정에 성공한다.")
     @ParameterizedTest
     @MethodSource("memoryRequestProvider")
     void updateMemory(MemoryRequest memoryRequest) throws Exception {

@@ -92,7 +92,7 @@ class MomentControllerTest {
         );
     }
 
-    @DisplayName("순간 기록 생성 시 사진 5장까지는 첨부 가능하다.")
+    @DisplayName("순간 생성 시 사진 5장까지는 첨부 가능하다.")
     @Test
     void createMoment() throws Exception {
         // given
@@ -123,7 +123,7 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(momentIdResponse)));
     }
 
-    @DisplayName("올바르지 않은 날짜 형식으로 순간 기록 생성을 요청하면 예외가 발생한다.")
+    @DisplayName("올바르지 않은 날짜 형식으로 순간 생성을 요청하면 예외가 발생한다.")
     @Test
     void failCreateMomentWithInvalidVistedAt() throws Exception {
         // given
@@ -162,7 +162,7 @@ class MomentControllerTest {
                 .andExpect(jsonPath("$.message").value("요청 본문을 읽을 수 없습니다. 올바른 형식으로 데이터를 제공해주세요."));
     }
 
-    @DisplayName("사진이 5장을 초과하면 순간 기록 생성에 실패한다.")
+    @DisplayName("사진이 5장을 초과하면 순간 생성에 실패한다.")
     @Test
     void failCreateMomentByImageCount() throws Exception {
         // given
@@ -199,7 +199,7 @@ class MomentControllerTest {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, visitedAt, 1L);
     }
 
-    @DisplayName("사용자가 잘못된 요청 형식으로 정보를 입력하면, 순간 기록을 생성할 수 없다.")
+    @DisplayName("사용자가 잘못된 요청 형식으로 정보를 입력하면, 순간을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidMomentRequestProvider")
     void failCreateMoment(MomentRequest momentRequest, String expectedMessage) throws Exception {
@@ -221,7 +221,7 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("적합한 경로변수를 통해 순간 기록 조회에 성공한다.")
+    @DisplayName("적합한 경로변수를 통해 순간 조회에 성공한다.")
     @Test
     void readMomentById() throws Exception {
         // given
@@ -237,11 +237,11 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
     }
 
-    @DisplayName("적합하지 않은 경로변수의 경우 순간 기록 조회에 실패한다.")
+    @DisplayName("적합하지 않은 경로변수의 경우 순간 조회에 실패한다.")
     @Test
     void failReadMomentById() throws Exception {
         // given
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 기록 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
         mockMvc.perform(get("/moments/{momentId}", 0))
@@ -249,7 +249,7 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("적합한 경로변수를 통해 순간 기록 수정에 성공한다.")
+    @DisplayName("적합한 경로변수를 통해 순간 수정에 성공한다.")
     @Test
     void updateMomentById() throws Exception {
         // given
@@ -272,7 +272,7 @@ class MomentControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("추가하려는 사진이 5장이 넘는다면 순간 기록 수정에 실패한다.")
+    @DisplayName("추가하려는 사진이 5장이 넘는다면 순간 수정에 실패한다.")
     @Test
     void failUpdateMomentByImagesSize() throws Exception {
         // given
@@ -307,12 +307,12 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("적합하지 않은 경로변수의 경우 순간 기록 수정에 실패한다.")
+    @DisplayName("적합하지 않은 경로변수의 경우 순간 수정에 실패한다.")
     @Test
     void failUpdateMomentById() throws Exception {
         // given
         long momentId = 0L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 기록 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
         MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
@@ -332,7 +332,7 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("순간 기록 수정 시 장소 이름을 입력하지 않은 경우 수정에 실패한다.")
+    @DisplayName("순간 수정 시 장소 이름을 입력하지 않은 경우 수정에 실패한다.")
     @Test
     void failUpdateMomentByPlaceName() throws Exception {
         // given
@@ -357,7 +357,7 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("순간 기록을 삭제한다.")
+    @DisplayName("순간을 삭제한다.")
     @Test
     void deleteMomentById() throws Exception {
         // given
@@ -370,12 +370,12 @@ class MomentControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("양수가 아닌 id로 순간 기록을 삭제할 수 없다.")
+    @DisplayName("양수가 아닌 id로 순간을 삭제할 수 없다.")
     @Test
     void failDeleteMomentById() throws Exception {
         // given
         long momentId = 0L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 기록 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
         mockMvc.perform(delete("/moments/{momentId}", momentId)

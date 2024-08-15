@@ -5,7 +5,7 @@ import com.staccato.comment.domain.Comment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "특정 순간 기록에 대해 함께 간 친구와 나눈 대화 응답 형식입니다.")
+@Schema(description = "특정 순간에 대해 함께 간 친구와 나눈 대화 응답 형식입니다.")
 public record CommentResponse(
         @Schema(example = "1")
         Long commentId,

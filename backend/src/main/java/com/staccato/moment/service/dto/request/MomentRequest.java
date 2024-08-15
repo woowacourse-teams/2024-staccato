@@ -15,7 +15,7 @@ import com.staccato.moment.domain.Moment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "순간 기록 생성 시 요청 형식입니다. 단, 멀티파트로 보내는 사진 파일은 여기에 포함되지 않습니다.")
+@Schema(description = "순간 생성 시 요청 형식입니다. 단, 멀티파트로 보내는 사진 파일은 여기에 포함되지 않습니다.")
 public record MomentRequest(
         @Schema(example = "런던 박물관")
         @NotBlank(message = "순간한 장소의 이름을 입력해주세요.")

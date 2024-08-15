@@ -84,7 +84,7 @@ public interface MemoryControllerDocs {
                                         
                     (5) 기간 설정이 잘못되었을 때
                                         
-                    (6) 변경하려는 추억 기간이 이미 존재하는 순간 기록을 포함하지 않을 때
+                    (6) 변경하려는 추억 기간이 이미 존재하는 순간을 포함하지 않을 때
                                         
                     (7) 수정하려는 추억이 존재하지 않을 때
                                         
@@ -104,7 +104,7 @@ public interface MemoryControllerDocs {
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
-                    (1) 순간 기록이 존재하는 추억 상세를 삭제하려고 했을 때
+                    (1) 순간이 존재하는 추억 상세를 삭제하려고 했을 때
                                         
                     (2) Path Variable 형식이 잘못되었을 때
                     """,

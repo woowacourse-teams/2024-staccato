@@ -47,7 +47,7 @@ class MomentServiceTest extends ServiceSliceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @DisplayName("사진 없이도 순간 기록을 생성할 수 있다.")
+    @DisplayName("사진 없이도 순간을 생성할 수 있다.")
     @Test
     void createMoment() {
         // given
@@ -65,7 +65,7 @@ class MomentServiceTest extends ServiceSliceTest {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
-    @DisplayName("순간 기록을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
+    @DisplayName("순간을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
     @Test
     void createMomentWithMomentImages() {
         // given
@@ -82,7 +82,7 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 추억에 순간 기록을 생성하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 추억에 순간을 생성하려고 하면 예외가 발생한다.")
     @Test
     void cannotCreateMomentIfNotOwner() {
         // given
@@ -97,7 +97,7 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 추억에 순간 기록 생성을 시도하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 추억에 순간 생성을 시도하면 예외가 발생한다.")
     @Test
     void failCreateMoment() {
         // given
@@ -113,7 +113,7 @@ class MomentServiceTest extends ServiceSliceTest {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
-    @DisplayName("특정 순간 기록 조회에 성공한다.")
+    @DisplayName("특정 순간 조회에 성공한다.")
     @Test
     void readMomentById() {
         // given
@@ -128,7 +128,7 @@ class MomentServiceTest extends ServiceSliceTest {
         assertThat(actual).isEqualTo(new MomentDetailResponse(moment));
     }
 
-    @DisplayName("본인 것이 아닌 특정 순간 기록을 조회하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간을 조회하려고 하면 예외가 발생한다.")
     @Test
     void cannotReadMomentByIdIfNotOwner() {
         // given
@@ -143,7 +143,7 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 순간 기록을 조회하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 순간을 조회하면 예외가 발생한다.")
     @Test
     void failReadMomentById() {
         // given
@@ -152,10 +152,10 @@ class MomentServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> momentService.readMomentById(1L, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 순간 기록을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
     }
 
-    @DisplayName("특정 순간 기록 수정에 성공한다.")
+    @DisplayName("특정 순간 수정에 성공한다.")
     @Test
     void updateMomentById() {
         // given
@@ -181,7 +181,7 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 순간 기록을 수정하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간을 수정하려고 하면 예외가 발생한다.")
     @Test
     void cannotUpdateMomentByIdIfNotOwner() {
         // given
@@ -197,7 +197,7 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 순간 기록을 수정하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 순간을 수정하면 예외가 발생한다.")
     @Test
     void failUpdateMomentById() {
         // given
@@ -207,7 +207,7 @@ class MomentServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, List.of(new MockMultipartFile("momentImagesFile", "namsan_tower.jpg".getBytes())), member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 순간 기록을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
     }
 
     @DisplayName("Moment을 삭제하면 이에 포함된 MomentImage와 MomentLog도 모두 삭제된다.")
@@ -231,7 +231,7 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 순간 기록을 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간을 삭제하려고 하면 예외가 발생한다.")
     @Test
     void cannotDeleteMomentByIdIfNotOwner() {
         // given

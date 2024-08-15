@@ -43,7 +43,7 @@ public class CommentService {
 
     private Moment getMoment(long momentId) {
         return momentRepository.findById(momentId)
-                .orElseThrow(() -> new StaccatoException("요청하신 순간 기록을 찾을 수 없어요."));
+                .orElseThrow(() -> new StaccatoException("요청하신 순간을 찾을 수 없어요."));
     }
 
     private void validateOwner(Memory memory, Member member) {

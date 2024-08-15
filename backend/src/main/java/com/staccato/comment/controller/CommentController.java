@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.staccato.comment.controller.docs.CommentControllerDocs;
 import com.staccato.comment.service.CommentService;
 import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
@@ -26,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/comments")
 @RequiredArgsConstructor
 @Validated
-public class CommentController {
+public class CommentController implements CommentControllerDocs {
     private final CommentService commentService;
 
     @PostMapping
@@ -42,7 +43,7 @@ public class CommentController {
     @GetMapping
     public ResponseEntity<CommentResponses> readCommentsByMomentId(
             @LoginMember Member member,
-            @RequestParam @Min(value = 1L, message = "순간 기록 식별자는 양수로 이루어져야 합니다.") long momentId
+            @RequestParam @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId
     ) {
         CommentResponses commentResponses = commentService.readAllCommentsByMomentId(member, momentId);
         return ResponseEntity.ok().body(commentResponses);
