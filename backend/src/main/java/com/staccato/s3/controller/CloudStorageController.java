@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,14 +22,14 @@ public class CloudStorageController {
     private final CloudStorageService cloudStorageService;
 
     @PostMapping
-    public ResponseEntity<List<String>> uploadFiles(@RequestParam("imageFiles") List<MultipartFile> images) {
-        List<String> fileUrl = cloudStorageService.uploadFiles(images);
-        return ResponseEntity.status(HttpStatus.CREATED).body(fileUrl);
+    public ResponseEntity<List<String>> uploadFiles(@RequestParam("imageFiles") List<MultipartFile> files) {
+        List<String> fileUrls = cloudStorageService.uploadFiles(files);
+        return ResponseEntity.status(HttpStatus.CREATED).body(fileUrls);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteFiles(@RequestBody List<String> imageUrls) {
-        cloudStorageService.deleteFiles(imageUrls);
+    public ResponseEntity<Void> deleteFiles(@RequestParam("imageUrls") List<String> urls) {
+        cloudStorageService.deleteFiles(urls);
         return ResponseEntity.ok().build();
     }
 }

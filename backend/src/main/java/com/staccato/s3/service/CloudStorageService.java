@@ -22,18 +22,18 @@ public class CloudStorageService {
 
     private final CloudStorageClient cloudStorageClient;
 
-    public List<String> uploadFiles(List<MultipartFile> images) {
-        return images.stream()
+    public List<String> uploadFiles(List<MultipartFile> files) {
+        return files.stream()
                 .map(this::uploadFile)
                 .toList();
     }
 
-    public String uploadFile(MultipartFile image) {
-        String fileName = image.getOriginalFilename();
-        String key = makeImagePath(fileName);
+    public String uploadFile(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        String key = makeFilePath(fileName);
         String contentType = getContentType(fileName);
         try {
-            cloudStorageClient.putS3Object(key, contentType, image.getBytes());
+            cloudStorageClient.putS3Object(key, contentType, file.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -41,7 +41,7 @@ public class CloudStorageService {
         return cloudStorageClient.getUrl(key);
     }
 
-    private String makeImagePath(String fileName) {
+    private String makeFilePath(String fileName) {
         String uniqueFileName = generateUniqueFileName(fileName);
         return TEAM_FOLDER + IMAGE_FOLDER + uniqueFileName;
     }
@@ -64,12 +64,12 @@ public class CloudStorageService {
         return fileName.substring(dotIndex);
     }
 
-    public void deleteFiles(List<String> imageUrls) {
-        List<String> objectKeys = imageUrls.stream()
+    public void deleteFiles(List<String> fileUrls) {
+        List<String> objectKeys = fileUrls.stream()
                 .map(this::getObjectKeyFromUrl)
                 .toList();
 
-        if (imageUrls.size() == 1) {
+        if (fileUrls.size() == 1) {
             cloudStorageClient.deleteS3Object(objectKeys.get(0));
             return;
         }
@@ -77,8 +77,8 @@ public class CloudStorageService {
         cloudStorageClient.deleteMultipleS3Object(objectKeys);
     }
 
-    private String getObjectKeyFromUrl(String imageUrl) {
-        URI uri = createUri(imageUrl);
+    private String getObjectKeyFromUrl(String fileUrl) {
+        URI uri = createUri(fileUrl);
         String path = uri.getPath();
 
         if (path != null && path.startsWith("/")) {
