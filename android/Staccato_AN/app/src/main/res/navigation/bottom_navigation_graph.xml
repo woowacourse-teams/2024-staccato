@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/travelFragment"
-        android:name="com.woowacourse.staccato.presentation.memory.TravelFragment"
+        android:name="com.woowacourse.staccato.presentation.memory.MemoryFragment"
         android:label="fragment_travel"
         tools:layout="@layout/fragment_travel">
         <action

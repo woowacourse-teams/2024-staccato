@@ -14,7 +14,7 @@
 
         <variable
             name="travelHandler"
-            type="com.woowacourse.staccato.presentation.memory.TravelHandler" />
+            type="com.woowacourse.staccato.presentation.memory.MemoryHandler" />
 
         <variable
             name="toolbarHandler"
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".presentation.memory.TravelFragment">
+        tools:context=".presentation.memory.MemoryFragment">
 
         <include
             android:id="@+id/include_travel_toolbar"
@@ -61,7 +61,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:coilImageUrl="@{viewModel.travel.memoryThumbnailUrl}"
+                    bind:coilImageUrl="@{viewModel.memory.memoryThumbnailUrl}"
                     bind:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
                     tools:src="@drawable/shape_place_holder_rectangle" />
 
@@ -73,7 +73,7 @@
                     android:layout_marginTop="16dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{viewModel.travel.title}"
+                    android:text="@{viewModel.memory.title}"
                     android:textAppearance="@style/Typography.Title1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -85,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="@{@string/travel_period(viewModel.travel.startAt.year, viewModel.travel.startAt.monthValue, viewModel.travel.startAt.dayOfMonth, viewModel.travel.endAt.year, viewModel.travel.endAt.monthValue, viewModel.travel.endAt.dayOfMonth)}"
+                    android:text="@{@string/travel_period(viewModel.memory.startAt.year, viewModel.memory.startAt.monthValue, viewModel.memory.startAt.dayOfMonth, viewModel.memory.endAt.year, viewModel.memory.endAt.monthValue, viewModel.memory.endAt.dayOfMonth)}"
                     android:textAppearance="@style/Typography.Body4"
                     app:layout_constraintStart_toStartOf="@id/tv_travel_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_travel_title"
@@ -104,7 +104,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:text="@{viewModel.travel.description}"
+                    android:text="@{viewModel.memory.description}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_travel_first"
@@ -197,7 +197,7 @@
                     android:paddingVertical="60dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_travel_visits"
-                    android:visibility="@{viewModel.travel.visits.empty ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.memory.visits.empty ? View.VISIBLE : View.GONE}"
                     tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.presentation.memory
 
-interface TravelHandler {
+interface MemoryHandler {
     fun onVisitClicked(visitId: Long)
 
     fun onVisitCreationClicked()

@@ -19,8 +19,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class MemoryViewModel(private val memoryRepository: MemoryRepository) : ViewModel() {
-    private val _travel = MutableLiveData<MemoryUiModel>()
-    val travel: LiveData<MemoryUiModel> get() = _travel
+    private val _memory = MutableLiveData<MemoryUiModel>()
+    val memory: LiveData<MemoryUiModel> get() = _memory
 
     private val _errorMessage = MutableSingleLiveData<String>()
     val errorMessage: SingleLiveData<String> get() = _errorMessage
@@ -28,34 +28,34 @@ class MemoryViewModel(private val memoryRepository: MemoryRepository) : ViewMode
     private val _isDeleteSuccess = MutableSingleLiveData<Boolean>(false)
     val isDeleteSuccess: SingleLiveData<Boolean> get() = _isDeleteSuccess
 
-    fun loadTravel(travelId: Long) {
+    fun loadMemory(memoryId: Long) {
         viewModelScope.launch {
-            val result: ResponseResult<Memory> = memoryRepository.getMemory(travelId)
+            val result: ResponseResult<Memory> = memoryRepository.getMemory(memoryId)
             result
-                .onSuccess(::setTravel)
+                .onSuccess(::setMemory)
                 .onServerError(::handleServerError)
                 .onException(::handelException)
         }
     }
 
-    fun isTraveling(): Boolean {
-        return travel.value?.let { travel ->
+    fun isInPeriod(): Boolean {
+        return memory.value?.let { memory ->
             val nowDate = LocalDate.now()
-            travel.startAt <= nowDate && nowDate <= travel.endAt
+            memory.startAt <= nowDate && nowDate <= memory.endAt
         } ?: false
     }
 
-    fun deleteTravel(travelId: Long) {
+    fun deleteMemory(memoryId: Long) {
         viewModelScope.launch {
-            val result: ResponseResult<Unit> = memoryRepository.deleteMemory(travelId)
+            val result: ResponseResult<Unit> = memoryRepository.deleteMemory(memoryId)
             result.onSuccess { updateIsDeleteSuccess() }
                 .onServerError(::handleServerError)
                 .onException(::handelException)
         }
     }
 
-    private fun setTravel(memory: Memory) {
-        _travel.value = memory.toUiModel()
+    private fun setMemory(memory: Memory) {
+        _memory.value = memory.toUiModel()
     }
 
     private fun updateIsDeleteSuccess() {

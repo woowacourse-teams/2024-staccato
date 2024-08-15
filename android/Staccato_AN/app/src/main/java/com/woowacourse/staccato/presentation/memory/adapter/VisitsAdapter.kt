@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.woowacourse.staccato.databinding.ItemVisitsBinding
-import com.woowacourse.staccato.presentation.memory.TravelHandler
+import com.woowacourse.staccato.presentation.memory.MemoryHandler
 import com.woowacourse.staccato.presentation.memory.model.MemoryVisitUiModel
 
-class VisitsAdapter(private val handler: TravelHandler) : ListAdapter<MemoryVisitUiModel, VisitsViewHolder>(diffUtil) {
+class VisitsAdapter(private val handler: MemoryHandler) : ListAdapter<MemoryVisitUiModel, VisitsViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

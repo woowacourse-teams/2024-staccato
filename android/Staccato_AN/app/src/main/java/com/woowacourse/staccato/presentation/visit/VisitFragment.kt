@@ -10,8 +10,8 @@ import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
 import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
-import com.woowacourse.staccato.presentation.memory.TravelFragment.Companion.TRAVEL_ID_KEY
-import com.woowacourse.staccato.presentation.memory.TravelFragment.Companion.TRAVEL_TITLE_KEY
+import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
+import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.adapter.VisitAdapter
 import com.woowacourse.staccato.presentation.visit.viewmodel.VisitViewModel
@@ -36,8 +36,8 @@ class VisitFragment :
         savedInstanceState: Bundle?,
     ) {
         visitId = arguments?.getLong(VISIT_ID_KEY) ?: return
-        travelId = arguments?.getLong(TRAVEL_ID_KEY) ?: return
-        travelTitle = arguments?.getString(TRAVEL_TITLE_KEY) ?: return
+        travelId = arguments?.getLong(MEMORY_ID_KEY) ?: return
+        travelTitle = arguments?.getString(MEMORY_TITLE_KEY) ?: return
         initAdapter()
         initToolbarHandler()
         observeData()

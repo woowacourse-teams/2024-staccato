@@ -8,7 +8,7 @@
 
         <variable
             name="handler"
-            type="com.woowacourse.staccato.presentation.memory.TravelHandler" />
+            type="com.woowacourse.staccato.presentation.memory.MemoryHandler" />
 
         <variable
             name="visit"

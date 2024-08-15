@@ -17,7 +17,7 @@ import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
 import com.woowacourse.staccato.databinding.ActivityTravelUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
-import com.woowacourse.staccato.presentation.memory.TravelFragment.Companion.TRAVEL_ID_KEY
+import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.TravelUpdateViewModel
 import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.TravelUpdateViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
@@ -25,7 +25,7 @@ import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListene
 
 class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), TravelUpdateHandler, OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_travel_update
-    private val travelId by lazy { intent.getLongExtra(TRAVEL_ID_KEY, DEFAULT_TRAVEL_ID) }
+    private val travelId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_TRAVEL_ID) }
     private val viewModel: TravelUpdateViewModel by viewModels {
         TravelUpdateViewModelFactory(
             travelId,
@@ -105,7 +105,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
 
     private fun navigateToTravel(isUpdateSuccess: Boolean) {
         if (isUpdateSuccess) {
-            val intent = Intent().putExtra(TRAVEL_ID_KEY, travelId)
+            val intent = Intent().putExtra(MEMORY_ID_KEY, travelId)
             setResult(RESULT_OK, intent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -128,7 +128,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, TravelUpdateActivity::class.java).apply {
-                putExtra(TRAVEL_ID_KEY, travelId)
+                putExtra(MEMORY_ID_KEY, travelId)
                 activityLauncher.launch(this)
             }
         }

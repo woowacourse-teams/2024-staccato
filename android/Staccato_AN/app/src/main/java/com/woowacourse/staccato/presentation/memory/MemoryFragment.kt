@@ -26,13 +26,13 @@ import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 
-class TravelFragment :
+class MemoryFragment :
     BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
     ToolbarHandler,
-    TravelHandler,
+    MemoryHandler,
     DialogHandler {
-    private val travelId by lazy {
-        arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException()
+    private val memoryId by lazy {
+        arguments?.getLong(MEMORY_ID_KEY) ?: throw IllegalArgumentException()
     }
     private val viewModel: MemoryViewModel by viewModels {
         MemoryViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
@@ -54,15 +54,15 @@ class TravelFragment :
         observeTravel()
         observeIsDeleteSuccess()
         showErrorToast()
-        viewModel.loadTravel(travelId)
+        viewModel.loadMemory(memoryId)
     }
 
     override fun onUpdateClicked() {
-        val travelUpdateLauncher = (activity as MainActivity).travelUpdateLauncher
+        val memoryUpdateLauncher = (activity as MainActivity).travelUpdateLauncher
         TravelUpdateActivity.startWithResultLauncher(
-            travelId,
+            memoryId,
             requireActivity(),
-            travelUpdateLauncher,
+            memoryUpdateLauncher,
         )
     }
 
@@ -74,27 +74,27 @@ class TravelFragment :
     }
 
     override fun onVisitClicked(visitId: Long) {
-        viewModel.travel.value?.let {
+        viewModel.memory.value?.let {
             val bundle =
                 bundleOf(
                     VISIT_ID_KEY to visitId,
-                    TRAVEL_ID_KEY to travelId,
-                    TRAVEL_TITLE_KEY to it.title,
+                    MEMORY_ID_KEY to memoryId,
+                    MEMORY_TITLE_KEY to it.title,
                 )
             findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
         }
     }
 
     override fun onConfirmClicked() {
-        viewModel.deleteTravel(travelId)
+        viewModel.deleteMemory(memoryId)
     }
 
     override fun onVisitCreationClicked() {
-        if (viewModel.isTraveling()) {
-            viewModel.travel.value?.let {
+        if (viewModel.isInPeriod()) {
+            viewModel.memory.value?.let {
                 val visitCreationLauncher = (activity as MainActivity).visitCreationLauncher
                 VisitCreationActivity.startWithResultLauncher(
-                    travelId,
+                    memoryId,
                     it.title,
                     requireContext(),
                     visitCreationLauncher,
@@ -119,9 +119,9 @@ class TravelFragment :
     }
 
     private fun observeTravel() {
-        viewModel.travel.observe(viewLifecycleOwner) { travel ->
-            matesAdapter.updateMates(travel.mates)
-            visitsAdapter.updateVisits(travel.visits)
+        viewModel.memory.observe(viewLifecycleOwner) { memory ->
+            matesAdapter.updateMates(memory.mates)
+            visitsAdapter.updateVisits(memory.visits)
         }
     }
 
@@ -152,7 +152,7 @@ class TravelFragment :
     }
 
     companion object {
-        const val TRAVEL_ID_KEY = "travelId"
-        const val TRAVEL_TITLE_KEY = "travelTitle"
+        const val MEMORY_ID_KEY = "memoryId"
+        const val MEMORY_TITLE_KEY = "memoryTitle"
     }
 }
