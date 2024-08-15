@@ -15,7 +15,7 @@ data class MemoryUiModel(
     val visits: List<MemoryVisitUiModel>,
 )
 
-val dummyTravel: MemoryUiModel =
+val dummyMemory: MemoryUiModel =
     MemoryUiModel(
         id = 1L,
         title = "제주도 여행",
