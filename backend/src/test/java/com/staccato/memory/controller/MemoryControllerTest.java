@@ -34,13 +34,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.memory.MemoryFixture;
+import com.staccato.fixture.memory.MemoryRequestFixture;
+import com.staccato.fixture.memory.MemoryResponsesFixture;
 import com.staccato.member.domain.Member;
-import com.staccato.memory.domain.Memory;
 import com.staccato.memory.service.MemoryService;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
-import com.staccato.memory.service.dto.response.MemoryResponse;
 import com.staccato.memory.service.dto.response.MemoryResponses;
 
 @WebMvcTest(MemoryController.class)
@@ -134,7 +135,7 @@ class MemoryControllerTest {
     void readAllMemory() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        MemoryResponses memoryResponses = new MemoryResponses(List.of(new MemoryResponse(createMemory())));
+        MemoryResponses memoryResponses = MemoryResponsesFixture.create(MemoryFixture.create());
         when(memoryService.readAllMemories(any(Member.class), any())).thenReturn(memoryResponses);
 
         // when & then
@@ -165,7 +166,7 @@ class MemoryControllerTest {
         // given
         long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(createMemory(), List.of());
+        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(MemoryFixture.create(), List.of());
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
 
         // when & then
@@ -173,16 +174,6 @@ class MemoryControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(memoryDetailResponse)));
-    }
-
-    private Memory createMemory() {
-        return Memory.builder()
-                .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
-                .title("2024 여름 휴가")
-                .description("친구들과 함께한 여름 휴가 추억")
-                .startAt(LocalDate.of(2024, 7, 1))
-                .endAt(LocalDate.of(2024, 7, 10))
-                .build();
     }
 
     @DisplayName("적합한 경로변수와 데이터를 통해 순간 기록 수정에 성공한다.")
@@ -236,7 +227,7 @@ class MemoryControllerTest {
         long memoryId = 0L;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "추억 식별자는 양수로 이루어져야 합니다.");
-        MemoryRequest memoryRequest = new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
+        MemoryRequest memoryRequest = MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
 
         // when & then
         mockMvc.perform(multipart("/memories/{memoryId}", memoryId)

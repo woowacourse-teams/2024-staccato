@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
@@ -28,9 +30,9 @@ class MemoryMemberRepositoryTest {
     @Test
     void findAllByMemberIdAndMemoryStartAtYear() {
         // given
-        Member member = memberRepository.save(Member.builder().nickname("staccato").build());
-        Memory memory = memoryRepository.save(createMemory(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Memory memory2 = memoryRepository.save(createMemory(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)));
+        Member member = memberRepository.save(MemberFixture.create());
+        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Memory memory2 = memoryRepository.save(MemoryFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)));
         memoryMemberRepository.save(new MemoryMember(member, memory));
         memoryMemberRepository.save(new MemoryMember(member, memory2));
 
@@ -39,13 +41,5 @@ class MemoryMemberRepositoryTest {
 
         // then
         assertThat(result).hasSize(1);
-    }
-
-    private static Memory createMemory(LocalDate startAt, LocalDate endAt) {
-        return Memory.builder()
-                .title("추억")
-                .startAt(startAt)
-                .endAt(endAt)
-                .build();
     }
 }
