@@ -134,7 +134,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     }
 
     private fun setupBottomSheetNavigation() {
-        binding.btnMainTravelCreation.setOnClickListener {
+        binding.btnMainMemoryCreation.setOnClickListener {
             MemoryCreationActivity.startWithResultLauncher(
                 this,
                 memoryCreationLauncher,
