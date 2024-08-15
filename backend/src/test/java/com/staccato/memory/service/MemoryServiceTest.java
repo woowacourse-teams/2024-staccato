@@ -279,7 +279,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> memoryService.deleteMemory(memoryIdResponse.memoryId(), member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("해당 추억에 순간 기록이 남아있어 삭제할 수 없습니다.");
+                .hasMessage("해당 추억 상세에 순간 기록이 남아있어 삭제할 수 없습니다.");
     }
 
     private Member saveMember() {
