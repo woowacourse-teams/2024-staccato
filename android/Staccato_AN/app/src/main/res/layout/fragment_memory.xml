@@ -13,7 +13,7 @@
             type="com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModel" />
 
         <variable
-            name="travelHandler"
+            name="memoryHandler"
             type="com.woowacourse.staccato.presentation.memory.MemoryHandler" />
 
         <variable
@@ -30,7 +30,7 @@
         tools:context=".presentation.memory.MemoryFragment">
 
         <include
-            android:id="@+id/include_travel_toolbar"
+            android:id="@+id/include_memory_toolbar"
             layout="@layout/toolbar_detail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,14 +38,14 @@
             bind:toolbarHandler="@{toolbarHandler}" />
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/sv_travel"
+            android:id="@+id/sv_memory"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/include_travel_toolbar">
+            app:layout_constraintTop_toBottomOf="@id/include_memory_toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -162,7 +162,7 @@
                     android:id="@+id/tv_memory_add_visits"
                     style="@style/ToolbarMenuStyle"
                     android:layout_marginEnd="20dp"
-                    android:onClick="@{()->travelHandler.onVisitCreationClicked()}"
+                    android:onClick="@{() -> memoryHandler.onVisitCreationClicked()}"
                     android:text="@string/visit_add"
                     android:textColor="@color/gray5"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -190,14 +190,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:paddingVertical="60dp"
                     android:text="@string/memory_visit_empty"
                     android:textAppearance="@style/Typography.Body2"
+                    android:visibility="@{viewModel.memory.visits.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:paddingVertical="60dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_visits"
-                    android:visibility="@{viewModel.memory.visits.empty ? View.VISIBLE : View.GONE}"
                     tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -51,7 +51,7 @@ class MemoryFragment :
         initToolbar()
         initMatesAdapter()
         initVisitsAdapter()
-        observeTravel()
+        observeMemory()
         observeIsDeleteSuccess()
         showErrorToast()
         viewModel.loadMemory(memoryId)
@@ -109,16 +109,16 @@ class MemoryFragment :
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.toolbarHandler = this
-        binding.travelHandler = this
+        binding.memoryHandler = this
     }
 
     private fun initToolbar() {
-        binding.includeTravelToolbar.toolbarDetail.setNavigationOnClickListener {
+        binding.includeMemoryToolbar.toolbarDetail.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }
 
-    private fun observeTravel() {
+    private fun observeMemory() {
         viewModel.memory.observe(viewLifecycleOwner) { memory ->
             matesAdapter.updateMates(memory.mates)
             visitsAdapter.updateVisits(memory.visits)
