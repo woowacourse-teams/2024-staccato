@@ -19,10 +19,10 @@
     <string name="all_required_mark">*</string>
 
     // fragment_timeline
-    <string name="timeline_my_timeline">나의 여행 타임라인 ✈️</string>
+    <string name="timeline_my_timeline">나의 추억 타임라인 ✈️</string>
     <string name="timeline_year">%s년</string>
     <string name="timeline_title">✈️ 추억을 떠올려보세요 ✈️</string>
-    <string name="timeline_empty">여행을 아직 기록하지 않으셨군요!\n여행을 생성해보세요.</string>
+    <string name="timeline_empty">아직 추억을 기록하지 않으셨군요!\n추억을 생성해보세요.</string>
 
     // fragment_memory
     <string name="memory_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
@@ -55,9 +55,9 @@
     <string name="visit_creation_address">주소</string>
     <string name="visit_creation_visited_at">방문 날짜</string>
     <string name="visit_creation_visited_at_hint">방문 날짜를 선택해주세요</string>
-    <string name="visit_creation_travel_selection">여행 선택</string>
-    <string name="visit_creation_travel_selection_hint">여행을 선택해주세요</string>
-    <string name="visit_creation_travel_unselected_travel">여행에 해당하는 방문 날짜가 없습니다.\n여행을 먼저 선택해주세요!</string>
+    <string name="visit_creation_memory_selection">추억 선택</string>
+    <string name="visit_creation_memory_selection_hint">추억을 선택해주세요</string>
+    <string name="visit_creation_unselected_memory">추억에 해당하는 방문 날짜가 없습니다.\n추억을 먼저 선택해주세요!</string>
     <string name="visit_creation_posting">방문 기록을 생성하는 중이예요.. ✈️</string>
     <string name="visit_update_posting">방문 기록을 수정하는 중이예요.. 🧳️</string>
 
@@ -72,15 +72,15 @@
     <string name="snack_bar_require_photo_album_permission">사진 및 동영상 액세스 권한을 허용해주세요.</string>
     <string name="snack_bar_move_to_setting">설정으로 이동하기</string>
 
-    // fragment_travel_selection
-    <string name="travel_selection_period">%s.%s.%s - %s.%s.%s</string>
+    // fragment_memory_selection
+    <string name="memory_selection_period">%s.%s.%s - %s.%s.%s</string>
 
     // fragment_visited_date_selection
     <string name="visited_date_selection_day">Day %d</string>
 
     // dialog_delete_impossibility
-    <string name="travel_delete_title">여행 상세를 삭제할 수 없어요.</string>
-    <string name="travel_delete_description">아직 방문 기록이 남아있어요!</string>
+    <string name="memory_delete_title">추억 상세를 삭제할 수 없어요.</string>
+    <string name="memory_delete_description">아직 방문 기록이 남아있어요!</string>
 
     // dialog_delete
     <string name="delete_title">삭제하시겠습니까?</string>

@@ -192,7 +192,7 @@ fun Button.setMemorySaveButtonActive(
 @BindingAdapter("selectedMemory")
 fun TextView.setSelectedMemory(selectedMemory: VisitMemoryUiModel?) {
     if (selectedMemory == null) {
-        text = resources.getString(R.string.visit_creation_travel_selection_hint)
+        text = resources.getString(R.string.visit_creation_memory_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
     } else {
         text = selectedMemory.title
