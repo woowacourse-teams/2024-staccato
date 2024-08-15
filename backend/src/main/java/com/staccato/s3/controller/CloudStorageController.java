@@ -17,12 +17,12 @@ import com.staccato.s3.service.CloudStorageService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/storage")
+@RequestMapping("/captures")
 @RequiredArgsConstructor
 public class CloudStorageController {
     private final CloudStorageService cloudStorageService;
 
-    @PostMapping("/upload")
+    @PostMapping
     public ResponseEntity<List<String>> uploadFiles(@RequestParam("file") List<MultipartFile> images) {
         List<String> fileUrl = cloudStorageService.uploadFiles(images);
         return ResponseEntity.status(HttpStatus.CREATED).body(fileUrl);
