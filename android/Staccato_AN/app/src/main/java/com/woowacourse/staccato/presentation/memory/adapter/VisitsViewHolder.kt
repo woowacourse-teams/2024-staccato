@@ -9,8 +9,8 @@ class VisitsViewHolder(
     private val binding: ItemVisitsBinding,
     private val handler: MemoryHandler,
 ) : ViewHolder(binding.root) {
-    fun bind(travelVisit: MemoryVisitUiModel) {
-        binding.visit = travelVisit
+    fun bind(memoryVisit: MemoryVisitUiModel) {
+        binding.visit = memoryVisit
         binding.handler = handler
     }
 }
