@@ -50,13 +50,13 @@
             android:name=".presentation.visitupdate.VisitUpdateActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.travelupdate.TravelUpdateActivity"
+            android:name=".presentation.memoryupdate.MemoryUpdateActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.visitcreation.VisitCreationActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.travelcreation.TravelCreationActivity"
+            android:name=".presentation.memorycreation.MemoryCreationActivity"
             android:exported="false" />
     </application>
 

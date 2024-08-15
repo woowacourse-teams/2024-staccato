@@ -9,8 +9,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="travel"
-            type="com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel" />
+            name="memory"
+            type="com.woowacourse.staccato.presentation.timeline.model.TimelineUiModel" />
 
         <variable
             name="eventHandler"
@@ -21,49 +21,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_all_gray1_4dp"
-        android:onClickListener="@{() -> eventHandler.onTravelClicked(travel.travelId)}"
+        android:onClickListener="@{() -> eventHandler.onMemoryClicked(memory.memoryId)}"
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/tv_travel_period"
+            android:id="@+id/tv_memory_period"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Typography.Body4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:endAt="@{travel.endAt}"
-            bind:startAt="@{travel.startAt}"
+            bind:endAt="@{memory.endAt}"
+            bind:startAt="@{memory.startAt}"
             tools:text="2024.07.23" />
 
         <TextView
-            android:id="@+id/tv_travel_title"
+            android:id="@+id/tv_memory_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{travel.travelTitle}"
+            android:text="@{memory.memoryTitle}"
             android:textAppearance="@style/Typography.Title3"
-            app:layout_constraintEnd_toStartOf="@id/iv_travel_thumbnail"
+            app:layout_constraintEnd_toStartOf="@id/iv_memory_thumbnail"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_travel_period"
+            app:layout_constraintTop_toBottomOf="@id/tv_memory_period"
             tools:text="제주도 가족 여행" />
 
         <ImageView
-            android:id="@+id/iv_travel_thumbnail"
+            android:id="@+id/iv_memory_thumbnail"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/all_image_content_description"
             android:scaleType="centerCrop"
-            android:visibility="@{travel.travelThumbnailUrl == null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{memory.memoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="8:5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.527"
             bind:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            bind:coilRoundedCornerImageUrl="@{travel.travelThumbnailUrl}"
+            bind:coilRoundedCornerImageUrl="@{memory.memoryThumbnailUrl}"
             bind:coilRoundingRadius="@{12f}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
