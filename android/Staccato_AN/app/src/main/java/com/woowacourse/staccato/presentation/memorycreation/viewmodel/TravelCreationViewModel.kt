@@ -73,7 +73,7 @@ class TravelCreationViewModel(
     }
 
     private fun setCreatedTravelId(memoryCreationResponse: MemoryCreationResponse) {
-        _createdTravelId.value = memoryCreationResponse.travelId
+        _createdTravelId.value = memoryCreationResponse.memoryId
     }
 
     private fun makeNewTravel(): NewMemory =

@@ -11,9 +11,9 @@ import java.time.LocalDate
 
 fun MemoryResponse.toDomain() =
     Memory(
-        travelId = travelId,
-        travelThumbnailUrl = travelThumbnailUrl,
-        travelTitle = travelTitle,
+        travelId = memoryId,
+        travelThumbnailUrl = memoryThumbnailUrl,
+        travelTitle = memoryTitle,
         startAt = LocalDate.parse(startAt),
         endAt = LocalDate.parse(endAt),
         description = description,
@@ -31,7 +31,7 @@ fun MemoryVisitDto.toDomain() =
 
 fun NewMemory.toDto() =
     MemoryRequest(
-        travelTitle = travelTitle,
+        memoryTitle = travelTitle,
         description = description,
         startAt = startAt.toString(),
         endAt = endAt.toString(),
@@ -39,8 +39,8 @@ fun NewMemory.toDto() =
 
 fun NewMemory.toTravelUpdateRequest() =
     MemoryUpdateRequest(
-        travelThumbnailUrl = travelThumbnail,
-        travelTitle = travelTitle,
+        memoryThumbnailUrl = travelThumbnail,
+        memoryTitle = travelTitle,
         description = description,
         startAt = startAt.toString(),
         endAt = endAt.toString(),
