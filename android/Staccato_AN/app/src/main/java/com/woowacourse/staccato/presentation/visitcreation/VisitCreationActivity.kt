@@ -29,19 +29,19 @@ class VisitCreationActivity :
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
     private lateinit var adapter: PhotoAttachAdapter
-    private val travelId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
-    private val travelTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
+    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
+    private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        initTravelInfo()
+        initMemoryInfo()
         initBinding()
         initAdapter()
         initToolbar()
         observeViewModelData()
     }
 
-    private fun initTravelInfo() {
-        viewModel.initTravelInfo(travelId, travelTitle)
+    private fun initMemoryInfo() {
+        viewModel.initTravelInfo(memoryId, memoryTitle)
     }
 
     private fun initBinding() {
@@ -72,8 +72,8 @@ class VisitCreationActivity :
             val resultIntent =
                 Intent()
                     .putExtra(VISIT_ID_KEY, createdVisitId)
-                    .putExtra(MEMORY_ID_KEY, travelId)
-                    .putExtra(MEMORY_TITLE_KEY, travelTitle)
+                    .putExtra(MEMORY_ID_KEY, memoryId)
+                    .putExtra(MEMORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -91,21 +91,21 @@ class VisitCreationActivity :
     override fun onCreateDoneClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.visit_creation_posting))
-        viewModel.createVisit(travelId, this)
+        viewModel.createVisit(memoryId, this)
     }
 
     companion object {
         const val MEMORY_TITLE_KEY = "memoryTitle"
 
         fun startWithResultLauncher(
-            travelId: Long,
-            travelTitle: String,
+            memoryId: Long,
+            memoryTitle: String,
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, VisitCreationActivity::class.java).apply {
-                putExtra(MEMORY_ID_KEY, travelId)
-                putExtra(MEMORY_TITLE_KEY, travelTitle)
+                putExtra(MEMORY_ID_KEY, memoryId)
+                putExtra(MEMORY_TITLE_KEY, memoryTitle)
                 activityLauncher.launch(this)
             }
         }
