@@ -11,7 +11,7 @@ class VisitUpdateViewModelFactory : ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(VisitUpdateViewModel::class.java)) {
             return VisitUpdateViewModel(
                 VisitDefaultRepository(
-                    remoteDataSource = VisitRemoteDataSource(StaccatoClient.visitApiService),
+                    remoteDataSource = VisitRemoteDataSource(StaccatoClient.momentApiService),
                 ),
             ) as T
         }

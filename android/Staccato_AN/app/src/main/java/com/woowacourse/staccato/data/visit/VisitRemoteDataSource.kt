@@ -7,19 +7,19 @@ import com.woowacourse.staccato.data.dto.visit.VisitUpdateRequest
 import okhttp3.MultipartBody
 
 class VisitRemoteDataSource(
-    private val visitApiService: VisitApiService,
+    private val momentApiService: MomentApiService,
 ) {
     suspend fun fetchVisit(visitId: Long): VisitResponse {
-        return visitApiService.getVisit(visitId = visitId)
+        return momentApiService.getMoment(momentId = visitId)
     }
 
     suspend fun createVisit(
         visitCreationRequest: VisitCreationRequest,
         visitImageFiles: List<MultipartBody.Part>,
     ): VisitCreationResponse {
-        return visitApiService.postVisit(
+        return momentApiService.postMoment(
             data = visitCreationRequest,
-            visitImageFiles = visitImageFiles,
+            momentImageFiles = visitImageFiles,
         )
     }
 
@@ -28,17 +28,17 @@ class VisitRemoteDataSource(
         placeName: String,
         visitImageUrls: List<String>,
         visitImageFiles: List<MultipartBody.Part>,
-    ) = visitApiService.putVisit(
-        visitId = visitId,
+    ) = momentApiService.putMoment(
+        momentId = visitId,
         data =
             VisitUpdateRequest(
                 placeName = placeName,
                 visitImageUrls = visitImageUrls,
             ),
-        visitImageFiles = visitImageFiles,
+        momentImageFiles = visitImageFiles,
     )
 
     suspend fun deleteVisit(visitId: Long) {
-        visitApiService.deleteVisit(visitId)
+        momentApiService.deleteMoment(visitId)
     }
 }

@@ -6,7 +6,7 @@ import com.woowacourse.staccato.data.dto.ErrorResponse
 import com.woowacourse.staccato.data.login.LoginApiService
 import com.woowacourse.staccato.data.memory.MemoryApiService
 import com.woowacourse.staccato.data.timeline.TimeLineApiService
-import com.woowacourse.staccato.data.visit.VisitApiService
+import com.woowacourse.staccato.data.visit.MomentApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -30,8 +30,8 @@ object StaccatoClient {
         create(TimeLineApiService::class.java)
     }
 
-    val visitApiService: VisitApiService by lazy {
-        create(VisitApiService::class.java)
+    val momentApiService: MomentApiService by lazy {
+        create(MomentApiService::class.java)
     }
 
     private val provideLoggingInterceptor =
