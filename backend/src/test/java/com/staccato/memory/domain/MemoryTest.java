@@ -29,7 +29,7 @@ class MemoryTest {
                 .hasMessage("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
     }
 
-    @DisplayName("특정 날짜가 추억 상세 날짜에 속하는지 알 수 있다.")
+    @DisplayName("특정 날짜가 추억 날짜에 속하는지 알 수 있다.")
     @Test
     void withoutDuration() {
         // given
@@ -43,7 +43,7 @@ class MemoryTest {
         assertThat(memory.isWithoutDuration(LocalDateTime.of(2023, 7, 11, 10, 0))).isTrue();
     }
 
-    @DisplayName("추억 상세를 수정 시 기존 순간 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
+    @DisplayName("추억을 수정 시 기존 순간 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
     @Test
     void validateDuration() {
         // given

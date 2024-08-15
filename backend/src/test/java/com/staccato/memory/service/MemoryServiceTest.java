@@ -66,7 +66,7 @@ class MemoryServiceTest extends ServiceSliceTest {
                         null, "imageUrl"));
     }
 
-    @DisplayName("추억 상세 정보를 기반으로, 추억 상세를 생성하고 작성자를 저장한다.")
+    @DisplayName("추억 정보를 기반으로, 추억을 생성하고 작성자를 저장한다.")
     @Test
     void createMemory() {
         // given
@@ -84,7 +84,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("조건에 따라 추억 상세 목록을 조회한다.")
+    @DisplayName("조건에 따라 추억 목록을 조회한다.")
     @MethodSource("yearProvider")
     @ParameterizedTest
     void readAllMemories(Integer year, int expectedSize) {
@@ -100,7 +100,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         assertThat(memoryResponses.memories()).hasSize(expectedSize);
     }
 
-    @DisplayName("특정 추억 상세를 조회한다.")
+    @DisplayName("특정 추억을 조회한다.")
     @Test
     void readMemoryById() {
         // given
@@ -118,7 +118,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 추억 상세를 조회하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 추억을 조회하려고 하면 예외가 발생한다.")
     @Test
     void cannotReadMemoryByIdIfNotOwner() {
         // given
@@ -133,7 +133,7 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("특정 추억 상세를 조회하면 순간 기록은 오래된 순으로 반환한다.")
+    @DisplayName("특정 추억을 조회하면 순간 기록은 오래된 순으로 반환한다.")
     @Test
     void readMemoryByIdOrderByVisitedAt() {
         // given
@@ -160,7 +160,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         return momentRepository.save(MomentFixture.create(memoryRepository.findById(memoryId).get(), visitedAt));
     }
 
-    @DisplayName("존재하지 않는 추억 상세를 조회하려고 할 경우 예외가 발생한다.")
+    @DisplayName("존재하지 않는 추억을 조회하려고 할 경우 예외가 발생한다.")
     @Test
     void failReadMemory() {
         // given
@@ -173,7 +173,7 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 추억을 찾을 수 없어요.");
     }
 
-    @DisplayName("추억 상세 정보를 기반으로, 추억 상세를 수정한다.")
+    @DisplayName("추억 정보를 기반으로, 추억을 수정한다.")
     @MethodSource("updateMemoryProvider")
     @ParameterizedTest
     void updateMemory(MemoryRequest updatedMemory, MockMultipartFile updatedFile, String expected) {
@@ -197,7 +197,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("존재하지 않는 추억 상세를 수정하려 할 경우 예외가 발생한다.")
+    @DisplayName("존재하지 않는 추억을 수정하려 할 경우 예외가 발생한다.")
     @Test
     void failUpdateMemory() {
         // given
@@ -221,7 +221,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 추억 상세를 수정하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 추억을 수정하려고 하면 예외가 발생한다.")
     @Test
     void cannotUpdateMemoryIfNotOwner() {
         // given
@@ -237,7 +237,7 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("추억 식별값을 통해 추억 상세를 삭제한다.")
+    @DisplayName("추억 식별값을 통해 추억을 삭제한다.")
     @Test
     void deleteMemory() {
         // given
@@ -254,7 +254,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 추억 상세를 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 추억을 삭제하려고 하면 예외가 발생한다.")
     @Test
     void cannotDeleteMemoryIfNotOwner() {
         // given
@@ -268,7 +268,7 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("순간기록이 존재하는 추억 상세에 삭제를 시도할 경우 예외가 발생한다.")
+    @DisplayName("순간기록이 존재하는 추억에 삭제를 시도할 경우 예외가 발생한다.")
     @Test
     void failDeleteMemoryByExistingMoments() {
         // given
@@ -279,7 +279,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> memoryService.deleteMemory(memoryIdResponse.memoryId(), member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("해당 추억 상세에 순간 기록이 남아있어 삭제할 수 없습니다.");
+                .hasMessage("해당 추억에 순간 기록이 남아있어 삭제할 수 없습니다.");
     }
 
     private Member saveMember() {

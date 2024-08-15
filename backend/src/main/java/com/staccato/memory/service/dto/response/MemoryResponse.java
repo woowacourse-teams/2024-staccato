@@ -7,7 +7,7 @@ import com.staccato.memory.domain.Memory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "추억 상세 목록 조회 시 각각의 추억 상세에 대한 응답 형식입니다.")
+@Schema(description = "추억 목록 조회 시 각각의 추억에 대한 응답 형식입니다.")
 public record MemoryResponse(
         @Schema(example = "1")
         Long memoryId,

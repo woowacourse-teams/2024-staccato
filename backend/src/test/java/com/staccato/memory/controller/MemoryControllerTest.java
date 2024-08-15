@@ -91,7 +91,7 @@ class MemoryControllerTest {
         );
     }
 
-    @DisplayName("사용자가 추억 상세 정보를 입력하면, 새로운 추억 상세를 생성한다.")
+    @DisplayName("사용자가 추억 정보를 입력하면, 새로운 추억을 생성한다.")
     @ParameterizedTest
     @MethodSource("memoryRequestProvider")
     void createMemory(MemoryRequest memoryRequest) throws Exception {
@@ -111,7 +111,7 @@ class MemoryControllerTest {
                 .andExpect(jsonPath("$.memoryId").value(1));
     }
 
-    @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 추억 상세를 생성할 수 없다.")
+    @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 추억을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidMemoryRequestProvider")
     void failCreateMemory(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
@@ -129,7 +129,7 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("사용자가 모든 추억 상세 목록을 조회한다.")
+    @DisplayName("사용자가 모든 추억 목록을 조회한다.")
     @Test
     void readAllMemory() throws Exception {
         // given
@@ -159,7 +159,7 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("사용자가 특정 추억 상세를 조회한다.")
+    @DisplayName("사용자가 특정 추억을 조회한다.")
     @Test
     void readMemory() throws Exception {
         // given
@@ -207,7 +207,7 @@ class MemoryControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 추억 상세를 수정할 수 없다.")
+    @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 추억을 수정할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidMemoryRequestProvider")
     void failUpdateMemory(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
@@ -229,7 +229,7 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("적합하지 않은 경로변수의 경우 추억 상세 수정에 실패한다.")
+    @DisplayName("적합하지 않은 경로변수의 경우 추억 수정에 실패한다.")
     @Test
     void failUpdateMemoryByInvalidPath() throws Exception {
         // given

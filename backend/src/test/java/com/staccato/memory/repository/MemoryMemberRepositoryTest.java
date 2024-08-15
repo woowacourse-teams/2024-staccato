@@ -25,7 +25,7 @@ class MemoryMemberRepositoryTest {
     @Autowired
     private MemoryRepository memoryRepository;
 
-    @DisplayName("사용자 식별자와 년도로 추억 상세 목록을 조회한다.")
+    @DisplayName("사용자 식별자와 년도로 추억 목록을 조회한다.")
     @Test
     void findAllByMemberIdAndMemoryStartAtYear() {
         // given
@@ -42,7 +42,7 @@ class MemoryMemberRepositoryTest {
         assertThat(result).hasSize(1);
     }
 
-    @DisplayName("사용자 식별자로 해당하는 추억 상세 목록만 최근 생성된 순서대로 조회한다.")
+    @DisplayName("사용자 식별자로 해당하는 추억 목록만 최근 생성된 순서대로 조회한다.")
     @Test
     void findAllByMemberIdAndMemoryStartAtYearWithoutDeleted() {
         // given
