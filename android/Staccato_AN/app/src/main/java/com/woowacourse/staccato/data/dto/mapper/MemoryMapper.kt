@@ -3,7 +3,7 @@ package com.woowacourse.staccato.data.dto.mapper
 import com.woowacourse.staccato.data.dto.memory.MemoryRequest
 import com.woowacourse.staccato.data.dto.memory.MemoryResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryUpdateRequest
-import com.woowacourse.staccato.data.dto.memory.TravelVisitDto
+import com.woowacourse.staccato.data.dto.memory.MemoryVisitDto
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.model.TravelVisit
@@ -21,7 +21,7 @@ fun MemoryResponse.toDomain() =
         visits = visits.map { it.toDomain() },
     )
 
-fun TravelVisitDto.toDomain() =
+fun MemoryVisitDto.toDomain() =
     TravelVisit(
         visitId = visitId,
         placeName = placeName,
