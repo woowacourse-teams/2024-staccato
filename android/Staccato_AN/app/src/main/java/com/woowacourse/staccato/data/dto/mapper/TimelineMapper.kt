@@ -1,24 +1,24 @@
 package com.woowacourse.staccato.data.dto.mapper
 
+import com.woowacourse.staccato.data.dto.timeline.TimelineMemoryDto
 import com.woowacourse.staccato.data.dto.timeline.TimelineResponse
-import com.woowacourse.staccato.data.dto.timeline.TimelineTravelDto
+import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.model.Timeline
-import com.woowacourse.staccato.domain.model.Travel
 import java.time.LocalDate
 
 fun TimelineResponse.toDomain(): Timeline {
-    val travels =
-        travels.map { timelineTravelDto ->
-            timelineTravelDto.toDomain()
+    val memories =
+        memories.map { timelineMemoryDto ->
+            timelineMemoryDto.toDomain()
         }
-    return Timeline(travels)
+    return Timeline(memories)
 }
 
-fun TimelineTravelDto.toDomain(): Travel {
-    return Travel(
-        travelId = travelId,
-        travelThumbnailUrl = travelThumbnailUrl,
-        travelTitle = travelTitle,
+fun TimelineMemoryDto.toDomain(): Memory {
+    return Memory(
+        memoryId = memoryId,
+        memoryThumbnailUrl = memoryThumbnailUrl,
+        memoryTitle = memoryTitle,
         startAt = LocalDate.parse(startAt),
         endAt = LocalDate.parse(endAt),
         description = description,

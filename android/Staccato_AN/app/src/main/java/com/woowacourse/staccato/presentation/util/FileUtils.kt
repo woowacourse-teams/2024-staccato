@@ -9,7 +9,9 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-fun convertTravelUriToFile(
+private const val MEMORY_FILE_CHILD_NAME = "memory"
+
+fun convertMemoryUriToFile(
     context: Context,
     uri: Uri?,
     name: String,
@@ -22,7 +24,7 @@ fun convertTravelUriToFile(
     // Uri로부터 InputStream을 얻고, 임시 파일로 복사
     val inputStream = contextResolver.openInputStream(uri)
 
-    val file = File(context.cacheDir, "travel")
+    val file = File(context.cacheDir, MEMORY_FILE_CHILD_NAME)
     inputStream.use { input ->
         file.outputStream().use { output ->
             input?.copyTo(output)
