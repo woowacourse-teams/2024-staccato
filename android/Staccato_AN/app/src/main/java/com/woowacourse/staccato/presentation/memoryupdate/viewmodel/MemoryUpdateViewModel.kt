@@ -17,7 +17,7 @@ import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
-import com.woowacourse.staccato.presentation.util.convertTravelUriToFile
+import com.woowacourse.staccato.presentation.util.convertMemoryUriToFile
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import java.time.LocalDate
@@ -72,7 +72,7 @@ class MemoryUpdateViewModel(
         _isPosting.value = true
         viewModelScope.launch {
             val newMemory: NewMemory = makeNewMemory()
-            val thumbnailFile: MultipartBody.Part? = convertTravelUriToFile(context, _imageUri.value, MEMORY_FILE_NAME)
+            val thumbnailFile: MultipartBody.Part? = convertMemoryUriToFile(context, _imageUri.value, MEMORY_FILE_NAME)
             val result = memoryRepository.updateMemory(memoryId, newMemory, thumbnailFile)
             result
                 .onSuccess { updateSuccessStatus() }
