@@ -1,7 +1,7 @@
 package com.woowacourse.staccato.data.dto.mapper
 
-import com.woowacourse.staccato.data.dto.timeline.TimelineResponse
 import com.woowacourse.staccato.data.dto.timeline.TimelineMemoryDto
+import com.woowacourse.staccato.data.dto.timeline.TimelineResponse
 import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.domain.model.Travel
 import java.time.LocalDate
