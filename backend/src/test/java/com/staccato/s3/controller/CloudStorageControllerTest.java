@@ -89,4 +89,21 @@ public class CloudStorageControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
+
+    @DisplayName("비어 있는 멀티파일 리스트가 들어오면, 비어 있는 url 리스트가 들어온다.")
+    @Test
+    void uploadNoFilesTest() throws Exception {
+        // given
+        List<String> fileUrls = List.of();
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(cloudStorageService.uploadFiles(anyList())).thenReturn(fileUrls);
+
+        // when & then
+        mockMvc.perform(multipart("/captures")
+                        .file("imageFiles", new byte[0])
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(objectMapper.writeValueAsString(fileUrls)));
+    }
 }
