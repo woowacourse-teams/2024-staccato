@@ -31,8 +31,8 @@ class VisitUpdateViewModel(
     private val _visitUpdateDefault = MutableLiveData<VisitUpdateDefaultUiModel>()
     val visitUpdateDefault: LiveData<VisitUpdateDefaultUiModel> get() = _visitUpdateDefault
 
-    private val _travel = MutableLiveData<VisitTravelUiModel>()
-    val travel: LiveData<VisitTravelUiModel> get() = _travel
+    private val _memory = MutableLiveData<VisitTravelUiModel>()
+    val memory: LiveData<VisitTravelUiModel> get() = _memory
 
     private val _isError = MutableSingleLiveData<Boolean>()
     val isError: SingleLiveData<Boolean> get() = _isError
@@ -45,11 +45,11 @@ class VisitUpdateViewModel(
 
     fun initViewModelData(
         visitId: Long,
-        travelId: Long,
-        travelTitle: String,
+        memoryId: Long,
+        memoryTitle: String,
     ) {
         fetchVisitData(visitId)
-        initTravelData(travelId, travelTitle)
+        initMemoryData(memoryId, memoryTitle)
     }
 
     private fun fetchVisitData(visitId: Long) {
@@ -65,14 +65,14 @@ class VisitUpdateViewModel(
         }
     }
 
-    private fun initTravelData(
-        travelId: Long,
-        travelTitle: String,
+    private fun initMemoryData(
+        memoryId: Long,
+        memoryTitle: String,
     ) {
-        _travel.value =
+        _memory.value =
             VisitTravelUiModel(
-                id = travelId,
-                title = travelTitle,
+                id = memoryId,
+                title = memoryTitle,
             )
     }
 
