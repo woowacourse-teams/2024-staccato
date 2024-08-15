@@ -96,7 +96,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     @ApiResponse(responseCode = "500")
     public ResponseEntity<ExceptionResponse> handleInternalServerErrorException(RuntimeException e) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "예기치 못한 서버 오류입니다. 다시 시도해주세요.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage());
         log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage());
         return ResponseEntity.internalServerError().body(exceptionResponse);
     }
