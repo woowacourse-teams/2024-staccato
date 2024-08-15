@@ -16,9 +16,9 @@ fun TimelineResponse.toDomain(): Timeline {
 
 fun TimelineMemoryDto.toDomain(): Memory {
     return Memory(
-        travelId = memoryId,
-        travelThumbnailUrl = memoryThumbnailUrl,
-        travelTitle = memoryTitle,
+        memoryId = memoryId,
+        memoryThumbnailUrl = memoryThumbnailUrl,
+        memoryTitle = memoryTitle,
         startAt = LocalDate.parse(startAt),
         endAt = LocalDate.parse(endAt),
         description = description,

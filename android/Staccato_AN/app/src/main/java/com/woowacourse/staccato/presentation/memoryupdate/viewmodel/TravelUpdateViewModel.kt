@@ -90,8 +90,8 @@ class TravelUpdateViewModel(
     }
 
     private fun initializeTravel(memory: Memory) {
-        _imageUrl.value = memory.travelThumbnailUrl
-        title.set(memory.travelTitle)
+        _imageUrl.value = memory.memoryThumbnailUrl
+        title.set(memory.memoryTitle)
         description.set(memory.description)
         _startDate.value = memory.startAt
         _endDate.value = memory.endAt
@@ -99,8 +99,8 @@ class TravelUpdateViewModel(
 
     private fun makeNewTravel() =
         NewMemory(
-            travelThumbnail = imageUrl.value,
-            travelTitle = title.get() ?: throw IllegalArgumentException(),
+            memoryThumbnail = imageUrl.value,
+            memoryTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
             endAt = endDate.value ?: throw IllegalArgumentException(),
             description = description.get(),

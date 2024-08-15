@@ -78,7 +78,7 @@ class TravelCreationViewModel(
 
     private fun makeNewTravel(): NewMemory =
         NewMemory(
-            travelTitle = title.get() ?: throw IllegalArgumentException(),
+            memoryTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
             endAt = endDate.value ?: throw IllegalArgumentException(),
             description = description.get(),

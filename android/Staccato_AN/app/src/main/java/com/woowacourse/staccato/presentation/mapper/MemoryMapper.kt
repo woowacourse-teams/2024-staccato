@@ -9,9 +9,9 @@ import com.woowacourse.staccato.presentation.memory.model.MemoryVisitUiModel
 
 fun Memory.toUiModel() =
     MemoryUiModel(
-        id = travelId,
-        title = travelTitle,
-        travelThumbnailUrl = travelThumbnailUrl,
+        id = memoryId,
+        title = memoryTitle,
+        travelThumbnailUrl = memoryThumbnailUrl,
         startAt = startAt,
         endAt = endAt,
         description = description,
