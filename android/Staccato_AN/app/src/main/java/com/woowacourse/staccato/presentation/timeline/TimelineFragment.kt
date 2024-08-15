@@ -59,7 +59,7 @@ class TimelineFragment :
     }
 
     private fun navigateToMemory(bundle: Bundle) {
-        findNavController().navigate(R.id.action_timelineFragment_to_travelFragment, bundle)
+        findNavController().navigate(R.id.action_timelineFragment_to_memoryFragment, bundle)
     }
 
     override fun onMemoryClicked(memoryId: Long) {

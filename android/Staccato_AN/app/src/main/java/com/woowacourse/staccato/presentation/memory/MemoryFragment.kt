@@ -81,7 +81,7 @@ class MemoryFragment :
                     MEMORY_ID_KEY to memoryId,
                     MEMORY_TITLE_KEY to it.title,
                 )
-            findNavController().navigate(R.id.action_travelFragment_to_visitFragment, bundle)
+            findNavController().navigate(R.id.action_memoryFragment_to_visitFragment, bundle)
         }
     }
 

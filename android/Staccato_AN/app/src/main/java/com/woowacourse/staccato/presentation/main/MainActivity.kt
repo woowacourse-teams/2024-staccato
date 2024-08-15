@@ -40,7 +40,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     showToast("새로운 추억을 만들었어요!")
                     val createdMemoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
                     val bundle = bundleOf(MEMORY_ID_KEY to createdMemoryId)
-                    navigateTo(R.id.travelFragment, R.id.timelineFragment, bundle, false)
+                    navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
                 }
             }
         }
@@ -53,7 +53,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     showToast("추억을 수정했어요!")
                     val updatedMemoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
                     val bundle = bundleOf(MEMORY_ID_KEY to updatedMemoryId)
-                    navigateTo(R.id.travelFragment, R.id.timelineFragment, bundle, false)
+                    navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
                 }
             }
         }
