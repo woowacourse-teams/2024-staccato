@@ -6,6 +6,7 @@ import java.util.List;
 import jakarta.validation.constraints.Size;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class CloudStorageController {
     private final CloudStorageService cloudStorageService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<String>> uploadFiles(
             @Size(max = 5, message = "사진은 최대 다섯 장까지만 업로드할 수 있어요.") @RequestPart(value = "imageFiles") List<MultipartFile> files
     ) {
