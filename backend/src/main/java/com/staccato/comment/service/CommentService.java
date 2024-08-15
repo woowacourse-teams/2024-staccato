@@ -33,7 +33,7 @@ public class CommentService {
         return commentRepository.save(comment).getId();
     }
 
-    public CommentResponses readAllByMomentId(Member member, Long momentId) {
+    public CommentResponses readAllCommentsByMomentId(Member member, Long momentId) {
         Moment moment = getMoment(momentId);
         validateOwner(moment.getMemory(), member);
         List<Comment> comments = commentRepository.findAllByMomentIdOrderByCreatedAtAsc(momentId);

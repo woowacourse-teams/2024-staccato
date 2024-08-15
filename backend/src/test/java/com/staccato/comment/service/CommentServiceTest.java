@@ -98,7 +98,7 @@ class CommentServiceTest extends ServiceSliceTest {
         commentService.createComment(commentRequestOfAnotherMoment, member);
 
         // when
-        CommentResponses commentResponses = commentService.readAllByMomentId(member, moment.getId());
+        CommentResponses commentResponses = commentService.readAllCommentsByMomentId(member, moment.getId());
 
         // then
         assertThat(commentResponses.comments().stream().map(CommentResponse::commentId).toList())
