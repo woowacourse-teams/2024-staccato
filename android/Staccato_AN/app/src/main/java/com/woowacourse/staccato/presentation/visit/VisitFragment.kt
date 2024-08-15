@@ -85,8 +85,8 @@ class VisitFragment :
         val visitUpdateLauncher = (activity as MainActivity).visitUpdateLauncher
         VisitUpdateActivity.startWithResultLauncher(
             visitId = visitId,
-            travelId = memoryId,
-            travelTitle = memoryTitle,
+            memoryId = memoryId,
+            memoryTitle = memoryTitle,
             context = requireContext(),
             activityLauncher = visitUpdateLauncher,
         )

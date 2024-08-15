@@ -33,14 +33,14 @@ class VisitUpdateActivity :
     private val fragmentManager: FragmentManager = supportFragmentManager
 
     private val visitId by lazy { intent.getLongExtra(VISIT_ID_KEY, 0L) }
-    private val travelId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
-    private val travelTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
+    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
+    private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
         initToolbar()
         observeViewModelData()
-        viewModel.initViewModelData(visitId, travelId, travelTitle)
+        viewModel.initViewModelData(visitId, memoryId, memoryTitle)
     }
 
     private fun initBinding() {
@@ -77,8 +77,8 @@ class VisitUpdateActivity :
             val intent =
                 Intent()
                     .putExtra(VISIT_ID_KEY, visitId)
-                    .putExtra(MEMORY_ID_KEY, travelId)
-                    .putExtra(MEMORY_TITLE_KEY, travelTitle)
+                    .putExtra(MEMORY_ID_KEY, memoryId)
+                    .putExtra(MEMORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, intent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -104,15 +104,15 @@ class VisitUpdateActivity :
     companion object {
         fun startWithResultLauncher(
             visitId: Long,
-            travelId: Long,
-            travelTitle: String,
+            memoryId: Long,
+            memoryTitle: String,
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, VisitUpdateActivity::class.java).apply {
                 putExtra(VISIT_ID_KEY, visitId)
-                putExtra(MEMORY_ID_KEY, travelId)
-                putExtra(MEMORY_TITLE_KEY, travelTitle)
+                putExtra(MEMORY_ID_KEY, memoryId)
+                putExtra(MEMORY_TITLE_KEY, memoryTitle)
                 activityLauncher.launch(this)
             }
         }
