@@ -22,12 +22,12 @@ import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import java.time.LocalDate
 
-class TravelUpdateViewModel(
-    private val travelId: Long,
+class MemoryUpdateViewModel(
+    private val memoryId: Long,
     private val memoryRepository: MemoryRepository,
 ) : ViewModel() {
-    private val _travel = MutableLiveData<NewMemory>()
-    val travel: LiveData<NewMemory> get() = _travel
+    private val _memory = MutableLiveData<NewMemory>()
+    val memory: LiveData<NewMemory> get() = _memory
 
     private val _imageUrl = MutableLiveData<String?>()
     val imageUrl: LiveData<String?> get() = _imageUrl
@@ -53,11 +53,11 @@ class TravelUpdateViewModel(
     private val _isPosting = MutableLiveData<Boolean>()
     val isPosting: LiveData<Boolean> get() = _isPosting
 
-    fun fetchTravel() {
+    fun fetchMemory() {
         viewModelScope.launch {
-            val result = memoryRepository.getMemory(travelId)
+            val result = memoryRepository.getMemory(memoryId)
             result
-                .onSuccess(::initializeTravel)
+                .onSuccess(::initializeMemory)
                 .onServerError(::handleServerError)
                 .onException(::handelException)
         }
@@ -68,12 +68,12 @@ class TravelUpdateViewModel(
         _imageUrl.value = null
     }
 
-    fun updateTravel(context: Context) {
+    fun updateMemory(context: Context) {
         _isPosting.value = true
         viewModelScope.launch {
-            val newMemory: NewMemory = makeNewTravel()
-            val thumbnailFile: MultipartBody.Part? = convertTravelUriToFile(context, _imageUri.value, TRAVEL_FILE_NAME)
-            val result = memoryRepository.updateMemory(travelId, newMemory, thumbnailFile)
+            val newMemory: NewMemory = makeNewMemory()
+            val thumbnailFile: MultipartBody.Part? = convertTravelUriToFile(context, _imageUri.value, MEMORY_FILE_NAME)
+            val result = memoryRepository.updateMemory(memoryId, newMemory, thumbnailFile)
             result
                 .onSuccess { updateSuccessStatus() }
                 .onServerError(::handleServerError)
@@ -81,7 +81,7 @@ class TravelUpdateViewModel(
         }
     }
 
-    fun setTravelPeriod(
+    fun setMemoryPeriod(
         startAt: Long,
         endAt: Long,
     ) {
@@ -89,7 +89,7 @@ class TravelUpdateViewModel(
         _endDate.value = convertLongToLocalDate(endAt)
     }
 
-    private fun initializeTravel(memory: Memory) {
+    private fun initializeMemory(memory: Memory) {
         _imageUrl.value = memory.memoryThumbnailUrl
         title.set(memory.memoryTitle)
         description.set(memory.description)
@@ -97,7 +97,7 @@ class TravelUpdateViewModel(
         _endDate.value = memory.endAt
     }
 
-    private fun makeNewTravel() =
+    private fun makeNewMemory() =
         NewMemory(
             memoryThumbnail = imageUrl.value,
             memoryTitle = title.get() ?: throw IllegalArgumentException(),
@@ -123,11 +123,11 @@ class TravelUpdateViewModel(
         message: String,
     ) {
         _isPosting.value = false
-        _errorMessage.value = TRAVEL_UPDATE_ERROR_MESSAGE
+        _errorMessage.value = MEMORY_UPDATE_ERROR_MESSAGE
     }
 
     companion object {
-        private const val TRAVEL_FILE_NAME = "travelThumbnailFile"
-        private const val TRAVEL_UPDATE_ERROR_MESSAGE = "여행 수정에 실패했습니다"
+        private const val MEMORY_FILE_NAME = "memoryThumbnailFile"
+        private const val MEMORY_UPDATE_ERROR_MESSAGE = "추억 수정에 실패했습니다"
     }
 }

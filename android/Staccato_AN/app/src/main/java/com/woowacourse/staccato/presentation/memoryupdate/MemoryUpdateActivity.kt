@@ -18,16 +18,16 @@ import com.woowacourse.staccato.databinding.ActivityMemoryUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.TravelUpdateViewModel
-import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.TravelUpdateViewModelFactory
+import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel
+import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
 class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), MemoryUpdateHandler, OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_update
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_MEMORY_ID) }
-    private val viewModel: TravelUpdateViewModel by viewModels {
-        TravelUpdateViewModelFactory(
+    private val viewModel: MemoryUpdateViewModel by viewModels {
+        MemoryUpdateViewModelFactory(
             memoryId,
             MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)),
         )
@@ -52,7 +52,7 @@ class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), Mem
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.memory_update_posting))
-        viewModel.updateTravel(this)
+        viewModel.updateMemory(this)
     }
 
     override fun onPhotoAttachClicked() {
@@ -86,14 +86,14 @@ class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), Mem
     }
 
     private fun fetchMemory() {
-        viewModel.fetchTravel()
+        viewModel.fetchMemory()
     }
 
     private fun updateMemoryPeriod() {
         dateRangePicker.addOnPositiveButtonClickListener { selection ->
             val startDate: Long = selection.first
             val endDate: Long = selection.second
-            viewModel.setTravelPeriod(startDate, endDate)
+            viewModel.setMemoryPeriod(startDate, endDate)
         }
     }
 
