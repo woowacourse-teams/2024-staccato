@@ -12,7 +12,7 @@ import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
-import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
+import com.woowacourse.staccato.presentation.visitcreation.model.VisitMemoryUiModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import java.time.LocalDateTime
@@ -25,8 +25,8 @@ class VisitCreationViewModel(
     private val _address = MutableLiveData<String>("서울특별시 강남구 테헤란로 411")
     val address: LiveData<String> get() = _address
 
-    private val _travel = MutableLiveData<VisitTravelUiModel>()
-    val travel: LiveData<VisitTravelUiModel> get() = _travel
+    private val _travel = MutableLiveData<VisitMemoryUiModel>()
+    val travel: LiveData<VisitMemoryUiModel> get() = _travel
 
     private val _selectedImages = MutableLiveData<Set<Uri>>()
     val selectedImages: LiveData<Set<Uri>> get() = _selectedImages
@@ -69,7 +69,7 @@ class VisitCreationViewModel(
         travelTitle: String,
     ) {
         _travel.value =
-            VisitTravelUiModel(
+            VisitMemoryUiModel(
                 id = travelId,
                 title = travelTitle,
             )

@@ -1,7 +1,7 @@
 package com.woowacourse.staccato.presentation.visitcreation.dialog
 
-import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
+import com.woowacourse.staccato.presentation.visitcreation.model.VisitMemoryUiModel
 
 fun interface TravelSelectionHandler {
-    fun onConfirmClicked(travelUiModel: VisitTravelUiModel)
+    fun onConfirmClicked(travelUiModel: VisitMemoryUiModel)
 }

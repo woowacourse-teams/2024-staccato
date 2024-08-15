@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.woowacourse.staccato.R
-import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
+import com.woowacourse.staccato.presentation.visitcreation.model.VisitMemoryUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -190,7 +190,7 @@ fun Button.setTravelSaveButtonActive(
 }
 
 @BindingAdapter("selectedTravel")
-fun TextView.setSelectedTravel(selectedTravel: VisitTravelUiModel?) {
+fun TextView.setSelectedTravel(selectedTravel: VisitMemoryUiModel?) {
     if (selectedTravel == null) {
         text = resources.getString(R.string.visit_creation_travel_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
@@ -204,7 +204,7 @@ fun TextView.setSelectedTravel(selectedTravel: VisitTravelUiModel?) {
     value = ["selectedTravel", "visitedAt"],
 )
 fun Button.setVisitUpdateButtonActive(
-    travel: VisitTravelUiModel?,
+    travel: VisitMemoryUiModel?,
     visitedAt: LocalDate?,
 ) {
     isEnabled =
