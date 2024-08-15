@@ -1,5 +1,6 @@
 package com.staccato.s3.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.Size;
@@ -28,7 +29,10 @@ public class CloudStorageController {
     public ResponseEntity<List<String>> uploadFiles(
             @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart(value = "imagefiles") List<MultipartFile> files
     ) {
-        List<String> fileUrls = cloudStorageService.uploadFiles(files);
+        List<String> fileUrls = new ArrayList<>();
+        if (!files.isEmpty()) {
+            fileUrls = cloudStorageService.uploadFiles(files);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(fileUrls);
     }
 
