@@ -1,7 +1,7 @@
 package com.woowacourse.staccato.presentation.mapper
 
-import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.domain.model.Memory
+import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.presentation.timeline.model.TimelineMemoryUiModel
 
 fun Timeline.toTimelineMemoryUiModel(): List<TimelineMemoryUiModel> {
@@ -12,9 +12,9 @@ fun Timeline.toTimelineMemoryUiModel(): List<TimelineMemoryUiModel> {
 
 fun Memory.toTimelineMemoryUiModel(): TimelineMemoryUiModel {
     return TimelineMemoryUiModel(
-        MemoryId = memoryId,
-        MemoryTitle = memoryTitle,
-        MemoryThumbnailUrl = memoryThumbnailUrl,
+        memoryId = memoryId,
+        memoryTitle = memoryTitle,
+        memoryThumbnailUrl = memoryThumbnailUrl,
         startAt = startAt,
         endAt = endAt,
     )

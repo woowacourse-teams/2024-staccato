@@ -75,7 +75,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
                 override fun areItemsTheSame(
                     oldItem: TimelineMemoryUiModel,
                     newItem: TimelineMemoryUiModel,
-                ): Boolean = oldItem.MemoryId == newItem.MemoryId
+                ): Boolean = oldItem.memoryId == newItem.memoryId
             }
     }
 }

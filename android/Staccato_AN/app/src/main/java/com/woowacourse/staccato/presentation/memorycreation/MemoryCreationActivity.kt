@@ -17,22 +17,24 @@ import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
 import com.woowacourse.staccato.databinding.ActivityMemoryCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
-import com.woowacourse.staccato.presentation.timeline.TimelineFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModel
 import com.woowacourse.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModelFactory
+import com.woowacourse.staccato.presentation.timeline.TimelineFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
-class MemoryCreationActivity : BindingActivity<ActivityMemoryCreationBinding>(),
-    MemoryCreationHandler, OnUrisSelectedListener {
+class MemoryCreationActivity :
+    BindingActivity<ActivityMemoryCreationBinding>(),
+    MemoryCreationHandler,
+    OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_creation
     private val viewModel: MemoryCreationViewModel by viewModels {
         MemoryCreationViewModelFactory(
             MemoryDefaultRepository(
                 MemoryRemoteDataSource(
-                    MemoryApiService
-                )
-            )
+                    MemoryApiService,
+                ),
+            ),
         )
     }
     private val photoAttachFragment = PhotoAttachFragment()

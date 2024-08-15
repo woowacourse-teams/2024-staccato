@@ -11,14 +11,14 @@ import com.woowacourse.staccato.data.StaccatoClient.MemoryApiService
 import com.woowacourse.staccato.data.memory.MemoryDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
 import com.woowacourse.staccato.databinding.FragmentMemoryBinding
+import com.woowacourse.staccato.presentation.Memory.adapter.MatesAdapter
+import com.woowacourse.staccato.presentation.Memory.adapter.VisitsAdapter
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
 import com.woowacourse.staccato.presentation.common.DialogHandler
 import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.main.SharedViewModel
-import com.woowacourse.staccato.presentation.Memory.adapter.MatesAdapter
-import com.woowacourse.staccato.presentation.Memory.adapter.VisitsAdapter
 import com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModel
 import com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModelFactory
 import com.woowacourse.staccato.presentation.memoryupdate.MemoryUpdateActivity
@@ -58,11 +58,11 @@ class MemoryFragment :
     }
 
     override fun onUpdateClicked() {
-        val MemoryUpdateLauncher = (activity as MainActivity).memoryUpdateLauncher
+        val memoryUpdateLauncher = (activity as MainActivity).memoryUpdateLauncher
         MemoryUpdateActivity.startWithResultLauncher(
             memoryId,
             requireActivity(),
-            MemoryUpdateLauncher,
+            memoryUpdateLauncher,
         )
     }
 
