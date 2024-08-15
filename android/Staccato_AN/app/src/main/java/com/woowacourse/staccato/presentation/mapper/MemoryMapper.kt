@@ -11,7 +11,7 @@ fun Memory.toUiModel() =
     MemoryUiModel(
         id = memoryId,
         title = memoryTitle,
-        travelThumbnailUrl = memoryThumbnailUrl,
+        memoryThumbnailUrl = memoryThumbnailUrl,
         startAt = startAt,
         endAt = endAt,
         description = description,
