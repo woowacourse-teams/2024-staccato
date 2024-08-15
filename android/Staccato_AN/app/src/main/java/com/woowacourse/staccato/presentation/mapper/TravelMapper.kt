@@ -1,13 +1,13 @@
 package com.woowacourse.staccato.presentation.mapper
 
 import com.woowacourse.staccato.domain.model.Member
-import com.woowacourse.staccato.domain.model.Travel
+import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.model.TravelVisit
 import com.woowacourse.staccato.presentation.common.MemberUiModel
 import com.woowacourse.staccato.presentation.memory.model.TravelUiModel
 import com.woowacourse.staccato.presentation.memory.model.TravelVisitUiModel
 
-fun Travel.toUiModel() =
+fun Memory.toUiModel() =
     TravelUiModel(
         id = travelId,
         title = travelTitle,

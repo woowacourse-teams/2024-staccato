@@ -3,15 +3,15 @@ package com.woowacourse.staccato.data.memory
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
+import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.model.NewMemory
-import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 import okhttp3.MultipartBody
 
 class MemoryDefaultRepository(
     private val memoryDataSource: MemoryDataSource,
 ) : MemoryRepository {
-    override suspend fun getTravel(travelId: Long): ResponseResult<Travel> {
+    override suspend fun getTravel(travelId: Long): ResponseResult<Memory> {
         return when (val responseResult = memoryDataSource.getTravel(travelId)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)

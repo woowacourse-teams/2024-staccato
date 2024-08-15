@@ -9,7 +9,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.Status
-import com.woowacourse.staccato.domain.model.Travel
+import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
@@ -30,7 +30,7 @@ class TravelViewModel(private val memoryRepository: MemoryRepository) : ViewMode
 
     fun loadTravel(travelId: Long) {
         viewModelScope.launch {
-            val result: ResponseResult<Travel> = memoryRepository.getTravel(travelId)
+            val result: ResponseResult<Memory> = memoryRepository.getTravel(travelId)
             result
                 .onSuccess(::setTravel)
                 .onServerError(::handleServerError)
@@ -54,8 +54,8 @@ class TravelViewModel(private val memoryRepository: MemoryRepository) : ViewMode
         }
     }
 
-    private fun setTravel(travel: Travel) {
-        _travel.value = travel.toUiModel()
+    private fun setTravel(memory: Memory) {
+        _travel.value = memory.toUiModel()
     }
 
     private fun updateIsDeleteSuccess() {

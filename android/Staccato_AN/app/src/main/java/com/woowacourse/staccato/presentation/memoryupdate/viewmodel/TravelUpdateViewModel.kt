@@ -11,8 +11,8 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.dto.Status
+import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.model.NewMemory
-import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
@@ -89,12 +89,12 @@ class TravelUpdateViewModel(
         _endDate.value = convertLongToLocalDate(endAt)
     }
 
-    private fun initializeTravel(travel: Travel) {
-        _imageUrl.value = travel.travelThumbnailUrl
-        title.set(travel.travelTitle)
-        description.set(travel.description)
-        _startDate.value = travel.startAt
-        _endDate.value = travel.endAt
+    private fun initializeTravel(memory: Memory) {
+        _imageUrl.value = memory.travelThumbnailUrl
+        title.set(memory.travelTitle)
+        description.set(memory.description)
+        _startDate.value = memory.startAt
+        _endDate.value = memory.endAt
     }
 
     private fun makeNewTravel() =
