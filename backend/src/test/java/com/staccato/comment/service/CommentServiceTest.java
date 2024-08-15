@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.request.CommentRequest;
+import com.staccato.comment.service.dto.response.CommentResponse;
+import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
@@ -78,6 +81,30 @@ class CommentServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> commentService.createComment(commentRequest, unexpectedMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @Disabled
+    @DisplayName("특정 순간 기록에 속한 모든 댓글을 생성 순으로 조회한다.")
+    @Test
+    void readAllByMomentId() {
+        // given
+        Member member = saveMember("member");
+        Memory memory = saveMemory(member);
+        Moment moment = saveMoment(memory);
+        Moment anotherMoment = saveMoment(memory);
+        CommentRequest commentRequest1 = new CommentRequest(moment.getId(), "content");
+        CommentRequest commentRequest2 = new CommentRequest(moment.getId(), "content");
+        CommentRequest commentRequestOfAnotherMoment = new CommentRequest(anotherMoment.getId(), "content");
+        long commentId1 = commentService.createComment(commentRequest1, member);
+        long commentId2 = commentService.createComment(commentRequest2, member);
+        commentService.createComment(commentRequestOfAnotherMoment, member);
+
+        // when
+        CommentResponses commentResponses = commentService.readAllByMomentId(member, moment.getId());
+
+        // then
+        assertThat(commentResponses.comments().stream().map(CommentResponse::commentId).toList())
+                .containsExactly(commentId1, commentId2);
     }
 
     private Member saveMember(String nickname) {

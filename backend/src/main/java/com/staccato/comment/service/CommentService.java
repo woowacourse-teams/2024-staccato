@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.request.CommentRequest;
+import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
@@ -39,5 +40,9 @@ public class CommentService {
         if (memory.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
+    }
+
+    public CommentResponses readAllByMomentId(Member member, Long momentId) {
+        return null;
     }
 }
