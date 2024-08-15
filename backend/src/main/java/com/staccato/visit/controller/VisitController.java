@@ -24,10 +24,10 @@ import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
 import com.staccato.visit.controller.docs.VisitControllerDocs;
 import com.staccato.visit.service.VisitService;
-import com.staccato.visit.service.dto.request.VisitRequest;
-import com.staccato.visit.service.dto.request.VisitUpdateRequest;
-import com.staccato.visit.service.dto.response.VisitDetailResponse;
-import com.staccato.visit.service.dto.response.VisitIdResponse;
+import com.staccato.visit.service.dto.request.MomentRequest;
+import com.staccato.visit.service.dto.request.MomentUpdateRequest;
+import com.staccato.visit.service.dto.response.MomentDetailResponse;
+import com.staccato.visit.service.dto.response.MomentIdResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,22 +39,22 @@ public class VisitController implements VisitControllerDocs {
     private final VisitService visitService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<VisitIdResponse> createVisit(
+    public ResponseEntity<MomentIdResponse> createVisit(
             @LoginMember Member member,
-            @Valid @RequestPart(value = "data") VisitRequest visitRequest,
+            @Valid @RequestPart(value = "data") MomentRequest momentRequest,
             @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart(value = "momentImageFiles") List<MultipartFile> visitImageFiles
     ) {
-        VisitIdResponse visitIdResponse = visitService.createVisit(visitRequest, visitImageFiles, member);
-        return ResponseEntity.created(URI.create("/moments/" + visitIdResponse.momentId()))
-                .body(visitIdResponse);
+        MomentIdResponse momentIdResponse = visitService.createVisit(momentRequest, visitImageFiles, member);
+        return ResponseEntity.created(URI.create("/moments/" + momentIdResponse.momentId()))
+                .body(momentIdResponse);
     }
 
     @GetMapping("/{momentId}")
-    public ResponseEntity<VisitDetailResponse> readVisitById(
+    public ResponseEntity<MomentDetailResponse> readVisitById(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long momentId) {
-        VisitDetailResponse visitDetailResponse = visitService.readVisitById(momentId, member);
-        return ResponseEntity.ok().body(visitDetailResponse);
+        MomentDetailResponse momentDetailResponse = visitService.readVisitById(momentId, member);
+        return ResponseEntity.ok().body(momentDetailResponse);
     }
 
     @PutMapping(path = "/{momentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -62,7 +62,7 @@ public class VisitController implements VisitControllerDocs {
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long momentId,
             @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart("momentImageFiles") List<MultipartFile> visitImageFiles,
-            @Valid @RequestPart(value = "data") VisitUpdateRequest request
+            @Valid @RequestPart(value = "data") MomentUpdateRequest request
     ) {
         visitService.updateVisitById(momentId, request, visitImageFiles, member);
         return ResponseEntity.ok().build();

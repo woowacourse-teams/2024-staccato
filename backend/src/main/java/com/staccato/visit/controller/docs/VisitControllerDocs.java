@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.member.domain.Member;
-import com.staccato.visit.service.dto.request.VisitRequest;
-import com.staccato.visit.service.dto.request.VisitUpdateRequest;
-import com.staccato.visit.service.dto.response.VisitDetailResponse;
-import com.staccato.visit.service.dto.response.VisitIdResponse;
+import com.staccato.visit.service.dto.request.MomentRequest;
+import com.staccato.visit.service.dto.request.MomentUpdateRequest;
+import com.staccato.visit.service.dto.response.MomentDetailResponse;
+import com.staccato.visit.service.dto.response.MomentIdResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,9 +42,9 @@ public interface VisitControllerDocs {
                     """,
                     responseCode = "400")
     })
-    ResponseEntity<VisitIdResponse> createVisit(
+    ResponseEntity<MomentIdResponse> createVisit(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "key = data", required = true) @Valid VisitRequest visitRequest,
+            @Parameter(description = "key = data", required = true) @Valid MomentRequest momentRequest,
             @Parameter(description = "key = visitImageFiles") @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> visitImagesFile
     );
 
@@ -60,7 +60,7 @@ public interface VisitControllerDocs {
                     """,
                     responseCode = "400")
     })
-    ResponseEntity<VisitDetailResponse> readVisitById(
+    ResponseEntity<MomentDetailResponse> readVisitById(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "방문 기록 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId);
 
@@ -82,7 +82,7 @@ public interface VisitControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "방문 기록 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId,
             @Parameter(description = "key = visitImageFiles") @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> visitImageFiles,
-            @Parameter(description = "key = data", required = true) @Valid VisitUpdateRequest request);
+            @Parameter(description = "key = data", required = true) @Valid MomentUpdateRequest request);
 
     @Operation(summary = "방문 기록 삭제", description = "방문 기록을 삭제합니다.")
     @ApiResponses(value = {

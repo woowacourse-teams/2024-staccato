@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "특정 방문 기록을 조회했을 때 응답 형식입니다.")
-public record VisitDetailResponse(
+public record MomentDetailResponse(
         @Schema(example = "1")
         long momentId,
         @Schema(example = "남산 서울타워")
@@ -22,16 +22,16 @@ public record VisitDetailResponse(
         LocalDate visitedAt,
         @Schema(example = "서울 용산구 남산공원길 105")
         String address,
-        List<VisitLogResponse> comments
+        List<commentResponse> comments
 ) {
-    public VisitDetailResponse(Visit visit) {
+    public MomentDetailResponse(Visit visit) {
         this(
                 visit.getId(),
                 visit.getPlaceName(),
                 visit.getVisitImages().getImages().stream().map(VisitImage::getImageUrl).toList(),
                 visit.getVisitedAt().toLocalDate(),
                 visit.getSpot().getAddress(),
-                visit.getVisitLogs().stream().map(VisitLogResponse::new).toList()
+                visit.getVisitLogs().stream().map(commentResponse::new).toList()
         );
     }
 }

@@ -29,9 +29,9 @@ import com.staccato.visit.fixture.VisitLogFixture;
 import com.staccato.visit.repository.VisitImageRepository;
 import com.staccato.visit.repository.VisitLogRepository;
 import com.staccato.visit.repository.VisitRepository;
-import com.staccato.visit.service.dto.request.VisitRequest;
-import com.staccato.visit.service.dto.request.VisitUpdateRequest;
-import com.staccato.visit.service.dto.response.VisitDetailResponse;
+import com.staccato.visit.service.dto.request.MomentRequest;
+import com.staccato.visit.service.dto.request.MomentUpdateRequest;
+import com.staccato.visit.service.dto.response.MomentDetailResponse;
 
 class VisitServiceTest extends ServiceSliceTest {
     @Autowired
@@ -61,8 +61,8 @@ class VisitServiceTest extends ServiceSliceTest {
         assertThat(visitRepository.findById(visitId)).isNotEmpty();
     }
 
-    private VisitRequest getVisitRequestWithoutImage() {
-        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
+    private MomentRequest getVisitRequestWithoutImage() {
+        return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
     @DisplayName("방문 기록을 생성하면 Visit과 VisitImage들이 함께 저장되고 id를 반환한다.")
@@ -89,10 +89,10 @@ class VisitServiceTest extends ServiceSliceTest {
         Member member = saveMember();
         Member otherMember = saveMember();
         saveTravel(member);
-        VisitRequest visitRequest = getVisitRequest();
+        MomentRequest momentRequest = getVisitRequest();
 
         // when & then
-        assertThatThrownBy(() -> visitService.createVisit(visitRequest, List.of(new MockMultipartFile("visitImageFiles", "example.jpg".getBytes())), otherMember))
+        assertThatThrownBy(() -> visitService.createVisit(momentRequest, List.of(new MockMultipartFile("visitImageFiles", "example.jpg".getBytes())), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -109,8 +109,8 @@ class VisitServiceTest extends ServiceSliceTest {
                 .hasMessageContaining("요청하신 여행을 찾을 수 없어요.");
     }
 
-    private VisitRequest getVisitRequest() {
-        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
+    private MomentRequest getVisitRequest() {
+        return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
     @DisplayName("특정 방문 기록 조회에 성공한다.")
@@ -122,10 +122,10 @@ class VisitServiceTest extends ServiceSliceTest {
         Visit visit = saveVisitWithImages(travel);
 
         // when
-        VisitDetailResponse actual = visitService.readVisitById(visit.getId(), member);
+        MomentDetailResponse actual = visitService.readVisitById(visit.getId(), member);
 
         // then
-        assertThat(actual).isEqualTo(new VisitDetailResponse(visit));
+        assertThat(actual).isEqualTo(new MomentDetailResponse(visit));
     }
 
     @DisplayName("본인 것이 아닌 특정 방문 기록을 조회하려고 하면 예외가 발생한다.")
@@ -164,9 +164,9 @@ class VisitServiceTest extends ServiceSliceTest {
         Visit visit = saveVisitWithImages(travel);
 
         // when
-        VisitUpdateRequest visitUpdateRequest = new VisitUpdateRequest("newPlaceName", List.of("https://existExample.com.jpg"));
+        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("newPlaceName", List.of("https://existExample.com.jpg"));
         MockMultipartFile mockMultipartFile = new MockMultipartFile("visitImagesFile", "newExample.jpg".getBytes());
-        visitService.updateVisitById(visit.getId(), visitUpdateRequest, List.of(mockMultipartFile), member);
+        visitService.updateVisitById(visit.getId(), momentUpdateRequest, List.of(mockMultipartFile), member);
 
         // then
         Visit foundedVisit = visitRepository.findById(visit.getId()).get();
@@ -189,10 +189,10 @@ class VisitServiceTest extends ServiceSliceTest {
         Member otherMember = saveMember();
         Travel travel = saveTravel(member);
         Visit visit = saveVisitWithImages(travel);
-        VisitUpdateRequest visitUpdateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
+        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
 
         // when & then
-        assertThatThrownBy(() -> visitService.updateVisitById(visit.getId(), visitUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes())), otherMember))
+        assertThatThrownBy(() -> visitService.updateVisitById(visit.getId(), momentUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes())), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -202,10 +202,10 @@ class VisitServiceTest extends ServiceSliceTest {
     void failUpdateVisitById() {
         // given
         Member member = saveMember();
-        VisitUpdateRequest visitUpdateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
+        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
 
         // when & then
-        assertThatThrownBy(() -> visitService.updateVisitById(1L, visitUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes())), member))
+        assertThatThrownBy(() -> visitService.updateVisitById(1L, momentUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes())), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
     }

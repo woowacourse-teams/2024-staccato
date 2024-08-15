@@ -37,11 +37,11 @@ import com.staccato.exception.ExceptionResponse;
 import com.staccato.member.domain.Member;
 import com.staccato.travel.domain.Travel;
 import com.staccato.travel.service.TravelService;
-import com.staccato.travel.service.dto.request.TravelRequest;
-import com.staccato.travel.service.dto.response.TravelDetailResponse;
-import com.staccato.travel.service.dto.response.TravelIdResponse;
-import com.staccato.travel.service.dto.response.TravelResponse;
-import com.staccato.travel.service.dto.response.TravelResponses;
+import com.staccato.travel.service.dto.request.MemoryRequest;
+import com.staccato.travel.service.dto.response.MemoryDetailResponse;
+import com.staccato.travel.service.dto.response.MemoryIdResponse;
+import com.staccato.travel.service.dto.response.MemoryResponse;
+import com.staccato.travel.service.dto.response.MemoryResponses;
 
 @WebMvcTest(TravelController.class)
 class TravelControllerTest {
@@ -54,38 +54,38 @@ class TravelControllerTest {
     @MockBean
     private AuthService authService;
 
-    static Stream<TravelRequest> travelRequestProvider() {
+    static Stream<MemoryRequest> travelRequestProvider() {
         return Stream.of(
-                new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                new TravelRequest(null, "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", null, LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10))
+                new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                new MemoryRequest(null, "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", null, LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10))
         );
     }
 
     static Stream<Arguments> invalidTravelRequestProvider() {
         return Stream.of(
                 Arguments.of(
-                        new TravelRequest("https://example.com/travels/geumohrm.jpg", null, "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", null, "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
                         "여행 제목을 입력해주세요."
                 ),
                 Arguments.of(
-                        new TravelRequest("https://example.com/travels/geumohrm.jpg", "  ", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", "  ", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
                         "여행 제목을 입력해주세요."
                 ),
                 Arguments.of(
-                        new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", null, LocalDate.of(2023, 7, 10)),
+                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", null, LocalDate.of(2023, 7, 10)),
                         "여행 시작 날짜를 입력해주세요."
                 ),
                 Arguments.of(
-                        new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), null),
+                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), null),
                         "여행 끝 날짜를 입력해주세요."
                 ),
                 Arguments.of(
-                        new TravelRequest("https://example.com/travels/geumohrm.jpg", "가".repeat(31), "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", "가".repeat(31), "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
                         "제목은 공백 포함 1자 이상 30자 이하로 설정해주세요."
                 ),
                 Arguments.of(
-                        new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "가".repeat(501), LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "가".repeat(501), LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
                         "내용의 최대 허용 글자수는 공백 포함 500자입니다."
                 )
         );
@@ -94,16 +94,16 @@ class TravelControllerTest {
     @DisplayName("사용자가 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")
     @ParameterizedTest
     @MethodSource("travelRequestProvider")
-    void createTravel(TravelRequest travelRequest) throws Exception {
+    void createTravel(MemoryRequest memoryRequest) throws Exception {
         // given
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(travelService.createTravel(any(), any(), any())).thenReturn(new TravelIdResponse(1));
+        when(travelService.createTravel(any(), any(), any())).thenReturn(new MemoryIdResponse(1));
 
         // when & then
         mockMvc.perform(multipart("/memories")
                         .file(file)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
+                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
@@ -114,15 +114,15 @@ class TravelControllerTest {
     @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 여행 상세를 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidTravelRequestProvider")
-    void failCreateTravel(TravelRequest travelRequest, String expectedMessage) throws Exception {
+    void failCreateTravel(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(travelService.createTravel(any(TravelRequest.class), any(MultipartFile.class), any(Member.class))).thenReturn(new TravelIdResponse(1));
+        when(travelService.createTravel(any(MemoryRequest.class), any(MultipartFile.class), any(Member.class))).thenReturn(new MemoryIdResponse(1));
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
         mockMvc.perform(multipart("/memories")
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
+                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
@@ -134,14 +134,14 @@ class TravelControllerTest {
     void readAllTravel() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        TravelResponses travelResponses = new TravelResponses(List.of(new TravelResponse(createTravel())));
-        when(travelService.readAllTravels(any(Member.class), any())).thenReturn(travelResponses);
+        MemoryResponses memoryResponses = new MemoryResponses(List.of(new MemoryResponse(createTravel())));
+        when(travelService.readAllTravels(any(Member.class), any())).thenReturn(memoryResponses);
 
         // when & then
         mockMvc.perform(get("/memories")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(travelResponses)));
+                .andExpect(content().json(objectMapper.writeValueAsString(memoryResponses)));
     }
 
     @DisplayName("사용자가 특정 여행 상세를 조회한다.")
@@ -150,14 +150,14 @@ class TravelControllerTest {
         // given
         long travelId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        TravelDetailResponse travelDetailResponse = new TravelDetailResponse(createTravel(), List.of());
-        when(travelService.readTravelById(anyLong(), any(Member.class))).thenReturn(travelDetailResponse);
+        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(createTravel(), List.of());
+        when(travelService.readTravelById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
 
         // when & then
         mockMvc.perform(get("/memories/{travelId}", travelId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(travelDetailResponse)));
+                .andExpect(content().json(objectMapper.writeValueAsString(memoryDetailResponse)));
     }
 
     private Travel createTravel() {
@@ -173,7 +173,7 @@ class TravelControllerTest {
     @DisplayName("적합한 경로변수와 데이터를 통해 방문 기록 수정에 성공한다.")
     @ParameterizedTest
     @MethodSource("travelRequestProvider")
-    void updateTravel(TravelRequest travelRequest) throws Exception {
+    void updateTravel(MemoryRequest memoryRequest) throws Exception {
         // given
         long travelId = 1L;
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
@@ -182,7 +182,7 @@ class TravelControllerTest {
         // when & then
         mockMvc.perform(multipart("/memories/{travelId}", travelId)
                         .file(file)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
+                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
                         .with(request -> {
                             request.setMethod("PUT");
                             return request;
@@ -195,7 +195,7 @@ class TravelControllerTest {
     @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 여행 상세를 수정할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidTravelRequestProvider")
-    void failUpdateTravel(TravelRequest travelRequest, String expectedMessage) throws Exception {
+    void failUpdateTravel(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
         // given
         long travelId = 1L;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
@@ -203,7 +203,7 @@ class TravelControllerTest {
 
         // when & then
         mockMvc.perform(multipart("/memories/{travelId}", travelId)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
+                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
                         .with(request -> {
                             request.setMethod("PUT");
                             return request;
@@ -221,11 +221,11 @@ class TravelControllerTest {
         long travelId = 0L;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "여행 식별자는 양수로 이루어져야 합니다.");
-        TravelRequest travelRequest = new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
+        MemoryRequest memoryRequest = new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
 
         // when & then
         mockMvc.perform(multipart("/memories/{travelId}", travelId)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
+                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
                         .with(request -> {
                             request.setMethod("PUT");
                             return request;

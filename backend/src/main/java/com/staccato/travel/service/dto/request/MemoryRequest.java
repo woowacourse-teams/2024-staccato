@@ -13,7 +13,7 @@ import com.staccato.travel.domain.Travel;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "여행 상세를 생성/수정하기 위한 요청 형식입니다.")
-public record TravelRequest(
+public record MemoryRequest(
         @Schema(example = "http://example.com/london.png")
         String memoryThumbnailUrl,
         @Schema(example = "런던 여행")

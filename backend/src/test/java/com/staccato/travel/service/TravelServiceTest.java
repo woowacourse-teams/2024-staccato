@@ -25,11 +25,11 @@ import com.staccato.travel.domain.Travel;
 import com.staccato.travel.domain.TravelMember;
 import com.staccato.travel.repository.TravelMemberRepository;
 import com.staccato.travel.repository.TravelRepository;
-import com.staccato.travel.service.dto.request.TravelRequest;
-import com.staccato.travel.service.dto.response.TravelDetailResponse;
-import com.staccato.travel.service.dto.response.TravelIdResponse;
-import com.staccato.travel.service.dto.response.TravelResponses;
-import com.staccato.travel.service.dto.response.VisitResponse;
+import com.staccato.travel.service.dto.request.MemoryRequest;
+import com.staccato.travel.service.dto.response.MemoryDetailResponse;
+import com.staccato.travel.service.dto.response.MemoryIdResponse;
+import com.staccato.travel.service.dto.response.MemoryResponses;
+import com.staccato.travel.service.dto.response.MomentResponse;
 import com.staccato.visit.domain.Visit;
 import com.staccato.visit.fixture.VisitFixture;
 import com.staccato.visit.repository.VisitRepository;
@@ -56,13 +56,13 @@ class TravelServiceTest extends ServiceSliceTest {
     static Stream<Arguments> updateTravelProvider() {
         return Stream.of(
                 Arguments.of(
-                        new TravelRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
+                        new MemoryRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
                         new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes()), "fakeUrl"),
                 Arguments.of(
-                        new TravelRequest(null, "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
+                        new MemoryRequest(null, "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
                         null, null),
                 Arguments.of(
-                        new TravelRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
+                        new MemoryRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
                         null, "imageUrl"));
     }
 
@@ -70,17 +70,17 @@ class TravelServiceTest extends ServiceSliceTest {
     @Test
     void createTravel() {
         // given
-        TravelRequest travelRequest = createTravelRequest(2024);
+        MemoryRequest memoryRequest = createTravelRequest(2024);
         Member member = saveMember();
 
         // when
-        TravelIdResponse travelIdResponse = travelService.createTravel(travelRequest, null, member);
+        MemoryIdResponse memoryIdResponse = travelService.createTravel(memoryRequest, null, member);
         TravelMember travelMember = travelMemberRepository.findAllByMemberIdOrderByTravelStartAtDesc(member.getId()).get(0);
 
         // then
         assertAll(
                 () -> assertThat(travelMember.getMember().getId()).isEqualTo(member.getId()),
-                () -> assertThat(travelMember.getTravel().getId()).isEqualTo(travelIdResponse.memoryId())
+                () -> assertThat(travelMember.getTravel().getId()).isEqualTo(memoryIdResponse.memoryId())
         );
     }
 
@@ -94,10 +94,10 @@ class TravelServiceTest extends ServiceSliceTest {
         travelService.createTravel(createTravelRequest(2024), null, member);
 
         // when
-        TravelResponses travelResponses = travelService.readAllTravels(member, year);
+        MemoryResponses memoryResponses = travelService.readAllTravels(member, year);
 
         // then
-        assertThat(travelResponses.memories()).hasSize(expectedSize);
+        assertThat(memoryResponses.memories()).hasSize(expectedSize);
     }
 
     @DisplayName("특정 여행 상세를 조회한다.")
@@ -106,15 +106,15 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
 
-        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
+        MemoryIdResponse memoryIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
 
         // when
-        TravelDetailResponse travelDetailResponse = travelService.readTravelById(travelIdResponse.memoryId(), member);
+        MemoryDetailResponse memoryDetailResponse = travelService.readTravelById(memoryIdResponse.memoryId(), member);
 
         // then
         assertAll(
-                () -> assertThat(travelDetailResponse.memoryId()).isEqualTo(travelIdResponse.memoryId()),
-                () -> assertThat(travelDetailResponse.mates()).hasSize(1)
+                () -> assertThat(memoryDetailResponse.memoryId()).isEqualTo(memoryIdResponse.memoryId()),
+                () -> assertThat(memoryDetailResponse.mates()).hasSize(1)
         );
     }
 
@@ -125,10 +125,10 @@ class TravelServiceTest extends ServiceSliceTest {
         Member member = saveMember();
         Member otherMember = saveMember();
 
-        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
+        MemoryIdResponse memoryIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
 
         // when & then
-        assertThatThrownBy(() -> travelService.readTravelById(travelIdResponse.memoryId(), otherMember))
+        assertThatThrownBy(() -> travelService.readTravelById(memoryIdResponse.memoryId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -139,19 +139,19 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
 
-        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
-        Visit firstVisit = saveVisit(LocalDateTime.of(2023, 7, 1, 10, 0), travelIdResponse.memoryId());
-        Visit secondVisit = saveVisit(LocalDateTime.of(2023, 7, 1, 10, 10), travelIdResponse.memoryId());
-        Visit lastVisit = saveVisit(LocalDateTime.of(2023, 7, 5, 9, 0), travelIdResponse.memoryId());
+        MemoryIdResponse memoryIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
+        Visit firstVisit = saveVisit(LocalDateTime.of(2023, 7, 1, 10, 0), memoryIdResponse.memoryId());
+        Visit secondVisit = saveVisit(LocalDateTime.of(2023, 7, 1, 10, 10), memoryIdResponse.memoryId());
+        Visit lastVisit = saveVisit(LocalDateTime.of(2023, 7, 5, 9, 0), memoryIdResponse.memoryId());
 
         // when
-        TravelDetailResponse travelDetailResponse = travelService.readTravelById(travelIdResponse.memoryId(), member);
+        MemoryDetailResponse memoryDetailResponse = travelService.readTravelById(memoryIdResponse.memoryId(), member);
 
         // then
         assertAll(
-                () -> assertThat(travelDetailResponse.memoryId()).isEqualTo(travelIdResponse.memoryId()),
-                () -> assertThat(travelDetailResponse.moments()).hasSize(3),
-                () -> assertThat(travelDetailResponse.moments().stream().map(VisitResponse::momentId).toList())
+                () -> assertThat(memoryDetailResponse.memoryId()).isEqualTo(memoryIdResponse.memoryId()),
+                () -> assertThat(memoryDetailResponse.moments()).hasSize(3),
+                () -> assertThat(memoryDetailResponse.moments().stream().map(MomentResponse::momentId).toList())
                         .containsExactly(firstVisit.getId(), secondVisit.getId(), lastVisit.getId())
         );
     }
@@ -176,11 +176,11 @@ class TravelServiceTest extends ServiceSliceTest {
     @DisplayName("여행 상세 정보를 기반으로, 여행 상세를 수정한다.")
     @MethodSource("updateTravelProvider")
     @ParameterizedTest
-    void updateTravel(TravelRequest updatedTravel, MockMultipartFile updatedFile, String expected) {
+    void updateTravel(MemoryRequest updatedTravel, MockMultipartFile updatedFile, String expected) {
         // given
         Member member = saveMember();
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
-        TravelIdResponse travelResponse = travelService.createTravel(createTravelRequest(2024), file, member);
+        MemoryIdResponse travelResponse = travelService.createTravel(createTravelRequest(2024), file, member);
 
         // when
         travelService.updateTravel(updatedTravel, travelResponse.memoryId(), updatedFile, member);
@@ -202,17 +202,17 @@ class TravelServiceTest extends ServiceSliceTest {
     void failUpdateTravel() {
         // given
         Member member = saveMember();
-        TravelRequest travelRequest = createTravelRequest(2023);
+        MemoryRequest memoryRequest = createTravelRequest(2023);
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
 
         // when & then
-        assertThatThrownBy(() -> travelService.updateTravel(travelRequest, 1L, file, member))
+        assertThatThrownBy(() -> travelService.updateTravel(memoryRequest, 1L, file, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 여행을 찾을 수 없어요.");
     }
 
-    private TravelRequest createTravelRequest(int year) {
-        return new TravelRequest(
+    private MemoryRequest createTravelRequest(int year) {
+        return new MemoryRequest(
                 "https://example.com/travels/geumohrm.jpg",
                 year + " 여름 휴가",
                 "친구들과 함께한 여름 휴가 여행",
@@ -227,12 +227,12 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        TravelRequest updatedTravel = createTravelRequest(2023);
-        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
+        MemoryRequest updatedTravel = createTravelRequest(2023);
+        MemoryIdResponse memoryIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
 
         // when & then
-        assertThatThrownBy(() -> travelService.updateTravel(updatedTravel, travelIdResponse.memoryId(), file, otherMember))
+        assertThatThrownBy(() -> travelService.updateTravel(updatedTravel, memoryIdResponse.memoryId(), file, otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -242,14 +242,14 @@ class TravelServiceTest extends ServiceSliceTest {
     void deleteTravel() {
         // given
         Member member = saveMember();
-        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
+        MemoryIdResponse memoryIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
 
         // when
-        travelService.deleteTravel(travelIdResponse.memoryId(), member);
+        travelService.deleteTravel(memoryIdResponse.memoryId(), member);
 
         // then
         assertAll(
-                () -> assertThat(travelRepository.findById(travelIdResponse.memoryId())).isEmpty(),
+                () -> assertThat(travelRepository.findById(memoryIdResponse.memoryId())).isEmpty(),
                 () -> assertThat(travelMemberRepository.findAll()).hasSize(0)
         );
     }
@@ -260,10 +260,10 @@ class TravelServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
+        MemoryIdResponse memoryIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
 
         // when & then
-        assertThatThrownBy(() -> travelService.deleteTravel(travelIdResponse.memoryId(), otherMember))
+        assertThatThrownBy(() -> travelService.deleteTravel(memoryIdResponse.memoryId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -273,11 +273,11 @@ class TravelServiceTest extends ServiceSliceTest {
     void failDeleteTravelByExistingVisits() {
         // given
         Member member = saveMember();
-        TravelIdResponse travelIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
-        saveVisit(LocalDateTime.of(2024, 7, 10, 10, 0), travelIdResponse.memoryId());
+        MemoryIdResponse memoryIdResponse = travelService.createTravel(createTravelRequest(2023), null, member);
+        saveVisit(LocalDateTime.of(2024, 7, 10, 10, 0), memoryIdResponse.memoryId());
 
         // when & then
-        assertThatThrownBy(() -> travelService.deleteTravel(travelIdResponse.memoryId(), member))
+        assertThatThrownBy(() -> travelService.deleteTravel(memoryIdResponse.memoryId(), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
     }

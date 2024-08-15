@@ -16,11 +16,11 @@ import com.staccato.travel.domain.Travel;
 import com.staccato.travel.domain.TravelMember;
 import com.staccato.travel.repository.TravelMemberRepository;
 import com.staccato.travel.repository.TravelRepository;
-import com.staccato.travel.service.dto.request.TravelRequest;
-import com.staccato.travel.service.dto.response.TravelDetailResponse;
-import com.staccato.travel.service.dto.response.TravelIdResponse;
-import com.staccato.travel.service.dto.response.TravelResponses;
-import com.staccato.travel.service.dto.response.VisitResponse;
+import com.staccato.travel.service.dto.request.MemoryRequest;
+import com.staccato.travel.service.dto.response.MemoryDetailResponse;
+import com.staccato.travel.service.dto.response.MemoryIdResponse;
+import com.staccato.travel.service.dto.response.MemoryResponses;
+import com.staccato.travel.service.dto.response.MomentResponse;
 import com.staccato.visit.domain.Visit;
 import com.staccato.visit.repository.VisitRepository;
 
@@ -36,48 +36,48 @@ public class TravelService {
     private final CloudStorageService cloudStorageService;
 
     @Transactional
-    public TravelIdResponse createTravel(TravelRequest travelRequest, MultipartFile thumbnailFile, Member member) {
-        Travel travel = travelRequest.toTravel();
+    public MemoryIdResponse createTravel(MemoryRequest memoryRequest, MultipartFile thumbnailFile, Member member) {
+        Travel travel = memoryRequest.toTravel();
         String thumbnailUrl = uploadFile(thumbnailFile);
         travel.assignThumbnail(thumbnailUrl);
         travel.addTravelMember(member);
         travelRepository.save(travel);
-        return new TravelIdResponse(travel.getId());
+        return new MemoryIdResponse(travel.getId());
     }
 
-    public TravelResponses readAllTravels(Member member, Integer year) {
+    public MemoryResponses readAllTravels(Member member, Integer year) {
         return Optional.ofNullable(year)
                 .map(y -> readAllByYear(member, y))
                 .orElseGet(() -> readAll(member));
     }
 
-    private TravelResponses readAllByYear(Member member, Integer year) {
+    private MemoryResponses readAllByYear(Member member, Integer year) {
         List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdAndStartAtYearDesc(member.getId(), year);
         return getTravelResponses(travelMembers);
     }
 
-    private TravelResponses readAll(Member member) {
+    private MemoryResponses readAll(Member member) {
         List<TravelMember> travelMembers = travelMemberRepository.findAllByMemberIdOrderByTravelStartAtDesc(member.getId());
         return getTravelResponses(travelMembers);
     }
 
-    private TravelResponses getTravelResponses(List<TravelMember> travelMembers) {
+    private MemoryResponses getTravelResponses(List<TravelMember> travelMembers) {
         List<Travel> travels = travelMembers.stream()
                 .map(TravelMember::getTravel)
                 .toList();
-        return TravelResponses.from(travels);
+        return MemoryResponses.from(travels);
     }
 
-    public TravelDetailResponse readTravelById(long travelId, Member member) {
+    public MemoryDetailResponse readTravelById(long travelId, Member member) {
         Travel travel = getTravelById(travelId);
         validateOwner(travel, member);
-        List<VisitResponse> visitResponses = getVisitResponses(visitRepository.findAllByTravelIdOrderByVisitedAt(travelId));
-        return new TravelDetailResponse(travel, visitResponses);
+        List<MomentResponse> momentRespons = getVisitResponses(visitRepository.findAllByTravelIdOrderByVisitedAt(travelId));
+        return new MemoryDetailResponse(travel, momentRespons);
     }
 
-    private List<VisitResponse> getVisitResponses(List<Visit> visits) {
+    private List<MomentResponse> getVisitResponses(List<Visit> visits) {
         return visits.stream()
-                .map(visit -> new VisitResponse(visit, getVisitThumbnail(visit)))
+                .map(visit -> new MomentResponse(visit, getVisitThumbnail(visit)))
                 .toList();
     }
 
@@ -89,8 +89,8 @@ public class TravelService {
     }
 
     @Transactional
-    public void updateTravel(TravelRequest travelRequest, Long travelId, MultipartFile thumbnailFile, Member member) {
-        Travel updatedTravel = travelRequest.toTravel();
+    public void updateTravel(MemoryRequest memoryRequest, Long travelId, MultipartFile thumbnailFile, Member member) {
+        Travel updatedTravel = memoryRequest.toTravel();
         Travel originTravel = getTravelById(travelId);
         validateOwner(originTravel, member);
         if (!Objects.isNull(thumbnailFile)) {

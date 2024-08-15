@@ -11,7 +11,7 @@ import com.staccato.travel.domain.Travel;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "여행 상세 목록 조회 시 각각의 여행 상세에 대한 응답 형식입니다.")
-public record TravelResponse(
+public record MemoryResponse(
         @Schema(example = "1")
         Long memoryId,
         @Schema(example = "https://example.com/travels/geumohrm.jpg")
@@ -28,7 +28,7 @@ public record TravelResponse(
         LocalDate endAt,
         List<MemberResponse> mates
 ) {
-    public TravelResponse(Travel travel) {
+    public MemoryResponse(Travel travel) {
         this(
                 travel.getId(),
                 travel.getThumbnailUrl(),

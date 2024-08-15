@@ -10,7 +10,7 @@ import com.staccato.travel.domain.Travel;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "특정 여행 상세 정보에 대한 응답 형식입니다.")
-public record TravelDetailResponse(
+public record MemoryDetailResponse(
         @Schema(example = "1")
         Long memoryId,
         @Schema(example = "https://example.com/travels/geumohrm.jpg")
@@ -26,9 +26,9 @@ public record TravelDetailResponse(
         @Schema(example = "2024-07-29")
         LocalDate endAt,
         List<MemberResponse> mates,
-        List<VisitResponse> moments
+        List<MomentResponse> moments
 ) {
-    public TravelDetailResponse(Travel travel, List<VisitResponse> visitResponses) {
+    public MemoryDetailResponse(Travel travel, List<MomentResponse> momentRespons) {
         this(
                 travel.getId(),
                 travel.getThumbnailUrl(),
@@ -37,7 +37,7 @@ public record TravelDetailResponse(
                 travel.getStartAt(),
                 travel.getEndAt(),
                 toMemberResponses(travel),
-                visitResponses
+                momentRespons
         );
     }
 

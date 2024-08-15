@@ -39,10 +39,10 @@ import com.staccato.exception.ExceptionResponse;
 import com.staccato.member.domain.Member;
 import com.staccato.visit.fixture.VisitDetailResponseFixture;
 import com.staccato.visit.service.VisitService;
-import com.staccato.visit.service.dto.request.VisitRequest;
-import com.staccato.visit.service.dto.request.VisitUpdateRequest;
-import com.staccato.visit.service.dto.response.VisitDetailResponse;
-import com.staccato.visit.service.dto.response.VisitIdResponse;
+import com.staccato.visit.service.dto.request.MomentRequest;
+import com.staccato.visit.service.dto.request.MomentUpdateRequest;
+import com.staccato.visit.service.dto.response.MomentDetailResponse;
+import com.staccato.visit.service.dto.response.MomentIdResponse;
 
 @WebMvcTest(controllers = VisitController.class)
 class VisitControllerTest {
@@ -58,31 +58,31 @@ class VisitControllerTest {
     static Stream<Arguments> invalidVisitRequestProvider() {
         return Stream.of(
                 Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 0L),
+                        new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 0L),
                         "여행 식별자는 양수로 이루어져야 합니다."
                 ),
                 Arguments.of(
-                        new VisitRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
+                        new MomentRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 이름을 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("  ", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
+                        new MomentRequest("  ", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 이름을 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("가".repeat(31), "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
+                        new MomentRequest("가".repeat(31), "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 이름은 공백 포함 1자 이상 30자 이하로 설정해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", "address", null, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
+                        new MomentRequest("placeName", "address", null, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 위도를 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", "address", BigDecimal.ONE, null, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
+                        new MomentRequest("placeName", "address", BigDecimal.ONE, null, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 경도를 입력해주세요."
                 ),
                 Arguments.of(
-                        new VisitRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
+                        new MomentRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L),
                         "방문한 장소의 주소를 입력해주세요."
                 ),
                 Arguments.of(
@@ -96,17 +96,17 @@ class VisitControllerTest {
     @Test
     void createVisit() throws Exception {
         // given
-        VisitRequest visitRequest = getVisitRequest(LocalDateTime.now());
-        String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
+        MomentRequest momentRequest = getVisitRequest(LocalDateTime.now());
+        String visitRequestJson = objectMapper.writeValueAsString(momentRequest);
         MockMultipartFile visitRequestPart = new MockMultipartFile("data", "visitRequest.json", "application/json", visitRequestJson.getBytes());
         MockMultipartFile file1 = new MockMultipartFile("momentImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
         MockMultipartFile file2 = new MockMultipartFile("momentImageFiles", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes());
         MockMultipartFile file3 = new MockMultipartFile("momentImageFiles", "test-image3.jpg", "image/jpeg", "dummy image content".getBytes());
         MockMultipartFile file4 = new MockMultipartFile("momentImageFiles", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes());
         MockMultipartFile file5 = new MockMultipartFile("momentImageFiles", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes());
-        VisitIdResponse visitIdResponse = new VisitIdResponse(1L);
+        MomentIdResponse momentIdResponse = new MomentIdResponse(1L);
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(visitService.createVisit(any(VisitRequest.class), any(List.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
+        when(visitService.createVisit(any(MomentRequest.class), any(List.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
 
         // when & then
         mockMvc.perform(multipart("/moments")
@@ -120,7 +120,7 @@ class VisitControllerTest {
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/moments/1"))
-                .andExpect(content().json(objectMapper.writeValueAsString(visitIdResponse)));
+                .andExpect(content().json(objectMapper.writeValueAsString(momentIdResponse)));
     }
 
     @DisplayName("올바르지 않은 날짜 형식으로 방문 기록 생성을 요청하면 예외가 발생한다.")
@@ -150,7 +150,7 @@ class VisitControllerTest {
                 objectMapper.writeValueAsString(List.of()).getBytes()
         );
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(visitService.createVisit(any(VisitRequest.class), any(List.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
+        when(visitService.createVisit(any(MomentRequest.class), any(List.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
 
         // when & then
         mockMvc.perform(multipart("/moments")
@@ -166,8 +166,8 @@ class VisitControllerTest {
     @Test
     void failCreateVisitByImageCount() throws Exception {
         // given
-        VisitRequest visitRequest = getVisitRequest(LocalDateTime.now());
-        String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
+        MomentRequest momentRequest = getVisitRequest(LocalDateTime.now());
+        String visitRequestJson = objectMapper.writeValueAsString(momentRequest);
         MockMultipartFile visitRequestPart = new MockMultipartFile("data", "visitRequest.json", "application/json", visitRequestJson.getBytes());
         MockMultipartFile file1 = new MockMultipartFile("momentImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
         MockMultipartFile file2 = new MockMultipartFile("momentImageFiles", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes());
@@ -195,21 +195,21 @@ class VisitControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    private static VisitRequest getVisitRequest(LocalDateTime visitedAt) {
-        return new VisitRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, visitedAt, 1L);
+    private static MomentRequest getVisitRequest(LocalDateTime visitedAt) {
+        return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, visitedAt, 1L);
     }
 
     @DisplayName("사용자가 잘못된 요청 형식으로 정보를 입력하면, 방문 기록을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidVisitRequestProvider")
-    void failCreateVisit(VisitRequest visitRequest, String expectedMessage) throws Exception {
+    void failCreateVisit(MomentRequest momentRequest, String expectedMessage) throws Exception {
         // given
-        String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
+        String visitRequestJson = objectMapper.writeValueAsString(momentRequest);
         MockMultipartFile visitRequestPart = new MockMultipartFile("data", "visitRequest.json", "application/json", visitRequestJson.getBytes());
         MockMultipartFile imageFilePart = new MockMultipartFile("visitImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(visitService.createVisit(any(VisitRequest.class), any(List.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
+        when(visitService.createVisit(any(MomentRequest.class), any(List.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
 
         // when & then
         mockMvc.perform(multipart("/moments")
@@ -227,7 +227,7 @@ class VisitControllerTest {
         // given
         long visitId = 1L;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        VisitDetailResponse response = VisitDetailResponseFixture.create(visitId, LocalDate.now());
+        MomentDetailResponse response = VisitDetailResponseFixture.create(visitId, LocalDate.now());
         when(visitService.readVisitById(anyLong(), any(Member.class))).thenReturn(response);
 
         // when & then
@@ -254,7 +254,7 @@ class VisitControllerTest {
     void updateVisitById() throws Exception {
         // given
         long visitId = 1L;
-        VisitUpdateRequest updateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
+        MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
@@ -278,7 +278,7 @@ class VisitControllerTest {
         // given
         long visitId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
-        VisitUpdateRequest updateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
+        MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         MockMultipartFile file1 = new MockMultipartFile("momentImageFiles", "namsan_tower1.jpg".getBytes());
         MockMultipartFile file2 = new MockMultipartFile("momentImageFiles", "namsan_tower2.jpg".getBytes());
         MockMultipartFile file3 = new MockMultipartFile("momentImageFiles", "namsan_tower3.jpg".getBytes());
@@ -313,7 +313,7 @@ class VisitControllerTest {
         // given
         long visitId = 0L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문 기록 식별자는 양수로 이루어져야 합니다.");
-        VisitUpdateRequest updateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
+        MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
@@ -338,7 +338,7 @@ class VisitControllerTest {
         // given
         long visitId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문한 장소의 이름을 입력해주세요.");
-        VisitUpdateRequest updateRequest = new VisitUpdateRequest(null, List.of("https://example1.com.jpg"));
+        MomentUpdateRequest updateRequest = new MomentUpdateRequest(null, List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 

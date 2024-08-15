@@ -16,7 +16,7 @@ import com.staccato.visit.domain.Visit;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "방문 기록 생성 시 요청 형식입니다. 단, 멀티파트로 보내는 사진 파일은 여기에 포함되지 않습니다.")
-public record VisitRequest(
+public record MomentRequest(
         @Schema(example = "런던 박물관")
         @NotBlank(message = "방문한 장소의 이름을 입력해주세요.")
         @Size(min = 1, max = 30, message = "방문한 장소의 이름은 공백 포함 1자 이상 30자 이하로 설정해주세요.")

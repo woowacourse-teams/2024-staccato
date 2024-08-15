@@ -23,10 +23,10 @@ import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
 import com.staccato.travel.controller.docs.TravelControllerDocs;
 import com.staccato.travel.service.TravelService;
-import com.staccato.travel.service.dto.request.TravelRequest;
-import com.staccato.travel.service.dto.response.TravelDetailResponse;
-import com.staccato.travel.service.dto.response.TravelIdResponse;
-import com.staccato.travel.service.dto.response.TravelResponses;
+import com.staccato.travel.service.dto.request.MemoryRequest;
+import com.staccato.travel.service.dto.response.MemoryDetailResponse;
+import com.staccato.travel.service.dto.response.MemoryIdResponse;
+import com.staccato.travel.service.dto.response.MemoryResponses;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,39 +38,39 @@ public class TravelController implements TravelControllerDocs {
     private final TravelService travelService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<TravelIdResponse> createTravel(
-            @Valid @RequestPart(value = "data") TravelRequest travelRequest,
+    public ResponseEntity<MemoryIdResponse> createTravel(
+            @Valid @RequestPart(value = "data") MemoryRequest memoryRequest,
             @RequestPart(value = "memoryThumbnailFile", required = false) MultipartFile travelThumbnailFile,
             @LoginMember Member member
     ) {
-        TravelIdResponse travelIdResponse = travelService.createTravel(travelRequest, travelThumbnailFile, member);
-        return ResponseEntity.created(URI.create("/memories/" + travelIdResponse.memoryId())).body(travelIdResponse);
+        MemoryIdResponse memoryIdResponse = travelService.createTravel(memoryRequest, travelThumbnailFile, member);
+        return ResponseEntity.created(URI.create("/memories/" + memoryIdResponse.memoryId())).body(memoryIdResponse);
     }
 
     @GetMapping
-    public ResponseEntity<TravelResponses> readAllTravels(
+    public ResponseEntity<MemoryResponses> readAllTravels(
             @LoginMember Member member,
             @RequestParam(value = "year", required = false) Integer year
     ) {
-        TravelResponses travelResponses = travelService.readAllTravels(member, year);
-        return ResponseEntity.ok(travelResponses);
+        MemoryResponses memoryResponses = travelService.readAllTravels(member, year);
+        return ResponseEntity.ok(memoryResponses);
     }
 
     @GetMapping("/{memoryId}")
-    public ResponseEntity<TravelDetailResponse> readTravel(
+    public ResponseEntity<MemoryDetailResponse> readTravel(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long memoryId) {
-        TravelDetailResponse travelDetailResponse = travelService.readTravelById(memoryId, member);
-        return ResponseEntity.ok(travelDetailResponse);
+        MemoryDetailResponse memoryDetailResponse = travelService.readTravelById(memoryId, member);
+        return ResponseEntity.ok(memoryDetailResponse);
     }
 
     @PutMapping(path = "/{memoryId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateTravel(
             @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long memoryId,
-            @Valid @RequestPart(value = "data") TravelRequest travelRequest,
+            @Valid @RequestPart(value = "data") MemoryRequest memoryRequest,
             @RequestPart(value = "memoryThumbnailFile", required = false) MultipartFile travelThumbnailFile,
             @LoginMember Member member) {
-        travelService.updateTravel(travelRequest, memoryId, travelThumbnailFile, member);
+        travelService.updateTravel(memoryRequest, memoryId, travelThumbnailFile, member);
         return ResponseEntity.ok().build();
     }
 

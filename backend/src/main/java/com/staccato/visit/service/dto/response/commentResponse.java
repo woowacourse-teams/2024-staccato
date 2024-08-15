@@ -6,7 +6,7 @@ import com.staccato.visit.domain.VisitLog;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "특정 방문 기록에 대해 함께 간 친구와 나눈 대화 응답 형식입니다.")
-public record VisitLogResponse(
+public record commentResponse(
         @Schema(example = "1")
         Long commentId,
         @Schema(example = "1")
@@ -20,7 +20,7 @@ public record VisitLogResponse(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String content
 ) {
-    public VisitLogResponse(VisitLog visitLog) {
+    public commentResponse(VisitLog visitLog) {
         this(
                 visitLog.getId(),
                 visitLog.getMember().getId(),

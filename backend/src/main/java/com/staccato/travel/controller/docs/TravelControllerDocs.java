@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.member.domain.Member;
-import com.staccato.travel.service.dto.request.TravelRequest;
-import com.staccato.travel.service.dto.response.TravelDetailResponse;
-import com.staccato.travel.service.dto.response.TravelIdResponse;
-import com.staccato.travel.service.dto.response.TravelResponses;
+import com.staccato.travel.service.dto.request.MemoryRequest;
+import com.staccato.travel.service.dto.response.MemoryDetailResponse;
+import com.staccato.travel.service.dto.response.MemoryIdResponse;
+import com.staccato.travel.service.dto.response.MemoryResponses;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,8 +38,8 @@ public interface TravelControllerDocs {
                     """,
                     responseCode = "400")
     })
-    ResponseEntity<TravelIdResponse> createTravel(
-            @Parameter(description = "key = data") @Valid TravelRequest travelRequest,
+    ResponseEntity<MemoryIdResponse> createTravel(
+            @Parameter(description = "key = data") @Valid MemoryRequest memoryRequest,
             @Parameter(description = "key = travelThumbnailFile") MultipartFile travelThumbnailFile,
             @Parameter(hidden = true) Member member);
 
@@ -48,7 +48,7 @@ public interface TravelControllerDocs {
             @ApiResponse(description = "여행 상세 목록 조회 성공", responseCode = "200"),
             @ApiResponse(description = "입력받은 년도가 유효하지 않을 때 발생", responseCode = "400")
     })
-    ResponseEntity<TravelResponses> readAllTravels(
+    ResponseEntity<MemoryResponses> readAllTravels(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "조회할 년도", example = "2024") Integer year);
 
@@ -64,7 +64,7 @@ public interface TravelControllerDocs {
                     """,
                     responseCode = "400")
     })
-    ResponseEntity<TravelDetailResponse> readTravel(
+    ResponseEntity<MemoryDetailResponse> readTravel(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "여행 상세 ID", example = "1") @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId);
 
@@ -94,7 +94,7 @@ public interface TravelControllerDocs {
     })
     ResponseEntity<Void> updateTravel(
             @Parameter(description = "여행 상세 ID", example = "1") @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
-            @Parameter(description = "key = data", required = true) @Valid TravelRequest travelRequest,
+            @Parameter(description = "key = data", required = true) @Valid MemoryRequest memoryRequest,
             @Parameter(description = "key = travelThumbnailFile") MultipartFile travelThumbnailFile,
             @Parameter(hidden = true) Member member);
 
