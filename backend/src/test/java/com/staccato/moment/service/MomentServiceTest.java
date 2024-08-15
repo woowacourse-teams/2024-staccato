@@ -73,8 +73,7 @@ class MomentServiceTest extends ServiceSliceTest {
         saveMemory(member);
 
         // when
-        long momentId = momentService.createMoment(getMomentRequest(), List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), member)
-                .momentId();
+        long momentId = momentService.createMoment(getMomentRequest(), List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), member).momentId();
 
         // then
         assertAll(
