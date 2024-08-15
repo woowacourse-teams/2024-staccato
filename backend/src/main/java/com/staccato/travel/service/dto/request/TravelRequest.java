@@ -15,11 +15,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "여행 상세를 생성/수정하기 위한 요청 형식입니다.")
 public record TravelRequest(
         @Schema(example = "http://example.com/london.png")
-        String travelThumbnailUrl,
+        String memoryThumbnailUrl,
         @Schema(example = "런던 여행")
         @NotBlank(message = "여행 제목을 입력해주세요.")
         @Size(min = 1, max = 30, message = "제목은 공백 포함 1자 이상 30자 이하로 설정해주세요.")
-        String travelTitle,
+        String memoryTitle,
         @Schema(example = "런던 시내 탐방")
         @Size(max = 500, message = "내용의 최대 허용 글자수는 공백 포함 500자입니다.")
         String description,
@@ -33,8 +33,8 @@ public record TravelRequest(
         LocalDate endAt) {
     public Travel toTravel() {
         return Travel.builder()
-                .thumbnailUrl(travelThumbnailUrl)
-                .title(travelTitle)
+                .thumbnailUrl(memoryThumbnailUrl)
+                .title(memoryTitle)
                 .description(description)
                 .startAt(startAt)
                 .endAt(endAt)

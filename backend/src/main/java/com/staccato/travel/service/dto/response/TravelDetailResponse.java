@@ -12,12 +12,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "특정 여행 상세 정보에 대한 응답 형식입니다.")
 public record TravelDetailResponse(
         @Schema(example = "1")
-        Long travelId,
+        Long memoryId,
         @Schema(example = "https://example.com/travels/geumohrm.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        String travelThumbnailUrl,
+        String memoryThumbnailUrl,
         @Schema(example = "런던 여행")
-        String travelTitle,
+        String memoryTitle,
         @Schema(example = "런던 시내 탐방")
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String description,
@@ -26,7 +26,7 @@ public record TravelDetailResponse(
         @Schema(example = "2024-07-29")
         LocalDate endAt,
         List<MemberResponse> mates,
-        List<VisitResponse> visits
+        List<VisitResponse> moments
 ) {
     public TravelDetailResponse(Travel travel, List<VisitResponse> visitResponses) {
         this(

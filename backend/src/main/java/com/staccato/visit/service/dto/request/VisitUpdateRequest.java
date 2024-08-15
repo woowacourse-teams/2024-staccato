@@ -14,5 +14,5 @@ public record VisitUpdateRequest(
         String placeName,
         @ArraySchema(
                 arraySchema = @Schema(example = "[\"https://example.com/images/namsan_tower.jpg\", \"https://example.com/images/namsan_tower2.jpg\"]"))
-        List<String> visitImageUrls) {
+        List<String> momentImageUrls) {
 }

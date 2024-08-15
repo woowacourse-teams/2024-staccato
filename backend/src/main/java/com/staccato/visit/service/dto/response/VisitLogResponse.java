@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "특정 방문 기록에 대해 함께 간 친구와 나눈 대화 응답 형식입니다.")
 public record VisitLogResponse(
         @Schema(example = "1")
-        Long visitLogId,
+        Long commentId,
         @Schema(example = "1")
         Long memberId,
         @Schema(example = "카고")

@@ -12,17 +12,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "특정 방문 기록을 조회했을 때 응답 형식입니다.")
 public record VisitDetailResponse(
         @Schema(example = "1")
-        long visitId,
+        long momentId,
         @Schema(example = "남산 서울타워")
         String placeName,
         @ArraySchema(
                 arraySchema = @Schema(example = "[\"https://example.com/images/namsan_tower.jpg\", \"https://example.com/images/namsan_tower2.jpg\"]"))
-        List<String> visitImageUrls,
+        List<String> momentImageUrls,
         @Schema(example = "2021-11-08T11:58:20")
         LocalDate visitedAt,
         @Schema(example = "서울 용산구 남산공원길 105")
         String address,
-        List<VisitLogResponse> visitLogs
+        List<VisitLogResponse> comments
 ) {
     public VisitDetailResponse(Visit visit) {
         this(

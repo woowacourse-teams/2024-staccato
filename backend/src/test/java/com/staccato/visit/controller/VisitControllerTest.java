@@ -99,17 +99,17 @@ class VisitControllerTest {
         VisitRequest visitRequest = getVisitRequest(LocalDateTime.now());
         String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
         MockMultipartFile visitRequestPart = new MockMultipartFile("data", "visitRequest.json", "application/json", visitRequestJson.getBytes());
-        MockMultipartFile file1 = new MockMultipartFile("visitImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
-        MockMultipartFile file2 = new MockMultipartFile("visitImageFiles", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes());
-        MockMultipartFile file3 = new MockMultipartFile("visitImageFiles", "test-image3.jpg", "image/jpeg", "dummy image content".getBytes());
-        MockMultipartFile file4 = new MockMultipartFile("visitImageFiles", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes());
-        MockMultipartFile file5 = new MockMultipartFile("visitImageFiles", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file1 = new MockMultipartFile("momentImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file2 = new MockMultipartFile("momentImageFiles", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file3 = new MockMultipartFile("momentImageFiles", "test-image3.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file4 = new MockMultipartFile("momentImageFiles", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file5 = new MockMultipartFile("momentImageFiles", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes());
         VisitIdResponse visitIdResponse = new VisitIdResponse(1L);
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         when(visitService.createVisit(any(VisitRequest.class), any(List.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
-        mockMvc.perform(multipart("/visits")
+        mockMvc.perform(multipart("/moments")
                         .file(visitRequestPart)
                         .file(file1)
                         .file(file2)
@@ -119,7 +119,7 @@ class VisitControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/visits/1"))
+                .andExpect(header().string(HttpHeaders.LOCATION, "/moments/1"))
                 .andExpect(content().json(objectMapper.writeValueAsString(visitIdResponse)));
     }
 
@@ -153,7 +153,7 @@ class VisitControllerTest {
         when(visitService.createVisit(any(VisitRequest.class), any(List.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
-        mockMvc.perform(multipart("/visits")
+        mockMvc.perform(multipart("/moments")
                         .file(visitRequestPart)
                         .file(visitImageFiles)
                         .header(HttpHeaders.AUTHORIZATION, "token")
@@ -169,19 +169,19 @@ class VisitControllerTest {
         VisitRequest visitRequest = getVisitRequest(LocalDateTime.now());
         String visitRequestJson = objectMapper.writeValueAsString(visitRequest);
         MockMultipartFile visitRequestPart = new MockMultipartFile("data", "visitRequest.json", "application/json", visitRequestJson.getBytes());
-        MockMultipartFile file1 = new MockMultipartFile("visitImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
-        MockMultipartFile file2 = new MockMultipartFile("visitImageFiles", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes());
-        MockMultipartFile file3 = new MockMultipartFile("visitImageFiles", "test-image3.jpg", "image/jpeg", "dummy image content".getBytes());
-        MockMultipartFile file4 = new MockMultipartFile("visitImageFiles", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes());
-        MockMultipartFile file5 = new MockMultipartFile("visitImageFiles", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes());
-        MockMultipartFile file6 = new MockMultipartFile("visitImageFiles", "test-image6.jpg", "image/jpeg", "dummy image content".getBytes());
-        MockMultipartHttpServletRequestBuilder builder = multipart("/visits");
+        MockMultipartFile file1 = new MockMultipartFile("momentImageFiles", "test-image1.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file2 = new MockMultipartFile("momentImageFiles", "test-image2.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file3 = new MockMultipartFile("momentImageFiles", "test-image3.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file4 = new MockMultipartFile("momentImageFiles", "test-image4.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file5 = new MockMultipartFile("momentImageFiles", "test-image5.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartFile file6 = new MockMultipartFile("momentImageFiles", "test-image6.jpg", "image/jpeg", "dummy image content".getBytes());
+        MockMultipartHttpServletRequestBuilder builder = multipart("/moments");
         builder.file(visitRequestPart);
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/visits")
+        mockMvc.perform(multipart("/moments")
                         .file(visitRequestPart)
                         .file(file1)
                         .file(file2)
@@ -212,7 +212,7 @@ class VisitControllerTest {
         when(visitService.createVisit(any(VisitRequest.class), any(List.class), any(Member.class))).thenReturn(new VisitIdResponse(1L));
 
         // when & then
-        mockMvc.perform(multipart("/visits")
+        mockMvc.perform(multipart("/moments")
                         .file(visitRequestPart)
                         .file(imageFilePart)
                         .header(HttpHeaders.AUTHORIZATION, "token")
@@ -231,7 +231,7 @@ class VisitControllerTest {
         when(visitService.readVisitById(anyLong(), any(Member.class))).thenReturn(response);
 
         // when & then
-        mockMvc.perform(get("/visits/{visitId}", visitId)
+        mockMvc.perform(get("/moments/{visitId}", visitId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
@@ -244,7 +244,7 @@ class VisitControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문 기록 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(get("/visits/{visitId}", 0))
+        mockMvc.perform(get("/moments/{visitId}", 0))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -255,11 +255,11 @@ class VisitControllerTest {
         // given
         long visitId = 1L;
         VisitUpdateRequest updateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
-        MockMultipartFile file = new MockMultipartFile("visitImageFiles", "namsan_tower.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/visits/{visitId}", visitId)
+        mockMvc.perform(multipart("/moments/{momentId}", visitId)
                         .file(file)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(updateRequest)
                                 .getBytes()))
@@ -279,16 +279,16 @@ class VisitControllerTest {
         long visitId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
         VisitUpdateRequest updateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
-        MockMultipartFile file1 = new MockMultipartFile("visitImageFiles", "namsan_tower1.jpg".getBytes());
-        MockMultipartFile file2 = new MockMultipartFile("visitImageFiles", "namsan_tower2.jpg".getBytes());
-        MockMultipartFile file3 = new MockMultipartFile("visitImageFiles", "namsan_tower3.jpg".getBytes());
-        MockMultipartFile file4 = new MockMultipartFile("visitImageFiles", "namsan_tower4.jpg".getBytes());
-        MockMultipartFile file5 = new MockMultipartFile("visitImageFiles", "namsan_tower5.jpg".getBytes());
-        MockMultipartFile file6 = new MockMultipartFile("visitImageFiles", "namsan_tower6.jpg".getBytes());
+        MockMultipartFile file1 = new MockMultipartFile("momentImageFiles", "namsan_tower1.jpg".getBytes());
+        MockMultipartFile file2 = new MockMultipartFile("momentImageFiles", "namsan_tower2.jpg".getBytes());
+        MockMultipartFile file3 = new MockMultipartFile("momentImageFiles", "namsan_tower3.jpg".getBytes());
+        MockMultipartFile file4 = new MockMultipartFile("momentImageFiles", "namsan_tower4.jpg".getBytes());
+        MockMultipartFile file5 = new MockMultipartFile("momentImageFiles", "namsan_tower5.jpg".getBytes());
+        MockMultipartFile file6 = new MockMultipartFile("momentImageFiles", "namsan_tower6.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/visits/{visitId}", visitId)
+        mockMvc.perform(multipart("/moments/{visitId}", visitId)
                         .file(file1)
                         .file(file2)
                         .file(file3)
@@ -314,11 +314,11 @@ class VisitControllerTest {
         long visitId = 0L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문 기록 식별자는 양수로 이루어져야 합니다.");
         VisitUpdateRequest updateRequest = new VisitUpdateRequest("placeName", List.of("https://example1.com.jpg"));
-        MockMultipartFile file = new MockMultipartFile("visitImageFiles", "namsan_tower.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/visits/{visitId}", visitId)
+        mockMvc.perform(multipart("/moments/{visitId}", visitId)
                         .file(file)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(updateRequest)
                                 .getBytes()))
@@ -339,11 +339,11 @@ class VisitControllerTest {
         long visitId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문한 장소의 이름을 입력해주세요.");
         VisitUpdateRequest updateRequest = new VisitUpdateRequest(null, List.of("https://example1.com.jpg"));
-        MockMultipartFile file = new MockMultipartFile("visitImageFiles", "namsan_tower.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/visits/{visitId}", visitId)
+        mockMvc.perform(multipart("/moments/{visitId}", visitId)
                         .file(file)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(updateRequest)
                                 .getBytes()))
@@ -365,7 +365,7 @@ class VisitControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(delete("/visits/{id}", visitId)
+        mockMvc.perform(delete("/moments/{id}", visitId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
     }
@@ -378,7 +378,7 @@ class VisitControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "방문 기록 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(delete("/visits/{id}", visitId)
+        mockMvc.perform(delete("/moments/{id}", visitId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));

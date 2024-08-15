@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
-@RequestMapping("/travels")
+@RequestMapping("/memories")
 @RequiredArgsConstructor
 public class TravelController implements TravelControllerDocs {
     private final TravelService travelService;
@@ -40,11 +40,11 @@ public class TravelController implements TravelControllerDocs {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<TravelIdResponse> createTravel(
             @Valid @RequestPart(value = "data") TravelRequest travelRequest,
-            @RequestPart(value = "travelThumbnailFile", required = false) MultipartFile travelThumbnailFile,
+            @RequestPart(value = "memoryThumbnailFile", required = false) MultipartFile travelThumbnailFile,
             @LoginMember Member member
     ) {
         TravelIdResponse travelIdResponse = travelService.createTravel(travelRequest, travelThumbnailFile, member);
-        return ResponseEntity.created(URI.create("/travels/" + travelIdResponse.travelId())).body(travelIdResponse);
+        return ResponseEntity.created(URI.create("/memories/" + travelIdResponse.memoryId())).body(travelIdResponse);
     }
 
     @GetMapping
@@ -56,29 +56,29 @@ public class TravelController implements TravelControllerDocs {
         return ResponseEntity.ok(travelResponses);
     }
 
-    @GetMapping("/{travelId}")
+    @GetMapping("/{memoryId}")
     public ResponseEntity<TravelDetailResponse> readTravel(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId) {
-        TravelDetailResponse travelDetailResponse = travelService.readTravelById(travelId, member);
+            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long memoryId) {
+        TravelDetailResponse travelDetailResponse = travelService.readTravelById(memoryId, member);
         return ResponseEntity.ok(travelDetailResponse);
     }
 
-    @PutMapping(path = "/{travelId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(path = "/{memoryId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateTravel(
-            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
+            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long memoryId,
             @Valid @RequestPart(value = "data") TravelRequest travelRequest,
-            @RequestPart(value = "travelThumbnailFile", required = false) MultipartFile travelThumbnailFile,
+            @RequestPart(value = "memoryThumbnailFile", required = false) MultipartFile travelThumbnailFile,
             @LoginMember Member member) {
-        travelService.updateTravel(travelRequest, travelId, travelThumbnailFile, member);
+        travelService.updateTravel(travelRequest, memoryId, travelThumbnailFile, member);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{travelId}")
+    @DeleteMapping("/{memoryId}")
     public ResponseEntity<Void> deleteTravel(
-            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long travelId,
+            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long memoryId,
             @LoginMember Member member) {
-        travelService.deleteTravel(travelId, member);
+        travelService.deleteTravel(memoryId, member);
         return ResponseEntity.ok().build();
     }
 }

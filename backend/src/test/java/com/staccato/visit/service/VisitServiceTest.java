@@ -55,7 +55,7 @@ class VisitServiceTest extends ServiceSliceTest {
         saveTravel(member);
 
         // when
-        long visitId = visitService.createVisit(getVisitRequestWithoutImage(), List.of(), member).visitId();
+        long visitId = visitService.createVisit(getVisitRequestWithoutImage(), List.of(), member).momentId();
 
         // then
         assertThat(visitRepository.findById(visitId)).isNotEmpty();
@@ -73,7 +73,7 @@ class VisitServiceTest extends ServiceSliceTest {
         saveTravel(member);
 
         // when
-        long visitId = visitService.createVisit(getVisitRequest(), List.of(new MockMultipartFile("visitImageFiles", "example.jpg".getBytes())), member).visitId();
+        long visitId = visitService.createVisit(getVisitRequest(), List.of(new MockMultipartFile("visitImageFiles", "example.jpg".getBytes())), member).momentId();
 
         // then
         assertAll(

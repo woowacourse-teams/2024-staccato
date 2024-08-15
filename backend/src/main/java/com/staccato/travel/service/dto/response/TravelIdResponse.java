@@ -1,4 +1,4 @@
 package com.staccato.travel.service.dto.response;
 
-public record TravelIdResponse(long travelId) {
+public record TravelIdResponse(long memoryId) {
 }

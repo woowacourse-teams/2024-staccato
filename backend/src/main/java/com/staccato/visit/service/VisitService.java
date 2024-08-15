@@ -32,7 +32,7 @@ public class VisitService {
 
     @Transactional
     public VisitIdResponse createVisit(VisitRequest visitRequest, List<MultipartFile> visitImageFiles, Member member) {
-        Travel travel = getTravelById(visitRequest.travelId());
+        Travel travel = getTravelById(visitRequest.memoryId());
         validateOwner(travel, member);
         Visit visit = visitRequest.toVisit(travel);
         List<String> visitImageUrls = cloudStorageService.uploadFiles(visitImageFiles);
@@ -66,7 +66,7 @@ public class VisitService {
         validateOwner(visit.getTravel(), member);
         List<String> addedImageUrls = cloudStorageService.uploadFiles(visitImageFiles);
         VisitImages visitImages = VisitImages.builder()
-                .existingImages(visitUpdateRequest.visitImageUrls())
+                .existingImages(visitUpdateRequest.momentImageUrls())
                 .addedImages(addedImageUrls)
                 .build();
 

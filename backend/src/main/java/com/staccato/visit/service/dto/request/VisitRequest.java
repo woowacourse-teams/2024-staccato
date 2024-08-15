@@ -37,7 +37,7 @@ public record VisitRequest(
         @Schema(example = "1")
         @NotNull(message = "여행 상세를 선택해주세요.")
         @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.")
-        long travelId
+        long memoryId
 ) {
     public Visit toVisit(Travel travel) {
         return Visit.builder()

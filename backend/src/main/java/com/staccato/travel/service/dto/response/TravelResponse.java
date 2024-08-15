@@ -13,12 +13,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "여행 상세 목록 조회 시 각각의 여행 상세에 대한 응답 형식입니다.")
 public record TravelResponse(
         @Schema(example = "1")
-        Long travelId,
+        Long memoryId,
         @Schema(example = "https://example.com/travels/geumohrm.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        String travelThumbnailUrl,
+        String memoryThumbnailUrl,
         @Schema(example = "런던 여행")
-        String travelTitle,
+        String memoryTitle,
         @Schema(example = "런던 시내 탐방")
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String description,

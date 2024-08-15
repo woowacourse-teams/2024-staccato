@@ -32,7 +32,7 @@ import com.staccato.visit.service.dto.response.VisitIdResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/visits")
+@RequestMapping("/moments")
 @RequiredArgsConstructor
 @Validated
 public class VisitController implements VisitControllerDocs {
@@ -42,38 +42,38 @@ public class VisitController implements VisitControllerDocs {
     public ResponseEntity<VisitIdResponse> createVisit(
             @LoginMember Member member,
             @Valid @RequestPart(value = "data") VisitRequest visitRequest,
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart(value = "visitImageFiles") List<MultipartFile> visitImageFiles
+            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart(value = "momentImageFiles") List<MultipartFile> visitImageFiles
     ) {
         VisitIdResponse visitIdResponse = visitService.createVisit(visitRequest, visitImageFiles, member);
-        return ResponseEntity.created(URI.create("/visits/" + visitIdResponse.visitId()))
+        return ResponseEntity.created(URI.create("/moments/" + visitIdResponse.momentId()))
                 .body(visitIdResponse);
     }
 
-    @GetMapping("/{visitId}")
+    @GetMapping("/{momentId}")
     public ResponseEntity<VisitDetailResponse> readVisitById(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId) {
-        VisitDetailResponse visitDetailResponse = visitService.readVisitById(visitId, member);
+            @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long momentId) {
+        VisitDetailResponse visitDetailResponse = visitService.readVisitById(momentId, member);
         return ResponseEntity.ok().body(visitDetailResponse);
     }
 
-    @PutMapping(path = "/{visitId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(path = "/{momentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateVisitById(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId,
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart("visitImageFiles") List<MultipartFile> visitImageFiles,
+            @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart("momentImageFiles") List<MultipartFile> visitImageFiles,
             @Valid @RequestPart(value = "data") VisitUpdateRequest request
     ) {
-        visitService.updateVisitById(visitId, request, visitImageFiles, member);
+        visitService.updateVisitById(momentId, request, visitImageFiles, member);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{visitId}")
+    @DeleteMapping("/{momentId}")
     public ResponseEntity<Void> deleteVisitById(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long visitId
+            @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long momentId
     ) {
-        visitService.deleteVisitById(visitId, member);
+        visitService.deleteVisitById(momentId, member);
         return ResponseEntity.ok().build();
     }
 }

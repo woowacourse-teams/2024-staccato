@@ -96,19 +96,19 @@ class TravelControllerTest {
     @MethodSource("travelRequestProvider")
     void createTravel(TravelRequest travelRequest) throws Exception {
         // given
-        MockMultipartFile file = new MockMultipartFile("travelThumbnailUrl", "example.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         when(travelService.createTravel(any(), any(), any())).thenReturn(new TravelIdResponse(1));
 
         // when & then
-        mockMvc.perform(multipart("/travels")
+        mockMvc.perform(multipart("/memories")
                         .file(file)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/travels/1"))
-                .andExpect(jsonPath("$.travelId").value(1));
+                .andExpect(header().string(HttpHeaders.LOCATION, "/memories/1"))
+                .andExpect(jsonPath("$.memoryId").value(1));
     }
 
     @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 여행 상세를 생성할 수 없다.")
@@ -121,7 +121,7 @@ class TravelControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
-        mockMvc.perform(multipart("/travels")
+        mockMvc.perform(multipart("/memories")
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -138,7 +138,7 @@ class TravelControllerTest {
         when(travelService.readAllTravels(any(Member.class), any())).thenReturn(travelResponses);
 
         // when & then
-        mockMvc.perform(get("/travels")
+        mockMvc.perform(get("/memories")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(travelResponses)));
@@ -154,7 +154,7 @@ class TravelControllerTest {
         when(travelService.readTravelById(anyLong(), any(Member.class))).thenReturn(travelDetailResponse);
 
         // when & then
-        mockMvc.perform(get("/travels/{travelId}", travelId)
+        mockMvc.perform(get("/memories/{travelId}", travelId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(travelDetailResponse)));
@@ -176,11 +176,11 @@ class TravelControllerTest {
     void updateTravel(TravelRequest travelRequest) throws Exception {
         // given
         long travelId = 1L;
-        MockMultipartFile file = new MockMultipartFile("travelThumbnailUrl", "example.jpg".getBytes());
+        MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/travels/{travelId}", travelId)
+        mockMvc.perform(multipart("/memories/{travelId}", travelId)
                         .file(file)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
                         .with(request -> {
@@ -202,7 +202,7 @@ class TravelControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
-        mockMvc.perform(multipart("/travels/{travelId}", travelId)
+        mockMvc.perform(multipart("/memories/{travelId}", travelId)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
                         .with(request -> {
                             request.setMethod("PUT");
@@ -224,7 +224,7 @@ class TravelControllerTest {
         TravelRequest travelRequest = new TravelRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
 
         // when & then
-        mockMvc.perform(multipart("/travels/{travelId}", travelId)
+        mockMvc.perform(multipart("/memories/{travelId}", travelId)
                         .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(travelRequest).getBytes()))
                         .with(request -> {
                             request.setMethod("PUT");
@@ -244,7 +244,7 @@ class TravelControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(delete("/travels/{travelId}", travelId)
+        mockMvc.perform(delete("/memories/{travelId}", travelId)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
@@ -258,7 +258,7 @@ class TravelControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "여행 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(delete("/travels/{travelId}", invalidId)
+        mockMvc.perform(delete("/memories/{travelId}", invalidId)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
