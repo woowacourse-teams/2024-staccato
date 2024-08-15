@@ -4,11 +4,11 @@ import com.woowacourse.staccato.domain.model.Member
 import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.model.MemoryVisit
 import com.woowacourse.staccato.presentation.common.MemberUiModel
-import com.woowacourse.staccato.presentation.memory.model.TravelUiModel
-import com.woowacourse.staccato.presentation.memory.model.TravelVisitUiModel
+import com.woowacourse.staccato.presentation.memory.model.MemoryUiModel
+import com.woowacourse.staccato.presentation.memory.model.MemoryVisitUiModel
 
 fun Memory.toUiModel() =
-    TravelUiModel(
+    MemoryUiModel(
         id = travelId,
         title = travelTitle,
         travelThumbnailUrl = travelThumbnailUrl,
@@ -27,7 +27,7 @@ fun Member.toUiModel() =
     )
 
 fun MemoryVisit.toUiModel() =
-    TravelVisitUiModel(
+    MemoryVisitUiModel(
         id = visitId,
         placeName = placeName,
         visitImageUrl = visitImageUrl,

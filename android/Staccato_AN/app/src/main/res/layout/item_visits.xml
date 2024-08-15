@@ -12,7 +12,7 @@
 
         <variable
             name="visit"
-            type="com.woowacourse.staccato.presentation.memory.model.TravelVisitUiModel" />
+            type="com.woowacourse.staccato.presentation.memory.model.MemoryVisitUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

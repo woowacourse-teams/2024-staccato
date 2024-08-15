@@ -14,13 +14,13 @@ import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toUiModel
-import com.woowacourse.staccato.presentation.memory.model.TravelUiModel
+import com.woowacourse.staccato.presentation.memory.model.MemoryUiModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class TravelViewModel(private val memoryRepository: MemoryRepository) : ViewModel() {
-    private val _travel = MutableLiveData<TravelUiModel>()
-    val travel: LiveData<TravelUiModel> get() = _travel
+    private val _travel = MutableLiveData<MemoryUiModel>()
+    val travel: LiveData<MemoryUiModel> get() = _travel
 
     private val _errorMessage = MutableSingleLiveData<String>()
     val errorMessage: SingleLiveData<String> get() = _errorMessage

@@ -4,7 +4,7 @@ import com.woowacourse.staccato.presentation.common.MemberUiModel
 import com.woowacourse.staccato.presentation.common.dummyMates
 import java.time.LocalDate
 
-data class TravelUiModel(
+data class MemoryUiModel(
     val id: Long,
     val title: String,
     val travelThumbnailUrl: String? = null,
@@ -12,11 +12,11 @@ data class TravelUiModel(
     val endAt: LocalDate,
     val description: String? = null,
     val mates: List<MemberUiModel>,
-    val visits: List<TravelVisitUiModel>,
+    val visits: List<MemoryVisitUiModel>,
 )
 
-val dummyTravel: TravelUiModel =
-    TravelUiModel(
+val dummyTravel: MemoryUiModel =
+    MemoryUiModel(
         id = 1L,
         title = "제주도 여행",
         travelThumbnailUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSA8EwTvV8MvmnT5SHmZVbqaPVflGBSRsj-uA&s",
