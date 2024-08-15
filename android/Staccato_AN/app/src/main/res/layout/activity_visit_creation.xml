@@ -115,40 +115,32 @@
                     app:layout_constraintStart_toStartOf="@id/tv_place_address_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address" />
 
+                <TextView
+                    android:id="@+id/tv_photo_title_size"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:textAppearance="@style/Typography.Body4"
+                    android:textColor="@color/gray3"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_photo_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_photo_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_photo_title"
+                    bind:currentPhotoNumbers="@{viewModel.selectedImages.size}"
+                    bind:maxPhotoNumbers="@{5}" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_photo_horizontal"
                     android:layout_width="0dp"
+                    android:layout_marginHorizontal="24dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
-                    android:foregroundGravity="left"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:foregroundGravity="center"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
-                    tools:listitem="@layout/item_photo_attach" />
-
-                <FrameLayout
-                    android:id="@+id/frame_photo_attach"
-                    android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{()-> visitCreationHandler.onPhotoAttachClicked()}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
-                    bind:setAttachedPhotoVisibility="@{viewModel.selectedImages}">
-
-                    <include
-                        layout="@layout/layout_photo_attach"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                </FrameLayout>
+                    app:spanCount="2"
+                    tools:listitem="@layout/item_attached_photo" />
 
                 <TextView
                     android:id="@+id/tv_travel_selection_title"
@@ -157,7 +149,7 @@
                     android:text="여행 선택"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_photo_title"
-                    app:layout_constraintTop_toBottomOf="@id/frame_photo_attach" />
+                    app:layout_constraintTop_toBottomOf="@id/rv_photo_horizontal" />
 
                 <TextView
                     android:id="@+id/tv_visit_creation_required_mark_third"

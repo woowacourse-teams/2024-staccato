@@ -8,6 +8,7 @@
     <string name="all_cancel">취소</string>
     <string name="all_confirm">확인</string>
     <string name="all_photo">사진</string>
+    <string name="all_photo_number">(%s/%s)</string>
     <string name="all_photo_attach">사진을 첨부해주세요</string>
     <string name="all_visited_date">방문 날짜</string>
     <string name="all_date_dots_format">%s. %s. %s</string>
