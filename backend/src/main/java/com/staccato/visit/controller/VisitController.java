@@ -42,9 +42,9 @@ public class VisitController implements VisitControllerDocs {
     public ResponseEntity<MomentIdResponse> createVisit(
             @LoginMember Member member,
             @Valid @RequestPart(value = "data") MomentRequest momentRequest,
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart(value = "momentImageFiles") List<MultipartFile> visitImageFiles
+            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart(value = "momentImageFiles") List<MultipartFile> momentImageFiles
     ) {
-        MomentIdResponse momentIdResponse = visitService.createVisit(momentRequest, visitImageFiles, member);
+        MomentIdResponse momentIdResponse = visitService.createVisit(momentRequest, momentImageFiles, member);
         return ResponseEntity.created(URI.create("/moments/" + momentIdResponse.momentId()))
                 .body(momentIdResponse);
     }
@@ -61,10 +61,10 @@ public class VisitController implements VisitControllerDocs {
     public ResponseEntity<Void> updateVisitById(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "방문 기록 식별자는 양수로 이루어져야 합니다.") long momentId,
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart("momentImageFiles") List<MultipartFile> visitImageFiles,
+            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart("momentImageFiles") List<MultipartFile> momentImageFiles,
             @Valid @RequestPart(value = "data") MomentUpdateRequest request
     ) {
-        visitService.updateVisitById(momentId, request, visitImageFiles, member);
+        visitService.updateVisitById(momentId, request, momentImageFiles, member);
         return ResponseEntity.ok().build();
     }
 

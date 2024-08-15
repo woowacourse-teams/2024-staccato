@@ -40,10 +40,10 @@ public class TravelController implements TravelControllerDocs {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MemoryIdResponse> createTravel(
             @Valid @RequestPart(value = "data") MemoryRequest memoryRequest,
-            @RequestPart(value = "memoryThumbnailFile", required = false) MultipartFile travelThumbnailFile,
+            @RequestPart(value = "memoryThumbnailFile", required = false) MultipartFile memoryThumbnailFile,
             @LoginMember Member member
     ) {
-        MemoryIdResponse memoryIdResponse = travelService.createTravel(memoryRequest, travelThumbnailFile, member);
+        MemoryIdResponse memoryIdResponse = travelService.createTravel(memoryRequest, memoryThumbnailFile, member);
         return ResponseEntity.created(URI.create("/memories/" + memoryIdResponse.memoryId())).body(memoryIdResponse);
     }
 
@@ -68,9 +68,9 @@ public class TravelController implements TravelControllerDocs {
     public ResponseEntity<Void> updateTravel(
             @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long memoryId,
             @Valid @RequestPart(value = "data") MemoryRequest memoryRequest,
-            @RequestPart(value = "memoryThumbnailFile", required = false) MultipartFile travelThumbnailFile,
+            @RequestPart(value = "memoryThumbnailFile", required = false) MultipartFile memoryThumbnailFile,
             @LoginMember Member member) {
-        travelService.updateTravel(memoryRequest, memoryId, travelThumbnailFile, member);
+        travelService.updateTravel(memoryRequest, memoryId, memoryThumbnailFile, member);
         return ResponseEntity.ok().build();
     }
 
