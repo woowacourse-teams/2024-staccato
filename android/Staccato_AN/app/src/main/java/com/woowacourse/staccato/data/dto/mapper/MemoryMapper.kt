@@ -4,7 +4,7 @@ import com.woowacourse.staccato.data.dto.memory.MemoryRequest
 import com.woowacourse.staccato.data.dto.memory.MemoryResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryUpdateRequest
 import com.woowacourse.staccato.data.dto.memory.MemoryVisitDto
-import com.woowacourse.staccato.domain.model.NewTravel
+import com.woowacourse.staccato.domain.model.NewMemory
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.model.TravelVisit
 import java.time.LocalDate
@@ -29,7 +29,7 @@ fun MemoryVisitDto.toDomain() =
         visitedAt = LocalDate.parse(visitedAt),
     )
 
-fun NewTravel.toDto() =
+fun NewMemory.toDto() =
     MemoryRequest(
         travelTitle = travelTitle,
         description = description,
@@ -37,7 +37,7 @@ fun NewTravel.toDto() =
         endAt = endAt.toString(),
     )
 
-fun NewTravel.toTravelUpdateRequest() =
+fun NewMemory.toTravelUpdateRequest() =
     MemoryUpdateRequest(
         travelThumbnailUrl = travelThumbnail,
         travelTitle = travelTitle,

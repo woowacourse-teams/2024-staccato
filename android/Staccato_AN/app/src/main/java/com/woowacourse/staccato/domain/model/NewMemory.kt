@@ -2,7 +2,7 @@ package com.woowacourse.staccato.domain.model
 
 import java.time.LocalDate
 
-data class NewTravel(
+data class NewMemory(
     val travelThumbnail: String? = null,
     val travelTitle: String,
     val startAt: LocalDate,

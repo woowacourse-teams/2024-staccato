@@ -11,7 +11,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.dto.Status
-import com.woowacourse.staccato.domain.model.NewTravel
+import com.woowacourse.staccato.domain.model.NewMemory
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
@@ -26,8 +26,8 @@ class TravelUpdateViewModel(
     private val travelId: Long,
     private val memoryRepository: MemoryRepository,
 ) : ViewModel() {
-    private val _travel = MutableLiveData<NewTravel>()
-    val travel: LiveData<NewTravel> get() = _travel
+    private val _travel = MutableLiveData<NewMemory>()
+    val travel: LiveData<NewMemory> get() = _travel
 
     private val _imageUrl = MutableLiveData<String?>()
     val imageUrl: LiveData<String?> get() = _imageUrl
@@ -71,9 +71,9 @@ class TravelUpdateViewModel(
     fun updateTravel(context: Context) {
         _isPosting.value = true
         viewModelScope.launch {
-            val newTravel: NewTravel = makeNewTravel()
+            val newMemory: NewMemory = makeNewTravel()
             val thumbnailFile: MultipartBody.Part? = convertTravelUriToFile(context, _imageUri.value, TRAVEL_FILE_NAME)
-            val result = memoryRepository.updateTravel(travelId, newTravel, thumbnailFile)
+            val result = memoryRepository.updateTravel(travelId, newMemory, thumbnailFile)
             result
                 .onSuccess { updateSuccessStatus() }
                 .onServerError(::handleServerError)
@@ -98,7 +98,7 @@ class TravelUpdateViewModel(
     }
 
     private fun makeNewTravel() =
-        NewTravel(
+        NewMemory(
             travelThumbnail = imageUrl.value,
             travelTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),

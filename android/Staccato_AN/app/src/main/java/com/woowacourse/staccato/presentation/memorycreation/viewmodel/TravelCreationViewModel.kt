@@ -13,7 +13,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
-import com.woowacourse.staccato.domain.model.NewTravel
+import com.woowacourse.staccato.domain.model.NewMemory
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
 import com.woowacourse.staccato.presentation.util.convertTravelUriToFile
@@ -60,7 +60,7 @@ class TravelCreationViewModel(
     fun createTravel(context: Context) {
         _isPosting.value = true
         viewModelScope.launch {
-            val travel: NewTravel = makeNewTravel()
+            val travel: NewMemory = makeNewTravel()
             val thumbnailFile: MultipartBody.Part? =
                 convertTravelUriToFile(context, _imageUri.value, name = TRAVEL_FILE_NAME)
             val result: ResponseResult<MemoryCreationResponse> =
@@ -76,8 +76,8 @@ class TravelCreationViewModel(
         _createdTravelId.value = memoryCreationResponse.travelId
     }
 
-    private fun makeNewTravel(): NewTravel =
-        NewTravel(
+    private fun makeNewTravel(): NewMemory =
+        NewMemory(
             travelTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
             endAt = endDate.value ?: throw IllegalArgumentException(),

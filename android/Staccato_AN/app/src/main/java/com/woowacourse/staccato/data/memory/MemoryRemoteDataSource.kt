@@ -6,7 +6,7 @@ import com.woowacourse.staccato.data.dto.mapper.toDto
 import com.woowacourse.staccato.data.dto.mapper.toTravelUpdateRequest
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryResponse
-import com.woowacourse.staccato.domain.model.NewTravel
+import com.woowacourse.staccato.domain.model.NewMemory
 import okhttp3.MultipartBody
 
 class MemoryRemoteDataSource(
@@ -16,20 +16,20 @@ class MemoryRemoteDataSource(
         handleApiResponse { memoryApiService.getTravel(travelId) }
 
     override suspend fun createTravel(
-        newTravel: NewTravel,
+        newMemory: NewMemory,
         thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<MemoryCreationResponse> =
         handleApiResponse {
-            memoryApiService.postTravel(newTravel.toDto(), thumbnailFile)
+            memoryApiService.postTravel(newMemory.toDto(), thumbnailFile)
         }
 
     override suspend fun updateTravel(
         travelId: Long,
-        newTravel: NewTravel,
+        newMemory: NewMemory,
         thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<String> =
         handleApiResponse {
-            memoryApiService.putTravel(travelId, newTravel.toTravelUpdateRequest(), thumbnailFile)
+            memoryApiService.putTravel(travelId, newMemory.toTravelUpdateRequest(), thumbnailFile)
         }
 
     override suspend fun deleteTravel(travelId: Long): ResponseResult<Unit> = handleApiResponse { memoryApiService.deleteTravel(travelId) }
