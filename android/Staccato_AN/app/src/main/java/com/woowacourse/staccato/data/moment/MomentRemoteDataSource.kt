@@ -6,39 +6,39 @@ import com.woowacourse.staccato.data.dto.moment.MomentResponse
 import com.woowacourse.staccato.data.dto.moment.MomentUpdateRequest
 import okhttp3.MultipartBody
 
-class VisitRemoteDataSource(
+class MomentRemoteDataSource(
     private val momentApiService: MomentApiService,
 ) {
-    suspend fun fetchVisit(visitId: Long): MomentResponse {
-        return momentApiService.getMoment(momentId = visitId)
+    suspend fun fetchMoment(momentId: Long): MomentResponse {
+        return momentApiService.getMoment(momentId = momentId)
     }
 
-    suspend fun createVisit(
+    suspend fun createMoment(
         momentCreationRequest: MomentCreationRequest,
-        visitImageFiles: List<MultipartBody.Part>,
+        momentImageFiles: List<MultipartBody.Part>,
     ): MomentCreationResponse {
         return momentApiService.postMoment(
             data = momentCreationRequest,
-            momentImageFiles = visitImageFiles,
+            momentImageFiles = momentImageFiles,
         )
     }
 
-    suspend fun updateVisit(
-        visitId: Long,
+    suspend fun updateMoment(
+        momentId: Long,
         placeName: String,
-        visitImageUrls: List<String>,
-        visitImageFiles: List<MultipartBody.Part>,
+        momentImageUrls: List<String>,
+        momentImageFiles: List<MultipartBody.Part>,
     ) = momentApiService.putMoment(
-        momentId = visitId,
+        momentId = momentId,
         data =
             MomentUpdateRequest(
                 placeName = placeName,
-                momentImageUrls = visitImageUrls,
+                momentImageUrls = momentImageUrls,
             ),
-        momentImageFiles = visitImageFiles,
+        momentImageFiles = momentImageFiles,
     )
 
-    suspend fun deleteVisit(visitId: Long) {
-        momentApiService.deleteMoment(visitId)
+    suspend fun deleteMoment(momentId: Long) {
+        momentApiService.deleteMoment(momentId)
     }
 }

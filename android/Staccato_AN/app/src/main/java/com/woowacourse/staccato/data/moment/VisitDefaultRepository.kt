@@ -8,11 +8,11 @@ import com.woowacourse.staccato.domain.repository.VisitRepository
 import okhttp3.MultipartBody
 import java.time.LocalDateTime
 
-class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource) :
+class VisitDefaultRepository(private val remoteDataSource: MomentRemoteDataSource) :
     VisitRepository {
     override suspend fun getVisit(visitId: Long): Result<Visit> {
         return runCatching {
-            remoteDataSource.fetchVisit(visitId).toDomain()
+            remoteDataSource.fetchMoment(visitId).toDomain()
         }
     }
 
@@ -26,7 +26,7 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
         visitImageMultiParts: List<MultipartBody.Part>,
     ): Result<MomentCreationResponse> {
         return runCatching {
-            remoteDataSource.createVisit(
+            remoteDataSource.createMoment(
                 MomentCreationRequest(
                     memoryId = memoryId,
                     placeName = placeName,
@@ -47,18 +47,18 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
         visitImageMultiParts: List<MultipartBody.Part>,
     ): Result<Unit> {
         return runCatching {
-            remoteDataSource.updateVisit(
-                visitId = visitId,
+            remoteDataSource.updateMoment(
+                momentId = visitId,
                 placeName = placeName,
-                visitImageUrls = visitImageUrls,
-                visitImageFiles = visitImageMultiParts,
+                momentImageUrls = visitImageUrls,
+                momentImageFiles = visitImageMultiParts,
             )
         }
     }
 
     override suspend fun deleteVisit(visitId: Long): Result<Unit> {
         return runCatching {
-            remoteDataSource.deleteVisit(visitId)
+            remoteDataSource.deleteMoment(visitId)
         }
     }
 }
