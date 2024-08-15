@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="travel"
-            type="com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel" />
+            name="memory"
+            type="com.woowacourse.staccato.presentation.timeline.model.TimelineMemoryUiModel" />
 
         <variable
             name="eventHandler"
@@ -52,7 +52,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/view_timeline"
             app:layout_constraintTop_toTopOf="parent"
-            app:travel="@{travel}" />
+            app:memory="@{memory}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

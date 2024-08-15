@@ -1,19 +1,19 @@
 package com.woowacourse.staccato.data.dto.mapper
 
-import com.woowacourse.staccato.data.dto.travel.TravelRequest
-import com.woowacourse.staccato.data.dto.travel.TravelResponse
-import com.woowacourse.staccato.data.dto.travel.TravelUpdateRequest
-import com.woowacourse.staccato.data.dto.travel.TravelVisitDto
-import com.woowacourse.staccato.domain.model.NewTravel
-import com.woowacourse.staccato.domain.model.Travel
-import com.woowacourse.staccato.domain.model.TravelVisit
+import com.woowacourse.staccato.data.dto.memory.MemoryRequest
+import com.woowacourse.staccato.data.dto.memory.MemoryResponse
+import com.woowacourse.staccato.data.dto.memory.MemoryUpdateRequest
+import com.woowacourse.staccato.data.dto.memory.MemoryVisitDto
+import com.woowacourse.staccato.domain.model.NewMemory
+import com.woowacourse.staccato.domain.model.Memory
+import com.woowacourse.staccato.domain.model.MemoryVisit
 import java.time.LocalDate
 
-fun TravelResponse.toDomain() =
-    Travel(
-        travelId = travelId,
-        travelThumbnailUrl = travelThumbnailUrl,
-        travelTitle = travelTitle,
+fun MemoryResponse.toDomain() =
+    Memory(
+        memoryId = memoryId,
+        memoryThumbnailUrl = memoryThumbnailUrl,
+        memoryTitle = memoryTitle,
         startAt = LocalDate.parse(startAt),
         endAt = LocalDate.parse(endAt),
         description = description,
@@ -21,26 +21,26 @@ fun TravelResponse.toDomain() =
         visits = visits.map { it.toDomain() },
     )
 
-fun TravelVisitDto.toDomain() =
-    TravelVisit(
+fun MemoryVisitDto.toDomain() =
+    MemoryVisit(
         visitId = visitId,
         placeName = placeName,
         visitImageUrl = visitImageUrl,
         visitedAt = LocalDate.parse(visitedAt),
     )
 
-fun NewTravel.toDto() =
-    TravelRequest(
-        travelTitle = travelTitle,
+fun NewMemory.toDto() =
+    MemoryRequest(
+        memoryTitle = memoryTitle,
         description = description,
         startAt = startAt.toString(),
         endAt = endAt.toString(),
     )
 
-fun NewTravel.toTravelUpdateRequest() =
-    TravelUpdateRequest(
-        travelThumbnailUrl = travelThumbnail,
-        travelTitle = travelTitle,
+fun NewMemory.toMemoryUpdateRequest() =
+    MemoryUpdateRequest(
+        memoryThumbnailUrl = memoryThumbnail,
+        memoryTitle = memoryTitle,
         description = description,
         startAt = startAt.toString(),
         endAt = endAt.toString(),

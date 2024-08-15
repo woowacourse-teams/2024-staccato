@@ -10,16 +10,16 @@
         android:label="fragment_timeline"
         tools:layout="@layout/fragment_timeline">
         <action
-            android:id="@+id/action_timelineFragment_to_travelFragment"
-            app:destination="@id/travelFragment" />
+            android:id="@+id/action_timelineFragment_to_memoryFragment"
+            app:destination="@id/memoryFragment" />
     </fragment>
     <fragment
-        android:id="@+id/travelFragment"
-        android:name="com.woowacourse.staccato.presentation.travel.TravelFragment"
-        android:label="fragment_travel"
-        tools:layout="@layout/fragment_travel">
+        android:id="@+id/memoryFragment"
+        android:name="com.woowacourse.staccato.presentation.memory.MemoryFragment"
+        android:label="fragment_memory"
+        tools:layout="@layout/fragment_memory">
         <action
-            android:id="@+id/action_travelFragment_to_visitFragment"
+            android:id="@+id/action_memoryFragment_to_visitFragment"
             app:destination="@id/visitFragment" />
     </fragment>
     <fragment

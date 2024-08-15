@@ -36,7 +36,7 @@ class TimelineFragment :
     }
 
     private fun setUpObserving() {
-        timelineViewModel.travels.observe(viewLifecycleOwner) { timeline ->
+        timelineViewModel.Memories.observe(viewLifecycleOwner) { timeline ->
             // TODO: data binding 으로 가시성 설정되지 않는 오류 해결하기
             if (timeline.isEmpty()) {
                 binding.tvTimelineEmpty.visibility = View.VISIBLE
@@ -57,16 +57,16 @@ class TimelineFragment :
         }
     }
 
-    private fun navigateToTravel(bundle: Bundle) {
-        findNavController().navigate(R.id.action_timelineFragment_to_travelFragment, bundle)
+    private fun navigateToMemory(bundle: Bundle) {
+        findNavController().navigate(R.id.action_timelineFragment_to_memoryFragment, bundle)
     }
 
-    override fun onTravelClicked(travelId: Long) {
-        val bundle: Bundle = bundleOf(TRAVEL_ID_KEY to travelId)
-        navigateToTravel(bundle)
+    override fun onMemoryClicked(MemoryId: Long) {
+        val bundle: Bundle = bundleOf(MEMORY_ID_KEY to MemoryId)
+        navigateToMemory(bundle)
     }
 
     companion object {
-        const val TRAVEL_ID_KEY = "travelId"
+        const val MEMORY_ID_KEY = "MemoryId"
     }
 }

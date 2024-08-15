@@ -17,7 +17,7 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
     }
 
     override suspend fun createVisit(
-        travelId: Long,
+        MemoryId: Long,
         placeName: String,
         latitude: String,
         longitude: String,
@@ -28,7 +28,7 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
         return runCatching {
             remoteDataSource.createVisit(
                 VisitCreationRequest(
-                    travelId = travelId,
+                    MemoryId = MemoryId,
                     placeName = placeName,
                     latitude = latitude,
                     longitude = longitude,

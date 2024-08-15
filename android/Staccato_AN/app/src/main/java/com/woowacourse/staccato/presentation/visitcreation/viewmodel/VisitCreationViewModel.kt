@@ -12,7 +12,7 @@ import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
-import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
+import com.woowacourse.staccato.presentation.visitcreation.model.VisitMemoryUiModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import java.time.LocalDateTime
@@ -25,8 +25,8 @@ class VisitCreationViewModel(
     private val _address = MutableLiveData<String>("서울특별시 강남구 테헤란로 411")
     val address: LiveData<String> get() = _address
 
-    private val _travel = MutableLiveData<VisitTravelUiModel>()
-    val travel: LiveData<VisitTravelUiModel> get() = _travel
+    private val _memory = MutableLiveData<VisitMemoryUiModel>()
+    val Memory: LiveData<VisitMemoryUiModel> get() = _memory
 
     private val _selectedImages = MutableLiveData<Set<Uri>>()
     val selectedImages: LiveData<Set<Uri>> get() = _selectedImages
@@ -64,14 +64,14 @@ class VisitCreationViewModel(
         if (currentUris.contains(deletedUri)) _selectedImages.value = currentUris - deletedUri
     }
 
-    fun initTravelInfo(
-        travelId: Long,
-        travelTitle: String,
+    fun initMemoryInfo(
+        MemoryId: Long,
+        MemoryTitle: String,
     ) {
-        _travel.value =
-            VisitTravelUiModel(
-                id = travelId,
-                title = travelTitle,
+        _memory.value =
+            VisitMemoryUiModel(
+                id = MemoryId,
+                title = MemoryTitle,
             )
     }
 
@@ -88,12 +88,12 @@ class VisitCreationViewModel(
     }
 
     fun createVisit(
-        travelId: Long,
+        MemoryId: Long,
         context: Context,
     ) = viewModelScope.launch {
         _isPosting.value = true
         visitRepository.createVisit(
-            travelId = travelId,
+            MemoryId = MemoryId,
             placeName = placeName.get() ?: "",
             latitude = latitude.value ?: "",
             longitude = longitude.value ?: "",

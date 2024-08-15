@@ -44,11 +44,11 @@
                 android:layout_marginEnd="150dp"
                 android:layout_marginBottom="100dp"
                 android:src="@drawable/icon_pin"
-                app:layout_constraintBottom_toTopOf="@id/btn_main_travel_creation"
+                app:layout_constraintBottom_toTopOf="@id/btn_main_memory_creation"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView
-                android:id="@+id/btn_main_travel_creation"
+                android:id="@+id/btn_main_memory_creation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"

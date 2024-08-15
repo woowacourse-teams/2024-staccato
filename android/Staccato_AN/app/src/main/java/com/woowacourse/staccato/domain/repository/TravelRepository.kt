@@ -1,24 +1,24 @@
 package com.woowacourse.staccato.domain.repository
 
 import com.woowacourse.staccato.data.ResponseResult
-import com.woowacourse.staccato.data.dto.travel.TravelCreationResponse
-import com.woowacourse.staccato.domain.model.NewTravel
-import com.woowacourse.staccato.domain.model.Travel
+import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
+import com.woowacourse.staccato.domain.model.NewMemory
+import com.woowacourse.staccato.domain.model.Memory
 import okhttp3.MultipartBody
 
-interface TravelRepository {
-    suspend fun getTravel(travelId: Long): ResponseResult<Travel>
+interface MemoryRepository {
+    suspend fun getMemory(MemoryId: Long): ResponseResult<Memory>
 
-    suspend fun createTravel(
-        newTravel: NewTravel,
+    suspend fun createMemory(
+        newMemory: NewMemory,
         thumbnailFile: MultipartBody.Part?,
-    ): ResponseResult<TravelCreationResponse>
+    ): ResponseResult<MemoryCreationResponse>
 
-    suspend fun updateTravel(
-        travelId: Long,
-        newTravel: NewTravel,
+    suspend fun updateMemory(
+        MemoryId: Long,
+        newMemory: NewMemory,
         thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<String>
 
-    suspend fun deleteTravel(travelId: Long): ResponseResult<Unit>
+    suspend fun deleteMemory(MemoryId: Long): ResponseResult<Unit>
 }

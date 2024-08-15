@@ -8,10 +8,10 @@ import com.woowacourse.staccato.databinding.ItemTimelineFirstBinding
 import com.woowacourse.staccato.databinding.ItemTimelineLastBinding
 import com.woowacourse.staccato.databinding.ItemTimelineMiddleBinding
 import com.woowacourse.staccato.presentation.timeline.TimelineHandler
-import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
+import com.woowacourse.staccato.presentation.timeline.model.TimelineMemoryUiModel
 
 class TimelineAdapter(private val eventHandler: TimelineHandler) :
-    ListAdapter<TimelineTravelUiModel, TimelineViewHolder>(diffUtil) {
+    ListAdapter<TimelineMemoryUiModel, TimelineViewHolder>(diffUtil) {
     override fun getItemViewType(position: Int): Int {
         return TimelineViewType.fromPosition(position, itemCount).viewType
     }
@@ -28,7 +28,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
                         parent,
                         false,
                     )
-                FirstTravelViewHolder(binding, eventHandler)
+                FirstMemoryViewHolder(binding, eventHandler)
             }
 
             TimelineViewType.MIDDLE_ITEM -> {
@@ -38,7 +38,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
                         parent,
                         false,
                     )
-                MiddleTravelViewHolder(binding, eventHandler)
+                MiddleMemoryViewHolder(binding, eventHandler)
             }
 
             TimelineViewType.LAST_ITEM -> {
@@ -48,7 +48,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
                         parent,
                         false,
                     )
-                LastTravelViewHolder(binding, eventHandler)
+                LastMemoryViewHolder(binding, eventHandler)
             }
         }
     }
@@ -60,22 +60,22 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
         holder.bind(currentList[position])
     }
 
-    fun updateTimeline(newTravels: List<TimelineTravelUiModel>) {
-        submitList(newTravels)
+    fun updateTimeline(newMemories: List<TimelineMemoryUiModel>) {
+        submitList(newMemories)
     }
 
     companion object {
         val diffUtil =
-            object : DiffUtil.ItemCallback<TimelineTravelUiModel>() {
+            object : DiffUtil.ItemCallback<TimelineMemoryUiModel>() {
                 override fun areContentsTheSame(
-                    oldItem: TimelineTravelUiModel,
-                    newItem: TimelineTravelUiModel,
+                    oldItem: TimelineMemoryUiModel,
+                    newItem: TimelineMemoryUiModel,
                 ): Boolean = oldItem == newItem
 
                 override fun areItemsTheSame(
-                    oldItem: TimelineTravelUiModel,
-                    newItem: TimelineTravelUiModel,
-                ): Boolean = oldItem.travelId == newItem.travelId
+                    oldItem: TimelineMemoryUiModel,
+                    newItem: TimelineMemoryUiModel,
+                ): Boolean = oldItem.MemoryId == newItem.MemoryId
             }
     }
 }

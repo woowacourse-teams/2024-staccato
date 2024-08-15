@@ -10,8 +10,8 @@ import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
 import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
-import com.woowacourse.staccato.presentation.travel.TravelFragment.Companion.TRAVEL_ID_KEY
-import com.woowacourse.staccato.presentation.travel.TravelFragment.Companion.TRAVEL_TITLE_KEY
+import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
+import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.adapter.VisitAdapter
 import com.woowacourse.staccato.presentation.visit.viewmodel.VisitViewModel
@@ -24,8 +24,8 @@ class VisitFragment :
     private val viewModel: VisitViewModel by viewModels { VisitViewModelFactory() }
     private lateinit var visitAdapter: VisitAdapter
     private var visitId by Delegates.notNull<Long>()
-    private var travelId by Delegates.notNull<Long>()
-    private var travelTitle by Delegates.notNull<String>()
+    private var MemoryId by Delegates.notNull<Long>()
+    private var MemoryTitle by Delegates.notNull<String>()
     private val deleteDialog =
         DeleteDialogFragment {
             viewModel.deleteVisit(visitId)
@@ -36,8 +36,8 @@ class VisitFragment :
         savedInstanceState: Bundle?,
     ) {
         visitId = arguments?.getLong(VISIT_ID_KEY) ?: return
-        travelId = arguments?.getLong(TRAVEL_ID_KEY) ?: return
-        travelTitle = arguments?.getString(TRAVEL_TITLE_KEY) ?: return
+        MemoryId = arguments?.getLong(MEMORY_ID_KEY) ?: return
+        MemoryTitle = arguments?.getString(MEMORY_TITLE_KEY) ?: return
         initAdapter()
         initToolbarHandler()
         observeData()
@@ -85,8 +85,8 @@ class VisitFragment :
         val visitUpdateLauncher = (activity as MainActivity).visitUpdateLauncher
         VisitUpdateActivity.startWithResultLauncher(
             visitId = visitId,
-            travelId = travelId,
-            travelTitle = travelTitle,
+            MemoryId = MemoryId,
+            MemoryTitle = MemoryTitle,
             context = requireContext(),
             activityLauncher = visitUpdateLauncher,
         )

@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.woowacourse.staccato.R
-import com.woowacourse.staccato.presentation.visitcreation.model.VisitTravelUiModel
+import com.woowacourse.staccato.presentation.visitcreation.model.VisitMemoryUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -94,7 +94,7 @@ fun ImageView.setRoundedCornerUriWithCoil(
 }
 
 @BindingAdapter(
-    value = ["coilImageUrl", "coilImageUri", "coilPlaceHolder", "coilRoundingRadius"],
+    value = ["updateCoilImageUrl", "updateCoilImageUri", "updateCoilPlaceHolder", "updateCoilRoundingRadius"],
 )
 fun ImageView.setRoundedCornerUpdateImageWithCoil(
     url: String?,
@@ -172,9 +172,9 @@ fun ImageView.setRoundedCornerImageByUriWithGlide(
 }
 
 @BindingAdapter(
-    value = ["travelTitle", "startDate", "endDate"],
+    value = ["memoryTitle", "startDate", "endDate"],
 )
-fun Button.setTravelSaveButtonActive(
+fun Button.setMemorySaveButtonActive(
     title: String?,
     startDate: LocalDate?,
     endDate: LocalDate?,
@@ -189,26 +189,26 @@ fun Button.setTravelSaveButtonActive(
         }
 }
 
-@BindingAdapter("selectedTravel")
-fun TextView.setSelectedTravel(selectedTravel: VisitTravelUiModel?) {
-    if (selectedTravel == null) {
-        text = resources.getString(R.string.visit_creation_travel_selection_hint)
+@BindingAdapter("selectedMemory")
+fun TextView.setSelectedMemory(selectedMemory: VisitMemoryUiModel?) {
+    if (selectedMemory == null) {
+        text = resources.getString(R.string.visit_creation_memory_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
     } else {
-        text = selectedTravel.title
+        text = selectedMemory.title
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
 }
 
 @BindingAdapter(
-    value = ["selectedTravel", "visitedAt"],
+    value = ["selectedMemory", "visitedAt"],
 )
 fun Button.setVisitUpdateButtonActive(
-    travel: VisitTravelUiModel?,
+    memory: VisitMemoryUiModel?,
     visitedAt: LocalDate?,
 ) {
     isEnabled =
-        if (travel == null || visitedAt == null) {
+        if (memory == null || visitedAt == null) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -220,15 +220,15 @@ fun Button.setVisitUpdateButtonActive(
 @BindingAdapter(
     value = ["startDate", "endDate"],
 )
-fun TextView.setTravelPeriod(
+fun TextView.setMemoryPeriod(
     startDate: LocalDate?,
     endDate: LocalDate?,
 ) {
     if (startDate == null || endDate == null) {
-        text = resources.getString(R.string.travel_creation_period_hint)
+        text = resources.getString(R.string.memory_creation_period_hint)
     } else {
         text =
-            resources.getString(R.string.travel_creation_period_description)
+            resources.getString(R.string.memory_creation_period_description)
                 .format(startDate, endDate)
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }

@@ -1,20 +1,20 @@
 package com.woowacourse.staccato.presentation.mapper
 
 import com.woowacourse.staccato.domain.model.Timeline
-import com.woowacourse.staccato.domain.model.Travel
-import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
+import com.woowacourse.staccato.domain.model.Memory
+import com.woowacourse.staccato.presentation.timeline.model.TimelineMemoryUiModel
 
-fun Timeline.toTimelineTravelUiModel(): List<TimelineTravelUiModel> {
-    return travels.map { travel ->
-        travel.toTimelineTravelUiModel()
+fun Timeline.toTimelineMemoryUiModel(): List<TimelineMemoryUiModel> {
+    return memories.map { Memory ->
+        Memory.toTimelineMemoryUiModel()
     }
 }
 
-fun Travel.toTimelineTravelUiModel(): TimelineTravelUiModel {
-    return TimelineTravelUiModel(
-        travelId = travelId,
-        travelTitle = travelTitle,
-        travelThumbnailUrl = travelThumbnailUrl,
+fun Memory.toTimelineMemoryUiModel(): TimelineMemoryUiModel {
+    return TimelineMemoryUiModel(
+        MemoryId = memoryId,
+        MemoryTitle = memoryTitle,
+        MemoryThumbnailUrl = memoryThumbnailUrl,
         startAt = startAt,
         endAt = endAt,
     )

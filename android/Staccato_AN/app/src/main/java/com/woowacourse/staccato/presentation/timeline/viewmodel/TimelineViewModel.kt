@@ -13,15 +13,15 @@ import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.domain.repository.TimelineRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
-import com.woowacourse.staccato.presentation.mapper.toTimelineTravelUiModel
-import com.woowacourse.staccato.presentation.timeline.model.TimelineTravelUiModel
+import com.woowacourse.staccato.presentation.mapper.toTimelineMemoryUiModel
+import com.woowacourse.staccato.presentation.timeline.model.TimelineMemoryUiModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 class TimelineViewModel(private val timelineRepository: TimelineRepository) : ViewModel() {
-    private val _travels = MutableLiveData<List<TimelineTravelUiModel>>()
-    val travels: LiveData<List<TimelineTravelUiModel>>
-        get() = _travels
+    private val _Memories = MutableLiveData<List<TimelineMemoryUiModel>>()
+    val Memories: LiveData<List<TimelineMemoryUiModel>>
+        get() = _Memories
 
     private val _errorMessage = MutableSingleLiveData<String>()
     val errorMessage: SingleLiveData<String>
@@ -39,14 +39,14 @@ class TimelineViewModel(private val timelineRepository: TimelineRepository) : Vi
     fun loadTimeline() {
         viewModelScope.launch(coroutineExceptionHandler) {
             timelineRepository.getTimeline()
-                .onSuccess(::setTimelineTravelUiModels)
+                .onSuccess(::setTimelineMemoryUiModels)
                 .onServerError(::handleServerError)
                 .onException(::handleException)
         }
     }
 
-    private fun setTimelineTravelUiModels(timeline: Timeline) {
-        _travels.value = timeline.toTimelineTravelUiModel()
+    private fun setTimelineMemoryUiModels(timeline: Timeline) {
+        _Memories.value = timeline.toTimelineMemoryUiModel()
     }
 
     private fun handleServerError(
