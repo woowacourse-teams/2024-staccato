@@ -6,7 +6,7 @@ import com.woowacourse.staccato.data.dto.ErrorResponse
 import com.woowacourse.staccato.data.login.LoginApiService
 import com.woowacourse.staccato.data.memory.MemoryApiService
 import com.woowacourse.staccato.data.timeline.TimeLineApiService
-import com.woowacourse.staccato.data.visit.MomentApiService
+import com.woowacourse.staccato.data.moment.MomentApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient

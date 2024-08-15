@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.data.visit
+package com.woowacourse.staccato.data.moment
 
 import com.woowacourse.staccato.data.dto.visit.VisitCreationRequest
 import com.woowacourse.staccato.data.dto.visit.VisitCreationResponse

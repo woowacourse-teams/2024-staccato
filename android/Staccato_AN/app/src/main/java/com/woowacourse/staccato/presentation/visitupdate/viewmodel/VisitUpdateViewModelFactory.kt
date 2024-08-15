@@ -3,8 +3,8 @@ package com.woowacourse.staccato.presentation.visitupdate.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.woowacourse.staccato.data.StaccatoClient
-import com.woowacourse.staccato.data.visit.VisitDefaultRepository
-import com.woowacourse.staccato.data.visit.VisitRemoteDataSource
+import com.woowacourse.staccato.data.moment.VisitDefaultRepository
+import com.woowacourse.staccato.data.moment.VisitRemoteDataSource
 
 class VisitUpdateViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
