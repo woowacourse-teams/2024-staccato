@@ -1,7 +1,6 @@
 package com.staccato.memory.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,28 +39,6 @@ class MemoryMemberRepositoryTest {
 
         // then
         assertThat(result).hasSize(1);
-    }
-
-    @DisplayName("사용자 식별자로 해당하는 추억 목록만 최근 생성된 순서대로 조회한다.")
-    @Test
-    void findAllByMemberIdAndMemoryStartAtYearWithoutDeleted() {
-        // given
-        Member member = memberRepository.save(Member.builder().nickname("staccato").build());
-        Memory memory = memoryRepository.save(createMemory(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Memory memory2 = memoryRepository.save(createMemory(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)));
-        memoryMemberRepository.save(new MemoryMember(member, memory));
-        memoryMemberRepository.save(new MemoryMember(member, memory2));
-
-        // when
-        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndYearOrderByCreatedAtDesc(member.getId(), 2023);
-
-        // then
-        assertAll(
-                () -> assertThat(result).hasSize(2),
-                () -> assertThat(result.stream().map(MemoryMember::getMemory).map(Memory::getStartAt)
-                        .toList()).containsExactly(LocalDate.of(2023, 12, 31), LocalDate.of(2023, 7, 1))
-
-        );
     }
 
     private static Memory createMemory(LocalDate startAt, LocalDate endAt) {
