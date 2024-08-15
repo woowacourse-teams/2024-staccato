@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VisitUpdateRequest(
+data class MomentUpdateRequest(
     @SerialName("placeName") val placeName: String,
-    @SerialName("visitImageUrls") val visitImageUrls: List<String>,
+    @SerialName("momentImageUrls") val momentImageUrls: List<String>,
 )

@@ -3,7 +3,7 @@ package com.woowacourse.staccato.data.moment
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.data.dto.moment.MomentResponse
-import com.woowacourse.staccato.data.dto.moment.VisitUpdateRequest
+import com.woowacourse.staccato.data.dto.moment.MomentUpdateRequest
 import okhttp3.MultipartBody
 
 class VisitRemoteDataSource(
@@ -31,9 +31,9 @@ class VisitRemoteDataSource(
     ) = momentApiService.putMoment(
         momentId = visitId,
         data =
-            VisitUpdateRequest(
+            MomentUpdateRequest(
                 placeName = placeName,
-                visitImageUrls = visitImageUrls,
+                momentImageUrls = visitImageUrls,
             ),
         momentImageFiles = visitImageFiles,
     )

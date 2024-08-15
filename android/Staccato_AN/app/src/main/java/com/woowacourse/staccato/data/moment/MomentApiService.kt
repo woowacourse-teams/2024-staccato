@@ -3,7 +3,7 @@ package com.woowacourse.staccato.data.moment
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.data.dto.moment.MomentResponse
-import com.woowacourse.staccato.data.dto.moment.VisitUpdateRequest
+import com.woowacourse.staccato.data.dto.moment.MomentUpdateRequest
 import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -30,7 +30,7 @@ interface MomentApiService {
     @PUT(MOMENT_PATH_WITH_ID)
     suspend fun putMoment(
         @Path(value = "momentId") momentId: Long,
-        @Part("data") data: VisitUpdateRequest,
+        @Part("data") data: MomentUpdateRequest,
         @Part momentImageFiles: List<MultipartBody.Part>,
     )
 
