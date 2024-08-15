@@ -10,7 +10,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.domain.model.Travel
-import com.woowacourse.staccato.domain.repository.TravelRepository
+import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toUiModel
@@ -18,7 +18,7 @@ import com.woowacourse.staccato.presentation.memory.model.TravelUiModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class TravelViewModel(private val travelRepository: TravelRepository) : ViewModel() {
+class TravelViewModel(private val memoryRepository: MemoryRepository) : ViewModel() {
     private val _travel = MutableLiveData<TravelUiModel>()
     val travel: LiveData<TravelUiModel> get() = _travel
 
@@ -30,7 +30,7 @@ class TravelViewModel(private val travelRepository: TravelRepository) : ViewMode
 
     fun loadTravel(travelId: Long) {
         viewModelScope.launch {
-            val result: ResponseResult<Travel> = travelRepository.getTravel(travelId)
+            val result: ResponseResult<Travel> = memoryRepository.getTravel(travelId)
             result
                 .onSuccess(::setTravel)
                 .onServerError(::handleServerError)
@@ -47,7 +47,7 @@ class TravelViewModel(private val travelRepository: TravelRepository) : ViewMode
 
     fun deleteTravel(travelId: Long) {
         viewModelScope.launch {
-            val result: ResponseResult<Unit> = travelRepository.deleteTravel(travelId)
+            val result: ResponseResult<Unit> = memoryRepository.deleteTravel(travelId)
             result.onSuccess { updateIsDeleteSuccess() }
                 .onServerError(::handleServerError)
                 .onException(::handelException)

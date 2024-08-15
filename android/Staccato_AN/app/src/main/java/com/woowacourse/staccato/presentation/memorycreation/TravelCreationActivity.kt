@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.memoryApiService
-import com.woowacourse.staccato.data.memory.TravelDefaultRepository
+import com.woowacourse.staccato.data.memory.MemoryDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
 import com.woowacourse.staccato.databinding.ActivityTravelCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
@@ -26,7 +26,7 @@ import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListene
 class TravelCreationActivity : BindingActivity<ActivityTravelCreationBinding>(), TravelCreationHandler, OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_travel_creation
     private val viewModel: TravelCreationViewModel by viewModels {
-        TravelCreationViewModelFactory(TravelDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
+        TravelCreationViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
     }
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager

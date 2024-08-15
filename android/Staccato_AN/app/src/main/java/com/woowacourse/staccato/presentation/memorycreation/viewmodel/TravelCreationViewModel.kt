@@ -14,7 +14,7 @@ import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.domain.model.NewTravel
-import com.woowacourse.staccato.domain.repository.TravelRepository
+import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
 import com.woowacourse.staccato.presentation.util.convertTravelUriToFile
 import kotlinx.coroutines.launch
@@ -22,7 +22,7 @@ import okhttp3.MultipartBody
 import java.time.LocalDate
 
 class TravelCreationViewModel(
-    private val travelRepository: TravelRepository,
+    private val memoryRepository: MemoryRepository,
 ) : ViewModel() {
     val title = ObservableField<String>()
     val description = ObservableField<String>()
@@ -64,7 +64,7 @@ class TravelCreationViewModel(
             val thumbnailFile: MultipartBody.Part? =
                 convertTravelUriToFile(context, _imageUri.value, name = TRAVEL_FILE_NAME)
             val result: ResponseResult<MemoryCreationResponse> =
-                travelRepository.createTravel(travel, thumbnailFile)
+                memoryRepository.createTravel(travel, thumbnailFile)
             result
                 .onSuccess(::setCreatedTravelId)
                 .onServerError(::handleServerError)

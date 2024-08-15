@@ -8,7 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.memoryApiService
-import com.woowacourse.staccato.data.memory.TravelDefaultRepository
+import com.woowacourse.staccato.data.memory.MemoryDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
 import com.woowacourse.staccato.databinding.FragmentTravelBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
@@ -35,7 +35,7 @@ class TravelFragment :
         arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException()
     }
     private val viewModel: TravelViewModel by viewModels {
-        TravelViewModelFactory(TravelDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
+        TravelViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
     }
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }

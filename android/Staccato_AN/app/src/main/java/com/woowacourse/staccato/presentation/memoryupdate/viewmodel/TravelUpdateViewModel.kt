@@ -13,7 +13,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.model.Travel
-import com.woowacourse.staccato.domain.repository.TravelRepository
+import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
@@ -24,7 +24,7 @@ import java.time.LocalDate
 
 class TravelUpdateViewModel(
     private val travelId: Long,
-    private val travelRepository: TravelRepository,
+    private val memoryRepository: MemoryRepository,
 ) : ViewModel() {
     private val _travel = MutableLiveData<NewTravel>()
     val travel: LiveData<NewTravel> get() = _travel
@@ -55,7 +55,7 @@ class TravelUpdateViewModel(
 
     fun fetchTravel() {
         viewModelScope.launch {
-            val result = travelRepository.getTravel(travelId)
+            val result = memoryRepository.getTravel(travelId)
             result
                 .onSuccess(::initializeTravel)
                 .onServerError(::handleServerError)
@@ -73,7 +73,7 @@ class TravelUpdateViewModel(
         viewModelScope.launch {
             val newTravel: NewTravel = makeNewTravel()
             val thumbnailFile: MultipartBody.Part? = convertTravelUriToFile(context, _imageUri.value, TRAVEL_FILE_NAME)
-            val result = travelRepository.updateTravel(travelId, newTravel, thumbnailFile)
+            val result = memoryRepository.updateTravel(travelId, newTravel, thumbnailFile)
             result
                 .onSuccess { updateSuccessStatus() }
                 .onServerError(::handleServerError)

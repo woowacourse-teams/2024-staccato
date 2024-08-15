@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.memoryApiService
-import com.woowacourse.staccato.data.memory.TravelDefaultRepository
+import com.woowacourse.staccato.data.memory.MemoryDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
 import com.woowacourse.staccato.databinding.ActivityTravelUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
@@ -29,7 +29,7 @@ class TravelUpdateActivity : BindingActivity<ActivityTravelUpdateBinding>(), Tra
     private val viewModel: TravelUpdateViewModel by viewModels {
         TravelUpdateViewModelFactory(
             travelId,
-            TravelDefaultRepository(MemoryRemoteDataSource(memoryApiService)),
+            MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)),
         )
     }
     private val photoAttachFragment = PhotoAttachFragment()
