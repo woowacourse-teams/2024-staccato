@@ -73,10 +73,10 @@ class MemoryViewModel(private val memoryRepository: MemoryRepository) : ViewMode
         e: Throwable,
         message: String,
     ) {
-        _errorMessage.setValue(TRAVEL_ERROR_MESSAGE)
+        _errorMessage.setValue(MEMORY_ERROR_MESSAGE)
     }
 
     companion object {
-        private const val TRAVEL_ERROR_MESSAGE = "여행을 조회할 수 없습니다"
+        private const val MEMORY_ERROR_MESSAGE = "추억을 조회할 수 없습니다"
     }
 }
