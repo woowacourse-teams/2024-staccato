@@ -75,7 +75,7 @@ class MemoryServiceTest extends ServiceSliceTest {
 
         // when
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, null, member);
-        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemoryStartAtDesc(member.getId()).get(0);
+        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId()).get(0);
 
         // then
         assertAll(
@@ -87,7 +87,7 @@ class MemoryServiceTest extends ServiceSliceTest {
     @DisplayName("조건에 따라 추억 상세 목록을 조회한다.")
     @MethodSource("yearProvider")
     @ParameterizedTest
-    void readAllMemorys(Integer year, int expectedSize) {
+    void readAllMemories(Integer year, int expectedSize) {
         // given
         Member member = saveMember();
         memoryService.createMemory(createMemoryRequest(2023), null, member);

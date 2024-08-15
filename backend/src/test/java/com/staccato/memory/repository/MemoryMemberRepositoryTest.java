@@ -30,35 +30,30 @@ class MemoryMemberRepositoryTest {
     void findAllByMemberIdAndMemoryStartAtYear() {
         // given
         Member member = memberRepository.save(Member.builder().nickname("staccato").build());
-        Memory memory = memoryRepository.save(createMemory(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)));
-        Memory memory2 = memoryRepository.save(createMemory(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Memory memory3 = memoryRepository.save(createMemory(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)));
+        Memory memory = memoryRepository.save(createMemory(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Memory memory2 = memoryRepository.save(createMemory(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)));
         memoryMemberRepository.save(new MemoryMember(member, memory));
         memoryMemberRepository.save(new MemoryMember(member, memory2));
-        memoryMemberRepository.save(new MemoryMember(member, memory3));
 
         // when
-        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndStartAtYearDesc(member.getId(), 2023);
+        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndYearOrderByCreatedAtDesc(member.getId(), 2023);
 
         // then
-        assertThat(result).hasSize(2);
+        assertThat(result).hasSize(1);
     }
 
-    @DisplayName("사용자 식별자와 년도로 해당하는 삭제되지 않은 추억 상세 목록만 최신순으로 조회한다.")
+    @DisplayName("사용자 식별자로 해당하는 추억 상세 목록만 최근 생성된 순서대로 조회한다.")
     @Test
     void findAllByMemberIdAndMemoryStartAtYearWithoutDeleted() {
         // given
         Member member = memberRepository.save(Member.builder().nickname("staccato").build());
-        Memory memory = memoryRepository.save(createMemory(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)));
-        Memory memory2 = memoryRepository.save(createMemory(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Memory memory3 = memoryRepository.save(createMemory(LocalDate.of(2023, 1, 10), LocalDate.of(2024, 1, 10)));
+        Memory memory = memoryRepository.save(createMemory(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Memory memory2 = memoryRepository.save(createMemory(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)));
         memoryMemberRepository.save(new MemoryMember(member, memory));
         memoryMemberRepository.save(new MemoryMember(member, memory2));
-        memoryMemberRepository.save(new MemoryMember(member, memory3));
-        memoryRepository.deleteById(memory3.getId());
 
         // when
-        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndStartAtYearDesc(member.getId(), 2023);
+        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndYearOrderByCreatedAtDesc(member.getId(), 2023);
 
         // then
         assertAll(
