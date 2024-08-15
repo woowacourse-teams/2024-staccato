@@ -18,7 +18,7 @@ import com.woowacourse.staccato.presentation.memory.model.MemoryUiModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class TravelViewModel(private val memoryRepository: MemoryRepository) : ViewModel() {
+class MemoryViewModel(private val memoryRepository: MemoryRepository) : ViewModel() {
     private val _travel = MutableLiveData<MemoryUiModel>()
     val travel: LiveData<MemoryUiModel> get() = _travel
 

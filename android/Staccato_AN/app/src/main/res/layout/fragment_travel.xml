@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.memory.viewmodel.TravelViewModel" />
+            type="com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModel" />
 
         <variable
             name="travelHandler"

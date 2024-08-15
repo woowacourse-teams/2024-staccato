@@ -19,8 +19,8 @@ import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.main.SharedViewModel
 import com.woowacourse.staccato.presentation.memory.adapter.MatesAdapter
 import com.woowacourse.staccato.presentation.memory.adapter.VisitsAdapter
-import com.woowacourse.staccato.presentation.memory.viewmodel.TravelViewModel
-import com.woowacourse.staccato.presentation.memory.viewmodel.TravelViewModelFactory
+import com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModel
+import com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModelFactory
 import com.woowacourse.staccato.presentation.memoryupdate.TravelUpdateActivity
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
@@ -34,8 +34,8 @@ class TravelFragment :
     private val travelId by lazy {
         arguments?.getLong(TRAVEL_ID_KEY) ?: throw IllegalArgumentException()
     }
-    private val viewModel: TravelViewModel by viewModels {
-        TravelViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
+    private val viewModel: MemoryViewModel by viewModels {
+        MemoryViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
     }
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
