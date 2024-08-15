@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,10 +25,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
-import com.staccato.comment.controller.CommentController;
 import com.staccato.comment.service.CommentService;
 import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.response.CommentResponse;
@@ -119,7 +116,6 @@ public class CommentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @Disabled
     @DisplayName("올바른 형식으로 댓글 읽기를 시도하면 성공한다.")
     @Test
     void readCommentsByMomentId() throws Exception {
@@ -132,10 +128,30 @@ public class CommentControllerTest {
 
         // when & then
         mockMvc.perform(get("/comments")
-                        .contentType(MediaType.APPLICATION_JSON)
                         .param("momentId", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(commentResponses)));
+    }
+
+    @DisplayName("순간 기록 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
+    @Test
+    void readCommentsByMomentIdFail() throws Exception {
+        // given
+        when(authService.extractFromToken(any())).thenReturn(Member.builder().nickname("member").build());
+        CommentResponses commentResponses = new CommentResponses(List.of(
+                new CommentResponse(1L, 1L, "member", "image.jpg", "내용")
+        ));
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 기록 식별자는 양수로 이루어져야 합니다.");
+        when(commentService.readAllCommentsByMomentId(any(), any())).thenReturn(commentResponses);
+
+        // when & then
+        mockMvc.perform(get("/comments")
+                        .param("momentId", "0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 }
