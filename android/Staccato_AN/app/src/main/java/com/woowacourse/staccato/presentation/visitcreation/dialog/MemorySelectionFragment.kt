@@ -8,14 +8,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowacourse.staccato.databinding.FragmentMemorySelectionBinding
 import com.woowacourse.staccato.presentation.visitcreation.model.VisitMemoryUiModel
 
-class TravelSelectionFragment : BottomSheetDialogFragment() {
+class MemorySelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentMemorySelectionBinding? = null
     private val binding get() = _binding!!
     private val items = mutableListOf<VisitMemoryUiModel>()
 
-    private lateinit var handler: TravelSelectionHandler
+    private lateinit var handler: MemorySelectionHandler
 
-    fun setOnTravelSelected(newHandler: TravelSelectionHandler) {
+    fun setOnMemorySelected(newHandler: MemorySelectionHandler) {
         handler = newHandler
     }
 
@@ -63,6 +63,6 @@ class TravelSelectionFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-        const val TAG = "TravelSelectionModalBottomSheet"
+        const val TAG = "MemorySelectionModalBottomSheet"
     }
 }
