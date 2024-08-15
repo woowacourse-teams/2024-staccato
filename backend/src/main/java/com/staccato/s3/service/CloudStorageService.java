@@ -53,7 +53,6 @@ public class CloudStorageService {
 
     private String getContentType(String fileName) {
         String fileExtension = getFileExtension(fileName);
-
         return FileExtension.getContentType(fileExtension);
     }
 
