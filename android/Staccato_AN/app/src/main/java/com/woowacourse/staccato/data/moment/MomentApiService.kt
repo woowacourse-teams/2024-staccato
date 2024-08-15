@@ -2,7 +2,7 @@ package com.woowacourse.staccato.data.moment
 
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
-import com.woowacourse.staccato.data.dto.moment.VisitResponse
+import com.woowacourse.staccato.data.dto.moment.MomentResponse
 import com.woowacourse.staccato.data.dto.moment.VisitUpdateRequest
 import okhttp3.MultipartBody
 import retrofit2.http.DELETE
@@ -17,7 +17,7 @@ interface MomentApiService {
     @GET(MOMENT_PATH_WITH_ID)
     suspend fun getMoment(
         @Path(value = "momentId") momentId: Long,
-    ): VisitResponse
+    ): MomentResponse
 
     @Multipart
     @POST(MOMENTS_PATH)

@@ -2,14 +2,14 @@ package com.woowacourse.staccato.data.moment
 
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
-import com.woowacourse.staccato.data.dto.moment.VisitResponse
+import com.woowacourse.staccato.data.dto.moment.MomentResponse
 import com.woowacourse.staccato.data.dto.moment.VisitUpdateRequest
 import okhttp3.MultipartBody
 
 class VisitRemoteDataSource(
     private val momentApiService: MomentApiService,
 ) {
-    suspend fun fetchVisit(visitId: Long): VisitResponse {
+    suspend fun fetchVisit(visitId: Long): MomentResponse {
         return momentApiService.getMoment(momentId = visitId)
     }
 

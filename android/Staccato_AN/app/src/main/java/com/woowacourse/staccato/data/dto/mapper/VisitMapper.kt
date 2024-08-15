@@ -1,16 +1,16 @@
 package com.woowacourse.staccato.data.dto.mapper
 
+import com.woowacourse.staccato.data.dto.moment.MomentResponse
 import com.woowacourse.staccato.data.dto.moment.VisitLogDto
-import com.woowacourse.staccato.data.dto.moment.VisitResponse
 import com.woowacourse.staccato.domain.model.Visit
 import com.woowacourse.staccato.domain.model.VisitLog
 import java.time.LocalDate
 
-fun VisitResponse.toDomain() =
+fun MomentResponse.toDomain() =
     Visit(
-        visitId = visitId,
+        visitId = momentId,
         placeName = placeName,
-        visitImageUrls = visitImageUrls,
+        visitImageUrls = momentImageUrls,
         address = address,
         visitedAt = LocalDate.parse(visitedAt),
         visitLogs = visitLogs.map { it.toDomain() },

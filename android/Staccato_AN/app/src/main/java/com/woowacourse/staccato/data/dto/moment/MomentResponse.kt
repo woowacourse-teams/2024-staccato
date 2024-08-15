@@ -4,11 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VisitResponse(
-    @SerialName("visitId") val visitId: Long,
+data class MomentResponse(
+    @SerialName("momentId") val momentId: Long,
     @SerialName("placeName") val placeName: String,
-    @SerialName("visitImageUrls") val visitImageUrls: List<String>,
+    @SerialName("momentImageUrls") val momentImageUrls: List<String>,
     @SerialName("address") val address: String,
     @SerialName("visitedAt") val visitedAt: String,
-    @SerialName("visitLogs") val visitLogs: List<VisitLogDto>,
+    @SerialName("comments") val visitLogs: List<VisitLogDto>,
 )
