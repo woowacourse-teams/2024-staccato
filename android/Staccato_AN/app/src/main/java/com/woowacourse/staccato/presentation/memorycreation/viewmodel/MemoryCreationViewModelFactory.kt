@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 
-class TravelCreationViewModelFactory(
+class MemoryCreationViewModelFactory(
     private val memoryRepository: MemoryRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TravelCreationViewModel::class.java)) {
-            return TravelCreationViewModel(memoryRepository) as T
+        if (modelClass.isAssignableFrom(MemoryCreationViewModel::class.java)) {
+            return MemoryCreationViewModel(memoryRepository) as T
         }
         throw IllegalArgumentException()
     }

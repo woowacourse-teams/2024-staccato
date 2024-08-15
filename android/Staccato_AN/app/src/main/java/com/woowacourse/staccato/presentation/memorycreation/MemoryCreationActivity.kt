@@ -18,15 +18,15 @@ import com.woowacourse.staccato.databinding.ActivityTravelCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.woowacourse.staccato.presentation.memorycreation.viewmodel.TravelCreationViewModel
-import com.woowacourse.staccato.presentation.memorycreation.viewmodel.TravelCreationViewModelFactory
+import com.woowacourse.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModel
+import com.woowacourse.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
 class MemoryCreationActivity : BindingActivity<ActivityTravelCreationBinding>(), MemoryCreationHandler, OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_travel_creation
-    private val viewModel: TravelCreationViewModel by viewModels {
-        TravelCreationViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
+    private val viewModel: MemoryCreationViewModel by viewModels {
+        MemoryCreationViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
     }
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
@@ -35,8 +35,8 @@ class MemoryCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
         navigateToMap()
-        updateTravelPeriod()
-        observeCreatedTravelId()
+        updateMemoryPeriod()
+        observeCreatedMemoryId()
         showErrorToast()
     }
 
@@ -47,7 +47,7 @@ class MemoryCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.travel_creation_posting))
-        viewModel.createTravel(this)
+        viewModel.createMemory(this)
     }
 
     override fun onPhotoAttachClicked() {
@@ -80,18 +80,18 @@ class MemoryCreationActivity : BindingActivity<ActivityTravelCreationBinding>(),
         }
     }
 
-    private fun updateTravelPeriod() {
+    private fun updateMemoryPeriod() {
         dateRangePicker.addOnPositiveButtonClickListener { selection ->
             val startDate: Long = selection.first
             val endDate: Long = selection.second
-            viewModel.setTravelPeriod(startDate, endDate)
+            viewModel.setMemoryPeriod(startDate, endDate)
         }
     }
 
-    private fun observeCreatedTravelId() {
-        viewModel.createdTravelId.observe(this) { travelId ->
+    private fun observeCreatedMemoryId() {
+        viewModel.createdMemoryId.observe(this) { memoryId ->
             val resultIntent = Intent()
-            resultIntent.putExtra(MEMORY_ID_KEY, travelId)
+            resultIntent.putExtra(MEMORY_ID_KEY, memoryId)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()

@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import java.time.LocalDate
 
-class TravelCreationViewModel(
+class MemoryCreationViewModel(
     private val memoryRepository: MemoryRepository,
 ) : ViewModel() {
     val title = ObservableField<String>()
@@ -33,8 +33,8 @@ class TravelCreationViewModel(
     private val _endDate = MutableLiveData<LocalDate>(null)
     val endDate: LiveData<LocalDate> get() = _endDate
 
-    private val _createdTravelId = MutableLiveData<Long>()
-    val createdTravelId: LiveData<Long> get() = _createdTravelId
+    private val _createdMemoryId = MutableLiveData<Long>()
+    val createdMemoryId: LiveData<Long> get() = _createdMemoryId
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
@@ -49,7 +49,7 @@ class TravelCreationViewModel(
         _imageUri.value = uri
     }
 
-    fun setTravelPeriod(
+    fun setMemoryPeriod(
         startAt: Long,
         endAt: Long,
     ) {
@@ -57,26 +57,26 @@ class TravelCreationViewModel(
         _endDate.value = convertLongToLocalDate(endAt)
     }
 
-    fun createTravel(context: Context) {
+    fun createMemory(context: Context) {
         _isPosting.value = true
         viewModelScope.launch {
-            val travel: NewMemory = makeNewTravel()
+            val memory: NewMemory = makeNewMemory()
             val thumbnailFile: MultipartBody.Part? =
-                convertTravelUriToFile(context, _imageUri.value, name = TRAVEL_FILE_NAME)
+                convertTravelUriToFile(context, _imageUri.value, name = MEMORY_FILE_NAME)
             val result: ResponseResult<MemoryCreationResponse> =
-                memoryRepository.createMemory(travel, thumbnailFile)
+                memoryRepository.createMemory(memory, thumbnailFile)
             result
-                .onSuccess(::setCreatedTravelId)
+                .onSuccess(::setCreatedMemoryId)
                 .onServerError(::handleServerError)
                 .onException(::handelException)
         }
     }
 
-    private fun setCreatedTravelId(memoryCreationResponse: MemoryCreationResponse) {
-        _createdTravelId.value = memoryCreationResponse.memoryId
+    private fun setCreatedMemoryId(memoryCreationResponse: MemoryCreationResponse) {
+        _createdMemoryId.value = memoryCreationResponse.memoryId
     }
 
-    private fun makeNewTravel(): NewMemory =
+    private fun makeNewMemory(): NewMemory =
         NewMemory(
             memoryTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
@@ -97,11 +97,11 @@ class TravelCreationViewModel(
         message: String,
     ) {
         _isPosting.value = false
-        _errorMessage.value = TRAVEL_CREATION_ERROR_MESSAGE
+        _errorMessage.value = MEMORY_CREATION_ERROR_MESSAGE
     }
 
     companion object {
-        private const val TRAVEL_FILE_NAME = "travelThumbnailFile"
-        private const val TRAVEL_CREATION_ERROR_MESSAGE = "여행 생성에 실패했습니다"
+        private const val MEMORY_FILE_NAME = "memoryThumbnailFile"
+        private const val MEMORY_CREATION_ERROR_MESSAGE = "추억 생성에 실패했습니다"
     }
 }
