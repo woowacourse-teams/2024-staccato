@@ -5,8 +5,8 @@ import com.woowacourse.staccato.data.dto.memory.MemoryResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryUpdateRequest
 import com.woowacourse.staccato.data.dto.memory.MemoryVisitDto
 import com.woowacourse.staccato.domain.model.Memory
+import com.woowacourse.staccato.domain.model.MemoryVisit
 import com.woowacourse.staccato.domain.model.NewMemory
-import com.woowacourse.staccato.domain.model.TravelVisit
 import java.time.LocalDate
 
 fun MemoryResponse.toDomain() =
@@ -22,7 +22,7 @@ fun MemoryResponse.toDomain() =
     )
 
 fun MemoryVisitDto.toDomain() =
-    TravelVisit(
+    MemoryVisit(
         visitId = visitId,
         placeName = placeName,
         visitImageUrl = visitImageUrl,
