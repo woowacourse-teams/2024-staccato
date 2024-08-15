@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.data.dto.mapper
 
-import com.woowacourse.staccato.data.dto.memory.TravelRequest
+import com.woowacourse.staccato.data.dto.memory.MemoryRequest
 import com.woowacourse.staccato.data.dto.memory.TravelResponse
 import com.woowacourse.staccato.data.dto.memory.TravelUpdateRequest
 import com.woowacourse.staccato.data.dto.memory.TravelVisitDto
@@ -30,7 +30,7 @@ fun TravelVisitDto.toDomain() =
     )
 
 fun NewTravel.toDto() =
-    TravelRequest(
+    MemoryRequest(
         travelTitle = travelTitle,
         description = description,
         startAt = startAt.toString(),

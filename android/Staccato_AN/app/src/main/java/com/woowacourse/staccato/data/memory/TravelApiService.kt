@@ -1,7 +1,7 @@
 package com.woowacourse.staccato.data.memory
 
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
-import com.woowacourse.staccato.data.dto.memory.TravelRequest
+import com.woowacourse.staccato.data.dto.memory.MemoryRequest
 import com.woowacourse.staccato.data.dto.memory.TravelResponse
 import com.woowacourse.staccato.data.dto.memory.TravelUpdateRequest
 import okhttp3.MultipartBody
@@ -23,7 +23,7 @@ interface TravelApiService {
     @Multipart
     @POST(TRAVELS_PATH)
     suspend fun postTravel(
-        @Part("data") data: TravelRequest,
+        @Part("data") data: MemoryRequest,
         @Part thumbnailFile: MultipartBody.Part?,
     ): Response<MemoryCreationResponse>
 
