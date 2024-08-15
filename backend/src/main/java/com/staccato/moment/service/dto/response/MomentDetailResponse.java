@@ -3,6 +3,7 @@ package com.staccato.moment.service.dto.response;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImage;
 
@@ -22,7 +23,7 @@ public record MomentDetailResponse(
         LocalDate visitedAt,
         @Schema(example = "서울 용산구 남산공원길 105")
         String address,
-        List<commentResponse> comments
+        List<CommentResponse> comments
 ) {
     public MomentDetailResponse(Moment moment) {
         this(
@@ -31,7 +32,7 @@ public record MomentDetailResponse(
                 moment.getMomentImages().getImages().stream().map(MomentImage::getImageUrl).toList(),
                 moment.getVisitedAt().toLocalDate(),
                 moment.getSpot().getAddress(),
-                moment.getComments().stream().map(commentResponse::new).toList()
+                moment.getComments().stream().map(CommentResponse::new).toList()
         );
     }
 }

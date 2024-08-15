@@ -1,4 +1,4 @@
-package com.staccato.moment.domain;
+package com.staccato.comment.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.member.domain.Member;
+import com.staccato.moment.domain.Moment;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
