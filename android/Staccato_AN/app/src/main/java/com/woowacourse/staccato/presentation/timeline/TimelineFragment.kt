@@ -10,6 +10,7 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentTimelineBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.main.SharedViewModel
+import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.timeline.adapter.TimelineAdapter
 import com.woowacourse.staccato.presentation.timeline.viewmodel.TimelineViewModel
 import com.woowacourse.staccato.presentation.timeline.viewmodel.TimelineViewModelFactory
@@ -36,7 +37,7 @@ class TimelineFragment :
     }
 
     private fun setUpObserving() {
-        timelineViewModel.travels.observe(viewLifecycleOwner) { timeline ->
+        timelineViewModel.timeline.observe(viewLifecycleOwner) { timeline ->
             // TODO: data binding 으로 가시성 설정되지 않는 오류 해결하기
             if (timeline.isEmpty()) {
                 binding.tvTimelineEmpty.visibility = View.VISIBLE
@@ -57,16 +58,12 @@ class TimelineFragment :
         }
     }
 
-    private fun navigateToTravel(bundle: Bundle) {
+    private fun navigateToMemory(bundle: Bundle) {
         findNavController().navigate(R.id.action_timelineFragment_to_travelFragment, bundle)
     }
 
-    override fun onTravelClicked(travelId: Long) {
-        val bundle: Bundle = bundleOf(TRAVEL_ID_KEY to travelId)
-        navigateToTravel(bundle)
-    }
-
-    companion object {
-        const val TRAVEL_ID_KEY = "travelId"
+    override fun onTravelClicked(memoryId: Long) {
+        val bundle: Bundle = bundleOf(MEMORY_ID_KEY to memoryId)
+        navigateToMemory(bundle)
     }
 }

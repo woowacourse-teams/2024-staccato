@@ -12,6 +12,7 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityVisitCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
+import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
 import com.woowacourse.staccato.presentation.visitcreation.adapter.PhotoAttachAdapter
@@ -28,7 +29,7 @@ class VisitCreationActivity :
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
     private lateinit var adapter: PhotoAttachAdapter
-    private val travelId by lazy { intent.getLongExtra(TRAVEL_ID_KEY, 0L) }
+    private val travelId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
     private val travelTitle by lazy { intent.getStringExtra(TRAVEL_TITLE_KEY) ?: "" }
 
     override fun initStartView(savedInstanceState: Bundle?) {
@@ -71,7 +72,7 @@ class VisitCreationActivity :
             val resultIntent =
                 Intent()
                     .putExtra(VISIT_ID_KEY, createdVisitId)
-                    .putExtra(TRAVEL_ID_KEY, travelId)
+                    .putExtra(MEMORY_ID_KEY, travelId)
                     .putExtra(TRAVEL_TITLE_KEY, travelTitle)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
@@ -94,7 +95,6 @@ class VisitCreationActivity :
     }
 
     companion object {
-        const val TRAVEL_ID_KEY = "travelId"
         const val TRAVEL_TITLE_KEY = "travelTitle"
 
         fun startWithResultLauncher(
@@ -104,7 +104,7 @@ class VisitCreationActivity :
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, VisitCreationActivity::class.java).apply {
-                putExtra(TRAVEL_ID_KEY, travelId)
+                putExtra(MEMORY_ID_KEY, travelId)
                 putExtra(TRAVEL_TITLE_KEY, travelTitle)
                 activityLauncher.launch(this)
             }
