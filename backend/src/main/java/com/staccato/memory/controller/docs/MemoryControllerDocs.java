@@ -50,7 +50,7 @@ public interface MemoryControllerDocs {
     })
     ResponseEntity<MemoryResponses> readAllMemories(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "조회할 년도", example = "2024") Integer year);
+            @Parameter(description = "조회할 년도", example = "2024") @Min(value = 1L, message = "년도는 양수로 이루어져야 합니다.") Integer year);
 
     @Operation(summary = "특정 추억 상세 조회", description = "사용자의 특정 추억 상세를 조회합니다.")
     @ApiResponses(value = {

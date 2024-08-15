@@ -144,6 +144,21 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(memoryResponses)));
     }
 
+    @DisplayName("사용자가 잘못된 형식의 년도로 추억 목록 조회를 시도하면 예외가 발생한다.")
+    @Test
+    void cannotReadAllMemoryByInvalidYear() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "년도는 양수로 이루어져야 합니다.");
+
+        // when & then
+        mockMvc.perform(get("/memories")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("year", String.valueOf(0)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
     @DisplayName("사용자가 특정 추억 상세를 조회한다.")
     @Test
     void readMemory() throws Exception {
