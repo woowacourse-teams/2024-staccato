@@ -37,7 +37,7 @@ fun NewMemory.toDto() =
         endAt = endAt.toString(),
     )
 
-fun NewMemory.toTravelUpdateRequest() =
+fun NewMemory.toMemoryUpdateRequest() =
     MemoryUpdateRequest(
         memoryThumbnailUrl = memoryThumbnail,
         memoryTitle = memoryTitle,
