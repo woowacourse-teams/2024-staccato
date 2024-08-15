@@ -1,5 +1,7 @@
 package com.staccato.comment.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,14 @@ public class CommentService {
         return commentRepository.save(comment).getId();
     }
 
+    public CommentResponses readAllByMomentId(Member member, Long momentId) {
+        Moment moment = getMoment(momentId);
+        validateOwner(moment.getMemory(), member);
+        List<Comment> comments = commentRepository.findAllByMomentIdOrderByCreatedAtAsc(momentId);
+
+        return CommentResponses.from(comments);
+    }
+
     private Moment getMoment(long momentId) {
         return momentRepository.findById(momentId)
                 .orElseThrow(() -> new StaccatoException("요청하신 순간 기록을 찾을 수 없어요."));
@@ -40,9 +50,5 @@ public class CommentService {
         if (memory.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
-    }
-
-    public CommentResponses readAllByMomentId(Member member, Long momentId) {
-        return null;
     }
 }
