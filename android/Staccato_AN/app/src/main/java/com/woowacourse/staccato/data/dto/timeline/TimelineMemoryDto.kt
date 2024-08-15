@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TimelineMemoryDto(
-    @SerialName("travelId") val travelId: Long,
-    @SerialName("travelTitle") val travelTitle: String,
-    @SerialName("travelThumbnailUrl") val travelThumbnailUrl: String? = null,
+    @SerialName("memoryId") val memoryId: Long,
+    @SerialName("memoryTitle") val memoryTitle: String,
+    @SerialName("memoryThumbnailUrl") val memoryThumbnailUrl: String? = null,
     @SerialName("startAt") val startAt: String,
     @SerialName("endAt") val endAt: String,
     @SerialName("description") val description: String? = null,

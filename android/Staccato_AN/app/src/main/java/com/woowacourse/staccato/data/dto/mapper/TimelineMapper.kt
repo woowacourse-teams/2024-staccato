@@ -7,18 +7,18 @@ import com.woowacourse.staccato.domain.model.Timeline
 import java.time.LocalDate
 
 fun TimelineResponse.toDomain(): Timeline {
-    val travels =
-        travels.map { timelineTravelDto ->
-            timelineTravelDto.toDomain()
+    val memories =
+        memories.map { timelineMemoryDto ->
+            timelineMemoryDto.toDomain()
         }
-    return Timeline(travels)
+    return Timeline(memories)
 }
 
 fun TimelineMemoryDto.toDomain(): Memory {
     return Memory(
-        travelId = travelId,
-        travelThumbnailUrl = travelThumbnailUrl,
-        travelTitle = travelTitle,
+        travelId = memoryId,
+        travelThumbnailUrl = memoryThumbnailUrl,
+        travelTitle = memoryTitle,
         startAt = LocalDate.parse(startAt),
         endAt = LocalDate.parse(endAt),
         description = description,
