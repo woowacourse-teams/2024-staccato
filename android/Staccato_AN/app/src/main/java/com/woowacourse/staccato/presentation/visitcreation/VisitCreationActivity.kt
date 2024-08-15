@@ -30,7 +30,7 @@ class VisitCreationActivity :
     private val fragmentManager: FragmentManager = supportFragmentManager
     private lateinit var adapter: PhotoAttachAdapter
     private val travelId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
-    private val travelTitle by lazy { intent.getStringExtra(TRAVEL_TITLE_KEY) ?: "" }
+    private val travelTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initTravelInfo()
@@ -73,7 +73,7 @@ class VisitCreationActivity :
                 Intent()
                     .putExtra(VISIT_ID_KEY, createdVisitId)
                     .putExtra(MEMORY_ID_KEY, travelId)
-                    .putExtra(TRAVEL_TITLE_KEY, travelTitle)
+                    .putExtra(MEMORY_TITLE_KEY, travelTitle)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -95,7 +95,7 @@ class VisitCreationActivity :
     }
 
     companion object {
-        const val TRAVEL_TITLE_KEY = "travelTitle"
+        const val MEMORY_TITLE_KEY = "memoryTitle"
 
         fun startWithResultLauncher(
             travelId: Long,
@@ -105,7 +105,7 @@ class VisitCreationActivity :
         ) {
             Intent(context, VisitCreationActivity::class.java).apply {
                 putExtra(MEMORY_ID_KEY, travelId)
-                putExtra(TRAVEL_TITLE_KEY, travelTitle)
+                putExtra(MEMORY_TITLE_KEY, travelTitle)
                 activityLauncher.launch(this)
             }
         }
