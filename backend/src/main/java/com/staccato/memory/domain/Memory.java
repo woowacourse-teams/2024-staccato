@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -38,15 +39,13 @@ public class Memory extends BaseEntity {
     private String title;
     @Column(columnDefinition = "TEXT")
     private String description;
-    @Column(nullable = false)
     private LocalDate startAt;
-    @Column(nullable = false)
     private LocalDate endAt;
     @OneToMany(mappedBy = "memory", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<MemoryMember> memoryMembers = new ArrayList<>();
 
     @Builder
-    public Memory(String thumbnailUrl, @NonNull String title, String description, @NonNull LocalDate startAt, @NonNull LocalDate endAt) {
+    public Memory(String thumbnailUrl, @NonNull String title, String description, LocalDate startAt, LocalDate endAt) {
         validateDate(startAt, endAt);
         this.thumbnailUrl = thumbnailUrl;
         this.title = title;
@@ -56,7 +55,7 @@ public class Memory extends BaseEntity {
     }
 
     private void validateDate(LocalDate startAt, LocalDate endAt) {
-        if (endAt.isBefore(startAt)) {
+        if (!(Objects.isNull(startAt) && Objects.isNull(endAt)) && endAt.isBefore(startAt)) {
             throw new StaccatoException("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
         }
     }
@@ -92,6 +91,9 @@ public class Memory extends BaseEntity {
     }
 
     public boolean isWithoutDuration(LocalDateTime date) {
+        if (Objects.isNull(startAt) && Objects.isNull(endAt)) {
+            return false;
+        }
         return startAt.isAfter(ChronoLocalDate.from(date)) || endAt.isBefore(ChronoLocalDate.from(date));
     }
 
