@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:text="@string/all_photo_attach"
         android:textAppearance="@style/Typography.Body4"
+        android:textColor="@color/gray4"
         app:layout_constraintEnd_toEndOf="@id/view_photo_attach_camera"
         app:layout_constraintStart_toStartOf="@id/view_photo_attach_camera"
         app:layout_constraintTop_toBottomOf="@id/view_photo_attach_camera" />

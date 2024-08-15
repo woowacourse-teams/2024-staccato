@@ -8,7 +8,7 @@
 
         <variable
             name="selectedPhotoHandler"
-            type="com.woowacourse.staccato.presentation.common.SelectedPhotoHandler" />
+            type="com.woowacourse.staccato.presentation.common.AttachedPhotoHandler" />
 
         <variable
             name="attachedPhoto"
@@ -18,7 +18,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp">
+        android:layout_marginTop="10dp">
 
         <ImageView
             android:id="@+id/iv_attached_photo"
@@ -29,13 +29,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
-            bind:glideUriPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            bind:glideUriRoundedCornerImageUri="@{attachedPhoto}"
-            bind:glideUriRoundingRadius="@{12}"
+            bind:coilUriPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            bind:coilUriRoundedCorner="@{attachedPhoto}"
+            bind:coilUriRoundingRadius="@{12f}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
         <ImageView
-            android:id="@+id/iv_delete_attached_photo"
+            android:id="@+id/iv_delete_photo"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="130dp"

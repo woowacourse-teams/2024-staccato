@@ -37,6 +37,12 @@ class TimelineFragment :
 
     private fun setUpObserving() {
         timelineViewModel.travels.observe(viewLifecycleOwner) { timeline ->
+            // TODO: data binding 으로 가시성 설정되지 않는 오류 해결하기
+            if (timeline.isEmpty()) {
+                binding.tvTimelineEmpty.visibility = View.VISIBLE
+            } else {
+                binding.tvTimelineEmpty.visibility = View.GONE
+            }
             adapter.updateTimeline(timeline)
         }
 
