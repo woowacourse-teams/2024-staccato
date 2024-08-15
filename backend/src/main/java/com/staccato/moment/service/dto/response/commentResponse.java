@@ -5,7 +5,7 @@ import com.staccato.moment.domain.Comment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "특정 방문 기록에 대해 함께 간 친구와 나눈 대화 응답 형식입니다.")
+@Schema(description = "특정 순간 기록에 대해 함께 간 친구와 나눈 대화 응답 형식입니다.")
 public record commentResponse(
         @Schema(example = "1")
         Long commentId,
@@ -16,7 +16,7 @@ public record commentResponse(
         @Schema(example = "https://example.com/images/kargo.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String memberImageUrl,
-        @Schema(example = "즐거운 여행")
+        @Schema(example = "즐거운 추억")
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String content
 ) {

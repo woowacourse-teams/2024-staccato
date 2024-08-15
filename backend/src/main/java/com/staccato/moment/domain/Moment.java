@@ -58,16 +58,16 @@ public class Moment extends BaseEntity {
             @NonNull BigDecimal longitude,
             @NonNull Memory memory
     ) {
-        validateIsWithinTravelDuration(visitedAt, memory);
+        validateIsWithinMemoryDuration(visitedAt, memory);
         this.visitedAt = visitedAt;
         this.placeName = placeName;
         this.spot = new Spot(address, latitude, longitude);
         this.memory = memory;
     }
 
-    private void validateIsWithinTravelDuration(LocalDateTime visitedAt, Memory memory) {
+    private void validateIsWithinMemoryDuration(LocalDateTime visitedAt, Memory memory) {
         if (memory.isWithoutDuration(visitedAt)) {
-            throw new StaccatoException("여행에 포함되지 않는 날짜입니다.");
+            throw new StaccatoException("추억에 포함되지 않는 날짜입니다.");
         }
     }
 

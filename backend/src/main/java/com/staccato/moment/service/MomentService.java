@@ -46,7 +46,7 @@ public class MomentService {
 
     private Memory getMemoryById(long memoryId) {
         return memoryRepository.findById(memoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
+                .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
     }
 
     public MomentDetailResponse readMomentById(long momentId, Member member) {
@@ -75,7 +75,7 @@ public class MomentService {
 
     private Moment getMomentById(long momentId) {
         return momentRepository.findById(momentId)
-                .orElseThrow(() -> new StaccatoException("요청하신 방문 기록을 찾을 수 없어요."));
+                .orElseThrow(() -> new StaccatoException("요청하신 순간 기록을 찾을 수 없어요."));
     }
 
     @Transactional

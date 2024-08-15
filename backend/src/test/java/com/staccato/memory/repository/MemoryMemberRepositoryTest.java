@@ -25,14 +25,14 @@ class MemoryMemberRepositoryTest {
     @Autowired
     private MemoryRepository memoryRepository;
 
-    @DisplayName("사용자 식별자와 년도로 여행 상세 목록을 조회한다.")
+    @DisplayName("사용자 식별자와 년도로 추억 상세 목록을 조회한다.")
     @Test
-    void findAllByMemberIdAndTravelStartAtYear() {
+    void findAllByMemberIdAndMemoryStartAtYear() {
         // given
         Member member = memberRepository.save(Member.builder().nickname("staccato").build());
-        Memory memory = memoryRepository.save(createTravel(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)));
-        Memory memory2 = memoryRepository.save(createTravel(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Memory memory3 = memoryRepository.save(createTravel(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)));
+        Memory memory = memoryRepository.save(createMemory(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)));
+        Memory memory2 = memoryRepository.save(createMemory(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Memory memory3 = memoryRepository.save(createMemory(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)));
         memoryMemberRepository.save(new MemoryMember(member, memory));
         memoryMemberRepository.save(new MemoryMember(member, memory2));
         memoryMemberRepository.save(new MemoryMember(member, memory3));
@@ -44,14 +44,14 @@ class MemoryMemberRepositoryTest {
         assertThat(result).hasSize(2);
     }
 
-    @DisplayName("사용자 식별자와 년도로 해당하는 삭제되지 않은 여행 상세 목록만 최신순으로 조회한다.")
+    @DisplayName("사용자 식별자와 년도로 해당하는 삭제되지 않은 추억 상세 목록만 최신순으로 조회한다.")
     @Test
-    void findAllByMemberIdAndTravelStartAtYearWithoutDeleted() {
+    void findAllByMemberIdAndMemoryStartAtYearWithoutDeleted() {
         // given
         Member member = memberRepository.save(Member.builder().nickname("staccato").build());
-        Memory memory = memoryRepository.save(createTravel(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)));
-        Memory memory2 = memoryRepository.save(createTravel(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Memory memory3 = memoryRepository.save(createTravel(LocalDate.of(2023, 1, 10), LocalDate.of(2024, 1, 10)));
+        Memory memory = memoryRepository.save(createMemory(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)));
+        Memory memory2 = memoryRepository.save(createMemory(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Memory memory3 = memoryRepository.save(createMemory(LocalDate.of(2023, 1, 10), LocalDate.of(2024, 1, 10)));
         memoryMemberRepository.save(new MemoryMember(member, memory));
         memoryMemberRepository.save(new MemoryMember(member, memory2));
         memoryMemberRepository.save(new MemoryMember(member, memory3));
@@ -69,9 +69,9 @@ class MemoryMemberRepositoryTest {
         );
     }
 
-    private static Memory createTravel(LocalDate startAt, LocalDate endAt) {
+    private static Memory createMemory(LocalDate startAt, LocalDate endAt) {
         return Memory.builder()
-                .title("여행")
+                .title("추억")
                 .startAt(startAt)
                 .endAt(endAt)
                 .build();

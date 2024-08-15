@@ -54,47 +54,47 @@ class MemoryControllerTest {
     @MockBean
     private AuthService authService;
 
-    static Stream<MemoryRequest> travelRequestProvider() {
+    static Stream<MemoryRequest> memoryRequestProvider() {
         return Stream.of(
-                new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                new MemoryRequest(null, "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", null, LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10))
+                new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                new MemoryRequest(null, "2023 여름 휴가", "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", null, LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10))
         );
     }
 
-    static Stream<Arguments> invalidTravelRequestProvider() {
+    static Stream<Arguments> invalidMemoryRequestProvider() {
         return Stream.of(
                 Arguments.of(
-                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", null, "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                        "여행 제목을 입력해주세요."
+                        new MemoryRequest("https://example.com/memorys/geumohrm.jpg", null, "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        "추억 제목을 입력해주세요."
                 ),
                 Arguments.of(
-                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", "  ", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                        "여행 제목을 입력해주세요."
+                        new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "  ", "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        "추억 제목을 입력해주세요."
                 ),
                 Arguments.of(
-                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", null, LocalDate.of(2023, 7, 10)),
-                        "여행 시작 날짜를 입력해주세요."
+                        new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 추억", null, LocalDate.of(2023, 7, 10)),
+                        "추억 시작 날짜를 입력해주세요."
                 ),
                 Arguments.of(
-                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), null),
-                        "여행 끝 날짜를 입력해주세요."
+                        new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), null),
+                        "추억 끝 날짜를 입력해주세요."
                 ),
                 Arguments.of(
-                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", "가".repeat(31), "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "가".repeat(31), "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
                         "제목은 공백 포함 1자 이상 30자 이하로 설정해주세요."
                 ),
                 Arguments.of(
-                        new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "가".repeat(501), LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                        new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", "가".repeat(501), LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
                         "내용의 최대 허용 글자수는 공백 포함 500자입니다."
                 )
         );
     }
 
-    @DisplayName("사용자가 여행 상세 정보를 입력하면, 새로운 여행 상세를 생성한다.")
+    @DisplayName("사용자가 추억 상세 정보를 입력하면, 새로운 추억 상세를 생성한다.")
     @ParameterizedTest
-    @MethodSource("travelRequestProvider")
-    void createTravel(MemoryRequest memoryRequest) throws Exception {
+    @MethodSource("memoryRequestProvider")
+    void createMemory(MemoryRequest memoryRequest) throws Exception {
         // given
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
@@ -111,10 +111,10 @@ class MemoryControllerTest {
                 .andExpect(jsonPath("$.memoryId").value(1));
     }
 
-    @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 여행 상세를 생성할 수 없다.")
+    @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 추억 상세를 생성할 수 없다.")
     @ParameterizedTest
-    @MethodSource("invalidTravelRequestProvider")
-    void failCreateTravel(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
+    @MethodSource("invalidMemoryRequestProvider")
+    void failCreateMemory(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         when(memoryService.createMemory(any(MemoryRequest.class), any(MultipartFile.class), any(Member.class))).thenReturn(new MemoryIdResponse(1));
@@ -129,12 +129,12 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("사용자가 모든 여행 상세 목록을 조회한다.")
+    @DisplayName("사용자가 모든 추억 상세 목록을 조회한다.")
     @Test
-    void readAllTravel() throws Exception {
+    void readAllMemory() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        MemoryResponses memoryResponses = new MemoryResponses(List.of(new MemoryResponse(createTravel())));
+        MemoryResponses memoryResponses = new MemoryResponses(List.of(new MemoryResponse(createMemory())));
         when(memoryService.readAllMemories(any(Member.class), any())).thenReturn(memoryResponses);
 
         // when & then
@@ -144,13 +144,13 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(memoryResponses)));
     }
 
-    @DisplayName("사용자가 특정 여행 상세를 조회한다.")
+    @DisplayName("사용자가 특정 추억 상세를 조회한다.")
     @Test
-    void readTravel() throws Exception {
+    void readMemory() throws Exception {
         // given
         long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(createTravel(), List.of());
+        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(createMemory(), List.of());
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
 
         // when & then
@@ -160,20 +160,20 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(memoryDetailResponse)));
     }
 
-    private Memory createTravel() {
+    private Memory createMemory() {
         return Memory.builder()
-                .thumbnailUrl("https://example.com/travels/geumohrm.jpg")
+                .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
                 .title("2024 여름 휴가")
-                .description("친구들과 함께한 여름 휴가 여행")
+                .description("친구들과 함께한 여름 휴가 추억")
                 .startAt(LocalDate.of(2024, 7, 1))
                 .endAt(LocalDate.of(2024, 7, 10))
                 .build();
     }
 
-    @DisplayName("적합한 경로변수와 데이터를 통해 방문 기록 수정에 성공한다.")
+    @DisplayName("적합한 경로변수와 데이터를 통해 순간 기록 수정에 성공한다.")
     @ParameterizedTest
-    @MethodSource("travelRequestProvider")
-    void updateTravel(MemoryRequest memoryRequest) throws Exception {
+    @MethodSource("memoryRequestProvider")
+    void updateMemory(MemoryRequest memoryRequest) throws Exception {
         // given
         long memoryId = 1L;
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
@@ -192,10 +192,10 @@ class MemoryControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 여행 상세를 수정할 수 없다.")
+    @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 추억 상세를 수정할 수 없다.")
     @ParameterizedTest
-    @MethodSource("invalidTravelRequestProvider")
-    void failUpdateTravel(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
+    @MethodSource("invalidMemoryRequestProvider")
+    void failUpdateMemory(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
         // given
         long memoryId = 1L;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
@@ -214,14 +214,14 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("적합하지 않은 경로변수의 경우 여행 상세 수정에 실패한다.")
+    @DisplayName("적합하지 않은 경로변수의 경우 추억 상세 수정에 실패한다.")
     @Test
-    void failUpdateTravelByInvalidPath() throws Exception {
+    void failUpdateMemoryByInvalidPath() throws Exception {
         // given
         long memoryId = 0L;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "여행 식별자는 양수로 이루어져야 합니다.");
-        MemoryRequest memoryRequest = new MemoryRequest("https://example.com/travels/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 여행", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "추억 식별자는 양수로 이루어져야 합니다.");
+        MemoryRequest memoryRequest = new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
 
         // when & then
         mockMvc.perform(multipart("/memories/{memoryId}", memoryId)
@@ -236,9 +236,9 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("사용자가 여행 식별자로 여행을 삭제한다.")
+    @DisplayName("사용자가 추억 식별자로 추억을 삭제한다.")
     @Test
-    void deleteTravel() throws Exception {
+    void deleteMemory() throws Exception {
         // given
         long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
@@ -250,12 +250,12 @@ class MemoryControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("사용자가 잘못된 여행 식별자로 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("사용자가 잘못된 추억 식별자로 삭제하려고 하면 예외가 발생한다.")
     @Test
-    void cannotDeleteTravelByInvalidId() throws Exception {
+    void cannotDeleteMemoryByInvalidId() throws Exception {
         // given
         long invalidId = 0;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "여행 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "추억 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
         mockMvc.perform(delete("/memories/{memoryId}", invalidId)

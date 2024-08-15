@@ -53,24 +53,24 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    static Stream<Arguments> updateTravelProvider() {
+    static Stream<Arguments> updateMemoryProvider() {
         return Stream.of(
                 Arguments.of(
-                        new MemoryRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
+                        new MemoryRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 추억", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
                         new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes()), "fakeUrl"),
                 Arguments.of(
-                        new MemoryRequest(null, "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
+                        new MemoryRequest(null, "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 추억", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
                         null, null),
                 Arguments.of(
-                        new MemoryRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 여행", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
+                        new MemoryRequest("imageUrl", "2024 여름 휴가다!", "친한 친구들과 함께한 여름 휴가 추억", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
                         null, "imageUrl"));
     }
 
-    @DisplayName("여행 상세 정보를 기반으로, 여행 상세를 생성하고 작성자를 저장한다.")
+    @DisplayName("추억 상세 정보를 기반으로, 추억 상세를 생성하고 작성자를 저장한다.")
     @Test
-    void createTravel() {
+    void createMemory() {
         // given
-        MemoryRequest memoryRequest = createTravelRequest(2024);
+        MemoryRequest memoryRequest = createMemoryRequest(2024);
         Member member = saveMember();
 
         // when
@@ -84,14 +84,14 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("조건에 따라 여행 상세 목록을 조회한다.")
+    @DisplayName("조건에 따라 추억 상세 목록을 조회한다.")
     @MethodSource("yearProvider")
     @ParameterizedTest
-    void readAllTravels(Integer year, int expectedSize) {
+    void readAllMemorys(Integer year, int expectedSize) {
         // given
         Member member = saveMember();
-        memoryService.createMemory(createTravelRequest(2023), null, member);
-        memoryService.createMemory(createTravelRequest(2024), null, member);
+        memoryService.createMemory(createMemoryRequest(2023), null, member);
+        memoryService.createMemory(createMemoryRequest(2024), null, member);
 
         // when
         MemoryResponses memoryResponses = memoryService.readAllMemories(member, year);
@@ -100,13 +100,13 @@ class MemoryServiceTest extends ServiceSliceTest {
         assertThat(memoryResponses.memories()).hasSize(expectedSize);
     }
 
-    @DisplayName("특정 여행 상세를 조회한다.")
+    @DisplayName("특정 추억 상세를 조회한다.")
     @Test
-    void readTravelById() {
+    void readMemoryById() {
         // given
         Member member = saveMember();
 
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createTravelRequest(2023), null, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createMemoryRequest(2023), null, member);
 
         // when
         MemoryDetailResponse memoryDetailResponse = memoryService.readMemoryById(memoryIdResponse.memoryId(), member);
@@ -118,14 +118,14 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 여행 상세를 조회하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 추억 상세를 조회하려고 하면 예외가 발생한다.")
     @Test
-    void cannotReadTravelByIdIfNotOwner() {
+    void cannotReadMemoryByIdIfNotOwner() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
 
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createTravelRequest(2023), null, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createMemoryRequest(2023), null, member);
 
         // when & then
         assertThatThrownBy(() -> memoryService.readMemoryById(memoryIdResponse.memoryId(), otherMember))
@@ -133,16 +133,16 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("특정 여행 상세를 조회하면 방문 기록은 오래된 순으로 반환한다.")
+    @DisplayName("특정 추억 상세를 조회하면 순간 기록은 오래된 순으로 반환한다.")
     @Test
-    void readTravelByIdOrderByVisitedAt() {
+    void readMemoryByIdOrderByVisitedAt() {
         // given
         Member member = saveMember();
 
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createTravelRequest(2023), null, member);
-        Moment firstMoment = saveVisit(LocalDateTime.of(2023, 7, 1, 10, 0), memoryIdResponse.memoryId());
-        Moment secondMoment = saveVisit(LocalDateTime.of(2023, 7, 1, 10, 10), memoryIdResponse.memoryId());
-        Moment lastMoment = saveVisit(LocalDateTime.of(2023, 7, 5, 9, 0), memoryIdResponse.memoryId());
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createMemoryRequest(2023), null, member);
+        Moment firstMoment = saveMoment(LocalDateTime.of(2023, 7, 1, 10, 0), memoryIdResponse.memoryId());
+        Moment secondMoment = saveMoment(LocalDateTime.of(2023, 7, 1, 10, 10), memoryIdResponse.memoryId());
+        Moment lastMoment = saveMoment(LocalDateTime.of(2023, 7, 5, 9, 0), memoryIdResponse.memoryId());
 
         // when
         MemoryDetailResponse memoryDetailResponse = memoryService.readMemoryById(memoryIdResponse.memoryId(), member);
@@ -156,13 +156,13 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    private Moment saveVisit(LocalDateTime visitedAt, long travelId) {
-        return momentRepository.save(MomentFixture.create(memoryRepository.findById(travelId).get(), visitedAt));
+    private Moment saveMoment(LocalDateTime visitedAt, long memoryId) {
+        return momentRepository.save(MomentFixture.create(memoryRepository.findById(memoryId).get(), visitedAt));
     }
 
-    @DisplayName("존재하지 않는 여행 상세를 조회하려고 할 경우 예외가 발생한다.")
+    @DisplayName("존재하지 않는 추억 상세를 조회하려고 할 경우 예외가 발생한다.")
     @Test
-    void failReadTravel() {
+    void failReadMemory() {
         // given
         Member member = saveMember();
         long unknownId = 1;
@@ -170,79 +170,79 @@ class MemoryServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> memoryService.readMemoryById(unknownId, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("요청하신 여행을 찾을 수 없어요.");
+                .hasMessage("요청하신 추억을 찾을 수 없어요.");
     }
 
-    @DisplayName("여행 상세 정보를 기반으로, 여행 상세를 수정한다.")
-    @MethodSource("updateTravelProvider")
+    @DisplayName("추억 상세 정보를 기반으로, 추억 상세를 수정한다.")
+    @MethodSource("updateMemoryProvider")
     @ParameterizedTest
-    void updateTravel(MemoryRequest updatedTravel, MockMultipartFile updatedFile, String expected) {
+    void updateMemory(MemoryRequest updatedMemory, MockMultipartFile updatedFile, String expected) {
         // given
         Member member = saveMember();
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
-        MemoryIdResponse travelResponse = memoryService.createMemory(createTravelRequest(2024), file, member);
+        MemoryIdResponse memoryResponse = memoryService.createMemory(createMemoryRequest(2024), file, member);
 
         // when
-        memoryService.updateMemory(updatedTravel, travelResponse.memoryId(), updatedFile, member);
-        Memory foundedMemory = memoryRepository.findById(travelResponse.memoryId()).get();
+        memoryService.updateMemory(updatedMemory, memoryResponse.memoryId(), updatedFile, member);
+        Memory foundedMemory = memoryRepository.findById(memoryResponse.memoryId()).get();
 
         // then
         assertAll(
-                () -> assertThat(foundedMemory.getId()).isEqualTo(travelResponse.memoryId()),
-                () -> assertThat(foundedMemory.getTitle()).isEqualTo(updatedTravel.memoryTitle()),
-                () -> assertThat(foundedMemory.getDescription()).isEqualTo(updatedTravel.description()),
-                () -> assertThat(foundedMemory.getStartAt()).isEqualTo(updatedTravel.startAt()),
-                () -> assertThat(foundedMemory.getEndAt()).isEqualTo(updatedTravel.endAt()),
+                () -> assertThat(foundedMemory.getId()).isEqualTo(memoryResponse.memoryId()),
+                () -> assertThat(foundedMemory.getTitle()).isEqualTo(updatedMemory.memoryTitle()),
+                () -> assertThat(foundedMemory.getDescription()).isEqualTo(updatedMemory.description()),
+                () -> assertThat(foundedMemory.getStartAt()).isEqualTo(updatedMemory.startAt()),
+                () -> assertThat(foundedMemory.getEndAt()).isEqualTo(updatedMemory.endAt()),
                 () -> assertThat(foundedMemory.getThumbnailUrl()).isEqualTo(expected)
         );
     }
 
-    @DisplayName("존재하지 않는 여행 상세를 수정하려 할 경우 예외가 발생한다.")
+    @DisplayName("존재하지 않는 추억 상세를 수정하려 할 경우 예외가 발생한다.")
     @Test
-    void failUpdateTravel() {
+    void failUpdateMemory() {
         // given
         Member member = saveMember();
-        MemoryRequest memoryRequest = createTravelRequest(2023);
+        MemoryRequest memoryRequest = createMemoryRequest(2023);
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
 
         // when & then
         assertThatThrownBy(() -> memoryService.updateMemory(memoryRequest, 1L, file, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("요청하신 여행을 찾을 수 없어요.");
+                .hasMessage("요청하신 추억을 찾을 수 없어요.");
     }
 
-    private MemoryRequest createTravelRequest(int year) {
+    private MemoryRequest createMemoryRequest(int year) {
         return new MemoryRequest(
-                "https://example.com/travels/geumohrm.jpg",
+                "https://example.com/memorys/geumohrm.jpg",
                 year + " 여름 휴가",
-                "친구들과 함께한 여름 휴가 여행",
+                "친구들과 함께한 여름 휴가 추억",
                 LocalDate.of(year, 7, 1),
                 LocalDate.of(2024, 7, 10)
         );
     }
 
-    @DisplayName("본인 것이 아닌 여행 상세를 수정하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 추억 상세를 수정하려고 하면 예외가 발생한다.")
     @Test
-    void cannotUpdateTravelIfNotOwner() {
+    void cannotUpdateMemoryIfNotOwner() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        MemoryRequest updatedTravel = createTravelRequest(2023);
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createTravelRequest(2023), null, member);
+        MemoryRequest updatedMemory = createMemoryRequest(2023);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createMemoryRequest(2023), null, member);
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
 
         // when & then
-        assertThatThrownBy(() -> memoryService.updateMemory(updatedTravel, memoryIdResponse.memoryId(), file, otherMember))
+        assertThatThrownBy(() -> memoryService.updateMemory(updatedMemory, memoryIdResponse.memoryId(), file, otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("여행 식별값을 통해 여행 상세를 삭제한다.")
+    @DisplayName("추억 식별값을 통해 추억 상세를 삭제한다.")
     @Test
-    void deleteTravel() {
+    void deleteMemory() {
         // given
         Member member = saveMember();
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createTravelRequest(2023), null, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createMemoryRequest(2023), null, member);
 
         // when
         memoryService.deleteMemory(memoryIdResponse.memoryId(), member);
@@ -254,13 +254,13 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 여행 상세를 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 추억 상세를 삭제하려고 하면 예외가 발생한다.")
     @Test
-    void cannotDeleteTravelIfNotOwner() {
+    void cannotDeleteMemoryIfNotOwner() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createTravelRequest(2023), null, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createMemoryRequest(2023), null, member);
 
         // when & then
         assertThatThrownBy(() -> memoryService.deleteMemory(memoryIdResponse.memoryId(), otherMember))
@@ -268,18 +268,18 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("방문기록이 존재하는 여행 상세에 삭제를 시도할 경우 예외가 발생한다.")
+    @DisplayName("순간기록이 존재하는 추억 상세에 삭제를 시도할 경우 예외가 발생한다.")
     @Test
-    void failDeleteTravelByExistingVisits() {
+    void failDeleteMemoryByExistingMoments() {
         // given
         Member member = saveMember();
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createTravelRequest(2023), null, member);
-        saveVisit(LocalDateTime.of(2024, 7, 10, 10, 0), memoryIdResponse.memoryId());
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(createMemoryRequest(2023), null, member);
+        saveMoment(LocalDateTime.of(2024, 7, 10, 10, 0), memoryIdResponse.memoryId());
 
         // when & then
         assertThatThrownBy(() -> memoryService.deleteMemory(memoryIdResponse.memoryId(), member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
+                .hasMessage("해당 추억 상세에 순간 기록이 남아있어 삭제할 수 없습니다.");
     }
 
     private Member saveMember() {

@@ -16,12 +16,12 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.memory.domain.Memory;
 
 class MomentTest {
-    @DisplayName("여행 날짜 안에 방문 기록 날짜가 포함되면 Visit을 생성할 수 있다.")
+    @DisplayName("추억 날짜 안에 순간 기록 날짜가 포함되면 Moment을 생성할 수 있다.")
     @Test
-    void createVisit() {
+    void createMoment() {
         // given
         Memory memory = Memory.builder()
-                .title("Sample Travel")
+                .title("Sample Memory")
                 .startAt(LocalDate.now())
                 .endAt(LocalDate.now().plusDays(1))
                 .build();
@@ -37,13 +37,13 @@ class MomentTest {
                 .build()).doesNotThrowAnyException();
     }
 
-    @DisplayName("여행 날짜 안에 방문 기록 날짜가 포함되지 않으면 예외를 발생시킨다.")
+    @DisplayName("추억 날짜 안에 순간 기록 날짜가 포함되지 않으면 예외를 발생시킨다.")
     @ValueSource(longs = {-1, 2})
     @ParameterizedTest
-    void failCreateVisit(long plusDays) {
+    void failCreateMoment(long plusDays) {
         // given
         Memory memory = Memory.builder()
-                .title("Sample Travel")
+                .title("Sample Memory")
                 .startAt(LocalDate.now())
                 .endAt(LocalDate.now().plusDays(1))
                 .build();
@@ -57,6 +57,6 @@ class MomentTest {
                 .address("address")
                 .memory(memory)
                 .build()).isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("여행에 포함되지 않는 날짜입니다.");
+                .hasMessageContaining("추억에 포함되지 않는 날짜입니다.");
     }
 }

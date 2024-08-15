@@ -9,7 +9,7 @@ import com.staccato.moment.domain.MomentImage;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "특정 방문 기록을 조회했을 때 응답 형식입니다.")
+@Schema(description = "특정 순간 기록을 조회했을 때 응답 형식입니다.")
 public record MomentDetailResponse(
         @Schema(example = "1")
         long momentId,

@@ -112,7 +112,7 @@ public class MemoryService {
 
     private Memory getMemoryById(long memoryId) {
         return memoryRepository.findById(memoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 여행을 찾을 수 없어요."));
+                .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
     }
 
     @Transactional
@@ -132,7 +132,7 @@ public class MemoryService {
 
     private void validateMomentExistsByMemory(Memory memory) {
         if (momentRepository.existsByMemory(memory)) {
-            throw new StaccatoException("해당 여행 상세에 방문 기록이 남아있어 삭제할 수 없습니다.");
+            throw new StaccatoException("해당 추억 상세에 순간 기록이 남아있어 삭제할 수 없습니다.");
         }
     }
 }

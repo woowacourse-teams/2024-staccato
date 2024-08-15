@@ -78,7 +78,7 @@ public class MomentImages {
 
     private boolean without(MomentImage image) {
         return this.images.stream()
-                .noneMatch(visitImage -> visitImage.isSameUrl(image));
+                .noneMatch(momentImage -> momentImage.isSameUrl(image));
     }
 
     public boolean isNotEmpty() {

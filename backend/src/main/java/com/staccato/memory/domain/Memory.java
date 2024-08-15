@@ -87,7 +87,7 @@ public class Memory extends BaseEntity {
                 .filter(moment -> updatedMemory.isWithoutDuration(moment.getVisitedAt()))
                 .findAny()
                 .ifPresent(moment -> {
-                    throw new StaccatoException("변경하려는 여행 기간이 이미 존재하는 방문 기록을 포함하지 않습니다. 여행 기간을 다시 설정해주세요.");
+                    throw new StaccatoException("변경하려는 추억 기간이 이미 존재하는 순간 기록을 포함하지 않습니다. 추억 기간을 다시 설정해주세요.");
                 });
     }
 

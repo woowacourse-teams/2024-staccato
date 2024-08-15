@@ -18,7 +18,7 @@ import com.staccato.moment.fixture.MomentFixture;
 class MomentImagesTest {
     @DisplayName("생성하려는 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
     @Test
-    void failAddVisitImages() {
+    void failAddMomentImages() {
         // given & when & then
         assertThatThrownBy(() -> new MomentImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
                 .isInstanceOf(StaccatoException.class)
@@ -27,7 +27,7 @@ class MomentImagesTest {
 
     @DisplayName("사진을 추가할 때 총 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
     @Test
-    void failUpdateVisitImages() {
+    void failUpdateMomentImages() {
         // given & when & then
         assertThatThrownBy(() -> MomentImages.builder()
                 .existingImages(List.of("picture1", "picture2", "picture3", "picture4"))
@@ -40,7 +40,7 @@ class MomentImagesTest {
     @Test
     void update() {
         // given
-        Memory memory = Memory.builder().title("Sample Travel").startAt(LocalDate.now().minusDays(1))
+        Memory memory = Memory.builder().title("Sample Memory").startAt(LocalDate.now().minusDays(1))
                 .endAt(LocalDate.now().plusDays(1)).build();
         MomentImages existingImages = new MomentImages(List.of("picture1", "picture3"));
         MomentImages updatedImages = new MomentImages(List.of("picture1", "picture4"));

@@ -10,14 +10,14 @@ import com.staccato.memory.domain.Memory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "여행 상세 목록 조회 시 각각의 여행 상세에 대한 응답 형식입니다.")
+@Schema(description = "추억 상세 목록 조회 시 각각의 추억 상세에 대한 응답 형식입니다.")
 public record MemoryResponse(
         @Schema(example = "1")
         Long memoryId,
-        @Schema(example = "https://example.com/travels/geumohrm.jpg")
+        @Schema(example = "https://example.com/memorys/geumohrm.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String memoryThumbnailUrl,
-        @Schema(example = "런던 여행")
+        @Schema(example = "런던 추억")
         String memoryTitle,
         @Schema(example = "런던 시내 탐방")
         @JsonInclude(JsonInclude.Include.NON_NULL)

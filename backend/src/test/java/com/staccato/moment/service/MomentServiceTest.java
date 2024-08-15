@@ -47,79 +47,79 @@ class MomentServiceTest extends ServiceSliceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @DisplayName("사진 없이도 방문 기록을 생성할 수 있다.")
+    @DisplayName("사진 없이도 순간 기록을 생성할 수 있다.")
     @Test
-    void createVisit() {
+    void createMoment() {
         // given
         Member member = saveMember();
-        saveTravel(member);
+        saveMemory(member);
 
         // when
-        long visitId = momentService.createMoment(getVisitRequestWithoutImage(), List.of(), member).momentId();
+        long momentId = momentService.createMoment(getMomentRequestWithoutImage(), List.of(), member).momentId();
 
         // then
-        assertThat(momentRepository.findById(visitId)).isNotEmpty();
+        assertThat(momentRepository.findById(momentId)).isNotEmpty();
     }
 
-    private MomentRequest getVisitRequestWithoutImage() {
+    private MomentRequest getMomentRequestWithoutImage() {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
-    @DisplayName("방문 기록을 생성하면 Visit과 VisitImage들이 함께 저장되고 id를 반환한다.")
+    @DisplayName("순간 기록을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
     @Test
-    void createVisitWithVisitImages() {
+    void createMomentWithMomentImages() {
         // given
         Member member = saveMember();
-        saveTravel(member);
+        saveMemory(member);
 
         // when
-        long visitId = momentService.createMoment(getVisitRequest(), List.of(new MockMultipartFile("visitImageFiles", "example.jpg".getBytes())), member).momentId();
+        long momentId = momentService.createMoment(getMomentRequest(), List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), member).momentId();
 
         // then
         assertAll(
-                () -> assertThat(momentRepository.findById(visitId)).isNotEmpty(),
-                () -> assertThat(momentImageRepository.findFirstByMomentId(visitId)).isNotEmpty()
+                () -> assertThat(momentRepository.findById(momentId)).isNotEmpty(),
+                () -> assertThat(momentImageRepository.findFirstByMomentId(momentId)).isNotEmpty()
         );
     }
 
-    @DisplayName("본인 것이 아닌 여행에 방문 기록을 생성하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 추억에 순간 기록을 생성하려고 하면 예외가 발생한다.")
     @Test
-    void cannotCreateVisitIfNotOwner() {
+    void cannotCreateMomentIfNotOwner() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        saveTravel(member);
-        MomentRequest momentRequest = getVisitRequest();
+        saveMemory(member);
+        MomentRequest momentRequest = getMomentRequest();
 
         // when & then
-        assertThatThrownBy(() -> momentService.createMoment(momentRequest, List.of(new MockMultipartFile("visitImageFiles", "example.jpg".getBytes())), otherMember))
+        assertThatThrownBy(() -> momentService.createMoment(momentRequest, List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 여행에 방문 기록 생성을 시도하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 추억에 순간 기록 생성을 시도하면 예외가 발생한다.")
     @Test
-    void failCreateVisit() {
+    void failCreateMoment() {
         // given
         Member member = saveMember();
 
         // when & then
-        assertThatThrownBy(() -> momentService.createMoment(getVisitRequest(), List.of(new MockMultipartFile("visitImageFiles", "example.jpg".getBytes())), member))
+        assertThatThrownBy(() -> momentService.createMoment(getMomentRequest(), List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 여행을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 추억을 찾을 수 없어요.");
     }
 
-    private MomentRequest getVisitRequest() {
+    private MomentRequest getMomentRequest() {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
-    @DisplayName("특정 방문 기록 조회에 성공한다.")
+    @DisplayName("특정 순간 기록 조회에 성공한다.")
     @Test
-    void readVisitById() {
+    void readMomentById() {
         // given
         Member member = saveMember();
-        Memory memory = saveTravel(member);
-        Moment moment = saveVisitWithImages(memory);
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
 
         // when
         MomentDetailResponse actual = momentService.readMomentById(moment.getId(), member);
@@ -128,14 +128,14 @@ class MomentServiceTest extends ServiceSliceTest {
         assertThat(actual).isEqualTo(new MomentDetailResponse(moment));
     }
 
-    @DisplayName("본인 것이 아닌 특정 방문 기록을 조회하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간 기록을 조회하려고 하면 예외가 발생한다.")
     @Test
-    void cannotReadVisitByIdIfNotOwner() {
+    void cannotReadMomentByIdIfNotOwner() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        Memory memory = saveTravel(member);
-        Moment moment = saveVisitWithImages(memory);
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
 
         // when & then
         assertThatThrownBy(() -> momentService.readMomentById(moment.getId(), otherMember))
@@ -143,29 +143,29 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 방문 기록을 조회하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 순간 기록을 조회하면 예외가 발생한다.")
     @Test
-    void failReadVisitById() {
+    void failReadMomentById() {
         // given
         Member member = saveMember();
 
         // when & then
         assertThatThrownBy(() -> momentService.readMomentById(1L, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 순간 기록을 찾을 수 없어요.");
     }
 
-    @DisplayName("특정 방문 기록 수정에 성공한다.")
+    @DisplayName("특정 순간 기록 수정에 성공한다.")
     @Test
-    void updateVisitById() {
+    void updateMomentById() {
         // given
         Member member = saveMember();
-        Memory memory = saveTravel(member);
-        Moment moment = saveVisitWithImages(memory);
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
 
         // when
         MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("newPlaceName", List.of("https://existExample.com.jpg"));
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("visitImagesFile", "newExample.jpg".getBytes());
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("momentImagesFile", "newExample.jpg".getBytes());
         momentService.updateMomentById(moment.getId(), momentUpdateRequest, List.of(mockMultipartFile), member);
 
         // then
@@ -181,42 +181,42 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 방문 기록을 수정하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간 기록을 수정하려고 하면 예외가 발생한다.")
     @Test
-    void cannotUpdateVisitByIdIfNotOwner() {
+    void cannotUpdateMomentByIdIfNotOwner() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        Memory memory = saveTravel(member);
-        Moment moment = saveVisitWithImages(memory);
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
         MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
 
         // when & then
-        assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes())), otherMember))
+        assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentUpdateRequest, List.of(new MockMultipartFile("momentImagesFile", "namsan_tower.jpg".getBytes())), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 방문 기록을 수정하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 순간 기록을 수정하면 예외가 발생한다.")
     @Test
-    void failUpdateVisitById() {
+    void failUpdateMomentById() {
         // given
         Member member = saveMember();
         MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
 
         // when & then
-        assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, List.of(new MockMultipartFile("visitImagesFile", "namsan_tower.jpg".getBytes())), member))
+        assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, List.of(new MockMultipartFile("momentImagesFile", "namsan_tower.jpg".getBytes())), member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 방문 기록을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 순간 기록을 찾을 수 없어요.");
     }
 
-    @DisplayName("Visit을 삭제하면 이에 포함된 VisitImage와 VisitLog도 모두 삭제된다.")
+    @DisplayName("Moment을 삭제하면 이에 포함된 MomentImage와 MomentLog도 모두 삭제된다.")
     @Test
-    void deleteVisitById() {
+    void deleteMomentById() {
         // given
         Member member = saveMember();
-        Memory memory = saveTravel(member);
-        Moment moment = saveVisitWithImages(memory);
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
         Comment comment = commentRepository.save(CommentFixture.create(moment, member));
 
         // when
@@ -231,14 +231,14 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 방문 기록을 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간 기록을 삭제하려고 하면 예외가 발생한다.")
     @Test
-    void cannotDeleteVisitByIdIfNotOwner() {
+    void cannotDeleteMomentByIdIfNotOwner() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        Memory memory = saveTravel(member);
-        Moment moment = saveVisitWithImages(memory);
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
 
         // when & then
         assertThatThrownBy(() -> momentService.deleteMomentById(moment.getId(), otherMember))
@@ -250,14 +250,14 @@ class MomentServiceTest extends ServiceSliceTest {
         return memberRepository.save(Member.builder().nickname("staccato").build());
     }
 
-    private Memory saveTravel(Member member) {
-        Memory memory = Memory.builder().title("Sample Travel").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build();
+    private Memory saveMemory(Member member) {
+        Memory memory = Memory.builder().title("Sample Memory").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build();
         memory.addMemoryMember(member);
 
         return memoryRepository.save(memory);
     }
 
-    private Moment saveVisitWithImages(Memory memory) {
+    private Moment saveMomentWithImages(Memory memory) {
         Moment moment = MomentFixture.create(memory, LocalDateTime.now());
         moment.addMomentImages(new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
         return momentRepository.save(moment);

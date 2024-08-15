@@ -59,14 +59,14 @@ public class MemoryController implements MemoryControllerDocs {
     @GetMapping("/{memoryId}")
     public ResponseEntity<MemoryDetailResponse> readMemory(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long memoryId) {
+            @PathVariable @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId) {
         MemoryDetailResponse memoryDetailResponse = memoryService.readMemoryById(memoryId, member);
         return ResponseEntity.ok(memoryDetailResponse);
     }
 
     @PutMapping(path = "/{memoryId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateMemory(
-            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long memoryId,
+            @PathVariable @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId,
             @Valid @RequestPart(value = "data") MemoryRequest memoryRequest,
             @RequestPart(value = "memoryThumbnailFile", required = false) MultipartFile memoryThumbnailFile,
             @LoginMember Member member) {
@@ -76,7 +76,7 @@ public class MemoryController implements MemoryControllerDocs {
 
     @DeleteMapping("/{memoryId}")
     public ResponseEntity<Void> deleteMemory(
-            @PathVariable @Min(value = 1L, message = "여행 식별자는 양수로 이루어져야 합니다.") long memoryId,
+            @PathVariable @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId,
             @LoginMember Member member) {
         memoryService.deleteMemory(memoryId, member);
         return ResponseEntity.ok().build();
