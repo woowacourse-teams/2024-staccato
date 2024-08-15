@@ -79,6 +79,21 @@ fun ImageView.setRoundedCornerImageWithCoil(
 }
 
 @BindingAdapter(
+    value = ["coilUriRoundedCorner", "coilUriPlaceHolder", "coilUriRoundingRadius"],
+)
+fun ImageView.setRoundedCornerUriWithCoil(
+    uri: Uri?,
+    placeHolder: Drawable? = null,
+    roundingRadius: Float,
+) {
+    load(uri) {
+        placeholder(placeHolder)
+        transformations(RoundedCornersTransformation(roundingRadius))
+        error(placeHolder)
+    }
+}
+
+@BindingAdapter(
     value = ["coilImageUrl", "coilImageUri", "coilPlaceHolder", "coilRoundingRadius"],
 )
 fun ImageView.setRoundedCornerUpdateImageWithCoil(
@@ -316,4 +331,13 @@ fun FrameLayout.setAttachedPhotoVisibility(items: Array<Uri>?) {
 @BindingAdapter("setEnabled")
 fun Button.setEnabled(isUpdateCompleted: Boolean?) {
     isEnabled = !(isUpdateCompleted ?: true)
+}
+
+@BindingAdapter(value = ["currentPhotoNumbers", "maxPhotoNumbers"])
+fun TextView.setPhotoNumbers(
+    currentPhotoNumbers: Int,
+    maxPhotoNumbers: Int,
+) {
+    text =
+        resources.getString(R.string.all_photo_number).format(currentPhotoNumbers, maxPhotoNumbers)
 }
