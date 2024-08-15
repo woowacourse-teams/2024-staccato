@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.request.CommentRequest;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -35,7 +35,6 @@ class CommentServiceTest extends ServiceSliceTest {
     @Autowired
     private MomentRepository momentRepository;
 
-    @Disabled
     @DisplayName("순간 기록이 존재하면 댓글 생성에 성공한다.")
     @Test
     void createComment() {
@@ -52,7 +51,6 @@ class CommentServiceTest extends ServiceSliceTest {
         assertThat(commentRepository.findById(commentId)).isNotEmpty();
     }
 
-    @Disabled
     @DisplayName("존재하지 않는 순간 기록에 댓글 생성을 시도하면 예외가 발생한다.")
     @Test
     void createCommentFailByNotExistMoment() {
@@ -66,7 +64,6 @@ class CommentServiceTest extends ServiceSliceTest {
                 .hasMessageContaining("요청하신 순간 기록을 찾을 수 없어요.");
     }
 
-    @Disabled
     @DisplayName("권한이 없는 순간 기록에 댓글 생성을 시도하면 예외가 발생한다.")
     @Test
     void createCommentFailByForbidden() {
@@ -79,7 +76,7 @@ class CommentServiceTest extends ServiceSliceTest {
 
         // when & then
         assertThatThrownBy(() -> commentService.createComment(commentRequest, unexpectedMember))
-                .isInstanceOf(StaccatoException.class)
+                .isInstanceOf(ForbiddenException.class)
                 .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");
     }
 

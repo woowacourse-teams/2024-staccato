@@ -5,6 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import com.staccato.comment.domain.Comment;
+import com.staccato.member.domain.Member;
+import com.staccato.moment.domain.Moment;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "댓글 생성 시 요청 형식입니다.")
@@ -18,4 +22,11 @@ public record CommentRequest(
         @Size(min = 1, max = 500, message = "댓글은 공백 포함 1자 이상 500자 이하로 입력해주세요.")
         String content
 ) {
+        public Comment toComment(Moment moment, Member member) {
+                return Comment.builder()
+                        .content(content)
+                        .moment(moment)
+                        .member(member)
+                        .build();
+        }
 }
