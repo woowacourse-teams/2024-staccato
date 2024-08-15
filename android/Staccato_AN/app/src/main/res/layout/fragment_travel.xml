@@ -10,11 +10,11 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel" />
+            type="com.woowacourse.staccato.presentation.memory.viewmodel.TravelViewModel" />
 
         <variable
             name="travelHandler"
-            type="com.woowacourse.staccato.presentation.travel.TravelHandler" />
+            type="com.woowacourse.staccato.presentation.memory.TravelHandler" />
 
         <variable
             name="toolbarHandler"
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".presentation.travel.TravelFragment">
+        tools:context=".presentation.memory.TravelFragment">
 
         <include
             android:id="@+id/include_travel_toolbar"

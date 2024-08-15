@@ -4,8 +4,8 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.woowacourse.staccato.BuildConfig
 import com.woowacourse.staccato.data.dto.ErrorResponse
 import com.woowacourse.staccato.data.login.LoginApiService
+import com.woowacourse.staccato.data.memory.TravelApiService
 import com.woowacourse.staccato.data.timeline.TimeLineApiService
-import com.woowacourse.staccato.data.travel.TravelApiService
 import com.woowacourse.staccato.data.visit.VisitApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType

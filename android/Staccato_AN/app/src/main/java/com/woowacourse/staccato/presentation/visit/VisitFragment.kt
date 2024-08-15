@@ -10,8 +10,8 @@ import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
 import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
-import com.woowacourse.staccato.presentation.travel.TravelFragment.Companion.TRAVEL_ID_KEY
-import com.woowacourse.staccato.presentation.travel.TravelFragment.Companion.TRAVEL_TITLE_KEY
+import com.woowacourse.staccato.presentation.memory.TravelFragment.Companion.TRAVEL_ID_KEY
+import com.woowacourse.staccato.presentation.memory.TravelFragment.Companion.TRAVEL_TITLE_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.adapter.VisitAdapter
 import com.woowacourse.staccato.presentation.visit.viewmodel.VisitViewModel

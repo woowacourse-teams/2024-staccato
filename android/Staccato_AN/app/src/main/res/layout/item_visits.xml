@@ -8,11 +8,11 @@
 
         <variable
             name="handler"
-            type="com.woowacourse.staccato.presentation.travel.TravelHandler" />
+            type="com.woowacourse.staccato.presentation.memory.TravelHandler" />
 
         <variable
             name="visit"
-            type="com.woowacourse.staccato.presentation.travel.model.TravelVisitUiModel" />
+            type="com.woowacourse.staccato.presentation.memory.model.TravelVisitUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

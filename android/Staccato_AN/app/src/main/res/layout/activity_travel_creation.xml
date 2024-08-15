@@ -10,18 +10,18 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.travelcreation.viewmodel.TravelCreationViewModel" />
+            type="com.woowacourse.staccato.presentation.memorycreation.viewmodel.TravelCreationViewModel" />
 
         <variable
             name="handler"
-            type="com.woowacourse.staccato.presentation.travelcreation.TravelCreationHandler" />
+            type="com.woowacourse.staccato.presentation.memorycreation.TravelCreationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".presentation.travelcreation.TravelCreationActivity">
+        tools:context=".presentation.memorycreation.TravelCreationActivity">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_travel_creation"

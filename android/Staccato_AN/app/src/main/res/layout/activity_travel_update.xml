@@ -10,18 +10,18 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.travelupdate.viewmodel.TravelUpdateViewModel" />
+            type="com.woowacourse.staccato.presentation.memoryupdate.viewmodel.TravelUpdateViewModel" />
 
         <variable
             name="handler"
-            type="com.woowacourse.staccato.presentation.travelupdate.TravelUpdateHandler" />
+            type="com.woowacourse.staccato.presentation.memoryupdate.TravelUpdateHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".presentation.travelupdate.TravelUpdateActivity">
+        tools:context=".presentation.memoryupdate.TravelUpdateActivity">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_travel_update"

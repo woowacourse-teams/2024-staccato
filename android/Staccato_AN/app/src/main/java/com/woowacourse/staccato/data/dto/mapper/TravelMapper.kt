@@ -1,9 +1,9 @@
 package com.woowacourse.staccato.data.dto.mapper
 
-import com.woowacourse.staccato.data.dto.travel.TravelRequest
-import com.woowacourse.staccato.data.dto.travel.TravelResponse
-import com.woowacourse.staccato.data.dto.travel.TravelUpdateRequest
-import com.woowacourse.staccato.data.dto.travel.TravelVisitDto
+import com.woowacourse.staccato.data.dto.memory.TravelRequest
+import com.woowacourse.staccato.data.dto.memory.TravelResponse
+import com.woowacourse.staccato.data.dto.memory.TravelUpdateRequest
+import com.woowacourse.staccato.data.dto.memory.TravelVisitDto
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.model.TravelVisit
