@@ -3,6 +3,7 @@ package com.woowacourse.staccato.presentation.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +22,7 @@ import com.woowacourse.staccato.presentation.util.showToast
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), LoginHandler {
     private lateinit var binding: ActivityLoginBinding
     private val loginViewModel: LoginViewModel by viewModels {
         LoginViewModelFactory()
@@ -36,6 +37,11 @@ class LoginActivity : AppCompatActivity() {
         observeLoginState()
         observeErrorEvent()
         setHideKeyboardAction()
+    }
+
+    override fun onStartClicked() {
+        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
+        loginViewModel.requestLogin()
     }
 
     private fun checkIfLoggedIn(splashScreen: SplashScreen) {
@@ -72,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.lifecycleOwner = this
         binding.viewModel = loginViewModel
-        binding.handler = loginViewModel
+        binding.handler = this
     }
 
     private fun observeLoginState() {
@@ -83,11 +89,15 @@ class LoginActivity : AppCompatActivity() {
         if (success) {
             showToast(LOGIN_SUCCESS_MESSAGE)
             navigateToMainActivity()
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
         }
     }
 
     private fun observeErrorEvent() {
-        loginViewModel.errorMessage.observe(this, ::showToast)
+        loginViewModel.errorMessage.observe(this) { errorMessage ->
+            showToast(errorMessage)
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
+        }
     }
 
     private fun setHideKeyboardAction() {

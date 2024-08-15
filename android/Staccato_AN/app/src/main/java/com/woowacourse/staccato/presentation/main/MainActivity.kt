@@ -127,20 +127,20 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     }
 
     private fun setupBottomSheetController() {
-        behavior = BottomSheetBehavior.from(binding.constraintBottomSheet)
+        behavior = BottomSheetBehavior.from(binding.constraintMainBottomSheet)
         navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+            supportFragmentManager.findFragmentById(R.id.fragment_container_view_main_bottom_sheet) as NavHostFragment
         navController = navHostFragment.navController
     }
 
     private fun setupBottomSheetNavigation() {
-        binding.btnTravelCreate.setOnClickListener {
+        binding.btnMainTravelCreation.setOnClickListener {
             TravelCreationActivity.startWithResultLauncher(
                 this,
                 travelCreationLauncher,
             )
         }
-        binding.btnVisitCreate.setOnClickListener {
+        binding.btnMainVisitCreation.setOnClickListener {
             // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
             VisitCreationActivity.startWithResultLauncher(
                 1,
@@ -149,7 +149,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                 visitCreationLauncher,
             )
         }
-        binding.btnTimeline.setOnClickListener {
+        binding.btnMainTimeline.setOnClickListener {
             navigateTo(R.id.timelineFragment, R.id.timelineFragment, null, false)
         }
     }
@@ -183,11 +183,11 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     ) {
                         when (newState) {
                             STATE_EXPANDED -> {
-                                binding.btnTimeline.visibility = View.INVISIBLE
+                                binding.btnMainTimeline.visibility = View.INVISIBLE
                             }
 
                             else -> {
-                                binding.btnTimeline.visibility = View.VISIBLE
+                                binding.btnMainTimeline.visibility = View.VISIBLE
                             }
                         }
                     }
@@ -196,8 +196,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                         bottomSheet: View,
                         slideOffset: Float,
                     ) {
-                        binding.tvBottomSheetRemindYourMemories.alpha = 1 - slideOffset
-                        binding.btnTimeline.alpha = 1 - slideOffset
+                        binding.tvMainBottomSheetRemindYourMemories.alpha = 1 - slideOffset
+                        binding.btnMainTimeline.alpha = 1 - slideOffset
                     }
                 },
             )

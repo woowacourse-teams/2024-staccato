@@ -139,7 +139,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     }
 
     override fun onCameraClicked() {
-        // 카메라 열기
+        showToast(getString(R.string.all_default_not_supported))
     }
 
     override fun onGalleryClicked() {

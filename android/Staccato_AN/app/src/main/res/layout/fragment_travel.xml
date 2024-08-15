@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.woowacourse.staccato.presentation.travel.viewmodel.TravelViewModel" />
@@ -152,7 +154,7 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/visit_logs"
+                    android:text="@string/travel_visits"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_travel_third" />
 
@@ -161,7 +163,7 @@
                     style="@style/ToolbarMenuStyle"
                     android:layout_marginEnd="20dp"
                     android:onClick="@{()->travelHandler.onVisitCreationClicked()}"
-                    android:text="@string/add_visit"
+                    android:text="@string/visit_add"
                     android:textColor="@color/gray5"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_travel_third" />
@@ -182,6 +184,21 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_travel_visits"
                     app:layout_constraintVertical_bias="0.0"
                     tools:listitem="@layout/item_visits" />
+
+                <TextView
+                    android:id="@+id/tv_travel_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/travel_visit_empty"
+                    android:textAppearance="@style/Typography.Body2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:paddingVertical="60dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_travel_visits"
+                    android:visibility="@{viewModel.travel.visits.empty ? View.VISIBLE : View.GONE}"
+                    tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

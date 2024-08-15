@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
@@ -63,6 +64,7 @@ class VisitUpdateActivity :
 
     private fun handleError(isError: Boolean) {
         if (isError) {
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast("방문을 수정할 수 없어요!")
             finish()
         }
@@ -76,6 +78,7 @@ class VisitUpdateActivity :
                     .putExtra(TRAVEL_ID_KEY, travelId)
                     .putExtra(TRAVEL_TITLE_KEY, travelTitle)
             setResult(RESULT_OK, intent)
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
     }
@@ -89,6 +92,7 @@ class VisitUpdateActivity :
     }
 
     override fun onUpdateDoneClicked() {
+        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         lifecycleScope.launch {
             showToast(getString(R.string.visit_update_posting))
             viewModel.updateVisit(this@VisitUpdateActivity)

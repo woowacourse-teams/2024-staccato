@@ -12,6 +12,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.Status
+import com.woowacourse.staccato.data.dto.travel.TravelCreationResponse
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.repository.TravelRepository
 import com.woowacourse.staccato.presentation.travelcreation.DateConverter.convertLongToLocalDate
@@ -62,7 +63,7 @@ class TravelCreationViewModel(
             val travel: NewTravel = makeNewTravel()
             val thumbnailFile: MultipartBody.Part? =
                 convertTravelUriToFile(context, _imageUri.value, name = TRAVEL_FILE_NAME)
-            val result: ResponseResult<String> =
+            val result: ResponseResult<TravelCreationResponse> =
                 travelRepository.createTravel(travel, thumbnailFile)
             result
                 .onSuccess(::setCreatedTravelId)
@@ -71,8 +72,8 @@ class TravelCreationViewModel(
         }
     }
 
-    private fun setCreatedTravelId(it: String) {
-        _createdTravelId.value = it.split("/").last().toLong()
+    private fun setCreatedTravelId(travelCreationResponse: TravelCreationResponse) {
+        _createdTravelId.value = travelCreationResponse.travelId
     }
 
     private fun makeNewTravel(): NewTravel =
@@ -87,6 +88,7 @@ class TravelCreationViewModel(
         status: Status,
         message: String,
     ) {
+        _isPosting.value = false
         _errorMessage.value = message
     }
 
@@ -94,6 +96,7 @@ class TravelCreationViewModel(
         e: Throwable,
         message: String,
     ) {
+        _isPosting.value = false
         _errorMessage.value = TRAVEL_CREATION_ERROR_MESSAGE
     }
 

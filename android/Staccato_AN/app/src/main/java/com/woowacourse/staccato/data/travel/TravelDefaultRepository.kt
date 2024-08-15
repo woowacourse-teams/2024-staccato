@@ -2,6 +2,7 @@ package com.woowacourse.staccato.data.travel
 
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.mapper.toDomain
+import com.woowacourse.staccato.data.dto.travel.TravelCreationResponse
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.repository.TravelRepository
@@ -21,7 +22,7 @@ class TravelDefaultRepository(
     override suspend fun createTravel(
         newTravel: NewTravel,
         thumbnailFile: MultipartBody.Part?,
-    ): ResponseResult<String> {
+    ): ResponseResult<TravelCreationResponse> {
         return when (val responseResult = travelDataSource.createTravel(newTravel, thumbnailFile)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)

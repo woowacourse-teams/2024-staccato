@@ -78,6 +78,7 @@ class VisitUpdateViewModel(
 
     suspend fun updateVisit(context: Context) {
         if (placeName.get() != null && visitUpdateDefault.value != null) {
+            _isPosting.value = true
             visitRepository.updateVisit(
                 visitId = visitUpdateDefault.value!!.id,
                 placeName = placeName.get()!!,
@@ -86,6 +87,7 @@ class VisitUpdateViewModel(
             ).onSuccess {
                 _isUpdateCompleted.postValue(true)
             }.onFailure {
+                _isPosting.value = false
                 _isError.postValue(true)
             }
         }
