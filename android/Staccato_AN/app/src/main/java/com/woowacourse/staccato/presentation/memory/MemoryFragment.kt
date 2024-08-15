@@ -21,7 +21,7 @@ import com.woowacourse.staccato.presentation.memory.adapter.MatesAdapter
 import com.woowacourse.staccato.presentation.memory.adapter.VisitsAdapter
 import com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModel
 import com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModelFactory
-import com.woowacourse.staccato.presentation.memoryupdate.TravelUpdateActivity
+import com.woowacourse.staccato.presentation.memoryupdate.MemoryUpdateActivity
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
@@ -59,7 +59,7 @@ class MemoryFragment :
 
     override fun onUpdateClicked() {
         val memoryUpdateLauncher = (activity as MainActivity).travelUpdateLauncher
-        TravelUpdateActivity.startWithResultLauncher(
+        MemoryUpdateActivity.startWithResultLauncher(
             memoryId,
             requireActivity(),
             memoryUpdateLauncher,

@@ -23,12 +23,12 @@ import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.TravelUpdate
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
-class TravelUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), TravelUpdateHandler, OnUrisSelectedListener {
+class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), MemoryUpdateHandler, OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_update
-    private val travelId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_TRAVEL_ID) }
+    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_MEMORY_ID) }
     private val viewModel: TravelUpdateViewModel by viewModels {
         TravelUpdateViewModelFactory(
-            travelId,
+            memoryId,
             MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)),
         )
     }
@@ -38,9 +38,9 @@ class TravelUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), Tra
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
-        navigateToTravel()
-        fetchTravel()
-        updateTravelPeriod()
+        navigateToMemory()
+        fetchMemory()
+        updateMemoryPeriod()
         observeIsUpdateSuccess()
         showErrorToast()
     }
@@ -79,17 +79,17 @@ class TravelUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), Tra
         binding.handler = this
     }
 
-    private fun navigateToTravel() {
+    private fun navigateToMemory() {
         binding.toolbarMemoryUpdate.setNavigationOnClickListener {
             finish()
         }
     }
 
-    private fun fetchTravel() {
+    private fun fetchMemory() {
         viewModel.fetchTravel()
     }
 
-    private fun updateTravelPeriod() {
+    private fun updateMemoryPeriod() {
         dateRangePicker.addOnPositiveButtonClickListener { selection ->
             val startDate: Long = selection.first
             val endDate: Long = selection.second
@@ -99,13 +99,13 @@ class TravelUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), Tra
 
     private fun observeIsUpdateSuccess() {
         viewModel.isUpdateSuccess.observe(this) { isUpdateSuccess ->
-            navigateToTravel(isUpdateSuccess)
+            navigateToMemory(isUpdateSuccess)
         }
     }
 
-    private fun navigateToTravel(isUpdateSuccess: Boolean) {
+    private fun navigateToMemory(isUpdateSuccess: Boolean) {
         if (isUpdateSuccess) {
-            val intent = Intent().putExtra(MEMORY_ID_KEY, travelId)
+            val intent = Intent().putExtra(MEMORY_ID_KEY, memoryId)
             setResult(RESULT_OK, intent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -120,15 +120,15 @@ class TravelUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), Tra
     }
 
     companion object {
-        private const val DEFAULT_TRAVEL_ID = 0L
+        private const val DEFAULT_MEMORY_ID = 0L
 
         fun startWithResultLauncher(
-            travelId: Long,
+            memoryId: Long,
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
-            Intent(context, TravelUpdateActivity::class.java).apply {
-                putExtra(MEMORY_ID_KEY, travelId)
+            Intent(context, MemoryUpdateActivity::class.java).apply {
+                putExtra(MEMORY_ID_KEY, memoryId)
                 activityLauncher.launch(this)
             }
         }

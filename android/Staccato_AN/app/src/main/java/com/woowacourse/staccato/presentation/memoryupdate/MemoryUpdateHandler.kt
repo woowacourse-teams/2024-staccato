@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.presentation.memoryupdate
 
-interface TravelUpdateHandler {
+interface MemoryUpdateHandler {
     fun onPeriodSelectionClicked()
 
     fun onSaveClicked()

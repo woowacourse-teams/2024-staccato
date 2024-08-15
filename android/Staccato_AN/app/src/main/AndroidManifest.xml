@@ -50,7 +50,7 @@
             android:name=".presentation.visitupdate.VisitUpdateActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.memoryupdate.TravelUpdateActivity"
+            android:name=".presentation.memoryupdate.MemoryUpdateActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.visitcreation.VisitCreationActivity"
