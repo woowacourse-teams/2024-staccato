@@ -10,7 +10,7 @@ import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.memoryApiService
 import com.woowacourse.staccato.data.memory.MemoryDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
-import com.woowacourse.staccato.databinding.FragmentTravelBinding
+import com.woowacourse.staccato.databinding.FragmentMemoryBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
 import com.woowacourse.staccato.presentation.common.DialogHandler
@@ -27,7 +27,7 @@ import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 
 class MemoryFragment :
-    BindingFragment<FragmentTravelBinding>(R.layout.fragment_travel),
+    BindingFragment<FragmentMemoryBinding>(R.layout.fragment_memory),
     ToolbarHandler,
     MemoryHandler,
     DialogHandler {
@@ -130,19 +130,19 @@ class MemoryFragment :
             if (isDeleteSuccess) {
                 sharedViewModel.setTimelineHasUpdated()
                 findNavController().popBackStack()
-                showToast(getString(R.string.travel_delete_complete))
+                showToast(getString(R.string.memory_delete_complete))
             }
         }
     }
 
     private fun initMatesAdapter() {
         matesAdapter = MatesAdapter()
-        binding.rvTravelMates.adapter = matesAdapter
+        binding.rvMemoryMates.adapter = matesAdapter
     }
 
     private fun initVisitsAdapter() {
         visitsAdapter = VisitsAdapter(handler = this)
-        binding.rvTravelVisits.adapter = visitsAdapter
+        binding.rvMemoryVisits.adapter = visitsAdapter
     }
 
     private fun showErrorToast() {

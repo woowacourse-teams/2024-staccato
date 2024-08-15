@@ -25,7 +25,7 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/tv_travel_period"
+            android:id="@+id/tv_memory_period"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Typography.Body4"
@@ -36,7 +36,7 @@
             tools:text="2024.07.23" />
 
         <TextView
-            android:id="@+id/tv_travel_title"
+            android:id="@+id/tv_memory_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
@@ -45,13 +45,13 @@
             android:maxLines="1"
             android:text="@{travel.travelTitle}"
             android:textAppearance="@style/Typography.Title3"
-            app:layout_constraintEnd_toStartOf="@id/iv_travel_thumbnail"
+            app:layout_constraintEnd_toStartOf="@id/iv_memory_thumbnail"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_travel_period"
+            app:layout_constraintTop_toBottomOf="@id/tv_memory_period"
             tools:text="제주도 가족 여행" />
 
         <ImageView
-            android:id="@+id/iv_travel_thumbnail"
+            android:id="@+id/iv_memory_thumbnail"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/all_image_content_description"

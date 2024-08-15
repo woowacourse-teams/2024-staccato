@@ -24,13 +24,13 @@
     <string name="timeline_title">✈️ 추억을 떠올려보세요 ✈️</string>
     <string name="timeline_empty">여행을 아직 기록하지 않으셨군요!\n여행을 생성해보세요.</string>
 
-    // fragment_travel
-    <string name="travel_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
-    <string name="travel_mates">함께 간 사람들</string>
-    <string name="travel_visits">방문 기록</string>
-    <string name="travel_daily_visits">%s월 %s일의 방문 기록</string>
-    <string name="travel_delete_complete">여행이 삭제 되었습니다.</string>
-    <string name="travel_visit_empty">방문 기록을 아직 기록하지 않으셨군요!\n방문 기록을 생성해보세요.</string>
+    // fragment_memory
+    <string name="memory_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
+    <string name="memory_mates">함께 간 사람들</string>
+    <string name="memory_visits">방문 기록</string>
+    <string name="memory_daily_visits">%s월 %s일의 방문 기록</string>
+    <string name="memory_delete_complete">여행이 삭제 되었습니다.</string>
+    <string name="memory_visit_empty">방문 기록을 아직 기록하지 않으셨군요!\n방문 기록을 생성해보세요.</string>
 
     // activity_travel_creation / activity_travel_update
     <string name="travel_creation_title">여행 제목</string>

@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/iv_travel_thumbnail"
+                    android:id="@+id/iv_memory_thumbnail"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:contentDescription="@string/all_image_content_description"
@@ -66,7 +66,7 @@
                     tools:src="@drawable/shape_place_holder_rectangle" />
 
                 <TextView
-                    android:id="@+id/tv_travel_title"
+                    android:id="@+id/tv_memory_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -77,58 +77,58 @@
                     android:textAppearance="@style/Typography.Title1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_travel_thumbnail"
+                    app:layout_constraintTop_toBottomOf="@id/iv_memory_thumbnail"
                     tools:text="여행 제목" />
 
                 <TextView
-                    android:id="@+id/tv_travel_period"
+                    android:id="@+id/tv_memory_period"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="@{@string/travel_period(viewModel.memory.startAt.year, viewModel.memory.startAt.monthValue, viewModel.memory.startAt.dayOfMonth, viewModel.memory.endAt.year, viewModel.memory.endAt.monthValue, viewModel.memory.endAt.dayOfMonth)}"
+                    android:text="@{@string/memory_period(viewModel.memory.startAt.year, viewModel.memory.startAt.monthValue, viewModel.memory.startAt.dayOfMonth, viewModel.memory.endAt.year, viewModel.memory.endAt.monthValue, viewModel.memory.endAt.dayOfMonth)}"
                     android:textAppearance="@style/Typography.Body4"
-                    app:layout_constraintStart_toStartOf="@id/tv_travel_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_travel_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_memory_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_title"
                     tools:text="2023년 7월 1일 ~ 7월 5일" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_travel_first"
+                    android:id="@+id/divider_memory_first"
                     style="@style/DividerStyle"
                     android:layout_marginTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_travel_period" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_period" />
 
                 <TextView
-                    android:id="@+id/tv_travel_description"
+                    android:id="@+id/tv_memory_description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:text="@{viewModel.memory.description}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_travel_first"
+                    app:layout_constraintTop_toBottomOf="@id/divider_memory_first"
                     tools:text="(여행 소개) Lorem Ipsum is simply dummy text of the printing and typesetting industry. " />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_travel_second"
+                    android:id="@+id/divider_memory_second"
                     style="@style/DividerStyle"
                     android:layout_marginTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_travel_description" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_description" />
 
                 <TextView
-                    android:id="@+id/tv_travel_mates"
+                    android:id="@+id/tv_memory_mates"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/travel_mates"
+                    android:text="@string/memory_mates"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_travel_second" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_memory_second" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_travel_mates"
+                    android:id="@+id/rv_memory_mates"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -138,38 +138,38 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_travel_mates"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_mates"
                     tools:listitem="@layout/item_mates" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_travel_third"
+                    android:id="@+id/divider_memory_third"
                     style="@style/DividerStyle"
                     android:layout_marginTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rv_travel_mates" />
+                    app:layout_constraintTop_toBottomOf="@id/rv_memory_mates" />
 
                 <TextView
-                    android:id="@+id/tv_travel_visits"
+                    android:id="@+id/tv_memory_visits"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/travel_visits"
+                    android:text="@string/memory_visits"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_travel_third" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_memory_third" />
 
                 <TextView
-                    android:id="@+id/tv_travel_add_visits"
+                    android:id="@+id/tv_memory_add_visits"
                     style="@style/ToolbarMenuStyle"
                     android:layout_marginEnd="20dp"
                     android:onClick="@{()->travelHandler.onVisitCreationClicked()}"
                     android:text="@string/visit_add"
                     android:textColor="@color/gray5"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_travel_third" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_memory_third" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_travel_visits"
+                    android:id="@+id/rv_memory_visits"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -181,22 +181,22 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_travel_visits"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_visits"
                     app:layout_constraintVertical_bias="0.0"
                     tools:listitem="@layout/item_visits" />
 
                 <TextView
-                    android:id="@+id/tv_travel_empty"
+                    android:id="@+id/tv_memory_empty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/travel_visit_empty"
+                    android:text="@string/memory_visit_empty"
                     android:textAppearance="@style/Typography.Body2"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:paddingVertical="60dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_travel_visits"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_visits"
                     android:visibility="@{viewModel.memory.visits.empty ? View.VISIBLE : View.GONE}"
                     tools:visibility="visible" />
 
