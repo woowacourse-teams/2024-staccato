@@ -2,7 +2,7 @@ package com.woowacourse.staccato.data.memory
 
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryRequest
-import com.woowacourse.staccato.data.dto.memory.TravelResponse
+import com.woowacourse.staccato.data.dto.memory.MemoryResponse
 import com.woowacourse.staccato.data.dto.memory.TravelUpdateRequest
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -18,7 +18,7 @@ interface TravelApiService {
     @GET(TRAVEL_PATH_WITH_ID)
     suspend fun getTravel(
         @Path("travelId") travelId: Long,
-    ): Response<TravelResponse>
+    ): Response<MemoryResponse>
 
     @Multipart
     @POST(TRAVELS_PATH)

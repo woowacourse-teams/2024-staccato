@@ -1,7 +1,7 @@
 package com.woowacourse.staccato.data.dto.mapper
 
 import com.woowacourse.staccato.data.dto.memory.MemoryRequest
-import com.woowacourse.staccato.data.dto.memory.TravelResponse
+import com.woowacourse.staccato.data.dto.memory.MemoryResponse
 import com.woowacourse.staccato.data.dto.memory.TravelUpdateRequest
 import com.woowacourse.staccato.data.dto.memory.TravelVisitDto
 import com.woowacourse.staccato.domain.model.NewTravel
@@ -9,7 +9,7 @@ import com.woowacourse.staccato.domain.model.Travel
 import com.woowacourse.staccato.domain.model.TravelVisit
 import java.time.LocalDate
 
-fun TravelResponse.toDomain() =
+fun MemoryResponse.toDomain() =
     Travel(
         travelId = travelId,
         travelThumbnailUrl = travelThumbnailUrl,

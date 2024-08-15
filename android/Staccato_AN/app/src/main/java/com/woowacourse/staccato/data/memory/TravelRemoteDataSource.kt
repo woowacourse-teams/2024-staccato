@@ -5,14 +5,14 @@ import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.mapper.toDto
 import com.woowacourse.staccato.data.dto.mapper.toTravelUpdateRequest
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
-import com.woowacourse.staccato.data.dto.memory.TravelResponse
+import com.woowacourse.staccato.data.dto.memory.MemoryResponse
 import com.woowacourse.staccato.domain.model.NewTravel
 import okhttp3.MultipartBody
 
 class TravelRemoteDataSource(
     private val travelApiService: TravelApiService,
 ) : TravelDataSource {
-    override suspend fun getTravel(travelId: Long): ResponseResult<TravelResponse> =
+    override suspend fun getTravel(travelId: Long): ResponseResult<MemoryResponse> =
         handleApiResponse { travelApiService.getTravel(travelId) }
 
     override suspend fun createTravel(
