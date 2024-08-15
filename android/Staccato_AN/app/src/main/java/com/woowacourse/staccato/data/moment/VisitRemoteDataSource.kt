@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.data.moment
 
-import com.woowacourse.staccato.data.dto.moment.VisitCreationRequest
+import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.VisitCreationResponse
 import com.woowacourse.staccato.data.dto.moment.VisitResponse
 import com.woowacourse.staccato.data.dto.moment.VisitUpdateRequest
@@ -14,11 +14,11 @@ class VisitRemoteDataSource(
     }
 
     suspend fun createVisit(
-        visitCreationRequest: VisitCreationRequest,
+        momentCreationRequest: MomentCreationRequest,
         visitImageFiles: List<MultipartBody.Part>,
     ): VisitCreationResponse {
         return momentApiService.postMoment(
-            data = visitCreationRequest,
+            data = momentCreationRequest,
             momentImageFiles = visitImageFiles,
         )
     }

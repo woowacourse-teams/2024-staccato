@@ -1,7 +1,7 @@
 package com.woowacourse.staccato.data.moment
 
 import com.woowacourse.staccato.data.dto.mapper.toDomain
-import com.woowacourse.staccato.data.dto.moment.VisitCreationRequest
+import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.VisitCreationResponse
 import com.woowacourse.staccato.domain.model.Visit
 import com.woowacourse.staccato.domain.repository.VisitRepository
@@ -27,7 +27,7 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
     ): Result<VisitCreationResponse> {
         return runCatching {
             remoteDataSource.createVisit(
-                VisitCreationRequest(
+                MomentCreationRequest(
                     memoryId = memoryId,
                     placeName = placeName,
                     latitude = latitude,

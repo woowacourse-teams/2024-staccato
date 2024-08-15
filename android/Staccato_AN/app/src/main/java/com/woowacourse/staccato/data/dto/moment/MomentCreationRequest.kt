@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VisitCreationRequest(
+data class MomentCreationRequest(
     @SerialName("memoryId") val memoryId: Long,
     @SerialName("placeName") val placeName: String,
     @SerialName("latitude") val latitude: String,

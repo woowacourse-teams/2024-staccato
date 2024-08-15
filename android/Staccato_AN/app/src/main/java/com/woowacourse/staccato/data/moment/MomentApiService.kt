@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.data.moment
 
-import com.woowacourse.staccato.data.dto.moment.VisitCreationRequest
+import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.VisitCreationResponse
 import com.woowacourse.staccato.data.dto.moment.VisitResponse
 import com.woowacourse.staccato.data.dto.moment.VisitUpdateRequest
@@ -22,7 +22,7 @@ interface MomentApiService {
     @Multipart
     @POST(MOMENTS_PATH)
     suspend fun postMoment(
-        @Part("data") data: VisitCreationRequest,
+        @Part("data") data: MomentCreationRequest,
         @Part momentImageFiles: List<MultipartBody.Part>,
     ): VisitCreationResponse
 
