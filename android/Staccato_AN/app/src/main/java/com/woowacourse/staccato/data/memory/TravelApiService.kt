@@ -3,7 +3,7 @@ package com.woowacourse.staccato.data.memory
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryRequest
 import com.woowacourse.staccato.data.dto.memory.MemoryResponse
-import com.woowacourse.staccato.data.dto.memory.TravelUpdateRequest
+import com.woowacourse.staccato.data.dto.memory.MemoryUpdateRequest
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.DELETE
@@ -31,7 +31,7 @@ interface TravelApiService {
     @PUT(TRAVEL_PATH_WITH_ID)
     suspend fun putTravel(
         @Path("travelId") travelId: Long,
-        @Part("data") data: TravelUpdateRequest,
+        @Part("data") data: MemoryUpdateRequest,
         @Part travelThumbnailFile: MultipartBody.Part?,
     ): Response<String>
 
