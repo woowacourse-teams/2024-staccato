@@ -41,7 +41,7 @@ interface MemoryApiService {
     ): Response<Unit>
 
     companion object {
-        private const val MEMORIES_PATH = "/memories"
+        const val MEMORIES_PATH = "/memories"
         private const val MEMORY_ID = "/{memoryId}"
         private const val MEMORY_PATH_WITH_ID = "$MEMORIES_PATH$MEMORY_ID"
     }
