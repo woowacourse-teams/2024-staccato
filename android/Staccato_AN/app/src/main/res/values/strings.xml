@@ -15,6 +15,7 @@
     <string name="all_date_time_am_pm_kr_format">%s년 %s월 %s일  %s %s시</string>
     <string name="all_image_content_description">사진</string>
     <string name="all_default_not_supported">아직 지원하지 않는 기능이예요.</string>
+    <string name="all_required_mark">*</string>
 
     // fragment_timeline
     <string name="timeline_my_timeline">나의 여행 타임라인 ✈️</string>
