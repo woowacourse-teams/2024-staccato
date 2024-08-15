@@ -1,8 +1,8 @@
 package com.staccato.moment.fixture;
 
 import com.staccato.member.domain.Member;
-import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.Comment;
+import com.staccato.moment.domain.Moment;
 
 public class CommentFixture {
     public static Comment create(Moment moment, Member member) {

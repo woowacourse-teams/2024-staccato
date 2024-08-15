@@ -21,13 +21,13 @@ import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.moment.domain.Comment;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;
-import com.staccato.moment.domain.Comment;
-import com.staccato.moment.fixture.MomentFixture;
 import com.staccato.moment.fixture.CommentFixture;
-import com.staccato.moment.repository.MomentImageRepository;
+import com.staccato.moment.fixture.MomentFixture;
 import com.staccato.moment.repository.CommentRepository;
+import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
@@ -73,7 +73,8 @@ class MomentServiceTest extends ServiceSliceTest {
         saveMemory(member);
 
         // when
-        long momentId = momentService.createMoment(getMomentRequest(), List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), member).momentId();
+        long momentId = momentService.createMoment(getMomentRequest(), List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), member)
+                .momentId();
 
         // then
         assertAll(
