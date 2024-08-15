@@ -64,7 +64,7 @@ class TravelCreationViewModel(
             val thumbnailFile: MultipartBody.Part? =
                 convertTravelUriToFile(context, _imageUri.value, name = TRAVEL_FILE_NAME)
             val result: ResponseResult<MemoryCreationResponse> =
-                memoryRepository.createTravel(travel, thumbnailFile)
+                memoryRepository.createMemory(travel, thumbnailFile)
             result
                 .onSuccess(::setCreatedTravelId)
                 .onServerError(::handleServerError)

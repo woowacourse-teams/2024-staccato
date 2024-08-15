@@ -55,7 +55,7 @@ class TravelUpdateViewModel(
 
     fun fetchTravel() {
         viewModelScope.launch {
-            val result = memoryRepository.getTravel(travelId)
+            val result = memoryRepository.getMemory(travelId)
             result
                 .onSuccess(::initializeTravel)
                 .onServerError(::handleServerError)
@@ -73,7 +73,7 @@ class TravelUpdateViewModel(
         viewModelScope.launch {
             val newMemory: NewMemory = makeNewTravel()
             val thumbnailFile: MultipartBody.Part? = convertTravelUriToFile(context, _imageUri.value, TRAVEL_FILE_NAME)
-            val result = memoryRepository.updateTravel(travelId, newMemory, thumbnailFile)
+            val result = memoryRepository.updateMemory(travelId, newMemory, thumbnailFile)
             result
                 .onSuccess { updateSuccessStatus() }
                 .onServerError(::handleServerError)

@@ -7,18 +7,18 @@ import com.woowacourse.staccato.domain.model.NewMemory
 import okhttp3.MultipartBody
 
 interface MemoryRepository {
-    suspend fun getTravel(travelId: Long): ResponseResult<Memory>
+    suspend fun getMemory(memoryId: Long): ResponseResult<Memory>
 
-    suspend fun createTravel(
+    suspend fun createMemory(
         newMemory: NewMemory,
         thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<MemoryCreationResponse>
 
-    suspend fun updateTravel(
-        travelId: Long,
+    suspend fun updateMemory(
+        memoryId: Long,
         newMemory: NewMemory,
         thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<String>
 
-    suspend fun deleteTravel(travelId: Long): ResponseResult<Unit>
+    suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit>
 }

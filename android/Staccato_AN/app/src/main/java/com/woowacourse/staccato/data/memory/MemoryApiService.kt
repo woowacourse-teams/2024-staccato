@@ -16,27 +16,27 @@ import retrofit2.http.Path
 
 interface MemoryApiService {
     @GET(MEMORY_PATH_WITH_ID)
-    suspend fun getTravel(
+    suspend fun getMemory(
         @Path("memoryId") memoryId: Long,
     ): Response<MemoryResponse>
 
     @Multipart
     @POST(MEMORIES_PATH)
-    suspend fun postTravel(
+    suspend fun postMemory(
         @Part("data") data: MemoryRequest,
         @Part thumbnailFile: MultipartBody.Part?,
     ): Response<MemoryCreationResponse>
 
     @Multipart
     @PUT(MEMORY_PATH_WITH_ID)
-    suspend fun putTravel(
+    suspend fun putMemory(
         @Path("memoryId") memoryId: Long,
         @Part("data") data: MemoryUpdateRequest,
         @Part memoryThumbnailFile: MultipartBody.Part?,
     ): Response<String>
 
     @DELETE(MEMORY_PATH_WITH_ID)
-    suspend fun deleteTravel(
+    suspend fun deleteMemory(
         @Path("memoryId") memoryId: Long,
     ): Response<Unit>
 

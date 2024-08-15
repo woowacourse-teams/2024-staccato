@@ -30,7 +30,7 @@ class MemoryViewModel(private val memoryRepository: MemoryRepository) : ViewMode
 
     fun loadTravel(travelId: Long) {
         viewModelScope.launch {
-            val result: ResponseResult<Memory> = memoryRepository.getTravel(travelId)
+            val result: ResponseResult<Memory> = memoryRepository.getMemory(travelId)
             result
                 .onSuccess(::setTravel)
                 .onServerError(::handleServerError)
@@ -47,7 +47,7 @@ class MemoryViewModel(private val memoryRepository: MemoryRepository) : ViewMode
 
     fun deleteTravel(travelId: Long) {
         viewModelScope.launch {
-            val result: ResponseResult<Unit> = memoryRepository.deleteTravel(travelId)
+            val result: ResponseResult<Unit> = memoryRepository.deleteMemory(travelId)
             result.onSuccess { updateIsDeleteSuccess() }
                 .onServerError(::handleServerError)
                 .onException(::handelException)

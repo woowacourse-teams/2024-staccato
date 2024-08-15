@@ -11,39 +11,39 @@ import okhttp3.MultipartBody
 class MemoryDefaultRepository(
     private val memoryDataSource: MemoryDataSource,
 ) : MemoryRepository {
-    override suspend fun getTravel(travelId: Long): ResponseResult<Memory> {
-        return when (val responseResult = memoryDataSource.getTravel(travelId)) {
+    override suspend fun getMemory(memoryId: Long): ResponseResult<Memory> {
+        return when (val responseResult = memoryDataSource.getMemory(memoryId)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
         }
     }
 
-    override suspend fun createTravel(
+    override suspend fun createMemory(
         newMemory: NewMemory,
         thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<MemoryCreationResponse> {
-        return when (val responseResult = memoryDataSource.createTravel(newMemory, thumbnailFile)) {
+        return when (val responseResult = memoryDataSource.createMemory(newMemory, thumbnailFile)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
         }
     }
 
-    override suspend fun updateTravel(
-        travelId: Long,
+    override suspend fun updateMemory(
+        memoryId: Long,
         newMemory: NewMemory,
         thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<String> {
-        return when (val responseResult = memoryDataSource.updateTravel(travelId, newMemory, thumbnailFile)) {
+        return when (val responseResult = memoryDataSource.updateMemory(memoryId, newMemory, thumbnailFile)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
         }
     }
 
-    override suspend fun deleteTravel(travelId: Long): ResponseResult<Unit> {
-        return when (val responseResult = memoryDataSource.deleteTravel(travelId)) {
+    override suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit> {
+        return when (val responseResult = memoryDataSource.deleteMemory(memoryId)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(Unit)
