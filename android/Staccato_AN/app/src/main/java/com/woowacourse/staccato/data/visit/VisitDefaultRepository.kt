@@ -28,7 +28,7 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
         return runCatching {
             remoteDataSource.createVisit(
                 VisitCreationRequest(
-                    travelId = travelId,
+                    memoryId = travelId,
                     placeName = placeName,
                     latitude = latitude,
                     longitude = longitude,

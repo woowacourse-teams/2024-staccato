@@ -9,7 +9,7 @@ interface VisitRepository {
     suspend fun getVisit(visitId: Long): Result<Visit>
 
     suspend fun createVisit(
-        travelId: Long,
+        memoryId: Long,
         placeName: String,
         latitude: String,
         longitude: String,

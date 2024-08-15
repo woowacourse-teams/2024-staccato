@@ -93,7 +93,7 @@ class VisitCreationViewModel(
     ) = viewModelScope.launch {
         _isPosting.value = true
         visitRepository.createVisit(
-            travelId = travelId,
+            memoryId = travelId,
             placeName = placeName.get() ?: "",
             latitude = latitude.value ?: "",
             longitude = longitude.value ?: "",
