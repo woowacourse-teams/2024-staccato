@@ -14,7 +14,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 
-interface TravelApiService {
+interface MemoryApiService {
     @GET(TRAVEL_PATH_WITH_ID)
     suspend fun getTravel(
         @Path("travelId") travelId: Long,

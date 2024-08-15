@@ -10,17 +10,17 @@ import com.woowacourse.staccato.domain.model.NewTravel
 import okhttp3.MultipartBody
 
 class TravelRemoteDataSource(
-    private val travelApiService: TravelApiService,
+    private val memoryApiService: MemoryApiService,
 ) : TravelDataSource {
     override suspend fun getTravel(travelId: Long): ResponseResult<MemoryResponse> =
-        handleApiResponse { travelApiService.getTravel(travelId) }
+        handleApiResponse { memoryApiService.getTravel(travelId) }
 
     override suspend fun createTravel(
         newTravel: NewTravel,
         thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<MemoryCreationResponse> =
         handleApiResponse {
-            travelApiService.postTravel(newTravel.toDto(), thumbnailFile)
+            memoryApiService.postTravel(newTravel.toDto(), thumbnailFile)
         }
 
     override suspend fun updateTravel(
@@ -29,8 +29,8 @@ class TravelRemoteDataSource(
         thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<String> =
         handleApiResponse {
-            travelApiService.putTravel(travelId, newTravel.toTravelUpdateRequest(), thumbnailFile)
+            memoryApiService.putTravel(travelId, newTravel.toTravelUpdateRequest(), thumbnailFile)
         }
 
-    override suspend fun deleteTravel(travelId: Long): ResponseResult<Unit> = handleApiResponse { travelApiService.deleteTravel(travelId) }
+    override suspend fun deleteTravel(travelId: Long): ResponseResult<Unit> = handleApiResponse { memoryApiService.deleteTravel(travelId) }
 }

@@ -4,7 +4,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.woowacourse.staccato.BuildConfig
 import com.woowacourse.staccato.data.dto.ErrorResponse
 import com.woowacourse.staccato.data.login.LoginApiService
-import com.woowacourse.staccato.data.memory.TravelApiService
+import com.woowacourse.staccato.data.memory.MemoryApiService
 import com.woowacourse.staccato.data.timeline.TimeLineApiService
 import com.woowacourse.staccato.data.visit.VisitApiService
 import kotlinx.serialization.json.Json
@@ -22,8 +22,8 @@ object StaccatoClient {
         create(LoginApiService::class.java)
     }
 
-    val travelApiService: TravelApiService by lazy {
-        create(TravelApiService::class.java)
+    val memoryApiService: MemoryApiService by lazy {
+        create(MemoryApiService::class.java)
     }
 
     val timelineService: TimeLineApiService by lazy {
