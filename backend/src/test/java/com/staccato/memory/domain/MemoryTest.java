@@ -20,7 +20,7 @@ class MemoryTest {
     @DisplayName("끝 날짜는 시작 날짜보다 앞설 수 없다.")
     @Test
     void validateDate() {
-        assertThatCode(() -> MemoryFixture.create(LocalDate.MAX, LocalDate.MIN))
+        assertThatCode(() -> MemoryFixture.create(LocalDate.now().plusDays(1), LocalDate.now()))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
     }
