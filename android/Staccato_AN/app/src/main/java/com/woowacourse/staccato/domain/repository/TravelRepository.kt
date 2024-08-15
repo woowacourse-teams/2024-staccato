@@ -1,7 +1,7 @@
 package com.woowacourse.staccato.domain.repository
 
 import com.woowacourse.staccato.data.ResponseResult
-import com.woowacourse.staccato.data.dto.memory.TravelCreationResponse
+import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.domain.model.NewTravel
 import com.woowacourse.staccato.domain.model.Travel
 import okhttp3.MultipartBody
@@ -12,7 +12,7 @@ interface TravelRepository {
     suspend fun createTravel(
         newTravel: NewTravel,
         thumbnailFile: MultipartBody.Part?,
-    ): ResponseResult<TravelCreationResponse>
+    ): ResponseResult<MemoryCreationResponse>
 
     suspend fun updateTravel(
         travelId: Long,
