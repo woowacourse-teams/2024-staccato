@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CloudStorageService {
+    private static final String CONTENT_TYPE = "multipart/form-data";
     private static final String TEAM_FOLDER = "staccato/";
     private static final String IMAGE_FOLDER = "image/";
 
@@ -28,10 +29,9 @@ public class CloudStorageService {
     }
 
     public String uploadFile(MultipartFile image) {
-        String fileName = image.getOriginalFilename();
-        String key = makeImagePath(fileName);
+        String key = makeImagePath(image.getOriginalFilename());
         try {
-            cloudStorageClient.putS3Object(key, image.getContentType(), image.getBytes());
+            cloudStorageClient.putS3Object(key, CONTENT_TYPE, image.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
