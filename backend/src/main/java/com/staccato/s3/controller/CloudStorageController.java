@@ -23,7 +23,7 @@ public class CloudStorageController {
     private final CloudStorageService cloudStorageService;
 
     @PostMapping
-    public ResponseEntity<List<String>> uploadFiles(@RequestParam("file") List<MultipartFile> images) {
+    public ResponseEntity<List<String>> uploadFiles(@RequestParam("imageFiles") List<MultipartFile> images) {
         List<String> fileUrl = cloudStorageService.uploadFiles(images);
         return ResponseEntity.status(HttpStatus.CREATED).body(fileUrl);
     }
