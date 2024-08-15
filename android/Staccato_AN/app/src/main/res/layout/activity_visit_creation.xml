@@ -45,19 +45,24 @@
 
                 <TextView
                     android:id="@+id/tv_visit_creation_place_name_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="24dp"
                     android:layout_marginTop="12dp"
                     android:text="@string/visit_creation_place_name"
-                    android:textAppearance="@style/Typography.Title2"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_visit_creation_required_mark_first"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_visit_creation_place_name_title" />
 
                 <EditText
                     android:id="@+id/tv_place_name"
                     style="@style/EditTextStyle"
+                    android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:hint="@string/visit_creation_place_name_hint"
@@ -66,57 +71,61 @@
                     android:maxLength="30"
                     android:maxLines="1"
                     android:text="@={viewModel.placeName}"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visit_creation_place_name_title" />
 
                 <TextView
                     android:id="@+id/tv_place_address_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    style="@style/SubTitleStyle"
                     android:layout_marginTop="24dp"
                     android:text="@string/visit_creation_address"
                     android:textAppearance="@style/Typography.Title2"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_name" />
+
+                <TextView
+                    android:id="@+id/tv_visit_creation_required_mark_second"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_place_address_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_place_address_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_place_address_title" />
 
                 <TextView
                     android:id="@+id/tv_place_address"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:text="@{viewModel.address}"
                     android:textAppearance="@style/Typography.Body1"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address_title"
                     tools:text="장소 주소 (고정)" />
 
                 <TextView
                     android:id="@+id/tv_photo_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    style="@style/SubTitleStyle"
                     android:layout_marginTop="24dp"
                     android:text="@string/all_photo"
-                    android:textAppearance="@style/Typography.Title2"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_place_address_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_photo_horizontal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:foregroundGravity="left"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
                     tools:listitem="@layout/item_photo_attach" />
 
@@ -124,11 +133,12 @@
                     android:id="@+id/frame_photo_attach"
                     android:layout_width="0dp"
                     android:layout_height="150dp"
+                    android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:onClick="@{()-> visitCreationHandler.onPhotoAttachClicked()}"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
                     bind:setAttachedPhotoVisibility="@{viewModel.selectedImages}">
 
@@ -142,19 +152,25 @@
 
                 <TextView
                     android:id="@+id/tv_travel_selection_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    style="@style/SubTitleStyle"
                     android:layout_marginTop="24dp"
                     android:text="여행 선택"
-                    android:textAppearance="@style/Typography.Title2"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_photo_title"
                     app:layout_constraintTop_toBottomOf="@id/frame_photo_attach" />
+
+                <TextView
+                    android:id="@+id/tv_visit_creation_required_mark_third"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_travel_selection_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_travel_selection_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_travel_selection_title" />
 
                 <TextView
                     android:id="@+id/tv_travel_selection"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:paddingHorizontal="16dp"
@@ -162,32 +178,38 @@
                     android:text="@{viewModel.travel.title}"
                     android:textAppearance="@style/Typography.Body1"
                     android:textColor="@color/staccato_black"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_travel_selection_title" />
 
                 <TextView
                     android:id="@+id/tv_visited_at_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    style="@style/SubTitleStyle"
                     android:layout_marginTop="24dp"
                     android:text="@string/visit_creation_visited_at"
-                    android:textAppearance="@style/Typography.Title2"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_travel_selection_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_travel_selection" />
+
+                <TextView
+                    android:id="@+id/tv_visit_creation_required_mark_fourth"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_visited_at_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_visited_at_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_visited_at_title" />
 
                 <TextView
                     android:id="@+id/tv_visited_at"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
                     bind:setDateTimeWithAmPm="@{viewModel.nowDateTime}" />
 
