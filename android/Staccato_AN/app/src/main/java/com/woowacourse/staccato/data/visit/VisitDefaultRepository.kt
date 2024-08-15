@@ -17,25 +17,25 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
     }
 
     override suspend fun createVisit(
-        travelId: Long,
+        memoryId: Long,
         placeName: String,
         latitude: String,
         longitude: String,
         address: String,
         visitedAt: LocalDateTime,
-        visitImageFiles: List<MultipartBody.Part>,
+        visitImageMultiParts: List<MultipartBody.Part>,
     ): Result<VisitCreationResponse> {
         return runCatching {
             remoteDataSource.createVisit(
                 VisitCreationRequest(
-                    memoryId = travelId,
+                    memoryId = memoryId,
                     placeName = placeName,
                     latitude = latitude,
                     longitude = longitude,
                     address = address,
                     visitedAt = visitedAt.toString(),
                 ),
-                visitImageFiles,
+                visitImageMultiParts,
             )
         }
     }
