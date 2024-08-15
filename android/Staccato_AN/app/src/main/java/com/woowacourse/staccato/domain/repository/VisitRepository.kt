@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.domain.repository
 
-import com.woowacourse.staccato.data.dto.moment.VisitCreationResponse
+import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.domain.model.Visit
 import okhttp3.MultipartBody
 import java.time.LocalDateTime
@@ -16,7 +16,7 @@ interface VisitRepository {
         address: String,
         visitedAt: LocalDateTime,
         visitImageMultiParts: List<MultipartBody.Part>,
-    ): Result<VisitCreationResponse>
+    ): Result<MomentCreationResponse>
 
     suspend fun updateVisit(
         visitId: Long,

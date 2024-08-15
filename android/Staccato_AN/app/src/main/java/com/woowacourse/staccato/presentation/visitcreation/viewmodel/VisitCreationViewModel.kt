@@ -101,7 +101,7 @@ class VisitCreationViewModel(
             visitedAt = nowDateTime,
             visitImageMultiParts = convertUrisToMultiParts(context),
         ).onSuccess { response ->
-            _createdVisitId.postValue(response.visitId)
+            _createdVisitId.postValue(response.momentId)
         }.onFailure {
             _isPosting.value = false
             _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")

@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VisitCreationResponse(
-    @SerialName("visitId") val visitId: Long,
+data class MomentCreationResponse(
+    @SerialName("momentId") val momentId: Long,
 )

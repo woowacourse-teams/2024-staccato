@@ -2,7 +2,7 @@ package com.woowacourse.staccato.data.moment
 
 import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
-import com.woowacourse.staccato.data.dto.moment.VisitCreationResponse
+import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.domain.model.Visit
 import com.woowacourse.staccato.domain.repository.VisitRepository
 import okhttp3.MultipartBody
@@ -24,7 +24,7 @@ class VisitDefaultRepository(private val remoteDataSource: VisitRemoteDataSource
         address: String,
         visitedAt: LocalDateTime,
         visitImageMultiParts: List<MultipartBody.Part>,
-    ): Result<VisitCreationResponse> {
+    ): Result<MomentCreationResponse> {
         return runCatching {
             remoteDataSource.createVisit(
                 MomentCreationRequest(
