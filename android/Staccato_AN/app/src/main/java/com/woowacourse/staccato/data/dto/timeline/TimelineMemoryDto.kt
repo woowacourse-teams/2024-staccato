@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TimelineTravelDto(
+data class TimelineMemoryDto(
     @SerialName("travelId") val travelId: Long,
     @SerialName("travelTitle") val travelTitle: String,
     @SerialName("travelThumbnailUrl") val travelThumbnailUrl: String? = null,
