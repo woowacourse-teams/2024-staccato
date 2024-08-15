@@ -4,26 +4,26 @@ import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.domain.model.Visit
-import com.woowacourse.staccato.domain.repository.VisitRepository
+import com.woowacourse.staccato.domain.repository.MomentRepository
 import okhttp3.MultipartBody
 import java.time.LocalDateTime
 
-class VisitDefaultRepository(private val remoteDataSource: MomentRemoteDataSource) :
-    VisitRepository {
-    override suspend fun getVisit(visitId: Long): Result<Visit> {
+class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSource) :
+    MomentRepository {
+    override suspend fun getMoment(momentId: Long): Result<Visit> {
         return runCatching {
-            remoteDataSource.fetchMoment(visitId).toDomain()
+            remoteDataSource.fetchMoment(momentId).toDomain()
         }
     }
 
-    override suspend fun createVisit(
+    override suspend fun createMoment(
         memoryId: Long,
         placeName: String,
         latitude: String,
         longitude: String,
         address: String,
         visitedAt: LocalDateTime,
-        visitImageMultiParts: List<MultipartBody.Part>,
+        momentImageMultiParts: List<MultipartBody.Part>,
     ): Result<MomentCreationResponse> {
         return runCatching {
             remoteDataSource.createMoment(
@@ -35,30 +35,30 @@ class VisitDefaultRepository(private val remoteDataSource: MomentRemoteDataSourc
                     address = address,
                     visitedAt = visitedAt.toString(),
                 ),
-                visitImageMultiParts,
+                momentImageMultiParts,
             )
         }
     }
 
-    override suspend fun updateVisit(
-        visitId: Long,
+    override suspend fun updateMoment(
+        momentId: Long,
         placeName: String,
-        visitImageUrls: List<String>,
-        visitImageMultiParts: List<MultipartBody.Part>,
+        momentImageUrls: List<String>,
+        momentImageMultiParts: List<MultipartBody.Part>,
     ): Result<Unit> {
         return runCatching {
             remoteDataSource.updateMoment(
-                momentId = visitId,
+                momentId = momentId,
                 placeName = placeName,
-                momentImageUrls = visitImageUrls,
-                momentImageFiles = visitImageMultiParts,
+                momentImageUrls = momentImageUrls,
+                momentImageFiles = momentImageMultiParts,
             )
         }
     }
 
-    override suspend fun deleteVisit(visitId: Long): Result<Unit> {
+    override suspend fun deleteMoment(momentId: Long): Result<Unit> {
         return runCatching {
-            remoteDataSource.deleteMoment(visitId)
+            remoteDataSource.deleteMoment(momentId)
         }
     }
 }

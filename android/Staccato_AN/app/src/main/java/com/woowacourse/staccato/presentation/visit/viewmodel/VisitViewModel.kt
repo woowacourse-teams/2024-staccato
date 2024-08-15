@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowacourse.staccato.domain.repository.VisitRepository
+import com.woowacourse.staccato.domain.repository.MomentRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toVisitDefaultUiModel
@@ -12,7 +12,7 @@ import com.woowacourse.staccato.presentation.mapper.toVisitLogUiModel
 import com.woowacourse.staccato.presentation.visit.model.VisitDetailUiModel
 import kotlinx.coroutines.launch
 
-class VisitViewModel(private val visitRepository: VisitRepository) : ViewModel() {
+class VisitViewModel(private val momentRepository: MomentRepository) : ViewModel() {
     private val _visitDefault = MutableLiveData<VisitDetailUiModel.VisitDefaultUiModel>()
     val visitDefault: LiveData<VisitDetailUiModel.VisitDefaultUiModel> get() = _visitDefault
 
@@ -31,14 +31,14 @@ class VisitViewModel(private val visitRepository: VisitRepository) : ViewModel()
 
     fun deleteVisit(visitId: Long) =
         viewModelScope.launch {
-            visitRepository.deleteVisit(visitId).onSuccess {
+            momentRepository.deleteMoment(visitId).onSuccess {
                 _isDeleted.postValue(true)
             }
         }
 
     private fun fetchVisitData(visitId: Long) {
         viewModelScope.launch {
-            visitRepository.getVisit(visitId).onSuccess { visit ->
+            momentRepository.getMoment(visitId).onSuccess { visit ->
                 _visitDefault.value = visit.toVisitDefaultUiModel()
                 _visitLogs.value = visit.visitLogs.map { it.toVisitLogUiModel() }
             }.onFailure {

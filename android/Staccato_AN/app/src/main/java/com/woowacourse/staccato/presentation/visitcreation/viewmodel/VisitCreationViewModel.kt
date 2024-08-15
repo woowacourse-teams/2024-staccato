@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowacourse.staccato.domain.repository.VisitRepository
+import com.woowacourse.staccato.domain.repository.MomentRepository
 import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
@@ -18,7 +18,7 @@ import okhttp3.MultipartBody
 import java.time.LocalDateTime
 
 class VisitCreationViewModel(
-    private val visitRepository: VisitRepository,
+    private val momentRepository: MomentRepository,
 ) : AttachedPhotoHandler, ViewModel() {
     val placeName = ObservableField<String>()
 
@@ -92,14 +92,14 @@ class VisitCreationViewModel(
         context: Context,
     ) = viewModelScope.launch {
         _isPosting.value = true
-        visitRepository.createVisit(
+        momentRepository.createMoment(
             memoryId = memoryId,
             placeName = placeName.get() ?: "",
             latitude = latitude.value ?: "",
             longitude = longitude.value ?: "",
             address = address.value ?: "",
             visitedAt = nowDateTime,
-            visitImageMultiParts = convertUrisToMultiParts(context),
+            momentImageMultiParts = convertUrisToMultiParts(context),
         ).onSuccess { response ->
             _createdVisitId.postValue(response.momentId)
         }.onFailure {

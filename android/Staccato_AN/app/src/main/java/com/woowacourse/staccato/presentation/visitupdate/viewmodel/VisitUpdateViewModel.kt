@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowacourse.staccato.domain.repository.VisitRepository
+import com.woowacourse.staccato.domain.repository.MomentRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toVisitUpdateDefaultUiModel
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
 class VisitUpdateViewModel(
-    private val visitRepository: VisitRepository,
+    private val momentRepository: MomentRepository,
 ) : ViewModel() {
     val placeName = ObservableField<String>()
 
@@ -54,7 +54,7 @@ class VisitUpdateViewModel(
 
     private fun fetchVisitData(visitId: Long) {
         viewModelScope.launch {
-            visitRepository.getVisit(visitId = visitId)
+            momentRepository.getMoment(momentId = visitId)
                 .onSuccess { visit ->
                     _visitUpdateDefault.value = visit.toVisitUpdateDefaultUiModel()
                     _existVisitImageUrls.value = visit.visitImageUrls
@@ -79,11 +79,11 @@ class VisitUpdateViewModel(
     suspend fun updateVisit(context: Context) {
         if (placeName.get() != null && visitUpdateDefault.value != null) {
             _isPosting.value = true
-            visitRepository.updateVisit(
-                visitId = visitUpdateDefault.value!!.id,
+            momentRepository.updateMoment(
+                momentId = visitUpdateDefault.value!!.id,
                 placeName = placeName.get()!!,
-                visitImageUrls = existVisitImageUrls.value ?: emptyList(),
-                visitImageMultiParts = convertUrisToMultiParts(context),
+                momentImageUrls = existVisitImageUrls.value ?: emptyList(),
+                momentImageMultiParts = convertUrisToMultiParts(context),
             ).onSuccess {
                 _isUpdateCompleted.postValue(true)
             }.onFailure {

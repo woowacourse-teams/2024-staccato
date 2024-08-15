@@ -5,25 +5,25 @@ import com.woowacourse.staccato.domain.model.Visit
 import okhttp3.MultipartBody
 import java.time.LocalDateTime
 
-interface VisitRepository {
-    suspend fun getVisit(visitId: Long): Result<Visit>
+interface MomentRepository {
+    suspend fun getMoment(momentId: Long): Result<Visit>
 
-    suspend fun createVisit(
+    suspend fun createMoment(
         memoryId: Long,
         placeName: String,
         latitude: String,
         longitude: String,
         address: String,
         visitedAt: LocalDateTime,
-        visitImageMultiParts: List<MultipartBody.Part>,
+        momentImageMultiParts: List<MultipartBody.Part>,
     ): Result<MomentCreationResponse>
 
-    suspend fun updateVisit(
-        visitId: Long,
+    suspend fun updateMoment(
+        momentId: Long,
         placeName: String,
-        visitImageUrls: List<String>,
-        visitImageMultiParts: List<MultipartBody.Part>,
+        momentImageUrls: List<String>,
+        momentImageMultiParts: List<MultipartBody.Part>,
     ): Result<Unit>
 
-    suspend fun deleteVisit(visitId: Long): Result<Unit>
+    suspend fun deleteMoment(momentId: Long): Result<Unit>
 }
