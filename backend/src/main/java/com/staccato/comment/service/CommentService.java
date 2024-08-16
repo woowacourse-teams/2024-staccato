@@ -25,6 +25,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final MomentRepository momentRepository;
 
+    @Transactional
     public long createComment(CommentRequest commentRequest, Member member) {
         Moment moment = getMoment(commentRequest.momentId());
         validateOwner(moment.getMemory(), member);
