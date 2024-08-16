@@ -35,7 +35,7 @@ class MemoryTest {
         assertThat(memory.isWithoutDuration(LocalDateTime.of(2023, 7, 11, 10, 0))).isTrue();
     }
 
-    @DisplayName("추억을 수정 시 기존 순간 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
+    @DisplayName("추억을 수정 시 기존 순간 날짜를 포함하지 않는 경우 수정에 실패한다.")
     @Test
     void validateDuration() {
         // given
@@ -46,6 +46,6 @@ class MemoryTest {
         // when & then
         assertThatThrownBy(() -> memory.update(updatedMemory, List.of(moment)))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("변경하려는 추억 기간이 이미 존재하는 순간 기록을 포함하지 않습니다. 추억 기간을 다시 설정해주세요.");
+                .hasMessage("변경하려는 추억 기간이 이미 존재하는 순간을 포함하지 않습니다. 추억 기간을 다시 설정해주세요.");
     }
 }
