@@ -50,4 +50,8 @@ public class Comment extends BaseEntity {
         this.member = member;
         moment.addComment(this);
     }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
 }
