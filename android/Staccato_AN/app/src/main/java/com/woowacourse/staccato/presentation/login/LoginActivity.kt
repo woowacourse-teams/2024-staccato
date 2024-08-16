@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         setBinding()
         observeLoginState()
         observeErrorEvent()
-        setHideKeyboardAction()
+        setHidingKeyboardAction()
     }
 
     override fun onStartClicked() {
@@ -100,7 +100,7 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         }
     }
 
-    private fun setHideKeyboardAction() {
+    private fun setHidingKeyboardAction() {
         binding.root.setOnClickListener {
             hideKeyboard()
         }

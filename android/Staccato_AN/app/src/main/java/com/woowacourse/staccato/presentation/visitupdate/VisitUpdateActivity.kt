@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
@@ -41,6 +42,7 @@ class VisitUpdateActivity :
         initToolbar()
         observeViewModelData()
         viewModel.initViewModelData(visitId, memoryId, memoryTitle)
+        setHidingKeyboardAction()
     }
 
     private fun initBinding() {
@@ -98,6 +100,23 @@ class VisitUpdateActivity :
         lifecycleScope.launch {
             showToast(getString(R.string.visit_update_posting))
             viewModel.updateVisit(this@VisitUpdateActivity)
+        }
+    }
+
+    private fun setHidingKeyboardAction() {
+        binding.root.setOnClickListener {
+            hideKeyboard()
+        }
+    }
+
+    private fun hideKeyboard() {
+        if (this.currentFocus != null) {
+            val inputManager: InputMethodManager =
+                this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(
+                this.currentFocus?.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS,
+            )
         }
     }
 

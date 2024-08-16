@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.core.util.Pair
@@ -23,10 +24,17 @@ import com.woowacourse.staccato.presentation.memorycreation.viewmodel.MemoryCrea
 import com.woowacourse.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.woowacourse.staccato.presentation.util.showToast
 
-class MemoryCreationActivity : BindingActivity<ActivityMemoryCreationBinding>(), MemoryCreationHandler, OnUrisSelectedListener {
+class MemoryCreationActivity : BindingActivity<ActivityMemoryCreationBinding>(),
+    MemoryCreationHandler, OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_creation
     private val viewModel: MemoryCreationViewModel by viewModels {
-        MemoryCreationViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
+        MemoryCreationViewModelFactory(
+            MemoryDefaultRepository(
+                MemoryRemoteDataSource(
+                    memoryApiService
+                )
+            )
+        )
     }
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
@@ -38,6 +46,7 @@ class MemoryCreationActivity : BindingActivity<ActivityMemoryCreationBinding>(),
         updateMemoryPeriod()
         observeCreatedMemoryId()
         showErrorToast()
+        setHidingKeyboardAction()
     }
 
     override fun onPeriodSelectionClicked() {
@@ -102,6 +111,23 @@ class MemoryCreationActivity : BindingActivity<ActivityMemoryCreationBinding>(),
         viewModel.errorMessage.observe(this) {
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
+        }
+    }
+
+    private fun setHidingKeyboardAction() {
+        binding.root.setOnClickListener {
+            hideKeyboard()
+        }
+    }
+
+    private fun hideKeyboard() {
+        if (this.currentFocus != null) {
+            val inputManager: InputMethodManager =
+                this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(
+                this.currentFocus?.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS,
+            )
         }
     }
 
