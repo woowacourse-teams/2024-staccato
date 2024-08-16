@@ -34,7 +34,7 @@ class MemoryDefaultRepository(
         memoryId: Long,
         newMemory: NewMemory,
         thumbnailFile: MultipartBody.Part?,
-    ): ResponseResult<String> {
+    ): ResponseResult<Unit> {
         return when (val responseResult = memoryDataSource.updateMemory(memoryId, newMemory, thumbnailFile)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
