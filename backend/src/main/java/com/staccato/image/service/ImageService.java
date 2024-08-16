@@ -2,7 +2,6 @@ package com.staccato.image.service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -59,13 +58,9 @@ public class ImageService {
 
     private String getFileExtension(MultipartFile file) {
         String fileName = file.getOriginalFilename();
-        if (Objects.isNull(fileName)) {
+        if (fileName == null || !fileName.contains(".")) {
             return "";
         }
-        int dotIndex = fileName.lastIndexOf('.');
-        if (dotIndex == -1) {
-            return "";
-        }
-        return fileName.substring(dotIndex);
+        return fileName.substring(fileName.lastIndexOf('.'));
     }
 }
