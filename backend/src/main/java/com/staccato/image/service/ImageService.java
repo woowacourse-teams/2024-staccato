@@ -1,8 +1,6 @@
 package com.staccato.image.service;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.exception.StaccatoException;
-import com.staccato.image.domain.ImageClient;
 import com.staccato.image.domain.FileExtension;
+import com.staccato.image.domain.ImageClient;
 import com.staccato.image.service.dto.ImageUrlResponse;
 
 import lombok.RequiredArgsConstructor;
