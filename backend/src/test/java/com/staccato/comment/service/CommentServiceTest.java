@@ -174,4 +174,20 @@ class CommentServiceTest extends ServiceSliceTest {
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");
     }
+
+    @DisplayName("본인이 쓴 댓글은 삭제할 수 있다.")
+    @Test
+    void deleteComment() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create("nickname"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(member));
+        Moment moment = momentRepository.save(MomentFixture.create(memory));
+        Comment comment = commentRepository.save(CommentFixture.create(moment, member));
+
+        // when
+        commentService.deleteComment(comment.getId(), member);
+
+        // then
+        assertThat(commentRepository.findById(comment.getId())).isEmpty();
+    }
 }

@@ -71,4 +71,9 @@ public class CommentService {
             throw new ForbiddenException();
         }
     }
+
+    @Transactional
+    public void deleteComment(long commentId, Member member) {
+        commentRepository.deleteById(commentId);
+    }
 }
