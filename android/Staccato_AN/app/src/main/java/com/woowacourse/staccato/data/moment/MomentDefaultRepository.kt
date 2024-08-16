@@ -3,14 +3,14 @@ package com.woowacourse.staccato.data.moment
 import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
-import com.woowacourse.staccato.domain.model.Visit
+import com.woowacourse.staccato.domain.model.Moment
 import com.woowacourse.staccato.domain.repository.MomentRepository
 import okhttp3.MultipartBody
 import java.time.LocalDateTime
 
 class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSource) :
     MomentRepository {
-    override suspend fun getMoment(momentId: Long): Result<Visit> {
+    override suspend fun getMoment(momentId: Long): Result<Moment> {
         return runCatching {
             remoteDataSource.fetchMoment(momentId).toDomain()
         }

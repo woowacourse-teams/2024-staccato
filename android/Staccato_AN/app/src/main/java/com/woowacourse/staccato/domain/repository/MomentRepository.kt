@@ -1,12 +1,12 @@
 package com.woowacourse.staccato.domain.repository
 
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
-import com.woowacourse.staccato.domain.model.Visit
+import com.woowacourse.staccato.domain.model.Moment
 import okhttp3.MultipartBody
 import java.time.LocalDateTime
 
 interface MomentRepository {
-    suspend fun getMoment(momentId: Long): Result<Visit>
+    suspend fun getMoment(momentId: Long): Result<Moment>
 
     suspend fun createMoment(
         memoryId: Long,

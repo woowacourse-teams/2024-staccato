@@ -40,7 +40,7 @@ class VisitViewModel(private val momentRepository: MomentRepository) : ViewModel
         viewModelScope.launch {
             momentRepository.getMoment(visitId).onSuccess { visit ->
                 _visitDefault.value = visit.toVisitDefaultUiModel()
-                _visitLogs.value = visit.visitLogs.map { it.toVisitLogUiModel() }
+                _visitLogs.value = visit.comments.map { it.toVisitLogUiModel() }
             }.onFailure {
                 _isError.postValue(true)
             }

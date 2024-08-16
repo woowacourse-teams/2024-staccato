@@ -57,7 +57,7 @@ class VisitUpdateViewModel(
             momentRepository.getMoment(momentId = visitId)
                 .onSuccess { visit ->
                     _visitUpdateDefault.value = visit.toVisitUpdateDefaultUiModel()
-                    _existVisitImageUrls.value = visit.visitImageUrls
+                    _existVisitImageUrls.value = visit.momentImageUrls
                     placeName.set(visit.placeName)
                 }.onFailure {
                     _isError.postValue(true)

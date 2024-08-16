@@ -2,11 +2,11 @@ package com.woowacourse.staccato.domain.model
 
 import java.time.LocalDate
 
-data class Visit(
-    val visitId: Long,
+data class Moment(
+    val momentId: Long,
     val placeName: String,
-    val visitImageUrls: List<String>,
+    val momentImageUrls: List<String>,
     val address: String,
     val visitedAt: LocalDate,
-    val visitLogs: List<VisitLog>,
+    val comments: List<VisitLog>,
 )
