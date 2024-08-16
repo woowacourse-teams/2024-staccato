@@ -12,8 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.memory.domain.Memory;
-import com.staccato.moment.fixture.MomentFixture;
 
 class MomentImagesTest {
     @DisplayName("생성하려는 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")

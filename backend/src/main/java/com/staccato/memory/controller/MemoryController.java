@@ -50,7 +50,7 @@ public class MemoryController implements MemoryControllerDocs {
     @GetMapping
     public ResponseEntity<MemoryResponses> readAllMemories(
             @LoginMember Member member,
-            @RequestParam(value = "year", required = false) Integer year
+            @RequestParam(value = "year", required = false) @Min(value = 1L, message = "년도는 양수로 이루어져야 합니다.") Integer year
     ) {
         MemoryResponses memoryResponses = memoryService.readAllMemories(member, year);
         return ResponseEntity.ok(memoryResponses);
