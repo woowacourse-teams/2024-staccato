@@ -1,9 +1,6 @@
 package com.staccato.s3.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.validation.constraints.Size;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.s3.service.CloudStorageService;
+import com.staccato.s3.service.dto.ImageUrlResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,10 +27,10 @@ public class CloudStorageController {
     private final CloudStorageService cloudStorageService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadFiles(@RequestPart(value = "imageFile") MultipartFile file) {
-        String fileUrl = cloudStorageService.uploadFile(file);
+    public ResponseEntity<ImageUrlResponse> uploadFiles(@RequestPart(value = "imageFile") MultipartFile file) {
+        ImageUrlResponse imageUrlResponse = cloudStorageService.uploadFileNew(file);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(fileUrl);
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageUrlResponse);
     }
 
     @DeleteMapping

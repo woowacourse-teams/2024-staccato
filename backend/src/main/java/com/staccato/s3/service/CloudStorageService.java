@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.staccato.exception.StaccatoException;
 import com.staccato.s3.domain.CloudStorageClient;
 import com.staccato.s3.domain.FileExtension;
+import com.staccato.s3.service.dto.ImageUrlResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +23,24 @@ public class CloudStorageService {
     private static final String IMAGE_FOLDER = "image/";
 
     private final CloudStorageClient cloudStorageClient;
+
+    public List<String> uploadFiles(List<MultipartFile> files) {
+        return files.stream()
+                .map(this::uploadFile)
+                .toList();
+    }
+
+    public ImageUrlResponse uploadFileNew(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        String key = makeFilePath(fileName);
+        String contentType = getContentType(fileName);
+        byte[] fileBytes = getFileBytes(file);
+
+        cloudStorageClient.putS3Object(key, contentType, fileBytes);
+        String fileUrl = cloudStorageClient.getUrl(key);
+
+        return new ImageUrlResponse(fileUrl);
+    }
 
     public String uploadFile(MultipartFile file) {
         String fileName = file.getOriginalFilename();
