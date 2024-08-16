@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.staccato.config.auth.LoginMember;
 import com.staccato.image.service.ImageService;
 import com.staccato.image.service.dto.ImageUrlResponse;
+import com.staccato.member.domain.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +25,7 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ImageUrlResponse> uploadImages(@RequestPart(value = "imageFile") MultipartFile file) {
+    public ResponseEntity<ImageUrlResponse> uploadImages(@RequestPart(value = "imageFile") MultipartFile file, @LoginMember Member member) {
         ImageUrlResponse imageUrlResponse = imageService.uploadImage(file);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(imageUrlResponse);
