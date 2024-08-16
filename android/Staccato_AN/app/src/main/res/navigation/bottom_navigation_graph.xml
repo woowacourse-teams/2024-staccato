@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/visitFragment"
-        android:name="com.woowacourse.staccato.presentation.moment.VisitFragment"
+        android:name="com.woowacourse.staccato.presentation.moment.MomentFragment"
         android:label="fragment_visit"
         tools:layout="@layout/fragment_visit" />
 

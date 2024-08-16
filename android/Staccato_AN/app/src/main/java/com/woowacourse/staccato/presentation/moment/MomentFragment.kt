@@ -19,29 +19,29 @@ import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitupdate.VisitUpdateActivity
 import kotlin.properties.Delegates
 
-class VisitFragment :
+class MomentFragment :
     BindingFragment<FragmentVisitBinding>(R.layout.fragment_visit), ToolbarHandler {
     private val viewModel: VisitViewModel by viewModels { VisitViewModelFactory() }
     private lateinit var momentAdapter: MomentAdapter
-    private var visitId by Delegates.notNull<Long>()
+    private var momentId by Delegates.notNull<Long>()
     private var memoryId by Delegates.notNull<Long>()
     private var memoryTitle by Delegates.notNull<String>()
     private val deleteDialog =
         DeleteDialogFragment {
-            viewModel.deleteVisit(visitId)
+            viewModel.deleteVisit(momentId)
         }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        visitId = arguments?.getLong(MOMENT_ID_KEY) ?: return
+        momentId = arguments?.getLong(MOMENT_ID_KEY) ?: return
         memoryId = arguments?.getLong(MEMORY_ID_KEY) ?: return
         memoryTitle = arguments?.getString(MEMORY_TITLE_KEY) ?: return
         initAdapter()
         initToolbarHandler()
         observeData()
-        viewModel.fetchVisitDetailData(visitId)
+        viewModel.fetchVisitDetailData(momentId)
     }
 
     private fun initAdapter() {
@@ -57,11 +57,11 @@ class VisitFragment :
     }
 
     private fun observeData() {
-        viewModel.visitDefault.observe(viewLifecycleOwner) { visitDefault ->
-            momentAdapter.updateMomentDefault(visitDefault)
+        viewModel.visitDefault.observe(viewLifecycleOwner) { momentDefault ->
+            momentAdapter.updateMomentDefault(momentDefault)
         }
-        viewModel.visitLogs.observe(viewLifecycleOwner) { visitLogs ->
-            momentAdapter.updateVisitLogs(visitLogs)
+        viewModel.visitLogs.observe(viewLifecycleOwner) { momentLogs ->
+            momentAdapter.updateVisitLogs(momentLogs)
         }
         viewModel.isError.observe(viewLifecycleOwner) { isError ->
             if (isError) {
@@ -81,15 +81,14 @@ class VisitFragment :
         }
     }
 
-
     override fun onUpdateClicked() {
-        val visitUpdateLauncher = (activity as MainActivity).visitUpdateLauncher
+        val momentUpdateLauncher = (activity as MainActivity).visitUpdateLauncher
         VisitUpdateActivity.startWithResultLauncher(
-            visitId = visitId,
+            visitId = momentId,
             memoryId = memoryId,
             memoryTitle = memoryTitle,
             context = requireContext(),
-            activityLauncher = visitUpdateLauncher,
+            activityLauncher = momentUpdateLauncher,
         )
     }
 

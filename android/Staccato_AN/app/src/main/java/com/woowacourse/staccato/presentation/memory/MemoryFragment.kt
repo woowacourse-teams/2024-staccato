@@ -22,7 +22,7 @@ import com.woowacourse.staccato.presentation.memory.adapter.VisitsAdapter
 import com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModel
 import com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModelFactory
 import com.woowacourse.staccato.presentation.memoryupdate.MemoryUpdateActivity
-import com.woowacourse.staccato.presentation.moment.VisitFragment.Companion.MOMENT_ID_KEY
+import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 
