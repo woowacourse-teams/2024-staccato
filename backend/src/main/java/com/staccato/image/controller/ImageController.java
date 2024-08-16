@@ -1,4 +1,4 @@
-package com.staccato.s3.controller;
+package com.staccato.image.controller;
 
 import java.util.List;
 
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.staccato.s3.service.CloudStorageService;
-import com.staccato.s3.service.dto.ImageUrlResponse;
+import com.staccato.image.service.ImageService;
+import com.staccato.image.service.dto.ImageUrlResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,19 +23,19 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/images")
 @RequiredArgsConstructor
 @Validated
-public class CloudStorageController {
-    private final CloudStorageService cloudStorageService;
+public class ImageController {
+    private final ImageService imageService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ImageUrlResponse> uploadFiles(@RequestPart(value = "imageFile") MultipartFile file) {
-        ImageUrlResponse imageUrlResponse = cloudStorageService.uploadFileNew(file);
+        ImageUrlResponse imageUrlResponse = imageService.uploadFileNew(file);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(imageUrlResponse);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteFiles(@RequestParam("imageUrls") List<String> urls) {
-        cloudStorageService.deleteFiles(urls);
+        imageService.deleteFiles(urls);
         return ResponseEntity.ok().build();
     }
 }

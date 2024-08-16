@@ -1,4 +1,4 @@
-package com.staccato.s3.domain;
+package com.staccato.image.domain;
 
 import java.util.Arrays;
 

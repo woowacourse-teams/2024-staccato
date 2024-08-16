@@ -25,18 +25,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
+import com.staccato.image.controller.ImageController;
 import com.staccato.member.domain.Member;
-import com.staccato.s3.service.CloudStorageService;
+import com.staccato.image.service.ImageService;
 
 @Disabled
-@WebMvcTest(controllers = CloudStorageController.class)
-public class CloudStorageControllerTest {
+@WebMvcTest(controllers = ImageController.class)
+public class ImageControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private CloudStorageService cloudStorageService;
+    private ImageService imageService;
     @MockBean
     private AuthService authService;
 
@@ -63,7 +64,7 @@ public class CloudStorageControllerTest {
         // given
         List<String> fileUrls = List.of("ex1", "ex2", "ex3", "ex4", "ex5");
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(cloudStorageService.uploadFiles(anyList())).thenReturn(fileUrls);
+        when(imageService.uploadFiles(anyList())).thenReturn(fileUrls);
 
         // when & then
         mockMvc.perform(multipart("/images")
@@ -81,7 +82,7 @@ public class CloudStorageControllerTest {
         List<String> fileUrls = List.of("ex1", "ex2", "ex3", "ex4", "ex5", "ex6");
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 최대 다섯 장까지만 업로드할 수 있어요.");
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(cloudStorageService.uploadFiles(anyList())).thenReturn(fileUrls);
+        when(imageService.uploadFiles(anyList())).thenReturn(fileUrls);
 
         // when & then
         mockMvc.perform(multipart("/images")
@@ -98,7 +99,7 @@ public class CloudStorageControllerTest {
         // given
         List<String> fileUrls = List.of();
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(cloudStorageService.uploadFiles(anyList())).thenReturn(fileUrls);
+        when(imageService.uploadFiles(anyList())).thenReturn(fileUrls);
 
         // when & then
         mockMvc.perform(multipart("/images")

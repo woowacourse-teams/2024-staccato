@@ -3,12 +3,12 @@ package com.staccato;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
-import com.staccato.s3.domain.CloudStorageClient;
+import com.staccato.image.domain.ImageClient;
 
 @TestConfiguration
 public class TestConfig {
     @Bean
-    public CloudStorageClient cloudStorageClient() {
-        return new FakeCloudStorageClient();
+    public ImageClient cloudStorageClient() {
+        return new FakeImageClient();
     }
 }

@@ -1,4 +1,4 @@
-package com.staccato.s3.domain;
+package com.staccato.image.domain;
 
 import java.util.List;
 
@@ -17,13 +17,13 @@ import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Component
-public class CloudStorageClient {
+public class ImageClient {
     private final S3Client s3Client;
     private final String bucketName;
     private final String endPoint;
     private final String cloudFrontEndPoint;
 
-    public CloudStorageClient(
+    public ImageClient(
             @Value("${cloud.aws.s3.bucket}") String bucketName,
             @Value("${cloud.aws.s3.endpoint}") String endPoint,
             @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint

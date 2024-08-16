@@ -1,4 +1,4 @@
-package com.staccato.s3.service;
+package com.staccato.image.service;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,19 +10,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.exception.StaccatoException;
-import com.staccato.s3.domain.CloudStorageClient;
-import com.staccato.s3.domain.FileExtension;
-import com.staccato.s3.service.dto.ImageUrlResponse;
+import com.staccato.image.domain.ImageClient;
+import com.staccato.image.domain.FileExtension;
+import com.staccato.image.service.dto.ImageUrlResponse;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CloudStorageService {
+public class ImageService {
     private static final String TEAM_FOLDER = "staccato/";
     private static final String IMAGE_FOLDER = "image/";
 
-    private final CloudStorageClient cloudStorageClient;
+    private final ImageClient imageClient;
 
     public List<String> uploadFiles(List<MultipartFile> files) {
         return files.stream()
@@ -36,8 +36,8 @@ public class CloudStorageService {
         String contentType = getContentType(fileName);
         byte[] fileBytes = getFileBytes(file);
 
-        cloudStorageClient.putS3Object(key, contentType, fileBytes);
-        String fileUrl = cloudStorageClient.getUrl(key);
+        imageClient.putS3Object(key, contentType, fileBytes);
+        String fileUrl = imageClient.getUrl(key);
 
         return new ImageUrlResponse(fileUrl);
     }
@@ -48,9 +48,9 @@ public class CloudStorageService {
         String contentType = getContentType(fileName);
         byte[] fileBytes = getFileBytes(file);
 
-        cloudStorageClient.putS3Object(key, contentType, fileBytes);
+        imageClient.putS3Object(key, contentType, fileBytes);
 
-        return cloudStorageClient.getUrl(key);
+        return imageClient.getUrl(key);
     }
 
     private byte[] getFileBytes(MultipartFile file) {
@@ -90,11 +90,11 @@ public class CloudStorageService {
                 .toList();
 
         if (fileUrls.size() == 1) {
-            cloudStorageClient.deleteS3Object(objectKeys.get(0));
+            imageClient.deleteS3Object(objectKeys.get(0));
             return;
         }
 
-        cloudStorageClient.deleteMultipleS3Object(objectKeys);
+        imageClient.deleteMultipleS3Object(objectKeys);
     }
 
     private String getObjectKeyFromUrl(String fileUrl) {
