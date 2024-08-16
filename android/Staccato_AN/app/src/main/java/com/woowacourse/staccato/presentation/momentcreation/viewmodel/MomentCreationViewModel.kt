@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import java.time.LocalDateTime
 
-class VisitCreationViewModel(
+class MomentCreationViewModel(
     private val momentRepository: MomentRepository,
 ) : AttachedPhotoHandler, ViewModel() {
     val placeName = ObservableField<String>()
@@ -39,8 +39,8 @@ class VisitCreationViewModel(
 
     val nowDateTime: LocalDateTime = LocalDateTime.now()
 
-    private val _createdVisitId = MutableSingleLiveData<Long>()
-    val createdVisitId: SingleLiveData<Long> get() = _createdVisitId
+    private val _createdMomentId = MutableSingleLiveData<Long>()
+    val createdMomentId: SingleLiveData<Long> get() = _createdMomentId
 
     private val _errorMessage = MutableSingleLiveData<String>()
     val errorMessage: SingleLiveData<String> get() = _errorMessage
@@ -87,7 +87,7 @@ class VisitCreationViewModel(
             }
     }
 
-    fun createVisit(
+    fun createMoment(
         memoryId: Long,
         context: Context,
     ) = viewModelScope.launch {
@@ -101,7 +101,7 @@ class VisitCreationViewModel(
             visitedAt = nowDateTime,
             momentImageMultiParts = convertUrisToMultiParts(context),
         ).onSuccess { response ->
-            _createdVisitId.postValue(response.momentId)
+            _createdMomentId.postValue(response.momentId)
         }.onFailure {
             _isPosting.value = false
             _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")

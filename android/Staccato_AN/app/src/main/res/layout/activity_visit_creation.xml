@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.momentcreation.viewmodel.VisitCreationViewModel" />
+            type="com.woowacourse.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel" />
 
         <variable
             name="visitCreationHandler"

@@ -15,8 +15,8 @@ import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.woowacourse.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
-import com.woowacourse.staccato.presentation.momentcreation.viewmodel.VisitCreationViewModel
-import com.woowacourse.staccato.presentation.momentcreation.viewmodel.VisitCreationViewModelFactory
+import com.woowacourse.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel
+import com.woowacourse.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
 
 class MomentCreationActivity :
@@ -24,7 +24,7 @@ class MomentCreationActivity :
     OnUrisSelectedListener,
     MomentCreationHandler {
     override val layoutResourceId = R.layout.activity_visit_creation
-    private val viewModel: VisitCreationViewModel by viewModels { VisitCreationViewModelFactory() }
+    private val viewModel: MomentCreationViewModel by viewModels { MomentCreationViewModelFactory() }
 
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
@@ -68,10 +68,10 @@ class MomentCreationActivity :
         viewModel.isAddPhotoClicked.observe(this) {
             if (it) photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
         }
-        viewModel.createdVisitId.observe(this) { createdVisitId ->
+        viewModel.createdMomentId.observe(this) { createdMomentId ->
             val resultIntent =
                 Intent()
-                    .putExtra(MOMENT_ID_KEY, createdVisitId)
+                    .putExtra(MOMENT_ID_KEY, createdMomentId)
                     .putExtra(MEMORY_ID_KEY, memoryId)
                     .putExtra(MEMORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, resultIntent)
@@ -91,7 +91,7 @@ class MomentCreationActivity :
     override fun onCreateDoneClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.visit_creation_posting))
-        viewModel.createVisit(memoryId, this)
+        viewModel.createMoment(memoryId, this)
     }
 
     companion object {
