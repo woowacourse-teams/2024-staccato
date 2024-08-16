@@ -29,14 +29,10 @@ public class CloudStorageController {
     private final CloudStorageService cloudStorageService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<List<String>> uploadFiles(
-            @Size(max = 5, message = "사진은 최대 다섯 장까지만 업로드할 수 있어요.") @RequestPart(value = "imageFiles") List<MultipartFile> files
-    ) {
-        List<String> fileUrls = new ArrayList<>();
-        if (!files.isEmpty()) {
-            fileUrls = cloudStorageService.uploadFiles(files);
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(fileUrls);
+    public ResponseEntity<String> uploadFiles(@RequestPart(value = "imageFile") MultipartFile file) {
+        String fileUrl = cloudStorageService.uploadFile(file);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(fileUrl);
     }
 
     @DeleteMapping

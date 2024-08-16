@@ -23,12 +23,6 @@ public class CloudStorageService {
 
     private final CloudStorageClient cloudStorageClient;
 
-    public List<String> uploadFiles(List<MultipartFile> files) {
-        return files.stream()
-                .map(this::uploadFile)
-                .toList();
-    }
-
     public String uploadFile(MultipartFile file) {
         String fileName = file.getOriginalFilename();
         String key = makeFilePath(fileName);
