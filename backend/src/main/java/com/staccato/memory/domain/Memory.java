@@ -2,12 +2,12 @@ package com.staccato.memory.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,26 +39,17 @@ public class Memory extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
     @Column
-    private LocalDate startAt;
-    @Column
-    private LocalDate endAt;
+    @Embedded
+    private Term term;
     @OneToMany(mappedBy = "memory", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<MemoryMember> memoryMembers = new ArrayList<>();
 
     @Builder
     public Memory(String thumbnailUrl, @NonNull String title, String description, @NonNull LocalDate startAt, @NonNull LocalDate endAt) {
-        validateDate(startAt, endAt);
         this.thumbnailUrl = thumbnailUrl;
         this.title = title;
         this.description = description;
-        this.startAt = startAt;
-        this.endAt = endAt;
-    }
-
-    private void validateDate(LocalDate startAt, LocalDate endAt) {
-        if (endAt.isBefore(startAt)) {
-            throw new StaccatoException("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
-        }
+        this.term = new Term(startAt, endAt);
     }
 
     public void addMemoryMember(MemoryMember memoryMember) {
@@ -78,8 +69,7 @@ public class Memory extends BaseEntity {
         this.thumbnailUrl = updatedMemory.getThumbnailUrl();
         this.title = updatedMemory.getTitle();
         this.description = updatedMemory.getDescription();
-        this.startAt = updatedMemory.getStartAt();
-        this.endAt = updatedMemory.getEndAt();
+        this.term = updatedMemory.getTerm();
     }
 
     private void validateDuration(Memory updatedMemory, List<Moment> moments) {
@@ -92,7 +82,7 @@ public class Memory extends BaseEntity {
     }
 
     public boolean isWithoutDuration(LocalDateTime date) {
-        return startAt.isAfter(ChronoLocalDate.from(date)) || endAt.isBefore(ChronoLocalDate.from(date));
+        return term.doesNotContain(date);
     }
 
     public List<Member> getMates() {

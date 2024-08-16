@@ -188,8 +188,8 @@ class MemoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(foundedMemory.getId()).isEqualTo(memoryResponse.memoryId()),
                 () -> assertThat(foundedMemory.getTitle()).isEqualTo(updatedMemory.memoryTitle()),
                 () -> assertThat(foundedMemory.getDescription()).isEqualTo(updatedMemory.description()),
-                () -> assertThat(foundedMemory.getStartAt()).isEqualTo(updatedMemory.startAt()),
-                () -> assertThat(foundedMemory.getEndAt()).isEqualTo(updatedMemory.endAt()),
+                () -> assertThat(foundedMemory.getTerm().getStartAt()).isEqualTo(updatedMemory.startAt()),
+                () -> assertThat(foundedMemory.getTerm().getEndAt()).isEqualTo(updatedMemory.endAt()),
                 () -> assertThat(foundedMemory.getThumbnailUrl()).isEqualTo(expected)
         );
     }
