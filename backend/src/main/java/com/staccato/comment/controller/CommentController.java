@@ -21,6 +21,7 @@ import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.config.auth.LoginMember;
+import com.staccato.exception.validation.ValidationSteps.ValidationSequence;
 import com.staccato.member.domain.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,7 @@ public class CommentController implements CommentControllerDocs {
     public ResponseEntity<Void> updateComment(
             @LoginMember Member member,
             @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
-            @Valid @RequestBody CommentUpdateRequest commentUpdateRequest
+            @Validated(ValidationSequence.class) @RequestBody CommentUpdateRequest commentUpdateRequest
     ) {
        commentService.updateComment(member, commentId, commentUpdateRequest);
         return ResponseEntity.ok().build();
