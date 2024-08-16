@@ -75,6 +75,10 @@ public class CommentControllerTest {
                         "댓글 내용을 입력해주세요."
                 ),
                 Arguments.of(
+                        new CommentRequest(MIN_MOMENT_ID, ""),
+                        "댓글 내용을 입력해주세요."
+                ),
+                Arguments.of(
                         new CommentRequest(MIN_MOMENT_ID, " "),
                         "댓글 내용을 입력해주세요."
                 ),
