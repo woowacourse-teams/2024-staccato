@@ -64,9 +64,9 @@ public interface MomentControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "순간 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId);
 
-    @Operation(summary = "특정 순간 수정", description = "특정 순간을 수정합니다.")
+    @Operation(summary = "순간 수정", description = "순간을 수정합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "특정 순간 수정 성공", responseCode = "200"),
+            @ApiResponse(description = "순간 수정 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
@@ -81,8 +81,7 @@ public interface MomentControllerDocs {
     ResponseEntity<Void> updateMomentById(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "순간 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
-            @Parameter(description = "key = momentImageFiles") @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> momentImageFiles,
-            @Parameter(description = "key = data", required = true) @Valid MomentUpdateRequest request);
+            @Valid MomentUpdateRequest request);
 
     @Operation(summary = "순간 삭제", description = "순간을 삭제합니다.")
     @ApiResponses(value = {

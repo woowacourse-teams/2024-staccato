@@ -58,14 +58,13 @@ public class MomentController implements MomentControllerDocs {
         return ResponseEntity.ok().body(momentDetailResponse);
     }
 
-    @PutMapping(path = "/{momentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(path = "/{momentId}")
     public ResponseEntity<Void> updateMomentById(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
-            @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart("momentImageFiles") List<MultipartFile> momentImageFiles,
-            @Valid @RequestPart(value = "data") MomentUpdateRequest request
+            @Valid @RequestBody MomentUpdateRequest request
     ) {
-        momentService.updateMomentById(momentId, request, momentImageFiles, member);
+        momentService.updateMomentById(momentId, request, member);
         return ResponseEntity.ok().build();
     }
 
