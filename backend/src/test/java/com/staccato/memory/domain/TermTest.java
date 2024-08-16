@@ -2,6 +2,7 @@ package com.staccato.memory.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,5 +29,21 @@ class TermTest {
 
         // when & then
         assertThat(term.doesNotContain(LocalDateTime.of(2023, 7, 11, 10, 0))).isTrue();
+    }
+
+    @DisplayName("끝 날짜는 있는데, 시작 날짜가 누락되면 예외를 발생한다.")
+    @Test
+    void cannotCreateTermByNoStartAt() {
+        assertThatThrownBy(() -> new Term(null, LocalDate.now()))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("추억 시작 날짜와 끝 날짜를 모두 입력해주세요.");
+    }
+
+    @DisplayName("시작 날짜는 있는데, 끝 날짜가 누락되면 예외를 발생한다.")
+    @Test
+    void cannotCreateTermByNoEndAt() {
+        assertThatThrownBy(() -> new Term(LocalDate.now(), null))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("추억 시작 날짜와 끝 날짜를 모두 입력해주세요.");
     }
 }

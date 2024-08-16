@@ -3,6 +3,7 @@ package com.staccato.memory.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -22,18 +23,30 @@ public class Term {
     private LocalDate endAt;
 
     public Term(LocalDate startAt, LocalDate endAt) {
-        validateDate(startAt, endAt);
+        validateTermDates(startAt, endAt);
         this.startAt = startAt;
         this.endAt = endAt;
     }
 
-    private void validateDate(LocalDate startAt, LocalDate endAt) {
-        if (endAt.isBefore(startAt)) {
+    private void validateTermDates(LocalDate startAt, LocalDate endAt) {
+        if (isOnlyOneDatePresent(startAt, endAt)) {
+            throw new StaccatoException("추억 시작 날짜와 끝 날짜를 모두 입력해주세요.");
+        }
+        if (isInvalidTerm(startAt, endAt)) {
             throw new StaccatoException("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
         }
     }
 
+    private boolean isOnlyOneDatePresent(LocalDate startAt, LocalDate endAt) {
+        return (Objects.nonNull(startAt) && Objects.isNull(endAt)) || (Objects.isNull(startAt) && Objects.nonNull(endAt));
+    }
+
+    private boolean isInvalidTerm(LocalDate startAt, LocalDate endAt) {
+        return Objects.nonNull(startAt) && Objects.nonNull(endAt) && endAt.isBefore(startAt);
+    }
+
     public boolean doesNotContain(LocalDateTime date) {
-        return startAt.isAfter(ChronoLocalDate.from(date)) || endAt.isBefore(ChronoLocalDate.from(date));
+        ChronoLocalDate localDate = ChronoLocalDate.from(date);
+        return startAt.isAfter(localDate) || endAt.isBefore(localDate);
     }
 }
