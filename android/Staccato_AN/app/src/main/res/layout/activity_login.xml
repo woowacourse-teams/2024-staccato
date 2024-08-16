@@ -50,6 +50,7 @@
                 android:id="@+id/et_login_user_nickname"
                 style="@style/EditTextStyle"
                 android:hint="@string/login_nickname_hint"
+                android:inputType="text"
                 android:maxLength="20"
                 android:maxLines="1"
                 android:text="@={viewModel.nickname}"
