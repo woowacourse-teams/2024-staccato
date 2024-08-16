@@ -242,7 +242,30 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 추억을 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("추억을 삭제하면 속한 순간들도 함께 삭제된다.")
+    @Test
+    void deleteMemoryWithMoment() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), null, member);
+        saveMoment(LocalDateTime.of(2023, 7, 2, 10, 10), memoryIdResponse.memoryId());
+
+        // when
+        memoryService.deleteMemory(memoryIdResponse.memoryId(), member);
+
+        // then
+        assertAll(
+                () -> assertThat(memoryRepository.findById(memoryIdResponse.memoryId())).isEmpty(),
+                () -> assertThat(memoryMemberRepository.findAll()).hasSize(0),
+                () -> assertThat(momentRepository.findAll()).isEmpty()
+        );
+    }
+
+    private Moment saveMoment(LocalDateTime visitedAt, long memoryId) {
+        return momentRepository.save(MomentFixture.create(memoryRepository.findById(memoryId).get(), visitedAt));
+    }
+
+    @DisplayName("본인 것이 아닌 추억 상세를 삭제하려고 하면 예외가 발생한다.")
     @Test
     void cannotDeleteMemoryIfNotOwner() {
         // given
@@ -254,23 +277,5 @@ class MemoryServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> memoryService.deleteMemory(memoryIdResponse.memoryId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
-    }
-
-    @DisplayName("순간기록이 존재하는 추억에 삭제를 시도할 경우 예외가 발생한다.")
-    @Test
-    void failDeleteMemoryByExistingMoments() {
-        // given
-        Member member = memberRepository.save(MemberFixture.create());
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), null, member);
-        saveMoment(LocalDateTime.of(2024, 7, 10, 10, 0), memoryIdResponse.memoryId());
-
-        // when & then
-        assertThatThrownBy(() -> memoryService.deleteMemory(memoryIdResponse.memoryId(), member))
-                .isInstanceOf(StaccatoException.class)
-                .hasMessage("해당 추억 상세에 순간 기록이 남아있어 삭제할 수 없습니다.");
-    }
-
-    private Moment saveMoment(LocalDateTime visitedAt, long memoryId) {
-        return momentRepository.save(MomentFixture.create(memoryRepository.findById(memoryId).get(), visitedAt));
     }
 }
