@@ -107,6 +107,22 @@ class CommentServiceTest extends ServiceSliceTest {
                 .containsExactly(commentId1, commentId2);
     }
 
+    @DisplayName("조회 권한이 없는 순간에 달린 댓글들 조회를 시도하면 예외가 발생한다.")
+    @Test
+    void readAllByMomentIdFailByForbidden() {
+        // given
+        Member momentOwner = memberRepository.save(MemberFixture.create("momentOwner"));
+        Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(momentOwner));
+        Moment moment = momentRepository.save(MomentFixture.create(memory));
+        commentRepository.save(CommentFixture.create(moment, momentOwner));
+
+        // when
+        assertThatThrownBy(() -> commentService.readAllCommentsByMomentId(unexpectedMember, moment.getId()))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
     @DisplayName("본인이 쓴 댓글은 수정할 수 있다.")
     @Test
     void updateComment() {
