@@ -172,4 +172,22 @@ public class CommentControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
     }
+
+    @DisplayName("댓글 식별자가 양수가 아닐 경우 댓글 수정에 실패한다.")
+    @Test
+    void updateCommentFail() throws Exception {
+        // given
+        when(authService.extractFromToken(any())).thenReturn(Member.builder().nickname("member").build());
+        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest("updated content");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
+
+        // when & then
+        mockMvc.perform(put("/comments")
+                        .param("commentId", "0")
+                        .content(objectMapper.writeValueAsString(commentUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
 }
