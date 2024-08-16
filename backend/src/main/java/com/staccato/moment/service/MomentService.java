@@ -11,9 +11,11 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;
 import com.staccato.moment.repository.MomentRepository;
+import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
@@ -90,5 +92,13 @@ public class MomentService {
         if (memory.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
+    }
+
+    @Transactional
+    public void updateMomentFeelingById(long momentId, Member member, FeelingRequest feelingRequest) {
+        Moment moment = getMomentById(momentId);
+        validateOwner(moment.getMemory(), member);
+        Feeling feeling = feelingRequest.toFeeling();
+        moment.changeFeeling(feeling);
     }
 }

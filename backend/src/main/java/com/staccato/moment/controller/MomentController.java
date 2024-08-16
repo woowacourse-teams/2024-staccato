@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,7 @@ import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.controller.docs.MomentControllerDocs;
 import com.staccato.moment.service.MomentService;
+import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
@@ -74,6 +76,16 @@ public class MomentController implements MomentControllerDocs {
             @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId
     ) {
         momentService.deleteMomentById(momentId, member);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{momentId}/feeling")
+    public ResponseEntity<Void> updateMomentFeelingById(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @Valid @RequestBody FeelingRequest feelingRequest
+    ) {
+        momentService.updateMomentFeelingById(momentId, member, feelingRequest);
         return ResponseEntity.ok().build();
     }
 }

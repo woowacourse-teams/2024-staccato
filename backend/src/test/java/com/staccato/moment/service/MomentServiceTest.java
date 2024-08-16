@@ -25,10 +25,12 @@ import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
+import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
@@ -73,7 +75,8 @@ class MomentServiceTest extends ServiceSliceTest {
         saveMemory(member);
 
         // when
-        long momentId = momentService.createMoment(getMomentRequest(), List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), member).momentId();
+        long momentId = momentService.createMoment(getMomentRequest(), List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), member)
+                .momentId();
 
         // then
         assertAll(
@@ -261,5 +264,24 @@ class MomentServiceTest extends ServiceSliceTest {
         Moment moment = MomentFixture.create(memory, LocalDateTime.now());
         moment.addMomentImages(new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
         return momentRepository.save(moment);
+    }
+
+    @DisplayName("순간의 기분을 선택할 수 있다.")
+    @Test
+    void updateMomentFeelingById() {
+        // given
+        Member member = saveMember();
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
+        FeelingRequest feelingRequest = new FeelingRequest("happy");
+
+        // when
+        momentService.updateMomentFeelingById(moment.getId(), member, feelingRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(momentRepository.findById(moment.getId())).isNotEmpty(),
+                () -> assertThat(momentRepository.findById(moment.getId()).get().getFeeling()).isEqualTo(Feeling.HAPPY)
+        );
     }
 }

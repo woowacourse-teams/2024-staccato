@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,6 +40,7 @@ import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.moment.MomentDetailResponseFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.MomentService;
+import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
@@ -380,6 +382,22 @@ class MomentControllerTest {
         // when & then
         mockMvc.perform(delete("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("기분 선택을 하지 않은 경우 기분 수정에 실패한다.")
+    @Test
+    void failUpdateMomentFeelingById() throws Exception {
+        // given
+        long momentId = 1L;
+        FeelingRequest feelingRequest = new FeelingRequest(null);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "기분 값을 입력해주세요.");
+
+        // when & then
+        mockMvc.perform(post("/moments/{momentId}/feeling", momentId)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .content(objectMapper.writeValueAsString(feelingRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
