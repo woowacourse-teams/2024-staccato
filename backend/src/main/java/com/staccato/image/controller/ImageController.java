@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/images")
 @RequiredArgsConstructor
-@Validated
 public class ImageController {
     private final ImageService imageService;
 
