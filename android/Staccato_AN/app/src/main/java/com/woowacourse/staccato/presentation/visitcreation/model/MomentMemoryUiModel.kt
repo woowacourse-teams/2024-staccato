@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.presentation.visitcreation.model
 
-data class VisitMemoryUiModel(
+data class MomentMemoryUiModel(
     val id: Long,
     val title: String,
 )

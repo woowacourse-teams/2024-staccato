@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.woowacourse.staccato.R
-import com.woowacourse.staccato.presentation.visitcreation.model.VisitMemoryUiModel
+import com.woowacourse.staccato.presentation.visitcreation.model.MomentMemoryUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -190,7 +190,7 @@ fun Button.setMemorySaveButtonActive(
 }
 
 @BindingAdapter("selectedMemory")
-fun TextView.setSelectedMemory(selectedMemory: VisitMemoryUiModel?) {
+fun TextView.setSelectedMemory(selectedMemory: MomentMemoryUiModel?) {
     if (selectedMemory == null) {
         text = resources.getString(R.string.visit_creation_memory_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
@@ -204,7 +204,7 @@ fun TextView.setSelectedMemory(selectedMemory: VisitMemoryUiModel?) {
     value = ["selectedMemory", "visitedAt"],
 )
 fun Button.setVisitUpdateButtonActive(
-    memory: VisitMemoryUiModel?,
+    memory: MomentMemoryUiModel?,
     visitedAt: LocalDate?,
 ) {
     isEnabled =

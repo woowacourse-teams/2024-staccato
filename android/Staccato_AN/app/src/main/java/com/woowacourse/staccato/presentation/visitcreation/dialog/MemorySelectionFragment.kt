@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowacourse.staccato.databinding.FragmentMemorySelectionBinding
-import com.woowacourse.staccato.presentation.visitcreation.model.VisitMemoryUiModel
+import com.woowacourse.staccato.presentation.visitcreation.model.MomentMemoryUiModel
 
 class MemorySelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentMemorySelectionBinding? = null
     private val binding get() = _binding!!
-    private val items = mutableListOf<VisitMemoryUiModel>()
+    private val items = mutableListOf<MomentMemoryUiModel>()
 
     private lateinit var handler: MemorySelectionHandler
 
@@ -19,7 +19,7 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
         handler = newHandler
     }
 
-    fun setItems(newItems: List<VisitMemoryUiModel>) {
+    fun setItems(newItems: List<MomentMemoryUiModel>) {
         items.clear()
         items.addAll(newItems)
     }

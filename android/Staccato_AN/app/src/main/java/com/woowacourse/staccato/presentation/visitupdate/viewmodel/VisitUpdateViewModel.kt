@@ -12,7 +12,7 @@ import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toVisitUpdateDefaultUiModel
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
-import com.woowacourse.staccato.presentation.visitcreation.model.VisitMemoryUiModel
+import com.woowacourse.staccato.presentation.visitcreation.model.MomentMemoryUiModel
 import com.woowacourse.staccato.presentation.visitupdate.model.VisitUpdateDefaultUiModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
@@ -31,8 +31,8 @@ class VisitUpdateViewModel(
     private val _visitUpdateDefault = MutableLiveData<VisitUpdateDefaultUiModel>()
     val visitUpdateDefault: LiveData<VisitUpdateDefaultUiModel> get() = _visitUpdateDefault
 
-    private val _memory = MutableLiveData<VisitMemoryUiModel>()
-    val memory: LiveData<VisitMemoryUiModel> get() = _memory
+    private val _memory = MutableLiveData<MomentMemoryUiModel>()
+    val memory: LiveData<MomentMemoryUiModel> get() = _memory
 
     private val _isError = MutableSingleLiveData<Boolean>()
     val isError: SingleLiveData<Boolean> get() = _isError
@@ -70,7 +70,7 @@ class VisitUpdateViewModel(
         memoryTitle: String,
     ) {
         _memory.value =
-            VisitMemoryUiModel(
+            MomentMemoryUiModel(
                 id = memoryId,
                 title = memoryTitle,
             )
