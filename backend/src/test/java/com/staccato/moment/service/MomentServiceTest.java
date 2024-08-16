@@ -24,11 +24,13 @@ import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Comment;
+import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;
 import com.staccato.moment.repository.CommentRepository;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
+import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
@@ -153,7 +155,7 @@ class MomentServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> momentService.readMomentById(1L, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 순간 기록을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
     }
 
     @DisplayName("특정 순간 기록 수정에 성공한다.")
@@ -208,7 +210,7 @@ class MomentServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, List.of(new MockMultipartFile("momentImagesFile", "namsan_tower.jpg".getBytes())), member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 순간 기록을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
     }
 
     @DisplayName("Moment을 삭제하면 이에 포함된 MomentImage와 MomentLog도 모두 삭제된다.")
@@ -262,5 +264,24 @@ class MomentServiceTest extends ServiceSliceTest {
         Moment moment = MomentFixture.create(memory, LocalDateTime.now());
         moment.addMomentImages(new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
         return momentRepository.save(moment);
+    }
+
+    @DisplayName("순간의 기분을 선택할 수 있다.")
+    @Test
+    void updateMomentFeelingById() {
+        // given
+        Member member = saveMember();
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
+        FeelingRequest feelingRequest = new FeelingRequest("happy");
+
+        // when
+        momentService.updateMomentFeelingById(moment.getId(), member, feelingRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(momentRepository.findById(moment.getId())).isNotEmpty(),
+                () -> assertThat(momentRepository.findById(moment.getId()).get().getFeeling()).isEqualTo(Feeling.HAPPY)
+        );
     }
 }
