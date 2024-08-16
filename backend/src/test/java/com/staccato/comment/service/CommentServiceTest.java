@@ -136,7 +136,7 @@ class CommentServiceTest extends ServiceSliceTest {
         CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
 
         // when
-        commentService.updateComment(comment.getId(), commentUpdateRequest, member);
+        commentService.updateComment(member, comment.getId(), commentUpdateRequest);
 
         // then
         assertThat(commentRepository.findById(comment.getId()).get().getContent()).isEqualTo(updatedContent);
@@ -151,7 +151,7 @@ class CommentServiceTest extends ServiceSliceTest {
         CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
 
         // when & then
-        assertThatThrownBy(() -> commentService.updateComment(notExistCommentId, commentUpdateRequest, MemberFixture.create()))
+        assertThatThrownBy(() -> commentService.updateComment(MemberFixture.create(), notExistCommentId, commentUpdateRequest))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 댓글을 찾을 수 없어요.");
     }
@@ -170,7 +170,7 @@ class CommentServiceTest extends ServiceSliceTest {
         CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
 
         // when & then
-        assertThatThrownBy(() -> commentService.updateComment(comment.getId(), commentUpdateRequest, unexpectedMember))
+        assertThatThrownBy(() -> commentService.updateComment(unexpectedMember, comment.getId(), commentUpdateRequest))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");
     }

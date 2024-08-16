@@ -44,7 +44,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, Member member) {
+    public void updateComment(Member member, Long commentId, CommentUpdateRequest commentUpdateRequest) {
         Comment comment = getComment(commentId);
         validateCommentOwner(comment, member);
         comment.changeContent(commentUpdateRequest.content());
