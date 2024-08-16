@@ -3,6 +3,7 @@ package com.woowacourse.staccato.data
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.woowacourse.staccato.BuildConfig
 import com.woowacourse.staccato.data.dto.ErrorResponse
+import com.woowacourse.staccato.data.image.ImageApiService
 import com.woowacourse.staccato.data.login.LoginApiService
 import com.woowacourse.staccato.data.memory.MemoryApiService
 import com.woowacourse.staccato.data.moment.MomentApiService
@@ -32,6 +33,10 @@ object StaccatoClient {
 
     val momentApiService: MomentApiService by lazy {
         create(MomentApiService::class.java)
+    }
+
+    val imageApiService: ImageApiService by lazy {
+        create(ImageApiService::class.java)
     }
 
     private val provideLoggingInterceptor =
