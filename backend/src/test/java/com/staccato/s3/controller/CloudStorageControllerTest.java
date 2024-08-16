@@ -64,7 +64,7 @@ public class CloudStorageControllerTest {
         when(cloudStorageService.uploadFiles(anyList())).thenReturn(fileUrls);
 
         // when & then
-        mockMvc.perform(multipart("/captures")
+        mockMvc.perform(multipart("/images")
                         .file(file1).file(file2).file(file3).file(file4).file(file5)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.MULTIPART_FORM_DATA))
@@ -82,7 +82,7 @@ public class CloudStorageControllerTest {
         when(cloudStorageService.uploadFiles(anyList())).thenReturn(fileUrls);
 
         // when & then
-        mockMvc.perform(multipart("/captures")
+        mockMvc.perform(multipart("/images")
                         .file(file1).file(file2).file(file3).file(file4).file(file5).file(file6)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.MULTIPART_FORM_DATA))
@@ -99,7 +99,7 @@ public class CloudStorageControllerTest {
         when(cloudStorageService.uploadFiles(anyList())).thenReturn(fileUrls);
 
         // when & then
-        mockMvc.perform(multipart("/captures")
+        mockMvc.perform(multipart("/images")
                         .file("imageFiles", new byte[0])
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.MULTIPART_FORM_DATA))
