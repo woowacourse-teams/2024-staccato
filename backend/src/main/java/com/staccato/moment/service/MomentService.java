@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.s3.service.CloudStorageService;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Moment;
@@ -19,6 +18,7 @@ import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
+import com.staccato.s3.service.CloudStorageService;
 
 import lombok.RequiredArgsConstructor;
 

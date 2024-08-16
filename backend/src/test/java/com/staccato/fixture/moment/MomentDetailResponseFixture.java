@@ -1,4 +1,4 @@
-package com.staccato.moment.fixture;
+package com.staccato.fixture.moment;
 
 import java.time.LocalDate;
 import java.util.List;
