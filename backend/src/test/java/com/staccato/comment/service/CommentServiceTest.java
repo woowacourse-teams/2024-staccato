@@ -125,4 +125,18 @@ class CommentServiceTest extends ServiceSliceTest {
         // then
         assertThat(commentRepository.findById(comment.getId()).get().getContent()).isEqualTo(updatedContent);
     }
+
+    @DisplayName("댓글을 찾을 수 없는 경우 예외가 발생한다.")
+    @Test
+    void updateCommentFailByNotExist() {
+        // given
+        long notExistCommentId = 1;
+        String updatedContent = "updated content";
+        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
+
+        // when & then
+        assertThatThrownBy(() -> commentService.updateComment(notExistCommentId, commentUpdateRequest))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessageContaining("요청하신 댓글을 찾을 수 없어요.");
+    }
 }
