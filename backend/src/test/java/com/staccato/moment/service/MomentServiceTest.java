@@ -258,8 +258,7 @@ class MomentServiceTest extends ServiceSliceTest {
     }
 
     private Moment saveMomentWithImages(Memory memory) {
-        Moment moment = MomentFixture.create(memory, LocalDateTime.now());
-        moment.addMomentImages(new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
         return momentRepository.save(moment);
     }
 }

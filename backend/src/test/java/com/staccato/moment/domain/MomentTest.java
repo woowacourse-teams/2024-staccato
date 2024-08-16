@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ class MomentTest {
                 .longitude(BigDecimal.ONE)
                 .address("address")
                 .memory(memory)
+                .momentImages(new MomentImages(List.of()))
                 .build()).doesNotThrowAnyException();
     }
 
@@ -53,6 +55,7 @@ class MomentTest {
                 .longitude(BigDecimal.ONE)
                 .address("address")
                 .memory(memory)
+                .momentImages(new MomentImages(List.of()))
                 .build()).doesNotThrowAnyException();
     }
 
@@ -75,6 +78,7 @@ class MomentTest {
                 .longitude(BigDecimal.ONE)
                 .address("address")
                 .memory(memory)
+                .momentImages(new MomentImages(List.of()))
                 .build()).isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("추억에 포함되지 않는 날짜입니다.");
     }

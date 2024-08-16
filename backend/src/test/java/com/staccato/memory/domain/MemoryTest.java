@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.MomentImages;
 
 class MemoryTest {
     @DisplayName("끝 날짜는 시작 날짜보다 앞설 수 없다.")
@@ -67,6 +68,7 @@ class MemoryTest {
                 .longitude(BigDecimal.ONE)
                 .address("address")
                 .memory(memory)
+                .momentImages(new MomentImages(List.of()))
                 .build();
 
         // when & then

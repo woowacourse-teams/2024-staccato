@@ -54,10 +54,7 @@ public record MomentRequest(
                 .longitude(longitude)
                 .address(address)
                 .memory(memory)
+                .momentImages(new MomentImages(momentImageUrls))
                 .build();
-    }
-
-    public MomentImages toMomentImages() {
-        return new MomentImages(momentImageUrls);
     }
 }

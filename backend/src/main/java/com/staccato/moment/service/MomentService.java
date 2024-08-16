@@ -35,8 +35,6 @@ public class MomentService {
         Memory memory = getMemoryById(momentRequest.memoryId());
         validateOwner(memory, member);
         Moment moment = momentRequest.toMoment(memory);
-        MomentImages momentImages = momentRequest.toMomentImages();
-        moment.addMomentImages(momentImages);
 
         momentRepository.save(moment);
 
