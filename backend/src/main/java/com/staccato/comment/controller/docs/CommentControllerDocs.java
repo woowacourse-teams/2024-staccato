@@ -4,12 +4,10 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 
 import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
-import com.staccato.exception.validation.ValidationSteps.ValidationSequence;
 import com.staccato.member.domain.Member;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,5 +68,5 @@ public interface CommentControllerDocs {
     ResponseEntity<Void> updateComment(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "댓글 식별자", example = "1") @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
-            @Parameter(description = "댓글 수정 시 요구 형식") @Validated(ValidationSequence.class) CommentUpdateRequest commentUpdateRequest);
+            @Parameter(description = "댓글 수정 시 요구 형식") @Valid CommentUpdateRequest commentUpdateRequest);
 }
