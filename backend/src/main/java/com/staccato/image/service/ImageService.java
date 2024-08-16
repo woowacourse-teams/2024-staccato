@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.exception.StaccatoException;
-import com.staccato.image.domain.FileExtension;
-import com.staccato.image.domain.ImageClient;
+import com.staccato.image.domain.ImageExtension;
+import com.staccato.image.domain.S3Client;
 import com.staccato.image.service.dto.ImageUrlResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
-    private final ImageClient imageClient;
+    private final S3Client s3Client;
 
     public List<String> uploadFiles(List<MultipartFile> files) {
         return files.stream()
@@ -25,42 +25,42 @@ public class ImageService {
                 .toList();
     }
 
-    public ImageUrlResponse uploadFileNew(MultipartFile file) {
-        String fileExtension = getFileExtension(file);
-        String key = UUID.randomUUID() + fileExtension;
-        String contentType = FileExtension.getContentType(fileExtension);
-        byte[] fileBytes = getFileBytes(file);
+    public ImageUrlResponse uploadImage(MultipartFile image) {
+        String imageExtension = getImageExtension(image);
+        String key = UUID.randomUUID() + imageExtension;
+        String contentType = ImageExtension.getContentType(imageExtension);
+        byte[] imageBytes = getImageBytes(image);
 
-        imageClient.putS3Object(key, contentType, fileBytes);
-        String fileUrl = imageClient.getUrl(key);
+        s3Client.putS3Object(key, contentType, imageBytes);
+        String imageUrl = s3Client.getUrl(key);
 
-        return new ImageUrlResponse(fileUrl);
+        return new ImageUrlResponse(imageUrl);
     }
 
     public String uploadFile(MultipartFile file) {
-        String fileExtension = getFileExtension(file);
+        String fileExtension = getImageExtension(file);
         String key = UUID.randomUUID() + fileExtension;
-        String contentType = FileExtension.getContentType(fileExtension);
-        byte[] fileBytes = getFileBytes(file);
+        String contentType = ImageExtension.getContentType(fileExtension);
+        byte[] fileBytes = getImageBytes(file);
 
-        imageClient.putS3Object(key, contentType, fileBytes);
+        s3Client.putS3Object(key, contentType, fileBytes);
 
-        return imageClient.getUrl(key);
+        return s3Client.getUrl(key);
     }
 
-    private byte[] getFileBytes(MultipartFile file) {
+    private byte[] getImageBytes(MultipartFile image) {
         try {
-            return file.getBytes();
+            return image.getBytes();
         } catch (IOException e) {
             throw new StaccatoException("전송된 파일이 손상되었거나 지원되지 않는 형식입니다.");
         }
     }
 
-    private String getFileExtension(MultipartFile file) {
-        String fileName = file.getOriginalFilename();
-        if (fileName == null || !fileName.contains(".")) {
+    private String getImageExtension(MultipartFile image) {
+        String imageName = image.getOriginalFilename();
+        if (imageName == null || !imageName.contains(".")) {
             return "";
         }
-        return fileName.substring(fileName.lastIndexOf('.'));
+        return imageName.substring(imageName.lastIndexOf('.'));
     }
 }
