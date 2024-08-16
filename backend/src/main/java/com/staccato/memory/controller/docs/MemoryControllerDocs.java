@@ -20,9 +20,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Memory", description = "Memory API")
 public interface MemoryControllerDocs {
-    @Operation(summary = "추억 상세 생성", description = "추억 상세(썸네일, 제목, 내용, 기간)를 생성합니다.")
+    @Operation(summary = "추억 생성", description = "추억(썸네일, 제목, 내용, 기간)을 생성합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "추억 상세 생성 성공", responseCode = "200"),
+            @ApiResponse(description = "추억 생성 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
@@ -43,18 +43,18 @@ public interface MemoryControllerDocs {
             @Parameter(description = "key = memoryThumbnailFile") MultipartFile memoryThumbnailFile,
             @Parameter(hidden = true) Member member);
 
-    @Operation(summary = "추억 상세 목록 조회", description = "사용자의 전체/년도별 추억 상세 목록을 조회합니다.")
+    @Operation(summary = "추억 목록 조회", description = "사용자의 전체/년도별 추억 목록을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "추억 상세 목록 조회 성공", responseCode = "200"),
+            @ApiResponse(description = "추억 목록 조회 성공", responseCode = "200"),
             @ApiResponse(description = "입력받은 년도가 유효하지 않을 때 발생", responseCode = "400")
     })
     ResponseEntity<MemoryResponses> readAllMemories(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "조회할 년도", example = "2024") Integer year);
+            @Parameter(description = "조회할 년도", example = "2024") @Min(value = 1L, message = "년도는 양수로 이루어져야 합니다.") Integer year);
 
-    @Operation(summary = "특정 추억 상세 조회", description = "사용자의 특정 추억 상세를 조회합니다.")
+    @Operation(summary = "추억 조회", description = "사용자의 추억을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "특정 추억 상세 조회 성공", responseCode = "200"),
+            @ApiResponse(description = "추억 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
@@ -66,11 +66,11 @@ public interface MemoryControllerDocs {
     })
     ResponseEntity<MemoryDetailResponse> readMemory(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "추억 상세 ID", example = "1") @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId);
+            @Parameter(description = "추억 ID", example = "1") @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId);
 
-    @Operation(summary = "추억 상세 수정", description = "추억 상세 정보(썸네일, 제목, 내용, 기간)를 수정합니다.")
+    @Operation(summary = "추억 수정", description = "추억 정보(썸네일, 제목, 내용, 기간)를 수정합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "추억 상세 수정 성공", responseCode = "200"),
+            @ApiResponse(description = "추억 수정 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
@@ -93,14 +93,14 @@ public interface MemoryControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<Void> updateMemory(
-            @Parameter(description = "추억 상세 ID", example = "1") @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId,
+            @Parameter(description = "추억 ID", example = "1") @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId,
             @Parameter(description = "key = data", required = true) @Valid MemoryRequest memoryRequest,
             @Parameter(description = "key = memoryThumbnailFile") MultipartFile memoryThumbnailFile,
             @Parameter(hidden = true) Member member);
 
-    @Operation(summary = "특정 추억 삭제", description = "사용자의 특정 추억을 삭제합니다.")
+    @Operation(summary = "추억 삭제", description = "사용자의 추억을 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "특정 추억 삭제 성공", responseCode = "200"),
+            @ApiResponse(description = "추억 삭제 성공", responseCode = "200"),
             @ApiResponse(description = "Path Variable 형식이 잘못되었을 때 발생", responseCode = "400")
     })
     ResponseEntity<Void> deleteMemory(

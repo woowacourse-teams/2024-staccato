@@ -38,9 +38,9 @@ public class Memory extends BaseEntity {
     private String title;
     @Column(columnDefinition = "TEXT")
     private String description;
-    @Column(nullable = false)
+    @Column
     private LocalDate startAt;
-    @Column(nullable = false)
+    @Column
     private LocalDate endAt;
     @OneToMany(mappedBy = "memory", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<MemoryMember> memoryMembers = new ArrayList<>();

@@ -52,12 +52,12 @@ public class MemoryService {
     }
 
     private MemoryResponses readAllByYear(Member member, Integer year) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndStartAtYearDesc(member.getId(), year);
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndYearOrderByCreatedAtDesc(member.getId(), year);
         return getMemoryResponses(memoryMembers);
     }
 
     private MemoryResponses readAll(Member member) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdOrderByMemoryStartAtDesc(member.getId());
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId());
         return getMemoryResponses(memoryMembers);
     }
 
