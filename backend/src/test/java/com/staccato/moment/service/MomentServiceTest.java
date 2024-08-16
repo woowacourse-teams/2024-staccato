@@ -65,7 +65,7 @@ class MomentServiceTest extends ServiceSliceTest {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
-    @DisplayName("순간 기록을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
+    @DisplayName("순간을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
     @Test
     void createMomentWithMomentImages() {
         // given
