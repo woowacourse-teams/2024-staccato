@@ -1,19 +1,19 @@
 package com.woowacourse.staccato.presentation.moment.adapter
 
-enum class VisitViewHolderType(val value: Int) {
-    VISIT_DEFAULT(0),
-    MY_VISIT_LOG(1),
+enum class MomentViewHolderType(val value: Int) {
+    MOMENT_DEFAULT(0),
+    MY_COMMENTS(1),
     ;
 
     companion object {
-        fun from(value: Int): VisitViewHolderType {
+        fun from(value: Int): MomentViewHolderType {
             return when (value) {
                 0 -> {
-                    VISIT_DEFAULT
+                    MOMENT_DEFAULT
                 }
 
                 1 -> {
-                    MY_VISIT_LOG
+                    MY_COMMENTS
                 }
 
                 else -> {

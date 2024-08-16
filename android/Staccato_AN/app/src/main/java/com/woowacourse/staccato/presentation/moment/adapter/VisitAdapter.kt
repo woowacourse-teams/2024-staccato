@@ -13,9 +13,9 @@ class VisitAdapter(private val items: MutableList<VisitDetailUiModel> = mutableL
 
     override fun getItemViewType(position: Int): Int {
         return if (position == VISIT_DEFAULT_POSITION) {
-            VisitViewHolderType.VISIT_DEFAULT.value
+            MomentViewHolderType.MOMENT_DEFAULT.value
         } else {
-            VisitViewHolderType.MY_VISIT_LOG.value
+            MomentViewHolderType.MY_COMMENTS.value
         }
     }
 
@@ -23,14 +23,14 @@ class VisitAdapter(private val items: MutableList<VisitDetailUiModel> = mutableL
         parent: ViewGroup,
         viewType: Int,
     ): VisitViewHolder {
-        return when (VisitViewHolderType.from(viewType)) {
-            VisitViewHolderType.VISIT_DEFAULT -> {
+        return when (MomentViewHolderType.from(viewType)) {
+            MomentViewHolderType.MOMENT_DEFAULT -> {
                 val inflater = LayoutInflater.from(parent.context)
                 val binding = ItemVisitDefaultBinding.inflate(inflater, parent, false)
                 VisitViewHolder.VisitDefaultViewHolder(binding)
             }
 
-            VisitViewHolderType.MY_VISIT_LOG -> {
+            MomentViewHolderType.MY_COMMENTS -> {
                 val inflater = LayoutInflater.from(parent.context)
                 val binding = ItemMyVisitLogBinding.inflate(inflater, parent, false)
                 VisitViewHolder.MyVisitLogViewHolder(binding)
