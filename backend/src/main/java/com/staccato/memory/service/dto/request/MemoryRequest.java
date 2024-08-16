@@ -3,7 +3,6 @@ package com.staccato.memory.service.dto.request;
 import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,11 +23,9 @@ public record MemoryRequest(
         @Size(max = 500, message = "내용의 최대 허용 글자수는 공백 포함 500자입니다.")
         String description,
         @Schema(example = "2024-07-27")
-        @NotNull(message = "추억 시작 날짜를 입력해주세요.")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate startAt,
         @Schema(example = "2024-07-29")
-        @NotNull(message = "추억 끝 날짜를 입력해주세요.")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate endAt) {
     public Memory toMemory() {

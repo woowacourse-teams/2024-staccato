@@ -39,8 +39,7 @@ public interface MemoryControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<MemoryIdResponse> createMemory(
-            @Parameter(description = "key = data") @Valid MemoryRequest memoryRequest,
-            @Parameter(description = "key = memoryThumbnailFile") MultipartFile memoryThumbnailFile,
+            @Parameter @Valid MemoryRequest memoryRequest,
             @Parameter(hidden = true) Member member);
 
     @Operation(summary = "추억 목록 조회", description = "사용자의 전체/년도별 추억 목록을 조회합니다.")
