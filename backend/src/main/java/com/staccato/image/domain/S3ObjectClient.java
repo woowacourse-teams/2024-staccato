@@ -6,17 +6,18 @@ import org.springframework.stereotype.Component;
 import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Component
-public class S3Client {
-    private final software.amazon.awssdk.services.s3.S3Client s3Client;
+public class S3ObjectClient {
+    private final S3Client s3Client;
     private final String bucketName;
     private final String endPoint;
     private final String cloudFrontEndPoint;
 
-    public S3Client(
+    public S3ObjectClient(
             @Value("${cloud.aws.s3.bucket}") String bucketName,
             @Value("${cloud.aws.s3.endpoint}") String endPoint,
             @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint

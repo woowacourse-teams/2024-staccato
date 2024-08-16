@@ -1,9 +1,9 @@
 package com.staccato;
 
-import com.staccato.image.domain.S3Client;
+import com.staccato.image.domain.S3ObjectClient;
 
-public class FakeS3Client extends S3Client {
-    public FakeS3Client() {
+public class FakeS3ObjectClient extends S3ObjectClient {
+    public FakeS3ObjectClient() {
         super("fakeBuket", "fakeEndPoint", "fakeCloudFrontEndPoint");
     }
 

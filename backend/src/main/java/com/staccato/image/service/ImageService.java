@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.exception.StaccatoException;
 import com.staccato.image.domain.ImageExtension;
-import com.staccato.image.domain.S3Client;
+import com.staccato.image.domain.S3ObjectClient;
 import com.staccato.image.service.dto.ImageUrlResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
-    private final S3Client s3Client;
+    private final S3ObjectClient s3ObjectClient;
 
     public List<String> uploadFiles(List<MultipartFile> files) {
         return files.stream()
@@ -31,8 +31,8 @@ public class ImageService {
         String contentType = ImageExtension.getContentType(imageExtension);
         byte[] imageBytes = getImageBytes(image);
 
-        s3Client.putS3Object(key, contentType, imageBytes);
-        String imageUrl = s3Client.getUrl(key);
+        s3ObjectClient.putS3Object(key, contentType, imageBytes);
+        String imageUrl = s3ObjectClient.getUrl(key);
 
         return new ImageUrlResponse(imageUrl);
     }
@@ -43,9 +43,9 @@ public class ImageService {
         String contentType = ImageExtension.getContentType(fileExtension);
         byte[] fileBytes = getImageBytes(file);
 
-        s3Client.putS3Object(key, contentType, fileBytes);
+        s3ObjectClient.putS3Object(key, contentType, fileBytes);
 
-        return s3Client.getUrl(key);
+        return s3ObjectClient.getUrl(key);
     }
 
     private byte[] getImageBytes(MultipartFile image) {
