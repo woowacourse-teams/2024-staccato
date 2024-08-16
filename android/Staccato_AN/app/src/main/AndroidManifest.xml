@@ -53,7 +53,7 @@
             android:name=".presentation.memoryupdate.MemoryUpdateActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.visitcreation.VisitCreationActivity"
+            android:name=".presentation.momentcreation.MomentCreationActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.memorycreation.MemoryCreationActivity"

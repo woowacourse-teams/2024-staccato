@@ -22,9 +22,9 @@ import com.woowacourse.staccato.presentation.memory.adapter.VisitsAdapter
 import com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModel
 import com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModelFactory
 import com.woowacourse.staccato.presentation.memoryupdate.MemoryUpdateActivity
+import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
+import com.woowacourse.staccato.presentation.momentcreation.MomentCreationActivity
 import com.woowacourse.staccato.presentation.util.showToast
-import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
-import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 
 class MemoryFragment :
     BindingFragment<FragmentMemoryBinding>(R.layout.fragment_memory),
@@ -77,7 +77,7 @@ class MemoryFragment :
         viewModel.memory.value?.let {
             val bundle =
                 bundleOf(
-                    VISIT_ID_KEY to visitId,
+                    MOMENT_ID_KEY to visitId,
                     MEMORY_ID_KEY to memoryId,
                     MEMORY_TITLE_KEY to it.title,
                 )
@@ -93,7 +93,7 @@ class MemoryFragment :
         if (viewModel.isInPeriod()) {
             viewModel.memory.value?.let {
                 val visitCreationLauncher = (activity as MainActivity).visitCreationLauncher
-                VisitCreationActivity.startWithResultLauncher(
+                MomentCreationActivity.startWithResultLauncher(
                     memoryId,
                     it.title,
                     requireContext(),
@@ -101,7 +101,7 @@ class MemoryFragment :
                 )
             }
         } else {
-            showToast("지금은 여행 기간이 아니에요!")
+            showToast(getString(R.string.memory_unable_to_create_moment))
         }
     }
 

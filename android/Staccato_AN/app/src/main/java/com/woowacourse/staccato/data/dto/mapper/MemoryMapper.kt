@@ -1,11 +1,11 @@
 package com.woowacourse.staccato.data.dto.mapper
 
+import com.woowacourse.staccato.data.dto.memory.MemoryMomentDto
 import com.woowacourse.staccato.data.dto.memory.MemoryRequest
 import com.woowacourse.staccato.data.dto.memory.MemoryResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryUpdateRequest
-import com.woowacourse.staccato.data.dto.memory.MemoryVisitDto
 import com.woowacourse.staccato.domain.model.Memory
-import com.woowacourse.staccato.domain.model.MemoryVisit
+import com.woowacourse.staccato.domain.model.MemoryMoment
 import com.woowacourse.staccato.domain.model.NewMemory
 import java.time.LocalDate
 
@@ -18,14 +18,14 @@ fun MemoryResponse.toDomain() =
         endAt = LocalDate.parse(endAt),
         description = description,
         mates = mates.map { it.toDomain() },
-        visits = visits.map { it.toDomain() },
+        moments = moments.map { it.toDomain() },
     )
 
-fun MemoryVisitDto.toDomain() =
-    MemoryVisit(
-        visitId = visitId,
+fun MemoryMomentDto.toDomain() =
+    MemoryMoment(
+        momentId = momentId,
         placeName = placeName,
-        visitImageUrl = visitImageUrl,
+        momentImageUrl = momentImageUrl,
         visitedAt = LocalDate.parse(visitedAt),
     )
 

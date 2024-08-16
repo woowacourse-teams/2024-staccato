@@ -7,18 +7,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowacourse.staccato.domain.repository.VisitRepository
+import com.woowacourse.staccato.domain.repository.MomentRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toVisitUpdateDefaultUiModel
+import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
-import com.woowacourse.staccato.presentation.visitcreation.model.VisitMemoryUiModel
 import com.woowacourse.staccato.presentation.visitupdate.model.VisitUpdateDefaultUiModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
 class VisitUpdateViewModel(
-    private val visitRepository: VisitRepository,
+    private val momentRepository: MomentRepository,
 ) : ViewModel() {
     val placeName = ObservableField<String>()
 
@@ -31,8 +31,8 @@ class VisitUpdateViewModel(
     private val _visitUpdateDefault = MutableLiveData<VisitUpdateDefaultUiModel>()
     val visitUpdateDefault: LiveData<VisitUpdateDefaultUiModel> get() = _visitUpdateDefault
 
-    private val _memory = MutableLiveData<VisitMemoryUiModel>()
-    val memory: LiveData<VisitMemoryUiModel> get() = _memory
+    private val _memory = MutableLiveData<MomentMemoryUiModel>()
+    val memory: LiveData<MomentMemoryUiModel> get() = _memory
 
     private val _isError = MutableSingleLiveData<Boolean>()
     val isError: SingleLiveData<Boolean> get() = _isError
@@ -54,10 +54,10 @@ class VisitUpdateViewModel(
 
     private fun fetchVisitData(visitId: Long) {
         viewModelScope.launch {
-            visitRepository.getVisit(visitId = visitId)
+            momentRepository.getMoment(momentId = visitId)
                 .onSuccess { visit ->
                     _visitUpdateDefault.value = visit.toVisitUpdateDefaultUiModel()
-                    _existVisitImageUrls.value = visit.visitImageUrls
+                    _existVisitImageUrls.value = visit.momentImageUrls
                     placeName.set(visit.placeName)
                 }.onFailure {
                     _isError.postValue(true)
@@ -70,7 +70,7 @@ class VisitUpdateViewModel(
         memoryTitle: String,
     ) {
         _memory.value =
-            VisitMemoryUiModel(
+            MomentMemoryUiModel(
                 id = memoryId,
                 title = memoryTitle,
             )
@@ -79,11 +79,11 @@ class VisitUpdateViewModel(
     suspend fun updateVisit(context: Context) {
         if (placeName.get() != null && visitUpdateDefault.value != null) {
             _isPosting.value = true
-            visitRepository.updateVisit(
-                visitId = visitUpdateDefault.value!!.id,
+            momentRepository.updateMoment(
+                momentId = visitUpdateDefault.value!!.id,
                 placeName = placeName.get()!!,
-                visitImageUrls = existVisitImageUrls.value ?: emptyList(),
-                visitImageMultiParts = convertUrisToMultiParts(context),
+                momentImageUrls = existVisitImageUrls.value ?: emptyList(),
+                momentImageMultiParts = convertUrisToMultiParts(context),
             ).onSuccess {
                 _isUpdateCompleted.postValue(true)
             }.onFailure {
