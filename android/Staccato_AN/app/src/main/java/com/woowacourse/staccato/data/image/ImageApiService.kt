@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.data
+package com.woowacourse.staccato.data.image
 
 import com.woowacourse.staccato.data.dto.image.ImageResponse
 import okhttp3.MultipartBody
