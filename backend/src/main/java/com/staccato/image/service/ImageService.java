@@ -2,6 +2,7 @@ package com.staccato.image.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -17,9 +18,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
-    private static final String TEAM_FOLDER = "staccato/";
-    private static final String IMAGE_FOLDER = "image/";
-
     private final ImageClient imageClient;
 
     public List<String> uploadFiles(List<MultipartFile> files) {
@@ -29,9 +27,9 @@ public class ImageService {
     }
 
     public ImageUrlResponse uploadFileNew(MultipartFile file) {
-        String fileName = file.getOriginalFilename();
-        String key = makeFilePath(fileName);
-        String contentType = getContentType(fileName);
+        String fileExtension = getFileExtension(file);
+        String key = UUID.randomUUID() + fileExtension;
+        String contentType = FileExtension.getContentType(fileExtension);
         byte[] fileBytes = getFileBytes(file);
 
         imageClient.putS3Object(key, contentType, fileBytes);
@@ -41,9 +39,9 @@ public class ImageService {
     }
 
     public String uploadFile(MultipartFile file) {
-        String fileName = file.getOriginalFilename();
-        String key = makeFilePath(fileName);
-        String contentType = getContentType(fileName);
+        String fileExtension = getFileExtension(file);
+        String key = UUID.randomUUID() + fileExtension;
+        String contentType = FileExtension.getContentType(fileExtension);
         byte[] fileBytes = getFileBytes(file);
 
         imageClient.putS3Object(key, contentType, fileBytes);
@@ -59,22 +57,11 @@ public class ImageService {
         }
     }
 
-    private String makeFilePath(String fileName) {
-        String uniqueFileName = generateUniqueFileName(fileName);
-        return TEAM_FOLDER + IMAGE_FOLDER + uniqueFileName;
-    }
-
-    private String generateUniqueFileName(String fileName) {
-        String fileExtension = getFileExtension(fileName);
-        return UUID.randomUUID() + fileExtension;
-    }
-
-    private String getContentType(String fileName) {
-        String fileExtension = getFileExtension(fileName);
-        return FileExtension.getContentType(fileExtension);
-    }
-
-    private String getFileExtension(String fileName) {
+    private String getFileExtension(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        if (Objects.isNull(fileName)) {
+            return "";
+        }
         int dotIndex = fileName.lastIndexOf('.');
         if (dotIndex == -1) {
             return "";
