@@ -43,8 +43,6 @@ class MomentTest {
         // given
         Memory memory = Memory.builder()
                 .title("Sample Memory")
-                .startAt(null)
-                .endAt(null)
                 .build();
 
         // when & then
