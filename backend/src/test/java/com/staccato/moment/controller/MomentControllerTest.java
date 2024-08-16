@@ -36,8 +36,8 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.moment.MomentDetailResponseFixture;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.fixture.MomentDetailResponseFixture;
 import com.staccato.moment.service.MomentService;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
