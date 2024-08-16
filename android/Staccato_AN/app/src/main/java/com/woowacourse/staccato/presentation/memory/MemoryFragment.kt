@@ -101,7 +101,7 @@ class MemoryFragment :
                 )
             }
         } else {
-            showToast("지금은 여행 기간이 아니에요!")
+            showToast(getString(R.string.memory_unable_to_create_moment))
         }
     }
 

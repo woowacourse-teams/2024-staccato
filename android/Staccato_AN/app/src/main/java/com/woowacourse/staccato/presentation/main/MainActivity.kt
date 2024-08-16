@@ -37,7 +37,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     sharedViewModel.setTimelineHasUpdated()
-                    showToast("새로운 추억을 만들었어요!")
+                    showToast(getString(R.string.main_memory_creation_success))
                     val createdMemoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
                     val bundle = bundleOf(MEMORY_ID_KEY to createdMemoryId)
                     navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
@@ -50,7 +50,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     sharedViewModel.setTimelineHasUpdated()
-                    showToast("추억을 수정했어요!")
+                    showToast(getString(R.string.main_memory_update_success))
                     val updatedMemoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
                     val bundle = bundleOf(MEMORY_ID_KEY to updatedMemoryId)
                     navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
@@ -62,7 +62,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    showToast("새로운 방문 기록을 만들었어요!")
+                    showToast(getString(R.string.main_moment_creation_success))
                     val createdVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
                     val memoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
                     val memoryTitle = it.getStringExtra(MEMORY_TITLE_KEY)
@@ -81,7 +81,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    showToast("방문 기록을 수정했어요!")
+                    showToast(getString(R.string.main_moment_update_success))
                     val updatedVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
                     val memoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
                     val memoryTitle = it.getStringExtra(MEMORY_TITLE_KEY)
@@ -119,7 +119,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     private fun handleBackPressedTwice(backPressedTime: Long): Long {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime >= 3000L) {
-            showToast("버튼을 한 번 더 누르면 종료됩니다.")
+            showToast(getString(R.string.main_end))
         } else {
             finish()
         }

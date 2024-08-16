@@ -184,7 +184,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="@string/visit_creation_visited_at"
+                    android:text="@string/all_visited_date"
                     android:textAppearance="@style/Typography.Title2"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_selection_title"
