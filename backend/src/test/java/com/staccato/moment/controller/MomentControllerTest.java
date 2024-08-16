@@ -63,27 +63,27 @@ class MomentControllerTest {
                 ),
                 Arguments.of(
                         new MomentRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간한 장소의 이름을 입력해주세요."
+                        "순간 장소의 이름을 입력해주세요."
                 ),
                 Arguments.of(
                         new MomentRequest("  ", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간한 장소의 이름을 입력해주세요."
+                        "순간 장소의 이름을 입력해주세요."
                 ),
                 Arguments.of(
                         new MomentRequest("가".repeat(31), "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간한 장소의 이름은 공백 포함 1자 이상 30자 이하로 설정해주세요."
+                        "순간 장소의 이름은 공백 포함 1자 이상 30자 이하로 설정해주세요."
                 ),
                 Arguments.of(
                         new MomentRequest("placeName", "address", null, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간한 장소의 위도를 입력해주세요."
+                        "순간 장소의 위도를 입력해주세요."
                 ),
                 Arguments.of(
                         new MomentRequest("placeName", "address", BigDecimal.ONE, null, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간한 장소의 경도를 입력해주세요."
+                        "순간 장소의 경도를 입력해주세요."
                 ),
                 Arguments.of(
                         new MomentRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간한 장소의 주소를 입력해주세요."
+                        "순간 장소의 주소를 입력해주세요."
                 ),
                 Arguments.of(
                         getMomentRequest(null),
@@ -143,7 +143,7 @@ class MomentControllerTest {
                 .andExpect(jsonPath("$.message").value("요청 본문을 읽을 수 없습니다. 올바른 형식으로 데이터를 제공해주세요."));
     }
 
-    @DisplayName("사진이 5장을 초과하면 순간 기록 생성에 실패한다.")
+    @DisplayName("사진이 5장을 초과하면 순간 생성에 실패한다.")
     @Test
     void failCreateMomentByImageCount() throws Exception {
         // given
@@ -171,7 +171,7 @@ class MomentControllerTest {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, visitedAt, 1L, List.of("https://example.com/images/namsan_tower.jpg"));
     }
 
-    @DisplayName("사용자가 잘못된 요청 형식으로 정보를 입력하면, 순간 기록을 생성할 수 없다.")
+    @DisplayName("사용자가 잘못된 요청 형식으로 정보를 입력하면, 순간을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidMomentRequestProvider")
     void failCreateMoment(MomentRequest momentRequest, String expectedMessage) throws Exception {
