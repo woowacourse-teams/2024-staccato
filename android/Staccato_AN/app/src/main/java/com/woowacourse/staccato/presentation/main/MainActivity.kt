@@ -18,7 +18,7 @@ import com.woowacourse.staccato.databinding.ActivityMainBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memorycreation.MemoryCreationActivity
-import com.woowacourse.staccato.presentation.moment.VisitFragment.Companion.VISIT_ID_KEY
+import com.woowacourse.staccato.presentation.moment.VisitFragment.Companion.MOMENT_ID_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
 import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity.Companion.MEMORY_TITLE_KEY
@@ -63,12 +63,12 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     showToast("새로운 방문 기록을 만들었어요!")
-                    val createdVisitId = it.getLongExtra(VISIT_ID_KEY, 0L)
+                    val createdVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
                     val memoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
                     val memoryTitle = it.getStringExtra(MEMORY_TITLE_KEY)
                     val bundle =
                         bundleOf(
-                            VISIT_ID_KEY to createdVisitId,
+                            MOMENT_ID_KEY to createdVisitId,
                             MEMORY_ID_KEY to memoryId,
                             MEMORY_TITLE_KEY to memoryTitle,
                         )
@@ -82,12 +82,12 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     showToast("방문 기록을 수정했어요!")
-                    val updatedVisitId = it.getLongExtra(VISIT_ID_KEY, 0L)
+                    val updatedVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
                     val memoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
                     val memoryTitle = it.getStringExtra(MEMORY_TITLE_KEY)
                     val bundle =
                         bundleOf(
-                            VISIT_ID_KEY to updatedVisitId,
+                            MOMENT_ID_KEY to updatedVisitId,
                             MEMORY_TITLE_KEY to memoryTitle,
                             MEMORY_ID_KEY to memoryId,
                         )

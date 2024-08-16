@@ -13,7 +13,7 @@ import com.woowacourse.staccato.databinding.ActivityVisitCreationBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.woowacourse.staccato.presentation.moment.VisitFragment.Companion.VISIT_ID_KEY
+import com.woowacourse.staccato.presentation.moment.VisitFragment.Companion.MOMENT_ID_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.adapter.PhotoAttachAdapter
 import com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModel
@@ -71,7 +71,7 @@ class VisitCreationActivity :
         viewModel.createdVisitId.observe(this) { createdVisitId ->
             val resultIntent =
                 Intent()
-                    .putExtra(VISIT_ID_KEY, createdVisitId)
+                    .putExtra(MOMENT_ID_KEY, createdVisitId)
                     .putExtra(MEMORY_ID_KEY, memoryId)
                     .putExtra(MEMORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, resultIntent)

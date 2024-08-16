@@ -35,7 +35,7 @@ class VisitFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        visitId = arguments?.getLong(VISIT_ID_KEY) ?: return
+        visitId = arguments?.getLong(MOMENT_ID_KEY) ?: return
         memoryId = arguments?.getLong(MEMORY_ID_KEY) ?: return
         memoryTitle = arguments?.getString(MEMORY_TITLE_KEY) ?: return
         initAdapter()
@@ -81,6 +81,7 @@ class VisitFragment :
         }
     }
 
+
     override fun onUpdateClicked() {
         val visitUpdateLauncher = (activity as MainActivity).visitUpdateLauncher
         VisitUpdateActivity.startWithResultLauncher(
@@ -93,6 +94,6 @@ class VisitFragment :
     }
 
     companion object {
-        const val VISIT_ID_KEY = "visitId"
+        const val MOMENT_ID_KEY = "momentId"
     }
 }
