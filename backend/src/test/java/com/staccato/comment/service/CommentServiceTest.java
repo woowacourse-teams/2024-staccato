@@ -8,14 +8,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.staccato.ServiceSliceTest;
+import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.request.CommentRequest;
+import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.memory.MemoryFixture;
+import com.staccato.fixture.moment.CommentFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -102,5 +105,24 @@ class CommentServiceTest extends ServiceSliceTest {
         // then
         assertThat(commentResponses.comments().stream().map(CommentResponse::commentId).toList())
                 .containsExactly(commentId1, commentId2);
+    }
+
+    @DisplayName("본인이 쓴 댓글은 수정할 수 있다.")
+    @Test
+    void updateComment() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create("nickname"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(member));
+        Moment moment = momentRepository.save(MomentFixture.create(memory));
+        Comment comment = commentRepository.save(CommentFixture.create(moment, member));
+
+        String updatedContent = "updated content";
+        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
+
+        // when
+        commentService.updateComment(comment.getId(), commentUpdateRequest);
+
+        // then
+        assertThat(commentRepository.findById(comment.getId()).get().getContent()).isEqualTo(updatedContent);
     }
 }
