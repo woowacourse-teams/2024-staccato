@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
+import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.model.NewMemory
@@ -73,7 +74,7 @@ class MemoryUpdateViewModel(
         viewModelScope.launch {
             val newMemory: NewMemory = makeNewMemory()
             val thumbnailFile: MultipartBody.Part? = convertMemoryUriToFile(context, _imageUri.value, MEMORY_FILE_NAME)
-            val result = memoryRepository.updateMemory(memoryId, newMemory, thumbnailFile)
+            val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory, thumbnailFile)
             result
                 .onSuccess { updateSuccessStatus() }
                 .onServerError(::handleServerError)
