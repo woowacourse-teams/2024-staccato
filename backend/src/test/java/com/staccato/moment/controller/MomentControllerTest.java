@@ -330,7 +330,7 @@ class MomentControllerTest {
                         })
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.MULTIPART_FORM_DATA))
-                 .andExpect(status().isBadRequest())
+                .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
@@ -392,7 +392,7 @@ class MomentControllerTest {
         // given
         long momentId = 1L;
         FeelingRequest feelingRequest = new FeelingRequest(null);
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "기분 표현은 필수에요.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "기분 값을 입력해주세요.");
 
         // when & then
         mockMvc.perform(post("/moments/{momentId}/feeling", momentId)

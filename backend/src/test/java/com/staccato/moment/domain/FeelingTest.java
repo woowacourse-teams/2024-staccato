@@ -13,14 +13,12 @@ class FeelingTest {
     @DisplayName("기분을 선택할 수 있다.")
     @Test
     void match() {
-        // given & when & then
         assertThat(Feeling.match("happy")).isEqualTo(Feeling.HAPPY);
     }
 
     @DisplayName("존재하지 않는 기분을 선택할 경우 예외가 발생한다.")
     @Test
     void failMatch() {
-        // given & when & then
         assertThatThrownBy(() -> Feeling.match("upset"))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 기분 표현을 찾을 수 없어요.");
