@@ -20,6 +20,8 @@ import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
+import com.staccato.moment.service.dto.response.MomentResponse;
+import com.staccato.moment.service.dto.response.MomentResponses;
 import com.staccato.s3.service.CloudStorageService;
 
 import lombok.RequiredArgsConstructor;
@@ -46,6 +48,12 @@ public class MomentService {
     private Memory getMemoryById(long memoryId) {
         return memoryRepository.findById(memoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
+    }
+
+    public MomentResponses readAllMoment(Member member) {
+        return new MomentResponses(momentRepository.findAllByMemory_MemoryMembers_Member(member)
+                .stream()
+                .map(MomentResponse::new).toList());
     }
 
     public MomentDetailResponse readMomentById(long momentId, Member member) {
