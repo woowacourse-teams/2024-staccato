@@ -2,16 +2,16 @@ package com.woowacourse.staccato.presentation.mapper
 
 import com.woowacourse.staccato.domain.model.Moment
 import com.woowacourse.staccato.domain.model.VisitLog
-import com.woowacourse.staccato.presentation.moment.model.VisitDetailUiModel
+import com.woowacourse.staccato.presentation.moment.model.MomentDetailUiModel
 import com.woowacourse.staccato.presentation.visitupdate.model.VisitUpdateDefaultUiModel
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-fun Moment.toVisitDefaultUiModel(): VisitDetailUiModel.VisitDefaultUiModel {
-    return VisitDetailUiModel.VisitDefaultUiModel(
+fun Moment.toVisitDefaultUiModel(): MomentDetailUiModel.MomentDefaultUiModel {
+    return MomentDetailUiModel.MomentDefaultUiModel(
         id = momentId,
         placeName = placeName,
-        visitImageUrls = momentImageUrls,
+        momentImageUrls = momentImageUrls,
         address = address,
         visitedAt = visitedAt,
     )
@@ -26,7 +26,7 @@ fun Moment.toVisitUpdateDefaultUiModel(): VisitUpdateDefaultUiModel {
 }
 
 fun VisitLog.toVisitLogUiModel() =
-    VisitDetailUiModel.VisitLogUiModel(
+    MomentDetailUiModel.VisitLogUiModel(
         id = visitLogId,
         memberId = memberId,
         nickname = nickname,

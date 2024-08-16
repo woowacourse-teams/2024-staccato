@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.staccato.databinding.ItemMyVisitLogBinding
 import com.woowacourse.staccato.databinding.ItemVisitDefaultBinding
-import com.woowacourse.staccato.presentation.moment.model.VisitDetailUiModel
+import com.woowacourse.staccato.presentation.moment.model.MomentDetailUiModel
 
-class MomentAdapter(private val items: MutableList<VisitDetailUiModel> = mutableListOf()) :
+class MomentAdapter(private val items: MutableList<MomentDetailUiModel> = mutableListOf()) :
     RecyclerView.Adapter<MomentViewHolder>() {
     override fun getItemCount(): Int = items.size
 
@@ -43,28 +43,28 @@ class MomentAdapter(private val items: MutableList<VisitDetailUiModel> = mutable
         position: Int,
     ) {
         if (holder is MomentViewHolder.MomentDefaultViewHolder) {
-            holder.bind(items[position] as VisitDetailUiModel.VisitDefaultUiModel)
+            holder.bind(items[position] as MomentDetailUiModel.MomentDefaultUiModel)
         }
         if (holder is MomentViewHolder.MyCommentViewHolder) {
-            holder.bind(items[position] as VisitDetailUiModel.VisitLogUiModel)
+            holder.bind(items[position] as MomentDetailUiModel.VisitLogUiModel)
         }
     }
 
-    fun updateMomentDefault(newMomentDefault: VisitDetailUiModel.VisitDefaultUiModel) {
-        val result = mutableListOf<VisitDetailUiModel>(newMomentDefault)
+    fun updateMomentDefault(newMomentDefault: MomentDetailUiModel.MomentDefaultUiModel) {
+        val result = mutableListOf<MomentDetailUiModel>(newMomentDefault)
         result.addAll(items.drop(MOMENT_DEFAULT_ITEM_SIZE))
         replaceAllItems(result)
         notifyItemChanged(MOMENT_DEFAULT_POSITION)
     }
 
-    fun updateVisitLogs(newComments: List<VisitDetailUiModel.VisitLogUiModel>) {
+    fun updateVisitLogs(newComments: List<MomentDetailUiModel.VisitLogUiModel>) {
         val result = items.take(MOMENT_DEFAULT_ITEM_SIZE).toMutableList()
         result.addAll(newComments)
         replaceAllItems(result)
         notifyItemRangeInserted(MOMENT_DEFAULT_ITEM_SIZE, result.size)
     }
 
-    private fun replaceAllItems(result: MutableList<VisitDetailUiModel>) {
+    private fun replaceAllItems(result: MutableList<MomentDetailUiModel>) {
         items.clear()
         items.addAll(result)
     }

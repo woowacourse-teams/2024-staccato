@@ -9,15 +9,15 @@ import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toVisitDefaultUiModel
 import com.woowacourse.staccato.presentation.mapper.toVisitLogUiModel
-import com.woowacourse.staccato.presentation.moment.model.VisitDetailUiModel
+import com.woowacourse.staccato.presentation.moment.model.MomentDetailUiModel
 import kotlinx.coroutines.launch
 
 class VisitViewModel(private val momentRepository: MomentRepository) : ViewModel() {
-    private val _visitDefault = MutableLiveData<VisitDetailUiModel.VisitDefaultUiModel>()
-    val visitDefault: LiveData<VisitDetailUiModel.VisitDefaultUiModel> get() = _visitDefault
+    private val _visitDefault = MutableLiveData<MomentDetailUiModel.MomentDefaultUiModel>()
+    val visitDefault: LiveData<MomentDetailUiModel.MomentDefaultUiModel> get() = _visitDefault
 
-    private val _visitLogs = MutableLiveData<List<VisitDetailUiModel.VisitLogUiModel>>()
-    val visitLogs: LiveData<List<VisitDetailUiModel.VisitLogUiModel>> get() = _visitLogs
+    private val _visitLogs = MutableLiveData<List<MomentDetailUiModel.VisitLogUiModel>>()
+    val visitLogs: LiveData<List<MomentDetailUiModel.VisitLogUiModel>> get() = _visitLogs
 
     private val _isDeleted = MutableSingleLiveData(false)
     val isDeleted: SingleLiveData<Boolean> get() = _isDeleted
