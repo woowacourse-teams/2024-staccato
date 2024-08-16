@@ -8,7 +8,7 @@ import com.woowacourse.staccato.databinding.ItemVisitDefaultBinding
 import com.woowacourse.staccato.presentation.moment.model.VisitDetailUiModel
 
 class VisitAdapter(private val items: MutableList<VisitDetailUiModel> = mutableListOf()) :
-    RecyclerView.Adapter<VisitViewHolder>() {
+    RecyclerView.Adapter<MomentViewHolder>() {
     override fun getItemCount(): Int = items.size
 
     override fun getItemViewType(position: Int): Int {
@@ -22,30 +22,30 @@ class VisitAdapter(private val items: MutableList<VisitDetailUiModel> = mutableL
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): VisitViewHolder {
+    ): MomentViewHolder {
         return when (MomentViewHolderType.from(viewType)) {
             MomentViewHolderType.MOMENT_DEFAULT -> {
                 val inflater = LayoutInflater.from(parent.context)
                 val binding = ItemVisitDefaultBinding.inflate(inflater, parent, false)
-                VisitViewHolder.VisitDefaultViewHolder(binding)
+                MomentViewHolder.MomentDefaultViewHolder(binding)
             }
 
             MomentViewHolderType.MY_COMMENTS -> {
                 val inflater = LayoutInflater.from(parent.context)
                 val binding = ItemMyVisitLogBinding.inflate(inflater, parent, false)
-                VisitViewHolder.MyVisitLogViewHolder(binding)
+                MomentViewHolder.MyCommentViewHolder(binding)
             }
         }
     }
 
     override fun onBindViewHolder(
-        holder: VisitViewHolder,
+        holder: MomentViewHolder,
         position: Int,
     ) {
-        if (holder is VisitViewHolder.VisitDefaultViewHolder) {
+        if (holder is MomentViewHolder.MomentDefaultViewHolder) {
             holder.bind(items[position] as VisitDetailUiModel.VisitDefaultUiModel)
         }
-        if (holder is VisitViewHolder.MyVisitLogViewHolder) {
+        if (holder is MomentViewHolder.MyCommentViewHolder) {
             holder.bind(items[position] as VisitDetailUiModel.VisitLogUiModel)
         }
     }

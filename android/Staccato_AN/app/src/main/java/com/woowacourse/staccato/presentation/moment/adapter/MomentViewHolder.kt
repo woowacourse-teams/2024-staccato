@@ -6,9 +6,9 @@ import com.woowacourse.staccato.databinding.ItemMyVisitLogBinding
 import com.woowacourse.staccato.databinding.ItemVisitDefaultBinding
 import com.woowacourse.staccato.presentation.moment.model.VisitDetailUiModel
 
-sealed class VisitViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-    class VisitDefaultViewHolder(private val binding: ItemVisitDefaultBinding) :
-        VisitViewHolder(binding) {
+sealed class MomentViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
+    class MomentDefaultViewHolder(private val binding: ItemVisitDefaultBinding) :
+        MomentViewHolder(binding) {
         val adapter = HorizontalPhotoAdapter()
 
         fun bind(item: VisitDetailUiModel.VisitDefaultUiModel) {
@@ -19,8 +19,8 @@ sealed class VisitViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder
         }
     }
 
-    class MyVisitLogViewHolder(private val binding: ItemMyVisitLogBinding) :
-        VisitViewHolder(binding) {
+    class MyCommentViewHolder(private val binding: ItemMyVisitLogBinding) :
+        MomentViewHolder(binding) {
         fun bind(item: VisitDetailUiModel.VisitLogUiModel) {
             binding.visitLog = item
         }
