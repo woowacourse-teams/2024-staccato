@@ -31,7 +31,7 @@ import com.staccato.image.service.ImageService;
 
 @Disabled
 @WebMvcTest(controllers = ImageController.class)
-public class ImageControllerTest {
+public class FileControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
