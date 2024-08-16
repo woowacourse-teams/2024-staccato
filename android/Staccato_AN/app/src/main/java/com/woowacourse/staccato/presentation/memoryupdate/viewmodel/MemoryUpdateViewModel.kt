@@ -2,6 +2,7 @@ package com.woowacourse.staccato.presentation.memoryupdate.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -86,6 +87,8 @@ class MemoryUpdateViewModel(
         startAt: Long,
         endAt: Long,
     ) {
+        Log.d("hye", _startDate.value.toString())
+        Log.d("hye", _endDate.value.toString())
         _startDate.value = convertLongToLocalDate(startAt)
         _endDate.value = convertLongToLocalDate(endAt)
     }

@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.data.dto.timeline
 
-import com.woowacourse.staccato.data.dto.member.MemberDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
