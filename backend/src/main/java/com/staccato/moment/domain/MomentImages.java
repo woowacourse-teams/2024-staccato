@@ -29,24 +29,10 @@ public class MomentImages {
                 .toList());
     }
 
-    @Builder
-    public MomentImages(List<String> existingImages, List<String> addedImages) {
-        validateNumberOfImages(existingImages, addedImages);
-        this.images.addAll(combine(existingImages, addedImages));
-    }
-
     private void validateNumberOfImages(List<String> existingImages, List<String> addedImages) {
         if (existingImages.size() + addedImages.size() > MAX_COUNT) {
             throw new StaccatoException("사진은 5장까지만 추가할 수 있어요.");
         }
-    }
-
-    private List<MomentImage> combine(List<String> existingImages, List<String> addedImages) {
-        List<String> images = new ArrayList(existingImages);
-        images.addAll(addedImages);
-        return images.stream()
-                .map(MomentImage::new)
-                .toList();
     }
 
     protected void addAll(MomentImages newMomentImages, Moment moment) {

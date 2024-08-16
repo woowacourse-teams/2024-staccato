@@ -29,9 +29,7 @@ class MomentImagesTest {
     @Test
     void failUpdateMomentImages() {
         // given & when & then
-        assertThatThrownBy(() -> MomentImages.builder()
-                .existingImages(List.of("picture1", "picture2", "picture3", "picture4"))
-                .addedImages(List.of("picture5", "picture6")).build())
+        assertThatThrownBy(() -> new MomentImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("사진은 5장까지만 추가할 수 있어요.");
     }
