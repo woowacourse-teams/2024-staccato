@@ -12,9 +12,9 @@ import com.woowacourse.staccato.presentation.mapper.toVisitLogUiModel
 import com.woowacourse.staccato.presentation.moment.model.MomentDetailUiModel
 import kotlinx.coroutines.launch
 
-class VisitViewModel(private val momentRepository: MomentRepository) : ViewModel() {
-    private val _visitDefault = MutableLiveData<MomentDetailUiModel.MomentDefaultUiModel>()
-    val visitDefault: LiveData<MomentDetailUiModel.MomentDefaultUiModel> get() = _visitDefault
+class MomentViewModel(private val momentRepository: MomentRepository) : ViewModel() {
+    private val _momentDefault = MutableLiveData<MomentDetailUiModel.MomentDefaultUiModel>()
+    val momentDefault: LiveData<MomentDetailUiModel.MomentDefaultUiModel> get() = _momentDefault
 
     private val _visitLogs = MutableLiveData<List<MomentDetailUiModel.CommentsUiModel>>()
     val visitLogs: LiveData<List<MomentDetailUiModel.CommentsUiModel>> get() = _visitLogs
@@ -25,22 +25,22 @@ class VisitViewModel(private val momentRepository: MomentRepository) : ViewModel
     private val _isError = MutableSingleLiveData(false)
     val isError: SingleLiveData<Boolean> get() = _isError
 
-    fun fetchVisitDetailData(visitId: Long) {
-        fetchVisitData(visitId)
+    fun fetchMomentDetailData(momentId: Long) {
+        fetchMomentData(momentId)
     }
 
-    fun deleteVisit(visitId: Long) =
+    fun deleteMoment(momentId: Long) =
         viewModelScope.launch {
-            momentRepository.deleteMoment(visitId).onSuccess {
+            momentRepository.deleteMoment(momentId).onSuccess {
                 _isDeleted.postValue(true)
             }
         }
 
-    private fun fetchVisitData(visitId: Long) {
+    private fun fetchMomentData(momentId: Long) {
         viewModelScope.launch {
-            momentRepository.getMoment(visitId).onSuccess { visit ->
-                _visitDefault.value = visit.toVisitDefaultUiModel()
-                _visitLogs.value = visit.comments.map { it.toVisitLogUiModel() }
+            momentRepository.getMoment(momentId).onSuccess { moment ->
+                _momentDefault.value = moment.toVisitDefaultUiModel()
+                _visitLogs.value = moment.comments.map { it.toVisitLogUiModel() }
             }.onFailure {
                 _isError.postValue(true)
             }

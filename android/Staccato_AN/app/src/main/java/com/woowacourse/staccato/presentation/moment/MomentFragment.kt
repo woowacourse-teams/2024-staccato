@@ -13,22 +13,22 @@ import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.moment.adapter.MomentAdapter
-import com.woowacourse.staccato.presentation.moment.viewmodel.VisitViewModel
-import com.woowacourse.staccato.presentation.moment.viewmodel.VisitViewModelFactory
+import com.woowacourse.staccato.presentation.moment.viewmodel.MomentViewModel
+import com.woowacourse.staccato.presentation.moment.viewmodel.MomentViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitupdate.VisitUpdateActivity
 import kotlin.properties.Delegates
 
 class MomentFragment :
     BindingFragment<FragmentVisitBinding>(R.layout.fragment_visit), ToolbarHandler {
-    private val viewModel: VisitViewModel by viewModels { VisitViewModelFactory() }
+    private val viewModel: MomentViewModel by viewModels { MomentViewModelFactory() }
     private lateinit var momentAdapter: MomentAdapter
     private var momentId by Delegates.notNull<Long>()
     private var memoryId by Delegates.notNull<Long>()
     private var memoryTitle by Delegates.notNull<String>()
     private val deleteDialog =
         DeleteDialogFragment {
-            viewModel.deleteVisit(momentId)
+            viewModel.deleteMoment(momentId)
         }
 
     override fun onViewCreated(
@@ -41,7 +41,7 @@ class MomentFragment :
         initAdapter()
         initToolbarHandler()
         observeData()
-        viewModel.fetchVisitDetailData(momentId)
+        viewModel.fetchMomentDetailData(momentId)
     }
 
     private fun initAdapter() {
@@ -57,7 +57,7 @@ class MomentFragment :
     }
 
     private fun observeData() {
-        viewModel.visitDefault.observe(viewLifecycleOwner) { momentDefault ->
+        viewModel.momentDefault.observe(viewLifecycleOwner) { momentDefault ->
             momentAdapter.updateMomentDefault(momentDefault)
         }
         viewModel.visitLogs.observe(viewLifecycleOwner) { momentLogs ->

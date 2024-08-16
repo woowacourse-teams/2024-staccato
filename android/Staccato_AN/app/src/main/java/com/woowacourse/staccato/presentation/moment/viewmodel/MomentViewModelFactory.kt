@@ -6,10 +6,10 @@ import com.woowacourse.staccato.data.StaccatoClient.momentApiService
 import com.woowacourse.staccato.data.moment.MomentDefaultRepository
 import com.woowacourse.staccato.data.moment.MomentRemoteDataSource
 
-class VisitViewModelFactory : ViewModelProvider.Factory {
+class MomentViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(VisitViewModel::class.java)) {
-            return VisitViewModel(
+        if (modelClass.isAssignableFrom(MomentViewModel::class.java)) {
+            return MomentViewModel(
                 MomentDefaultRepository(
                     remoteDataSource = MomentRemoteDataSource(momentApiService),
                 ),
