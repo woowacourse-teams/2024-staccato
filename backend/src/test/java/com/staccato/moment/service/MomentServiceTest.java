@@ -57,14 +57,14 @@ class MomentServiceTest extends ServiceSliceTest {
         saveMemory(member);
 
         // when
-        long momentId = momentService.createMoment(getMomentRequestWithoutImage(), List.of(), member).momentId();
+        long momentId = momentService.createMoment(getMomentRequestWithoutImage(), member).momentId();
 
         // then
         assertThat(momentRepository.findById(momentId)).isNotEmpty();
     }
 
     private MomentRequest getMomentRequestWithoutImage() {
-        return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
+        return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of());
     }
 
     @DisplayName("순간을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
@@ -75,8 +75,7 @@ class MomentServiceTest extends ServiceSliceTest {
         saveMemory(member);
 
         // when
-        long momentId = momentService.createMoment(getMomentRequest(), List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), member)
-                .momentId();
+        long momentId = momentService.createMoment(getMomentRequest(), member).momentId();
 
         // then
         assertAll(
@@ -95,7 +94,7 @@ class MomentServiceTest extends ServiceSliceTest {
         MomentRequest momentRequest = getMomentRequest();
 
         // when & then
-        assertThatThrownBy(() -> momentService.createMoment(momentRequest, List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), otherMember))
+        assertThatThrownBy(() -> momentService.createMoment(momentRequest, otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -107,13 +106,13 @@ class MomentServiceTest extends ServiceSliceTest {
         Member member = saveMember();
 
         // when & then
-        assertThatThrownBy(() -> momentService.createMoment(getMomentRequest(), List.of(new MockMultipartFile("momentImageFiles", "example.jpg".getBytes())), member))
+        assertThatThrownBy(() -> momentService.createMoment(getMomentRequest(), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 추억을 찾을 수 없어요.");
     }
 
     private MomentRequest getMomentRequest() {
-        return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
+        return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
     }
 
     @DisplayName("특정 순간 조회에 성공한다.")
@@ -256,13 +255,11 @@ class MomentServiceTest extends ServiceSliceTest {
     private Memory saveMemory(Member member) {
         Memory memory = Memory.builder().title("Sample Memory").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build();
         memory.addMemoryMember(member);
-
         return memoryRepository.save(memory);
     }
 
     private Moment saveMomentWithImages(Memory memory) {
-        Moment moment = MomentFixture.create(memory, LocalDateTime.now());
-        moment.addMomentImages(new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
         return momentRepository.save(moment);
     }
 

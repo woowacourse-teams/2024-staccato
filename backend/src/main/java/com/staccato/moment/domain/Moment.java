@@ -62,12 +62,14 @@ public class Moment extends BaseEntity {
             @NonNull String address,
             @NonNull BigDecimal latitude,
             @NonNull BigDecimal longitude,
+            @NonNull MomentImages momentImages,
             @NonNull Memory memory
     ) {
         validateIsWithinMemoryDuration(visitedAt, memory);
         this.visitedAt = visitedAt;
         this.placeName = placeName;
         this.spot = new Spot(address, latitude, longitude);
+        this.momentImages.addAll(momentImages, this);
         this.memory = memory;
     }
 
@@ -75,10 +77,6 @@ public class Moment extends BaseEntity {
         if (memory.isWithoutDuration(visitedAt)) {
             throw new StaccatoException("추억에 포함되지 않는 날짜입니다.");
         }
-    }
-
-    public void addMomentImages(MomentImages momentImages) {
-        this.momentImages.addAll(momentImages, this);
     }
 
     public void addComment(Comment comment) {

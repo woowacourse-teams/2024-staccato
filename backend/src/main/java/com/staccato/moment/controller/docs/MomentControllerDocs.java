@@ -45,8 +45,7 @@ public interface MomentControllerDocs {
     })
     ResponseEntity<MomentIdResponse> createMoment(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "key = data", required = true) @Valid MomentRequest momentRequest,
-            @Parameter(description = "key = momentImageFiles") @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> momentImagesFile
+            @Parameter(required = true) @Valid MomentRequest momentRequest
     );
 
     @Operation(summary = "특정 순간 조회", description = "특정 순간을 조회합니다.")

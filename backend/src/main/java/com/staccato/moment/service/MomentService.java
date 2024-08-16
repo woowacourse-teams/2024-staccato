@@ -33,13 +33,10 @@ public class MomentService {
     private final CloudStorageService cloudStorageService;
 
     @Transactional
-    public MomentIdResponse createMoment(MomentRequest momentRequest, List<MultipartFile> momentImageFiles, Member member) {
+    public MomentIdResponse createMoment(MomentRequest momentRequest, Member member) {
         Memory memory = getMemoryById(momentRequest.memoryId());
         validateOwner(memory, member);
         Moment moment = momentRequest.toMoment(memory);
-        List<String> momentImageUrls = cloudStorageService.uploadFiles(momentImageFiles);
-        MomentImages momentImages = new MomentImages(momentImageUrls);
-        moment.addMomentImages(momentImages);
 
         momentRepository.save(moment);
 
