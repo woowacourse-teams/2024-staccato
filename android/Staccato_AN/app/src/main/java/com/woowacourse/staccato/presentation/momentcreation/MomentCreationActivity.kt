@@ -42,6 +42,16 @@ class MomentCreationActivity :
         setHidingKeyboardAction()
     }
 
+    override fun onUrisSelected(vararg uris: Uri) {
+        viewModel.updateSelectedImageUris(arrayOf(*uris))
+    }
+
+    override fun onCreateDoneClicked() {
+        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
+        showToast(getString(R.string.visit_creation_posting))
+        viewModel.createMoment(memoryId, this)
+    }
+
     private fun initMemoryInfo() {
         viewModel.initMemoryInfo(memoryId, memoryTitle)
     }
@@ -84,16 +94,6 @@ class MomentCreationActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
-    }
-
-    override fun onUrisSelected(vararg uris: Uri) {
-        viewModel.updateSelectedImageUris(arrayOf(*uris))
-    }
-
-    override fun onCreateDoneClicked() {
-        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        showToast(getString(R.string.visit_creation_posting))
-        viewModel.createMoment(memoryId, this)
     }
 
     private fun setHidingKeyboardAction() {

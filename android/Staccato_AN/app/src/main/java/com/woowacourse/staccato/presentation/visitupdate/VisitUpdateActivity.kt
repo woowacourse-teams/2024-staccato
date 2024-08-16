@@ -45,6 +45,22 @@ class VisitUpdateActivity :
         setHidingKeyboardAction()
     }
 
+    override fun onUrisSelected(vararg uris: Uri) {
+        viewModel.setImageUris(arrayOf(*uris))
+    }
+
+    override fun onPhotoAttachClicked() {
+        photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+    }
+
+    override fun onUpdateDoneClicked() {
+        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
+        lifecycleScope.launch {
+            showToast(getString(R.string.visit_update_posting))
+            viewModel.updateVisit(this@VisitUpdateActivity)
+        }
+    }
+
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -84,22 +100,6 @@ class VisitUpdateActivity :
             setResult(RESULT_OK, intent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
-        }
-    }
-
-    override fun onUrisSelected(vararg uris: Uri) {
-        viewModel.setImageUris(arrayOf(*uris))
-    }
-
-    override fun onPhotoAttachClicked() {
-        photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
-    }
-
-    override fun onUpdateDoneClicked() {
-        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        lifecycleScope.launch {
-            showToast(getString(R.string.visit_update_posting))
-            viewModel.updateVisit(this@VisitUpdateActivity)
         }
     }
 
