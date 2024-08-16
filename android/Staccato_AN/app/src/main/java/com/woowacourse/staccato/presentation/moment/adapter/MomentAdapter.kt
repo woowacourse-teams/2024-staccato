@@ -7,12 +7,12 @@ import com.woowacourse.staccato.databinding.ItemMyVisitLogBinding
 import com.woowacourse.staccato.databinding.ItemVisitDefaultBinding
 import com.woowacourse.staccato.presentation.moment.model.VisitDetailUiModel
 
-class VisitAdapter(private val items: MutableList<VisitDetailUiModel> = mutableListOf()) :
+class MomentAdapter(private val items: MutableList<VisitDetailUiModel> = mutableListOf()) :
     RecyclerView.Adapter<MomentViewHolder>() {
     override fun getItemCount(): Int = items.size
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == VISIT_DEFAULT_POSITION) {
+        return if (position == MOMENT_DEFAULT_POSITION) {
             MomentViewHolderType.MOMENT_DEFAULT.value
         } else {
             MomentViewHolderType.MY_COMMENTS.value
@@ -50,18 +50,18 @@ class VisitAdapter(private val items: MutableList<VisitDetailUiModel> = mutableL
         }
     }
 
-    fun updateVisitDefault(newVisitDefault: VisitDetailUiModel.VisitDefaultUiModel) {
-        val result = mutableListOf<VisitDetailUiModel>(newVisitDefault)
-        result.addAll(items.drop(VISIT_DEFAULT_ITEM_SIZE))
+    fun updateMomentDefault(newMomentDefault: VisitDetailUiModel.VisitDefaultUiModel) {
+        val result = mutableListOf<VisitDetailUiModel>(newMomentDefault)
+        result.addAll(items.drop(MOMENT_DEFAULT_ITEM_SIZE))
         replaceAllItems(result)
-        notifyItemChanged(VISIT_DEFAULT_POSITION)
+        notifyItemChanged(MOMENT_DEFAULT_POSITION)
     }
 
     fun updateVisitLogs(newVisitLogs: List<VisitDetailUiModel.VisitLogUiModel>) {
-        val result = items.take(VISIT_DEFAULT_ITEM_SIZE).toMutableList()
+        val result = items.take(MOMENT_DEFAULT_ITEM_SIZE).toMutableList()
         result.addAll(newVisitLogs)
         replaceAllItems(result)
-        notifyItemRangeInserted(VISIT_DEFAULT_ITEM_SIZE, result.size)
+        notifyItemRangeInserted(MOMENT_DEFAULT_ITEM_SIZE, result.size)
     }
 
     private fun replaceAllItems(result: MutableList<VisitDetailUiModel>) {
@@ -70,7 +70,7 @@ class VisitAdapter(private val items: MutableList<VisitDetailUiModel> = mutableL
     }
 
     companion object {
-        private const val VISIT_DEFAULT_POSITION = 0
-        private const val VISIT_DEFAULT_ITEM_SIZE = 1
+        private const val MOMENT_DEFAULT_POSITION = 0
+        private const val MOMENT_DEFAULT_ITEM_SIZE = 1
     }
 }

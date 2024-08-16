@@ -12,7 +12,7 @@ import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
-import com.woowacourse.staccato.presentation.moment.adapter.VisitAdapter
+import com.woowacourse.staccato.presentation.moment.adapter.MomentAdapter
 import com.woowacourse.staccato.presentation.moment.viewmodel.VisitViewModel
 import com.woowacourse.staccato.presentation.moment.viewmodel.VisitViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
@@ -22,7 +22,7 @@ import kotlin.properties.Delegates
 class VisitFragment :
     BindingFragment<FragmentVisitBinding>(R.layout.fragment_visit), ToolbarHandler {
     private val viewModel: VisitViewModel by viewModels { VisitViewModelFactory() }
-    private lateinit var visitAdapter: VisitAdapter
+    private lateinit var momentAdapter: MomentAdapter
     private var visitId by Delegates.notNull<Long>()
     private var memoryId by Delegates.notNull<Long>()
     private var memoryTitle by Delegates.notNull<String>()
@@ -45,8 +45,8 @@ class VisitFragment :
     }
 
     private fun initAdapter() {
-        visitAdapter = VisitAdapter(mutableListOf())
-        binding.rvVisitDetail.adapter = visitAdapter
+        momentAdapter = MomentAdapter(mutableListOf())
+        binding.rvVisitDetail.adapter = momentAdapter
     }
 
     private fun initToolbarHandler() {
@@ -58,10 +58,10 @@ class VisitFragment :
 
     private fun observeData() {
         viewModel.visitDefault.observe(viewLifecycleOwner) { visitDefault ->
-            visitAdapter.updateVisitDefault(visitDefault)
+            momentAdapter.updateMomentDefault(visitDefault)
         }
         viewModel.visitLogs.observe(viewLifecycleOwner) { visitLogs ->
-            visitAdapter.updateVisitLogs(visitLogs)
+            momentAdapter.updateVisitLogs(visitLogs)
         }
         viewModel.isError.observe(viewLifecycleOwner) { isError ->
             if (isError) {
