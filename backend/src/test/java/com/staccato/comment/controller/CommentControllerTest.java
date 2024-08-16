@@ -76,7 +76,7 @@ public class CommentControllerTest {
                 ),
                 Arguments.of(
                         new CommentRequest(MIN_MOMENT_ID, "1".repeat(MAX_CONTENT_LENGTH + 1)),
-                        "댓글은 공백 포함 1자 이상 500자 이하로 입력해주세요."
+                        "댓글은 공백 포함 500자 이하로 입력해주세요."
                 )
         );
     }
