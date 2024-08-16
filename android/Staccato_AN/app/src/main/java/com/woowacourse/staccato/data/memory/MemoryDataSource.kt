@@ -18,7 +18,7 @@ interface MemoryDataSource {
         memoryId: Long,
         newMemory: NewMemory,
         thumbnailFile: MultipartBody.Part?,
-    ): ResponseResult<String>
+    ): ResponseResult<Unit>
 
     suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit>
 }

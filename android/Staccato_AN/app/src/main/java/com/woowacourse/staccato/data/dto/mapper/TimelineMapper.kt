@@ -22,7 +22,7 @@ fun TimelineMemoryDto.toDomain(): Memory {
         startAt = LocalDate.parse(startAt),
         endAt = LocalDate.parse(endAt),
         description = description,
-        mates = mates.map { it.toDomain() },
+        mates = emptyList(),
         moments = emptyList(),
     )
 }
