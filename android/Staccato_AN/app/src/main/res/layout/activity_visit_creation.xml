@@ -14,7 +14,7 @@
 
         <variable
             name="visitCreationHandler"
-            type="com.woowacourse.staccato.presentation.momentcreation.VisitCreationHandler" />
+            type="com.woowacourse.staccato.presentation.momentcreation.MomentCreationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

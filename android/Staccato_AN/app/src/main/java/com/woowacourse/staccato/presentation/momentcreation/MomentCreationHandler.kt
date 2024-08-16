@@ -1,5 +1,5 @@
 package com.woowacourse.staccato.presentation.momentcreation
 
-interface VisitCreationHandler {
+interface MomentCreationHandler {
     fun onCreateDoneClicked()
 }

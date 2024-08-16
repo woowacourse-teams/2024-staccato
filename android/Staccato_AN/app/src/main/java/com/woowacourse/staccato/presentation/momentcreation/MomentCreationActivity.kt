@@ -22,7 +22,7 @@ import com.woowacourse.staccato.presentation.util.showToast
 class MomentCreationActivity :
     BindingActivity<ActivityVisitCreationBinding>(),
     OnUrisSelectedListener,
-    VisitCreationHandler {
+    MomentCreationHandler {
     override val layoutResourceId = R.layout.activity_visit_creation
     private val viewModel: VisitCreationViewModel by viewModels { VisitCreationViewModelFactory() }
 
