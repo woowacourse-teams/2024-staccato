@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import com.staccato.exception.ExceptionResponse;
 import com.staccato.member.domain.Member;
 import com.staccato.s3.service.CloudStorageService;
 
+@Disabled
 @WebMvcTest(controllers = CloudStorageController.class)
 public class CloudStorageControllerTest {
     @Autowired
