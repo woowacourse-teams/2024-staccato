@@ -3,6 +3,7 @@ package com.staccato.comment.controller;
 import static org.mockito.ArgumentMatchers.any;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -215,5 +216,19 @@ public class CommentControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("올바른 형식으로 댓글 삭제를 시도하면 성공한다.")
+    @Test
+    void deleteComment() throws Exception {
+        // given
+        when(authService.extractFromToken(any())).thenReturn(Member.builder().nickname("member").build());
+
+        // when & then
+        mockMvc.perform(delete("/comments")
+                        .param("commentId", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk());
     }
 }

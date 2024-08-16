@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -58,6 +59,15 @@ public class CommentController implements CommentControllerDocs {
             @Valid @RequestBody CommentUpdateRequest commentUpdateRequest
     ) {
         commentService.updateComment(member, commentId, commentUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteComment(
+            @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
+            @LoginMember Member member
+    ) {
+        commentService.deleteComment(commentId, member);
         return ResponseEntity.ok().build();
     }
 }
