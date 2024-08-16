@@ -18,7 +18,7 @@ fun MemoryResponse.toDomain() =
         endAt = LocalDate.parse(endAt),
         description = description,
         mates = mates.map { it.toDomain() },
-        moments = visits.map { it.toDomain() },
+        moments = moments.map { it.toDomain() },
     )
 
 fun MemoryMomentDto.toDomain() =
