@@ -10,7 +10,7 @@
     <string name="all_photo">사진</string>
     <string name="all_photo_number">(%s/%s)</string>
     <string name="all_photo_attach">사진을 첨부해주세요</string>
-    <string name="all_visited_date">방문 날짜</string>
+    <string name="all_visited_date">날짜</string>
     <string name="all_date_dots_format">%s. %s. %s</string>
     <string name="all_date_kr_format">%s년 %s월 %s일</string>
     <string name="all_date_time_am_pm_kr_format">%s년 %s월 %s일  %s %s시</string>
@@ -18,19 +18,27 @@
     <string name="all_default_not_supported">아직 지원하지 않는 기능이예요.</string>
     <string name="all_required_mark">*</string>
 
+    // MainActivity
+    <string name="main_moment_creation_success">새로운 스타카토를 찍었어요!</string>
+    <string name="main_moment_update_success">스타카토를 수정했어요!</string>
+    <string name="main_memory_update_success">추억을 수정했어요!</string>
+    <string name="main_memory_creation_success">새로운 추억을 만들었어요!</string>
+    <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
+
     // fragment_timeline
-    <string name="timeline_my_timeline">나의 추억 타임라인 ✈️</string>
+    <string name="timeline_my_timeline">나의 추억 타임라인</string>
     <string name="timeline_year">%s년</string>
-    <string name="timeline_title">✈️ 추억을 떠올려보세요 ✈️</string>
+    <string name="timeline_title">추억을 떠올려보세요 🎵</string>
     <string name="timeline_empty">아직 추억을 기록하지 않으셨군요!\n추억을 생성해보세요.</string>
 
     // fragment_memory
     <string name="memory_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
-    <string name="memory_mates">함께 간 사람들</string>
-    <string name="memory_visits">방문 기록</string>
-    <string name="memory_daily_visits">%s월 %s일의 방문 기록</string>
+    <string name="memory_mates">함께 한 사람들</string>
+    <string name="memory_visits">스타카토</string>
+    <string name="memory_daily_visits">%s월 %s일의 스타카토</string>
     <string name="memory_delete_complete">추억이 삭제 되었습니다.</string>
-    <string name="memory_visit_empty">방문 기록을 아직 기록하지 않으셨군요!\n방문 기록을 생성해보세요.</string>
+    <string name="memory_visit_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
+    <string name="memory_unable_to_create_moment">아직은 지난 추억에 스타카토를 찍을 수 없어요!</string>
 
     // activity_memory_creation / activity_memory_update
     <string name="memory_creation_title">추억 제목</string>
@@ -40,26 +48,26 @@
     <string name="memory_creation_period">추억 기간</string>
     <string name="memory_creation_period_hint">추억 기간을 선택해주세요</string>
     <string name="memory_creation_period_description">%s ~ %s</string>
-    <string name="memory_creation_posting">추억을 생성하는 중이예요.. ✈️</string>
-    <string name="memory_update_posting">추억을 수정하는 중이예요.. 🧳️</string>
+    <string name="memory_creation_posting">추억을 만드는 중이예요.. 🎼</string>
+    <string name="memory_update_posting">추억을 수정하는 중이예요.. 🎼</string>
 
     // fragment_visit
     <string name="visit_history">%s년 %s월 %s일에 방문했어요</string>
-    <string name="visit_logs">방문 로그</string>
+    <string name="visit_logs">코멘트</string>
     <string name="visit_add">추가하기</string>
-    <string name="visit_enter_log">로그 입력하기</string>
+    <string name="visit_enter_log">코멘트 입력하기</string>
 
     // activity_visit_creation / activity_visit_update
-    <string name="visit_creation_place_name">장소 이름</string>
-    <string name="visit_creation_place_name_hint">장소 이름을 입력해주세요</string>
+    <string name="visit_creation_place_name">스타카토 제목</string>
+    <string name="visit_creation_place_name_hint">제목을 입력해주세요</string>
     <string name="visit_creation_address">주소</string>
-    <string name="visit_creation_visited_at">방문 날짜</string>
-    <string name="visit_creation_visited_at_hint">방문 날짜를 선택해주세요</string>
+    <string name="visit_creation_visited_at_hint">날짜를 선택해주세요</string>
     <string name="visit_creation_memory_selection">추억 선택</string>
     <string name="visit_creation_memory_selection_hint">추억을 선택해주세요</string>
-    <string name="visit_creation_unselected_memory">추억에 해당하는 방문 날짜가 없습니다.\n추억을 먼저 선택해주세요!</string>
-    <string name="visit_creation_posting">방문 기록을 생성하는 중이예요.. ✈️</string>
-    <string name="visit_update_posting">방문 기록을 수정하는 중이예요.. 🧳️</string>
+    <string name="visit_creation_unselected_memory">추억을 먼저 선택해주세요!</string>
+    <string name="visit_creation_posting">스타카토를 찍는 중이예요.. 🎵️</string>
+    <string name="visit_update_posting">스타카토를 수정하는 중이예요.. 🎵️</string>
+    <string name="moment_creation_memory_selection">추억 선택</string>
 
     // activity_login
     <string name="login_start">시작하기</string>
@@ -79,8 +87,8 @@
     <string name="visited_date_selection_day">Day %d</string>
 
     // dialog_delete_impossibility
-    <string name="memory_delete_title">추억 상세를 삭제할 수 없어요.</string>
-    <string name="memory_delete_description">아직 방문 기록이 남아있어요!</string>
+    <string name="memory_delete_title">추억을 삭제할 수 없어요.</string>
+    <string name="memory_delete_description">아직 스타카토가 남아있어요!</string>
 
     // dialog_delete
     <string name="delete_title">삭제하시겠습니까?</string>

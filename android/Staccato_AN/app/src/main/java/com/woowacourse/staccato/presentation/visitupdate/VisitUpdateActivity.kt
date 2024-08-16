@@ -15,9 +15,9 @@ import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
+import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
+import com.woowacourse.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.woowacourse.staccato.presentation.util.showToast
-import com.woowacourse.staccato.presentation.visit.VisitFragment.Companion.VISIT_ID_KEY
-import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModelFactory
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ class VisitUpdateActivity :
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
 
-    private val visitId by lazy { intent.getLongExtra(VISIT_ID_KEY, 0L) }
+    private val visitId by lazy { intent.getLongExtra(MOMENT_ID_KEY, 0L) }
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
@@ -76,7 +76,7 @@ class VisitUpdateActivity :
         if (isUpdateCompleted) {
             val intent =
                 Intent()
-                    .putExtra(VISIT_ID_KEY, visitId)
+                    .putExtra(MOMENT_ID_KEY, visitId)
                     .putExtra(MEMORY_ID_KEY, memoryId)
                     .putExtra(MEMORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, intent)
@@ -110,7 +110,7 @@ class VisitUpdateActivity :
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, VisitUpdateActivity::class.java).apply {
-                putExtra(VISIT_ID_KEY, visitId)
+                putExtra(MOMENT_ID_KEY, visitId)
                 putExtra(MEMORY_ID_KEY, memoryId)
                 putExtra(MEMORY_TITLE_KEY, memoryTitle)
                 activityLauncher.launch(this)

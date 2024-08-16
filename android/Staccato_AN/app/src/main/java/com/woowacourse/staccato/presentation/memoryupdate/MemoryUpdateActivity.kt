@@ -20,8 +20,8 @@ import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel
 import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModelFactory
+import com.woowacourse.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.woowacourse.staccato.presentation.util.showToast
-import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
 class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), MemoryUpdateHandler, OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_update

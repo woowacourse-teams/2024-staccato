@@ -10,11 +10,11 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModel" />
+            type="com.woowacourse.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel" />
 
         <variable
             name="visitCreationHandler"
-            type="com.woowacourse.staccato.presentation.visitcreation.VisitCreationHandler" />
+            type="com.woowacourse.staccato.presentation.momentcreation.MomentCreationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,7 +41,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".presentation.visitcreation.VisitCreationActivity">
+                tools:context=".presentation.momentcreation.MomentCreationActivity">
 
                 <TextView
                     android:id="@+id/tv_visit_creation_place_name_title"
@@ -146,7 +146,7 @@
                     android:id="@+id/tv_memory_selection_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="24dp"
-                    android:text="여행 선택"
+                    android:text="@string/moment_creation_memory_selection"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_photo_title"
                     app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
@@ -178,7 +178,7 @@
                     android:id="@+id/tv_visited_at_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="24dp"
-                    android:text="@string/visit_creation_visited_at"
+                    android:text="@string/all_visited_date"
                     app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_selection_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection" />

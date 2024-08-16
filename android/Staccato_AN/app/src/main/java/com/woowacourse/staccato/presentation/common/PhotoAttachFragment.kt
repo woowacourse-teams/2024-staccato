@@ -21,8 +21,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentPhotoAttachBinding
+import com.woowacourse.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.woowacourse.staccato.presentation.util.showToast
-import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 
 class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private var _binding: FragmentPhotoAttachBinding? = null
