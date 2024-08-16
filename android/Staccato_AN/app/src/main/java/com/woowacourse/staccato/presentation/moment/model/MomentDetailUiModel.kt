@@ -11,7 +11,7 @@ sealed class MomentDetailUiModel {
         val visitedAt: LocalDate,
     ) : MomentDetailUiModel()
 
-    data class VisitLogUiModel(
+    data class CommentsUiModel(
         val id: Long = 0,
         val memberId: Long = 0,
         val nickname: String,

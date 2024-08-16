@@ -26,7 +26,7 @@ fun Moment.toVisitUpdateDefaultUiModel(): VisitUpdateDefaultUiModel {
 }
 
 fun VisitLog.toVisitLogUiModel() =
-    MomentDetailUiModel.VisitLogUiModel(
+    MomentDetailUiModel.CommentsUiModel(
         id = visitLogId,
         memberId = memberId,
         nickname = nickname,

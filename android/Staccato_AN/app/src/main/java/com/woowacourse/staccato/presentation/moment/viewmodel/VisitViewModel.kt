@@ -16,8 +16,8 @@ class VisitViewModel(private val momentRepository: MomentRepository) : ViewModel
     private val _visitDefault = MutableLiveData<MomentDetailUiModel.MomentDefaultUiModel>()
     val visitDefault: LiveData<MomentDetailUiModel.MomentDefaultUiModel> get() = _visitDefault
 
-    private val _visitLogs = MutableLiveData<List<MomentDetailUiModel.VisitLogUiModel>>()
-    val visitLogs: LiveData<List<MomentDetailUiModel.VisitLogUiModel>> get() = _visitLogs
+    private val _visitLogs = MutableLiveData<List<MomentDetailUiModel.CommentsUiModel>>()
+    val visitLogs: LiveData<List<MomentDetailUiModel.CommentsUiModel>> get() = _visitLogs
 
     private val _isDeleted = MutableSingleLiveData(false)
     val isDeleted: SingleLiveData<Boolean> get() = _isDeleted

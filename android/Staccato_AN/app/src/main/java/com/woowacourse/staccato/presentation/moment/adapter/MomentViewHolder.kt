@@ -21,7 +21,7 @@ sealed class MomentViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolde
 
     class MyCommentViewHolder(private val binding: ItemMyVisitLogBinding) :
         MomentViewHolder(binding) {
-        fun bind(item: MomentDetailUiModel.VisitLogUiModel) {
+        fun bind(item: MomentDetailUiModel.CommentsUiModel) {
             binding.visitLog = item
         }
     }

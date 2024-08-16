@@ -46,7 +46,7 @@ class MomentAdapter(private val items: MutableList<MomentDetailUiModel> = mutabl
             holder.bind(items[position] as MomentDetailUiModel.MomentDefaultUiModel)
         }
         if (holder is MomentViewHolder.MyCommentViewHolder) {
-            holder.bind(items[position] as MomentDetailUiModel.VisitLogUiModel)
+            holder.bind(items[position] as MomentDetailUiModel.CommentsUiModel)
         }
     }
 
@@ -57,7 +57,7 @@ class MomentAdapter(private val items: MutableList<MomentDetailUiModel> = mutabl
         notifyItemChanged(MOMENT_DEFAULT_POSITION)
     }
 
-    fun updateVisitLogs(newComments: List<MomentDetailUiModel.VisitLogUiModel>) {
+    fun updateVisitLogs(newComments: List<MomentDetailUiModel.CommentsUiModel>) {
         val result = items.take(MOMENT_DEFAULT_ITEM_SIZE).toMutableList()
         result.addAll(newComments)
         replaceAllItems(result)
