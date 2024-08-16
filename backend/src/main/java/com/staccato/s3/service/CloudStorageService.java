@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.staccato.exception.StaccatoException;
 import com.staccato.s3.domain.CloudStorageClient;
 import com.staccato.s3.domain.FileExtension;
 
@@ -32,13 +33,19 @@ public class CloudStorageService {
         String fileName = file.getOriginalFilename();
         String key = makeFilePath(fileName);
         String contentType = getContentType(fileName);
-        try {
-            cloudStorageClient.putS3Object(key, contentType, file.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        byte[] fileBytes = getFileBytes(file);
+
+        cloudStorageClient.putS3Object(key, contentType, fileBytes);
 
         return cloudStorageClient.getUrl(key);
+    }
+
+    private byte[] getFileBytes(MultipartFile file) {
+        try {
+            return file.getBytes();
+        } catch (IOException e) {
+            throw new StaccatoException("전송된 파일이 손상되었거나 지원되지 않는 형식입니다.");
+        }
     }
 
     private String makeFilePath(String fileName) {
