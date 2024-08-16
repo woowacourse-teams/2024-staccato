@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.config.auth.LoginMember;
+import com.staccato.image.controller.docs.ImageControllerDocs;
 import com.staccato.image.service.ImageService;
 import com.staccato.image.service.dto.ImageUrlResponse;
 import com.staccato.member.domain.Member;
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/images")
 @RequiredArgsConstructor
-public class ImageController {
+public class ImageController implements ImageControllerDocs {
     private final ImageService imageService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
