@@ -37,6 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.moment.MomentDetailResponseFixture;
+import com.staccato.fixture.moment.MomentResponsesFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.MomentService;
 import com.staccato.moment.service.dto.request.FeelingRequest;
@@ -44,6 +45,7 @@ import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
+import com.staccato.moment.service.dto.response.MomentResponses;
 
 @WebMvcTest(controllers = MomentController.class)
 class MomentControllerTest {
@@ -189,6 +191,21 @@ class MomentControllerTest {
                         .content(momentRequestJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("순간 목록 조회에 성공한다.")
+    @Test
+    void readAllMoment() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        MomentResponses responses = MomentResponsesFixture.create();
+        when(momentService.readAllMoment(any(Member.class))).thenReturn(responses);
+
+        // when & then
+        mockMvc.perform(get("/moments")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(responses)));
     }
 
     @DisplayName("적합한 경로변수를 통해 순간 조회에 성공한다.")
