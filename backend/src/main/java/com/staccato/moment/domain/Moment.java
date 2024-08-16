@@ -41,7 +41,8 @@ public class Moment extends BaseEntity {
     @Column(nullable = false)
     private String placeName;
     @Enumerated(EnumType.STRING)
-    private Feeling feeling;
+    @Column(nullable = false)
+    private Feeling feeling = Feeling.NOTHING;
     @Column(nullable = false)
     @Embedded
     private Spot spot;
@@ -96,7 +97,7 @@ public class Moment extends BaseEntity {
         return momentImages.isNotEmpty();
     }
 
-    public void updateMood(Feeling feeling) {
+    public void changeFeeling(Feeling feeling) {
         this.feeling = feeling;
     }
 }

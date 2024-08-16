@@ -99,6 +99,6 @@ public class MomentService {
         Moment moment = getMomentById(momentId);
         validateOwner(moment.getMemory(), member);
         Feeling feeling = feelingRequest.toFeeling();
-        moment.updateMood(feeling);
+        moment.changeFeeling(feeling);
     }
 }
