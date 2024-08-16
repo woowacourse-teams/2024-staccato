@@ -57,9 +57,9 @@ class MomentAdapter(private val items: MutableList<VisitDetailUiModel> = mutable
         notifyItemChanged(MOMENT_DEFAULT_POSITION)
     }
 
-    fun updateVisitLogs(newVisitLogs: List<VisitDetailUiModel.VisitLogUiModel>) {
+    fun updateVisitLogs(newComments: List<VisitDetailUiModel.VisitLogUiModel>) {
         val result = items.take(MOMENT_DEFAULT_ITEM_SIZE).toMutableList()
-        result.addAll(newVisitLogs)
+        result.addAll(newComments)
         replaceAllItems(result)
         notifyItemRangeInserted(MOMENT_DEFAULT_ITEM_SIZE, result.size)
     }
