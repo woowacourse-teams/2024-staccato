@@ -21,15 +21,6 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-//    @ExceptionHandler(DateTimeParseException.class)
-//    @ApiResponse(responseCode = "400")
-//    public ResponseEntity<ExceptionResponse> handleDateTimeParseException(DateTimeParseException e) {
-//        String errorMessage = "올바르지 않은 날짜 형식입니다.";
-//        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), errorMessage);
-//        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse);
-//        return ResponseEntity.badRequest().body(exceptionResponse);
-//    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleValidationException(MethodArgumentNotValidException e) {
