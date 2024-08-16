@@ -32,10 +32,4 @@ public class ImageController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(imageUrlResponse);
     }
-
-    @DeleteMapping
-    public ResponseEntity<Void> deleteFiles(@RequestParam("imageUrls") List<String> urls) {
-        imageService.deleteFiles(urls);
-        return ResponseEntity.ok().build();
-    }
 }

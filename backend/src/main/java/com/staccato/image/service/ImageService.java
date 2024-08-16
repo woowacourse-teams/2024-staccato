@@ -83,36 +83,4 @@ public class ImageService {
         }
         return fileName.substring(dotIndex);
     }
-
-    public void deleteFiles(List<String> fileUrls) {
-        List<String> objectKeys = fileUrls.stream()
-                .map(this::getObjectKeyFromUrl)
-                .toList();
-
-        if (fileUrls.size() == 1) {
-            imageClient.deleteS3Object(objectKeys.get(0));
-            return;
-        }
-
-        imageClient.deleteMultipleS3Object(objectKeys);
-    }
-
-    private String getObjectKeyFromUrl(String fileUrl) {
-        URI uri = createUri(fileUrl);
-        String path = uri.getPath();
-
-        if (path != null && path.startsWith("/")) {
-            return path.substring(1);
-        }
-
-        throw new IllegalArgumentException("S3 URL 형식이 올바르지 않습니다.");
-    }
-
-    private URI createUri(String uri) {
-        try {
-            return new URI(uri);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("URL 형식이 올바르지 않습니다.");
-        }
-    }
 }

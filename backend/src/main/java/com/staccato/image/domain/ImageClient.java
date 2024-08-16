@@ -57,34 +57,4 @@ public class ImageClient {
 
         return url.replace(endPoint, cloudFrontEndPoint);
     }
-
-    public void deleteS3Object(String objectKey) {
-        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                .bucket(bucketName)
-                .key(objectKey)
-                .build();
-
-        s3Client.deleteObject(deleteObjectRequest);
-    }
-
-    public void deleteMultipleS3Object(List<String> objectKeys) {
-        Delete delete = getDelete(objectKeys);
-
-        DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder()
-                .bucket(bucketName)
-                .delete(delete)
-                .build();
-
-        s3Client.deleteObjects(deleteObjectsRequest);
-    }
-
-    private Delete getDelete(List<String> objectKeys) {
-        List<ObjectIdentifier> objectsToDelete = objectKeys.stream()
-                .map(objectKey -> ObjectIdentifier.builder().key(objectKey).build())
-                .toList();
-
-        return Delete.builder()
-                .objects(objectsToDelete)
-                .build();
-    }
 }
