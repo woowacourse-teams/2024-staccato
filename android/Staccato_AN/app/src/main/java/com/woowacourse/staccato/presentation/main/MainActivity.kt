@@ -19,9 +19,9 @@ import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memorycreation.MemoryCreationActivity
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
+import com.woowacourse.staccato.presentation.momentcreation.VisitCreationActivity
+import com.woowacourse.staccato.presentation.momentcreation.VisitCreationActivity.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.util.showToast
-import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity
-import com.woowacourse.staccato.presentation.visitcreation.VisitCreationActivity.Companion.MEMORY_TITLE_KEY
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     override val layoutResourceId: Int

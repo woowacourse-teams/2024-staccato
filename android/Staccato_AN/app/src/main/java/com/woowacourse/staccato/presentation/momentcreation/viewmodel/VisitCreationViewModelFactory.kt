@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visitcreation.viewmodel
+package com.woowacourse.staccato.presentation.momentcreation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

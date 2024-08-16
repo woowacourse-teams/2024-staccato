@@ -41,7 +41,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".presentation.visitcreation.VisitCreationActivity">
+                tools:context=".presentation.momentcreation.VisitCreationActivity">
 
                 <TextView
                     android:id="@+id/tv_visit_update_place_name_title"

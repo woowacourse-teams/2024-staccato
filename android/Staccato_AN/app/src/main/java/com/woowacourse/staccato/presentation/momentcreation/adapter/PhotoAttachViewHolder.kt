@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visitcreation.adapter
+package com.woowacourse.staccato.presentation.momentcreation.adapter
 
 import android.net.Uri
 import androidx.databinding.ViewDataBinding

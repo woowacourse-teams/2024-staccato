@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visitcreation.viewmodel
+package com.woowacourse.staccato.presentation.momentcreation.viewmodel
 
 import android.content.Context
 import android.net.Uri
@@ -11,8 +11,8 @@ import com.woowacourse.staccato.domain.repository.MomentRepository
 import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
+import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
-import com.woowacourse.staccato.presentation.visitcreation.model.MomentMemoryUiModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import java.time.LocalDateTime

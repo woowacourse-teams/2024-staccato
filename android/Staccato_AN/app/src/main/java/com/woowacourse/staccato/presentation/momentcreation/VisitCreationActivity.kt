@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visitcreation
+package com.woowacourse.staccato.presentation.momentcreation
 
 import android.content.Context
 import android.content.Intent
@@ -14,10 +14,10 @@ import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
+import com.woowacourse.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
+import com.woowacourse.staccato.presentation.momentcreation.viewmodel.VisitCreationViewModel
+import com.woowacourse.staccato.presentation.momentcreation.viewmodel.VisitCreationViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
-import com.woowacourse.staccato.presentation.visitcreation.adapter.PhotoAttachAdapter
-import com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModel
-import com.woowacourse.staccato.presentation.visitcreation.viewmodel.VisitCreationViewModelFactory
 
 class VisitCreationActivity :
     BindingActivity<ActivityVisitCreationBinding>(),

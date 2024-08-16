@@ -11,8 +11,8 @@ import com.woowacourse.staccato.domain.repository.MomentRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toVisitUpdateDefaultUiModel
+import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
-import com.woowacourse.staccato.presentation.visitcreation.model.MomentMemoryUiModel
 import com.woowacourse.staccato.presentation.visitupdate.model.VisitUpdateDefaultUiModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody

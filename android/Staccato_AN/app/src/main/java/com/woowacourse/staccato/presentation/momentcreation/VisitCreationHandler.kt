@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visitcreation
+package com.woowacourse.staccato.presentation.momentcreation
 
 interface VisitCreationHandler {
     fun onCreateDoneClicked()

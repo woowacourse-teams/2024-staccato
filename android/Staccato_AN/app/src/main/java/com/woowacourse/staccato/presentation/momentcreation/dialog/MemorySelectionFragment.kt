@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visitcreation.dialog
+package com.woowacourse.staccato.presentation.momentcreation.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowacourse.staccato.databinding.FragmentMemorySelectionBinding
-import com.woowacourse.staccato.presentation.visitcreation.model.MomentMemoryUiModel
+import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 
 class MemorySelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentMemorySelectionBinding? = null

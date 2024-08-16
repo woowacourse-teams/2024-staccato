@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.woowacourse.staccato.R
-import com.woowacourse.staccato.presentation.visitcreation.model.MomentMemoryUiModel
+import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime

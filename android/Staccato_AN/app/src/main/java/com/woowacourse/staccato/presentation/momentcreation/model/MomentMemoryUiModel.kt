@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visitcreation.model
+package com.woowacourse.staccato.presentation.momentcreation.model
 
 data class MomentMemoryUiModel(
     val id: Long,

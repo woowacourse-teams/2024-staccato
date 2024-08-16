@@ -16,8 +16,8 @@ import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
+import com.woowacourse.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.woowacourse.staccato.presentation.util.showToast
-import com.woowacourse.staccato.presentation.visitcreation.OnUrisSelectedListener
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModelFactory
 import kotlinx.coroutines.launch

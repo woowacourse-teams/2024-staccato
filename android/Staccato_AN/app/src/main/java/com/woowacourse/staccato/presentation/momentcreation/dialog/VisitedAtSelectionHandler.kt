@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visitcreation.dialog
+package com.woowacourse.staccato.presentation.momentcreation.dialog
 
 import java.time.LocalDate
 
