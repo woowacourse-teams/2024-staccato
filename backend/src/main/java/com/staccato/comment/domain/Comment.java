@@ -1,5 +1,7 @@
 package com.staccato.comment.domain;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -53,5 +55,9 @@ public class Comment extends BaseEntity {
 
     public void changeContent(String content) {
         this.content = content;
+    }
+
+    public boolean isNotOwnedBy(Member member) {
+        return !Objects.equals(this.member, member);
     }
 }

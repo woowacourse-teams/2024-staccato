@@ -44,8 +44,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest) {
+    public void updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, Member member) {
         Comment comment = getComment(commentId);
+        validateCommentOwner(comment, member);
         comment.changeContent(commentUpdateRequest.content());
     }
 
@@ -61,6 +62,12 @@ public class CommentService {
 
     private void validateOwner(Memory memory, Member member) {
         if (memory.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private void validateCommentOwner(Comment comment, Member member) {
+        if (comment.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
     }

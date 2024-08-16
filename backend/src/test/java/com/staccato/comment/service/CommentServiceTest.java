@@ -120,13 +120,13 @@ class CommentServiceTest extends ServiceSliceTest {
         CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
 
         // when
-        commentService.updateComment(comment.getId(), commentUpdateRequest);
+        commentService.updateComment(comment.getId(), commentUpdateRequest, member);
 
         // then
         assertThat(commentRepository.findById(comment.getId()).get().getContent()).isEqualTo(updatedContent);
     }
 
-    @DisplayName("댓글을 찾을 수 없는 경우 예외가 발생한다.")
+    @DisplayName("수정하려는 댓글을 찾을 수 없는 경우 예외가 발생한다.")
     @Test
     void updateCommentFailByNotExist() {
         // given
@@ -135,8 +135,27 @@ class CommentServiceTest extends ServiceSliceTest {
         CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
 
         // when & then
-        assertThatThrownBy(() -> commentService.updateComment(notExistCommentId, commentUpdateRequest))
+        assertThatThrownBy(() -> commentService.updateComment(notExistCommentId, commentUpdateRequest, MemberFixture.create()))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 댓글을 찾을 수 없어요.");
+    }
+
+    @DisplayName("본인이 달지 않은 댓글에 대해 수정을 시도하면 예외가 발생한다.")
+    @Test
+    void updateCommentFailByForbidden() {
+        // given
+        Member momentOwner = memberRepository.save(MemberFixture.create("momentOwner"));
+        Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(momentOwner));
+        Moment moment = momentRepository.save(MomentFixture.create(memory));
+        Comment comment = commentRepository.save(CommentFixture.create(moment, momentOwner));
+
+        String updatedContent = "updated content";
+        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
+
+        // when & then
+        assertThatThrownBy(() -> commentService.updateComment(comment.getId(), commentUpdateRequest, unexpectedMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");
     }
 }
