@@ -19,8 +19,8 @@ import com.woowacourse.staccato.presentation.base.BindingActivity
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memorycreation.MemoryCreationActivity
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
-import com.woowacourse.staccato.presentation.momentcreation.VisitCreationActivity
-import com.woowacourse.staccato.presentation.momentcreation.VisitCreationActivity.Companion.MEMORY_TITLE_KEY
+import com.woowacourse.staccato.presentation.momentcreation.MomentCreationActivity
+import com.woowacourse.staccato.presentation.momentcreation.MomentCreationActivity.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
@@ -142,7 +142,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         }
         binding.btnMainVisitCreation.setOnClickListener {
             // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
-            VisitCreationActivity.startWithResultLauncher(
+            MomentCreationActivity.startWithResultLauncher(
                 1,
                 "임시 추억",
                 this,

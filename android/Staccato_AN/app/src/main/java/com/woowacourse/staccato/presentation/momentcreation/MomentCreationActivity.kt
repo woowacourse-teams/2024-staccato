@@ -19,7 +19,7 @@ import com.woowacourse.staccato.presentation.momentcreation.viewmodel.VisitCreat
 import com.woowacourse.staccato.presentation.momentcreation.viewmodel.VisitCreationViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
 
-class VisitCreationActivity :
+class MomentCreationActivity :
     BindingActivity<ActivityVisitCreationBinding>(),
     OnUrisSelectedListener,
     VisitCreationHandler {
@@ -103,7 +103,7 @@ class VisitCreationActivity :
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
-            Intent(context, VisitCreationActivity::class.java).apply {
+            Intent(context, MomentCreationActivity::class.java).apply {
                 putExtra(MEMORY_ID_KEY, memoryId)
                 putExtra(MEMORY_TITLE_KEY, memoryTitle)
                 activityLauncher.launch(this)
