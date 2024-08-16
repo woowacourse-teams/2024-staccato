@@ -22,7 +22,7 @@ import com.staccato.s3.service.CloudStorageService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/captures")
+@RequestMapping("/images")
 @RequiredArgsConstructor
 @Validated
 public class CloudStorageController {
