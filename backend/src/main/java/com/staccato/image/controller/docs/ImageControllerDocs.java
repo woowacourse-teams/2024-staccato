@@ -29,6 +29,6 @@ public interface ImageControllerDocs {
             @Parameter(description = "업로드할 이미지 파일 (PNG, JPG, JPEG, WEBP 형식 지원, 최대 20MB",
                     required = true,
                     content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))
-            @RequestPart(value = "imageFile") MultipartFile file,
+            @RequestPart(value = "imageFile") MultipartFile image,
             @Parameter(hidden = true) @LoginMember Member member);
 }
