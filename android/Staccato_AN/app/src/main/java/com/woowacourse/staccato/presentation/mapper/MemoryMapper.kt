@@ -16,7 +16,7 @@ fun Memory.toUiModel() =
         endAt = endAt,
         description = description,
         mates = mates.map { it.toUiModel() },
-        visits = visits.map { it.toUiModel() },
+        visits = moments.map { it.toUiModel() },
     )
 
 fun Member.toUiModel() =

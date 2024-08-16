@@ -10,5 +10,5 @@ data class Memory(
     val endAt: LocalDate,
     val description: String? = null,
     val mates: List<Member>,
-    val visits: List<MemoryVisit>,
+    val moments: List<MemoryVisit>,
 )
