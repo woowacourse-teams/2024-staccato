@@ -25,6 +25,7 @@ import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.controller.docs.MomentControllerDocs;
 import com.staccato.moment.service.MomentService;
+import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
@@ -52,7 +53,7 @@ public class MomentController implements MomentControllerDocs {
     @GetMapping("/{momentId}")
     public ResponseEntity<MomentDetailResponse> readMomentById(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "순간 기록 식별자는 양수로 이루어져야 합니다.") long momentId) {
+            @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId) {
         MomentDetailResponse momentDetailResponse = momentService.readMomentById(momentId, member);
         return ResponseEntity.ok().body(momentDetailResponse);
     }
@@ -60,7 +61,7 @@ public class MomentController implements MomentControllerDocs {
     @PutMapping(path = "/{momentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateMomentById(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "순간 기록 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
             @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") @RequestPart("momentImageFiles") List<MultipartFile> momentImageFiles,
             @Valid @RequestPart(value = "data") MomentUpdateRequest request
     ) {
@@ -71,9 +72,19 @@ public class MomentController implements MomentControllerDocs {
     @DeleteMapping("/{momentId}")
     public ResponseEntity<Void> deleteMomentById(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "순간 기록 식별자는 양수로 이루어져야 합니다.") long momentId
+            @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId
     ) {
         momentService.deleteMomentById(momentId, member);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{momentId}/feeling")
+    public ResponseEntity<Void> updateMomentFeelingById(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @Valid @RequestBody FeelingRequest feelingRequest
+    ) {
+        momentService.updateMomentFeelingById(momentId, member, feelingRequest);
         return ResponseEntity.ok().build();
     }
 }

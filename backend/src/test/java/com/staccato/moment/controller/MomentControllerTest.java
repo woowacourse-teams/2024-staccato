@@ -39,6 +39,7 @@ import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.moment.MomentDetailResponseFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.MomentService;
+import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
@@ -190,7 +191,7 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("적합한 경로변수를 통해 순간 기록 조회에 성공한다.")
+    @DisplayName("적합한 경로변수를 통해 순간 조회에 성공한다.")
     @Test
     void readMomentById() throws Exception {
         // given
@@ -206,11 +207,11 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
     }
 
-    @DisplayName("적합하지 않은 경로변수의 경우 순간 기록 조회에 실패한다.")
+    @DisplayName("적합하지 않은 경로변수의 경우 순간 조회에 실패한다.")
     @Test
     void failReadMomentById() throws Exception {
         // given
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 기록 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
         mockMvc.perform(get("/moments/{momentId}", 0))
@@ -218,7 +219,7 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("적합한 경로변수를 통해 순간 기록 수정에 성공한다.")
+    @DisplayName("적합한 경로변수를 통해 순간 수정에 성공한다.")
     @Test
     void updateMomentById() throws Exception {
         // given
@@ -241,7 +242,7 @@ class MomentControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("추가하려는 사진이 5장이 넘는다면 순간 기록 수정에 실패한다.")
+    @DisplayName("추가하려는 사진이 5장이 넘는다면 순간 수정에 실패한다.")
     @Test
     void failUpdateMomentByImagesSize() throws Exception {
         // given
@@ -276,12 +277,12 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("적합하지 않은 경로변수의 경우 순간 기록 수정에 실패한다.")
+    @DisplayName("적합하지 않은 경로변수의 경우 순간 수정에 실패한다.")
     @Test
     void failUpdateMomentById() throws Exception {
         // given
         long momentId = 0L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 기록 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
         MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
@@ -301,7 +302,7 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("순간 기록 수정 시 장소 이름을 입력하지 않은 경우 수정에 실패한다.")
+    @DisplayName("순간 수정 시 장소 이름을 입력하지 않은 경우 수정에 실패한다.")
     @Test
     void failUpdateMomentByPlaceName() throws Exception {
         // given
@@ -326,7 +327,7 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("순간 기록을 삭제한다.")
+    @DisplayName("순간을 삭제한다.")
     @Test
     void deleteMomentById() throws Exception {
         // given
@@ -339,16 +340,32 @@ class MomentControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("양수가 아닌 id로 순간 기록을 삭제할 수 없다.")
+    @DisplayName("양수가 아닌 id로 순간을 삭제할 수 없다.")
     @Test
     void failDeleteMomentById() throws Exception {
         // given
         long momentId = 0L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 기록 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
         mockMvc.perform(delete("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("기분 선택을 하지 않은 경우 기분 수정에 실패한다.")
+    @Test
+    void failUpdateMomentFeelingById() throws Exception {
+        // given
+        long momentId = 1L;
+        FeelingRequest feelingRequest = new FeelingRequest(null);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "기분 값을 입력해주세요.");
+
+        // when & then
+        mockMvc.perform(post("/moments/{momentId}/feeling", momentId)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .content(objectMapper.writeValueAsString(feelingRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }

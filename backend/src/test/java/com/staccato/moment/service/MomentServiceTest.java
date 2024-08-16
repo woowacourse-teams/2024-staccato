@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 
 import com.staccato.ServiceSliceTest;
+import com.staccato.comment.domain.Comment;
+import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.moment.CommentFixture;
@@ -23,12 +25,12 @@ import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
-import com.staccato.moment.domain.Comment;
+import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;
-import com.staccato.moment.repository.CommentRepository;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
+import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
@@ -65,7 +67,7 @@ class MomentServiceTest extends ServiceSliceTest {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of());
     }
 
-    @DisplayName("순간을 생성하면 Moment와 MomentImage들이 함께 저장되고 id를 반환한다.")
+    @DisplayName("순간을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
     @Test
     void createMomentWithMomentImages() {
         // given
@@ -113,7 +115,7 @@ class MomentServiceTest extends ServiceSliceTest {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
     }
 
-    @DisplayName("특정 순간 기록 조회에 성공한다.")
+    @DisplayName("특정 순간 조회에 성공한다.")
     @Test
     void readMomentById() {
         // given
@@ -128,7 +130,7 @@ class MomentServiceTest extends ServiceSliceTest {
         assertThat(actual).isEqualTo(new MomentDetailResponse(moment));
     }
 
-    @DisplayName("본인 것이 아닌 특정 순간 기록을 조회하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간을 조회하려고 하면 예외가 발생한다.")
     @Test
     void cannotReadMomentByIdIfNotOwner() {
         // given
@@ -143,7 +145,7 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 순간 기록을 조회하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 순간을 조회하면 예외가 발생한다.")
     @Test
     void failReadMomentById() {
         // given
@@ -152,10 +154,10 @@ class MomentServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> momentService.readMomentById(1L, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 순간 기록을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
     }
 
-    @DisplayName("특정 순간 기록 수정에 성공한다.")
+    @DisplayName("특정 순간 수정에 성공한다.")
     @Test
     void updateMomentById() {
         // given
@@ -181,7 +183,7 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 순간 기록을 수정하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간을 수정하려고 하면 예외가 발생한다.")
     @Test
     void cannotUpdateMomentByIdIfNotOwner() {
         // given
@@ -197,7 +199,7 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 순간 기록을 수정하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 순간을 수정하면 예외가 발생한다.")
     @Test
     void failUpdateMomentById() {
         // given
@@ -207,7 +209,7 @@ class MomentServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, List.of(new MockMultipartFile("momentImagesFile", "namsan_tower.jpg".getBytes())), member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 순간 기록을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
     }
 
     @DisplayName("Moment을 삭제하면 이에 포함된 MomentImage와 MomentLog도 모두 삭제된다.")
@@ -231,7 +233,7 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 순간 기록을 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간을 삭제하려고 하면 예외가 발생한다.")
     @Test
     void cannotDeleteMomentByIdIfNotOwner() {
         // given
@@ -259,5 +261,24 @@ class MomentServiceTest extends ServiceSliceTest {
     private Moment saveMomentWithImages(Memory memory) {
         Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
         return momentRepository.save(moment);
+    }
+
+    @DisplayName("순간의 기분을 선택할 수 있다.")
+    @Test
+    void updateMomentFeelingById() {
+        // given
+        Member member = saveMember();
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
+        FeelingRequest feelingRequest = new FeelingRequest("happy");
+
+        // when
+        momentService.updateMomentFeelingById(moment.getId(), member, feelingRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(momentRepository.findById(moment.getId())).isNotEmpty(),
+                () -> assertThat(momentRepository.findById(moment.getId()).get().getFeeling()).isEqualTo(Feeling.HAPPY)
+        );
     }
 }
