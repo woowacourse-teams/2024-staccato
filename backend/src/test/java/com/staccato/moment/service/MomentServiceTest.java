@@ -15,19 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 
 import com.staccato.ServiceSliceTest;
+import com.staccato.comment.domain.Comment;
+import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.moment.CommentFixture;
+import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;
-import com.staccato.comment.domain.Comment;
-import com.staccato.moment.fixture.MomentFixture;
-import com.staccato.moment.fixture.CommentFixture;
 import com.staccato.moment.repository.MomentImageRepository;
-import com.staccato.comment.repository.CommentRepository;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
@@ -65,7 +65,7 @@ class MomentServiceTest extends ServiceSliceTest {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
-    @DisplayName("순간을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
+    @DisplayName("순간 기록을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
     @Test
     void createMomentWithMomentImages() {
         // given

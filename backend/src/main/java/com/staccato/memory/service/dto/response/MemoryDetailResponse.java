@@ -9,7 +9,7 @@ import com.staccato.memory.domain.Memory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "특정 추억 상세 정보에 대한 응답 형식입니다.")
+@Schema(description = "특정 추억에 대한 응답 형식입니다.")
 public record MemoryDetailResponse(
         @Schema(example = "1")
         Long memoryId,
@@ -22,8 +22,10 @@ public record MemoryDetailResponse(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String description,
         @Schema(example = "2024-07-27")
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate startAt,
         @Schema(example = "2024-07-29")
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate endAt,
         List<MemberResponse> mates,
         List<MomentResponse> moments

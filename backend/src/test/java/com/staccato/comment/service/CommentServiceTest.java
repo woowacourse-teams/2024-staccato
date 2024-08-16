@@ -17,12 +17,12 @@ import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Moment;
-import com.staccato.moment.fixture.MomentFixture;
 import com.staccato.moment.repository.MomentRepository;
 
 class CommentServiceTest extends ServiceSliceTest {
