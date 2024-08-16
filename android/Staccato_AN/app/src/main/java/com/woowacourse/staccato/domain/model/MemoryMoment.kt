@@ -2,9 +2,9 @@ package com.woowacourse.staccato.domain.model
 
 import java.time.LocalDate
 
-data class MemoryVisit(
-    val visitId: Long,
+data class MemoryMoment(
+    val momentId: Long,
     val placeName: String,
-    val visitImageUrl: String? = null,
+    val momentImageUrl: String? = null,
     val visitedAt: LocalDate,
 )
