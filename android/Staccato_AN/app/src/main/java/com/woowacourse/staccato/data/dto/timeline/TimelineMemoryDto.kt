@@ -12,5 +12,4 @@ data class TimelineMemoryDto(
     @SerialName("startAt") val startAt: String,
     @SerialName("endAt") val endAt: String,
     @SerialName("description") val description: String? = null,
-    @SerialName("mates") val mates: List<MemberDto>,
 )
