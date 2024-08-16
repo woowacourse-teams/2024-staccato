@@ -24,16 +24,18 @@ import com.woowacourse.staccato.presentation.memorycreation.viewmodel.MemoryCrea
 import com.woowacourse.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.woowacourse.staccato.presentation.util.showToast
 
-class MemoryCreationActivity : BindingActivity<ActivityMemoryCreationBinding>(),
-    MemoryCreationHandler, OnUrisSelectedListener {
+class MemoryCreationActivity :
+    BindingActivity<ActivityMemoryCreationBinding>(),
+    MemoryCreationHandler,
+    OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_creation
     private val viewModel: MemoryCreationViewModel by viewModels {
         MemoryCreationViewModelFactory(
             MemoryDefaultRepository(
                 MemoryRemoteDataSource(
-                    memoryApiService
-                )
-            )
+                    memoryApiService,
+                ),
+            ),
         )
     }
     private val photoAttachFragment = PhotoAttachFragment()
