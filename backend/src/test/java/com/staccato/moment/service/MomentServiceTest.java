@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 
 import com.staccato.ServiceSliceTest;
+import com.staccato.comment.domain.Comment;
+import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.moment.CommentFixture;
@@ -23,11 +25,9 @@ import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
-import com.staccato.moment.domain.Comment;
 import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;
-import com.staccato.moment.repository.CommentRepository;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
@@ -49,7 +49,7 @@ class MomentServiceTest extends ServiceSliceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @DisplayName("사진 없이도 순간 기록을 생성할 수 있다.")
+    @DisplayName("사진 없이도 순간을 생성할 수 있다.")
     @Test
     void createMoment() {
         // given
@@ -67,7 +67,7 @@ class MomentServiceTest extends ServiceSliceTest {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
-    @DisplayName("순간 기록을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
+    @DisplayName("순간을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
     @Test
     void createMomentWithMomentImages() {
         // given
@@ -85,7 +85,7 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 추억에 순간 기록을 생성하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 추억에 순간을 생성하려고 하면 예외가 발생한다.")
     @Test
     void cannotCreateMomentIfNotOwner() {
         // given
@@ -100,7 +100,7 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 추억에 순간 기록 생성을 시도하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 추억에 순간 생성을 시도하면 예외가 발생한다.")
     @Test
     void failCreateMoment() {
         // given
@@ -116,7 +116,7 @@ class MomentServiceTest extends ServiceSliceTest {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L);
     }
 
-    @DisplayName("특정 순간 기록 조회에 성공한다.")
+    @DisplayName("특정 순간 조회에 성공한다.")
     @Test
     void readMomentById() {
         // given
@@ -131,7 +131,7 @@ class MomentServiceTest extends ServiceSliceTest {
         assertThat(actual).isEqualTo(new MomentDetailResponse(moment));
     }
 
-    @DisplayName("본인 것이 아닌 특정 순간 기록을 조회하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간을 조회하려고 하면 예외가 발생한다.")
     @Test
     void cannotReadMomentByIdIfNotOwner() {
         // given
@@ -146,7 +146,7 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 순간 기록을 조회하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 순간을 조회하면 예외가 발생한다.")
     @Test
     void failReadMomentById() {
         // given
@@ -158,7 +158,7 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
     }
 
-    @DisplayName("특정 순간 기록 수정에 성공한다.")
+    @DisplayName("특정 순간 수정에 성공한다.")
     @Test
     void updateMomentById() {
         // given
@@ -184,7 +184,7 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 순간 기록을 수정하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간을 수정하려고 하면 예외가 발생한다.")
     @Test
     void cannotUpdateMomentByIdIfNotOwner() {
         // given
@@ -200,7 +200,7 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 순간 기록을 수정하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 순간을 수정하면 예외가 발생한다.")
     @Test
     void failUpdateMomentById() {
         // given
@@ -234,7 +234,7 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 순간 기록을 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 순간을 삭제하려고 하면 예외가 발생한다.")
     @Test
     void cannotDeleteMomentByIdIfNotOwner() {
         // given

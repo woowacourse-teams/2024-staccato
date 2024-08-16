@@ -16,7 +16,7 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.memory.domain.Memory;
 
 class MomentTest {
-    @DisplayName("추억 날짜 안에 순간 기록 날짜가 포함되면 Moment을 생성할 수 있다.")
+    @DisplayName("추억 날짜 안에 순간 날짜가 포함되면 Moment을 생성할 수 있다.")
     @Test
     void createMoment() {
         // given
@@ -37,7 +37,7 @@ class MomentTest {
                 .build()).doesNotThrowAnyException();
     }
 
-    @DisplayName("추억 날짜 안에 순간 기록 날짜가 포함되지 않으면 예외를 발생시킨다.")
+    @DisplayName("추억 날짜 안에 순간 날짜가 포함되지 않으면 예외를 발생시킨다.")
     @ValueSource(longs = {-1, 2})
     @ParameterizedTest
     void failCreateMoment(long plusDays) {
