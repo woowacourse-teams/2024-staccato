@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visit.viewmodel
+package com.woowacourse.staccato.presentation.moment.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,7 +9,7 @@ import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toVisitDefaultUiModel
 import com.woowacourse.staccato.presentation.mapper.toVisitLogUiModel
-import com.woowacourse.staccato.presentation.visit.model.VisitDetailUiModel
+import com.woowacourse.staccato.presentation.moment.model.VisitDetailUiModel
 import kotlinx.coroutines.launch
 
 class VisitViewModel(private val momentRepository: MomentRepository) : ViewModel() {

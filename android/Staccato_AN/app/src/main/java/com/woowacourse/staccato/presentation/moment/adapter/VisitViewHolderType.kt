@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visit.adapter
+package com.woowacourse.staccato.presentation.moment.adapter
 
 enum class VisitViewHolderType(val value: Int) {
     VISIT_DEFAULT(0),

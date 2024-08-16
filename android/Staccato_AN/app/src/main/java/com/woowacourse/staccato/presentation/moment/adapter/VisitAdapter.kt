@@ -1,11 +1,11 @@
-package com.woowacourse.staccato.presentation.visit.adapter
+package com.woowacourse.staccato.presentation.moment.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.staccato.databinding.ItemMyVisitLogBinding
 import com.woowacourse.staccato.databinding.ItemVisitDefaultBinding
-import com.woowacourse.staccato.presentation.visit.model.VisitDetailUiModel
+import com.woowacourse.staccato.presentation.moment.model.VisitDetailUiModel
 
 class VisitAdapter(private val items: MutableList<VisitDetailUiModel> = mutableListOf()) :
     RecyclerView.Adapter<VisitViewHolder>() {

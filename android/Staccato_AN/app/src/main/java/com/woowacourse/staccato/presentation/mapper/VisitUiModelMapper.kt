@@ -2,7 +2,7 @@ package com.woowacourse.staccato.presentation.mapper
 
 import com.woowacourse.staccato.domain.model.Moment
 import com.woowacourse.staccato.domain.model.VisitLog
-import com.woowacourse.staccato.presentation.visit.model.VisitDetailUiModel
+import com.woowacourse.staccato.presentation.moment.model.VisitDetailUiModel
 import com.woowacourse.staccato.presentation.visitupdate.model.VisitUpdateDefaultUiModel
 import java.time.LocalDateTime
 import java.time.LocalTime

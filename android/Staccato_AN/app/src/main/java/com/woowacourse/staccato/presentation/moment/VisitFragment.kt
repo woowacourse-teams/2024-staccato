@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visit
+package com.woowacourse.staccato.presentation.moment
 
 import android.os.Bundle
 import android.view.View
@@ -12,10 +12,10 @@ import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
+import com.woowacourse.staccato.presentation.moment.adapter.VisitAdapter
+import com.woowacourse.staccato.presentation.moment.viewmodel.VisitViewModel
+import com.woowacourse.staccato.presentation.moment.viewmodel.VisitViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
-import com.woowacourse.staccato.presentation.visit.adapter.VisitAdapter
-import com.woowacourse.staccato.presentation.visit.viewmodel.VisitViewModel
-import com.woowacourse.staccato.presentation.visit.viewmodel.VisitViewModelFactory
 import com.woowacourse.staccato.presentation.visitupdate.VisitUpdateActivity
 import kotlin.properties.Delegates
 

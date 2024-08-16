@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.visit.adapter
+package com.woowacourse.staccato.presentation.moment.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
