@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.member.domain.Member;
+import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
@@ -22,7 +23,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Visit", description = "Visit API")
+@Tag(name = "Moment", description = "Moment API")
 public interface MomentControllerDocs {
     @Operation(summary = "순간 기록 생성", description = "순간 기록을 생성합니다.")
     @ApiResponses(value = {
@@ -93,4 +94,25 @@ public interface MomentControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "순간 기록 ID", example = "1", required = true) @Min(value = 1L, message = "순간 기록 식별자는 양수로 이루어져야 합니다.") long momentId
     );
+
+    @Operation(summary = "순간 기분 선택", description = "순간에 기분을 선택합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "순간 기분 선택 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+
+                    (1) 조회하려는 순간이 존재하지 않을 때
+
+                    (2) Path Variable 형식이 잘못되었을 때
+
+                    (3) RequestBody 형식이 잘못되었을 때
+
+                    (4) 요청한 기분 표현을 찾을 수 없을 때
+                    """,
+                    responseCode = "400")
+    })
+    ResponseEntity<Void> updateMomentFeelingById(
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "순간 ID", example = "1") @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @Valid FeelingRequest feelingRequest);
 }
