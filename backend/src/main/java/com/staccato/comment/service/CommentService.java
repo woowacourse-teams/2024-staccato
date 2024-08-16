@@ -74,6 +74,9 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(long commentId, Member member) {
-        commentRepository.deleteById(commentId);
+        commentRepository.findById(commentId).ifPresent(comment -> {
+            validateCommentOwner(comment, member);
+            commentRepository.deleteById(commentId);
+        });
     }
 }
