@@ -27,7 +27,7 @@ class MemoryRemoteDataSource(
         memoryId: Long,
         newMemory: NewMemory,
         thumbnailFile: MultipartBody.Part?,
-    ): ResponseResult<String> =
+    ): ResponseResult<Unit> =
         handleApiResponse {
             memoryApiService.putMemory(memoryId, newMemory.toMemoryUpdateRequest(), thumbnailFile)
         }

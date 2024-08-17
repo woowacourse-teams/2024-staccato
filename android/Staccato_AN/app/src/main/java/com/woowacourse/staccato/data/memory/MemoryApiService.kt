@@ -33,7 +33,7 @@ interface MemoryApiService {
         @Path("memoryId") memoryId: Long,
         @Part("data") data: MemoryUpdateRequest,
         @Part memoryThumbnailFile: MultipartBody.Part?,
-    ): Response<String>
+    ): Response<Unit>
 
     @DELETE(MEMORY_PATH_WITH_ID)
     suspend fun deleteMemory(
