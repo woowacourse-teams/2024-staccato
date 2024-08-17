@@ -51,10 +51,12 @@
                     android:contentDescription="@string/all_image_content_description"
                     android:onClick="@{() -> handler.onPhotoAttachClicked()}"
                     android:scaleType="centerCrop"
-                    android:src="@{viewModel.imageUri}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    bind:coilUriPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
+                    bind:coilUriRoundedCorner="@{viewModel.imageUri}"
+                    bind:coilUriRoundingRadius="@{12f}" />
 
                 <include
                     android:id="@+id/include_memory_creation_photo_attach"
