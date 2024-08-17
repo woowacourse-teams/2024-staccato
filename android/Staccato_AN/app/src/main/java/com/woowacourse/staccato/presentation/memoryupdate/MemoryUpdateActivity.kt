@@ -59,6 +59,10 @@ class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), Mem
         photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
     }
 
+    override fun onPhotoDeletionClicked() {
+        viewModel.setImage(null)
+    }
+
     override fun onUrisSelected(vararg uris: Uri) {
         viewModel.setImage(uris.first())
     }

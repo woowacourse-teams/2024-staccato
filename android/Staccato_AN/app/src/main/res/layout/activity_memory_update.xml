@@ -64,6 +64,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/all_delete_image"
+                    android:onClick="@{() -> handler.onPhotoDeletionClicked()}"
                     android:padding="12dp"
                     android:src="@drawable/ic_delete"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_update_photo_attach"
