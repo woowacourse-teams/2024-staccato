@@ -39,13 +39,13 @@ class MemoryCreationViewModel(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
-    private val _imageUri = MutableLiveData<Uri>()
-    val imageUri: LiveData<Uri> get() = _imageUri
+    private val _imageUri = MutableLiveData<Uri?>()
+    val imageUri: LiveData<Uri?> get() = _imageUri
 
     private val _isPosting = MutableLiveData<Boolean>(false)
     val isPosting: LiveData<Boolean> get() = _isPosting
 
-    fun setImageUri(uri: Uri) {
+    fun setImageUri(uri: Uri?) {
         _imageUri.value = uri
     }
 
