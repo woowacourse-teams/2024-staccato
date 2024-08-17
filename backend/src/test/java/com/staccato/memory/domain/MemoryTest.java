@@ -26,6 +26,6 @@ class MemoryTest {
         // when & then
         assertThatThrownBy(() -> memory.update(updatedMemory, List.of(moment)))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("변경하려는 추억 기간이 이미 존재하는 순간 기록을 포함하지 않습니다. 추억 기간을 다시 설정해주세요.");
+                .hasMessage("변경하려는 추억 기간이 이미 존재하는 순간을 포함하지 않습니다. 추억 기간을 다시 설정해주세요.");
     }
 }

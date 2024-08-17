@@ -9,6 +9,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +19,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
+import com.staccato.comment.domain.Comment;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import com.staccato.memory.domain.Memory;
@@ -38,6 +41,9 @@ public class Moment extends BaseEntity {
     private LocalDateTime visitedAt;
     @Column(nullable = false)
     private String placeName;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Feeling feeling = Feeling.NOTHING;
     @Column(nullable = false)
     @Embedded
     private Spot spot;
@@ -56,12 +62,14 @@ public class Moment extends BaseEntity {
             @NonNull String address,
             @NonNull BigDecimal latitude,
             @NonNull BigDecimal longitude,
+            @NonNull MomentImages momentImages,
             @NonNull Memory memory
     ) {
         validateIsWithinMemoryDuration(visitedAt, memory);
         this.visitedAt = visitedAt;
         this.placeName = placeName;
         this.spot = new Spot(address, latitude, longitude);
+        this.momentImages.addAll(momentImages, this);
         this.memory = memory;
     }
 
@@ -69,10 +77,6 @@ public class Moment extends BaseEntity {
         if (memory.isWithoutDuration(visitedAt)) {
             throw new StaccatoException("추억에 포함되지 않는 날짜입니다.");
         }
-    }
-
-    public void addMomentImages(MomentImages momentImages) {
-        this.momentImages.addAll(momentImages, this);
     }
 
     public void addComment(Comment comment) {
@@ -90,5 +94,9 @@ public class Moment extends BaseEntity {
 
     public boolean hasImage() {
         return momentImages.isNotEmpty();
+    }
+
+    public void changeFeeling(Feeling feeling) {
+        this.feeling = feeling;
     }
 }

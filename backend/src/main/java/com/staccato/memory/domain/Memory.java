@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -45,7 +46,7 @@ public class Memory extends BaseEntity {
     private List<MemoryMember> memoryMembers = new ArrayList<>();
 
     @Builder
-    public Memory(String thumbnailUrl, @NonNull String title, String description, @NonNull LocalDate startAt, @NonNull LocalDate endAt) {
+    public Memory(String thumbnailUrl, @NonNull String title, String description, LocalDate startAt, LocalDate endAt) {
         this.thumbnailUrl = thumbnailUrl;
         this.title = title;
         this.description = description;
@@ -77,7 +78,7 @@ public class Memory extends BaseEntity {
                 .filter(moment -> updatedMemory.isWithoutDuration(moment.getVisitedAt()))
                 .findAny()
                 .ifPresent(moment -> {
-                    throw new StaccatoException("변경하려는 추억 기간이 이미 존재하는 순간 기록을 포함하지 않습니다. 추억 기간을 다시 설정해주세요.");
+                    throw new StaccatoException("변경하려는 추억 기간이 이미 존재하는 순간을 포함하지 않습니다. 추억 기간을 다시 설정해주세요.");
                 });
     }
 
