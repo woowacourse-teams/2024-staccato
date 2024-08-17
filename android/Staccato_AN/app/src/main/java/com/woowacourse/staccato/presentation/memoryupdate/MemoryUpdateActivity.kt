@@ -56,7 +56,9 @@ class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), Mem
     }
 
     override fun onPhotoAttachClicked() {
-        photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+        if (!photoAttachFragment.isAdded) {
+            photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+        }
     }
 
     override fun onPhotoDeletionClicked() {
