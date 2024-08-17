@@ -10,7 +10,6 @@ import jakarta.persistence.OneToMany;
 import com.staccato.exception.StaccatoException;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,15 +22,15 @@ public class MomentImages {
     private List<MomentImage> images = new ArrayList<>();
 
     public MomentImages(List<String> addedImages) {
-        validateNumberOfImages(List.of(), addedImages);
+        validateNumberOfImages(addedImages);
         this.images.addAll(addedImages.stream()
                 .map(MomentImage::new)
                 .toList());
     }
 
-    private void validateNumberOfImages(List<String> existingImages, List<String> addedImages) {
-        if (existingImages.size() + addedImages.size() > MAX_COUNT) {
-            throw new StaccatoException("사진은 5장까지만 추가할 수 있어요.");
+    private void validateNumberOfImages(List<String> addedImages) {
+        if (addedImages.size() > MAX_COUNT) {
+            throw new StaccatoException("사진은 5장을 초과할 수 없습니다.");
         }
     }
 

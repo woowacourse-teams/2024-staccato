@@ -22,7 +22,7 @@ class MomentImagesTest {
         // given & when & then
         assertThatThrownBy(() -> new MomentImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("사진은 5장까지만 추가할 수 있어요.");
+                .hasMessage("사진은 5장을 초과할 수 없습니다.");
     }
 
     @DisplayName("사진을 추가할 때 총 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
@@ -31,7 +31,7 @@ class MomentImagesTest {
         // given & when & then
         assertThatThrownBy(() -> new MomentImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("사진은 5장까지만 추가할 수 있어요.");
+                .hasMessage("사진은 5장을 초과할 수 없습니다.");
     }
 
     @DisplayName("사진들을 추가할 때 기존 사진이 포함되지 않은 경우 삭제 후 추가한다.")
