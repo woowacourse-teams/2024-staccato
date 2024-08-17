@@ -68,6 +68,8 @@
                     android:src="@drawable/ic_delete"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
+                    bind:imageUri="@{viewModel.imageUri}"
+                    bind:imageUrl="@{viewModel.imageUrl}"
                     tools:visibility="visible" />
 
                 <include
