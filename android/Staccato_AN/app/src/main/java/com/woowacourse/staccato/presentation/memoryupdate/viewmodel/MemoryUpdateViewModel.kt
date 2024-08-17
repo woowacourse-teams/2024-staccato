@@ -65,7 +65,7 @@ class MemoryUpdateViewModel(
         }
     }
 
-    fun setImage(uri: Uri) {
+    fun setImage(uri: Uri?) {
         _imageUri.value = uri
         _imageUrl.value = null
     }
