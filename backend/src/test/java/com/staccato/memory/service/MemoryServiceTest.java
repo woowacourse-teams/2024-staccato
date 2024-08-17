@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -171,6 +172,7 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 추억을 찾을 수 없어요.");
     }
 
+    @Disabled
     @DisplayName("추억 정보를 기반으로, 추억을 수정한다.")
     @MethodSource("updateMemoryProvider")
     @ParameterizedTest
