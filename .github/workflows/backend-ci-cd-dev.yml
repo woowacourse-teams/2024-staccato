@@ -5,16 +5,9 @@ on:
     branches: [ "develop-be" ]
   pull_request:
     branches: [ "develop-be" ]
-  workflow_dispatch:
-    inputs:
-      run_for_pr:
-        description: "Run CI/CD workflow for pull requests"
-        required: false
-        default: "false"
 
 jobs:
   ci:
-    if: github.event.name == 'push' || (github.event_name == 'pull_request' && github.event.inputs.run_for_pr == 'true')
     runs-on: [self-hosted, dev]
 
     defaults:
@@ -58,7 +51,6 @@ jobs:
           sudo docker push staccato/staccato:dev
 
   cd:
-    if: github.event.name == 'push' || (github.event_name == 'pull_request' && github.event.inputs.run_for_pr == 'true')
     needs: ci
     runs-on: [self-hosted, dev]
     steps:
