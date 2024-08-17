@@ -93,4 +93,5 @@
     // dialog_delete
     <string name="delete_title">삭제하시겠습니까?</string>
     <string name="delete_description">삭제를 누르면 복구할 수 없습니다</string>
+    <string name="all_delete_image">이미지 삭제 버튼</string>
 </resources>

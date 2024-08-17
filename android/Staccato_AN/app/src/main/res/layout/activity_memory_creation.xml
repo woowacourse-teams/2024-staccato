@@ -47,7 +47,7 @@
                     android:id="@+id/iv_memory_creation_photo_attach"
                     style="@style/PhotoAttachBoxStyle"
                     android:layout_marginHorizontal="20dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="24dp"
                     android:contentDescription="@string/all_image_content_description"
                     android:onClick="@{() -> handler.onPhotoAttachClicked()}"
                     android:scaleType="centerCrop"
@@ -57,6 +57,18 @@
                     bind:coilUriPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
                     bind:coilUriRoundedCorner="@{viewModel.imageUri}"
                     bind:coilUriRoundingRadius="@{12f}" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/all_delete_image"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="@{viewModel.imageUri == null ? View.GONE : View.VISIBLE }"
+                    app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
+                    tools:visibility="visible" />
 
                 <include
                     android:id="@+id/include_memory_creation_photo_attach"
