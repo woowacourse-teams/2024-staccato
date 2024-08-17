@@ -114,6 +114,10 @@ class MomentCreationViewModel(
         } ?: emptyList()
     }
 
+    fun setUrisWithNewOrder(list: List<Uri>) {
+        _selectedImages.value = list.toSet()
+    }
+
     companion object {
         private const val MAX_PHOTO_NUMBER = 5
         const val MAX_PHOTO_NUMBER_MESSAGE = "사진은 최대 ${MAX_PHOTO_NUMBER}장만 첨부할 수 있어요!"

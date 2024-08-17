@@ -131,8 +131,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_photo_attach"
                     android:layout_width="0dp"
-                    android:layout_marginHorizontal="24dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
                     android:foregroundGravity="center"
                     android:overScrollMode="never"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -147,7 +147,6 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="24dp"
                     android:text="@string/moment_creation_memory_selection"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_photo_title"
                     app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
 
@@ -179,7 +178,6 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="24dp"
                     android:text="@string/all_visited_date"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_creation_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_selection_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection" />
 

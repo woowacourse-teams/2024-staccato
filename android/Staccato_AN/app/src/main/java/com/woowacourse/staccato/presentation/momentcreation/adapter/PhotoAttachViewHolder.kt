@@ -1,11 +1,13 @@
 package com.woowacourse.staccato.presentation.momentcreation.adapter
 
 import android.net.Uri
+import android.view.MotionEvent
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.staccato.databinding.ItemAddPhotoBinding
 import com.woowacourse.staccato.databinding.ItemAttachedPhotoBinding
 import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
+import com.woowacourse.staccato.presentation.visitcreation.adapter.ItemDragListener
 
 sealed class PhotoAttachViewHolder(binding: ViewDataBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -22,8 +24,15 @@ sealed class PhotoAttachViewHolder(binding: ViewDataBinding) :
     class AttachedPhotoViewHolder(
         private val binding: ItemAttachedPhotoBinding,
         private val attachedPhotoHandler: AttachedPhotoHandler,
+        private val dragListener: ItemDragListener,
     ) : PhotoAttachViewHolder(binding) {
         fun bind(item: Uri) {
+            binding.ivAttachedPhoto.setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    dragListener.onStartDrag(this)
+                }
+                false
+            }
             binding.attachedPhoto = item
             binding.selectedPhotoHandler = attachedPhotoHandler
         }

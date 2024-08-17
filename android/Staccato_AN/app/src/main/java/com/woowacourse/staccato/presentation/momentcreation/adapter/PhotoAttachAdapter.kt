@@ -8,9 +8,14 @@ import androidx.recyclerview.widget.ListAdapter
 import com.woowacourse.staccato.databinding.ItemAddPhotoBinding
 import com.woowacourse.staccato.databinding.ItemAttachedPhotoBinding
 import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
+import com.woowacourse.staccato.presentation.visitcreation.adapter.ItemDragListener
+import com.woowacourse.staccato.presentation.visitcreation.adapter.ItemMoveListener
 
-class PhotoAttachAdapter(private val attachedPhotoHandler: AttachedPhotoHandler) :
-    ListAdapter<Uri, PhotoAttachViewHolder>(diffUtil) {
+class PhotoAttachAdapter(
+    private val dragListener: ItemDragListener,
+    private val attachedPhotoHandler: AttachedPhotoHandler,
+) :
+    ItemMoveListener, ListAdapter<Uri, PhotoAttachViewHolder>(diffUtil) {
     init {
         submitList(listOf(Uri.parse(TEMP_URI_STRING)))
     }
@@ -36,7 +41,11 @@ class PhotoAttachAdapter(private val attachedPhotoHandler: AttachedPhotoHandler)
 
             VIEW_TYPE_ATTACHED_PHOTO -> {
                 val binding = ItemAttachedPhotoBinding.inflate(inflater, parent, false)
-                PhotoAttachViewHolder.AttachedPhotoViewHolder(binding, attachedPhotoHandler)
+                PhotoAttachViewHolder.AttachedPhotoViewHolder(
+                    binding,
+                    attachedPhotoHandler,
+                    dragListener,
+                )
             }
 
             else -> {
@@ -54,6 +63,23 @@ class PhotoAttachAdapter(private val attachedPhotoHandler: AttachedPhotoHandler)
         } else if (holder is PhotoAttachViewHolder.AttachedPhotoViewHolder) {
             holder.bind(getItem(position))
         }
+    }
+
+    override fun onItemMove(
+        from: Int,
+        to: Int,
+    ) {
+        val movedItem = currentList[from]
+        submitList(
+            currentList.toMutableList().apply {
+                removeAt(from)
+                add(to, movedItem)
+            },
+        )
+    }
+
+    override fun onStopDrag() {
+        dragListener.onStopDrag(currentList.filterNot { it.toString() == TEMP_URI_STRING })
     }
 
     companion object {
