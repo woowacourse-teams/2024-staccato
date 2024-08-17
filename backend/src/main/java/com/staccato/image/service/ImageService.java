@@ -16,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
+    private static final String TEAM_FOLDER = "staccato/";
+    private static final String IMAGE_FOLDER = "image/";
+
     private final S3ObjectClient s3ObjectClient;
 
     public List<String> uploadFiles(List<MultipartFile> files) {
@@ -26,7 +29,7 @@ public class ImageService {
 
     public ImageUrlResponse uploadImage(MultipartFile image) {
         String imageExtension = getImageExtension(image);
-        String key = UUID.randomUUID() + imageExtension;
+        String key = TEAM_FOLDER + IMAGE_FOLDER + UUID.randomUUID() + imageExtension;
         String contentType = ImageExtension.getContentType(imageExtension);
         byte[] imageBytes = getImageBytes(image);
 
