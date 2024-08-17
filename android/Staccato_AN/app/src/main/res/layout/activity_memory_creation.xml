@@ -65,6 +65,7 @@
                     android:contentDescription="@string/all_delete_image"
                     android:padding="12dp"
                     android:src="@drawable/ic_delete"
+                    android:onClick="@{() -> handler.onImageDeletionClicked()}"
                     android:visibility="@{viewModel.imageUri == null ? View.GONE : View.VISIBLE }"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
