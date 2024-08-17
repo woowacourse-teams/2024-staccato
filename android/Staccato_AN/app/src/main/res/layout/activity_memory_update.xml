@@ -64,11 +64,13 @@
                     layout="@layout/layout_photo_attach"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_update_photo_attach"
-                    app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach" />
+                    app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
+                    bind:imageUri="@{viewModel.imageUri}"
+                    bind:imageUrl="@{viewModel.imageUrl}"
+                    tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/tv_memory_update_title"
