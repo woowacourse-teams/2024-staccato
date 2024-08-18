@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -90,10 +89,6 @@ public class Memory extends BaseEntity {
         return memoryMembers.stream()
                 .map(MemoryMember::getMember)
                 .toList();
-    }
-
-    public void assignThumbnail(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
     }
 
     public boolean isNotOwnedBy(Member member) {
