@@ -1,4 +1,4 @@
-package com.staccato.s3.controller;
+package com.staccato.image.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
-import com.staccato.image.controller.ImageController;
 import com.staccato.image.service.ImageService;
 import com.staccato.image.service.dto.ImageUrlResponse;
 import com.staccato.member.domain.Member;
