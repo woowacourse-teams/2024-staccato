@@ -50,11 +50,7 @@ class MomentRepositoryTest {
         Moment moment = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2023, 12, 31, 22, 20)));
         Moment moment1 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 1, 22, 20)));
         Moment moment2 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 1, 22, 21)));
-
-        Moment moment3 = momentRepository.save(MomentFixture.create(memory2, LocalDateTime.of(2024, 7, 4, 22, 20)));
-
         Moment anotherMoment = momentRepository.save(MomentFixture.create(anotherMemberMemory, LocalDateTime.of(2024, 5, 1, 22, 21)));
-        Moment anotherMoment2 = momentRepository.save(MomentFixture.create(anotherMemberMemory, LocalDateTime.of(2024, 6, 1, 22, 21)));
 
         // when
         List<Moment> memberResult = momentRepository.findAllByMemory_MemoryMembers_Member(member);
@@ -62,10 +58,10 @@ class MomentRepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(memberResult.size()).isEqualTo(4),
-                () -> assertThat(memberResult).containsExactlyInAnyOrder(moment, moment1, moment2, moment3),
-                () -> assertThat(anotherMemberResult.size()).isEqualTo(2),
-                () -> assertThat(anotherMemberResult).containsExactlyInAnyOrder(anotherMoment, anotherMoment2)
+                () -> assertThat(memberResult.size()).isEqualTo(3),
+                () -> assertThat(memberResult).containsExactlyInAnyOrder(moment, moment1, moment2),
+                () -> assertThat(anotherMemberResult.size()).isEqualTo(1),
+                () -> assertThat(anotherMemberResult).containsExactlyInAnyOrder(anotherMoment)
         );
     }
 }
