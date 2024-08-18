@@ -45,7 +45,7 @@ public class TokenProviderTest {
     @DisplayName("주어진 사용자 정보로 토큰을 생성한다.")
     @Test
     public void createToken() {
-        // when
+        // given & when
         String token = tokenProvider.create(member);
 
         // then
