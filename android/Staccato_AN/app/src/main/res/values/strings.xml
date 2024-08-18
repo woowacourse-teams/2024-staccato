@@ -17,6 +17,7 @@
     <string name="all_image_content_description">사진</string>
     <string name="all_default_not_supported">아직 지원하지 않는 기능이예요.</string>
     <string name="all_required_mark">*</string>
+    <string name="all_posting_photo">사진을 게시하는 중이에요</string>
 
     // MainActivity
     <string name="main_moment_creation_success">새로운 스타카토를 찍었어요!</string>

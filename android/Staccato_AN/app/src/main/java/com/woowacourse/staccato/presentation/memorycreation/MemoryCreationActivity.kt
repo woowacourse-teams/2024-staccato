@@ -67,6 +67,7 @@ class MemoryCreationActivity : BindingActivity<ActivityMemoryCreationBinding>(),
 
     override fun onUrisSelected(vararg uris: Uri) {
         viewModel.createThumbnailUrl(this, uris.first())
+        showToast(getString(R.string.all_posting_photo))
     }
 
     private fun buildDateRangePicker() =
