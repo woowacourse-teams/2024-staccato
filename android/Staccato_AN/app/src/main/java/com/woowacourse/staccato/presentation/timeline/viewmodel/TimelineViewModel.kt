@@ -28,8 +28,11 @@ class TimelineViewModel(private val timelineRepository: TimelineRepository) : Vi
         get() = _errorMessage
 
     private val coroutineExceptionHandler =
-        CoroutineExceptionHandler { _, throwable ->
-            Log.e("TimelineViewModel", "An error occurred: ${throwable.message}")
+        CoroutineExceptionHandler { context, throwable ->
+            Log.e(
+                "TimelineViewModel",
+                "In coroutine context: $context\nAn error occurred: ${throwable.message}",
+            )
         }
 
     init {
