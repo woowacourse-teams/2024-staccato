@@ -51,9 +51,6 @@ class MemoryUpdateViewModel(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
-    private val _imageUri = MutableLiveData<Uri?>()
-    val imageUri: LiveData<Uri?> get() = _imageUri
-
     private val _thumbnailUrl = MutableLiveData<String>()
     val thumbnailUrl: LiveData<String> get() = _thumbnailUrl
 
@@ -86,11 +83,6 @@ class MemoryUpdateViewModel(
 
     fun setThumbnailUrl(imageResponse: ImageResponse?) {
         _thumbnailUrl.value = imageResponse?.imageUrl
-    }
-
-    fun setImage(uri: Uri?) {
-        _imageUri.value = uri
-        _imageUrl.value = null
     }
 
     fun updateMemory() {

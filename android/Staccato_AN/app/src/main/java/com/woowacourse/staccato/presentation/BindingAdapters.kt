@@ -5,7 +5,6 @@ import android.net.Uri
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
@@ -341,20 +340,4 @@ fun TextView.setPhotoNumbers(
 ) {
     text =
         resources.getString(R.string.all_photo_number).format(currentPhotoNumbers, maxPhotoNumbers)
-}
-
-@BindingAdapter(value = ["imageUrl", "imageUri"])
-fun View.isPhotoAttachIconVisible(
-    imageUrl: String?,
-    imageUri: Uri?,
-) {
-    visibility = if (imageUrl.isNullOrEmpty() && imageUri == null) View.VISIBLE else View.GONE
-}
-
-@BindingAdapter(value = ["imageUrl", "imageUri"])
-fun ImageButton.isPhotoDeletionVisible(
-    imageUrl: String?,
-    imageUri: Uri?,
-) {
-    visibility = if (imageUrl.isNullOrEmpty() && imageUri == null) View.GONE else View.VISIBLE
 }
