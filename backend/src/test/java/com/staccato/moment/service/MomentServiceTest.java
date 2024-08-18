@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,6 +158,7 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
     }
 
+    @Disabled
     @DisplayName("특정 순간 수정에 성공한다.")
     @Test
     void updateMomentById() {

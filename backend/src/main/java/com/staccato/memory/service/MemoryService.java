@@ -22,7 +22,7 @@ import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
-import com.staccato.s3.service.CloudStorageService;
+import com.staccato.image.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +33,7 @@ public class MemoryService {
     private final MemoryRepository memoryRepository;
     private final MemoryMemberRepository memoryMemberRepository;
     private final MomentRepository momentRepository;
-    private final CloudStorageService cloudStorageService;
+    private final ImageService imageService;
 
     @Transactional
     public MemoryIdResponse createMemory(MemoryRequest memoryRequest, MultipartFile thumbnailFile, Member member) {
@@ -105,7 +105,7 @@ public class MemoryService {
         if (Objects.isNull(thumbnailFile)) {
             return null;
         }
-        String thumbnailUrl = cloudStorageService.uploadFile(thumbnailFile);
+        String thumbnailUrl = imageService.uploadFile(thumbnailFile);
 
         return thumbnailUrl;
     }
