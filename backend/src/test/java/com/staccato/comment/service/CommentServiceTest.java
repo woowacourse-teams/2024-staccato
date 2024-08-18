@@ -3,6 +3,9 @@ package com.staccato.comment.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +78,7 @@ class CommentServiceTest extends ServiceSliceTest {
         Member momentOwner = memberRepository.save(MemberFixture.create("momentOwner"));
         Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
         Memory memory = memoryRepository.save(MemoryFixture.create(momentOwner));
-        Moment moment = momentRepository.save(MomentFixture.create(memory));
+        momentRepository.save(MomentFixture.create(memory));
         CommentRequest commentRequest = new CommentRequest(1L, "content");
 
         // when & then
@@ -117,7 +120,7 @@ class CommentServiceTest extends ServiceSliceTest {
         Moment moment = momentRepository.save(MomentFixture.create(memory));
         commentRepository.save(CommentFixture.create(moment, momentOwner));
 
-        // when
+        // when & then
         assertThatThrownBy(() -> commentService.readAllCommentsByMomentId(unexpectedMember, moment.getId()))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");

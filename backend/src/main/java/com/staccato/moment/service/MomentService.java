@@ -20,7 +20,7 @@ import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
-import com.staccato.s3.service.CloudStorageService;
+import com.staccato.image.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class MomentService {
     private final MomentRepository momentRepository;
     private final MemoryRepository memoryRepository;
-    private final CloudStorageService cloudStorageService;
+    private final ImageService imageService;
 
     @Transactional
     public MomentIdResponse createMoment(MomentRequest momentRequest, Member member) {
@@ -63,7 +63,7 @@ public class MomentService {
     ) {
         Moment moment = getMomentById(momentId);
         validateOwner(moment.getMemory(), member);
-        List<String> addedImageUrls = cloudStorageService.uploadFiles(momentImageFiles);
+        List<String> addedImageUrls = imageService.uploadFiles(momentImageFiles);
         MomentImages momentImages = MomentImages.builder()
                 .existingImages(momentUpdateRequest.momentImageUrls())
                 .addedImages(addedImageUrls)

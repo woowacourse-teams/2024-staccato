@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -37,13 +38,12 @@ import lombok.RequiredArgsConstructor;
 public class MemoryController implements MemoryControllerDocs {
     private final MemoryService memoryService;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     public ResponseEntity<MemoryIdResponse> createMemory(
-            @Valid @RequestPart(value = "data") MemoryRequest memoryRequest,
-            @RequestPart(value = "memoryThumbnailFile", required = false) MultipartFile memoryThumbnailFile,
+            @Valid @RequestBody MemoryRequest memoryRequest,
             @LoginMember Member member
     ) {
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, memoryThumbnailFile, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, member);
         return ResponseEntity.created(URI.create("/memories/" + memoryIdResponse.memoryId())).body(memoryIdResponse);
     }
 
