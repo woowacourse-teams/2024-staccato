@@ -11,7 +11,9 @@ import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.woowacourse.staccato.R
+import com.woowacourse.staccato.data.StaccatoClient.imageApiService
 import com.woowacourse.staccato.data.StaccatoClient.memoryApiService
+import com.woowacourse.staccato.data.image.ImageDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
 import com.woowacourse.staccato.databinding.ActivityMemoryUpdateBinding
@@ -30,6 +32,7 @@ class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), Mem
         MemoryUpdateViewModelFactory(
             memoryId,
             MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)),
+            ImageDefaultRepository(imageApiService),
         )
     }
     private val photoAttachFragment = PhotoAttachFragment()
