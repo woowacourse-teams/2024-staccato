@@ -5,7 +5,6 @@ import java.net.URI;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
@@ -64,13 +61,12 @@ public class MemoryController implements MemoryControllerDocs {
         return ResponseEntity.ok(memoryDetailResponse);
     }
 
-    @PutMapping(path = "/{memoryId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(path = "/{memoryId}")
     public ResponseEntity<Void> updateMemory(
             @PathVariable @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId,
-            @Valid @RequestPart(value = "data") MemoryRequest memoryRequest,
-            @RequestPart(value = "memoryThumbnailFile", required = false) MultipartFile memoryThumbnailFile,
+            @Valid @RequestBody MemoryRequest memoryRequest,
             @LoginMember Member member) {
-        memoryService.updateMemory(memoryRequest, memoryId, memoryThumbnailFile, member);
+        memoryService.updateMemory(memoryRequest, memoryId, member);
         return ResponseEntity.ok().build();
     }
 

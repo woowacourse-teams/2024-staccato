@@ -87,25 +87,12 @@ public class MemoryService {
     }
 
     @Transactional
-    public void updateMemory(MemoryRequest memoryRequest, Long memoryId, MultipartFile thumbnailFile, Member member) {
+    public void updateMemory(MemoryRequest memoryRequest, Long memoryId, Member member) {
         Memory updatedMemory = memoryRequest.toMemory();
         Memory originMemory = getMemoryById(memoryId);
         validateOwner(originMemory, member);
-        if (!Objects.isNull(thumbnailFile)) {
-            String thumbnailUrl = uploadFile(thumbnailFile);
-            updatedMemory.assignThumbnail(thumbnailUrl);
-        }
         List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAt(memoryId);
         originMemory.update(updatedMemory, moments);
-    }
-
-    private String uploadFile(MultipartFile thumbnailFile) {
-        if (Objects.isNull(thumbnailFile)) {
-            return null;
-        }
-        String thumbnailUrl = imageService.uploadFile(thumbnailFile);
-
-        return thumbnailUrl;
     }
 
     private Memory getMemoryById(long memoryId) {

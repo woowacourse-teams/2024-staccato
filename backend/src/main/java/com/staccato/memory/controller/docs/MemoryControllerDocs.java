@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.member.domain.Member;
 import com.staccato.memory.service.dto.request.MemoryRequest;
@@ -22,7 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface MemoryControllerDocs {
     @Operation(summary = "추억 생성", description = "추억(썸네일, 제목, 내용, 기간)을 생성합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "추억 생성 성공", responseCode = "200"),
+            @ApiResponse(description = "추억 생성 성공", responseCode = "201"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
@@ -39,7 +38,7 @@ public interface MemoryControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<MemoryIdResponse> createMemory(
-            @Parameter @Valid MemoryRequest memoryRequest,
+            @Parameter(required = true) @Valid MemoryRequest memoryRequest,
             @Parameter(hidden = true) Member member);
 
     @Operation(summary = "추억 목록 조회", description = "사용자의 전체/년도별 추억 목록을 조회합니다.")
@@ -93,8 +92,7 @@ public interface MemoryControllerDocs {
     })
     ResponseEntity<Void> updateMemory(
             @Parameter(description = "추억 ID", example = "1") @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long memoryId,
-            @Parameter(description = "key = data", required = true) @Valid MemoryRequest memoryRequest,
-            @Parameter(description = "key = memoryThumbnailFile") MultipartFile memoryThumbnailFile,
+            @Parameter(required = true) @Valid MemoryRequest memoryRequest,
             @Parameter(hidden = true) Member member);
 
     @Operation(summary = "추억 삭제", description = "사용자의 추억을 삭제합니다.")
