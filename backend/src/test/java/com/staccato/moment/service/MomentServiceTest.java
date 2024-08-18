@@ -13,7 +13,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockMultipartFile;
 
 import com.staccato.ServiceSliceTest;
 import com.staccato.comment.domain.Comment;
@@ -189,22 +188,18 @@ class MomentServiceTest extends ServiceSliceTest {
         Moment moment = saveMomentWithImages(memory);
 
         // when
-        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("newPlaceName", List.of("https://existExample.com.jpg"));
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("momentImagesFile", "newExample.jpg".getBytes());
-        momentService.updateMomentById(moment.getId(), momentUpdateRequest, List.of(mockMultipartFile), member);
+        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("newPlaceName", List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
+        momentService.updateMomentById(moment.getId(), momentUpdateRequest, member);
 
         // then
         Moment foundedMoment = momentRepository.findById(moment.getId()).get();
         assertAll(
                 () -> assertThat(foundedMoment.getPlaceName()).isEqualTo("newPlaceName"),
                 () -> assertThat(momentImageRepository.findById(1L)).isEmpty(),
-                () -> assertThat(momentImageRepository.findById(2L).get()
-                        .getImageUrl()).isEqualTo("https://existExample.com.jpg"),
-                () -> assertThat(momentImageRepository.findById(3L).get().getImageUrl()).isEqualTo("fakeUrl"),
-                () -> assertThat(momentImageRepository.findById(2L).get().getMoment()
-                        .getId()).isEqualTo(foundedMoment.getId()),
-                () -> assertThat(momentImageRepository.findById(3L).get().getMoment()
-                        .getId()).isEqualTo(foundedMoment.getId()),
+                () -> assertThat(momentImageRepository.findById(2L).get().getImageUrl()).isEqualTo("https://existExample.com.jpg"),
+                () -> assertThat(momentImageRepository.findById(3L).get().getImageUrl()).isEqualTo("https://existExample2.com.jpg"),
+                () -> assertThat(momentImageRepository.findById(2L).get().getMoment().getId()).isEqualTo(foundedMoment.getId()),
+                () -> assertThat(momentImageRepository.findById(3L).get().getMoment().getId()).isEqualTo(foundedMoment.getId()),
                 () -> assertThat(momentImageRepository.findAll().size()).isEqualTo(2)
         );
     }
@@ -220,7 +215,7 @@ class MomentServiceTest extends ServiceSliceTest {
         MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
 
         // when & then
-        assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentUpdateRequest, List.of(new MockMultipartFile("momentImagesFile", "namsan_tower.jpg".getBytes())), otherMember))
+        assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentUpdateRequest, otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -233,7 +228,7 @@ class MomentServiceTest extends ServiceSliceTest {
         MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
 
         // when & then
-        assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, List.of(new MockMultipartFile("momentImagesFile", "namsan_tower.jpg".getBytes())), member))
+        assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
     }
@@ -259,7 +254,7 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 순간을 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 순간을 삭제하려고 하면 예외가 발생한다.")
     @Test
     void cannotDeleteMomentByIdIfNotOwner() {
         // given

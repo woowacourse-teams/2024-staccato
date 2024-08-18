@@ -1,14 +1,10 @@
 package com.staccato.moment.controller.docs;
 
-import java.util.List;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.dto.request.FeelingRequest;
@@ -67,11 +63,11 @@ public interface MomentControllerDocs {
     })
     ResponseEntity<MomentDetailResponse> readMomentById(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "순간 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId);
+            @Parameter(description = "순간 ID", example = "1") @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId);
 
-    @Operation(summary = "특정 순간 수정", description = "특정 순간을 수정합니다.")
+    @Operation(summary = "순간 수정", description = "순간을 수정합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "특정 순간 수정 성공", responseCode = "200"),
+            @ApiResponse(description = "순간 수정 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
@@ -85,9 +81,8 @@ public interface MomentControllerDocs {
     })
     ResponseEntity<Void> updateMomentById(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "순간 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
-            @Parameter(description = "key = momentImageFiles") @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.") List<MultipartFile> momentImageFiles,
-            @Parameter(description = "key = data", required = true) @Valid MomentUpdateRequest request);
+            @Parameter(description = "순간 ID", example = "1") @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @Parameter(required = true) @Valid MomentUpdateRequest request);
 
     @Operation(summary = "순간 삭제", description = "순간을 삭제합니다.")
     @ApiResponses(value = {
@@ -96,7 +91,7 @@ public interface MomentControllerDocs {
     })
     ResponseEntity<Void> deleteMomentById(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "순간 ID", example = "1", required = true) @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId
+            @Parameter(description = "순간 ID", example = "1") @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId
     );
 
     @Operation(summary = "순간 기분 선택", description = "순간에 기분을 선택합니다.")
@@ -118,5 +113,5 @@ public interface MomentControllerDocs {
     ResponseEntity<Void> updateMomentFeelingById(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "순간 ID", example = "1") @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
-            @Valid FeelingRequest feelingRequest);
+            @Parameter(required = true) @Valid FeelingRequest feelingRequest);
 }

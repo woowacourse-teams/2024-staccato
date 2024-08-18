@@ -22,7 +22,7 @@ import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
-import com.staccato.s3.service.CloudStorageService;
+import com.staccato.image.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,13 +33,11 @@ public class MemoryService {
     private final MemoryRepository memoryRepository;
     private final MemoryMemberRepository memoryMemberRepository;
     private final MomentRepository momentRepository;
-    private final CloudStorageService cloudStorageService;
+    private final ImageService imageService;
 
     @Transactional
-    public MemoryIdResponse createMemory(MemoryRequest memoryRequest, MultipartFile thumbnailFile, Member member) {
+    public MemoryIdResponse createMemory(MemoryRequest memoryRequest, Member member) {
         Memory memory = memoryRequest.toMemory();
-        String thumbnailUrl = uploadFile(thumbnailFile);
-        memory.assignThumbnail(thumbnailUrl);
         memory.addMemoryMember(member);
         memoryRepository.save(memory);
         return new MemoryIdResponse(memory.getId());
@@ -89,25 +87,12 @@ public class MemoryService {
     }
 
     @Transactional
-    public void updateMemory(MemoryRequest memoryRequest, Long memoryId, MultipartFile thumbnailFile, Member member) {
+    public void updateMemory(MemoryRequest memoryRequest, Long memoryId, Member member) {
         Memory updatedMemory = memoryRequest.toMemory();
         Memory originMemory = getMemoryById(memoryId);
         validateOwner(originMemory, member);
-        if (!Objects.isNull(thumbnailFile)) {
-            String thumbnailUrl = uploadFile(thumbnailFile);
-            updatedMemory.assignThumbnail(thumbnailUrl);
-        }
         List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAt(memoryId);
         originMemory.update(updatedMemory, moments);
-    }
-
-    private String uploadFile(MultipartFile thumbnailFile) {
-        if (Objects.isNull(thumbnailFile)) {
-            return null;
-        }
-        String thumbnailUrl = cloudStorageService.uploadFile(thumbnailFile);
-
-        return thumbnailUrl;
     }
 
     private Memory getMemoryById(long memoryId) {

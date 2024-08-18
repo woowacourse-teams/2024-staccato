@@ -7,8 +7,10 @@ import jakarta.validation.constraints.Min;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.staccato.comment.controller.docs.CommentControllerDocs;
 import com.staccato.comment.service.CommentService;
 import com.staccato.comment.service.dto.request.CommentRequest;
+import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
@@ -47,5 +50,24 @@ public class CommentController implements CommentControllerDocs {
     ) {
         CommentResponses commentResponses = commentService.readAllCommentsByMomentId(member, momentId);
         return ResponseEntity.ok().body(commentResponses);
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateComment(
+            @LoginMember Member member,
+            @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
+            @Valid @RequestBody CommentUpdateRequest commentUpdateRequest
+    ) {
+        commentService.updateComment(member, commentId, commentUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteComment(
+            @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
+            @LoginMember Member member
+    ) {
+        commentService.deleteComment(commentId, member);
+        return ResponseEntity.ok().build();
     }
 }

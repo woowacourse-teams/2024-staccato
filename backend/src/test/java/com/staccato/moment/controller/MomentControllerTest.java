@@ -6,8 +6,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,7 +30,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -242,20 +241,14 @@ class MomentControllerTest {
         // given
         long momentId = 1L;
         MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
-        MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
+        String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/moments/{momentId}", momentId)
-                        .file(file)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(updateRequest)
-                                .getBytes()))
-                        .with(request -> {
-                            request.setMethod("PUT");
-                            return request;
-                        })
+        mockMvc.perform(put("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequestJson))
                 .andExpect(status().isOk());
     }
 
@@ -265,31 +258,21 @@ class MomentControllerTest {
         // given
         long momentId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
-        MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
-        MockMultipartFile file1 = new MockMultipartFile("momentImageFiles", "namsan_tower1.jpg".getBytes());
-        MockMultipartFile file2 = new MockMultipartFile("momentImageFiles", "namsan_tower2.jpg".getBytes());
-        MockMultipartFile file3 = new MockMultipartFile("momentImageFiles", "namsan_tower3.jpg".getBytes());
-        MockMultipartFile file4 = new MockMultipartFile("momentImageFiles", "namsan_tower4.jpg".getBytes());
-        MockMultipartFile file5 = new MockMultipartFile("momentImageFiles", "namsan_tower5.jpg".getBytes());
-        MockMultipartFile file6 = new MockMultipartFile("momentImageFiles", "namsan_tower6.jpg".getBytes());
+        MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName",
+                List.of("https://example.com/images/namsan_tower1.jpg",
+                        "https://example.com/images/namsan_tower2.jpg",
+                        "https://example.com/images/namsan_tower3.jpg",
+                        "https://example.com/images/namsan_tower4.jpg",
+                        "https://example.com/images/namsan_tower5.jpg",
+                        "https://example.com/images/namsan_tower6.jpg"));
+        String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/moments/{momentId}", momentId)
-                        .file(file1)
-                        .file(file2)
-                        .file(file3)
-                        .file(file4)
-                        .file(file5)
-                        .file(file6)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(updateRequest)
-                                .getBytes()))
-                        .with(request -> {
-                            request.setMethod("PUT");
-                            return request;
-                        })
+        mockMvc.perform(put("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequestJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -301,20 +284,14 @@ class MomentControllerTest {
         long momentId = 0L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
         MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
-        MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
+        String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/moments/{momentId}", momentId)
-                        .file(file)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(updateRequest)
-                                .getBytes()))
-                        .with(request -> {
-                            request.setMethod("PUT");
-                            return request;
-                        })
+        mockMvc.perform(put("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequestJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -324,22 +301,16 @@ class MomentControllerTest {
     void failUpdateMomentByPlaceName() throws Exception {
         // given
         long momentId = 1L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간한 장소의 이름을 입력해주세요.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 장소의 이름을 입력해주세요.");
         MomentUpdateRequest updateRequest = new MomentUpdateRequest(null, List.of("https://example1.com.jpg"));
-        MockMultipartFile file = new MockMultipartFile("momentImageFiles", "namsan_tower.jpg".getBytes());
+        String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/moments/{momentId}", momentId)
-                        .file(file)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(updateRequest)
-                                .getBytes()))
-                        .with(request -> {
-                            request.setMethod("PUT");
-                            return request;
-                        })
+        mockMvc.perform(put("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequestJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }

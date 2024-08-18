@@ -14,7 +14,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockMultipartFile;
 
 import com.staccato.ServiceSliceTest;
 import com.staccato.exception.ForbiddenException;
@@ -58,14 +57,9 @@ class MemoryServiceTest extends ServiceSliceTest {
     static Stream<Arguments> updateMemoryProvider() {
         return Stream.of(
                 Arguments.of(
-                        MemoryRequestFixture.create("imageUrl", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
-                        new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes()), "fakeUrl"),
+                        MemoryRequestFixture.create(null, LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)), null),
                 Arguments.of(
-                        MemoryRequestFixture.create(null, LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
-                        null, null),
-                Arguments.of(
-                        MemoryRequestFixture.create("imageUrl", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
-                        null, "imageUrl"));
+                        MemoryRequestFixture.create("imageUrl", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)), "imageUrl"));
     }
 
     @DisplayName("추억 정보를 기반으로, 추억을 생성하고 작성자를 저장한다.")
@@ -76,7 +70,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create());
 
         // when
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, null, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, member);
         MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId()).get(0);
 
         // then
@@ -92,8 +86,8 @@ class MemoryServiceTest extends ServiceSliceTest {
     void readAllMemories(Integer year, int expectedSize) {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), null, member);
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), null, member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
 
         // when
         MemoryResponses memoryResponses = memoryService.readAllMemories(member, year);
@@ -108,7 +102,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
 
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), null, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
 
         // when
         MemoryDetailResponse memoryDetailResponse = memoryService.readMemoryById(memoryIdResponse.memoryId(), member);
@@ -127,7 +121,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create("member"));
         Member otherMember = memberRepository.save(MemberFixture.create("otherMember"));
 
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), null, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
 
         // when & then
         assertThatThrownBy(() -> memoryService.readMemoryById(memoryIdResponse.memoryId(), otherMember))
@@ -141,7 +135,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
 
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), null, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
         Moment firstMoment = saveMoment(LocalDateTime.of(2023, 7, 1, 10, 0), memoryIdResponse.memoryId());
         Moment secondMoment = saveMoment(LocalDateTime.of(2023, 7, 1, 10, 10), memoryIdResponse.memoryId());
         Moment lastMoment = saveMoment(LocalDateTime.of(2023, 7, 5, 9, 0), memoryIdResponse.memoryId());
@@ -174,14 +168,13 @@ class MemoryServiceTest extends ServiceSliceTest {
     @DisplayName("추억 정보를 기반으로, 추억을 수정한다.")
     @MethodSource("updateMemoryProvider")
     @ParameterizedTest
-    void updateMemory(MemoryRequest updatedMemory, MockMultipartFile updatedFile, String expected) {
+    void updateMemory(MemoryRequest updatedMemory, String expected) {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
-        MemoryIdResponse memoryResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), file, member);
+        MemoryIdResponse memoryResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
 
         // when
-        memoryService.updateMemory(updatedMemory, memoryResponse.memoryId(), updatedFile, member);
+        memoryService.updateMemory(updatedMemory, memoryResponse.memoryId(), member);
         Memory foundedMemory = memoryRepository.findById(memoryResponse.memoryId()).get();
 
         // then
@@ -189,8 +182,8 @@ class MemoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(foundedMemory.getId()).isEqualTo(memoryResponse.memoryId()),
                 () -> assertThat(foundedMemory.getTitle()).isEqualTo(updatedMemory.memoryTitle()),
                 () -> assertThat(foundedMemory.getDescription()).isEqualTo(updatedMemory.description()),
-                () -> assertThat(foundedMemory.getStartAt()).isEqualTo(updatedMemory.startAt()),
-                () -> assertThat(foundedMemory.getEndAt()).isEqualTo(updatedMemory.endAt()),
+                () -> assertThat(foundedMemory.getTerm().getStartAt()).isEqualTo(updatedMemory.startAt()),
+                () -> assertThat(foundedMemory.getTerm().getEndAt()).isEqualTo(updatedMemory.endAt()),
                 () -> assertThat(foundedMemory.getThumbnailUrl()).isEqualTo(expected)
         );
     }
@@ -201,10 +194,9 @@ class MemoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         MemoryRequest memoryRequest = MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10));
-        MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
 
         // when & then
-        assertThatThrownBy(() -> memoryService.updateMemory(memoryRequest, 1L, file, member))
+        assertThatThrownBy(() -> memoryService.updateMemory(memoryRequest, 1L, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 추억을 찾을 수 없어요.");
     }
@@ -216,11 +208,10 @@ class MemoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create("member"));
         Member otherMember = memberRepository.save(MemberFixture.create("otherMember"));
         MemoryRequest updatedMemory = MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10));
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), null, member);
-        MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
 
         // when & then
-        assertThatThrownBy(() -> memoryService.updateMemory(updatedMemory, memoryIdResponse.memoryId(), file, otherMember))
+        assertThatThrownBy(() -> memoryService.updateMemory(updatedMemory, memoryIdResponse.memoryId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -230,7 +221,7 @@ class MemoryServiceTest extends ServiceSliceTest {
     void deleteMemory() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), null, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
 
         // when
         memoryService.deleteMemory(memoryIdResponse.memoryId(), member);
@@ -247,7 +238,7 @@ class MemoryServiceTest extends ServiceSliceTest {
     void deleteMemoryWithMoment() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), null, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
         saveMoment(LocalDateTime.of(2023, 7, 2, 10, 10), memoryIdResponse.memoryId());
 
         // when
@@ -271,7 +262,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create("member"));
         Member otherMember = memberRepository.save(MemberFixture.create("otherMember"));
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), null, member);
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
 
         // when & then
         assertThatThrownBy(() -> memoryService.deleteMemory(memoryIdResponse.memoryId(), otherMember))

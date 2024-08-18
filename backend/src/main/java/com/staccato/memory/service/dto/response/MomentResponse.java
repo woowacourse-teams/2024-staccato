@@ -7,7 +7,7 @@ import com.staccato.moment.domain.Moment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "특정 추억 상세 조회 시 보여주는 순간의 정보에 대한 응답 형식입니다.")
+@Schema(description = "추억 조회 시 보여주는 순간의 정보에 대한 응답 형식입니다.")
 public record MomentResponse(
         @Schema(example = "1")
         Long momentId,

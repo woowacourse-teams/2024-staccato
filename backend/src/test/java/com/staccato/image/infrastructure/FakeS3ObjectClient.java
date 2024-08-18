@@ -1,9 +1,9 @@
-package com.staccato;
+package com.staccato.image.infrastructure;
 
-import com.staccato.s3.domain.CloudStorageClient;
+import com.staccato.image.infrastructure.S3ObjectClient;
 
-public class FakeCloudStorageClient extends CloudStorageClient {
-    public FakeCloudStorageClient() {
+public class FakeS3ObjectClient extends S3ObjectClient {
+    public FakeS3ObjectClient() {
         super("fakeBuket", "fakeEndPoint", "fakeCloudFrontEndPoint");
     }
 

@@ -9,7 +9,7 @@ import com.staccato.memory.domain.Memory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "특정 추억에 대한 응답 형식입니다.")
+@Schema(description = "추억에 대한 응답 형식입니다.")
 public record MemoryDetailResponse(
         @Schema(example = "1")
         Long memoryId,
@@ -36,8 +36,8 @@ public record MemoryDetailResponse(
                 memory.getThumbnailUrl(),
                 memory.getTitle(),
                 memory.getDescription(),
-                memory.getStartAt(),
-                memory.getEndAt(),
+                memory.getTerm().getStartAt(),
+                memory.getTerm().getEndAt(),
                 toMemberResponses(memory),
                 momentResponses
         );
