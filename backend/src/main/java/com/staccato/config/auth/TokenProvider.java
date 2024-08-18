@@ -21,7 +21,7 @@ public class TokenProvider {
     public String create(Member member) {
         return Jwts.builder()
                 .claim("id", member.getId())
-                .claim("nickname", member.getNickname())
+                .claim("nickname", member.getNickname().getNickname())
                 .claim("createdAt", member.getCreatedAt().toString())
                 .signWith(SignatureAlgorithm.HS256, tokenProperties.secretKey().getBytes())
                 .compact();

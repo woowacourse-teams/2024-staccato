@@ -12,6 +12,7 @@ import com.staccato.ServiceSliceTest;
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.exception.StaccatoException;
+import com.staccato.exception.UnauthorizedException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
@@ -50,5 +51,18 @@ class AuthServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> authService.login(loginRequest))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("이미 존재하는 닉네임입니다. 다시 설정해주세요.");
+    }
+
+    @DisplayName("만약 전달 받은 토큰이 null일 경우 예외가 발생한다.")
+    @Test
+    void cannotExtractMemberByUnknown() {
+        // given
+        String nickname = "staccato";
+        memberRepository.save(Member.builder().nickname(nickname).build());
+
+        // when & then
+        assertThatThrownBy(() -> authService.extractFromToken(null))
+                .isInstanceOf(UnauthorizedException.class)
+                .hasMessage("인증되지 않은 사용자입니다.");
     }
 }
