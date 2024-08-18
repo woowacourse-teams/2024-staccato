@@ -91,7 +91,7 @@ public interface MomentControllerDocs {
     })
     ResponseEntity<Void> deleteMomentById(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "순간 ID", example = "1", required = true) @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId
+            @Parameter(description = "순간 ID", example = "1") @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId
     );
 
     @Operation(summary = "순간 기분 선택", description = "순간에 기분을 선택합니다.")
