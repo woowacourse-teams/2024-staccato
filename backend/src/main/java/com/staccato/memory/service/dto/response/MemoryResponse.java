@@ -28,8 +28,8 @@ public record MemoryResponse(
                 memory.getId(),
                 memory.getThumbnailUrl(),
                 memory.getTitle(),
-                memory.getStartAt(),
-                memory.getEndAt()
+                memory.getTerm().getStartAt(),
+                memory.getTerm().getEndAt()
         );
     }
 }

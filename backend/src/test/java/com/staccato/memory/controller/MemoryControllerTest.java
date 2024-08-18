@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,7 +30,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
@@ -74,14 +74,6 @@ class MemoryControllerTest {
                         "추억 제목을 입력해주세요."
                 ),
                 Arguments.of(
-                        new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 추억", null, LocalDate.of(2023, 7, 10)),
-                        "추억 시작 날짜를 입력해주세요."
-                ),
-                Arguments.of(
-                        new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), null),
-                        "추억 끝 날짜를 입력해주세요."
-                ),
-                Arguments.of(
                         new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "가".repeat(31), "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
                         "제목은 공백 포함 1자 이상 30자 이하로 설정해주세요."
                 ),
@@ -97,15 +89,13 @@ class MemoryControllerTest {
     @MethodSource("memoryRequestProvider")
     void createMemory(MemoryRequest memoryRequest) throws Exception {
         // given
-        MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(memoryService.createMemory(any(), any(), any())).thenReturn(new MemoryIdResponse(1));
+        when(memoryService.createMemory(any(), any())).thenReturn(new MemoryIdResponse(1));
 
         // when & then
-        mockMvc.perform(multipart("/memories")
-                        .file(file)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
+        mockMvc.perform(post("/memories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memoryRequest))
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/memories/1"))
@@ -118,13 +108,13 @@ class MemoryControllerTest {
     void failCreateMemory(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        when(memoryService.createMemory(any(MemoryRequest.class), any(MultipartFile.class), any(Member.class))).thenReturn(new MemoryIdResponse(1));
+        when(memoryService.createMemory(any(MemoryRequest.class), any(Member.class))).thenReturn(new MemoryIdResponse(1));
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
-        mockMvc.perform(multipart("/memories")
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
+        mockMvc.perform(post("/memories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memoryRequest))
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
@@ -251,7 +241,6 @@ class MemoryControllerTest {
 
         // when & then
         mockMvc.perform(delete("/memories/{memoryId}", memoryId)
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
     }
@@ -265,7 +254,6 @@ class MemoryControllerTest {
 
         // when & then
         mockMvc.perform(delete("/memories/{memoryId}", invalidId)
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));

@@ -36,8 +36,8 @@ public record MemoryDetailResponse(
                 memory.getThumbnailUrl(),
                 memory.getTitle(),
                 memory.getDescription(),
-                memory.getStartAt(),
-                memory.getEndAt(),
+                memory.getTerm().getStartAt(),
+                memory.getTerm().getEndAt(),
                 toMemberResponses(memory),
                 momentResponses
         );
