@@ -5,15 +5,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockMultipartFile;
 
 import com.staccato.ServiceSliceTest;
 import com.staccato.comment.domain.Comment;
@@ -35,6 +34,8 @@ import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
+import com.staccato.moment.service.dto.response.MomentLocationResponse;
+import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 class MomentServiceTest extends ServiceSliceTest {
     @Autowired
@@ -116,6 +117,26 @@ class MomentServiceTest extends ServiceSliceTest {
         return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
     }
 
+    @DisplayName("순간 목록 조회에 성공한다.")
+    @Test
+    void readAllMoment() {
+        // given
+        Member member = saveMember();
+        Memory memory = saveMemory(member);
+        saveMomentWithImages(memory);
+        saveMomentWithImages(memory);
+        saveMomentWithImages(memory);
+
+        // when
+        MomentLocationResponses actual = momentService.readAllMoment(member);
+
+        // then
+        assertThat(actual).isEqualTo(new MomentLocationResponses(
+                List.of(new MomentLocationResponse(1L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)),
+                        new MomentLocationResponse(2L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)),
+                        new MomentLocationResponse(3L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)))));
+    }
+
     @DisplayName("특정 순간 조회에 성공한다.")
     @Test
     void readMomentById() {
@@ -167,7 +188,7 @@ class MomentServiceTest extends ServiceSliceTest {
         Moment moment = saveMomentWithImages(memory);
 
         // when
-        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("newPlaceName", List.of("https://existExample.com.jpg","https://existExample2.com.jpg"));
+        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("newPlaceName", List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
         momentService.updateMomentById(moment.getId(), momentUpdateRequest, member);
 
         // then
@@ -253,7 +274,8 @@ class MomentServiceTest extends ServiceSliceTest {
     }
 
     private Memory saveMemory(Member member) {
-        Memory memory = Memory.builder().title("Sample Memory").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build();
+        Memory memory = Memory.builder().title("Sample Memory").startAt(LocalDate.now())
+                .endAt(LocalDate.now().plusDays(1)).build();
         memory.addMemoryMember(member);
         return memoryRepository.save(memory);
     }

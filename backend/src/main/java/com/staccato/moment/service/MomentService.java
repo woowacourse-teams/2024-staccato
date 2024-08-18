@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
-import com.staccato.image.service.ImageService;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
@@ -17,6 +16,8 @@ import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
+import com.staccato.moment.service.dto.response.MomentLocationResponse;
+import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 public class MomentService {
     private final MomentRepository momentRepository;
     private final MemoryRepository memoryRepository;
-    private final ImageService imageService;
 
     @Transactional
     public MomentIdResponse createMoment(MomentRequest momentRequest, Member member) {
@@ -42,6 +42,12 @@ public class MomentService {
     private Memory getMemoryById(long memoryId) {
         return memoryRepository.findById(memoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
+    }
+
+    public MomentLocationResponses readAllMoment(Member member) {
+        return new MomentLocationResponses(momentRepository.findAllByMemory_MemoryMembers_Member(member)
+                .stream()
+                .map(MomentLocationResponse::new).toList());
     }
 
     public MomentDetailResponse readMomentById(long momentId, Member member) {

@@ -30,6 +30,7 @@ import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
+import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,6 +49,12 @@ public class MomentController implements MomentControllerDocs {
         MomentIdResponse momentIdResponse = momentService.createMoment(momentRequest, member);
         return ResponseEntity.created(URI.create("/moments/" + momentIdResponse.momentId()))
                 .body(momentIdResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<MomentLocationResponses> readAllMoment(@LoginMember Member member) {
+        MomentLocationResponses momentLocationResponses = momentService.readAllMoment(member);
+        return ResponseEntity.ok().body(momentLocationResponses);
     }
 
     @GetMapping("/{momentId}")

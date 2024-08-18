@@ -12,6 +12,7 @@ import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
+import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -44,9 +45,13 @@ public interface MomentControllerDocs {
             @Parameter(required = true) @Valid MomentRequest momentRequest
     );
 
-    @Operation(summary = "특정 순간 조회", description = "특정 순간을 조회합니다.")
+    @Operation(summary = "순간 목록 조회", description = "순간 목록을 조회합니다.")
+    @ApiResponse(description = "순간 목록 조회 성공", responseCode = "200")
+    ResponseEntity<MomentLocationResponses> readAllMoment(@Parameter(hidden = true) Member member);
+
+    @Operation(summary = "순간 조회", description = "순간을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "특정 순간 조회 성공", responseCode = "200"),
+            @ApiResponse(description = "순간 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
@@ -58,7 +63,7 @@ public interface MomentControllerDocs {
     })
     ResponseEntity<MomentDetailResponse> readMomentById(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "순간 ID", example = "1", required = true) @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId);
+            @Parameter(description = "순간 ID", example = "1") @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId);
 
     @Operation(summary = "순간 수정", description = "순간을 수정합니다.")
     @ApiResponses(value = {

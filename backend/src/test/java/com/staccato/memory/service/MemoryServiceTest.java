@@ -8,14 +8,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockMultipartFile;
 
 import com.staccato.ServiceSliceTest;
 import com.staccato.exception.ForbiddenException;
@@ -59,14 +57,9 @@ class MemoryServiceTest extends ServiceSliceTest {
     static Stream<Arguments> updateMemoryProvider() {
         return Stream.of(
                 Arguments.of(
-                        MemoryRequestFixture.create("imageUrl", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
-                        new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes()), "fakeUrl"),
+                        MemoryRequestFixture.create(null, LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)), null),
                 Arguments.of(
-                        MemoryRequestFixture.create(null, LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
-                        null, null),
-                Arguments.of(
-                        MemoryRequestFixture.create("imageUrl", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)),
-                        null, "imageUrl"));
+                        MemoryRequestFixture.create("imageUrl", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)), "imageUrl"));
     }
 
     @DisplayName("추억 정보를 기반으로, 추억을 생성하고 작성자를 저장한다.")
@@ -172,11 +165,10 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 추억을 찾을 수 없어요.");
     }
 
-    @Disabled
     @DisplayName("추억 정보를 기반으로, 추억을 수정한다.")
     @MethodSource("updateMemoryProvider")
     @ParameterizedTest
-    void updateMemory(MemoryRequest updatedMemory, MockMultipartFile updatedFile, String expected) {
+    void updateMemory(MemoryRequest updatedMemory, String expected) {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         MemoryIdResponse memoryResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
