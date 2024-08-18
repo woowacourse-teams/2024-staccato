@@ -6,8 +6,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -176,15 +176,10 @@ class MemoryControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
 
         // when & then
-        mockMvc.perform(multipart("/memories/{memoryId}", memoryId)
-                        .file(file)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
-                        .with(request -> {
-                            request.setMethod("PUT");
-                            return request;
-                        })
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
+        mockMvc.perform(put("/memories/{memoryId}", memoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memoryRequest).getBytes()))
                 .andExpect(status().isOk());
     }
 
@@ -198,14 +193,10 @@ class MemoryControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
-        mockMvc.perform(multipart("/memories/{memoryId}", memoryId)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
-                        .with(request -> {
-                            request.setMethod("PUT");
-                            return request;
-                        })
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
+        mockMvc.perform(put("/memories/{memoryId}", memoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memoryRequest).getBytes()))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -220,14 +211,10 @@ class MemoryControllerTest {
         MemoryRequest memoryRequest = MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
 
         // when & then
-        mockMvc.perform(multipart("/memories/{memoryId}", memoryId)
-                        .file(new MockMultipartFile("data", "", "application/json", objectMapper.writeValueAsString(memoryRequest).getBytes()))
-                        .with(request -> {
-                            request.setMethod("PUT");
-                            return request;
-                        })
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
+        mockMvc.perform(put("/memories/{memoryId}", memoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memoryRequest).getBytes()))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }

@@ -182,7 +182,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         MemoryIdResponse memoryResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
 
         // when
-        memoryService.updateMemory(updatedMemory, memoryResponse.memoryId(), updatedFile, member);
+        memoryService.updateMemory(updatedMemory, memoryResponse.memoryId(), member);
         Memory foundedMemory = memoryRepository.findById(memoryResponse.memoryId()).get();
 
         // then
@@ -202,10 +202,9 @@ class MemoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         MemoryRequest memoryRequest = MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10));
-        MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
 
         // when & then
-        assertThatThrownBy(() -> memoryService.updateMemory(memoryRequest, 1L, file, member))
+        assertThatThrownBy(() -> memoryService.updateMemory(memoryRequest, 1L, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 추억을 찾을 수 없어요.");
     }
@@ -218,10 +217,9 @@ class MemoryServiceTest extends ServiceSliceTest {
         Member otherMember = memberRepository.save(MemberFixture.create("otherMember"));
         MemoryRequest updatedMemory = MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10));
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
-        MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
 
         // when & then
-        assertThatThrownBy(() -> memoryService.updateMemory(updatedMemory, memoryIdResponse.memoryId(), file, otherMember))
+        assertThatThrownBy(() -> memoryService.updateMemory(updatedMemory, memoryIdResponse.memoryId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
