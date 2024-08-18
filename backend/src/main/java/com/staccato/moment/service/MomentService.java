@@ -1,26 +1,22 @@
 package com.staccato.moment.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.image.service.ImageService;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
-import com.staccato.moment.domain.MomentImages;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
-import com.staccato.image.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -58,18 +54,11 @@ public class MomentService {
     public void updateMomentById(
             long momentId,
             MomentUpdateRequest momentUpdateRequest,
-            List<MultipartFile> momentImageFiles,
             Member member
     ) {
         Moment moment = getMomentById(momentId);
         validateOwner(moment.getMemory(), member);
-        List<String> addedImageUrls = imageService.uploadFiles(momentImageFiles);
-        MomentImages momentImages = MomentImages.builder()
-                .existingImages(momentUpdateRequest.momentImageUrls())
-                .addedImages(addedImageUrls)
-                .build();
-
-        moment.update(momentUpdateRequest.placeName(), momentImages);
+        moment.update(momentUpdateRequest.placeName(), momentUpdateRequest.toMomentImages());
     }
 
     private Moment getMomentById(long momentId) {

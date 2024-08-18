@@ -158,7 +158,6 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
     }
 
-    @Disabled
     @DisplayName("특정 순간 수정에 성공한다.")
     @Test
     void updateMomentById() {
@@ -168,9 +167,8 @@ class MomentServiceTest extends ServiceSliceTest {
         Moment moment = saveMomentWithImages(memory);
 
         // when
-        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("newPlaceName", List.of("https://existExample.com.jpg"));
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("momentImagesFile", "newExample.jpg".getBytes());
-        momentService.updateMomentById(moment.getId(), momentUpdateRequest, List.of(mockMultipartFile), member);
+        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("newPlaceName", List.of("https://existExample.com.jpg","https://existExample2.com.jpg"));
+        momentService.updateMomentById(moment.getId(), momentUpdateRequest, member);
 
         // then
         Moment foundedMoment = momentRepository.findById(moment.getId()).get();
@@ -178,7 +176,7 @@ class MomentServiceTest extends ServiceSliceTest {
                 () -> assertThat(foundedMoment.getPlaceName()).isEqualTo("newPlaceName"),
                 () -> assertThat(momentImageRepository.findById(1L)).isEmpty(),
                 () -> assertThat(momentImageRepository.findById(2L).get().getImageUrl()).isEqualTo("https://existExample.com.jpg"),
-                () -> assertThat(momentImageRepository.findById(3L).get().getImageUrl()).isEqualTo("fakeUrl"),
+                () -> assertThat(momentImageRepository.findById(3L).get().getImageUrl()).isEqualTo("https://existExample2.com.jpg"),
                 () -> assertThat(momentImageRepository.findById(2L).get().getMoment().getId()).isEqualTo(foundedMoment.getId()),
                 () -> assertThat(momentImageRepository.findById(3L).get().getMoment().getId()).isEqualTo(foundedMoment.getId()),
                 () -> assertThat(momentImageRepository.findAll().size()).isEqualTo(2)
@@ -196,7 +194,7 @@ class MomentServiceTest extends ServiceSliceTest {
         MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
 
         // when & then
-        assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentUpdateRequest, List.of(new MockMultipartFile("momentImagesFile", "namsan_tower.jpg".getBytes())), otherMember))
+        assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentUpdateRequest, otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -209,7 +207,7 @@ class MomentServiceTest extends ServiceSliceTest {
         MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
 
         // when & then
-        assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, List.of(new MockMultipartFile("momentImagesFile", "namsan_tower.jpg".getBytes())), member))
+        assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
     }
