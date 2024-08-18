@@ -33,8 +33,8 @@ class MemoryUpdateViewModel(
     private val _memory = MutableLiveData<NewMemory>()
     val memory: LiveData<NewMemory> get() = _memory
 
-    private val _imageUrl = MutableLiveData<String?>()
-    val imageUrl: LiveData<String?> get() = _imageUrl
+    private val _thumbnailUrl = MutableLiveData<String?>()
+    val thumbnailUrl: LiveData<String?> get() = _thumbnailUrl
 
     val title = ObservableField<String>()
     val description = ObservableField<String>()
@@ -50,9 +50,6 @@ class MemoryUpdateViewModel(
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
-
-    private val _thumbnailUrl = MutableLiveData<String>()
-    val thumbnailUrl: LiveData<String> get() = _thumbnailUrl
 
     private val _isPosting = MutableLiveData<Boolean>()
     val isPosting: LiveData<Boolean> get() = _isPosting
@@ -108,7 +105,7 @@ class MemoryUpdateViewModel(
     }
 
     private fun initializeMemory(memory: Memory) {
-        _imageUrl.value = memory.memoryThumbnailUrl
+        _thumbnailUrl.value = memory.memoryThumbnailUrl
         title.set(memory.memoryTitle)
         description.set(memory.description)
         _startDate.value = memory.startAt
@@ -117,7 +114,7 @@ class MemoryUpdateViewModel(
 
     private fun makeNewMemory() =
         NewMemory(
-            memoryThumbnailUrl = imageUrl.value,
+            memoryThumbnailUrl = thumbnailUrl.value,
             memoryTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
             endAt = endDate.value ?: throw IllegalArgumentException(),
