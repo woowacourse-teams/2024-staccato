@@ -1,7 +1,6 @@
 package com.woowacourse.staccato.presentation.timeline.viewmodel
 
 import android.util.Log
-import android.util.Printer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -83,9 +82,7 @@ class TimelineViewModel(private val timelineRepository: TimelineRepository) : Vi
     }
 
     companion object {
-        fun factory(
-            timelineRepository: TimelineRepository = TimelineDefaultRepository(),
-        ): TimelineViewModelFactory {
+        fun factory(timelineRepository: TimelineRepository = TimelineDefaultRepository()): TimelineViewModelFactory {
             return TimelineViewModelFactory(timelineRepository)
         }
     }

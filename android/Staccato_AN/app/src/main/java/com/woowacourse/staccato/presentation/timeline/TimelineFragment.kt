@@ -14,7 +14,6 @@ import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEM
 import com.woowacourse.staccato.presentation.timeline.adapter.TimelineAdapter
 import com.woowacourse.staccato.presentation.timeline.model.TimelineUiModel
 import com.woowacourse.staccato.presentation.timeline.viewmodel.TimelineViewModel
-import com.woowacourse.staccato.presentation.timeline.viewmodel.TimelineViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
 
 class TimelineFragment :

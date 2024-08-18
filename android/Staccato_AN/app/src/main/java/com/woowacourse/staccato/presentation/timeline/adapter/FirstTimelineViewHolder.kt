@@ -13,10 +13,11 @@ class FirstTimelineViewHolder(
     override fun bind(item: TimelineUiModel) {
         binding.memory = item
         binding.eventHandler = eventHandler
-        binding.viewTimeline.visibility = if (isOnlyOne) {
-            View.INVISIBLE
-        } else {
-            View.VISIBLE
-        }
+        binding.viewTimeline.visibility =
+            if (isOnlyOne) {
+                View.INVISIBLE
+            } else {
+                View.VISIBLE
+            }
     }
 }
