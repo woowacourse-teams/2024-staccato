@@ -113,6 +113,6 @@ public interface MomentControllerDocs {
     })
     ResponseEntity<Void> updateMomentFeelingById(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "순간 ID", example = "1") @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
-            @Valid FeelingRequest feelingRequest);
+            @Parameter(description = "순간 ID", example = "1", required = true) @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @Parameter(description = "기분 선택 시 요구 형식", required = true) @Valid FeelingRequest feelingRequest);
 }
