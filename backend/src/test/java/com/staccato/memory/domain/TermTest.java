@@ -21,14 +21,34 @@ class TermTest {
                 .hasMessage("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
     }
 
-    @DisplayName("특정 날짜가 추억 날짜에 속하는지 알 수 있다.")
+    @DisplayName("특정 날짜가 추억 기간에 속하지 않으면 참을 반환한다.")
     @Test
-    void withoutDuration() {
+    void isOutOfTerm() {
         // given
         Term term = new Term(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
 
         // when & then
         assertThat(term.doesNotContain(LocalDateTime.of(2023, 7, 11, 10, 0))).isTrue();
+    }
+
+    @DisplayName("특정 날짜가 추억 기간에 속하면 거짓을 반환한다.")
+    @Test
+    void isInTerm() {
+        // given
+        Term term = new Term(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
+
+        // when & then
+        assertThat(term.doesNotContain(LocalDateTime.of(2023, 7, 1, 10, 0))).isFalse();
+    }
+
+    @DisplayName("추억 기간이 없다면, 어떤 날짜든 거짓을 반환한다.")
+    @Test
+    void isNoTerm() {
+        // given
+        Term term = new Term(null, null);
+
+        // when & then
+        assertThat(term.doesNotContain(LocalDateTime.of(2023, 7, 11, 10, 0))).isFalse();
     }
 
     @DisplayName("끝 날짜는 있는데, 시작 날짜가 누락되면 예외를 발생한다.")
