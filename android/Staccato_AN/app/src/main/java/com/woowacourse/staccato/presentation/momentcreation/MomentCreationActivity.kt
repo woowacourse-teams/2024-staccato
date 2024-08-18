@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
@@ -39,7 +41,6 @@ class MomentCreationActivity :
         initAdapter()
         initToolbar()
         observeViewModelData()
-        setHidingKeyboardAction()
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
@@ -50,6 +51,40 @@ class MomentCreationActivity :
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.visit_creation_posting))
         viewModel.createMoment(memoryId, this)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            currentFocus?.let { view ->
+                if (!isTouchInsideView(event, view)) {
+                    clearFocusAndHideKeyboard(view)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
+
+    private fun isTouchInsideView(
+        event: MotionEvent,
+        view: View,
+    ): Boolean {
+        val rect = android.graphics.Rect()
+        view.getGlobalVisibleRect(rect)
+        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
+    }
+
+    private fun clearFocusAndHideKeyboard(view: View) {
+        view.clearFocus()
+        hideKeyboard(view)
+    }
+
+    private fun hideKeyboard(view: View) {
+        val inputManager: InputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.hideSoftInputFromWindow(
+            view.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
     }
 
     private fun initMemoryInfo() {
@@ -93,23 +128,6 @@ class MomentCreationActivity :
         viewModel.errorMessage.observe(this) {
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
-        }
-    }
-
-    private fun setHidingKeyboardAction() {
-        binding.root.setOnClickListener {
-            hideKeyboard()
-        }
-    }
-
-    private fun hideKeyboard() {
-        if (this.currentFocus != null) {
-            val inputManager: InputMethodManager =
-                this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputManager.hideSoftInputFromWindow(
-                this.currentFocus?.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS,
-            )
         }
     }
 
