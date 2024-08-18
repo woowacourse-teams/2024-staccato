@@ -69,7 +69,7 @@ class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), Mem
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
-        viewModel.setImage(uris.first())
+        viewModel.createThumbnailUrl(this, uris.first())
     }
 
     private fun buildDateRangePicker() =
