@@ -28,7 +28,7 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
                         parent,
                         false,
                     )
-                FirstTimelineViewHolder(binding, eventHandler)
+                FirstTimelineViewHolder(binding, eventHandler, currentList.size == LIST_SIZE_ONE)
             }
 
             TimelineViewType.MIDDLE_ITEM -> {
@@ -65,6 +65,8 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
     }
 
     companion object {
+        private const val LIST_SIZE_ONE = 1
+
         val diffUtil =
             object : DiffUtil.ItemCallback<TimelineUiModel>() {
                 override fun areContentsTheSame(
