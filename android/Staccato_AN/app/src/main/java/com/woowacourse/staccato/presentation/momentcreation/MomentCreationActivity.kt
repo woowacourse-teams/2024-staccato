@@ -34,6 +34,9 @@ class MomentCreationActivity :
     private lateinit var adapter: PhotoAttachAdapter
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
+    private val inputManager: InputMethodManager by lazy {
+        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+    }
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initMemoryInfo()
@@ -79,8 +82,6 @@ class MomentCreationActivity :
     }
 
     private fun hideKeyboard(view: View) {
-        val inputManager: InputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(
             view.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS,
