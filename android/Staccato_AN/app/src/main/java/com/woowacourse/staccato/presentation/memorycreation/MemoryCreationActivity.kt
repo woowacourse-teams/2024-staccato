@@ -62,11 +62,11 @@ class MemoryCreationActivity : BindingActivity<ActivityMemoryCreationBinding>(),
     }
 
     override fun onImageDeletionClicked() {
-        viewModel.setImageUri(null)
+        viewModel.setThumbnailUrl(null)
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
-        viewModel.setImageUri(uris.first())
+        viewModel.createThumbnailUrl(this, uris.first())
     }
 
     private fun buildDateRangePicker() =

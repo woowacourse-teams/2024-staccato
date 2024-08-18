@@ -74,7 +74,7 @@ class MemoryUpdateViewModel(
         _isPosting.value = true
         viewModelScope.launch {
             val newMemory: NewMemory = makeNewMemory()
-            val thumbnailFile: MultipartBody.Part? = convertMemoryUriToFile(context, _imageUri.value, MEMORY_FILE_NAME)
+            val thumbnailFile: MultipartBody.Part? = convertMemoryUriToFile(context, _imageUri.value ?: return@launch, MEMORY_FILE_NAME)
             val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory, thumbnailFile)
             result
                 .onSuccess { updateSuccessStatus() }

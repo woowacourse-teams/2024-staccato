@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.presentation.memorycreation.viewmodel
 
+import android.content.Context
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
@@ -11,11 +12,13 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.Status
+import com.woowacourse.staccato.data.dto.image.ImageResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.domain.model.NewMemory
 import com.woowacourse.staccato.domain.repository.ImageRepository
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
+import com.woowacourse.staccato.presentation.util.convertMemoryUriToFile
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -41,11 +44,28 @@ class MemoryCreationViewModel(
     private val _imageUri = MutableLiveData<Uri?>()
     val imageUri: LiveData<Uri?> get() = _imageUri
 
+    private val _thumbnailUrl = MutableLiveData<String>()
+    val thumbnailUrl: LiveData<String> get() = _thumbnailUrl
+
     private val _isPosting = MutableLiveData<Boolean>(false)
     val isPosting: LiveData<Boolean> get() = _isPosting
 
-    fun setImageUri(uri: Uri?) {
-        _imageUri.value = uri
+    fun createThumbnailUrl(
+        context: Context,
+        thumbnailUri: Uri,
+    ) {
+        val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
+        viewModelScope.launch {
+            val result: ResponseResult<ImageResponse> =
+                imageRepository.convertImageFileToUrl(thumbnailFile)
+            result.onSuccess(::setThumbnailUrl)
+                .onServerError(::handleServerError)
+                .onException(::handelException)
+        }
+    }
+
+    fun setThumbnailUrl(imageResponse: ImageResponse?) {
+        _thumbnailUrl.value = imageResponse?.imageUrl
     }
 
     fun setMemoryPeriod(
@@ -98,7 +118,7 @@ class MemoryCreationViewModel(
     }
 
     companion object {
-        private const val MEMORY_FILE_NAME = "memoryThumbnailFile"
+        private const val MEMORY_FILE_NAME = "imageFile"
         private const val MEMORY_CREATION_ERROR_MESSAGE = "추억 생성에 실패했습니다"
     }
 }
