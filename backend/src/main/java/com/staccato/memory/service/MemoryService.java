@@ -36,10 +36,8 @@ public class MemoryService {
     private final ImageService imageService;
 
     @Transactional
-    public MemoryIdResponse createMemory(MemoryRequest memoryRequest, MultipartFile thumbnailFile, Member member) {
+    public MemoryIdResponse createMemory(MemoryRequest memoryRequest, Member member) {
         Memory memory = memoryRequest.toMemory();
-        String thumbnailUrl = uploadFile(thumbnailFile);
-        memory.assignThumbnail(thumbnailUrl);
         memory.addMemoryMember(member);
         memoryRepository.save(memory);
         return new MemoryIdResponse(memory.getId());
