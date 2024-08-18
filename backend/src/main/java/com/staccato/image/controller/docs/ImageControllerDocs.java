@@ -26,7 +26,7 @@ public interface ImageControllerDocs {
             @ApiResponse(description = "20MB 초과의 사진을 업로드 하려고 할 때", responseCode = "413")
     })
     ResponseEntity<ImageUrlResponse> uploadImage(
-            @Parameter(description = "업로드할 이미지 파일 (PNG, JPG, JPEG, WEBP 형식 지원, 최대 20MB",
+            @Parameter(description = "업로드할 이미지 파일 (PNG, JPG, JPEG, WEBP) 형식 지원, 최대 20MB",
                     required = true,
                     content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))
             @RequestPart(value = "imageFile") MultipartFile image,
