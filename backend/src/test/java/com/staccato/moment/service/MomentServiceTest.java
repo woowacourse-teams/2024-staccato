@@ -233,7 +233,7 @@ class MomentServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 순간을 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 순간을 삭제하려고 하면 예외가 발생한다.")
     @Test
     void cannotDeleteMomentByIdIfNotOwner() {
         // given
