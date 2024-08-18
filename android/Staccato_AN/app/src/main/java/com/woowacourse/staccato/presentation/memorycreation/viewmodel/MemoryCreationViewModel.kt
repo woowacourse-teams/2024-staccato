@@ -13,6 +13,7 @@ import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.Status
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.domain.model.NewMemory
+import com.woowacourse.staccato.domain.repository.ImageRepository
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ import java.time.LocalDate
 
 class MemoryCreationViewModel(
     private val memoryRepository: MemoryRepository,
+    private val imageRepository: ImageRepository,
 ) : ViewModel() {
     val title = ObservableField<String>()
     val description = ObservableField<String>()

@@ -11,7 +11,9 @@ import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.woowacourse.staccato.R
+import com.woowacourse.staccato.data.StaccatoClient.imageApiService
 import com.woowacourse.staccato.data.StaccatoClient.memoryApiService
+import com.woowacourse.staccato.data.image.ImageDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
 import com.woowacourse.staccato.databinding.ActivityMemoryCreationBinding
@@ -26,7 +28,10 @@ import com.woowacourse.staccato.presentation.util.showToast
 class MemoryCreationActivity : BindingActivity<ActivityMemoryCreationBinding>(), MemoryCreationHandler, OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_creation
     private val viewModel: MemoryCreationViewModel by viewModels {
-        MemoryCreationViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
+        MemoryCreationViewModelFactory(
+            MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)),
+            ImageDefaultRepository(imageApiService),
+        )
     }
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
