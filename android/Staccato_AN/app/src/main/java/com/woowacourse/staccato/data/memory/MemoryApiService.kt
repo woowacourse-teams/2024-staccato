@@ -3,16 +3,12 @@ package com.woowacourse.staccato.data.memory
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryRequest
 import com.woowacourse.staccato.data.dto.memory.MemoryResponse
-import com.woowacourse.staccato.data.dto.memory.MemoryUpdateRequest
-import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface MemoryApiService {
@@ -26,12 +22,10 @@ interface MemoryApiService {
         @Body memoryRequest: MemoryRequest,
     ): Response<MemoryCreationResponse>
 
-    @Multipart
     @PUT(MEMORY_PATH_WITH_ID)
     suspend fun putMemory(
         @Path("memoryId") memoryId: Long,
-        @Part("data") data: MemoryUpdateRequest,
-        @Part memoryThumbnailFile: MultipartBody.Part?,
+        @Body memoryRequest: MemoryRequest,
     ): Response<Unit>
 
     @DELETE(MEMORY_PATH_WITH_ID)

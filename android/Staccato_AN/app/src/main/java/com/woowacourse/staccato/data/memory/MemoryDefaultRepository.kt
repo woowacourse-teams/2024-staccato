@@ -6,7 +6,6 @@ import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.model.NewMemory
 import com.woowacourse.staccato.domain.repository.MemoryRepository
-import okhttp3.MultipartBody
 
 class MemoryDefaultRepository(
     private val memoryDataSource: MemoryDataSource,
@@ -30,9 +29,8 @@ class MemoryDefaultRepository(
     override suspend fun updateMemory(
         memoryId: Long,
         newMemory: NewMemory,
-        thumbnailFile: MultipartBody.Part?,
     ): ResponseResult<Unit> {
-        return when (val responseResult = memoryDataSource.updateMemory(memoryId, newMemory, thumbnailFile)) {
+        return when (val responseResult = memoryDataSource.updateMemory(memoryId, newMemory)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)

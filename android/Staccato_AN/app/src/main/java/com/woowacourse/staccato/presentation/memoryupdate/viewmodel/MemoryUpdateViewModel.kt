@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.memoryupdate.viewmodel
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.databinding.ObservableField
@@ -19,9 +18,7 @@ import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
-import com.woowacourse.staccato.presentation.util.convertMemoryUriToFile
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 import java.time.LocalDate
 
 class MemoryUpdateViewModel(
@@ -70,12 +67,11 @@ class MemoryUpdateViewModel(
         _imageUrl.value = null
     }
 
-    fun updateMemory(context: Context) {
+    fun updateMemory() {
         _isPosting.value = true
         viewModelScope.launch {
             val newMemory: NewMemory = makeNewMemory()
-            val thumbnailFile: MultipartBody.Part? = convertMemoryUriToFile(context, _imageUri.value ?: return@launch, MEMORY_FILE_NAME)
-            val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory, thumbnailFile)
+            val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory)
             result
                 .onSuccess { updateSuccessStatus() }
                 .onServerError(::handleServerError)
