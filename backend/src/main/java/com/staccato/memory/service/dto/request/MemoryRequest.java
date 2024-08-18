@@ -11,7 +11,7 @@ import com.staccato.memory.domain.Memory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "추억 상세를 생성/수정하기 위한 요청 형식입니다.")
+@Schema(description = "추억을 생성/수정하기 위한 요청 형식입니다.")
 public record MemoryRequest(
         @Schema(example = "http://example.com/london.png")
         String memoryThumbnailUrl,
