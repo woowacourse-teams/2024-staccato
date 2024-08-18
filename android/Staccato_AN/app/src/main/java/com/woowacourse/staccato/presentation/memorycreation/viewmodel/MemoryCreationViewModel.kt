@@ -92,6 +92,7 @@ class MemoryCreationViewModel(
 
     private fun makeNewMemory(): NewMemory =
         NewMemory(
+            memoryThumbnailUrl = thumbnailUrl.value ?: throw IllegalArgumentException(),
             memoryTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
             endAt = endDate.value ?: throw IllegalArgumentException(),
