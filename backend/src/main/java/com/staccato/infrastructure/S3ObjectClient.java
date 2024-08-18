@@ -1,4 +1,4 @@
-package com.staccato.image.domain;
+package com.staccato.infrastructure;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

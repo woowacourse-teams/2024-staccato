@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.exception.StaccatoException;
-import com.staccato.image.domain.S3ObjectClient;
+import com.staccato.infrastructure.S3ObjectClient;
 import com.staccato.image.service.dto.ImageUrlResponse;
 
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,4 @@
-package com.staccato;
-
-import com.staccato.image.domain.S3ObjectClient;
+package com.staccato.infrastructure;
 
 public class FakeS3ObjectClient extends S3ObjectClient {
     public FakeS3ObjectClient() {
