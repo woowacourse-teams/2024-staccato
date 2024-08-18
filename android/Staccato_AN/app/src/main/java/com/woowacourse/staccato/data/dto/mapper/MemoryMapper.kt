@@ -31,6 +31,7 @@ fun MemoryMomentDto.toDomain() =
 
 fun NewMemory.toDto() =
     MemoryRequest(
+        memoryThumbnailUrl = memoryThumbnail,
         memoryTitle = memoryTitle,
         description = description,
         startAt = startAt.toString(),

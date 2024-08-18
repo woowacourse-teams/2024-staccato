@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MemoryRequest(
+    @SerialName("memoryThumbnailUrl") val memoryThumbnailUrl: String?,
     @SerialName("memoryTitle") val memoryTitle: String,
     @SerialName("description") val description: String? = null,
     @SerialName("startAt") val startAt: String,
