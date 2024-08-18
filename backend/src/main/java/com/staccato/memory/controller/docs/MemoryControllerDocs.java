@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface MemoryControllerDocs {
     @Operation(summary = "추억 생성", description = "추억(썸네일, 제목, 내용, 기간)을 생성합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "추억 생성 성공", responseCode = "200"),
+            @ApiResponse(description = "추억 생성 성공", responseCode = "201"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
