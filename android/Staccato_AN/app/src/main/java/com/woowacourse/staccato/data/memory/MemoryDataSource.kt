@@ -9,10 +9,7 @@ import okhttp3.MultipartBody
 interface MemoryDataSource {
     suspend fun getMemory(memoryId: Long): ResponseResult<MemoryResponse>
 
-    suspend fun createMemory(
-        newMemory: NewMemory,
-        thumbnailFile: MultipartBody.Part?,
-    ): ResponseResult<MemoryCreationResponse>
+    suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse>
 
     suspend fun updateMemory(
         memoryId: Long,

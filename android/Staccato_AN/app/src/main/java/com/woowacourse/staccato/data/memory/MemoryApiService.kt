@@ -6,6 +6,7 @@ import com.woowacourse.staccato.data.dto.memory.MemoryResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryUpdateRequest
 import okhttp3.MultipartBody
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
@@ -20,11 +21,9 @@ interface MemoryApiService {
         @Path("memoryId") memoryId: Long,
     ): Response<MemoryResponse>
 
-    @Multipart
     @POST(MEMORIES_PATH)
     suspend fun postMemory(
-        @Part("data") data: MemoryRequest,
-        @Part thumbnailFile: MultipartBody.Part?,
+        @Body memoryRequest: MemoryRequest,
     ): Response<MemoryCreationResponse>
 
     @Multipart

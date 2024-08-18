@@ -19,11 +19,8 @@ class MemoryDefaultRepository(
         }
     }
 
-    override suspend fun createMemory(
-        newMemory: NewMemory,
-        thumbnailFile: MultipartBody.Part?,
-    ): ResponseResult<MemoryCreationResponse> {
-        return when (val responseResult = memoryDataSource.createMemory(newMemory, thumbnailFile)) {
+    override suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse> {
+        return when (val responseResult = memoryDataSource.createMemory(newMemory)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
             is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)

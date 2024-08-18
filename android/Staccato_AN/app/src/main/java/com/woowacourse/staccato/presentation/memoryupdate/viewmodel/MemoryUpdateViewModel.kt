@@ -103,7 +103,7 @@ class MemoryUpdateViewModel(
 
     private fun makeNewMemory() =
         NewMemory(
-            memoryThumbnail = imageUrl.value,
+            memoryThumbnailUrl = imageUrl.value,
             memoryTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
             endAt = endDate.value ?: throw IllegalArgumentException(),

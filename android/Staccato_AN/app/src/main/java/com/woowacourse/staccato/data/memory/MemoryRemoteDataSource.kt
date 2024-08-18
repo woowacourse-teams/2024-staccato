@@ -15,12 +15,9 @@ class MemoryRemoteDataSource(
     override suspend fun getMemory(memoryId: Long): ResponseResult<MemoryResponse> =
         handleApiResponse { memoryApiService.getMemory(memoryId) }
 
-    override suspend fun createMemory(
-        newMemory: NewMemory,
-        thumbnailFile: MultipartBody.Part?,
-    ): ResponseResult<MemoryCreationResponse> =
+    override suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse> =
         handleApiResponse {
-            memoryApiService.postMemory(newMemory.toDto(), thumbnailFile)
+            memoryApiService.postMemory(newMemory.toDto())
         }
 
     override suspend fun updateMemory(

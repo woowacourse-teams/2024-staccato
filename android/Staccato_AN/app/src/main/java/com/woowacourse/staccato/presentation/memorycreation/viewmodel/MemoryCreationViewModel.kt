@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.memorycreation.viewmodel
 
-import android.content.Context
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
@@ -16,9 +15,7 @@ import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.domain.model.NewMemory
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
-import com.woowacourse.staccato.presentation.util.convertMemoryUriToFile
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 import java.time.LocalDate
 
 class MemoryCreationViewModel(
@@ -57,14 +54,12 @@ class MemoryCreationViewModel(
         _endDate.value = convertLongToLocalDate(endAt)
     }
 
-    fun createMemory(context: Context) {
+    fun createMemory() {
         _isPosting.value = true
         viewModelScope.launch {
             val memory: NewMemory = makeNewMemory()
-            val thumbnailFile: MultipartBody.Part? =
-                convertMemoryUriToFile(context, _imageUri.value, name = MEMORY_FILE_NAME)
             val result: ResponseResult<MemoryCreationResponse> =
-                memoryRepository.createMemory(memory, thumbnailFile)
+                memoryRepository.createMemory(memory)
             result
                 .onSuccess(::setCreatedMemoryId)
                 .onServerError(::handleServerError)
