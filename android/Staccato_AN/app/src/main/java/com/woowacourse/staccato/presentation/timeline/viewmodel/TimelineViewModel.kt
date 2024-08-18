@@ -1,6 +1,7 @@
 package com.woowacourse.staccato.presentation.timeline.viewmodel
 
 import android.util.Log
+import android.util.Printer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.dto.Status
+import com.woowacourse.staccato.data.timeline.TimelineDefaultRepository
 import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.domain.repository.TimelineRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
@@ -78,5 +80,13 @@ class TimelineViewModel(private val timelineRepository: TimelineRepository) : Vi
     ) {
         _errorMessage.postValue(errorMessage)
         Log.e("TimelineViewModel", "An exception occurred: $e, $errorMessage")
+    }
+
+    companion object {
+        fun factory(
+            timelineRepository: TimelineRepository = TimelineDefaultRepository(),
+        ): TimelineViewModelFactory {
+            return TimelineViewModelFactory(timelineRepository)
+        }
     }
 }

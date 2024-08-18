@@ -20,7 +20,7 @@ import com.woowacourse.staccato.presentation.util.showToast
 class TimelineFragment :
     BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
     TimelineHandler {
-    private val timelineViewModel: TimelineViewModel by viewModels { TimelineViewModelFactory() }
+    private val timelineViewModel: TimelineViewModel by viewModels { TimelineViewModel.factory() }
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private lateinit var adapter: TimelineAdapter
 
