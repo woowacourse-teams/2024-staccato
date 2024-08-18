@@ -69,4 +69,13 @@ public interface CommentControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "댓글 식별자", example = "1") @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
             @Parameter(description = "댓글 수정 시 요구 형식") @Valid CommentUpdateRequest commentUpdateRequest);
+
+    @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "댓글 삭제 성공", responseCode = "200"),
+            @ApiResponse(description = "댓글 식별자가 양수가 아닐 시 댓글 삭제 실패", responseCode = "400")
+    })
+    ResponseEntity<Void> deleteComment(
+            @Parameter(description = "댓글 식별자", example = "1") @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
+            @Parameter(hidden = true) Member member);
 }

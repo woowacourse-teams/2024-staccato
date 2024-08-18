@@ -3,6 +3,7 @@ package com.staccato.comment.controller;
 import static org.mockito.ArgumentMatchers.any;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -211,6 +212,36 @@ public class CommentControllerTest {
         mockMvc.perform(put("/comments")
                         .param("commentId", "1")
                         .content(objectMapper.writeValueAsString(commentUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("올바른 형식으로 댓글 삭제를 시도하면 성공한다.")
+    @Test
+    void deleteComment() throws Exception {
+        // given
+        when(authService.extractFromToken(any())).thenReturn(Member.builder().nickname("member").build());
+
+        // when & then
+        mockMvc.perform(delete("/comments")
+                        .param("commentId", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("댓글 식별자가 양수가 아닐 경우 댓글 삭제에 실패한다.")
+    @Test
+    void deleteCommentFail() throws Exception {
+        // given
+        when(authService.extractFromToken(any())).thenReturn(Member.builder().nickname("member").build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
+
+        // when & then
+        mockMvc.perform(delete("/comments")
+                        .param("commentId", "0")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())

@@ -71,4 +71,12 @@ public class CommentService {
             throw new ForbiddenException();
         }
     }
+
+    @Transactional
+    public void deleteComment(long commentId, Member member) {
+        commentRepository.findById(commentId).ifPresent(comment -> {
+            validateCommentOwner(comment, member);
+            commentRepository.deleteById(commentId);
+        });
+    }
 }

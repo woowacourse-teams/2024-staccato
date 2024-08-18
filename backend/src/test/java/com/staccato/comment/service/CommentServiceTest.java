@@ -3,6 +3,9 @@ package com.staccato.comment.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,6 +174,38 @@ class CommentServiceTest extends ServiceSliceTest {
 
         // when & then
         assertThatThrownBy(() -> commentService.updateComment(unexpectedMember, comment.getId(), commentUpdateRequest))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("본인이 쓴 댓글은 삭제할 수 있다.")
+    @Test
+    void deleteComment() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create("nickname"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(member));
+        Moment moment = momentRepository.save(MomentFixture.create(memory));
+        Comment comment = commentRepository.save(CommentFixture.create(moment, member));
+
+        // when
+        commentService.deleteComment(comment.getId(), member);
+
+        // then
+        assertThat(commentRepository.findById(comment.getId())).isEmpty();
+    }
+
+    @DisplayName("본인이 쓴 댓글이 아니면 삭제할 수 없다.")
+    @Test
+    void deleteCommentFail() {
+        // given
+        Member commentOwner = memberRepository.save(MemberFixture.create("commentOwner"));
+        Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(commentOwner));
+        Moment moment = momentRepository.save(MomentFixture.create(memory));
+        Comment comment = commentRepository.save(CommentFixture.create(moment, commentOwner));
+
+        // when & then
+        assertThatThrownBy(() -> commentService.deleteComment(comment.getId(), unexpectedMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");
     }
