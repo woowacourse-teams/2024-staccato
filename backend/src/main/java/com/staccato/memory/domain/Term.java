@@ -46,8 +46,11 @@ public class Term {
     }
 
     public boolean doesNotContain(LocalDateTime date) {
-        ChronoLocalDate targetDate = ChronoLocalDate.from(date);
-        return isExist(startAt, endAt) && (startAt.isAfter(targetDate) || endAt.isBefore(targetDate));
+        if(isExist(startAt, endAt)) {
+            ChronoLocalDate targetDate = ChronoLocalDate.from(date);
+            return (startAt.isAfter(targetDate) || endAt.isBefore(targetDate));
+        }
+        return false;
     }
 
     private boolean isExist(LocalDate startAt, LocalDate endAt) {
