@@ -37,7 +37,7 @@ public class ImageControllerTest {
 
     @DisplayName("사진을 한 장 업로드하고 S3 url을 가져올 수 있다.")
     @Test
-    void uploadFiveFilesTest() throws Exception {
+    void uploadFileTest() throws Exception {
         // given
         MockMultipartFile image = new MockMultipartFile("imageFile", new byte[0]);
         ImageUrlResponse imageUrlResponse = new ImageUrlResponse("imageUrl");
