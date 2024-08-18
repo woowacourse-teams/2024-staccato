@@ -35,8 +35,8 @@ import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
-import com.staccato.moment.service.dto.response.MomentResponse;
-import com.staccato.moment.service.dto.response.MomentResponses;
+import com.staccato.moment.service.dto.response.MomentLocationResponse;
+import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 class MomentServiceTest extends ServiceSliceTest {
     @Autowired
@@ -129,13 +129,13 @@ class MomentServiceTest extends ServiceSliceTest {
         saveMomentWithImages(memory);
 
         // when
-        MomentResponses actual = momentService.readAllMoment(member);
+        MomentLocationResponses actual = momentService.readAllMoment(member);
 
         // then
-        assertThat(actual).isEqualTo(new MomentResponses(
-                List.of(new MomentResponse(1L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)),
-                        new MomentResponse(2L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)),
-                        new MomentResponse(3L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)))));
+        assertThat(actual).isEqualTo(new MomentLocationResponses(
+                List.of(new MomentLocationResponse(1L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)),
+                        new MomentLocationResponse(2L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)),
+                        new MomentLocationResponse(3L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)))));
     }
 
     @DisplayName("특정 순간 조회에 성공한다.")

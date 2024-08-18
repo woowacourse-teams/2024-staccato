@@ -30,7 +30,7 @@ import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
-import com.staccato.moment.service.dto.response.MomentResponses;
+import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 import lombok.RequiredArgsConstructor;
 
@@ -52,9 +52,9 @@ public class MomentController implements MomentControllerDocs {
     }
 
     @GetMapping
-    public ResponseEntity<MomentResponses> readAllMoment(@LoginMember Member member) {
-        MomentResponses momentResponses = momentService.readAllMoment(member);
-        return ResponseEntity.ok().body(momentResponses);
+    public ResponseEntity<MomentLocationResponses> readAllMoment(@LoginMember Member member) {
+        MomentLocationResponses momentLocationResponses = momentService.readAllMoment(member);
+        return ResponseEntity.ok().body(momentLocationResponses);
     }
 
     @GetMapping("/{momentId}")

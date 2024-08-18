@@ -16,7 +16,7 @@ import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
-import com.staccato.moment.service.dto.response.MomentResponses;
+import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -51,7 +51,7 @@ public interface MomentControllerDocs {
 
     @Operation(summary = "순간 목록 조회", description = "순간 목록을 조회합니다.")
     @ApiResponse(description = "순간 목록 조회 성공", responseCode = "200")
-    ResponseEntity<MomentResponses> readAllMoment(@Parameter(hidden = true) Member member);
+    ResponseEntity<MomentLocationResponses> readAllMoment(@Parameter(hidden = true) Member member);
 
     @Operation(summary = "순간 조회", description = "순간을 조회합니다.")
     @ApiResponses(value = {

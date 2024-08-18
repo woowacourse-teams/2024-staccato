@@ -45,7 +45,7 @@ import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
-import com.staccato.moment.service.dto.response.MomentResponses;
+import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 @WebMvcTest(controllers = MomentController.class)
 class MomentControllerTest {
@@ -198,7 +198,7 @@ class MomentControllerTest {
     void readAllMoment() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        MomentResponses responses = MomentResponsesFixture.create();
+        MomentLocationResponses responses = MomentResponsesFixture.create();
         when(momentService.readAllMoment(any(Member.class))).thenReturn(responses);
 
         // when & then
