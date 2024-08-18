@@ -3,20 +3,22 @@ package com.staccato.comment.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.staccato.ServiceSliceTest;
+import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.request.CommentRequest;
+import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.memory.MemoryFixture;
+import com.staccato.fixture.moment.CommentFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -41,9 +43,9 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void createComment() {
         // given
-        Member member = saveMember("member");
-        Memory memory = saveMemory(member);
-        Moment moment = saveMoment(memory);
+        Member member = memberRepository.save(MemberFixture.create("nickname"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(member));
+        Moment moment = momentRepository.save(MomentFixture.create(memory));
         CommentRequest commentRequest = new CommentRequest(moment.getId(), "content");
 
         // when
@@ -57,7 +59,7 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void createCommentFailByNotExistMoment() {
         // given
-        Member member = saveMember("member");
+        Member member = memberRepository.save(MemberFixture.create("nickname"));
         CommentRequest commentRequest = new CommentRequest(1L, "content");
 
         // when & then
@@ -70,10 +72,10 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void createCommentFailByForbidden() {
         // given
-        Member momentOwner = saveMember("momentOwner");
-        Member unexpectedMember = saveMember("unexpectedMember");
-        Memory memory = saveMemory(momentOwner);
-        saveMoment(memory);
+        Member momentOwner = memberRepository.save(MemberFixture.create("momentOwner"));
+        Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(momentOwner));
+        momentRepository.save(MomentFixture.create(memory));
         CommentRequest commentRequest = new CommentRequest(1L, "content");
 
         // when & then
@@ -86,10 +88,10 @@ class CommentServiceTest extends ServiceSliceTest {
     @Test
     void readAllByMomentId() {
         // given
-        Member member = saveMember("member");
-        Memory memory = saveMemory(member);
-        Moment moment = saveMoment(memory);
-        Moment anotherMoment = saveMoment(memory);
+        Member member = memberRepository.save(MemberFixture.create("nickname"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(member));
+        Moment moment = momentRepository.save(MomentFixture.create(memory));
+        Moment anotherMoment = momentRepository.save(MomentFixture.create(memory));
         CommentRequest commentRequest1 = new CommentRequest(moment.getId(), "content");
         CommentRequest commentRequest2 = new CommentRequest(moment.getId(), "content");
         CommentRequest commentRequestOfAnotherMoment = new CommentRequest(anotherMoment.getId(), "content");
@@ -105,20 +107,71 @@ class CommentServiceTest extends ServiceSliceTest {
                 .containsExactly(commentId1, commentId2);
     }
 
-    private Member saveMember(String nickname) {
-        return memberRepository.save(Member.builder().nickname(nickname).build());
+    @DisplayName("조회 권한이 없는 순간에 달린 댓글들 조회를 시도하면 예외가 발생한다.")
+    @Test
+    void readAllByMomentIdFailByForbidden() {
+        // given
+        Member momentOwner = memberRepository.save(MemberFixture.create("momentOwner"));
+        Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(momentOwner));
+        Moment moment = momentRepository.save(MomentFixture.create(memory));
+        commentRepository.save(CommentFixture.create(moment, momentOwner));
+
+        // when & then
+        assertThatThrownBy(() -> commentService.readAllCommentsByMomentId(unexpectedMember, moment.getId()))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    private Memory saveMemory(Member member) {
-        Memory memory = Memory.builder().title("Sample Memory").startAt(LocalDate.now()).endAt(LocalDate.now().plusDays(1)).build();
-        memory.addMemoryMember(member);
+    @DisplayName("본인이 쓴 댓글은 수정할 수 있다.")
+    @Test
+    void updateComment() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create("nickname"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(member));
+        Moment moment = momentRepository.save(MomentFixture.create(memory));
+        Comment comment = commentRepository.save(CommentFixture.create(moment, member));
 
-        return memoryRepository.save(memory);
+        String updatedContent = "updated content";
+        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
+
+        // when
+        commentService.updateComment(member, comment.getId(), commentUpdateRequest);
+
+        // then
+        assertThat(commentRepository.findById(comment.getId()).get().getContent()).isEqualTo(updatedContent);
     }
 
-    private Moment saveMoment(Memory memory) {
-        Moment moment = MomentFixture.create(memory, LocalDateTime.now());
+    @DisplayName("수정하려는 댓글을 찾을 수 없는 경우 예외가 발생한다.")
+    @Test
+    void updateCommentFailByNotExist() {
+        // given
+        long notExistCommentId = 1;
+        String updatedContent = "updated content";
+        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
 
-        return momentRepository.save(moment);
+        // when & then
+        assertThatThrownBy(() -> commentService.updateComment(MemberFixture.create(), notExistCommentId, commentUpdateRequest))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessageContaining("요청하신 댓글을 찾을 수 없어요.");
+    }
+
+    @DisplayName("본인이 달지 않은 댓글에 대해 수정을 시도하면 예외가 발생한다.")
+    @Test
+    void updateCommentFailByForbidden() {
+        // given
+        Member momentOwner = memberRepository.save(MemberFixture.create("momentOwner"));
+        Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
+        Memory memory = memoryRepository.save(MemoryFixture.create(momentOwner));
+        Moment moment = momentRepository.save(MomentFixture.create(memory));
+        Comment comment = commentRepository.save(CommentFixture.create(moment, momentOwner));
+
+        String updatedContent = "updated content";
+        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
+
+        // when & then
+        assertThatThrownBy(() -> commentService.updateComment(unexpectedMember, comment.getId(), commentUpdateRequest))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");
     }
 }

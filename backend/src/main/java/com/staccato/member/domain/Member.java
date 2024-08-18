@@ -14,6 +14,7 @@ import com.staccato.config.domain.BaseEntity;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -22,10 +23,12 @@ import lombok.NonNull;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @SQLRestriction("is_deleted = false")
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
     @Column(nullable = false, unique = true)
     @Embedded

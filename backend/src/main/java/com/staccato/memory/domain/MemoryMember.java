@@ -1,5 +1,7 @@
 package com.staccato.memory.domain;
 
+import java.util.Objects;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -39,6 +41,6 @@ public class MemoryMember extends BaseEntity {
     }
 
     public boolean isMember(Member member) {
-        return this.member.getId().equals(member.getId());
+        return Objects.equals(this.member, member);
     }
 }

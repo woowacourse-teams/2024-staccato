@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.request.CommentRequest;
+import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
@@ -42,13 +43,31 @@ public class CommentService {
         return CommentResponses.from(comments);
     }
 
+    @Transactional
+    public void updateComment(Member member, Long commentId, CommentUpdateRequest commentUpdateRequest) {
+        Comment comment = getComment(commentId);
+        validateCommentOwner(comment, member);
+        comment.changeContent(commentUpdateRequest.content());
+    }
+
     private Moment getMoment(long momentId) {
         return momentRepository.findById(momentId)
                 .orElseThrow(() -> new StaccatoException("요청하신 순간을 찾을 수 없어요."));
     }
 
+    private Comment getComment(long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new StaccatoException("요청하신 댓글을 찾을 수 없어요."));
+    }
+
     private void validateOwner(Memory memory, Member member) {
         if (memory.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private void validateCommentOwner(Comment comment, Member member) {
+        if (comment.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
     }
