@@ -1,4 +1,4 @@
-package com.staccato.image.service;
+package com.staccato.image.domain;
 
 import java.util.Arrays;
 

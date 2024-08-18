@@ -24,7 +24,10 @@ public class ImageController implements ImageControllerDocs {
     private final ImageService imageService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ImageUrlResponse> uploadImage(@RequestPart(value = "imageFile") MultipartFile image, @LoginMember Member member) {
+    public ResponseEntity<ImageUrlResponse> uploadImage(
+            @RequestPart(value = "imageFile") MultipartFile image,
+            @LoginMember Member member
+    ) {
         ImageUrlResponse imageUrlResponse = imageService.uploadImage(image);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(imageUrlResponse);
