@@ -99,17 +99,21 @@
                     app:layout_constraintStart_toEndOf="@id/tv_memory_update_title"
                     app:layout_constraintTop_toTopOf="@id/tv_memory_update_title" />
 
-                <EditText
-                    android:id="@+id/et_memory_update"
-                    style="@style/EditTextStyle"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/memory_creation_title_hint"
-                    android:maxLength="30"
-                    android:text="@={viewModel.title}"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_memory_update_title"
+                    style="@style/TextInputLayoutStyle"
+                    app:counterMaxLength="30"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_update_title" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_update_title">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/TextInputEditTextStyle"
+                        android:hint="@string/memory_creation_title_hint"
+                        android:maxLength="30"
+                        android:text="@={viewModel.title}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/tv_memory_update_description"
@@ -118,21 +122,25 @@
                     android:layout_marginTop="24dp"
                     android:text="@string/memory_creation_description"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_memory_update" />
+                    app:layout_constraintTop_toBottomOf="@id/text_input_memory_update_title" />
 
-                <EditText
-                    android:id="@+id/et_memory_update_description"
-                    style="@style/EditTextStyle"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="top"
-                    android:hint="@string/memory_creation_description_hint"
-                    android:maxLength="500"
-                    android:minHeight="255dp"
-                    android:text="@={viewModel.description}"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_memory_update_description"
+                    style="@style/TextInputLayoutStyle"
+                    app:counterMaxLength="500"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_update_description" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_update_description">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/TextInputEditTextStyle"
+                        android:gravity="top"
+                        android:hint="@string/memory_creation_description_hint"
+                        android:maxLength="500"
+                        android:minHeight="255dp"
+                        android:text="@={viewModel.description}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/tv_memory_update_period_title"
@@ -141,7 +149,7 @@
                     android:layout_marginTop="24dp"
                     android:text="@string/memory_creation_period"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_memory_update_description" />
+                    app:layout_constraintTop_toBottomOf="@id/text_input_memory_update_description" />
 
                 <TextView
                     android:id="@+id/tv_memory_update_required_mark_second"
