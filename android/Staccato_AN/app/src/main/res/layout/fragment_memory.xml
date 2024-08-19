@@ -194,7 +194,7 @@
                 <ImageView
                     android:id="@+id/iv_memory_empty"
                     android:layout_width="0dp"
-                    android:layout_height="150dp"
+                    android:layout_height="200dp"
                     android:layout_marginTop="90dp"
                     android:contentDescription="@string/all_image_content_description"
                     android:paddingBottom="10dp"
