@@ -40,8 +40,10 @@ class TimelineFragment :
         timelineViewModel.timeline.observe(viewLifecycleOwner) { timeline ->
             // TODO: data binding 으로 가시성 설정되지 않는 오류 해결하기
             if (timeline.isEmpty()) {
+                binding.ivTimelineEmpty.visibility = View.VISIBLE
                 binding.tvTimelineEmpty.visibility = View.VISIBLE
             } else {
+                binding.ivTimelineEmpty.visibility = View.GONE
                 binding.tvTimelineEmpty.visibility = View.GONE
             }
             adapter.updateTimeline(timeline)
