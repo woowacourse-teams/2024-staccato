@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:onClick="@{() -> handler.onScreenClicked()}"
         android:paddingHorizontal="36dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,6 +51,8 @@
                 android:id="@+id/et_login_user_nickname"
                 style="@style/EditTextStyle"
                 android:hint="@string/login_nickname_hint"
+                android:imeOptions="actionDone"
+                android:inputType="text"
                 android:maxLength="20"
                 android:maxLines="1"
                 android:text="@={viewModel.nickname}"
