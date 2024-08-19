@@ -81,8 +81,8 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         val options =
             ActivityOptionsCompat.makeCustomAnimation(
                 this,
-                android.R.anim.fade_in,
-                android.R.anim.fade_out,
+                R.anim.anim_fade_in,
+                R.anim.anim_fade_out
             )
         startActivity(intent, options.toBundle())
         finish()
