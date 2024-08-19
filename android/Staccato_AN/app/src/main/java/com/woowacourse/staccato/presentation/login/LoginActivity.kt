@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.login
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
