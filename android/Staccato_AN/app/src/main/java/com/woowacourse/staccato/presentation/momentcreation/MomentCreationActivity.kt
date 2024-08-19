@@ -4,7 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
@@ -33,6 +36,9 @@ class MomentCreationActivity :
     private lateinit var adapter: PhotoAttachAdapter
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
+    private val inputManager: InputMethodManager by lazy {
+        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+    }
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initMemoryInfo()
@@ -40,6 +46,48 @@ class MomentCreationActivity :
         initAdapter()
         initToolbar()
         observeViewModelData()
+    }
+
+    override fun onUrisSelected(vararg uris: Uri) {
+        viewModel.updateSelectedImageUris(arrayOf(*uris))
+    }
+
+    override fun onCreateDoneClicked() {
+        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
+        showToast(getString(R.string.visit_creation_posting))
+        viewModel.createMoment(memoryId, this)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            currentFocus?.let { view ->
+                if (!isTouchInsideView(event, view)) {
+                    clearFocusAndHideKeyboard(view)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
+
+    private fun isTouchInsideView(
+        event: MotionEvent,
+        view: View,
+    ): Boolean {
+        val rect = android.graphics.Rect()
+        view.getGlobalVisibleRect(rect)
+        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
+    }
+
+    private fun clearFocusAndHideKeyboard(view: View) {
+        view.clearFocus()
+        hideKeyboard(view)
+    }
+
+    private fun hideKeyboard(view: View) {
+        inputManager.hideSoftInputFromWindow(
+            view.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
     }
 
     private fun initMemoryInfo() {
@@ -84,16 +132,6 @@ class MomentCreationActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
-    }
-
-    override fun onUrisSelected(vararg uris: Uri) {
-        viewModel.updateSelectedImageUris(arrayOf(*uris))
-    }
-
-    override fun onCreateDoneClicked() {
-        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        showToast(getString(R.string.visit_creation_posting))
-        viewModel.createMoment(memoryId, this)
     }
 
     companion object {
