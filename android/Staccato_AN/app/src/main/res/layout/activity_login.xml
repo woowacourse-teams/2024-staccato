@@ -51,6 +51,7 @@
                 android:id="@+id/et_login_user_nickname"
                 style="@style/EditTextStyle"
                 android:hint="@string/login_nickname_hint"
+                android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLength="20"
                 android:maxLines="1"
