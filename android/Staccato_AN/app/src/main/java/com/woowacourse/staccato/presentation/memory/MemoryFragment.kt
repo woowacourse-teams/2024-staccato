@@ -67,10 +67,7 @@ class MemoryFragment :
     }
 
     override fun onDeleteClicked() {
-        val fragmentManager = parentFragmentManager
-        deleteDialog.apply {
-            show(fragmentManager, DeleteDialogFragment.TAG)
-        }
+        deleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
     }
 
     override fun onVisitClicked(visitId: Long) {
