@@ -82,7 +82,7 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
             ActivityOptionsCompat.makeCustomAnimation(
                 this,
                 R.anim.anim_fade_in,
-                R.anim.anim_fade_out
+                R.anim.anim_fade_out,
             )
         startActivity(intent, options.toBundle())
         finish()
