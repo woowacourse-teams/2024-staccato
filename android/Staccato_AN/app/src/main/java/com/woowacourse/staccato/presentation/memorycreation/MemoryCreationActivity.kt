@@ -90,27 +90,6 @@ class MemoryCreationActivity :
         return super.dispatchTouchEvent(event)
     }
 
-    private fun isTouchInsideView(
-        event: MotionEvent,
-        view: View,
-    ): Boolean {
-        val rect = android.graphics.Rect()
-        view.getGlobalVisibleRect(rect)
-        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
-    }
-
-    private fun clearFocusAndHideKeyboard(view: View) {
-        view.clearFocus()
-        hideKeyboard(view)
-    }
-
-    private fun hideKeyboard(view: View) {
-        inputManager.hideSoftInputFromWindow(
-            view.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS,
-        )
-    }
-
     private fun buildDateRangePicker() =
         MaterialDatePicker.Builder.dateRangePicker()
             .setTheme(R.style.DatePickerStyle)
@@ -149,6 +128,27 @@ class MemoryCreationActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
+    }
+
+    private fun isTouchInsideView(
+        event: MotionEvent,
+        view: View,
+    ): Boolean {
+        val rect = android.graphics.Rect()
+        view.getGlobalVisibleRect(rect)
+        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
+    }
+
+    private fun clearFocusAndHideKeyboard(view: View) {
+        view.clearFocus()
+        hideKeyboard(view)
+    }
+
+    private fun hideKeyboard(view: View) {
+        inputManager.hideSoftInputFromWindow(
+            view.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
     }
 
     private fun showErrorToast() {
