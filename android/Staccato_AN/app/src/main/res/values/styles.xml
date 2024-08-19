@@ -44,9 +44,12 @@
         <item name="android:background">@drawable/shape_all_gray1_8dp</item>
         <item name="android:paddingHorizontal">16dp</item>
         <item name="android:paddingVertical">12dp</item>
+        <item name="android:textColorHint">@color/gray3</item>
+    </style>
+
+    <style name="TextInputEditTextStyle.Title" parent="TextInputEditTextStyle">
         <item name="android:inputType">text</item>
         <item name="maxLines">1</item>
-        <item name="android:textColorHint">@color/gray3</item>
     </style>
 
     <style name="EditTextStyle">

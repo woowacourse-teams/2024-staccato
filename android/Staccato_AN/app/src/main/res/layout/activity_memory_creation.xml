@@ -107,7 +107,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_title">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        style="@style/TextInputEditTextStyle"
+                        style="@style/TextInputEditTextStyle.Title"
                         android:hint="@string/memory_creation_title_hint"
                         android:maxLength="30"
                         android:text="@={viewModel.title}" />
