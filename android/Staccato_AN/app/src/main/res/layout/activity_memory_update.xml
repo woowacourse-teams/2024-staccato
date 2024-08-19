@@ -54,7 +54,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
+                    bind:coilPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
                     bind:coilRoundedCornerImageUrl="@{viewModel.thumbnailUrl}"
                     bind:coilRoundingRadius="@{12}" />
 
