@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.login
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -28,6 +27,9 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         LoginViewModelFactory()
     }
     private var isLoggedIn = false
+    private val inputManager: InputMethodManager by lazy {
+        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,12 +38,24 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         setBinding()
         observeLoginState()
         observeErrorEvent()
-        setHideKeyboardAction()
     }
 
     override fun onStartClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         loginViewModel.requestLogin()
+    }
+
+    override fun onScreenClicked() {
+        hideKeyboard()
+    }
+
+    private fun hideKeyboard() {
+        if (currentFocus != null) {
+            inputManager.hideSoftInputFromWindow(
+                currentFocus?.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS,
+            )
+        }
     }
 
     private fun checkIfLoggedIn(splashScreen: SplashScreen) {
@@ -97,23 +111,6 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         loginViewModel.errorMessage.observe(this) { errorMessage ->
             showToast(errorMessage)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
-        }
-    }
-
-    private fun setHideKeyboardAction() {
-        binding.root.setOnClickListener {
-            hideKeyboard()
-        }
-    }
-
-    private fun hideKeyboard() {
-        if (this.currentFocus != null) {
-            val inputManager: InputMethodManager =
-                this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputManager.hideSoftInputFromWindow(
-                this.currentFocus?.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS,
-            )
         }
     }
 
