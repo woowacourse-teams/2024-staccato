@@ -78,7 +78,7 @@
     <string name="photo_attach_camera">카메라 열기</string>
     <string name="photo_attach_album">앨범에서 가져오기</string>
     <string name="snack_bar_require_photo_album_permission">사진 및 동영상 액세스 권한을 허용해주세요.</string>
-    <string name="snack_bar_move_to_setting">설정으로 이동하기</string>
+    <string name="snack_bar_move_to_setting">설정으로 이동</string>
 
     // fragment_memory_selection
     <string name="memory_selection_period">%s.%s.%s - %s.%s.%s</string>
@@ -97,4 +97,8 @@
     // menu_creation
     <string name="menu_creation_memory">추억 생성</string>
     <string name="menu_creation_staccato">스타카토 생성</string>
+
+    // MapsFragment
+    <string name="maps_location_permission_granted_message">위치 서비스 사용을 위한 위치 권한이 설정 되었습니다.</string>
+    <string name="maps_location_permission_required_message">위치 서비스 사용을 위해 위치 권한을 허용해주세요.</string>
 </resources>
