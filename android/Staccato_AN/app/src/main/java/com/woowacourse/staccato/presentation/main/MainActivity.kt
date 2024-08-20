@@ -1,7 +1,9 @@
 package com.woowacourse.staccato.presentation.main
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.widget.PopupMenu
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -23,7 +25,7 @@ import com.woowacourse.staccato.presentation.momentcreation.MomentCreationActivi
 import com.woowacourse.staccato.presentation.momentcreation.MomentCreationActivity.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 
-class MainActivity : BindingActivity<ActivityMainBinding>() {
+class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
     override val layoutResourceId: Int
         get() = R.layout.activity_main
 
@@ -97,10 +99,49 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         }
 
     override fun initStartView(savedInstanceState: Bundle?) {
+        binding.handler = this
         setupBottomSheetController()
-        setupBottomSheetNavigation()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
+    }
+
+    override fun onCreationClicked() {
+        val popup = inflateCreationMenu(binding.ivMainCreation)
+        setUpCreationMenu(popup)
+        popup.show()
+    }
+
+    private fun inflateCreationMenu(view: View): PopupMenu {
+        val popup = PopupMenu(this, view, Gravity.END, 0, R.style.Theme_Staccato_AN_PopupMenu)
+        popup.menuInflater.inflate(R.menu.menu_creation, popup.menu)
+        return popup
+    }
+
+    private fun setUpCreationMenu(popup: PopupMenu) {
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.memory_creation -> navigateToMemoryCreation()
+                R.id.staccato_creation -> navigateToStaccatoCreation()
+            }
+            false
+        }
+    }
+
+    private fun navigateToStaccatoCreation() {
+        // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
+        MomentCreationActivity.startWithResultLauncher(
+            1,
+            "임시 추억",
+            this,
+            visitCreationLauncher,
+        )
+    }
+
+    private fun navigateToMemoryCreation() {
+        MemoryCreationActivity.startWithResultLauncher(
+            this,
+            memoryCreationLauncher,
+        )
     }
 
     private fun setupBackPressedHandler() {
@@ -133,27 +174,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         navController = navHostFragment.navController
     }
 
-    private fun setupBottomSheetNavigation() {
-        binding.btnMainMemoryCreation.setOnClickListener {
-            MemoryCreationActivity.startWithResultLauncher(
-                this,
-                memoryCreationLauncher,
-            )
-        }
-        binding.btnMainVisitCreation.setOnClickListener {
-            // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
-            MomentCreationActivity.startWithResultLauncher(
-                1,
-                "임시 추억",
-                this,
-                visitCreationLauncher,
-            )
-        }
-        binding.btnMainTimeline.setOnClickListener {
-            navigateTo(R.id.timelineFragment, R.id.timelineFragment, null, false)
-        }
-    }
-
     private fun navigateTo(
         navigateToId: Int,
         popUpToId: Int,
@@ -181,15 +201,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                         bottomSheet: View,
                         newState: Int,
                     ) {
-                        when (newState) {
-                            STATE_EXPANDED -> {
-                                binding.btnMainTimeline.visibility = View.INVISIBLE
-                            }
 
-                            else -> {
-                                binding.btnMainTimeline.visibility = View.VISIBLE
-                            }
-                        }
                     }
 
                     override fun onSlide(
@@ -197,7 +209,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                         slideOffset: Float,
                     ) {
                         binding.tvMainBottomSheetRemindYourMemories.alpha = 1 - slideOffset
-                        binding.btnMainTimeline.alpha = 1 - slideOffset
                     }
                 },
             )
