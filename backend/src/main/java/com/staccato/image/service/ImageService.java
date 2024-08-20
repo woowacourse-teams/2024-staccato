@@ -25,12 +25,6 @@ public class ImageService {
 
     private final S3ObjectClient s3ObjectClient;
 
-    public List<String> uploadFiles(List<MultipartFile> files) {
-        return files.stream()
-                .map(this::uploadFile)
-                .toList();
-    }
-
     public ImageUrlResponse uploadImage(MultipartFile image) {
         String imageExtension = getImageExtension(image);
         String key = TEAM_FOLDER_NAME + imageFolderName + UUID.randomUUID() + imageExtension;
@@ -41,17 +35,6 @@ public class ImageService {
         String imageUrl = s3ObjectClient.getUrl(key);
 
         return new ImageUrlResponse(imageUrl);
-    }
-
-    public String uploadFile(MultipartFile file) {
-        String fileExtension = getImageExtension(file);
-        String key = UUID.randomUUID() + fileExtension;
-        String contentType = ImageExtension.getContentType(fileExtension);
-        byte[] fileBytes = getImageBytes(file);
-
-        s3ObjectClient.putS3Object(key, contentType, fileBytes);
-
-        return s3ObjectClient.getUrl(key);
     }
 
     private byte[] getImageBytes(MultipartFile image) {
