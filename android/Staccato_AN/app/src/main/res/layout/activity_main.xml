@@ -17,11 +17,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_container_view_map"
+                android:name="com.woowacourse.staccato.presentation.home.MapsFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/img_map"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
