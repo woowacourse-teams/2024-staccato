@@ -1,6 +1,8 @@
 package com.staccato.auth.service;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +29,20 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final AdminProperties adminProperties;
+    private final Environment environment;
 
     @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
-        if (adminProperties.key().equals(loginRequest.nickname())) {
+        if (isNotProdProfile() && adminProperties.key().equals(loginRequest.nickname())) {
             return new LoginResponse(adminProperties.token());
         }
         Member member = createMember(loginRequest);
         String token = tokenProvider.create(member);
         return new LoginResponse(token);
+    }
+
+    private boolean isNotProdProfile() {
+        return !environment.acceptsProfiles(Profiles.of("prod"));
     }
 
     private Member createMember(LoginRequest loginRequest) {

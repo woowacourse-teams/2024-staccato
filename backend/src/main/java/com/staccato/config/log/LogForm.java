@@ -17,8 +17,13 @@ public class LogForm {
             "\"loginMemberNickname\": \"{}\"\n" +
             "}";
 
-    public static final String EXCEPTION_LOGGING_FORM = "\n{\n" +
+    public static final String CUSTOM_EXCEPTION_LOGGING_FORM = "\n{\n" +
             INDENT + "\"exceptionResponse\": \"{}\"\n" +
+            "}";
+
+    public static final String EXCEPTION_LOGGING_FORM = "\n{\n" +
+            INDENT + "\"exceptionResponse\": \"{}\"\n" + DELIMITER +
+            "\"exceptionMessage\": \"{}\"\n" +
             "}";
 
     public static final String ERROR_LOGGING_FORM = "\n{\n" +
