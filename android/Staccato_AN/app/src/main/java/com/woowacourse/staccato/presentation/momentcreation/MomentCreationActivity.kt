@@ -134,7 +134,9 @@ class MomentCreationActivity :
 
     private fun observeViewModelData() {
         viewModel.isAddPhotoClicked.observe(this) {
-            if (it) photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+            if (!photoAttachFragment.isAdded && it) {
+                photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+            }
         }
         viewModel.pendingPhotos.observe(this) {
             viewModel.fetchPhotosUrlsByUris(this)
