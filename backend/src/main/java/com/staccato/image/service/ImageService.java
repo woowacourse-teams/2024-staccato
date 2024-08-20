@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,10 +17,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
-    private static final String TEAM_FOLDER_NAME = "staccato/";
-
-    @Value("${image.folder.name}")
-    private String imageFolderName;
+    private static final String TEAM_FOLDER = "staccato/";
+    private static final String IMAGE_FOLDER = "image/";
 
     private final S3ObjectClient s3ObjectClient;
 
@@ -33,7 +30,7 @@ public class ImageService {
 
     public ImageUrlResponse uploadImage(MultipartFile image) {
         String imageExtension = getImageExtension(image);
-        String key = TEAM_FOLDER_NAME + imageFolderName + UUID.randomUUID() + imageExtension;
+        String key = TEAM_FOLDER + IMAGE_FOLDER + UUID.randomUUID() + imageExtension;
         String contentType = ImageExtension.getContentType(imageExtension);
         byte[] imageBytes = getImageBytes(image);
 
