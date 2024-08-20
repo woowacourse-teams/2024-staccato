@@ -200,9 +200,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
                     override fun onStateChanged(
                         bottomSheet: View,
                         newState: Int,
-                    ) {
-
-                    }
+                    ) { }
 
                     override fun onSlide(
                         bottomSheet: View,
