@@ -61,5 +61,5 @@ jobs:
 
       - name: Docker run
         run: |
-          sudo docker run --env-file .env -d staccato/staccato:prod
+          sudo docker run --env-file /home/ubuntu/staccato/.env -d staccato/staccato:prod
           sudo docker image prune -af
