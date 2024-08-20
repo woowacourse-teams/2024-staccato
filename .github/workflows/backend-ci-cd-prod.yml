@@ -61,10 +61,8 @@ jobs:
 
       - name: Stop and remove existing container
         run: |
-          if [ "$(docker ps -q -f name=staccato-backend-app)" ]; then
-            sudo docker stop staccato-backend-app
-            sudo docker rm staccato-backend-app
-          fi
+          sudo docker stop staccato-backend-app || true
+          sudo docker rm staccato-backend-app || true
 
       - name: Docker run
         run: |
