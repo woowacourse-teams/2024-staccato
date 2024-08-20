@@ -36,19 +36,19 @@ public class ImageService {
         return new ImageUrlResponse(imageUrl);
     }
 
-    private byte[] getImageBytes(MultipartFile image) {
-        try {
-            return image.getBytes();
-        } catch (IOException e) {
-            throw new StaccatoException("전송된 파일이 손상되었거나 지원되지 않는 형식입니다.");
-        }
-    }
-
     private String getImageExtension(MultipartFile image) {
         String imageName = image.getOriginalFilename();
         if (imageName == null || !imageName.contains(".")) {
             return "";
         }
         return imageName.substring(imageName.lastIndexOf('.'));
+    }
+
+    private byte[] getImageBytes(MultipartFile image) {
+        try {
+            return image.getBytes();
+        } catch (IOException e) {
+            throw new StaccatoException("전송된 파일이 손상되었거나 지원되지 않는 형식입니다.");
+        }
     }
 }
