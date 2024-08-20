@@ -93,4 +93,8 @@
     // dialog_delete
     <string name="delete_title">삭제하시겠습니까?</string>
     <string name="delete_description">삭제를 누르면 복구할 수 없습니다</string>
+
+    // menu_creation
+    <string name="menu_creation_memory">추억 생성</string>
+    <string name="menu_creation_staccato">스타카토 생성</string>
 </resources>
