@@ -59,6 +59,13 @@ jobs:
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
           sudo docker pull staccato/staccato:prod
 
+      - name: Stop and remove existing container
+        run: |
+          if [ "$(docker ps -q -f name=staccato-backend-app)" ]; then
+            sudo docker stop staccato-backend-app
+            sudo docker rm staccato-backend-app
+          fi
+
       - name: Docker run
         run: |
           sudo docker run --env-file /home/ubuntu/staccato/.env \
