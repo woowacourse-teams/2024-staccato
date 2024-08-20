@@ -12,7 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import com.staccato.config.log.LogForm;
@@ -77,7 +76,8 @@ public class GlobalExceptionHandler {
         String errorMessage = "20MB 이하의 사진을 업로드해 주세요.";
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.PAYLOAD_TOO_LARGE.toString(), e.getMessage());
         log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse);
-        return ResponseEntity.badRequest().body(new ExceptionResponse(HttpStatus.PAYLOAD_TOO_LARGE.toString(), errorMessage));
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponse(HttpStatus.PAYLOAD_TOO_LARGE.toString(), errorMessage));
     }
 
     @ExceptionHandler(StaccatoException.class)
