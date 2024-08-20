@@ -36,7 +36,7 @@ public class ImageController implements ImageControllerDocs {
         return ResponseEntity.status(HttpStatus.CREATED).body(imageUrlResponse);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(name = "/list", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ImageUrlResponses> uploadImages(
             @RequestPart(value = "imageFiles") List<MultipartFile> images,
             @LoginMember Member member
