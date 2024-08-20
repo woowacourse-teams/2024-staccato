@@ -15,7 +15,7 @@ interface MomentRepository {
         longitude: String,
         address: String,
         visitedAt: LocalDateTime,
-        momentImageMultiParts: List<MultipartBody.Part>,
+        momentImageUrls: List<String>,
     ): Result<MomentCreationResponse>
 
     suspend fun updateMoment(

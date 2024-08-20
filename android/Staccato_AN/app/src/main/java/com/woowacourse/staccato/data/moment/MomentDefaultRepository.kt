@@ -23,7 +23,7 @@ class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSour
         longitude: String,
         address: String,
         visitedAt: LocalDateTime,
-        momentImageMultiParts: List<MultipartBody.Part>,
+        momentImageUrls: List<String>,
     ): Result<MomentCreationResponse> {
         return runCatching {
             remoteDataSource.createMoment(
@@ -34,8 +34,8 @@ class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSour
                     longitude = longitude,
                     address = address,
                     visitedAt = visitedAt.toString(),
+                    momentImageUrls = momentImageUrls,
                 ),
-                momentImageMultiParts,
             )
         }
     }

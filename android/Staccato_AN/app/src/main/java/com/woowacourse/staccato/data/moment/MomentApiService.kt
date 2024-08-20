@@ -5,6 +5,7 @@ import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.data.dto.moment.MomentResponse
 import com.woowacourse.staccato.data.dto.moment.MomentUpdateRequest
 import okhttp3.MultipartBody
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
@@ -19,11 +20,9 @@ interface MomentApiService {
         @Path(value = "momentId") momentId: Long,
     ): MomentResponse
 
-    @Multipart
     @POST(MOMENTS_PATH)
     suspend fun postMoment(
-        @Part("data") data: MomentCreationRequest,
-        @Part momentImageFiles: List<MultipartBody.Part>,
+        @Body momentCreationRequest: MomentCreationRequest,
     ): MomentCreationResponse
 
     @Multipart

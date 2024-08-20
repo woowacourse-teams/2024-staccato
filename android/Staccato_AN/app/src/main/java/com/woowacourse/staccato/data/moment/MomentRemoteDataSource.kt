@@ -13,14 +13,8 @@ class MomentRemoteDataSource(
         return momentApiService.getMoment(momentId = momentId)
     }
 
-    suspend fun createMoment(
-        momentCreationRequest: MomentCreationRequest,
-        momentImageFiles: List<MultipartBody.Part>,
-    ): MomentCreationResponse {
-        return momentApiService.postMoment(
-            data = momentCreationRequest,
-            momentImageFiles = momentImageFiles,
-        )
+    suspend fun createMoment(momentCreationRequest: MomentCreationRequest): MomentCreationResponse {
+        return momentApiService.postMoment(momentCreationRequest)
     }
 
     suspend fun updateMoment(
