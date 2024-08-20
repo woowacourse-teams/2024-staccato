@@ -1,5 +1,7 @@
 package com.staccato.auth.service.dto.request;
 
+import java.util.Objects;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -15,7 +17,9 @@ public record LoginRequest(
         String nickname
 ) {
     public LoginRequest {
-        nickname = nickname.trim();
+        if(!Objects.isNull(nickname)){
+            nickname = nickname.trim();
+        }
     }
 
     public Member toMember() {
