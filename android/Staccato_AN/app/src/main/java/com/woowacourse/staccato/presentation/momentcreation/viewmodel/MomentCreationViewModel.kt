@@ -2,7 +2,6 @@ package com.woowacourse.staccato.presentation.momentcreation.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,8 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
-import com.woowacourse.staccato.data.ResponseResult
-import com.woowacourse.staccato.data.dto.image.ImageResponse
 import com.woowacourse.staccato.data.image.ImageDefaultRepository
 import com.woowacourse.staccato.domain.repository.MomentRepository
 import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
@@ -21,6 +18,9 @@ import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoU
 import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoUiModels
 import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
@@ -52,19 +52,18 @@ class MomentCreationViewModel(
     val nowDateTime: LocalDateTime = LocalDateTime.now()
 
     private val _createdMomentId = MutableSingleLiveData<Long>()
-
     val createdMomentId: SingleLiveData<Long> get() = _createdMomentId
 
     private val _errorMessage = MutableSingleLiveData<String>()
-
     val errorMessage: SingleLiveData<String> get() = _errorMessage
 
     private val _isPosting = MutableLiveData<Boolean>(false)
-
     val isPosting: LiveData<Boolean> get() = _isPosting
 
     private val _isAddPhotoClicked = MutableSingleLiveData(false)
     val isAddPhotoClicked: SingleLiveData<Boolean> get() = _isAddPhotoClicked
+
+    private val photoJobs = mutableMapOf<String, Job>()
 
     override fun onAddClicked() {
         if ((currentPhotos.value?.size ?: 0) == MAX_PHOTO_NUMBER) {
@@ -76,6 +75,9 @@ class MomentCreationViewModel(
 
     override fun onDeleteClicked(deletedPhoto: AttachedPhotoUiModel) {
         _currentPhotos.value = currentPhotos.value?.removePhoto(deletedPhoto)
+        if (photoJobs[deletedPhoto.uri.toString()]?.isActive == true) {
+            photoJobs[deletedPhoto.uri.toString()]?.cancel()
+        }
     }
 
     fun initMemoryInfo(
@@ -101,22 +103,31 @@ class MomentCreationViewModel(
 
     fun fetchPhotosUrlsByUris(context: Context) {
         pendingPhotos.getValue()?.forEach { photo ->
-            viewModelScope.launch {
-                val multiPartBody = convertExcretaFile(context, photo.uri, FORM_DATA_NAME)
-                val result = imageDefaultRepository.convertImageFileToUrl(multiPartBody)
-                handleConvertResult(result, photo)
+            val job = createPhotoUploadJob(context, photo)
+            job.invokeOnCompletion { _ ->
+                photoJobs.remove(photo.uri.toString())
             }
+            photoJobs[photo.uri.toString()] = job
         }
     }
 
-    private suspend fun handleConvertResult(
-        result: ResponseResult<ImageResponse>,
-        targetPhoto: AttachedPhotoUiModel,
-    ) {
-        result.onSuccess {
-            updatePhotoWithUrl(targetPhoto, it.imageUrl)
-        }.onException { e, message ->
-            Log.d("ㅌㅅㅌ 실패", "${e.message} | $message")
+    private fun createPhotoUploadJob(
+        context: Context,
+        photo: AttachedPhotoUiModel,
+    ) = viewModelScope.async(buildCoroutineExceptionHandler()) {
+        val multiPartBody = convertExcretaFile(context, photo.uri, FORM_DATA_NAME)
+        imageDefaultRepository.convertImageFileToUrl(multiPartBody)
+            .onSuccess {
+                updatePhotoWithUrl(photo, it.imageUrl)
+            }
+            .onException { _, message ->
+                _errorMessage.postValue(message)
+            }
+    }
+
+    private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
+        return CoroutineExceptionHandler { _, throwable ->
+            _errorMessage.postValue(throwable.message ?: "이미지 업로드에 실패했습니다.")
         }
     }
 
