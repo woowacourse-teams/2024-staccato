@@ -76,8 +76,7 @@ public class GlobalExceptionHandler {
         String errorMessage = "20MB 이하의 사진을 업로드해 주세요.";
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.PAYLOAD_TOO_LARGE.toString(), e.getMessage());
         log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse);
-        return ResponseEntity.badRequest()
-                .body(new ExceptionResponse(HttpStatus.PAYLOAD_TOO_LARGE.toString(), errorMessage));
+        return ResponseEntity.badRequest().body(new ExceptionResponse(HttpStatus.PAYLOAD_TOO_LARGE.toString(), errorMessage));
     }
 
     @ExceptionHandler(StaccatoException.class)
