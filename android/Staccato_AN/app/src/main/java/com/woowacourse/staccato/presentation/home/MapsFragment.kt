@@ -30,8 +30,8 @@ class MapsFragment : Fragment() {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(woowacourse, 15f))
         }
 
-    private val locationPermissions: List<String> =
-        listOf(
+    private val locationPermissions: Array<String> =
+        arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
         )
@@ -72,7 +72,7 @@ class MapsFragment : Fragment() {
             googleMap.isMyLocationEnabled = true
             return
         } else {
-            requestPermission.launch(locationPermissions.toTypedArray())
+            requestPermission.launch(locationPermissions)
         }
     }
 
