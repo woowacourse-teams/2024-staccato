@@ -11,6 +11,8 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.image.domain.ImageExtension;
 import com.staccato.image.infrastructure.S3ObjectClient;
 import com.staccato.image.service.dto.ImageUrlResponse;
+import com.staccato.image.service.dto.ImageUrlResponses;
+import com.staccato.image.service.dto.ImageUrlWithStatusResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,10 +24,11 @@ public class ImageService {
 
     private final S3ObjectClient s3ObjectClient;
 
-    public List<String> uploadFiles(List<MultipartFile> files) {
-        return files.stream()
+    public ImageUrlResponses uploadImages(List<MultipartFile> images) {
+        return new ImageUrlResponses(images.stream()
                 .map(this::uploadFile)
-                .toList();
+                .map(url -> new ImageUrlWithStatusResponse("200 OK", url))
+                .toList());
     }
 
     public ImageUrlResponse uploadImage(MultipartFile image) {
