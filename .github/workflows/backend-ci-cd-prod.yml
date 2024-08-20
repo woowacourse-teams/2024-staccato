@@ -3,6 +3,8 @@ name: Backend CI/CD prod
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "develop-be" ]
 
 jobs:
   ci:
