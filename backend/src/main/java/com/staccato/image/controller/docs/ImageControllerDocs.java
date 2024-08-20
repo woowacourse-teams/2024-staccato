@@ -23,6 +23,7 @@ public interface ImageControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(description = "이미지 업로드 성공", responseCode = "201"),
             @ApiResponse(description = "전송된 파일이 손상되었거나 지원되지 않는 형식일 때", responseCode = "400"),
+            @ApiResponse(description = "요청된 파트가 누락되었을 때", responseCode = "400"),
             @ApiResponse(description = "20MB 초과의 사진을 업로드 하려고 할 때", responseCode = "413")
     })
     ResponseEntity<ImageUrlResponse> uploadImage(

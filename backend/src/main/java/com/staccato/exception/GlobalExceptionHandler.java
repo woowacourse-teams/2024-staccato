@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import com.staccato.config.log.LogForm;
 
@@ -57,6 +58,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(S3Exception.class)
     public ResponseEntity<ExceptionResponse> handleS3Exception(S3Exception e) {
         String exceptionMessage = "이미지 처리에 실패했습니다.";
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), exceptionMessage);
+        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
+        return ResponseEntity.badRequest().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<ExceptionResponse> handleMissingServletRequestPartException(MissingServletRequestPartException e) {
+        String exceptionMessage = "요청된 파트가 누락되었습니다. 올바른 데이터를 제공해주세요.";
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), exceptionMessage);
         log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
         return ResponseEntity.badRequest().body(exceptionResponse);

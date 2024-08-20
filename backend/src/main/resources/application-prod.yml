@@ -25,7 +25,7 @@ spring:
   servlet:
     multipart:
       max-file-size: 20MB
-      max-request-size: 100MB
+      max-request-size: 20MB
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
@@ -47,3 +47,6 @@ cloud:
       static: ${AWS_REGION_STATIC}
     stack:
       auto: false
+image:
+  folder:
+    name: image-prod/
