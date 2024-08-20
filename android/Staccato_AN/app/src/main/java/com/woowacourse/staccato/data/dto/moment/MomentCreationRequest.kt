@@ -11,4 +11,5 @@ data class MomentCreationRequest(
     @SerialName("longitude") val longitude: String,
     @SerialName("address") val address: String,
     @SerialName("visitedAt") val visitedAt: String,
+    @SerialName("momentImageUrls") val momentImageUrls: List<String>,
 )

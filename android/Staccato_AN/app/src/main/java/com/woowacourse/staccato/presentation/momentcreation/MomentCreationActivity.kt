@@ -20,6 +20,7 @@ import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.woowacourse.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
+import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.woowacourse.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel
 import com.woowacourse.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
@@ -32,7 +33,6 @@ class MomentCreationActivity :
     MomentCreationHandler {
     override val layoutResourceId = R.layout.activity_visit_creation
     private val viewModel: MomentCreationViewModel by viewModels { MomentCreationViewModelFactory() }
-
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
     private lateinit var adapter: PhotoAttachAdapter
@@ -50,7 +50,7 @@ class MomentCreationActivity :
     override fun onCreateDoneClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.visit_creation_posting))
-        viewModel.createMoment(memoryId, this)
+        viewModel.createMoment(memoryId)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -112,7 +112,7 @@ class MomentCreationActivity :
                         itemTouchHelper.startDrag(viewHolder)
                     }
 
-                    override fun onStopDrag(list: List<Uri>) {
+                    override fun onStopDrag(list: List<AttachedPhotoUiModel>) {
                         viewModel.setUrisWithNewOrder(list)
                     }
                 },
@@ -136,6 +136,14 @@ class MomentCreationActivity :
         viewModel.isAddPhotoClicked.observe(this) {
             if (it) photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
         }
+        viewModel.pendingPhotos.observe(this) {
+            viewModel.fetchPhotosUrlsByUris(this)
+        }
+        viewModel.currentPhotos.observe(this) { photos ->
+            adapter.submitList(
+                listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
+            )
+        }
         viewModel.createdMomentId.observe(this) { createdMomentId ->
             val resultIntent =
                 Intent()
@@ -149,9 +157,6 @@ class MomentCreationActivity :
         viewModel.errorMessage.observe(this) {
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
-        }
-        viewModel.selectedImages.observe(this) { uris ->
-            adapter.submitList(listOf(Uri.parse(PhotoAttachAdapter.TEMP_URI_STRING)).plus(uris.toList()))
         }
     }
 

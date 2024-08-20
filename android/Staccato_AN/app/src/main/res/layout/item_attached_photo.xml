@@ -6,13 +6,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="selectedPhotoHandler"
             type="com.woowacourse.staccato.presentation.common.AttachedPhotoHandler" />
 
         <variable
             name="attachedPhoto"
-            type="android.net.Uri" />
+            type="com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,9 +32,24 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             bind:coilUriPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            bind:coilUriRoundedCorner="@{attachedPhoto}"
+            bind:coilUriRoundedCorner="@{attachedPhoto.uri}"
             bind:coilUriRoundingRadius="@{12f}"
             tools:src="@drawable/shape_all_gray2_4dp" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_attached_photo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white_80"
+            android:padding="50dp"
+            android:progress="30"
+            android:visibility="@{attachedPhoto.imageUrl == null ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBaseline_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/iv_delete_photo"

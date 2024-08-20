@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.momentcreation.adapter
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.woowacourse.staccato.databinding.ItemAddPhotoBinding
 import com.woowacourse.staccato.databinding.ItemAttachedPhotoBinding
 import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
+import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.woowacourse.staccato.presentation.visitcreation.adapter.ItemDragListener
 import com.woowacourse.staccato.presentation.visitcreation.adapter.ItemMoveListener
 
@@ -15,9 +15,9 @@ class PhotoAttachAdapter(
     private val dragListener: ItemDragListener,
     private val attachedPhotoHandler: AttachedPhotoHandler,
 ) :
-    ItemMoveListener, ListAdapter<Uri, PhotoAttachViewHolder>(diffUtil) {
+    ItemMoveListener, ListAdapter<AttachedPhotoUiModel, PhotoAttachViewHolder>(diffUtil) {
     init {
-        submitList(listOf(Uri.parse(TEMP_URI_STRING)))
+        submitList(listOf(AttachedPhotoUiModel.addPhotoButton))
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -79,29 +79,30 @@ class PhotoAttachAdapter(
     }
 
     override fun onStopDrag() {
-        dragListener.onStopDrag(currentList.filterNot { it.toString() == TEMP_URI_STRING })
+        dragListener.onStopDrag(currentList.filterNot { it == AttachedPhotoUiModel.addPhotoButton })
     }
 
     companion object {
+        const val ADD_PHOTO_BUTTON_URI = "add_photo_button_uri"
+        const val ADD_PHOTO_BUTTON_URL = "add_photo_button_url"
         const val ADD_PHOTO_POSITION = 0
         const val VIEW_TYPE_ADD_PHOTO = 0
         const val VIEW_TYPE_ATTACHED_PHOTO = 1
-        const val TEMP_URI_STRING = "tempUri"
 
         val diffUtil =
-            object : DiffUtil.ItemCallback<Uri>() {
+            object : DiffUtil.ItemCallback<AttachedPhotoUiModel>() {
                 override fun areItemsTheSame(
-                    oldItem: Uri,
-                    newItem: Uri,
+                    oldItem: AttachedPhotoUiModel,
+                    newItem: AttachedPhotoUiModel,
                 ): Boolean {
-                    return oldItem.toString() == newItem.toString()
+                    return oldItem.uri == newItem.uri
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: Uri,
-                    newItem: Uri,
+                    oldItem: AttachedPhotoUiModel,
+                    newItem: AttachedPhotoUiModel,
                 ): Boolean {
-                    return oldItem.toString() == newItem.toString()
+                    return oldItem == newItem
                 }
             }
     }
