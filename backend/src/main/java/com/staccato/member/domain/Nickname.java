@@ -23,8 +23,9 @@ public class Nickname {
     private String nickname;
 
     public Nickname(String nickname) {
-        validateRegex(nickname);
-        this.nickname = nickname;
+        String trimmedNickname = nickname.trim();
+        validateRegex(trimmedNickname);
+        this.nickname = trimmedNickname;
     }
 
     private static void validateRegex(String nickname) {

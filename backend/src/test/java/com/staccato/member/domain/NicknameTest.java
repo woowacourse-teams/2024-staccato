@@ -1,5 +1,6 @@
 package com.staccato.member.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -21,5 +22,15 @@ class NicknameTest {
         assertThatThrownBy(() -> new Nickname("//"))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("올바르지 않은 닉네임 형식입니다.");
+    }
+
+    @DisplayName("닉네임 맨 앞, 뒤 공백은 제거된다.")
+    @Test
+    void createNicknameAfterTrim() {
+        // given
+        Nickname nickname = new Nickname(" staccato ");
+
+        // when & then
+        assertThat(nickname.getNickname()).isEqualTo("staccato");
     }
 }

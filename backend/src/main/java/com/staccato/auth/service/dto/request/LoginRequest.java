@@ -14,6 +14,10 @@ public record LoginRequest(
         @Size(min = 1, max = 20, message = "1자 이상 20자 이하의 닉네임으로 설정해주세요.")
         String nickname
 ) {
+    public LoginRequest {
+        nickname = nickname.trim();
+    }
+
     public Member toMember() {
         return Member.builder()
                 .nickname(nickname)
