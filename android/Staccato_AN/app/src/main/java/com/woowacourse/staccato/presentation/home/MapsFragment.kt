@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -23,9 +24,10 @@ import com.woowacourse.staccato.R
 class MapsFragment : Fragment() {
     private val callback =
         OnMapReadyCallback { googleMap ->
+            checkLocationPermissions(googleMap)
             val woowacourse = LatLng(37.505, 127.050)
-            googleMap.addMarker(MarkerOptions().position(woowacourse).title("우아한테크코스 선릉 캠퍼스"))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(woowacourse, 13f))
+            googleMap.addMarker(MarkerOptions().position(woowacourse).title("우아한테크코스"))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(woowacourse, 15f))
         }
 
     private val locationPermissions: List<String> =
@@ -35,11 +37,6 @@ class MapsFragment : Fragment() {
         )
 
     private val requestPermission = initRequestPermissionsLauncher()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        checkLocationPermissions()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,7 +55,7 @@ class MapsFragment : Fragment() {
         mapFragment?.getMapAsync(callback)
     }
 
-    private fun checkLocationPermissions() {
+    private fun checkLocationPermissions(googleMap: GoogleMap) {
         val isAccessFineLocationGranted =
             ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -72,7 +69,8 @@ class MapsFragment : Fragment() {
             ) == PackageManager.PERMISSION_GRANTED
 
         if (isAccessFineLocationGranted || isAccessCoarseLocationGranted) {
-            // TODO: 현 위치 가져오기
+            googleMap.isMyLocationEnabled = true
+            return
         } else {
             requestPermission.launch(locationPermissions.toTypedArray())
         }
@@ -106,6 +104,6 @@ class MapsFragment : Fragment() {
     }
 
     companion object {
-        private const val PACKAGE_SCHEME = "package"
+        const val PACKAGE_SCHEME = "package"
     }
 }
