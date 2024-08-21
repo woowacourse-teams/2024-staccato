@@ -31,7 +31,7 @@ class VisitUpdateViewModel(
     private val momentRepository: MomentRepository,
     private val imageRepository: ImageRepository,
 ) : AttachedPhotoHandler, ViewModel() {
-    val placeName = ObservableField<String>()
+    val title = ObservableField<String>()
 
     private val _currentPhotos =
         MutableLiveData<AttachedPhotosUiModel>(AttachedPhotosUiModel(emptyList()))
@@ -90,7 +90,7 @@ class VisitUpdateViewModel(
                 .onSuccess { visit ->
                     _visitUpdateDefault.value = visit.toVisitUpdateDefaultUiModel()
                     _currentPhotos.value = createPhotosByUrls(visit.momentImageUrls)
-                    placeName.set(visit.placeName)
+                    title.set(visit.placeName)
                 }.onFailure { e ->
                     _errorMessage.postValue(e.message ?: "예외!!!!!")
                 }
@@ -109,12 +109,12 @@ class VisitUpdateViewModel(
     }
 
     fun updateVisit() {
-        if (placeName.get() != null && visitUpdateDefault.value != null) {
+        if (title.get() != null && visitUpdateDefault.value != null) {
             viewModelScope.launch {
                 _isPosting.value = true
                 momentRepository.updateMoment(
                     momentId = visitUpdateDefault.value!!.id,
-                    placeName = placeName.get()!!,
+                    placeName = title.get()!!,
                     momentImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
                 ).onSuccess {
                     _isUpdateCompleted.postValue(true)

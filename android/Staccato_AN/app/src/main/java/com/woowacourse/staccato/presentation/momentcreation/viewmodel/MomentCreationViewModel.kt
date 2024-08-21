@@ -28,7 +28,7 @@ class MomentCreationViewModel(
     private val momentRepository: MomentRepository,
     private val imageRepository: ImageDefaultRepository,
 ) : AttachedPhotoHandler, ViewModel() {
-    val placeName = ObservableField<String>()
+    val title = ObservableField<String>()
 
     private val _address = MutableLiveData<String>("서울특별시 강남구 테헤란로 411")
     val address: LiveData<String> get() = _address
@@ -49,7 +49,7 @@ class MomentCreationViewModel(
     private val _longitude = MutableLiveData<String>("32.123456")
     private val longitude: LiveData<String> get() = _longitude
 
-    val nowDateTime: LocalDateTime = LocalDateTime.now()
+    val nowDateTime = MutableLiveData<LocalDateTime>(LocalDateTime.now())
 
     private val _createdMomentId = MutableSingleLiveData<Long>()
     val createdMomentId: SingleLiveData<Long> get() = _createdMomentId
@@ -144,11 +144,11 @@ class MomentCreationViewModel(
             _isPosting.value = true
             momentRepository.createMoment(
                 memoryId = memoryId,
-                placeName = placeName.get() ?: "",
+                placeName = title.get() ?: "",
                 latitude = latitude.value ?: "",
                 longitude = longitude.value ?: "",
                 address = address.value ?: "",
-                visitedAt = nowDateTime,
+                visitedAt = nowDateTime.value ?: LocalDateTime.now(),
                 momentImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
             ).onSuccess { response ->
                 _createdMomentId.postValue(response.momentId)

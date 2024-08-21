@@ -73,7 +73,7 @@
                         android:hint="@string/visit_creation_place_name_hint"
                         android:imeOptions="actionDone"
                         android:maxLength="30"
-                        android:text="@={viewModel.placeName}" />
+                        android:text="@={viewModel.title}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -207,7 +207,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
-                    bind:setEnabled="@{viewModel.isUpdateCompleted}" />
+                    bind:setEnabled="@{viewModel.isUpdateCompleted}"
+                    bind:address="@{viewModel.visitUpdateDefault.address}"
+                    bind:staccatoTitle="@{viewModel.title}"
+                    bind:visitedAt="@{viewModel.visitUpdateDefault.visitedAt}"
+                    />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

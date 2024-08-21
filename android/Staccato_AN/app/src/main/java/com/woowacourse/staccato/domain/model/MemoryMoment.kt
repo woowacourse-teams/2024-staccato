@@ -1,10 +1,10 @@
 package com.woowacourse.staccato.domain.model
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class MemoryMoment(
     val momentId: Long,
     val placeName: String,
     val momentImageUrl: String? = null,
-    val visitedAt: LocalDate,
+    val visitedAt: LocalDateTime,
 )

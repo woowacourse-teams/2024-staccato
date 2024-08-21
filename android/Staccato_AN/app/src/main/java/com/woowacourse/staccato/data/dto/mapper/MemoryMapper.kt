@@ -8,6 +8,7 @@ import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.model.MemoryMoment
 import com.woowacourse.staccato.domain.model.NewMemory
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 fun MemoryResponse.toDomain() =
     Memory(
@@ -26,7 +27,7 @@ fun MemoryMomentDto.toDomain() =
         momentId = momentId,
         placeName = placeName,
         momentImageUrl = momentImageUrl,
-        visitedAt = LocalDate.parse(visitedAt),
+        visitedAt = LocalDateTime.parse(visitedAt),
     )
 
 fun NewMemory.toDto() =

@@ -189,6 +189,24 @@ fun Button.setMemorySaveButtonActive(
         }
 }
 
+@BindingAdapter(
+    value = ["staccatoTitle", "address", "visitedAt"],
+)
+fun Button.setStaccatoSaveButtonActive(
+    title: String?,
+    address: String?,
+    visitedAt: LocalDateTime?,
+) {
+    isEnabled =
+        if (title.isNullOrEmpty() || address == null || visitedAt == null) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
 @BindingAdapter("selectedMemory")
 fun TextView.setSelectedMemory(selectedMemory: MomentMemoryUiModel?) {
     if (selectedMemory == null) {
@@ -276,7 +294,7 @@ fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDate>?) {
 @BindingAdapter(
     value = ["visitedAt"],
 )
-fun TextView.combineVisitedAt(visitedAt: LocalDate) {
+fun TextView.combineVisitedAt(visitedAt: LocalDateTime) {
     text =
         format(
             resources.getString(R.string.visit_history),
