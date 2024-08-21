@@ -72,7 +72,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                             MEMORY_ID_KEY to memoryId,
                             MEMORY_TITLE_KEY to memoryTitle,
                         )
-                    navigateTo(R.id.visitFragment, R.id.visitFragment, bundle, true)
+                    navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
                 }
             }
         }
@@ -91,7 +91,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                             MEMORY_TITLE_KEY to memoryTitle,
                             MEMORY_ID_KEY to memoryId,
                         )
-                    navigateTo(R.id.visitFragment, R.id.visitFragment, bundle, true)
+                    navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
                 }
             }
         }

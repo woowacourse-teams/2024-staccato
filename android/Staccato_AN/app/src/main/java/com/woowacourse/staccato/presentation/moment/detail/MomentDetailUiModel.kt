@@ -1,13 +1,11 @@
-package com.woowacourse.staccato.domain.model
+package com.woowacourse.staccato.presentation.moment.detail
 
 import java.time.LocalDateTime
 
-data class Moment(
-    val momentId: Long,
+data class MomentDetailUiModel(
+    val id: Long,
     val placeName: String,
     val momentImageUrls: List<String>,
     val address: String,
     val visitedAt: LocalDateTime,
-    val feeling: Feeling,
-    val comments: List<VisitLog>,
 )

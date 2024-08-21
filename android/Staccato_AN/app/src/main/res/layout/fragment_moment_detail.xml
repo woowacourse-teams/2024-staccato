@@ -7,15 +7,14 @@
     <data>
 
         <variable
-            name="visitDefault"
-            type="com.woowacourse.staccato.presentation.moment.model.MomentDetailUiModel.MomentDefaultUiModel" />
+            name="viewModel"
+            type="com.woowacourse.staccato.presentation.moment.detail.MomentDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp">
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_photo_horizontal"
@@ -37,7 +36,7 @@
             android:layout_marginStart="18dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="18dp"
-            android:text="@{visitDefault.placeName}"
+            android:text="@{viewModel.momentDetail.placeName}"
             android:textAppearance="@style/Typography.Title1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_photo_horizontal"
@@ -48,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@{visitDefault.address}"
+            android:text="@{viewModel.momentDetail.address}"
             android:textAppearance="@style/Typography.Body4"
             app:layout_constraintStart_toStartOf="@id/tv_title"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
@@ -62,7 +61,7 @@
             android:textAppearance="@style/Typography.Body2"
             app:layout_constraintStart_toStartOf="@id/tv_title"
             app:layout_constraintTop_toBottomOf="@id/tv_detail"
-            bind:visitedAt="@{visitDefault.visitedAt}"
+            bind:visitedAt="@{viewModel.momentDetail.visitedAt}"
             tools:text="2024년 7월 15일에 처음 방문했어요!" />
 
         <com.google.android.material.divider.MaterialDivider
@@ -72,30 +71,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_visited_at" />
-
-        <TextView
-            android:id="@+id/tv_visit_log"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/visit_logs"
-            android:textAppearance="@style/Typography.Title2"
-            app:layout_constraintStart_toStartOf="@id/tv_title"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
-
-        <TextView
-            android:id="@+id/tv_visit_default_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingVertical="60dp"
-            android:text="@string/all_default_not_supported"
-            android:textAppearance="@style/Typography.Body2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_visit_log"
-            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
