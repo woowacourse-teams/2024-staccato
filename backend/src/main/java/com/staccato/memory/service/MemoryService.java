@@ -21,7 +21,6 @@ import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
-import com.staccato.image.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +31,6 @@ public class MemoryService {
     private final MemoryRepository memoryRepository;
     private final MemoryMemberRepository memoryMemberRepository;
     private final MomentRepository momentRepository;
-    private final ImageService imageService;
 
     @Transactional
     public MemoryIdResponse createMemory(MemoryRequest memoryRequest, Member member) {
@@ -52,7 +50,7 @@ public class MemoryService {
     }
 
     public MemoryNameResponses readAllMemoriesIncludingDate(Member member, LocalDate currentDate) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndDateOrderByCreatedAtDesc(member.getId(), currentDate);
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndIncludingDateOrderByCreatedAtDesc(member.getId(), currentDate);
         return MemoryNameResponses.from(
                 memoryMembers.stream()
                         .map(MemoryMember::getMemory)
