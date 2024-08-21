@@ -24,15 +24,15 @@
         tools:layout="@layout/fragment_memory">
 
         <action
-            android:id="@+id/action_memoryFragment_to_visitFragment"
-            app:destination="@id/visitFragment" />
+            android:id="@+id/action_memoryFragment_to_momentFragment"
+            app:destination="@id/momentFragment" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/visitFragment"
+        android:id="@+id/momentFragment"
         android:name="com.woowacourse.staccato.presentation.moment.MomentFragment"
-        android:label="fragment_visit"
-        tools:layout="@layout/fragment_visit" />
+        android:label="fragment_moment"
+        tools:layout="@layout/fragment_moment" />
 
 </navigation>
