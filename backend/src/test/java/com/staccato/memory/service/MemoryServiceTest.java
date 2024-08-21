@@ -49,8 +49,8 @@ class MemoryServiceTest extends ServiceSliceTest {
 
     static Stream<Arguments> dateProvider() {
         return Stream.of(
-                Arguments.of(LocalDate.of(2024, 7, 2), 2),
-                Arguments.of(LocalDate.of(2024, 7, 3), 1)
+                Arguments.of(LocalDate.of(2024, 7, 1), 2),
+                Arguments.of(LocalDate.of(2024, 7, 2), 1)
         );
     }
 
@@ -86,8 +86,8 @@ class MemoryServiceTest extends ServiceSliceTest {
     void readAllMemories(LocalDate currentDate, int expectedSize) {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 2)), member);
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 3)), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 1)), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2)), member);
 
         // when
         MemoryResponses memoryResponses = memoryService.readAllMemories(member, currentDate);
