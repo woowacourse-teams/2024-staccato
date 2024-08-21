@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="feeling"
+            type="com.woowacourse.staccato.presentation.moment.feeling.FeelingUiModel" />
+    </data>
+
+    <ImageView
+        style="@style/FeelingStyle"
+        android:contentDescription="@string/all_image_content_description"
+        android:src="@{feeling.src}"
+        bind:setSelected="@{feeling.isSelected}"
+        tools:src="@drawable/feeling_excited" />
+
+</layout>
