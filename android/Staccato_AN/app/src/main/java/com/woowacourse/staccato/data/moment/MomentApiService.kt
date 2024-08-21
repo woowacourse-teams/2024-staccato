@@ -2,9 +2,11 @@ package com.woowacourse.staccato.data.moment
 
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
+import com.woowacourse.staccato.data.dto.moment.MomentLocationResponse
 import com.woowacourse.staccato.data.dto.moment.MomentResponse
 import com.woowacourse.staccato.data.dto.moment.MomentUpdateRequest
 import okhttp3.MultipartBody
+import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
@@ -14,6 +16,9 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface MomentApiService {
+    @GET(MOMENTS_PATH)
+    suspend fun getMoments(): Response<MomentLocationResponse>
+
     @GET(MOMENT_PATH_WITH_ID)
     suspend fun getMoment(
         @Path(value = "momentId") momentId: Long,
