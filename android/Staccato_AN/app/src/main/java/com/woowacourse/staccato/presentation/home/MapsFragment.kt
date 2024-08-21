@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -20,14 +21,25 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.staccato.R
+import com.woowacourse.staccato.data.StaccatoClient.momentApiService
+import com.woowacourse.staccato.data.moment.MomentDefaultRepository
+import com.woowacourse.staccato.data.moment.MomentRemoteDataSource
+import com.woowacourse.staccato.domain.model.MomentLocation
 
 class MapsFragment : Fragment() {
-    private val callback =
+    private val viewModel: MapsViewModel by viewModels {
+        MapsViewModelFactory(
+            MomentDefaultRepository(
+                MomentRemoteDataSource(momentApiService),
+            ),
+        )
+    }
+
+    private val mapReadyCallback =
         OnMapReadyCallback { googleMap ->
             checkLocationPermissions(googleMap)
-            val woowacourse = LatLng(37.505, 127.050)
-            googleMap.addMarker(MarkerOptions().position(woowacourse).title("우아한테크코스"))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(woowacourse, 15f))
+            observeMomentLocations(googleMap)
+            moveCamera(googleMap)
         }
 
     private val locationPermissions: Array<String> =
@@ -52,7 +64,7 @@ class MapsFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(callback)
+        mapFragment?.getMapAsync(mapReadyCallback)
     }
 
     private fun checkLocationPermissions(googleMap: GoogleMap) {
@@ -101,6 +113,28 @@ class MapsFragment : Fragment() {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri)
             startActivity(intent)
         }
+    }
+
+    private fun observeMomentLocations(googleMap: GoogleMap) {
+        viewModel.momentLocations.observe(viewLifecycleOwner) { momentLocations ->
+            addMarkers(momentLocations, googleMap)
+        }
+    }
+
+    private fun addMarkers(
+        momentLocations: List<MomentLocation>,
+        googleMap: GoogleMap,
+    ) {
+        momentLocations.forEach { momentLocation ->
+            googleMap.addMarker(
+                MarkerOptions().position(LatLng(momentLocation.latitude, momentLocation.longitude)),
+            )
+        }
+    }
+
+    private fun moveCamera(googleMap: GoogleMap) {
+        val woowacourse = LatLng(37.5057434, 127.0506698)
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(woowacourse, 15f))
     }
 
     companion object {

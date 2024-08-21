@@ -23,10 +23,15 @@ class MapsViewModel(
     private val _errorMessage = MutableSingleLiveData<String>()
     val errorMessage: SingleLiveData<String> get() = _errorMessage
 
-    fun loadMoments() {
+    init {
+        loadMoments()
+    }
+
+    private fun loadMoments() {
         viewModelScope.launch {
             val result = momentRepository.getMoments()
-            result.onSuccess(::setMomentLocations).onServerError(::handleServerError)
+            result.onSuccess(::setMomentLocations)
+                .onServerError(::handleServerError)
                 .onException(::handelException)
         }
     }
