@@ -276,7 +276,7 @@ fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDate>?) {
 @BindingAdapter(
     value = ["visitedAt"],
 )
-fun TextView.combineVisitedAt(visitedAt: LocalDate) {
+fun TextView.combineVisitedAt(visitedAt: LocalDateTime) {
     text =
         format(
             resources.getString(R.string.visit_history),

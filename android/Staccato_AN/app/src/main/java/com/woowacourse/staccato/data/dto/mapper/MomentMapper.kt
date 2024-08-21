@@ -4,7 +4,7 @@ import com.woowacourse.staccato.data.dto.moment.MomentResponse
 import com.woowacourse.staccato.data.dto.moment.VisitLogDto
 import com.woowacourse.staccato.domain.model.Moment
 import com.woowacourse.staccato.domain.model.VisitLog
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 fun MomentResponse.toDomain() =
     Moment(
@@ -12,7 +12,7 @@ fun MomentResponse.toDomain() =
         placeName = placeName,
         momentImageUrls = momentImageUrls,
         address = address,
-        visitedAt = LocalDate.parse(visitedAt),
+        visitedAt = LocalDateTime.parse(visitedAt),
         comments = visitLogs.map { it.toDomain() },
     )
 
