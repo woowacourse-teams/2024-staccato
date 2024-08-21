@@ -56,6 +56,7 @@
     <string name="visit_logs">코멘트</string>
     <string name="visit_add">추가하기</string>
     <string name="visit_enter_log">코멘트 입력하기</string>
+    <string name="moment_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
 
     // activity_visit_creation / activity_visit_update
     <string name="visit_creation_place_name">스타카토 제목</string>

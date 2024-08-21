@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.data.moment
 
+import com.woowacourse.staccato.data.dto.moment.FeelingRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.data.dto.moment.MomentResponse
@@ -40,5 +41,15 @@ class MomentRemoteDataSource(
 
     suspend fun deleteMoment(momentId: Long) {
         momentApiService.deleteMoment(momentId)
+    }
+
+    suspend fun updateFeeling(
+        momentId: Long,
+        feelingRequest: FeelingRequest,
+    ) {
+        momentApiService.postFeeling(
+            momentId = momentId,
+            feelingRequest = feelingRequest,
+        )
     }
 }
