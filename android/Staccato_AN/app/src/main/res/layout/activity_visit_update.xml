@@ -60,29 +60,30 @@
                     app:layout_constraintStart_toEndOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintTop_toTopOf="@id/tv_visit_update_place_name_title" />
 
-                <EditText
-                    android:id="@+id/tv_place_name"
-                    style="@style/EditTextStyle"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/shape_button_gray1_5dp"
-                    android:hint="@string/visit_creation_place_name_hint"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:maxLength="30"
-                    android:maxLines="1"
-                    android:text="@={viewModel.placeName}"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_visit_update_title"
+                    style="@style/TextInputLayoutStyle"
+                    app:counterMaxLength="30"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visit_update_place_name_title" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_visit_update_place_name_title">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/TextInputEditTextStyle.Title"
+                        android:hint="@string/visit_creation_place_name_hint"
+                        android:imeOptions="actionDone"
+                        android:maxLength="30"
+                        android:text="@={viewModel.title}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/tv_place_address_title"
                     style="@style/SubTitleStyle"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/visit_creation_address"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_place_name" />
+                    app:layout_constraintTop_toBottomOf="@id/text_input_visit_update_title" />
 
                 <TextView
                     android:id="@+id/tv_visit_update_required_mark_second"
@@ -115,46 +116,28 @@
                     app:layout_constraintStart_toStartOf="@id/tv_place_address_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address" />
 
-                <FrameLayout
-                    android:id="@+id/frame_photo_attach"
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_photo_attach"
                     android:layout_width="0dp"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{() -> visitUpdateHandler.onPhotoAttachClicked()}"
+                    android:foregroundGravity="center"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
-                    bind:setAttachedPhotoVisibility="@{viewModel.newVisitImageUrls}">
-
-                    <include
-                        layout="@layout/layout_photo_attach"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                </FrameLayout>
-
-                <ImageView
-                    android:id="@+id/iv_attached_photo"
-                    android:layout_width="0dp"
-                    android:layout_height="200dp"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
-                    bind:setAttachedPhotoVisibility="@{viewModel.newVisitImageUrls}" />
+                    app:spanCount="2"
+                    tools:listitem="@layout/item_attached_photo" />
 
                 <TextView
                     android:id="@+id/tv_memory_selection_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="24dp"
                     android:text="추억 선택"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_photo_title"
-                    app:layout_constraintTop_toBottomOf="@id/frame_photo_attach" />
+                    app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
 
                 <TextView
                     android:id="@+id/tv_visit_update_required_mark_third"
@@ -186,7 +169,6 @@
                     android:layout_marginTop="24dp"
                     android:text="@string/all_visited_date"
                     android:textAppearance="@style/Typography.Title2"
-                    app:layout_constraintEnd_toEndOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_selection_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection" />
 
@@ -225,7 +207,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
-                    bind:setEnabled="@{viewModel.isUpdateCompleted}" />
+                    bind:setEnabled="@{viewModel.isUpdateCompleted}"
+                    bind:address="@{viewModel.visitUpdateDefault.address}"
+                    bind:staccatoTitle="@{viewModel.title}"
+                    bind:visitedAt="@{viewModel.visitUpdateDefault.visitedAt}"
+                    />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

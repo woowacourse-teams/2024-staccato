@@ -13,11 +13,9 @@ private const val MEMORY_FILE_CHILD_NAME = "memory"
 
 fun convertMemoryUriToFile(
     context: Context,
-    uri: Uri?,
+    uri: Uri,
     name: String,
-): MultipartBody.Part? {
-    uri ?: return null
-
+): MultipartBody.Part {
     val contextResolver: ContentResolver = context.contentResolver
     // 파일 이름과 MIME 타입 가져오기
     val contentType = contextResolver.getType(uri)?.toMediaTypeOrNull()
@@ -37,10 +35,10 @@ fun convertMemoryUriToFile(
 
 fun convertExcretaFile(
     context: Context,
-    uri: Uri,
+    uri: Uri?,
     name: String,
 ): MultipartBody.Part {
-    if (uri.toString().isEmpty()) {
+    if (uri.toString().isEmpty() || uri == null) {
         val emptyFile = "".toRequestBody("multipart/form-data".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(name, "", emptyFile)
     }

@@ -14,7 +14,7 @@ class MomentDetailFragment :
     private lateinit var photoAdapter: HorizontalPhotoAdapter
     private val momentDetailViewModel: MomentDetailViewModel by viewModels()
     private val momentViewModel: MomentViewModel by viewModels(
-        ownerProducer = { requireParentFragment() }
+        ownerProducer = { requireParentFragment() },
     ) {
         MomentViewModelFactory()
     }

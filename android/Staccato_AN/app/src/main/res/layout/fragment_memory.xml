@@ -57,6 +57,7 @@
                     android:layout_height="0dp"
                     android:contentDescription="@string/all_image_content_description"
                     android:scaleType="centerCrop"
+                    android:visibility="@{viewModel.memory.memoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -105,6 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:text="@{viewModel.memory.description}"
+                    android:visibility="@{viewModel.memory.description == null ? View.GONE : View.VISIBLE }"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_memory_first"
@@ -114,6 +116,7 @@
                     android:id="@+id/divider_memory_second"
                     style="@style/DividerStyle"
                     android:layout_marginTop="16dp"
+                    android:visibility="@{viewModel.memory.description == null ? View.GONE : View.VISIBLE }"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_description" />
@@ -124,6 +127,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/memory_mates"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_memory_second" />
 
@@ -135,6 +139,7 @@
                     android:clipToPadding="false"
                     android:orientation="horizontal"
                     android:paddingHorizontal="20dp"
+                    android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -145,6 +150,7 @@
                     android:id="@+id/divider_memory_third"
                     style="@style/DividerStyle"
                     android:layout_marginTop="16dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_memory_mates" />
@@ -185,19 +191,31 @@
                     app:layout_constraintVertical_bias="0.0"
                     tools:listitem="@layout/item_visits" />
 
+                <ImageView
+                    android:id="@+id/iv_memory_empty"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="90dp"
+                    android:contentDescription="@string/all_image_content_description"
+                    android:paddingBottom="10dp"
+                    android:src="@drawable/staccato_character"
+                    android:visibility="@{viewModel.memory.visits.empty ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_visits" />
+
                 <TextView
                     android:id="@+id/tv_memory_empty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingVertical="60dp"
+                    android:paddingBottom="100dp"
                     android:text="@string/memory_visit_empty"
                     android:textAppearance="@style/Typography.Body2"
                     android:visibility="@{viewModel.memory.visits.empty ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_visits"
+                    app:layout_constraintTop_toBottomOf="@id/iv_memory_empty"
                     tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,9 @@
 package com.woowacourse.staccato.presentation.common
 
-import android.net.Uri
+import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 
 interface AttachedPhotoHandler {
-    fun onDeleteClicked(deletedUri: Uri)
+    fun onDeleteClicked(deletedPhoto: AttachedPhotoUiModel)
 
     fun onAddClicked()
 }

@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.memory.model
 
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class MemoryVisitUiModel(

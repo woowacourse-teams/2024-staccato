@@ -11,13 +11,14 @@ import com.woowacourse.staccato.presentation.mapper.toFeelingUiModel
 
 class FeelingSelectionAdapter(private val feelingHandler: FeelingHandler) :
     ListAdapter<FeelingUiModel, FeelingSelectionAdapter.FeelingSelectionViewHolder>(diffUtil) {
-    private val feelings = listOf(
-        Feeling.HAPPY.toFeelingUiModel(),
-        Feeling.ANGRY.toFeelingUiModel(),
-        Feeling.SAD.toFeelingUiModel(),
-        Feeling.SCARED.toFeelingUiModel(),
-        Feeling.EXCITED.toFeelingUiModel(),
-    )
+    private val feelings =
+        listOf(
+            Feeling.HAPPY.toFeelingUiModel(),
+            Feeling.ANGRY.toFeelingUiModel(),
+            Feeling.SAD.toFeelingUiModel(),
+            Feeling.SCARED.toFeelingUiModel(),
+            Feeling.EXCITED.toFeelingUiModel(),
+        )
 
     init {
         submitList(feelings)

@@ -13,26 +13,28 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.Status
+import com.woowacourse.staccato.data.dto.image.ImageResponse
 import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.model.NewMemory
+import com.woowacourse.staccato.domain.repository.ImageRepository
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
 import com.woowacourse.staccato.presentation.util.convertMemoryUriToFile
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 import java.time.LocalDate
 
 class MemoryUpdateViewModel(
     private val memoryId: Long,
     private val memoryRepository: MemoryRepository,
+    private val imageRepository: ImageRepository,
 ) : ViewModel() {
     private val _memory = MutableLiveData<NewMemory>()
     val memory: LiveData<NewMemory> get() = _memory
 
-    private val _imageUrl = MutableLiveData<String?>()
-    val imageUrl: LiveData<String?> get() = _imageUrl
+    private val _thumbnailUrl = MutableLiveData<String?>()
+    val thumbnailUrl: LiveData<String?> get() = _thumbnailUrl
 
     val title = ObservableField<String>()
     val description = ObservableField<String>()
@@ -49,9 +51,6 @@ class MemoryUpdateViewModel(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
-    private val _imageUri = MutableLiveData<Uri?>()
-    val imageUri: LiveData<Uri?> get() = _imageUri
-
     private val _isPosting = MutableLiveData<Boolean>()
     val isPosting: LiveData<Boolean> get() = _isPosting
 
@@ -65,17 +64,29 @@ class MemoryUpdateViewModel(
         }
     }
 
-    fun setImage(uri: Uri) {
-        _imageUri.value = uri
-        _imageUrl.value = null
+    fun createThumbnailUrl(
+        context: Context,
+        thumbnailUri: Uri,
+    ) {
+        val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
+        viewModelScope.launch {
+            val result: ResponseResult<ImageResponse> =
+                imageRepository.convertImageFileToUrl(thumbnailFile)
+            result.onSuccess(::setThumbnailUrl)
+                .onServerError(::handleServerError)
+                .onException(::handelException)
+        }
     }
 
-    fun updateMemory(context: Context) {
+    fun setThumbnailUrl(imageResponse: ImageResponse?) {
+        _thumbnailUrl.value = imageResponse?.imageUrl
+    }
+
+    fun updateMemory() {
         _isPosting.value = true
         viewModelScope.launch {
             val newMemory: NewMemory = makeNewMemory()
-            val thumbnailFile: MultipartBody.Part? = convertMemoryUriToFile(context, _imageUri.value, MEMORY_FILE_NAME)
-            val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory, thumbnailFile)
+            val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory)
             result
                 .onSuccess { updateSuccessStatus() }
                 .onServerError(::handleServerError)
@@ -94,7 +105,7 @@ class MemoryUpdateViewModel(
     }
 
     private fun initializeMemory(memory: Memory) {
-        _imageUrl.value = memory.memoryThumbnailUrl
+        _thumbnailUrl.value = memory.memoryThumbnailUrl
         title.set(memory.memoryTitle)
         description.set(memory.description)
         _startDate.value = memory.startAt
@@ -103,7 +114,7 @@ class MemoryUpdateViewModel(
 
     private fun makeNewMemory() =
         NewMemory(
-            memoryThumbnail = imageUrl.value,
+            memoryThumbnailUrl = thumbnailUrl.value,
             memoryTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
             endAt = endDate.value ?: throw IllegalArgumentException(),
@@ -131,7 +142,7 @@ class MemoryUpdateViewModel(
     }
 
     companion object {
-        private const val MEMORY_FILE_NAME = "memoryThumbnailFile"
+        private const val MEMORY_FILE_NAME = "imageFile"
         private const val MEMORY_UPDATE_ERROR_MESSAGE = "추억 수정에 실패했습니다"
     }
 }

@@ -16,24 +16,37 @@
             android:id="@+id/tv_moment_comments_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/visit_logs"
             android:textAppearance="@style/Typography.Title2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_moment_comments_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingVertical="60dp"
-            android:text="@string/all_default_not_supported"
-            android:textAppearance="@style/Typography.Body2"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <ImageView
+            android:id="@+id/iv_moment_comments_default_empty"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="90dp"
+            android:contentDescription="@string/all_image_content_description"
+            android:paddingBottom="10dp"
+            android:src="@drawable/staccato_character"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_moment_comments_title"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_moment_comments_empty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="100dp"
+            android:text="@string/all_default_not_supported"
+            android:textAppearance="@style/Typography.Body2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_moment_comments_default_empty"
             tools:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView

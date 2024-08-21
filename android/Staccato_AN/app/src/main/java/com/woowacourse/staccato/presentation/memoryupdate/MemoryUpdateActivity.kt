@@ -14,7 +14,9 @@ import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.woowacourse.staccato.R
+import com.woowacourse.staccato.data.StaccatoClient.imageApiService
 import com.woowacourse.staccato.data.StaccatoClient.memoryApiService
+import com.woowacourse.staccato.data.image.ImageDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryDefaultRepository
 import com.woowacourse.staccato.data.memory.MemoryRemoteDataSource
 import com.woowacourse.staccato.databinding.ActivityMemoryUpdateBinding
@@ -36,6 +38,7 @@ class MemoryUpdateActivity :
         MemoryUpdateViewModelFactory(
             memoryId,
             MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)),
+            ImageDefaultRepository(imageApiService),
         )
     }
     private val photoAttachFragment = PhotoAttachFragment()
@@ -61,15 +64,22 @@ class MemoryUpdateActivity :
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.memory_update_posting))
-        viewModel.updateMemory(this)
+        viewModel.updateMemory()
     }
 
     override fun onPhotoAttachClicked() {
-        photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+        if (!photoAttachFragment.isAdded) {
+            photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+        }
+    }
+
+    override fun onPhotoDeletionClicked() {
+        viewModel.setThumbnailUrl(null)
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
-        viewModel.setImage(uris.first())
+        viewModel.createThumbnailUrl(this, uris.first())
+        showToast(getString(R.string.all_posting_photo))
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -81,27 +91,6 @@ class MemoryUpdateActivity :
             }
         }
         return super.dispatchTouchEvent(event)
-    }
-
-    private fun isTouchInsideView(
-        event: MotionEvent,
-        view: View,
-    ): Boolean {
-        val rect = android.graphics.Rect()
-        view.getGlobalVisibleRect(rect)
-        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
-    }
-
-    private fun clearFocusAndHideKeyboard(view: View) {
-        view.clearFocus()
-        hideKeyboard(view)
-    }
-
-    private fun hideKeyboard(view: View) {
-        inputManager.hideSoftInputFromWindow(
-            view.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS,
-        )
     }
 
     private fun buildDateRangePicker() =
@@ -151,6 +140,27 @@ class MemoryUpdateActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
+    }
+
+    private fun isTouchInsideView(
+        event: MotionEvent,
+        view: View,
+    ): Boolean {
+        val rect = android.graphics.Rect()
+        view.getGlobalVisibleRect(rect)
+        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
+    }
+
+    private fun clearFocusAndHideKeyboard(view: View) {
+        view.clearFocus()
+        hideKeyboard(view)
+    }
+
+    private fun hideKeyboard(view: View) {
+        inputManager.hideSoftInputFromWindow(
+            view.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
     }
 
     private fun showErrorToast() {
