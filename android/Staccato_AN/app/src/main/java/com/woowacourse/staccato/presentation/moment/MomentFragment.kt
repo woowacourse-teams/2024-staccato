@@ -77,7 +77,7 @@ class MomentFragment :
     private fun observeData() {
         momentViewModel.isError.observe(viewLifecycleOwner) { isError ->
             if (isError) {
-                showToast("방문을 불러올 수 없어요!")
+                showToast("스타카토를 불러올 수 없어요!")
                 findNavController().popBackStack()
             }
         }
