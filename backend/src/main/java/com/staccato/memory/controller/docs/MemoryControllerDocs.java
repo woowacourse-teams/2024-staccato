@@ -11,6 +11,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
+import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MemoryResponses;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,12 +44,16 @@ public interface MemoryControllerDocs {
             @Parameter(required = true) @Valid MemoryRequest memoryRequest,
             @Parameter(hidden = true) Member member);
 
-    @Operation(summary = "추억 목록 조회", description = "사용자의 전체/날짜별 추억 목록을 조회합니다.")
+    @Operation(summary = "추억 목록 조회", description = "사용자의 모든 추억 목록을 조회합니다.")
+    @ApiResponse(description = "추억 목록 조회 성공", responseCode = "200")
+    ResponseEntity<MemoryResponses> readAllMemories(@Parameter(hidden = true) Member member);
+
+    @Operation(summary = "특정 날짜를 포함하는 사용자의 모든 추억 목록 조회", description = "특정 날짜를 포함하는 사용자의 모든 추억 목록을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "추억 목록 조회 성공", responseCode = "200"),
             @ApiResponse(description = "입력받은 현재 날짜가 유효하지 않을 때 발생", responseCode = "400")
     })
-    ResponseEntity<MemoryResponses> readAllMemories(
+    ResponseEntity<MemoryNameResponses> readAllCandidateMemories(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "현재 날짜", example = "2024-08-21") LocalDate currentDate);
 

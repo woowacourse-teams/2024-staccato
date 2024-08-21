@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.memory.MemoryFixture;
+import com.staccato.fixture.memory.MemoryNameResponsesFixture;
 import com.staccato.fixture.memory.MemoryRequestFixture;
 import com.staccato.fixture.memory.MemoryResponsesFixture;
 import com.staccato.member.domain.Member;
@@ -43,6 +44,7 @@ import com.staccato.memory.service.MemoryService;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
+import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MemoryResponses;
 
 @WebMvcTest(MemoryController.class)
@@ -127,7 +129,7 @@ class MemoryControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         MemoryResponses memoryResponses = MemoryResponsesFixture.create(MemoryFixture.create());
-        when(memoryService.readAllMemories(any(Member.class), any())).thenReturn(memoryResponses);
+        when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
 
         // when & then
         mockMvc.perform(get("/memories")
@@ -141,16 +143,16 @@ class MemoryControllerTest {
     void readAllMemoryIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        MemoryResponses memoryResponses = MemoryResponsesFixture.create(MemoryFixture.create());
-        when(memoryService.readAllMemories(any(Member.class), any())).thenReturn(memoryResponses);
+        MemoryNameResponses memoryNameResponses = MemoryNameResponsesFixture.create(MemoryFixture.create());
+        when(memoryService.readAllMemoriesIncludingDate(any(Member.class), any())).thenReturn(memoryNameResponses);
         String currentDate = "2024-07-01";
 
         // when & then
-        mockMvc.perform(get("/memories")
+        mockMvc.perform(get("/memories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .param("currentDate", currentDate))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(memoryResponses)));
+                .andExpect(content().json(objectMapper.writeValueAsString(memoryNameResponses)));
     }
 
     @DisplayName("잘못된 날짜 형식으로 추억 목록 조회를 시도하면 예외가 발생한다.")
@@ -162,7 +164,7 @@ class MemoryControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
 
         // when & then
-        mockMvc.perform(get("/memories")
+        mockMvc.perform(get("/memories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .param("currentDate", currentDate))
                 .andExpect(status().isBadRequest())

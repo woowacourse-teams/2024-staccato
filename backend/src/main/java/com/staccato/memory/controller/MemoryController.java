@@ -26,6 +26,7 @@ import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
 import com.staccato.memory.service.dto.response.MemoryResponses;
+import com.staccato.memory.service.dto.response.MemoryNameResponses;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,12 +47,18 @@ public class MemoryController implements MemoryControllerDocs {
     }
 
     @GetMapping
-    public ResponseEntity<MemoryResponses> readAllMemories(
-            @LoginMember Member member,
-            @RequestParam(value = "currentDate", required = false) LocalDate currentDate
-    ) {
-        MemoryResponses memoryResponses = memoryService.readAllMemories(member, currentDate);
+    public ResponseEntity<MemoryResponses> readAllMemories(@LoginMember Member member) {
+        MemoryResponses memoryResponses = memoryService.readAllMemories(member);
         return ResponseEntity.ok(memoryResponses);
+    }
+
+    @GetMapping("/candidates")
+    public ResponseEntity<MemoryNameResponses> readAllCandidateMemories(
+            @LoginMember Member member,
+            @RequestParam(value = "currentDate") LocalDate currentDate
+    ) {
+        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
+        return ResponseEntity.ok(memoryNameResponses);
     }
 
     @GetMapping("/{memoryId}")

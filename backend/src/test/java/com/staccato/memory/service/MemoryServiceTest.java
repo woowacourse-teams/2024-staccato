@@ -30,7 +30,7 @@ import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
-import com.staccato.memory.service.dto.response.MemoryResponses;
+import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
@@ -71,7 +71,8 @@ class MemoryServiceTest extends ServiceSliceTest {
 
         // when
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, member);
-        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId()).get(0);
+        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId())
+                .get(0);
 
         // then
         assertAll(
@@ -90,10 +91,10 @@ class MemoryServiceTest extends ServiceSliceTest {
         memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2)), member);
 
         // when
-        MemoryResponses memoryResponses = memoryService.readAllMemories(member, currentDate);
+        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
 
         // then
-        assertThat(memoryResponses.memories()).hasSize(expectedSize);
+        assertThat(memoryNameResponses.memories()).hasSize(expectedSize);
     }
 
     @DisplayName("특정 추억을 조회한다.")
