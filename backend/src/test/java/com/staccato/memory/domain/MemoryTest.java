@@ -1,5 +1,6 @@
 package com.staccato.memory.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
@@ -27,5 +28,19 @@ class MemoryTest {
         assertThatThrownBy(() -> memory.update(updatedMemory, List.of(moment)))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("변경하려는 추억 기간이 이미 존재하는 순간을 포함하지 않습니다. 추억 기간을 다시 설정해주세요.");
+    }
+
+    @DisplayName("주어진 문자열과 제목이 같으면 거짓을 반환한다.")
+    @Test
+    void isNotSameTitle(){
+        // given
+        String title = "title";
+        Memory memory = Memory.builder().title(title).build();
+
+        // when
+        boolean result = memory.isNotSameTitle(title);
+
+        // then
+        assertThat(result).isFalse();
     }
 }

@@ -95,4 +95,8 @@ public class Memory extends BaseEntity {
         return memoryMembers.stream()
                 .noneMatch(memoryMember -> memoryMember.isMember(member));
     }
+
+    public boolean isNotSameTitle(String title) {
+        return !this.title.equals(title);
+    }
 }

@@ -1,12 +1,10 @@
 package com.staccato.memory.service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
@@ -22,7 +20,6 @@ import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
-import com.staccato.image.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,10 +30,10 @@ public class MemoryService {
     private final MemoryRepository memoryRepository;
     private final MemoryMemberRepository memoryMemberRepository;
     private final MomentRepository momentRepository;
-    private final ImageService imageService;
 
     @Transactional
     public MemoryIdResponse createMemory(MemoryRequest memoryRequest, Member member) {
+        validateMemoryTitle(memoryRequest.memoryTitle());
         Memory memory = memoryRequest.toMemory();
         memory.addMemoryMember(member);
         memoryRepository.save(memory);
@@ -88,9 +85,12 @@ public class MemoryService {
 
     @Transactional
     public void updateMemory(MemoryRequest memoryRequest, Long memoryId, Member member) {
-        Memory updatedMemory = memoryRequest.toMemory();
         Memory originMemory = getMemoryById(memoryId);
         validateOwner(originMemory, member);
+        if(originMemory.isNotSameTitle(memoryRequest.memoryTitle())) {
+            validateMemoryTitle(memoryRequest.memoryTitle());
+        }
+        Memory updatedMemory = memoryRequest.toMemory();
         List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAt(memoryId);
         originMemory.update(updatedMemory, moments);
     }
@@ -98,6 +98,12 @@ public class MemoryService {
     private Memory getMemoryById(long memoryId) {
         return memoryRepository.findById(memoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
+    }
+
+    private void validateMemoryTitle(String title) {
+        if (memoryRepository.existsByTitle(title)) {
+            throw new StaccatoException("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
+        }
     }
 
     @Transactional
