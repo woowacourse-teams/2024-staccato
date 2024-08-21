@@ -36,8 +36,4 @@ public class MomentImage {
     protected void belongTo(Moment moment) {
         this.moment = moment;
     }
-
-    protected boolean isSameUrl(MomentImage momentImage) {
-        return this.imageUrl.equals(momentImage.imageUrl);
-    }
 }

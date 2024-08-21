@@ -42,28 +42,12 @@ public class MomentImages {
     }
 
     protected void update(MomentImages momentImages, Moment moment) {
-        removeOnlyOldImages(momentImages, new ArrayList<>(this.images));
-        addOnlyNewImages(momentImages, moment);
+        removeExistsImages(new ArrayList<>(images));
+        addAll(momentImages, moment);
     }
 
-    private void removeOnlyOldImages(MomentImages momentImages, List<MomentImage> originalImages) {
-        originalImages.stream()
-                .filter(momentImages::without)
-                .forEach(this.images::remove);
-    }
-
-    private void addOnlyNewImages(MomentImages momentImages, Moment moment) {
-        momentImages.images.stream()
-                .filter(this::without)
-                .forEach(image -> {
-                    this.images.add(image);
-                    image.belongTo(moment);
-                });
-    }
-
-    private boolean without(MomentImage image) {
-        return this.images.stream()
-                .noneMatch(momentImage -> momentImage.isSameUrl(image));
+    private void removeExistsImages(List<MomentImage> originalImages) {
+        originalImages.forEach(this.images::remove);
     }
 
     public boolean isNotEmpty() {

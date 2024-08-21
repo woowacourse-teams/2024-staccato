@@ -195,10 +195,13 @@ class MomentServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(foundedMoment.getPlaceName()).isEqualTo("newPlaceName"),
                 () -> assertThat(momentImageRepository.findById(1L)).isEmpty(),
-                () -> assertThat(momentImageRepository.findById(2L).get().getImageUrl()).isEqualTo("https://existExample.com.jpg"),
-                () -> assertThat(momentImageRepository.findById(3L).get().getImageUrl()).isEqualTo("https://existExample2.com.jpg"),
-                () -> assertThat(momentImageRepository.findById(2L).get().getMoment().getId()).isEqualTo(foundedMoment.getId()),
+                () -> assertThat(momentImageRepository.findById(2L)).isEmpty(),
+                () -> assertThat(momentImageRepository.findById(3L).get().getImageUrl()).isEqualTo("https://existExample.com.jpg"),
+                () -> assertThat(momentImageRepository.findById(4L).get().getImageUrl()).isEqualTo("https://existExample2.com.jpg"),
                 () -> assertThat(momentImageRepository.findById(3L).get().getMoment().getId()).isEqualTo(foundedMoment.getId()),
+                () -> assertThat(momentImageRepository.findById(4L).get().getMoment().getId()).isEqualTo(foundedMoment.getId()),
+                () -> assertThat(momentImageRepository.findAll().get(0).getImageUrl()).isEqualTo("https://existExample.com.jpg"),
+                () -> assertThat(momentImageRepository.findAll().get(1).getImageUrl()).isEqualTo("https://existExample2.com.jpg"),
                 () -> assertThat(momentImageRepository.findAll().size()).isEqualTo(2)
         );
     }
