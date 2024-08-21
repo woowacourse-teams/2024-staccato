@@ -21,6 +21,8 @@ public record MomentDetailResponse(
         List<String> momentImageUrls,
         @Schema(example = "2021-11-08T11:58:20")
         LocalDate visitedAt,
+        @Schema(example = "happy")
+        String feeling,
         @Schema(example = "서울 용산구 남산공원길 105")
         String address,
         List<CommentResponse> comments
@@ -31,6 +33,7 @@ public record MomentDetailResponse(
                 moment.getPlaceName(),
                 moment.getMomentImages().getImages().stream().map(MomentImage::getImageUrl).toList(),
                 moment.getVisitedAt().toLocalDate(),
+                moment.getFeeling().getValue(),
                 moment.getSpot().getAddress(),
                 moment.getComments().stream().map(CommentResponse::new).toList()
         );
