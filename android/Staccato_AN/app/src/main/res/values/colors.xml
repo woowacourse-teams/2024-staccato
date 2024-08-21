@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_80">#CCFFFFFF</color>
 
     <color name="staccato_black">#FF222222</color>
     <color name="staccato_blue">#FF6C7BFF</color>

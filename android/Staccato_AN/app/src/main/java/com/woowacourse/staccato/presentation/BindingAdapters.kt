@@ -102,7 +102,7 @@ fun ImageView.setRoundedCornerUpdateImageWithCoil(
     placeHolder: Drawable? = null,
     roundingRadius: Float,
 ) {
-    val image = url ?: uri
+    val image = uri ?: url
     load(image) {
         placeholder(placeHolder)
         transformations(RoundedCornersTransformation(roundingRadius))
@@ -181,6 +181,24 @@ fun Button.setMemorySaveButtonActive(
 ) {
     isEnabled =
         if (title.isNullOrEmpty() || startDate == null || endDate == null) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
+@BindingAdapter(
+    value = ["staccatoTitle", "address", "visitedAt"],
+)
+fun Button.setStaccatoSaveButtonActive(
+    title: String?,
+    address: String?,
+    visitedAt: LocalDateTime?,
+) {
+    isEnabled =
+        if (title.isNullOrEmpty() || address == null || visitedAt == null) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -273,10 +291,7 @@ fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDate>?) {
     isGone = !items.isNullOrEmpty()
 }
 
-@BindingAdapter(
-    value = ["visitedAt"],
-    requireAll = false,
-)
+@BindingAdapter("visitedAt")
 fun TextView.combineVisitedAt(visitedAt: LocalDateTime?) {
     if (visitedAt != null) {
         text =
