@@ -31,12 +31,17 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private lateinit var uriSelectedListener: OnUrisSelectedListener
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
+    private var multipleAbleOption: Boolean = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         initUrisSelectedListener(context)
         initRequestPermissionLauncher()
         initGalleryLauncher()
+    }
+
+    fun setMultipleAbleOption(option: Boolean) {
+        multipleAbleOption = option
     }
 
     private fun initUrisSelectedListener(context: Context) {
@@ -62,7 +67,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
         val intent =
             Intent(Intent.ACTION_PICK)
                 .setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-                .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multipleAbleOption)
         galleryLauncher.launch(intent)
     }
 

@@ -3,7 +3,6 @@ package com.woowacourse.staccato.data.dto.mapper
 import com.woowacourse.staccato.data.dto.memory.MemoryMomentDto
 import com.woowacourse.staccato.data.dto.memory.MemoryRequest
 import com.woowacourse.staccato.data.dto.memory.MemoryResponse
-import com.woowacourse.staccato.data.dto.memory.MemoryUpdateRequest
 import com.woowacourse.staccato.domain.model.Memory
 import com.woowacourse.staccato.domain.model.MemoryMoment
 import com.woowacourse.staccato.domain.model.NewMemory
@@ -32,15 +31,7 @@ fun MemoryMomentDto.toDomain() =
 
 fun NewMemory.toDto() =
     MemoryRequest(
-        memoryTitle = memoryTitle,
-        description = description,
-        startAt = startAt.toString(),
-        endAt = endAt.toString(),
-    )
-
-fun NewMemory.toMemoryUpdateRequest() =
-    MemoryUpdateRequest(
-        memoryThumbnailUrl = memoryThumbnail,
+        memoryThumbnailUrl = memoryThumbnailUrl,
         memoryTitle = memoryTitle,
         description = description,
         startAt = startAt.toString(),

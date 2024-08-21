@@ -47,21 +47,36 @@
                     android:id="@+id/iv_memory_creation_photo_attach"
                     style="@style/PhotoAttachBoxStyle"
                     android:layout_marginHorizontal="20dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="24dp"
                     android:contentDescription="@string/all_image_content_description"
                     android:onClick="@{() -> handler.onPhotoAttachClicked()}"
                     android:scaleType="centerCrop"
-                    android:src="@{viewModel.imageUri}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    bind:coilPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
+                    bind:coilRoundedCornerImageUrl="@{viewModel.thumbnailUrl}"
+                    bind:coilRoundingRadius="@{12f}" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/all_delete_image"
+                    android:onClick="@{() -> handler.onImageDeletionClicked()}"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="@{viewModel.thumbnailUrl == null ? View.GONE : View.VISIBLE }"
+                    app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
+                    tools:visibility="visible" />
 
                 <include
                     android:id="@+id/include_memory_creation_photo_attach"
                     layout="@layout/layout_photo_attach"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="@{viewModel.imageUri == null ? View.VISIBLE : View.GONE }"
+                    android:visibility="@{viewModel.thumbnailUrl == null ? View.VISIBLE : View.GONE }"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
@@ -83,20 +98,21 @@
                     app:layout_constraintStart_toEndOf="@id/tv_memory_creation_title"
                     app:layout_constraintTop_toTopOf="@id/tv_memory_creation_title" />
 
-                <EditText
-                    android:id="@+id/et_memory_creation"
-                    style="@style/EditTextStyle"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/memory_creation_title_hint"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:maxLength="30"
-                    android:maxLines="1"
-                    android:text="@={viewModel.title}"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_memory_creation_title"
+                    style="@style/TextInputLayoutStyle"
+                    app:counterMaxLength="30"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_title" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_title">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/TextInputEditTextStyle.Title"
+                        android:hint="@string/memory_creation_title_hint"
+                        android:maxLength="30"
+                        android:text="@={viewModel.title}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/tv_memory_creation_description"
@@ -105,21 +121,25 @@
                     android:layout_marginTop="24dp"
                     android:text="@string/memory_creation_description"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_memory_creation" />
+                    app:layout_constraintTop_toBottomOf="@id/text_input_memory_creation_title" />
 
-                <EditText
-                    android:id="@+id/et_memory_creation_description"
-                    style="@style/EditTextStyle"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="top"
-                    android:hint="@string/memory_creation_description_hint"
-                    android:maxLength="500"
-                    android:minHeight="255dp"
-                    android:text="@={viewModel.description}"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_memory_creation_description"
+                    style="@style/TextInputLayoutStyle"
+                    app:counterMaxLength="500"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_description" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_description">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/TextInputEditTextStyle"
+                        android:gravity="top"
+                        android:hint="@string/memory_creation_description_hint"
+                        android:maxLength="500"
+                        android:minHeight="255dp"
+                        android:text="@={viewModel.description}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/tv_memory_creation_period_title"
@@ -128,7 +148,7 @@
                     android:layout_marginTop="24dp"
                     android:text="@string/memory_creation_period"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_memory_creation_description" />
+                    app:layout_constraintTop_toBottomOf="@id/text_input_memory_creation_description" />
 
                 <TextView
                     android:id="@+id/tv_memory_creation_required_mark_second"

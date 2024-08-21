@@ -6,4 +6,6 @@ interface MemoryCreationHandler {
     fun onSaveClicked()
 
     fun onPhotoAttachClicked()
+
+    fun onImageDeletionClicked()
 }
