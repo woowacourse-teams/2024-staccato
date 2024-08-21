@@ -43,18 +43,11 @@ public class MomentImages {
 
     protected void update(MomentImages momentImages, Moment moment) {
         removeExistsImages(new ArrayList<>(images));
-        addNewImages(momentImages, moment);
+        addAll(momentImages, moment);
     }
 
     private void removeExistsImages(List<MomentImage> originalImages) {
         originalImages.forEach(this.images::remove);
-    }
-
-    private void addNewImages(MomentImages momentImages, Moment moment) {
-        momentImages.images.forEach(image -> {
-            this.images.add(image);
-            image.belongTo(moment);
-        });
     }
 
     public boolean isNotEmpty() {
