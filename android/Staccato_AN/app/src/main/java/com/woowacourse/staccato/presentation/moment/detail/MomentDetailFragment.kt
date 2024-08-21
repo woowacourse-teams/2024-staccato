@@ -1,7 +1,6 @@
 package com.woowacourse.staccato.presentation.moment.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.woowacourse.staccato.R
@@ -25,6 +24,7 @@ class MomentDetailFragment :
         savedInstanceState: Bundle?,
     ) {
         initAdapter()
+        binding.viewModel = momentDetailViewModel
         observeViewModel()
     }
 
@@ -35,12 +35,10 @@ class MomentDetailFragment :
 
     private fun observeViewModel() {
         momentViewModel.momentDetail.observe(viewLifecycleOwner) { momentDetail ->
-            Log.d("hodu: MomentDetailFragment", "momentDetail of MomentViewModel: $momentDetail")
             momentDetailViewModel.setMomentDetail(momentDetail)
         }
 
         momentDetailViewModel.momentDetail.observe(viewLifecycleOwner) { momentDetail ->
-            Log.d("hodu: MomentDetailFragment", "momentDetail of MomentDetailViewModel: $momentDetail")
             photoAdapter.submitList(momentDetail.momentImageUrls)
         }
     }
