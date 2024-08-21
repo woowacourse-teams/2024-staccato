@@ -9,6 +9,7 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.dto.Status
+import com.woowacourse.staccato.data.timeline.TimelineDefaultRepository
 import com.woowacourse.staccato.domain.model.Timeline
 import com.woowacourse.staccato.domain.repository.TimelineRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
@@ -28,8 +29,11 @@ class TimelineViewModel(private val timelineRepository: TimelineRepository) : Vi
         get() = _errorMessage
 
     private val coroutineExceptionHandler =
-        CoroutineExceptionHandler { _, throwable ->
-            Log.e("TimelineViewModel", "An error occurred: ${throwable.message}")
+        CoroutineExceptionHandler { context, throwable ->
+            Log.e(
+                "TimelineViewModel",
+                "In coroutine context: $context\nAn error occurred: ${throwable.message}",
+            )
         }
 
     init {
@@ -75,5 +79,11 @@ class TimelineViewModel(private val timelineRepository: TimelineRepository) : Vi
     ) {
         _errorMessage.postValue(errorMessage)
         Log.e("TimelineViewModel", "An exception occurred: $e, $errorMessage")
+    }
+
+    companion object {
+        fun factory(timelineRepository: TimelineRepository = TimelineDefaultRepository()): TimelineViewModelFactory {
+            return TimelineViewModelFactory(timelineRepository)
+        }
     }
 }
