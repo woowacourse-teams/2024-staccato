@@ -59,16 +59,13 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         saveMemory(member);
+        MomentRequest momentRequest = new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of());
 
         // when
-        long momentId = momentService.createMoment(getMomentRequestWithoutImage(), member).momentId();
+        long momentId = momentService.createMoment(momentRequest, member).momentId();
 
         // then
         assertThat(momentRepository.findById(momentId)).isNotEmpty();
-    }
-
-    private MomentRequest getMomentRequestWithoutImage() {
-        return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of());
     }
 
     @DisplayName("순간을 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")

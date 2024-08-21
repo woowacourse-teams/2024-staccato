@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -36,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.moment.MomentDetailResponseFixture;
-import com.staccato.fixture.moment.MomentResponsesFixture;
+import com.staccato.fixture.moment.MomentLocationResponsesFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.MomentService;
 import com.staccato.moment.service.dto.request.FeelingRequest;
@@ -197,7 +196,7 @@ class MomentControllerTest {
     void readAllMoment() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        MomentLocationResponses responses = MomentResponsesFixture.create();
+        MomentLocationResponses responses = MomentLocationResponsesFixture.create();
         when(momentService.readAllMoment(any(Member.class))).thenReturn(responses);
 
         // when & then
@@ -213,7 +212,7 @@ class MomentControllerTest {
         // given
         long momentId = 1L;
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        MomentDetailResponse response = MomentDetailResponseFixture.create(momentId, LocalDate.now());
+        MomentDetailResponse response = MomentDetailResponseFixture.create(momentId, LocalDateTime.now());
         when(momentService.readMomentById(anyLong(), any(Member.class))).thenReturn(response);
 
         // when & then

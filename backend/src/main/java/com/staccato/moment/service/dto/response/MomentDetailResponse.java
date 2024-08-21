@@ -1,6 +1,6 @@
 package com.staccato.moment.service.dto.response;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.staccato.comment.service.dto.response.CommentResponse;
@@ -20,7 +20,7 @@ public record MomentDetailResponse(
                 arraySchema = @Schema(example = "[\"https://example.com/images/namsan_tower.jpg\", \"https://example.com/images/namsan_tower2.jpg\"]"))
         List<String> momentImageUrls,
         @Schema(example = "2021-11-08T11:58:20")
-        LocalDate visitedAt,
+        LocalDateTime visitedAt,
         @Schema(example = "happy")
         String feeling,
         @Schema(example = "서울 용산구 남산공원길 105")
@@ -32,7 +32,7 @@ public record MomentDetailResponse(
                 moment.getId(),
                 moment.getPlaceName(),
                 moment.getMomentImages().getImages().stream().map(MomentImage::getImageUrl).toList(),
-                moment.getVisitedAt().toLocalDate(),
+                moment.getVisitedAt(),
                 moment.getFeeling().getValue(),
                 moment.getSpot().getAddress(),
                 moment.getComments().stream().map(CommentResponse::new).toList()
