@@ -13,7 +13,11 @@
 
         <action
             android:id="@+id/action_timelineFragment_to_memoryFragment"
-            app:destination="@id/memoryFragment" />
+            app:destination="@id/memoryFragment"
+            app:enterAnim="@anim/anim_slide_in_from_left_fade_in"
+            app:exitAnim="@anim/anim_fade_out"
+            app:popEnterAnim="@anim/anim_fade_in"
+            app:popExitAnim="@anim/anim_slide_out_to_left_fade_out" />
 
     </fragment>
 
@@ -25,7 +29,11 @@
 
         <action
             android:id="@+id/action_memoryFragment_to_visitFragment"
-            app:destination="@id/visitFragment" />
+            app:destination="@id/visitFragment"
+            app:enterAnim="@anim/anim_slide_in_from_left_fade_in"
+            app:exitAnim="@anim/anim_fade_out"
+            app:popEnterAnim="@anim/anim_fade_in"
+            app:popExitAnim="@anim/anim_slide_out_to_left_fade_out" />
 
     </fragment>
 
