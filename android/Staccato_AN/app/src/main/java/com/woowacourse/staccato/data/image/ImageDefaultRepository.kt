@@ -13,7 +13,12 @@ class ImageDefaultRepository(
         val responseResult = handleApiResponse { imageApiService.postImage(imageFile) }
         return when (responseResult) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
-            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
+            is ResponseResult.ServerError ->
+                ResponseResult.ServerError(
+                    responseResult.status,
+                    responseResult.message,
+                )
+
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
         }
     }

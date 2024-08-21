@@ -67,8 +67,8 @@
     <string name="visit_creation_memory_selection">추억 선택</string>
     <string name="visit_creation_memory_selection_hint">추억을 선택해주세요</string>
     <string name="visit_creation_unselected_memory">추억을 먼저 선택해주세요!</string>
-    <string name="visit_creation_posting">스타카토를 찍는 중이예요.. 🎵️</string>
-    <string name="visit_update_posting">스타카토를 수정하는 중이예요.. 🎵️</string>
+    <string name="visit_creation_posting">스타카토를 찍는 중이에요.. 🎵️</string>
+    <string name="visit_update_posting">스타카토를 수정하는 중이에요.. 🎵️</string>
     <string name="moment_creation_memory_selection">추억 선택</string>
 
     // activity_login

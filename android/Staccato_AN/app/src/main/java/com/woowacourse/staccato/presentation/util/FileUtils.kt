@@ -35,10 +35,10 @@ fun convertMemoryUriToFile(
 
 fun convertExcretaFile(
     context: Context,
-    uri: Uri,
+    uri: Uri?,
     name: String,
 ): MultipartBody.Part {
-    if (uri.toString().isEmpty()) {
+    if (uri.toString().isEmpty() || uri == null) {
         val emptyFile = "".toRequestBody("multipart/form-data".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(name, "", emptyFile)
     }
