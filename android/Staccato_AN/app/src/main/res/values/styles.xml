@@ -26,6 +26,32 @@
         <item name="android:textColor">@color/gray3</item>
     </style>
 
+    <style name="TextInputLayoutStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="counterEnabled">true</item>
+        <item name="counterTextAppearance">@style/Typography.Body4</item>
+        <item name="counterTextColor">@color/gray3</item>
+        <item name="hintEnabled">false</item>
+    </style>
+
+    <style name="TextInputEditTextStyle">
+        <item name="android:layout_marginHorizontal">24dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/Typography.Body1</item>
+        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textColorHint">@color/gray3</item>
+    </style>
+
+    <style name="TextInputEditTextStyle.Title" parent="TextInputEditTextStyle">
+        <item name="android:inputType">text</item>
+        <item name="maxLines">1</item>
+    </style>
+
     <style name="EditTextStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -147,6 +173,17 @@
 
     <style name="CustomMaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
         <item name="rangeFillColor">@color/staccato_blue_30</item>
+    </style>
+
+    <style name="FeelingStyle">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_marginHorizontal">10dp</item>
+        <item name="android:background">@drawable/selector_feeling_oval</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
     </style>
 
 </resources>

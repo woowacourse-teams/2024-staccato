@@ -2,6 +2,7 @@ package com.woowacourse.staccato.data.moment
 
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.mapper.toDomain
+import com.woowacourse.staccato.data.dto.moment.FeelingRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.domain.model.Moment
@@ -72,7 +73,19 @@ class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSour
         }
     }
 
+    override suspend fun updateFeeling(
+        momentId: Long,
+        feeling: String,
+    ): Result<Unit> {
+        return runCatching {
+            remoteDataSource.updateFeeling(
+                momentId = momentId,
+                feelingRequest = FeelingRequest(feeling),
+            )
+        }
+    }
+
     companion object {
-        const val ERROR_MESSAGE = "예기치 않은 오류가 발생했습니다"
+        const val ERROR_MESSAGE = "스타카토 목록을 조회할 수 없어요."
     }
 }

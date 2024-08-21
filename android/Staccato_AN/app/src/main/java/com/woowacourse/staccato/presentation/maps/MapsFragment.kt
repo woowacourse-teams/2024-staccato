@@ -159,7 +159,7 @@ class MapsFragment : Fragment() {
     private fun observeStaccatoId() {
         viewModel.staccatoId.observe(viewLifecycleOwner) { staccatoId ->
             val bundle = bundleOf(MOMENT_ID_KEY to staccatoId)
-            findNavController().navigate(R.id.visitFragment, bundle)
+            findNavController().navigate(R.id.momentFragment, bundle)
             parentFragmentManager.setFragmentResult(
                 BOTTOM_SHEET_STATE_REQUEST_KEY,
                 bundleOf(BOTTOM_SHEET_NEW_STATE to BottomSheetBehavior.STATE_EXPANDED),

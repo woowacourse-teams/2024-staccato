@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Staccato_AN</string>
+    <string name="app_name">Staccato</string>
 
     // all
     <string name="all_update">수정</string>
@@ -17,6 +17,7 @@
     <string name="all_image_content_description">사진</string>
     <string name="all_default_not_supported">아직 지원하지 않는 기능이예요.</string>
     <string name="all_required_mark">*</string>
+    <string name="all_posting_photo">사진을 게시하는 중이에요</string>
 
     // MainActivity
     <string name="main_moment_creation_success">새로운 스타카토를 찍었어요!</string>
@@ -56,6 +57,7 @@
     <string name="visit_logs">코멘트</string>
     <string name="visit_add">추가하기</string>
     <string name="visit_enter_log">코멘트 입력하기</string>
+    <string name="moment_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
 
     // activity_visit_creation / activity_visit_update
     <string name="visit_creation_place_name">스타카토 제목</string>
@@ -78,7 +80,7 @@
     <string name="photo_attach_camera">카메라 열기</string>
     <string name="photo_attach_album">앨범에서 가져오기</string>
     <string name="snack_bar_require_photo_album_permission">사진 및 동영상 액세스 권한을 허용해주세요.</string>
-    <string name="snack_bar_move_to_setting">설정으로 이동</string>
+    <string name="snack_bar_move_to_setting">설정으로 이동하기</string>
 
     // fragment_memory_selection
     <string name="memory_selection_period">%s.%s.%s - %s.%s.%s</string>
@@ -93,6 +95,7 @@
     // dialog_delete
     <string name="delete_title">삭제하시겠습니까?</string>
     <string name="delete_description">삭제를 누르면 복구할 수 없습니다</string>
+    <string name="all_delete_image">이미지 삭제 버튼</string>
 
     // menu_creation
     <string name="menu_creation_memory">추억 생성</string>

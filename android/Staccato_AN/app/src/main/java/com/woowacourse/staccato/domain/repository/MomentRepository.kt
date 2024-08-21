@@ -30,4 +30,9 @@ interface MomentRepository {
     ): Result<Unit>
 
     suspend fun deleteMoment(momentId: Long): Result<Unit>
+
+    suspend fun updateFeeling(
+        momentId: Long,
+        feeling: String,
+    ): Result<Unit>
 }

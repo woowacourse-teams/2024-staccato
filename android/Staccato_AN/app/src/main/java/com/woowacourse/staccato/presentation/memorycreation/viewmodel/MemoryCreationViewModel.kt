@@ -12,17 +12,19 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.Status
+import com.woowacourse.staccato.data.dto.image.ImageResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.domain.model.NewMemory
+import com.woowacourse.staccato.domain.repository.ImageRepository
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
 import com.woowacourse.staccato.presentation.util.convertMemoryUriToFile
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 import java.time.LocalDate
 
 class MemoryCreationViewModel(
     private val memoryRepository: MemoryRepository,
+    private val imageRepository: ImageRepository,
 ) : ViewModel() {
     val title = ObservableField<String>()
     val description = ObservableField<String>()
@@ -39,14 +41,28 @@ class MemoryCreationViewModel(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
-    private val _imageUri = MutableLiveData<Uri>()
-    val imageUri: LiveData<Uri> get() = _imageUri
+    private val _thumbnailUrl = MutableLiveData<String?>()
+    val thumbnailUrl: LiveData<String?> get() = _thumbnailUrl
 
     private val _isPosting = MutableLiveData<Boolean>(false)
     val isPosting: LiveData<Boolean> get() = _isPosting
 
-    fun setImageUri(uri: Uri) {
-        _imageUri.value = uri
+    fun createThumbnailUrl(
+        context: Context,
+        thumbnailUri: Uri,
+    ) {
+        val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
+        viewModelScope.launch {
+            val result: ResponseResult<ImageResponse> =
+                imageRepository.convertImageFileToUrl(thumbnailFile)
+            result.onSuccess(::setThumbnailUrl)
+                .onServerError(::handleServerError)
+                .onException(::handelException)
+        }
+    }
+
+    fun setThumbnailUrl(imageResponse: ImageResponse?) {
+        _thumbnailUrl.value = imageResponse?.imageUrl
     }
 
     fun setMemoryPeriod(
@@ -57,14 +73,12 @@ class MemoryCreationViewModel(
         _endDate.value = convertLongToLocalDate(endAt)
     }
 
-    fun createMemory(context: Context) {
+    fun createMemory() {
         _isPosting.value = true
         viewModelScope.launch {
             val memory: NewMemory = makeNewMemory()
-            val thumbnailFile: MultipartBody.Part? =
-                convertMemoryUriToFile(context, _imageUri.value, name = MEMORY_FILE_NAME)
             val result: ResponseResult<MemoryCreationResponse> =
-                memoryRepository.createMemory(memory, thumbnailFile)
+                memoryRepository.createMemory(memory)
             result
                 .onSuccess(::setCreatedMemoryId)
                 .onServerError(::handleServerError)
@@ -78,6 +92,7 @@ class MemoryCreationViewModel(
 
     private fun makeNewMemory(): NewMemory =
         NewMemory(
+            memoryThumbnailUrl = thumbnailUrl.value,
             memoryTitle = title.get() ?: throw IllegalArgumentException(),
             startAt = startDate.value ?: throw IllegalArgumentException(),
             endAt = endDate.value ?: throw IllegalArgumentException(),
@@ -101,7 +116,7 @@ class MemoryCreationViewModel(
     }
 
     companion object {
-        private const val MEMORY_FILE_NAME = "memoryThumbnailFile"
+        private const val MEMORY_FILE_NAME = "imageFile"
         private const val MEMORY_CREATION_ERROR_MESSAGE = "추억 생성에 실패했습니다"
     }
 }
