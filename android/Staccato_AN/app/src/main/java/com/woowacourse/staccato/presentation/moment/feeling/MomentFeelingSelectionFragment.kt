@@ -13,7 +13,7 @@ import kotlin.properties.Delegates
 class MomentFeelingSelectionFragment :
     BindingFragment<FragmentMomentFeelingSelectionBinding>(R.layout.fragment_moment_feeling_selection) {
     private lateinit var feelingSelectionAdapter: FeelingSelectionAdapter
-    private val momentViewModel: MomentViewModel by viewModels({requireParentFragment()}) {
+    private val momentViewModel: MomentViewModel by viewModels({ requireParentFragment() }) {
         MomentViewModelFactory()
     }
     private val momentFeelingSelectionViewModel: MomentFeelingSelectionViewModel by viewModels {
@@ -32,7 +32,7 @@ class MomentFeelingSelectionFragment :
     }
 
     private fun initAdapter() {
-        feelingSelectionAdapter = FeelingSelectionAdapter()
+        feelingSelectionAdapter = FeelingSelectionAdapter(momentFeelingSelectionViewModel)
         binding.rvMomentFeelingSelection.adapter = feelingSelectionAdapter
     }
 

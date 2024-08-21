@@ -34,13 +34,13 @@ class MomentFeelingSelectionViewModel(
         _currentFeeling.value = Feeling.fromValue(selectedFeeling.value)
     }
 
-    fun checkFeelingBeforeChange(selectedFeeling: FeelingUiModel) {
+    private fun checkFeelingBeforeChange(selectedFeeling: FeelingUiModel) {
         val feelingToChange = getFeelingToChange(selectedFeeling)
         setFeelings(feelingToChange)
         requestChangingFeeling(feelingToChange)
     }
 
-    fun getFeelingToChange(selectedFeeling: FeelingUiModel): Feeling {
+    private fun getFeelingToChange(selectedFeeling: FeelingUiModel): Feeling {
         return if (currentFeeling.value?.value == selectedFeeling.feeling) {
             Feeling.NOTHING
         } else {
@@ -48,9 +48,8 @@ class MomentFeelingSelectionViewModel(
         }
     }
 
-    fun requestChangingFeeling(newFeeling: Feeling) {
+    private fun requestChangingFeeling(newFeeling: Feeling) {
         viewModelScope.launch {
-            // 기분 변경 요청
             momentRepository.updateFeeling(momentId, newFeeling.value)
         }
     }

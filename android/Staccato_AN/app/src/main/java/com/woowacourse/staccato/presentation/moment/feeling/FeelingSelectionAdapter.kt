@@ -9,14 +9,14 @@ import com.woowacourse.staccato.databinding.ItemMomentFeelingSelectionBinding
 import com.woowacourse.staccato.domain.model.Feeling
 import com.woowacourse.staccato.presentation.mapper.toFeelingUiModel
 
-class FeelingSelectionAdapter :
+class FeelingSelectionAdapter(private val feelingHandler: FeelingHandler) :
     ListAdapter<FeelingUiModel, FeelingSelectionAdapter.FeelingSelectionViewHolder>(diffUtil) {
     private val feelings = listOf(
         Feeling.HAPPY.toFeelingUiModel(),
-        Feeling.EXCITED.toFeelingUiModel(),
+        Feeling.ANGRY.toFeelingUiModel(),
         Feeling.SAD.toFeelingUiModel(),
         Feeling.SCARED.toFeelingUiModel(),
-        Feeling.ANGRY.toFeelingUiModel(),
+        Feeling.EXCITED.toFeelingUiModel(),
     )
 
     init {
@@ -25,8 +25,12 @@ class FeelingSelectionAdapter :
 
     class FeelingSelectionViewHolder(private val binding: ItemMomentFeelingSelectionBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(feelingUiModel: FeelingUiModel) {
+        fun bind(
+            feelingUiModel: FeelingUiModel,
+            feelingHandler: FeelingHandler,
+        ) {
             binding.feeling = feelingUiModel
+            binding.feelingHandler = feelingHandler
         }
     }
 
@@ -47,7 +51,7 @@ class FeelingSelectionAdapter :
         holder: FeelingSelectionViewHolder,
         position: Int,
     ) {
-        holder.bind(currentList[position])
+        holder.bind(currentList[position], feelingHandler)
     }
 
     fun updateFeelings(updatedFeelings: List<FeelingUiModel>) {
