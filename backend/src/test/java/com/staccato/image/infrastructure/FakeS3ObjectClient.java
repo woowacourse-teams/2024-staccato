@@ -1,7 +1,5 @@
 package com.staccato.image.infrastructure;
 
-import com.staccato.image.infrastructure.S3ObjectClient;
-
 public class FakeS3ObjectClient extends S3ObjectClient {
     public FakeS3ObjectClient() {
         super("fakeBuket", "fakeEndPoint", "fakeCloudFrontEndPoint");
