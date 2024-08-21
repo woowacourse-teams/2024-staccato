@@ -27,9 +27,10 @@ class MomentFeelingSelectionViewModel(
     }
 
     fun setFeelings(selectedFeeling: Feeling) {
-        val newFeelings = initialFeelings.map { feeling ->
-            feeling.toFeelingUiModel(selectedFeeling.value)
-        }
+        val newFeelings =
+            initialFeelings.map { feeling ->
+                feeling.toFeelingUiModel(selectedFeeling.value)
+            }
         _feelings.value = newFeelings
         _currentFeeling.value = Feeling.fromValue(selectedFeeling.value)
     }

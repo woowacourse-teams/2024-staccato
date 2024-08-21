@@ -30,5 +30,5 @@ interface MomentRepository {
     suspend fun updateFeeling(
         momentId: Long,
         feeling: String,
-        ): Result<Unit>
+    ): Result<Unit>
 }

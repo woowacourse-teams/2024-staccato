@@ -37,13 +37,14 @@ fun VisitLog.toCommentUiModel() =
     )
 
 fun Feeling.toFeelingUiModel(selectedFeeling: String = Feeling.NOTHING.value): FeelingUiModel {
-    val src = when (this) {
-        Feeling.HAPPY -> R.drawable.feeling_happy
-        Feeling.ANGRY -> R.drawable.feeling_angry
-        Feeling.SAD -> R.drawable.feeling_sad
-        Feeling.SCARED -> R.drawable.feeling_scared
-        Feeling.EXCITED -> R.drawable.feeling_excited
-        Feeling.NOTHING -> null
-    }
+    val src =
+        when (this) {
+            Feeling.HAPPY -> R.drawable.feeling_happy
+            Feeling.ANGRY -> R.drawable.feeling_angry
+            Feeling.SAD -> R.drawable.feeling_sad
+            Feeling.SCARED -> R.drawable.feeling_scared
+            Feeling.EXCITED -> R.drawable.feeling_excited
+            Feeling.NOTHING -> null
+        }
     return FeelingUiModel(value, src, selectedFeeling == this.value)
 }
