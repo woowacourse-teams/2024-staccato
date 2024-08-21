@@ -80,14 +80,28 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("추억 정보를 기반으로, 추억을 생성하고 작성자를 저장한다.")
+    @Test
+    void cannotCreateMemoryByDuplicatedTitle() {
+        // given
+        MemoryRequest memoryRequest = MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10));
+        Member member = memberRepository.save(MemberFixture.create());
+        memoryService.createMemory(memoryRequest, member);
+
+        // when then
+        assertThatThrownBy(() -> memoryService.createMemory(memoryRequest, member))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
+    }
+
     @DisplayName("조건에 따라 추억 목록을 조회한다.")
     @MethodSource("yearProvider")
     @ParameterizedTest
     void readAllMemories(Integer year, int expectedSize) {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10), "title1"), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10), "title2"), member);
 
         // when
         MemoryResponses memoryResponses = memoryService.readAllMemories(member, year);
