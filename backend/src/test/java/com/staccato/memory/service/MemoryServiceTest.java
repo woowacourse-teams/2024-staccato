@@ -47,10 +47,10 @@ class MemoryServiceTest extends ServiceSliceTest {
     @Autowired
     private MomentRepository momentRepository;
 
-    static Stream<Arguments> yearProvider() {
+    static Stream<Arguments> dateProvider() {
         return Stream.of(
-                Arguments.of(null, 2),
-                Arguments.of(2023, 1)
+                Arguments.of(LocalDate.of(2024, 7, 2), 2),
+                Arguments.of(LocalDate.of(2024, 7, 3), 1)
         );
     }
 
@@ -80,17 +80,17 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("조건에 따라 추억 목록을 조회한다.")
-    @MethodSource("yearProvider")
+    @DisplayName("현재 날짜를 포함하는 모든 추억 목록을 조회한다.")
+    @MethodSource("dateProvider")
     @ParameterizedTest
-    void readAllMemories(Integer year, int expectedSize) {
+    void readAllMemories(LocalDate currentDate, int expectedSize) {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 2)), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 3)), member);
 
         // when
-        MemoryResponses memoryResponses = memoryService.readAllMemories(member, year);
+        MemoryResponses memoryResponses = memoryService.readAllMemories(member, currentDate);
 
         // then
         assertThat(memoryResponses.memories()).hasSize(expectedSize);

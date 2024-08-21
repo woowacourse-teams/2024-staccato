@@ -1,12 +1,11 @@
 package com.staccato.memory.service;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
@@ -43,14 +42,14 @@ public class MemoryService {
         return new MemoryIdResponse(memory.getId());
     }
 
-    public MemoryResponses readAllMemories(Member member, Integer year) {
-        return Optional.ofNullable(year)
-                .map(y -> readAllByYear(member, y))
+    public MemoryResponses readAllMemories(Member member, LocalDate currentDate) {
+        return Optional.ofNullable(currentDate)
+                .map(d -> readAllMemoriesIncludingDate(member, d))
                 .orElseGet(() -> readAll(member));
     }
 
-    private MemoryResponses readAllByYear(Member member, Integer year) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndYearOrderByCreatedAtDesc(member.getId(), year);
+    private MemoryResponses readAllMemoriesIncludingDate(Member member, LocalDate currentDate) {
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndDateOrderByCreatedAtDesc(member.getId(), currentDate);
         return getMemoryResponses(memoryMembers);
     }
 

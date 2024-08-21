@@ -1,5 +1,7 @@
 package com.staccato.memory.controller.docs;
 
+import java.time.LocalDate;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
@@ -41,14 +43,14 @@ public interface MemoryControllerDocs {
             @Parameter(required = true) @Valid MemoryRequest memoryRequest,
             @Parameter(hidden = true) Member member);
 
-    @Operation(summary = "추억 목록 조회", description = "사용자의 전체/년도별 추억 목록을 조회합니다.")
+    @Operation(summary = "추억 목록 조회", description = "사용자의 전체/날짜별 추억 목록을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "추억 목록 조회 성공", responseCode = "200"),
-            @ApiResponse(description = "입력받은 년도가 유효하지 않을 때 발생", responseCode = "400")
+            @ApiResponse(description = "입력받은 현재 날짜가 유효하지 않을 때 발생", responseCode = "400")
     })
     ResponseEntity<MemoryResponses> readAllMemories(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "조회할 년도", example = "2024") @Min(value = 1L, message = "년도는 양수로 이루어져야 합니다.") Integer year);
+            @Parameter(description = "현재 날짜", example = "2024-08-21") LocalDate currentDate);
 
     @Operation(summary = "추억 조회", description = "사용자의 추억을 조회합니다.")
     @ApiResponses(value = {

@@ -1,6 +1,7 @@
 package com.staccato.memory.controller;
 
 import java.net.URI;
+import java.time.LocalDate;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -47,9 +48,9 @@ public class MemoryController implements MemoryControllerDocs {
     @GetMapping
     public ResponseEntity<MemoryResponses> readAllMemories(
             @LoginMember Member member,
-            @RequestParam(value = "year", required = false) @Min(value = 1L, message = "년도는 양수로 이루어져야 합니다.") Integer year
+            @RequestParam(value = "currentDate", required = false) LocalDate currentDate
     ) {
-        MemoryResponses memoryResponses = memoryService.readAllMemories(member, year);
+        MemoryResponses memoryResponses = memoryService.readAllMemories(member, currentDate);
         return ResponseEntity.ok(memoryResponses);
     }
 
