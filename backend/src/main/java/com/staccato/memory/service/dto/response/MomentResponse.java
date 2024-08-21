@@ -1,6 +1,6 @@
 package com.staccato.memory.service.dto.response;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.moment.domain.Moment;
@@ -16,10 +16,10 @@ public record MomentResponse(
         @Schema(example = "https://example.com/memorys/london_eye.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String momentImageUrl,
-        @Schema(example = "2024-07-27")
-        LocalDate visitedAt
+        @Schema(example = "2024-07-27T11:58:20")
+        LocalDateTime visitedAt
 ) {
     public MomentResponse(Moment moment, String momentImageUrl) {
-        this(moment.getId(), moment.getPlaceName(), momentImageUrl, moment.getVisitedAt().toLocalDate());
+        this(moment.getId(), moment.getPlaceName(), momentImageUrl, moment.getVisitedAt());
     }
 }
