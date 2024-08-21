@@ -1,6 +1,7 @@
 package com.staccato.memory.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -80,7 +81,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("추억 정보를 기반으로, 추억을 생성하고 작성자를 저장한다.")
+    @DisplayName("이미 존재하는 추억 이름으로 추억을 생성할 수 없다.")
     @Test
     void cannotCreateMemoryByDuplicatedTitle() {
         // given
@@ -88,7 +89,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create());
         memoryService.createMemory(memoryRequest, member);
 
-        // when then
+        // when & then
         assertThatThrownBy(() -> memoryService.createMemory(memoryRequest, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
@@ -185,7 +186,7 @@ class MemoryServiceTest extends ServiceSliceTest {
     void updateMemory(MemoryRequest updatedMemory, String expected) {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        MemoryIdResponse memoryResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
+        MemoryIdResponse memoryResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10), "originTitle"), member);
 
         // when
         memoryService.updateMemory(updatedMemory, memoryResponse.memoryId(), member);
@@ -228,6 +229,35 @@ class MemoryServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> memoryService.updateMemory(updatedMemory, memoryIdResponse.memoryId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("본래 해당 추억의 이름과 동일한 이름으로 추억을 수정할 수 있다.")
+    @Test
+    void updateMemoryByOriginTitle() {
+        // given
+        MemoryRequest memoryRequest = MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10));
+        Member member = memberRepository.save(MemberFixture.create());
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, member);
+
+        // when then
+        assertThatNoException().isThrownBy(() -> memoryService.updateMemory(memoryRequest, memoryIdResponse.memoryId(), member));
+    }
+
+    @DisplayName("이미 존재하는 이름으로 추억을 수정할 수 없다.")
+    @Test
+    void cannotUpdateMemoryByDuplicatedTitle() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        MemoryRequest memoryRequest1 = MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10), "existingTitle");
+        memoryService.createMemory(memoryRequest1, member);
+        MemoryRequest memoryRequest2 = MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10), "otherTitle");
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest2, member);
+
+        // when then
+        assertThatThrownBy(() -> memoryService.updateMemory(memoryRequest1, memoryIdResponse.memoryId(), member))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
+        ;
     }
 
     @DisplayName("추억 식별값을 통해 추억을 삭제한다.")

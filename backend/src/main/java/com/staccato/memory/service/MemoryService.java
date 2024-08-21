@@ -40,12 +40,6 @@ public class MemoryService {
         return new MemoryIdResponse(memory.getId());
     }
 
-    private void validateMemoryTitle(String title) {
-        if (memoryRepository.existsByTitle(title)) {
-            throw new StaccatoException("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
-        }
-    }
-
     public MemoryResponses readAllMemories(Member member, Integer year) {
         return Optional.ofNullable(year)
                 .map(y -> readAllByYear(member, y))
@@ -91,9 +85,12 @@ public class MemoryService {
 
     @Transactional
     public void updateMemory(MemoryRequest memoryRequest, Long memoryId, Member member) {
-        Memory updatedMemory = memoryRequest.toMemory();
         Memory originMemory = getMemoryById(memoryId);
         validateOwner(originMemory, member);
+        if(originMemory.isNotSameTitle(memoryRequest.memoryTitle())) {
+            validateMemoryTitle(memoryRequest.memoryTitle());
+        }
+        Memory updatedMemory = memoryRequest.toMemory();
         List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAt(memoryId);
         originMemory.update(updatedMemory, moments);
     }
@@ -101,6 +98,12 @@ public class MemoryService {
     private Memory getMemoryById(long memoryId) {
         return memoryRepository.findById(memoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
+    }
+
+    private void validateMemoryTitle(String title) {
+        if (memoryRepository.existsByTitle(title)) {
+            throw new StaccatoException("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
+        }
     }
 
     @Transactional
