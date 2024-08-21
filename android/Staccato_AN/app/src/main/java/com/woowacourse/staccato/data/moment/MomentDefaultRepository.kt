@@ -5,7 +5,6 @@ import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.domain.model.Moment
 import com.woowacourse.staccato.domain.repository.MomentRepository
-import okhttp3.MultipartBody
 import java.time.LocalDateTime
 
 class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSource) :
@@ -44,14 +43,12 @@ class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSour
         momentId: Long,
         placeName: String,
         momentImageUrls: List<String>,
-        momentImageMultiParts: List<MultipartBody.Part>,
     ): Result<Unit> {
         return runCatching {
             remoteDataSource.updateMoment(
                 momentId = momentId,
                 placeName = placeName,
                 momentImageUrls = momentImageUrls,
-                momentImageFiles = momentImageMultiParts,
             )
         }
     }

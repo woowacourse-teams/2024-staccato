@@ -3,6 +3,7 @@ package com.woowacourse.staccato.presentation.visitupdate.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.woowacourse.staccato.data.StaccatoClient
+import com.woowacourse.staccato.data.image.ImageDefaultRepository
 import com.woowacourse.staccato.data.moment.MomentDefaultRepository
 import com.woowacourse.staccato.data.moment.MomentRemoteDataSource
 
@@ -12,6 +13,9 @@ class VisitUpdateViewModelFactory : ViewModelProvider.Factory {
             return VisitUpdateViewModel(
                 MomentDefaultRepository(
                     remoteDataSource = MomentRemoteDataSource(StaccatoClient.momentApiService),
+                ),
+                ImageDefaultRepository(
+                    imageApiService = StaccatoClient.imageApiService,
                 ),
             ) as T
         }

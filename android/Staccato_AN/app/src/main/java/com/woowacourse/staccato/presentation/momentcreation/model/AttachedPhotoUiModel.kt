@@ -5,11 +5,14 @@ import com.woowacourse.staccato.presentation.momentcreation.adapter.PhotoAttachA
 import com.woowacourse.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter.Companion.ADD_PHOTO_BUTTON_URL
 
 data class AttachedPhotoUiModel(
-    val uri: Uri,
+    val uri: Uri? = null,
     val imageUrl: String? = null,
 ) {
     fun updateUrl(newUrl: String): AttachedPhotoUiModel {
-        return this.copy(imageUrl = newUrl)
+        return this.copy(
+            uri = uri,
+            imageUrl = newUrl,
+        )
     }
 
     companion object {

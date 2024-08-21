@@ -15,7 +15,7 @@ import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
-import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoUiModels
+import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
 import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -26,7 +26,7 @@ import java.time.LocalDateTime
 
 class MomentCreationViewModel(
     private val momentRepository: MomentRepository,
-    private val imageDefaultRepository: ImageDefaultRepository,
+    private val imageRepository: ImageDefaultRepository,
 ) : AttachedPhotoHandler, ViewModel() {
     val placeName = ObservableField<String>()
 
@@ -34,8 +34,8 @@ class MomentCreationViewModel(
     val address: LiveData<String> get() = _address
 
     private val _currentPhotos =
-        MutableLiveData<AttachedPhotoUiModels>(AttachedPhotoUiModels(emptyList()))
-    val currentPhotos: LiveData<AttachedPhotoUiModels> get() = _currentPhotos
+        MutableLiveData<AttachedPhotosUiModel>(AttachedPhotosUiModel(emptyList()))
+    val currentPhotos: LiveData<AttachedPhotosUiModel> get() = _currentPhotos
 
     private val _pendingPhotos = MutableSingleLiveData<List<AttachedPhotoUiModel>>()
     val pendingPhotos: SingleLiveData<List<AttachedPhotoUiModel>> get() = _pendingPhotos
@@ -43,7 +43,7 @@ class MomentCreationViewModel(
     private val _memory = MutableLiveData<MomentMemoryUiModel>()
     val memory: LiveData<MomentMemoryUiModel> get() = _memory
 
-    private val _latitude = MutableLiveData<String>("32.123456")
+    private val _latitude = MutableLiveData("32.123456")
     private val latitude: LiveData<String> get() = _latitude
 
     private val _longitude = MutableLiveData<String>("32.123456")
@@ -98,7 +98,7 @@ class MomentCreationViewModel(
     }
 
     fun setUrisWithNewOrder(list: List<AttachedPhotoUiModel>) {
-        _currentPhotos.value = AttachedPhotoUiModels(list)
+        _currentPhotos.value = AttachedPhotosUiModel(list)
     }
 
     fun fetchPhotosUrlsByUris(context: Context) {
@@ -116,7 +116,7 @@ class MomentCreationViewModel(
         photo: AttachedPhotoUiModel,
     ) = viewModelScope.async(buildCoroutineExceptionHandler()) {
         val multiPartBody = convertExcretaFile(context, photo.uri, FORM_DATA_NAME)
-        imageDefaultRepository.convertImageFileToUrl(multiPartBody)
+        imageRepository.convertImageFileToUrl(multiPartBody)
             .onSuccess {
                 updatePhotoWithUrl(photo, it.imageUrl)
             }
@@ -159,7 +159,7 @@ class MomentCreationViewModel(
         }
 
     companion object {
-        private const val MAX_PHOTO_NUMBER = 5
+        const val MAX_PHOTO_NUMBER = 5
         const val MAX_PHOTO_NUMBER_MESSAGE = "사진은 최대 ${MAX_PHOTO_NUMBER}장만 첨부할 수 있어요!"
         const val FORM_DATA_NAME = "imageFile"
     }

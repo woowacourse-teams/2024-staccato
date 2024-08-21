@@ -10,5 +10,6 @@ data class MomentResponse(
     @SerialName("momentImageUrls") val momentImageUrls: List<String>,
     @SerialName("address") val address: String,
     @SerialName("visitedAt") val visitedAt: String,
+    @SerialName("feeling") val feeling: String,
     @SerialName("comments") val visitLogs: List<VisitLogDto>,
 )

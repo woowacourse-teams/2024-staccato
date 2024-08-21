@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.presentation.moment.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -42,6 +43,7 @@ class MomentViewModel(private val momentRepository: MomentRepository) : ViewMode
                 _momentDefault.value = moment.toVisitDefaultUiModel()
                 _visitLogs.value = moment.comments.map { it.toVisitLogUiModel() }
             }.onFailure {
+                Log.d("ㅌㅅㅌ moment", "error : ${it.message}")
                 _isError.postValue(true)
             }
         }

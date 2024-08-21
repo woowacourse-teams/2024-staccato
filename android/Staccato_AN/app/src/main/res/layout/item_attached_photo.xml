@@ -31,9 +31,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
-            bind:coilUriPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            bind:coilUriRoundedCorner="@{attachedPhoto.uri}"
-            bind:coilUriRoundingRadius="@{12f}"
+            bind:coilImageUri="@{attachedPhoto.uri}"
+            bind:coilImageUrl="@{attachedPhoto.imageUrl}"
+            bind:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            bind:coilRoundingRadius="@{12f}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
         <ProgressBar

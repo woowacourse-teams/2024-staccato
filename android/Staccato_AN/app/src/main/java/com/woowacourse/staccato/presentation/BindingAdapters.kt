@@ -102,7 +102,7 @@ fun ImageView.setRoundedCornerUpdateImageWithCoil(
     placeHolder: Drawable? = null,
     roundingRadius: Float,
 ) {
-    val image = url ?: uri
+    val image = uri ?: url
     load(image) {
         placeholder(placeHolder)
         transformations(RoundedCornersTransformation(roundingRadius))

@@ -2,7 +2,6 @@ package com.woowacourse.staccato.domain.repository
 
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.domain.model.Moment
-import okhttp3.MultipartBody
 import java.time.LocalDateTime
 
 interface MomentRepository {
@@ -22,7 +21,6 @@ interface MomentRepository {
         momentId: Long,
         placeName: String,
         momentImageUrls: List<String>,
-        momentImageMultiParts: List<MultipartBody.Part>,
     ): Result<Unit>
 
     suspend fun deleteMoment(momentId: Long): Result<Unit>

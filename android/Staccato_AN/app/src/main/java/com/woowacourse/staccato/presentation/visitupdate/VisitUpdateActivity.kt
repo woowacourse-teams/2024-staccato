@@ -11,7 +11,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityVisitUpdateBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
@@ -20,10 +21,13 @@ import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEM
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.woowacourse.staccato.presentation.momentcreation.OnUrisSelectedListener
+import com.woowacourse.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
+import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.woowacourse.staccato.presentation.util.showToast
+import com.woowacourse.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
+import com.woowacourse.staccato.presentation.visitcreation.adapter.ItemDragListener
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
 import com.woowacourse.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModelFactory
-import kotlinx.coroutines.launch
 
 class VisitUpdateActivity :
     BindingActivity<ActivityVisitUpdateBinding>(),
@@ -31,10 +35,10 @@ class VisitUpdateActivity :
     VisitUpdateHandler {
     override val layoutResourceId = R.layout.activity_visit_update
     private val viewModel: VisitUpdateViewModel by viewModels { VisitUpdateViewModelFactory() }
-
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
-
+    private lateinit var adapter: PhotoAttachAdapter
+    private lateinit var itemTouchHelper: ItemTouchHelper
     private val visitId by lazy { intent.getLongExtra(MOMENT_ID_KEY, 0L) }
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
@@ -42,27 +46,14 @@ class VisitUpdateActivity :
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
-    override fun initStartView(savedInstanceState: Bundle?) {
-        initBinding()
-        initToolbar()
-        observeViewModelData()
-        viewModel.initViewModelData(visitId, memoryId, memoryTitle)
-    }
-
     override fun onUrisSelected(vararg uris: Uri) {
-        viewModel.setImageUris(arrayOf(*uris))
-    }
-
-    override fun onPhotoAttachClicked() {
-        photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+        viewModel.updateSelectedImageUris(arrayOf(*uris))
     }
 
     override fun onUpdateDoneClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        lifecycleScope.launch {
-            showToast(getString(R.string.visit_update_posting))
-            viewModel.updateVisit(this@VisitUpdateActivity)
-        }
+        showToast(getString(R.string.visit_update_posting))
+        viewModel.updateVisit()
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -97,6 +88,15 @@ class VisitUpdateActivity :
         )
     }
 
+    override fun initStartView(savedInstanceState: Bundle?) {
+        initBinding()
+        initToolbar()
+        initAdapter()
+        initItemTouchHelper()
+        observeViewModelData()
+        viewModel.initViewModelData(visitId, memoryId, memoryTitle)
+    }
+
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -109,21 +109,53 @@ class VisitUpdateActivity :
         }
     }
 
+    private fun initAdapter() {
+        adapter =
+            PhotoAttachAdapter(
+                object : ItemDragListener {
+                    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+                        itemTouchHelper.startDrag(viewHolder)
+                    }
+
+                    override fun onStopDrag(list: List<AttachedPhotoUiModel>) {
+                        viewModel.setUrisWithNewOrder(list)
+                    }
+                },
+                viewModel,
+            )
+        binding.rvPhotoAttach.adapter = adapter
+    }
+
+    private fun initItemTouchHelper() {
+        itemTouchHelper = ItemTouchHelper(AttachedPhotoItemTouchHelperCallback(adapter))
+        itemTouchHelper.attachToRecyclerView(binding.rvPhotoAttach)
+    }
+
     private fun observeViewModelData() {
-        viewModel.isError.observe(this) { isError ->
-            handleError(isError)
+        viewModel.isAddPhotoClicked.observe(this) {
+            if (!photoAttachFragment.isAdded && it) {
+                photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+            }
         }
         viewModel.isUpdateCompleted.observe(this) { isUpdateCompleted ->
             handleUpdateComplete(isUpdateCompleted)
         }
+        viewModel.pendingPhotos.observe(this) {
+            viewModel.fetchPhotosUrlsByUris(this)
+        }
+        viewModel.currentPhotos.observe(this) { photos ->
+            adapter.submitList(
+                listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
+            )
+        }
+        viewModel.errorMessage.observe(this) { message ->
+            handleError(message)
+        }
     }
 
-    private fun handleError(isError: Boolean) {
-        if (isError) {
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
-            showToast("방문을 수정할 수 없어요!")
-            finish()
-        }
+    private fun handleError(errorMessage: String) {
+        window.clearFlags(FLAG_NOT_TOUCHABLE)
+        showToast(errorMessage)
     }
 
     private fun handleUpdateComplete(isUpdateCompleted: Boolean) {

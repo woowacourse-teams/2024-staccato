@@ -95,7 +95,11 @@ class PhotoAttachAdapter(
                     oldItem: AttachedPhotoUiModel,
                     newItem: AttachedPhotoUiModel,
                 ): Boolean {
-                    return oldItem.uri == newItem.uri
+                    return if (oldItem.uri == null && newItem.uri == null) {
+                        oldItem.imageUrl == newItem.imageUrl
+                    } else {
+                        oldItem.uri == newItem.uri
+                    }
                 }
 
                 override fun areContentsTheSame(
