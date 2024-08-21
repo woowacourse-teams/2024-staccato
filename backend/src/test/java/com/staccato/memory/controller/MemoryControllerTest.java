@@ -159,7 +159,7 @@ class MemoryControllerTest {
     void cannotReadAllMemoryByInvalidDateFormat(String currentDate) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 날짜 형식입니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
 
         // when & then
         mockMvc.perform(get("/memories")
