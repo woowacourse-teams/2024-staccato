@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.data.moment
 
+import com.woowacourse.staccato.data.dto.moment.FeelingRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.data.dto.moment.MomentResponse
@@ -33,9 +34,16 @@ interface MomentApiService {
         @Path(value = "momentId") momentId: Long,
     )
 
+    @POST(FEELING_PATH)
+    suspend fun postFeeling(
+        @Path(value = "momentId") momentId: Long,
+        @Body feelingRequest: FeelingRequest,
+    )
+
     companion object {
         private const val MOMENTS_PATH = "/moments"
         private const val MOMENT_ID = "/{momentId}"
         private const val MOMENT_PATH_WITH_ID = "$MOMENTS_PATH$MOMENT_ID"
+        private const val FEELING_PATH = "$MOMENT_PATH_WITH_ID/feeling"
     }
 }

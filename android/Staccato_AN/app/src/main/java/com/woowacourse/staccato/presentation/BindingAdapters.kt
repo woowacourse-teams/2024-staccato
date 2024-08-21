@@ -291,17 +291,19 @@ fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDate>?) {
     isGone = !items.isNullOrEmpty()
 }
 
-@BindingAdapter(
-    value = ["visitedAt"],
-)
-fun TextView.combineVisitedAt(visitedAt: LocalDateTime) {
-    text =
-        format(
-            resources.getString(R.string.visit_history),
-            visitedAt.year,
-            visitedAt.monthValue,
-            visitedAt.dayOfMonth,
-        )
+@BindingAdapter("visitedAt")
+fun TextView.combineVisitedAt(visitedAt: LocalDateTime?) {
+    if (visitedAt != null) {
+        text =
+            format(
+                resources.getString(R.string.visit_history),
+                visitedAt.year,
+                visitedAt.monthValue,
+                visitedAt.dayOfMonth,
+            )
+    } else {
+        text = ""
+    }
 }
 
 @BindingAdapter(
@@ -358,4 +360,14 @@ fun TextView.setPhotoNumbers(
 ) {
     text =
         resources.getString(R.string.all_photo_number).format(currentPhotoNumbers, maxPhotoNumbers)
+}
+
+@BindingAdapter("setSelected")
+fun ImageView.setSelectedState(selected: Boolean) {
+    isSelected = selected
+}
+
+@BindingAdapter("setImageResource")
+fun ImageView.setImageResourceWithId(resId: Int) {
+    setImageResource(resId)
 }

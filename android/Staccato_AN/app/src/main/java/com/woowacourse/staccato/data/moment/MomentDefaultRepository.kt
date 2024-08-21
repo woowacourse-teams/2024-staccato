@@ -1,6 +1,7 @@
 package com.woowacourse.staccato.data.moment
 
 import com.woowacourse.staccato.data.dto.mapper.toDomain
+import com.woowacourse.staccato.data.dto.moment.FeelingRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.domain.model.Moment
@@ -56,6 +57,18 @@ class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSour
     override suspend fun deleteMoment(momentId: Long): Result<Unit> {
         return runCatching {
             remoteDataSource.deleteMoment(momentId)
+        }
+    }
+
+    override suspend fun updateFeeling(
+        momentId: Long,
+        feeling: String,
+    ): Result<Unit> {
+        return runCatching {
+            remoteDataSource.updateFeeling(
+                momentId = momentId,
+                feelingRequest = FeelingRequest(feeling),
+            )
         }
     }
 }

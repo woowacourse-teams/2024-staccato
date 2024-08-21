@@ -8,5 +8,6 @@ data class Moment(
     val momentImageUrls: List<String>,
     val address: String,
     val visitedAt: LocalDateTime,
+    val feeling: Feeling,
     val comments: List<VisitLog>,
 )

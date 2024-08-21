@@ -33,7 +33,10 @@ class MomentCreationActivity :
     MomentCreationHandler {
     override val layoutResourceId = R.layout.activity_visit_creation
     private val viewModel: MomentCreationViewModel by viewModels { MomentCreationViewModelFactory() }
-    private val photoAttachFragment = PhotoAttachFragment()
+
+    private val photoAttachFragment by lazy {
+        PhotoAttachFragment().apply { setMultipleAbleOption(true) }
+    }
     private val fragmentManager: FragmentManager = supportFragmentManager
     private lateinit var adapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper

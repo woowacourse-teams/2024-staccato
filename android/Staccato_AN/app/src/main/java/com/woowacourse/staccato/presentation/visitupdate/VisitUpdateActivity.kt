@@ -35,7 +35,9 @@ class VisitUpdateActivity :
     VisitUpdateHandler {
     override val layoutResourceId = R.layout.activity_visit_update
     private val viewModel: VisitUpdateViewModel by viewModels { VisitUpdateViewModelFactory() }
-    private val photoAttachFragment = PhotoAttachFragment()
+    private val photoAttachFragment by lazy {
+        PhotoAttachFragment().apply { setMultipleAbleOption(true) }
+    }
     private val fragmentManager: FragmentManager = supportFragmentManager
     private lateinit var adapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
