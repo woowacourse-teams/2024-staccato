@@ -6,4 +6,6 @@ interface MemoryUpdateHandler {
     fun onSaveClicked()
 
     fun onPhotoAttachClicked()
+
+    fun onPhotoDeletionClicked()
 }
