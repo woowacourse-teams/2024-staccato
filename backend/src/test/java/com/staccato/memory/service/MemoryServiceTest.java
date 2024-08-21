@@ -239,7 +239,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create());
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, member);
 
-        // when then
+        // when & then
         assertThatNoException().isThrownBy(() -> memoryService.updateMemory(memoryRequest, memoryIdResponse.memoryId(), member));
     }
 
@@ -253,7 +253,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         MemoryRequest memoryRequest2 = MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10), "otherTitle");
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest2, member);
 
-        // when then
+        // when & then
         assertThatThrownBy(() -> memoryService.updateMemory(memoryRequest1, memoryIdResponse.memoryId(), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
