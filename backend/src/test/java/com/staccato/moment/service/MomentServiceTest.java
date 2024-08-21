@@ -19,6 +19,8 @@ import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.fixture.moment.CommentFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
@@ -269,22 +271,6 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    private Member saveMember() {
-        return memberRepository.save(Member.builder().nickname("staccato").build());
-    }
-
-    private Memory saveMemory(Member member) {
-        Memory memory = Memory.builder().title("Sample Memory").startAt(LocalDate.now())
-                .endAt(LocalDate.now().plusDays(1)).build();
-        memory.addMemoryMember(member);
-        return memoryRepository.save(memory);
-    }
-
-    private Moment saveMomentWithImages(Memory memory) {
-        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
-        return momentRepository.save(moment);
-    }
-
     @DisplayName("순간의 기분을 선택할 수 있다.")
     @Test
     void updateMomentFeelingById() {
@@ -302,5 +288,20 @@ class MomentServiceTest extends ServiceSliceTest {
                 () -> assertThat(momentRepository.findById(moment.getId())).isNotEmpty(),
                 () -> assertThat(momentRepository.findById(moment.getId()).get().getFeeling()).isEqualTo(Feeling.HAPPY)
         );
+    }
+
+    private Member saveMember() {
+        return memberRepository.save(MemberFixture.create());
+    }
+
+    private Memory saveMemory(Member member) {
+        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        memory.addMemoryMember(member);
+        return memoryRepository.save(memory);
+    }
+
+    private Moment saveMomentWithImages(Memory memory) {
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
+        return momentRepository.save(moment);
     }
 }
