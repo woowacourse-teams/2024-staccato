@@ -2,6 +2,7 @@ package com.staccato.moment.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class Moment extends BaseEntity {
             @NonNull Memory memory
     ) {
         validateIsWithinMemoryDuration(visitedAt, memory);
-        this.visitedAt = visitedAt;
+        this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
         this.placeName = placeName;
         this.spot = new Spot(address, latitude, longitude);
         this.momentImages.addAll(momentImages, this);
