@@ -26,20 +26,37 @@ class MemoryMemberRepositoryTest {
     @Autowired
     private MemoryRepository memoryRepository;
 
-    @DisplayName("사용자 식별자와 년도로 추억 목록을 조회한다.")
+    @DisplayName("사용자 식별자와 날짜로 추억 목록을 조회한다.")
     @Test
-    void findAllByMemberIdAndMemoryStartAtYear() {
+    void findAllByMemberIdAndDate() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Memory memory2 = memoryRepository.save(MemoryFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)));
+        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 30), LocalDate.of(2023, 12, 30)));
+        Memory memory2 = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2023, 12, 31)));
         memoryMemberRepository.save(new MemoryMember(member, memory));
         memoryMemberRepository.save(new MemoryMember(member, memory2));
 
         // when
-        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndYearOrderByCreatedAtDesc(member.getId(), 2023);
+        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndIncludingDateOrderByCreatedAtDesc(member.getId(), LocalDate.of(2023, 12, 31));
 
         // then
         assertThat(result).hasSize(1);
+    }
+
+    @DisplayName("사용자 식별자와 날짜로 추억 목록을 조회할 때 추억에 기한이 없을 경우 함께 조회한다.")
+    @Test
+    void findAllByMemberIdAndDateWhenNull() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 30), LocalDate.of(2023, 12, 30)));
+        Memory memory2 = memoryRepository.save(MemoryFixture.create(null, null));
+        memoryMemberRepository.save(new MemoryMember(member, memory));
+        memoryMemberRepository.save(new MemoryMember(member, memory2));
+
+        // when
+        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndIncludingDateOrderByCreatedAtDesc(member.getId(), LocalDate.of(2023, 12, 30));
+
+        // then
+        assertThat(result).hasSize(2);
     }
 }

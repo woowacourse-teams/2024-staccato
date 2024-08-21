@@ -31,7 +31,7 @@ import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
-import com.staccato.memory.service.dto.response.MemoryResponses;
+import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
@@ -48,10 +48,10 @@ class MemoryServiceTest extends ServiceSliceTest {
     @Autowired
     private MomentRepository momentRepository;
 
-    static Stream<Arguments> yearProvider() {
+    static Stream<Arguments> dateProvider() {
         return Stream.of(
-                Arguments.of(null, 2),
-                Arguments.of(2023, 1)
+                Arguments.of(LocalDate.of(2024, 7, 1), 2),
+                Arguments.of(LocalDate.of(2024, 7, 2), 1)
         );
     }
 
@@ -72,7 +72,8 @@ class MemoryServiceTest extends ServiceSliceTest {
 
         // when
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, member);
-        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId()).get(0);
+        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId())
+                .get(0);
 
         // then
         assertAll(
@@ -95,20 +96,20 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
     }
 
-    @DisplayName("조건에 따라 추억 목록을 조회한다.")
-    @MethodSource("yearProvider")
+    @DisplayName("현재 날짜를 포함하는 모든 추억 목록을 조회한다.")
+    @MethodSource("dateProvider")
     @ParameterizedTest
-    void readAllMemories(Integer year, int expectedSize) {
+    void readAllMemories(LocalDate currentDate, int expectedSize) {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10), "title1"), member);
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10), "title2"), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 1), "title1"), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2), "title2"), member);
 
         // when
-        MemoryResponses memoryResponses = memoryService.readAllMemories(member, year);
+        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
 
         // then
-        assertThat(memoryResponses.memories()).hasSize(expectedSize);
+        assertThat(memoryNameResponses.memories()).hasSize(expectedSize);
     }
 
     @DisplayName("특정 추억을 조회한다.")
@@ -186,7 +187,7 @@ class MemoryServiceTest extends ServiceSliceTest {
     void updateMemory(MemoryRequest updatedMemory, String expected) {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        MemoryIdResponse memoryResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10), "originTitle"), member);
+        MemoryIdResponse memoryResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
 
         // when
         memoryService.updateMemory(updatedMemory, memoryResponse.memoryId(), member);

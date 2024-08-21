@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -35,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.memory.MemoryFixture;
+import com.staccato.fixture.memory.MemoryNameResponsesFixture;
 import com.staccato.fixture.memory.MemoryRequestFixture;
 import com.staccato.fixture.memory.MemoryResponsesFixture;
 import com.staccato.member.domain.Member;
@@ -42,6 +44,7 @@ import com.staccato.memory.service.MemoryService;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
+import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MemoryResponses;
 
 @WebMvcTest(MemoryController.class)
@@ -126,7 +129,7 @@ class MemoryControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
         MemoryResponses memoryResponses = MemoryResponsesFixture.create(MemoryFixture.create());
-        when(memoryService.readAllMemories(any(Member.class), any())).thenReturn(memoryResponses);
+        when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
 
         // when & then
         mockMvc.perform(get("/memories")
@@ -135,17 +138,35 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(memoryResponses)));
     }
 
-    @DisplayName("사용자가 잘못된 형식의 년도로 추억 목록 조회를 시도하면 예외가 발생한다.")
+    @DisplayName("특정 날짜를 포함하고 있는 모든 추억 목록을 조회한다.")
     @Test
-    void cannotReadAllMemoryByInvalidYear() throws Exception {
+    void readAllMemoryIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "년도는 양수로 이루어져야 합니다.");
+        MemoryNameResponses memoryNameResponses = MemoryNameResponsesFixture.create(MemoryFixture.create());
+        when(memoryService.readAllMemoriesIncludingDate(any(Member.class), any())).thenReturn(memoryNameResponses);
+        String currentDate = "2024-07-01";
 
         // when & then
-        mockMvc.perform(get("/memories")
+        mockMvc.perform(get("/memories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
-                        .param("year", String.valueOf(0)))
+                        .param("currentDate", currentDate))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(memoryNameResponses)));
+    }
+
+    @DisplayName("잘못된 날짜 형식으로 추억 목록 조회를 시도하면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"2024.07.01", "2024-07", "2024", "a"})
+    void cannotReadAllMemoryByInvalidDateFormat(String currentDate) throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
+
+        // when & then
+        mockMvc.perform(get("/memories/candidates")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("currentDate", currentDate))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }

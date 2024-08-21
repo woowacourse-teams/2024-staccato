@@ -1,7 +1,7 @@
 package com.staccato.memory.service;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +16,7 @@ import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
+import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
@@ -40,27 +41,22 @@ public class MemoryService {
         return new MemoryIdResponse(memory.getId());
     }
 
-    public MemoryResponses readAllMemories(Member member, Integer year) {
-        return Optional.ofNullable(year)
-                .map(y -> readAllByYear(member, y))
-                .orElseGet(() -> readAll(member));
-    }
-
-    private MemoryResponses readAllByYear(Member member, Integer year) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndYearOrderByCreatedAtDesc(member.getId(), year);
-        return getMemoryResponses(memoryMembers);
-    }
-
-    private MemoryResponses readAll(Member member) {
+    public MemoryResponses readAllMemories(Member member) {
         List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId());
-        return getMemoryResponses(memoryMembers);
+        return MemoryResponses.from(
+                memoryMembers.stream()
+                        .map(MemoryMember::getMemory)
+                        .toList()
+        );
     }
 
-    private MemoryResponses getMemoryResponses(List<MemoryMember> memoryMembers) {
-        List<Memory> memories = memoryMembers.stream()
-                .map(MemoryMember::getMemory)
-                .toList();
-        return MemoryResponses.from(memories);
+    public MemoryNameResponses readAllMemoriesIncludingDate(Member member, LocalDate currentDate) {
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndIncludingDateOrderByCreatedAtDesc(member.getId(), currentDate);
+        return MemoryNameResponses.from(
+                memoryMembers.stream()
+                        .map(MemoryMember::getMemory)
+                        .toList()
+        );
     }
 
     public MemoryDetailResponse readMemoryById(long memoryId, Member member) {
@@ -87,7 +83,7 @@ public class MemoryService {
     public void updateMemory(MemoryRequest memoryRequest, Long memoryId, Member member) {
         Memory originMemory = getMemoryById(memoryId);
         validateOwner(originMemory, member);
-        if(originMemory.isNotSameTitle(memoryRequest.memoryTitle())) {
+        if (originMemory.isNotSameTitle(memoryRequest.memoryTitle())) {
             validateMemoryTitle(memoryRequest.memoryTitle());
         }
         Memory updatedMemory = memoryRequest.toMemory();
