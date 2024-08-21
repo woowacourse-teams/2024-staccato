@@ -16,9 +16,9 @@ import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
+import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
-import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
 
@@ -34,6 +34,7 @@ public class MemoryService {
 
     @Transactional
     public MemoryIdResponse createMemory(MemoryRequest memoryRequest, Member member) {
+        validateMemoryTitle(memoryRequest.memoryTitle());
         Memory memory = memoryRequest.toMemory();
         memory.addMemoryMember(member);
         memoryRepository.save(memory);
@@ -80,9 +81,12 @@ public class MemoryService {
 
     @Transactional
     public void updateMemory(MemoryRequest memoryRequest, Long memoryId, Member member) {
-        Memory updatedMemory = memoryRequest.toMemory();
         Memory originMemory = getMemoryById(memoryId);
         validateOwner(originMemory, member);
+        if (originMemory.isNotSameTitle(memoryRequest.memoryTitle())) {
+            validateMemoryTitle(memoryRequest.memoryTitle());
+        }
+        Memory updatedMemory = memoryRequest.toMemory();
         List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAt(memoryId);
         originMemory.update(updatedMemory, moments);
     }
@@ -90,6 +94,12 @@ public class MemoryService {
     private Memory getMemoryById(long memoryId) {
         return memoryRepository.findById(memoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
+    }
+
+    private void validateMemoryTitle(String title) {
+        if (memoryRepository.existsByTitle(title)) {
+            throw new StaccatoException("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
+        }
     }
 
     @Transactional
