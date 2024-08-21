@@ -341,3 +341,8 @@ fun TextView.setPhotoNumbers(
     text =
         resources.getString(R.string.all_photo_number).format(currentPhotoNumbers, maxPhotoNumbers)
 }
+
+@BindingAdapter("setSelected")
+fun ImageView.setSelectedState(selected: Boolean) {
+    isSelected = selected
+}
