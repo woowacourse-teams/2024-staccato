@@ -1,4 +1,4 @@
-package com.woowacourse.staccato.presentation.home
+package com.woowacourse.staccato.presentation.maps
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
