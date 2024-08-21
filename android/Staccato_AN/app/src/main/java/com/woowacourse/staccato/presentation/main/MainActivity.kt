@@ -18,6 +18,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDE
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityMainBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
+import com.woowacourse.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_NEW_STATE
+import com.woowacourse.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_STATE_REQUEST_KEY
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memorycreation.MemoryCreationActivity
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
@@ -103,6 +105,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
+        setUpBottomSheetStateListener()
     }
 
     override fun onCreationClicked() {
@@ -210,6 +213,13 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
                     }
                 },
             )
+        }
+    }
+
+    private fun setUpBottomSheetStateListener() {
+        supportFragmentManager.setFragmentResultListener(BOTTOM_SHEET_STATE_REQUEST_KEY, this) { _, bundle ->
+            val newState = bundle.getInt(BOTTOM_SHEET_NEW_STATE)
+            behavior.state = newState
         }
     }
 }

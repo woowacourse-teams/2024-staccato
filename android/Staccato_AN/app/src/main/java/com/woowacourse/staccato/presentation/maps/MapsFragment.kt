@@ -11,20 +11,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.data.StaccatoClient.momentApiService
 import com.woowacourse.staccato.data.moment.MomentDefaultRepository
 import com.woowacourse.staccato.data.moment.MomentRemoteDataSource
 import com.woowacourse.staccato.domain.model.MomentLocation
+import com.woowacourse.staccato.presentation.maps.model.MarkerUiModel
+import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 
 class MapsFragment : Fragment() {
     private val viewModel: MapsViewModel by viewModels {
@@ -40,6 +46,7 @@ class MapsFragment : Fragment() {
             checkLocationPermissions(googleMap)
             observeMomentLocations(googleMap)
             moveCamera(googleMap)
+            onMarkerClicked(googleMap)
         }
 
     private val locationPermissions: Array<String> =
@@ -65,6 +72,7 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(mapReadyCallback)
+        observeStaccatoId()
     }
 
     private fun checkLocationPermissions(googleMap: GoogleMap) {
@@ -125,11 +133,15 @@ class MapsFragment : Fragment() {
         momentLocations: List<MomentLocation>,
         googleMap: GoogleMap,
     ) {
+        val markers: MutableList<MarkerUiModel> = mutableListOf()
         momentLocations.forEach { momentLocation ->
-            googleMap.addMarker(
-                MarkerOptions().position(LatLng(momentLocation.latitude, momentLocation.longitude)),
-            )
+            val latLng = LatLng(momentLocation.latitude, momentLocation.longitude)
+            val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
+            val marker: Marker = googleMap.addMarker(markerOptions) ?: return
+            val markerId: String = marker.id
+            markers.add(MarkerUiModel(momentLocation.momentId, markerId))
         }
+        viewModel.setMarkers(markers)
     }
 
     private fun moveCamera(googleMap: GoogleMap) {
@@ -137,7 +149,27 @@ class MapsFragment : Fragment() {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(woowacourse, 15f))
     }
 
+    private fun onMarkerClicked(googleMap: GoogleMap) {
+        googleMap.setOnMarkerClickListener { marker ->
+            viewModel.findStaccatoId(marker.id)
+            false
+        }
+    }
+
+    private fun observeStaccatoId() {
+        viewModel.staccatoId.observe(viewLifecycleOwner) { staccatoId ->
+            val bundle = bundleOf(MOMENT_ID_KEY to staccatoId)
+            findNavController().navigate(R.id.visitFragment, bundle)
+            parentFragmentManager.setFragmentResult(
+                BOTTOM_SHEET_STATE_REQUEST_KEY,
+                bundleOf(BOTTOM_SHEET_NEW_STATE to BottomSheetBehavior.STATE_EXPANDED),
+            )
+        }
+    }
+
     companion object {
         const val PACKAGE_SCHEME = "package"
+        const val BOTTOM_SHEET_STATE_REQUEST_KEY = "requestKey"
+        const val BOTTOM_SHEET_NEW_STATE = "newState"
     }
 }

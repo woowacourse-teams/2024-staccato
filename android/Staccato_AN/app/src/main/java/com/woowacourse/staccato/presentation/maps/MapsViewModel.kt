@@ -12,7 +12,9 @@ import com.woowacourse.staccato.domain.model.MomentLocation
 import com.woowacourse.staccato.domain.repository.MomentRepository
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
+import com.woowacourse.staccato.presentation.maps.model.MarkerUiModel
 import kotlinx.coroutines.launch
+import java.lang.IllegalArgumentException
 
 class MapsViewModel(
     private val momentRepository: MomentRepository,
@@ -20,11 +22,26 @@ class MapsViewModel(
     private val _momentLocations = MutableLiveData<List<MomentLocation>>()
     val momentLocations: LiveData<List<MomentLocation>> get() = _momentLocations
 
+    private val _markers = MutableLiveData<List<MarkerUiModel>>()
+    val markers: LiveData<List<MarkerUiModel>> get() = _markers
+
     private val _errorMessage = MutableSingleLiveData<String>()
     val errorMessage: SingleLiveData<String> get() = _errorMessage
 
+    private val _staccatoId = MutableLiveData<Long>()
+    val staccatoId: LiveData<Long> get() = _staccatoId
+
     init {
         loadMoments()
+    }
+
+    fun setMarkers(markers: List<MarkerUiModel>) {
+        _markers.value = markers
+    }
+
+    fun findStaccatoId(markerId: String?) {
+        val markers = _markers.value ?: throw IllegalArgumentException()
+        _staccatoId.value = markers.first { it.markerId == markerId }.staccatoId
     }
 
     private fun loadMoments() {
