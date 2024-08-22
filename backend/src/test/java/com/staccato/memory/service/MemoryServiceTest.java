@@ -145,7 +145,7 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("특정 추억을 조회하면 순간은 오래된 순으로 반환한다.")
+    @DisplayName("특정 추억을 조회하면 스타카토는 오래된 순으로 반환한다.")
     @Test
     void readMemoryByIdOrderByVisitedAt() {
         // given
@@ -278,7 +278,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("추억을 삭제하면 속한 순간들도 함께 삭제된다.")
+    @DisplayName("추억을 삭제하면 속한 스타카토들도 함께 삭제된다.")
     @Test
     void deleteMemoryWithMoment() {
         // given

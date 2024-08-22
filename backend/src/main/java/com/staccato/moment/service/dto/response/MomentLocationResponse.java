@@ -6,7 +6,7 @@ import com.staccato.moment.domain.Moment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "순간 목록 중 하나의 순간에 해당하는 응답입니다.")
+@Schema(description = "스타카토 목록 중 하나의 스타카토에 해당하는 응답입니다.")
 public record MomentLocationResponse(
         @Schema(example = "1")
         long momentId,

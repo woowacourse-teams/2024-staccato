@@ -143,7 +143,7 @@ public class CommentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(commentResponses)));
     }
 
-    @DisplayName("순간 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
+    @DisplayName("스타카토 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
     @Test
     void readCommentsByMomentIdFail() throws Exception {
         // given

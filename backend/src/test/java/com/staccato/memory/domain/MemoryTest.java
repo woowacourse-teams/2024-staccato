@@ -16,7 +16,7 @@ import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.moment.domain.Moment;
 
 class MemoryTest {
-    @DisplayName("추억을 수정 시 기존 순간 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
+    @DisplayName("추억을 수정 시 기존 스타카토 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
     @Test
     void validateDuration() {
         // given
