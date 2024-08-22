@@ -94,8 +94,8 @@
     <string name="memory_delete_description">아직 스타카토가 남아있어요!</string>
 
     // dialog_delete
-    <string name="delete_title">삭제하시겠습니까?</string>
-    <string name="delete_description">삭제를 누르면 복구할 수 없습니다</string>
+    <string name="delete_title">정말 삭제할까요?</string>
+    <string name="delete_description">삭제를 누르면 복구할 수 없어요!</string>
     <string name="all_delete_image">이미지 삭제 버튼</string>
 
     // menu_creation
