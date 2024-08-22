@@ -49,7 +49,7 @@ class MomentFragment :
         binding.vpPhotoHorizontal.adapter = pagePhotoAdapter
         TabLayoutMediator(
             binding.tabPhotoHorizontal,
-            binding.vpPhotoHorizontal
+            binding.vpPhotoHorizontal,
         ) { _, _ -> }.attach()
     }
 
