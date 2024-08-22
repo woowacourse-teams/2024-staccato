@@ -14,7 +14,7 @@ jobs:
         working-directory: ./backend
 
     permissions:
-      contents: read
+      contents: write-all
 
     steps:
       - uses: actions/checkout@v4
