@@ -147,7 +147,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
                 // TODO: 역지오코딩, 위경도 올바른지 확인하기
                 Log.d("hye", "latitude : ${location.latitude}, longitude: ${location.longitude}")
                 MomentCreationActivity.startWithResultLauncher(
-                    1,
+                    0L,
                     "임시 추억",
                     this,
                     visitCreationLauncher,

@@ -17,8 +17,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.woowacourse.staccato.R
+import com.woowacourse.staccato.domain.model.MemoryCandidate
 import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
-import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -203,9 +203,29 @@ fun Button.setMemorySaveButtonActive(
 }
 
 @BindingAdapter(
+    value = ["staccatoTitle", "address", "visitedAt", "photos", "selectedMemory"],
+)
+fun Button.setStaccatoCreationButtonActive(
+    title: String?,
+    address: String?,
+    visitedAt: LocalDateTime?,
+    photos: AttachedPhotosUiModel?,
+    selectedMemory: MemoryCandidate?,
+) {
+    isEnabled =
+        if (title.isNullOrBlank() || address == null || selectedMemory == null || visitedAt == null || photos?.isLoading() == true) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
+@BindingAdapter(
     value = ["staccatoTitle", "address", "visitedAt", "photos"],
 )
-fun Button.setStaccatoSaveButtonActive(
+fun Button.setStaccatoUpdateButtonActive(
     title: String?,
     address: String?,
     visitedAt: LocalDateTime?,
@@ -221,13 +241,13 @@ fun Button.setStaccatoSaveButtonActive(
         }
 }
 
-@BindingAdapter("selectedMemory")
-fun TextView.setSelectedMemory(selectedMemory: MomentMemoryUiModel?) {
+@BindingAdapter("setSelectedMemory")
+fun TextView.setSelectedMemory(selectedMemory: MemoryCandidate?) {
     if (selectedMemory == null) {
         text = resources.getString(R.string.visit_creation_memory_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
     } else {
-        text = selectedMemory.title
+        text = selectedMemory.memoryTitle
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
 }
@@ -236,7 +256,7 @@ fun TextView.setSelectedMemory(selectedMemory: MomentMemoryUiModel?) {
     value = ["selectedMemory", "visitedAt"],
 )
 fun Button.setVisitUpdateButtonActive(
-    memory: MomentMemoryUiModel?,
+    memory: MemoryCandidate?,
     visitedAt: LocalDate?,
 ) {
     isEnabled =

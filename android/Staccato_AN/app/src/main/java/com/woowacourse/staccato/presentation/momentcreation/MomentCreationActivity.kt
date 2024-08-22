@@ -20,12 +20,14 @@ import com.woowacourse.staccato.presentation.common.PhotoAttachFragment
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.woowacourse.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
+import com.woowacourse.staccato.presentation.momentcreation.dialog.MemorySelectionFragment
 import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.woowacourse.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel
 import com.woowacourse.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModelFactory
 import com.woowacourse.staccato.presentation.util.showToast
 import com.woowacourse.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.woowacourse.staccato.presentation.visitcreation.adapter.ItemDragListener
+import java.time.LocalDateTime
 
 class MomentCreationActivity :
     BindingActivity<ActivityVisitCreationBinding>(),
@@ -34,6 +36,9 @@ class MomentCreationActivity :
     override val layoutResourceId = R.layout.activity_visit_creation
     private val viewModel: MomentCreationViewModel by viewModels { MomentCreationViewModelFactory() }
 
+    private val memorySelectionFragment by lazy {
+        MemorySelectionFragment()
+    }
     private val photoAttachFragment by lazy {
         PhotoAttachFragment().apply { setMultipleAbleOption(true) }
     }
@@ -53,7 +58,13 @@ class MomentCreationActivity :
     override fun onCreateDoneClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         showToast(getString(R.string.visit_creation_posting))
-        viewModel.createMoment(memoryId)
+        viewModel.createMoment()
+    }
+
+    override fun onMemorySelectionClicked() {
+        if (!memorySelectionFragment.isAdded && memoryId == 0L) {
+            memorySelectionFragment.show(fragmentManager, MemorySelectionFragment.TAG)
+        }
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -90,21 +101,22 @@ class MomentCreationActivity :
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
-        initMemoryInfo()
         initAdapter()
         initItemTouchHelper()
         initToolbar()
+        initMemorySelectionFragment()
         observeViewModelData()
+        if (memoryId == 0L) {
+            viewModel.fetchMemoriesWithDate(LocalDateTime.now())
+        } else {
+            viewModel.selectMemory(memoryId, memoryTitle)
+        }
     }
 
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.visitCreationHandler = this
-    }
-
-    private fun initMemoryInfo() {
-        viewModel.initMemoryInfo(memoryId, memoryTitle)
     }
 
     private fun initAdapter() {
@@ -135,6 +147,12 @@ class MomentCreationActivity :
         }
     }
 
+    private fun initMemorySelectionFragment() {
+        memorySelectionFragment.setOnMemorySelected { selectedMemory ->
+            viewModel.selectMemory(selectedMemory.memoryId, selectedMemory.memoryTitle)
+        }
+    }
+
     private fun observeViewModelData() {
         viewModel.isAddPhotoClicked.observe(this) {
             if (!photoAttachFragment.isAdded && it) {
@@ -148,6 +166,9 @@ class MomentCreationActivity :
             adapter.submitList(
                 listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
             )
+        }
+        viewModel.memories.observe(this) { memories ->
+            memorySelectionFragment.setItems(memories.memoryCandidate)
         }
         viewModel.createdMomentId.observe(this) { createdMomentId ->
             val resultIntent =
