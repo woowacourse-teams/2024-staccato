@@ -1,8 +1,8 @@
-name: Android CI for generating APK
+name: Android CI/CD for generating demo APK
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
 
@@ -60,8 +60,19 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
+      - name: Clean test
+        run: ./gradlew clean test
+
       - name: Upload Debug APK
         uses: actions/upload-artifact@v3
         with:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: staccato_tester
+          file: app/build/outputs/apk/debug/app-debug.apk
