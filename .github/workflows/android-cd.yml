@@ -74,23 +74,17 @@ jobs:
       - name: Run clean test
         run: ./gradlew clean test
 
-      - name: create directory path
-        run: |
-          mkdir -p android/Staccato_AN/app/build/outputs/apk/release
       - name: Upload Release APK
         uses: actions/upload-artifact@v3
         with:
           name: app-release.apk
-          path: android/Staccato_AN/app/build/outputs/apk/release/app-release.apk
+          path: ${{ github.workspace }}/android/Staccato_AN/app/build/outputs/apk/release/*.apk
 
-      - name: create directory path
-        run: |
-          mkdir -p android/Staccato_AN/app/build/outputs/bundle/release/
       - name: Upload Release AAB
         uses: actions/upload-artifact@v3
         with:
           name: app-release.aab
-          path: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
+          path: ${{ github.workspace }}/android/Staccato_AN/app/build/outputs/bundle/release/*.aab
 
       - name: Upload On Google Play
         uses: r0adkll/upload-google-play@v1
