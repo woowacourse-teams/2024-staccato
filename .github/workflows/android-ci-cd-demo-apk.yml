@@ -72,10 +72,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-debug.apk
-          path: android/Staccato_AN/app/build/outputs/apk/debug/*.apk
-
-      - name: Debug APK Path Issue
-        run: find android/Staccato_AN/app/build/outputs/apk/ -name "*.apk"
+          path: android/Staccato_AN/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload Artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
