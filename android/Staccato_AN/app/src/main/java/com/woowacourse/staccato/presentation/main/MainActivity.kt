@@ -1,7 +1,9 @@
 package com.woowacourse.staccato.presentation.main
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.widget.PopupMenu
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -16,14 +18,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDE
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.ActivityMainBinding
 import com.woowacourse.staccato.presentation.base.BindingActivity
+import com.woowacourse.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_NEW_STATE
+import com.woowacourse.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_STATE_REQUEST_KEY
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.woowacourse.staccato.presentation.memorycreation.MemoryCreationActivity
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.woowacourse.staccato.presentation.momentcreation.MomentCreationActivity
-import com.woowacourse.staccato.presentation.momentcreation.MomentCreationActivity.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 
-class MainActivity : BindingActivity<ActivityMainBinding>() {
+class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
     override val layoutResourceId: Int
         get() = R.layout.activity_main
 
@@ -32,7 +35,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     private lateinit var navController: NavController
     private val sharedViewModel: SharedViewModel by viewModels()
 
-    private val memoryCreationLauncher =
+    val memoryCreationLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
@@ -64,13 +67,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                 result.data?.let {
                     showToast(getString(R.string.main_moment_creation_success))
                     val createdVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
-                    val memoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
-                    val memoryTitle = it.getStringExtra(MEMORY_TITLE_KEY)
                     val bundle =
                         bundleOf(
                             MOMENT_ID_KEY to createdVisitId,
-                            MEMORY_ID_KEY to memoryId,
-                            MEMORY_TITLE_KEY to memoryTitle,
                         )
                     navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
                 }
@@ -83,13 +82,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                 result.data?.let {
                     showToast(getString(R.string.main_moment_update_success))
                     val updatedVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
-                    val memoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
-                    val memoryTitle = it.getStringExtra(MEMORY_TITLE_KEY)
                     val bundle =
                         bundleOf(
                             MOMENT_ID_KEY to updatedVisitId,
-                            MEMORY_TITLE_KEY to memoryTitle,
-                            MEMORY_ID_KEY to memoryId,
                         )
                     navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
                 }
@@ -97,10 +92,50 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         }
 
     override fun initStartView(savedInstanceState: Bundle?) {
+        binding.handler = this
         setupBottomSheetController()
-        setupBottomSheetNavigation()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
+        setUpBottomSheetStateListener()
+    }
+
+    override fun onCreationClicked() {
+        val popup = inflateCreationMenu(binding.ivMainCreation)
+        setUpCreationMenu(popup)
+        popup.show()
+    }
+
+    private fun inflateCreationMenu(view: View): PopupMenu {
+        val popup = PopupMenu(this, view, Gravity.END, 0, R.style.Theme_Staccato_AN_PopupMenu)
+        popup.menuInflater.inflate(R.menu.menu_creation, popup.menu)
+        return popup
+    }
+
+    private fun setUpCreationMenu(popup: PopupMenu) {
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.memory_creation -> navigateToMemoryCreation()
+                R.id.staccato_creation -> navigateToStaccatoCreation()
+            }
+            false
+        }
+    }
+
+    private fun navigateToMemoryCreation() {
+        MemoryCreationActivity.startWithResultLauncher(
+            this,
+            memoryCreationLauncher,
+        )
+    }
+
+    private fun navigateToStaccatoCreation() {
+        // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
+        MomentCreationActivity.startWithResultLauncher(
+            0L,
+            "임시 추억",
+            this,
+            visitCreationLauncher,
+        )
     }
 
     private fun setupBackPressedHandler() {
@@ -133,27 +168,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         navController = navHostFragment.navController
     }
 
-    private fun setupBottomSheetNavigation() {
-        binding.btnMainMemoryCreation.setOnClickListener {
-            MemoryCreationActivity.startWithResultLauncher(
-                this,
-                memoryCreationLauncher,
-            )
-        }
-        binding.btnMainVisitCreation.setOnClickListener {
-            // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
-            MomentCreationActivity.startWithResultLauncher(
-                1,
-                "임시 추억",
-                this,
-                visitCreationLauncher,
-            )
-        }
-        binding.btnMainTimeline.setOnClickListener {
-            navigateTo(R.id.timelineFragment, R.id.timelineFragment, null, false)
-        }
-    }
-
     private fun navigateTo(
         navigateToId: Int,
         popUpToId: Int,
@@ -181,15 +195,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                         bottomSheet: View,
                         newState: Int,
                     ) {
-                        when (newState) {
-                            STATE_EXPANDED -> {
-                                binding.btnMainTimeline.visibility = View.INVISIBLE
-                            }
-
-                            else -> {
-                                binding.btnMainTimeline.visibility = View.VISIBLE
-                            }
-                        }
                     }
 
                     override fun onSlide(
@@ -197,10 +202,20 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                         slideOffset: Float,
                     ) {
                         binding.tvMainBottomSheetRemindYourMemories.alpha = 1 - slideOffset
-                        binding.btnMainTimeline.alpha = 1 - slideOffset
+                        binding.ivMainBottomSheetRemindYourMemories.alpha = 1 - slideOffset
                     }
                 },
             )
+        }
+    }
+
+    private fun setUpBottomSheetStateListener() {
+        supportFragmentManager.setFragmentResultListener(
+            BOTTOM_SHEET_STATE_REQUEST_KEY,
+            this,
+        ) { _, bundle ->
+            val newState = bundle.getInt(BOTTOM_SHEET_NEW_STATE)
+            behavior.state = newState
         }
     }
 }

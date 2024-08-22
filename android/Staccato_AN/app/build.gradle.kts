@@ -6,6 +6,11 @@ val localProperties =
         load(FileInputStream(rootProject.file("local.properties")))
     }
 
+val keystoreProperties =
+    Properties().apply {
+        load(FileInputStream(rootProject.file("app/signing/keystore.properties")))
+    }
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -13,6 +18,7 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.googleServices)
     alias(libs.plugins.firebaseCrashlytics)
+    alias(libs.plugins.mapsplatformSecretsGradlePlugin)
 }
 
 android {
@@ -28,8 +34,16 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "BASE_URL", "${localProperties["base_url"]}")
         buildConfigField("String", "TOKEN", "${localProperties["token"]}")
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("${keystoreProperties["store_file"]}")
+            keyAlias = "${keystoreProperties["key_alias"]}"
+            keyPassword = "${keystoreProperties["key_password"]}"
+            storePassword = "${keystoreProperties["keystore_password"]}"
+        }
     }
 
     buildFeatures {
@@ -39,12 +53,22 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "${localProperties["dev_base_url"]}")
+            manifestPlaceholders["appName"] = "@string/app_name_dev"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-DEV"
+        }
         release {
-            isMinifyEnabled = false
+            buildConfigField("String", "BASE_URL", "${localProperties["base_url"]}")
+            manifestPlaceholders["appName"] = "@string/app_name"
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -117,4 +141,20 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+
+    // Google Map
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+
+    // View Pager2
+    implementation(libs.androidx.viewpager2)
+    implementation(libs.dotsindicator)
+}
+
+secrets {
+    propertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "local.defaults.properties"
+
+    ignoreList.add("keyToIgnore")
+    ignoreList.add("sdk.*")
 }

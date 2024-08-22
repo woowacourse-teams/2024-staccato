@@ -17,7 +17,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.woowacourse.staccato.R
-import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
+import com.woowacourse.staccato.domain.model.MemoryCandidate
+import com.woowacourse.staccato.domain.model.MemoryCandidates
+import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -171,6 +173,18 @@ fun ImageView.setRoundedCornerImageByUriWithGlide(
         .into(this)
 }
 
+@BindingAdapter("setLoginButtonActive")
+fun Button.setLoginButtonActive(nickName: String?) {
+    isEnabled =
+        if (nickName.isNullOrBlank()) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
 @BindingAdapter(
     value = ["memoryTitle", "startDate", "endDate"],
 )
@@ -180,7 +194,7 @@ fun Button.setMemorySaveButtonActive(
     endDate: LocalDate?,
 ) {
     isEnabled =
-        if (title.isNullOrEmpty() || startDate == null || endDate == null) {
+        if (title.isNullOrBlank() || startDate == null || endDate == null) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -190,15 +204,17 @@ fun Button.setMemorySaveButtonActive(
 }
 
 @BindingAdapter(
-    value = ["staccatoTitle", "address", "visitedAt"],
+    value = ["staccatoTitle", "address", "visitedAt", "photos", "selectedMemory"],
 )
-fun Button.setStaccatoSaveButtonActive(
+fun Button.setStaccatoCreationButtonActive(
     title: String?,
     address: String?,
     visitedAt: LocalDateTime?,
+    photos: AttachedPhotosUiModel?,
+    selectedMemory: MemoryCandidate?,
 ) {
     isEnabled =
-        if (title.isNullOrEmpty() || address == null || visitedAt == null) {
+        if (title.isNullOrBlank() || address == null || selectedMemory == null || visitedAt == null || photos?.isLoading() == true) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -207,13 +223,42 @@ fun Button.setStaccatoSaveButtonActive(
         }
 }
 
-@BindingAdapter("selectedMemory")
-fun TextView.setSelectedMemory(selectedMemory: MomentMemoryUiModel?) {
-    if (selectedMemory == null) {
+@BindingAdapter(
+    value = ["staccatoTitle", "address", "visitedAt", "photos"],
+)
+fun Button.setStaccatoUpdateButtonActive(
+    title: String?,
+    address: String?,
+    visitedAt: LocalDateTime?,
+    photos: AttachedPhotosUiModel?,
+) {
+    isEnabled =
+        if (title.isNullOrBlank() || address == null || visitedAt == null || photos?.isLoading() == true) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
+@BindingAdapter(value = ["setSelectedMemory", "setMemoryCandidates"])
+fun TextView.setSelectedMemory(
+    selectedMemory: MemoryCandidate?,
+    memoryCandidates: MemoryCandidates?,
+) {
+    if (memoryCandidates?.memoryCandidate?.isEmpty() == true) {
+        text = resources.getString(R.string.visit_creation_no_memory_hint)
+        setTextColor(resources.getColor(R.color.gray3, null))
+        isClickable = false
+        isFocusable = false
+    } else if (selectedMemory == null) {
         text = resources.getString(R.string.visit_creation_memory_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
+        isClickable = true
+        isFocusable = true
     } else {
-        text = selectedMemory.title
+        text = selectedMemory.memoryTitle
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
 }
@@ -222,7 +267,7 @@ fun TextView.setSelectedMemory(selectedMemory: MomentMemoryUiModel?) {
     value = ["selectedMemory", "visitedAt"],
 )
 fun Button.setVisitUpdateButtonActive(
-    memory: MomentMemoryUiModel?,
+    memory: MemoryCandidate?,
     visitedAt: LocalDate?,
 ) {
     isEnabled =
@@ -353,6 +398,11 @@ fun Button.setEnabled(isUpdateCompleted: Boolean?) {
     isEnabled = !(isUpdateCompleted ?: true)
 }
 
+@BindingAdapter("setLoginEnabled")
+fun Button.setLoginEnabled(nickName: String?) {
+    isEnabled = !nickName.isNullOrEmpty()
+}
+
 @BindingAdapter(value = ["currentPhotoNumbers", "maxPhotoNumbers"])
 fun TextView.setPhotoNumbers(
     currentPhotoNumbers: Int,
@@ -370,4 +420,16 @@ fun ImageView.setSelectedState(selected: Boolean) {
 @BindingAdapter("setImageResource")
 fun ImageView.setImageResourceWithId(resId: Int) {
     setImageResource(resId)
+}
+
+@BindingAdapter("setAddress")
+fun TextView.setAddress(address: String?) {
+    text =
+        if (address == null) {
+            setTextColor(resources.getColor(R.color.gray3, null))
+            context.getString(R.string.staccato_loading_address)
+        } else {
+            setTextColor(resources.getColor(R.color.staccato_black, null))
+            address
+        }
 }

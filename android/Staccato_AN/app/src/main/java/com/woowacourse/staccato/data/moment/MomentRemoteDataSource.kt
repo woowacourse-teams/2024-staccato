@@ -1,14 +1,19 @@
 package com.woowacourse.staccato.data.moment
 
+import com.woowacourse.staccato.data.ApiResponseHandler.handleApiResponse
+import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.moment.FeelingRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationRequest
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
+import com.woowacourse.staccato.data.dto.moment.MomentLocationResponse
 import com.woowacourse.staccato.data.dto.moment.MomentResponse
 import com.woowacourse.staccato.data.dto.moment.MomentUpdateRequest
 
 class MomentRemoteDataSource(
     private val momentApiService: MomentApiService,
 ) {
+    suspend fun fetchMoments(): ResponseResult<MomentLocationResponse> = handleApiResponse { momentApiService.getMoments() }
+
     suspend fun fetchMoment(momentId: Long): MomentResponse {
         return momentApiService.getMoment(momentId = momentId)
     }

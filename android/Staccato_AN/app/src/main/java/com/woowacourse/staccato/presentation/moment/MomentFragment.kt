@@ -5,16 +5,14 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.tabs.TabLayoutMediator
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentMomentBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
-import com.woowacourse.staccato.presentation.common.ToolbarHandler
 import com.woowacourse.staccato.presentation.main.MainActivity
-import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.moment.comments.MomentCommentsFragment
-import com.woowacourse.staccato.presentation.moment.detail.MomentDetailFragment
+import com.woowacourse.staccato.presentation.moment.detail.ViewpagePhotoAdapter
 import com.woowacourse.staccato.presentation.moment.feeling.MomentFeelingSelectionFragment
 import com.woowacourse.staccato.presentation.moment.viewmodel.MomentViewModel
 import com.woowacourse.staccato.presentation.moment.viewmodel.MomentViewModelFactory
@@ -23,11 +21,10 @@ import com.woowacourse.staccato.presentation.visitupdate.VisitUpdateActivity
 import kotlin.properties.Delegates
 
 class MomentFragment :
-    BindingFragment<FragmentMomentBinding>(R.layout.fragment_moment), ToolbarHandler {
+    BindingFragment<FragmentMomentBinding>(R.layout.fragment_moment), MomentToolbarHandler {
     private val momentViewModel: MomentViewModel by viewModels { MomentViewModelFactory() }
     private var momentId by Delegates.notNull<Long>()
-    private var memoryId by Delegates.notNull<Long>()
-    private var memoryTitle by Delegates.notNull<String>()
+    private lateinit var pagePhotoAdapter: ViewpagePhotoAdapter
     private val deleteDialog =
         DeleteDialogFragment {
             momentViewModel.deleteMoment(momentId)
@@ -38,12 +35,28 @@ class MomentFragment :
         savedInstanceState: Bundle?,
     ) {
         momentId = arguments?.getLong(MOMENT_ID_KEY) ?: return
-        memoryId = arguments?.getLong(MEMORY_ID_KEY) ?: return
-        memoryTitle = arguments?.getString(MEMORY_TITLE_KEY) ?: return
+        binding.viewModel = momentViewModel
         initToolbarHandler()
+        initViewPagerAdapter()
         loadMomentData()
         observeData()
         createChildFragments(savedInstanceState)
+        observeViewModel()
+    }
+
+    private fun initViewPagerAdapter() {
+        pagePhotoAdapter = ViewpagePhotoAdapter()
+        binding.vpPhotoHorizontal.adapter = pagePhotoAdapter
+        TabLayoutMediator(
+            binding.tabPhotoHorizontal,
+            binding.vpPhotoHorizontal,
+        ) { _, _ -> }.attach()
+    }
+
+    private fun observeViewModel() {
+        momentViewModel.momentDetail.observe(viewLifecycleOwner) { momentDetail ->
+            pagePhotoAdapter.submitList(momentDetail.momentImageUrls)
+        }
     }
 
     private fun loadMomentData() {
@@ -60,7 +73,6 @@ class MomentFragment :
                 }
             val momentCommentsFragment = MomentCommentsFragment().apply { arguments = bundle }
             childFragmentManager.beginTransaction()
-                .replace(R.id.container_moment_detail, MomentDetailFragment())
                 .replace(R.id.container_moment_feeling_selection, momentFeelingSelectionFragment)
                 .replace(R.id.container_moment_comments, momentCommentsFragment)
                 .commit()
@@ -69,7 +81,7 @@ class MomentFragment :
 
     private fun initToolbarHandler() {
         binding.toolbarHandler = this
-        binding.includeMomentToolbar.toolbarDetail.setNavigationOnClickListener {
+        binding.toolbarMoment.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }
@@ -90,7 +102,10 @@ class MomentFragment :
         deleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
     }
 
-    override fun onUpdateClicked() {
+    override fun onUpdateClicked(
+        memoryId: Long,
+        memoryTitle: String,
+    ) {
         val momentUpdateLauncher = (activity as MainActivity).visitUpdateLauncher
         VisitUpdateActivity.startWithResultLauncher(
             visitId = momentId,

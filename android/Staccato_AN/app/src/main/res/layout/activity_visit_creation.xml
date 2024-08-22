@@ -101,11 +101,11 @@
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
-                    android:text="@{viewModel.address}"
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address_title"
+                    bind:setAddress="@{viewModel.address}"
                     tools:text="장소 주소 (고정)" />
 
                 <TextView
@@ -127,7 +127,8 @@
                     app:layout_constraintStart_toEndOf="@id/tv_photo_title"
                     app:layout_constraintTop_toTopOf="@id/tv_photo_title"
                     bind:currentPhotoNumbers="@{viewModel.currentPhotos.size}"
-                    bind:maxPhotoNumbers="@{5}" />
+                    bind:maxPhotoNumbers="@{5}"
+                    tools:text="5/5" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_photo_attach"
@@ -165,14 +166,17 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
+                    android:onClick="@{()->visitCreationHandler.onMemorySelectionClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
-                    android:text="@{viewModel.memory.title}"
+                    android:text="@{viewModel.selectedMemory.memoryTitle}"
                     android:textAppearance="@style/Typography.Body1"
                     android:textColor="@color/staccato_black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title"
+                    bind:setMemoryCandidates="@{viewModel.memoryCandidates}"
+                    bind:setSelectedMemory="@{viewModel.selectedMemory}" />
 
                 <TextView
                     android:id="@+id/tv_visited_at_title"
@@ -218,6 +222,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
                     bind:address="@{viewModel.address}"
+                    bind:photos="@{viewModel.currentPhotos}"
+                    bind:selectedMemory="@{viewModel.selectedMemory}"
                     bind:staccatoTitle="@{viewModel.title}"
                     bind:visitedAt="@{viewModel.nowDateTime}" />
 

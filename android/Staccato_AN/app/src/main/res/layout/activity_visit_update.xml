@@ -116,6 +116,19 @@
                     app:layout_constraintStart_toStartOf="@id/tv_place_address_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address" />
 
+                <TextView
+                    android:id="@+id/tv_photo_title_size"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:textAppearance="@style/Typography.Body4"
+                    android:textColor="@color/gray3"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_photo_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_photo_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_photo_title"
+                    bind:currentPhotoNumbers="@{viewModel.currentPhotos.size}"
+                    bind:maxPhotoNumbers="@{5}"
+                    tools:text="5/5" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_photo_attach"
@@ -155,7 +168,7 @@
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
-                    android:text="@{viewModel.memory.title}"
+                    android:text="@{viewModel.memory.memoryTitle}"
                     android:textAppearance="@style/Typography.Body1"
                     android:textColor="@color/staccato_black"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -207,11 +220,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
-                    bind:setEnabled="@{viewModel.isUpdateCompleted}"
                     bind:address="@{viewModel.visitUpdateDefault.address}"
+                    bind:photos="@{viewModel.currentPhotos}"
                     bind:staccatoTitle="@{viewModel.title}"
-                    bind:visitedAt="@{viewModel.visitUpdateDefault.visitedAt}"
-                    />
+                    bind:visitedAt="@{viewModel.visitUpdateDefault.visitedAt}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
