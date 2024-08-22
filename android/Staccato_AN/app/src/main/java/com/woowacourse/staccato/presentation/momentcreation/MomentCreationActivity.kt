@@ -85,27 +85,6 @@ class MomentCreationActivity :
         return super.dispatchTouchEvent(event)
     }
 
-    private fun isTouchInsideView(
-        event: MotionEvent,
-        view: View,
-    ): Boolean {
-        val rect = android.graphics.Rect()
-        view.getGlobalVisibleRect(rect)
-        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
-    }
-
-    private fun clearFocusAndHideKeyboard(view: View) {
-        view.clearFocus()
-        hideKeyboard(view)
-    }
-
-    private fun hideKeyboard(view: View) {
-        inputManager.hideSoftInputFromWindow(
-            view.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS,
-        )
-    }
-
     override fun initStartView(savedInstanceState: Bundle?) {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         initAddress()
@@ -135,6 +114,27 @@ class MomentCreationActivity :
                 return
             }
         }
+    }
+
+    private fun isTouchInsideView(
+        event: MotionEvent,
+        view: View,
+    ): Boolean {
+        val rect = android.graphics.Rect()
+        view.getGlobalVisibleRect(rect)
+        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
+    }
+
+    private fun clearFocusAndHideKeyboard(view: View) {
+        view.clearFocus()
+        hideKeyboard(view)
+    }
+
+    private fun hideKeyboard(view: View) {
+        inputManager.hideSoftInputFromWindow(
+            view.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
     }
 
     private fun makeSnackBar(message: String): Snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
