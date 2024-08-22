@@ -1,12 +1,15 @@
 package com.woowacourse.staccato.data.memory
 
 import com.woowacourse.staccato.data.ResponseResult
+import com.woowacourse.staccato.data.dto.memory.MemoriesResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryResponse
 import com.woowacourse.staccato.domain.model.NewMemory
 
 interface MemoryDataSource {
     suspend fun getMemory(memoryId: Long): ResponseResult<MemoryResponse>
+
+    suspend fun getMemories(currentDate: String?): ResponseResult<MemoriesResponse>
 
     suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse>
 

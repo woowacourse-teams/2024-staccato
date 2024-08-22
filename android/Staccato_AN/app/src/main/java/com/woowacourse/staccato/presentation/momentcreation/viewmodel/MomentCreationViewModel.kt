@@ -11,13 +11,15 @@ import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.image.ImageDefaultRepository
+import com.woowacourse.staccato.domain.model.MemoryCandidate
+import com.woowacourse.staccato.domain.model.MemoryCandidates
+import com.woowacourse.staccato.domain.repository.MemoryRepository
 import com.woowacourse.staccato.domain.repository.MomentRepository
 import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
 import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
 import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
-import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
@@ -26,6 +28,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 class MomentCreationViewModel(
+    private val memoryRepository: MemoryRepository,
     private val momentRepository: MomentRepository,
     private val imageRepository: ImageDefaultRepository,
 ) : AttachedPhotoHandler, ViewModel() {
@@ -41,8 +44,11 @@ class MomentCreationViewModel(
     private val _pendingPhotos = MutableSingleLiveData<List<AttachedPhotoUiModel>>()
     val pendingPhotos: SingleLiveData<List<AttachedPhotoUiModel>> get() = _pendingPhotos
 
-    private val _memory = MutableLiveData<MomentMemoryUiModel>()
-    val memory: LiveData<MomentMemoryUiModel> get() = _memory
+    private val _selectedMemory = MutableLiveData<MemoryCandidate>()
+    val selectedMemory: LiveData<MemoryCandidate> get() = _selectedMemory
+
+    private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
+    val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
 
     private val _latitude = MutableLiveData<Double>()
     private val latitude: LiveData<Double> get() = _latitude
@@ -50,7 +56,8 @@ class MomentCreationViewModel(
     private val _longitude = MutableLiveData<Double>()
     private val longitude: LiveData<Double> get() = _longitude
 
-    val nowDateTime = MutableLiveData<LocalDateTime>(LocalDateTime.now())
+    private val _nowDateTime = MutableLiveData<LocalDateTime>(LocalDateTime.now())
+    val nowDateTime: LiveData<LocalDateTime> get() = _nowDateTime
 
     private val _createdMomentId = MutableSingleLiveData<Long>()
     val createdMomentId: SingleLiveData<Long> get() = _createdMomentId
@@ -81,6 +88,26 @@ class MomentCreationViewModel(
         }
     }
 
+    fun selectMemory(
+        memoryId: Long,
+        memoryTitle: String,
+    ) {
+        _selectedMemory.value =
+            MemoryCandidate(
+                memoryId = memoryId,
+                memoryTitle = memoryTitle,
+            )
+    }
+
+    fun fetchMemoriesWithDate(localDateTime: LocalDateTime) {
+        viewModelScope.launch {
+            memoryRepository.getMemories(localDateTime.toLocalDate().toString())
+                .onSuccess { memoryCandidates ->
+                    _memoryCandidates.value = memoryCandidates
+                }
+        }
+    }
+
     fun setLocationInformation(
         address: String?,
         location: Location,
@@ -88,17 +115,6 @@ class MomentCreationViewModel(
         _address.postValue(address)
         _latitude.postValue(location.latitude)
         _longitude.postValue(location.longitude)
-    }
-
-    fun initMemoryInfo(
-        memoryId: Long,
-        memoryTitle: String,
-    ) {
-        _memory.value =
-            MomentMemoryUiModel(
-                id = memoryId,
-                title = memoryTitle,
-            )
     }
 
     fun updateSelectedImageUris(newUris: Array<Uri>) {
@@ -149,11 +165,11 @@ class MomentCreationViewModel(
         _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
     }
 
-    fun createMoment(memoryId: Long) =
+    fun createMoment() =
         viewModelScope.launch {
             _isPosting.value = true
             momentRepository.createMoment(
-                memoryId = memoryId,
+                memoryId = selectedMemory.value!!.memoryId,
                 placeName = title.get() ?: "",
                 latitude = latitude.value ?: return@launch,
                 longitude = longitude.value ?: return@launch,

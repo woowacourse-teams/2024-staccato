@@ -1,9 +1,12 @@
 package com.woowacourse.staccato.data.dto.mapper
 
+import com.woowacourse.staccato.data.dto.memory.MemoriesResponse
 import com.woowacourse.staccato.data.dto.memory.MemoryMomentDto
 import com.woowacourse.staccato.data.dto.memory.MemoryRequest
 import com.woowacourse.staccato.data.dto.memory.MemoryResponse
 import com.woowacourse.staccato.domain.model.Memory
+import com.woowacourse.staccato.domain.model.MemoryCandidate
+import com.woowacourse.staccato.domain.model.MemoryCandidates
 import com.woowacourse.staccato.domain.model.MemoryMoment
 import com.woowacourse.staccato.domain.model.NewMemory
 import java.time.LocalDate
@@ -19,6 +22,16 @@ fun MemoryResponse.toDomain() =
         description = description,
         mates = mates.map { it.toDomain() },
         moments = moments.map { it.toDomain() },
+    )
+
+fun MemoriesResponse.toDomain(): MemoryCandidates =
+    MemoryCandidates(
+        this.memories.map {
+            MemoryCandidate(
+                memoryId = it.memoryId,
+                memoryTitle = it.memoryTitle,
+            )
+        },
     )
 
 fun MemoryMomentDto.toDomain() =

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
+import com.woowacourse.staccato.domain.model.MemoryCandidate
 import com.woowacourse.staccato.domain.repository.ImageRepository
 import com.woowacourse.staccato.domain.repository.MomentRepository
 import com.woowacourse.staccato.presentation.common.AttachedPhotoHandler
@@ -18,7 +19,6 @@ import com.woowacourse.staccato.presentation.mapper.toVisitUpdateDefaultUiModel
 import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
 import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotosUiModel.Companion.createPhotosByUrls
-import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 import com.woowacourse.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel
 import com.woowacourse.staccato.presentation.util.convertExcretaFile
 import com.woowacourse.staccato.presentation.visitupdate.model.VisitUpdateDefaultUiModel
@@ -43,8 +43,8 @@ class VisitUpdateViewModel(
     private val _visitUpdateDefault = MutableLiveData<VisitUpdateDefaultUiModel>()
     val visitUpdateDefault: LiveData<VisitUpdateDefaultUiModel> get() = _visitUpdateDefault
 
-    private val _memory = MutableLiveData<MomentMemoryUiModel>()
-    val memory: LiveData<MomentMemoryUiModel> get() = _memory
+    private val _memory = MutableLiveData<MemoryCandidate>()
+    val memory: LiveData<MemoryCandidate> get() = _memory
 
     private val _isUpdateCompleted = MutableLiveData(false)
     val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
@@ -102,9 +102,9 @@ class VisitUpdateViewModel(
         memoryTitle: String,
     ) {
         _memory.value =
-            MomentMemoryUiModel(
-                id = memoryId,
-                title = memoryTitle,
+            MemoryCandidate(
+                memoryId = memoryId,
+                memoryTitle = memoryTitle,
             )
     }
 

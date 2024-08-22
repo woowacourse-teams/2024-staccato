@@ -131,7 +131,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
     private fun navigateToStaccatoCreation() {
         // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
         MomentCreationActivity.startWithResultLauncher(
-            1,
+            0L,
             "임시 추억",
             this,
             visitCreationLauncher,
@@ -194,7 +194,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
                     override fun onStateChanged(
                         bottomSheet: View,
                         newState: Int,
-                    ) { }
+                    ) {
+                    }
 
                     override fun onSlide(
                         bottomSheet: View,
