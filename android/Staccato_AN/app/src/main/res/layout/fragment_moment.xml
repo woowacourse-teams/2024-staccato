@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="toolbarHandler"
@@ -46,6 +49,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,14 +59,76 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/container_moment_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/vp_photo_horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:visibility="@{viewModel.momentDetail.momentImageUrls.isEmpty() ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:layout="@layout/fragment_moment_detail" />
+                    tools:listitem="@layout/item_viewpage_photo" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_photo_horizontal"
+                    android:layout_width="50dp"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#00000000"
+                    android:visibility="@{viewModel.momentDetail.momentImageUrls.size > 1 ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vp_photo_horizontal"
+                    app:tabBackground="@drawable/selector_viewpager_indicator"
+                    app:tabGravity="center"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabIndicatorHeight="0dp" />
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@{viewModel.momentDetail.placeName}"
+                    android:textAppearance="@style/Typography.Title1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tab_photo_horizontal"
+                    tools:text="장소 제목" />
+
+                <TextView
+                    android:id="@+id/tv_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@{viewModel.momentDetail.address}"
+                    android:textAppearance="@style/Typography.Body4"
+                    app:layout_constraintStart_toStartOf="@id/tv_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title"
+                    tools:text="상세 주소" />
+
+                <TextView
+                    android:id="@+id/tv_visited_at"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:textAppearance="@style/Typography.Body2"
+                    app:layout_constraintStart_toStartOf="@id/tv_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail"
+                    bind:visitedAt="@{viewModel.momentDetail.visitedAt}"
+                    tools:text="2024년 7월 15일에 처음 방문했어요!" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider"
+                    style="@style/DividerStyle"
+                    android:layout_marginTop="17dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at" />
+
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_moment_feeling_selection"
@@ -70,7 +136,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/container_moment_detail"
+                    app:layout_constraintTop_toBottomOf="@id/divider"
                     tools:layout="@layout/fragment_moment_feeling_selection" />
 
                 <androidx.fragment.app.FragmentContainerView
