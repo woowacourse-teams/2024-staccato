@@ -47,7 +47,7 @@ public interface CommentControllerDocs {
     })
     ResponseEntity<CommentResponses> readCommentsByMomentId(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "댓글이 속한 순간 식별자", example = "1") @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId);
+            @Parameter(description = "댓글이 속한 순간 식별자", example = "1") @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId);
 
     @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.")
     @ApiResponses(value = {

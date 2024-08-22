@@ -65,31 +65,31 @@ class MomentControllerTest {
                 ),
                 Arguments.of(
                         new MomentRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간 장소의 이름을 입력해주세요."
+                        "스타카토 제목을 입력해주세요."
                 ),
                 Arguments.of(
                         new MomentRequest("  ", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간 장소의 이름을 입력해주세요."
+                        "스타카토 제목을 입력해주세요."
                 ),
                 Arguments.of(
                         new MomentRequest("가".repeat(31), "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간 장소의 이름은 공백 포함 1자 이상 30자 이하로 설정해주세요."
+                        "스타카토 제목은 공백 포함 1자 이상 30자 이하로 설정해주세요."
                 ),
                 Arguments.of(
                         new MomentRequest("placeName", "address", null, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간 장소의 위도를 입력해주세요."
+                        "스타카토의 위도를 입력해주세요."
                 ),
                 Arguments.of(
                         new MomentRequest("placeName", "address", BigDecimal.ONE, null, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간 장소의 경도를 입력해주세요."
+                        "스타카토의 경도를 입력해주세요."
                 ),
                 Arguments.of(
                         new MomentRequest("placeName", null, BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "순간 장소의 주소를 입력해주세요."
+                        "스타카토의 주소를 입력해주세요."
                 ),
                 Arguments.of(
                         new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, null, 1L, List.of("https://example.com/images/namsan_tower.jpg")),
-                        "방문 날짜를 입력해주세요."
+                        "스타카토 날짜를 입력해주세요."
                 )
         );
     }
@@ -223,7 +223,7 @@ class MomentControllerTest {
     @Test
     void failReadMomentById() throws Exception {
         // given
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
         mockMvc.perform(get("/moments/{momentId}", 0))
@@ -278,7 +278,7 @@ class MomentControllerTest {
     void failUpdateMomentById() throws Exception {
         // given
         long momentId = 0L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
         MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
@@ -297,7 +297,7 @@ class MomentControllerTest {
     void failUpdateMomentByPlaceName() throws Exception {
         // given
         long momentId = 1L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 장소의 이름을 입력해주세요.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 제목을 입력해주세요.");
         MomentUpdateRequest updateRequest = new MomentUpdateRequest(null, List.of("https://example1.com.jpg"));
         String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
@@ -329,7 +329,7 @@ class MomentControllerTest {
     void failDeleteMomentById() throws Exception {
         // given
         long momentId = 0L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
         mockMvc.perform(delete("/moments/{momentId}", momentId)

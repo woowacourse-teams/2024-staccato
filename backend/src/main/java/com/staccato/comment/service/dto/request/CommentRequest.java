@@ -14,8 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "댓글 생성 시 요청 형식입니다.")
 public record CommentRequest(
         @Schema(example = "1")
-        @NotNull(message = "순간을 선택해주세요.")
-        @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.")
+        @NotNull(message = "스타카토를 선택해주세요.")
+        @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.")
         Long momentId,
         @Schema(example = "예시 댓글 내용")
         @NotBlank(message = "댓글 내용을 입력해주세요.")

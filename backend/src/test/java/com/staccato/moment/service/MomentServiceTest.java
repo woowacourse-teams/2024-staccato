@@ -175,7 +175,7 @@ class MomentServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> momentService.readMomentById(1L, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 스타카토를 찾을 수 없어요.");
     }
 
     @DisplayName("특정 순간 수정에 성공한다.")
@@ -232,7 +232,7 @@ class MomentServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 스타카토를 찾을 수 없어요.");
     }
 
     @DisplayName("Moment을 삭제하면 이에 포함된 MomentImage와 MomentLog도 모두 삭제된다.")

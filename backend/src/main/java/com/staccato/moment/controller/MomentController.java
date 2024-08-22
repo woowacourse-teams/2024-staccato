@@ -55,7 +55,7 @@ public class MomentController implements MomentControllerDocs {
     @GetMapping("/{momentId}")
     public ResponseEntity<MomentDetailResponse> readMomentById(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId) {
+            @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId) {
         MomentDetailResponse momentDetailResponse = momentService.readMomentById(momentId, member);
         return ResponseEntity.ok().body(momentDetailResponse);
     }
@@ -63,7 +63,7 @@ public class MomentController implements MomentControllerDocs {
     @PutMapping(path = "/{momentId}")
     public ResponseEntity<Void> updateMomentById(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
             @Valid @RequestBody MomentUpdateRequest request
     ) {
         momentService.updateMomentById(momentId, request, member);
@@ -73,7 +73,7 @@ public class MomentController implements MomentControllerDocs {
     @DeleteMapping("/{momentId}")
     public ResponseEntity<Void> deleteMomentById(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId
+            @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId
     ) {
         momentService.deleteMomentById(momentId, member);
         return ResponseEntity.ok().build();
@@ -82,7 +82,7 @@ public class MomentController implements MomentControllerDocs {
     @PostMapping("/{momentId}/feeling")
     public ResponseEntity<Void> updateMomentFeelingById(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
             @Valid @RequestBody FeelingRequest feelingRequest
     ) {
         momentService.updateMomentFeelingById(momentId, member, feelingRequest);

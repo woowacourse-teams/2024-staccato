@@ -65,7 +65,7 @@ class CommentServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> commentService.createComment(commentRequest, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 스타카토를 찾을 수 없어요.");
     }
 
     @DisplayName("권한이 없는 순간에 댓글 생성을 시도하면 예외가 발생한다.")
