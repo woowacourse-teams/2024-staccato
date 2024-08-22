@@ -4,17 +4,17 @@ on:
   pull_request:
     branches: [ "develop-be" ]
 
+permissions: write-all
+
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     defaults:
       run:
         shell: bash
         working-directory: ./backend
-
-    permissions:
-      contents: write-all
 
     steps:
       - uses: actions/checkout@v4
