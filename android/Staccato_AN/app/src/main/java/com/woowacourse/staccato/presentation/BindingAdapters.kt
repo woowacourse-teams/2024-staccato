@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.woowacourse.staccato.R
+import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
 import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
@@ -202,15 +203,16 @@ fun Button.setMemorySaveButtonActive(
 }
 
 @BindingAdapter(
-    value = ["staccatoTitle", "address", "visitedAt"],
+    value = ["staccatoTitle", "address", "visitedAt", "photos"],
 )
 fun Button.setStaccatoSaveButtonActive(
     title: String?,
     address: String?,
     visitedAt: LocalDateTime?,
+    photos: AttachedPhotosUiModel?,
 ) {
     isEnabled =
-        if (title.isNullOrBlank() || address == null || visitedAt == null) {
+        if (title.isNullOrBlank() || address == null || visitedAt == null || photos?.isLoading() == true) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {

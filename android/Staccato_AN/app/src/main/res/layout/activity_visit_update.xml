@@ -221,7 +221,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
                     bind:address="@{viewModel.visitUpdateDefault.address}"
-                    bind:setEnabled="@{viewModel.isUpdateCompleted}"
+                    bind:photos="@{viewModel.currentPhotos}"
                     bind:staccatoTitle="@{viewModel.title}"
                     bind:visitedAt="@{viewModel.visitUpdateDefault.visitedAt}" />
 
