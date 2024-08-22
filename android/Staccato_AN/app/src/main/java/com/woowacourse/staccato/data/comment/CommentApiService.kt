@@ -4,6 +4,7 @@ import com.woowacourse.staccato.data.comment.CommentApiService.Companion.COMMENT
 import com.woowacourse.staccato.data.dto.comment.CommentRequest
 import com.woowacourse.staccato.data.dto.comment.CommentUpdateRequest
 import com.woowacourse.staccato.data.dto.comment.CommentsResponse
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -16,23 +17,23 @@ interface CommentApiService {
     @GET(COMMENTS_PATH)
     suspend fun getComments(
         @Query("momentId") momentId: Long,
-    ): CommentsResponse
+    ): Response<CommentsResponse>
 
     @POST(COMMENTS_PATH)
     suspend fun postComments(
         @Body commentRequest: CommentRequest,
-    )
+    ): Response<Unit>
 
     @PUT(COMMENTS_PATH_WITH_ID)
     suspend fun putComment(
         @Path("commentId") commentId: Long,
         @Body commentUpdateRequest: CommentUpdateRequest,
-    )
+    ): Response<Unit>
 
     @DELETE(COMMENTS_PATH_WITH_ID)
     suspend fun deleteComment(
         @Path("commentId") commentId: Long,
-    )
+    ): Response<Unit>
 
     companion object {
         private const val COMMENTS_PATH = "/comments"
