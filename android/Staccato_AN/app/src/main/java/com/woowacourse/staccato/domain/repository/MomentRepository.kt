@@ -14,8 +14,8 @@ interface MomentRepository {
     suspend fun createMoment(
         memoryId: Long,
         placeName: String,
-        latitude: String,
-        longitude: String,
+        latitude: Double,
+        longitude: Double,
         address: String,
         visitedAt: LocalDateTime,
         momentImageUrls: List<String>,
