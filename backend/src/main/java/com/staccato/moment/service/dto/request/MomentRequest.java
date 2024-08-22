@@ -21,14 +21,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "스타카토 생성 시 요청 형식입니다. 단, 멀티파트로 보내는 사진 파일은 여기에 포함되지 않습니다.")
 public record MomentRequest(
-        @Schema(example = "재밌었던 런던 박물관에서의 기억")
+        @Schema(example = "런던 박물관")
         @NotBlank(message = "스타카토 제목을 입력해주세요.")
         @Size(max = 30, message = "스타카토 제목은 공백 포함 30자 이하로 설정해주세요.")
-        String staccatoTitle,
-        @Schema(example = "Great Russell St, London WC1B 3DG")
-        @NotNull(message = "장소 이름을 입력해주세요.")
         String placeName,
-        @Schema(example = "British Museum")
+        @Schema(example = "Great Russell St, London WC1B 3DG")
         @NotNull(message = "스타카토의 주소를 입력해주세요.")
         String address,
         @Schema(example = "51.51978412729915")
@@ -51,15 +48,14 @@ public record MomentRequest(
         List<String> momentImageUrls
 ) {
     public MomentRequest {
-        if (Objects.nonNull(staccatoTitle)) {
-            staccatoTitle = staccatoTitle.trim();
+        if (Objects.nonNull(placeName)) {
+            placeName = placeName.trim();
         }
     }
 
     public Moment toMoment(Memory memory) {
         return Moment.builder()
                 .visitedAt(visitedAt)
-                .title(staccatoTitle)
                 .placeName(placeName)
                 .latitude(latitude)
                 .longitude(longitude)

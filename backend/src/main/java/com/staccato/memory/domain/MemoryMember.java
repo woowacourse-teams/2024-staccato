@@ -37,6 +37,7 @@ public class MemoryMember extends BaseEntity {
     public MemoryMember(@NonNull Member member, @NonNull Memory memory) {
         this.member = member;
         this.memory = memory;
+        memory.addMemoryMember(this);
     }
 
     public boolean isMember(Member member) {

@@ -12,11 +12,6 @@ public class LogForm {
             "\"processingTimeMs\": \"{}\"\n" +
             "}";
 
-    public static final String TRACE_LOGGING_FORM = "\n{\n" +
-            INDENT + "\"Invoked Class\": \"{}\"" + DELIMITER +
-            "\"Invoked Method\": \"{}\"\n" +
-            "}";
-
     public static final String LOGIN_MEMBER_FORM = "\n{\n" +
             INDENT + "\"loginMemberId\": \"{}\"" + DELIMITER +
             "\"loginMemberNickname\": \"{}\"\n" +
@@ -34,6 +29,5 @@ public class LogForm {
     public static final String ERROR_LOGGING_FORM = "\n{\n" +
             INDENT + "\"exceptionResponse\": \"{}\"" + DELIMITER +
             "\"exceptionMessage\": \"{}\"\n" +
-            "\"exceptionStackTrace\": \"{}\"\n" +
             "}";
 }

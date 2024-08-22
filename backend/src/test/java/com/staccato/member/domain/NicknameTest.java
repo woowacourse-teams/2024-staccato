@@ -1,12 +1,13 @@
 package com.staccato.member.domain;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import com.staccato.exception.StaccatoException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import com.staccato.exception.StaccatoException;
 
 class NicknameTest {
     @DisplayName("유효한 닉네임을 생성한다.")

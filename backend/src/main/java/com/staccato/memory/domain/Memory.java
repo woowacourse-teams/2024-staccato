@@ -52,6 +52,10 @@ public class Memory extends BaseEntity {
         this.term = new Term(startAt, endAt);
     }
 
+    public void addMemoryMember(MemoryMember memoryMember) {
+        memoryMembers.add(memoryMember);
+    }
+
     public void addMemoryMember(Member member) {
         MemoryMember memoryMember = MemoryMember.builder()
                 .memory(this)

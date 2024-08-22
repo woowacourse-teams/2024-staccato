@@ -1,14 +1,16 @@
 package com.staccato.memory.domain;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import com.staccato.exception.StaccatoException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import com.staccato.exception.StaccatoException;
 
 class TermTest {
     @DisplayName("끝 날짜는 시작 날짜보다 앞설 수 없다.")
@@ -54,7 +56,7 @@ class TermTest {
     void cannotCreateTermByNoStartAt() {
         assertThatThrownBy(() -> new Term(null, LocalDate.now()))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("추억의 시작 날짜와 끝 날짜는 함께 입력되거나, 함께 비워져 있어야 합니다.");
+                .hasMessage("추억 시작 날짜와 끝 날짜를 모두 입력해주세요.");
     }
 
     @DisplayName("시작 날짜는 있는데, 끝 날짜가 누락되면 예외를 발생한다.")
@@ -62,6 +64,6 @@ class TermTest {
     void cannotCreateTermByNoEndAt() {
         assertThatThrownBy(() -> new Term(LocalDate.now(), null))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("추억의 시작 날짜와 끝 날짜는 함께 입력되거나, 함께 비워져 있어야 합니다.");
+                .hasMessage("추억 시작 날짜와 끝 날짜를 모두 입력해주세요.");
     }
 }

@@ -2,14 +2,18 @@ package com.staccato.moment.controller.docs;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
+import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -67,26 +71,18 @@ public interface MomentControllerDocs {
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
-                    (1) 수정하려는 스타카토가 존재하지 않을 때
+                    (1) 조회하려는 스타카토가 존재하지 않을 때
                                         
                     (2) Path Variable 형식이 잘못되었을 때
                                         
-                    (3) 필수 값(사진을 제외한 모든 값)이 누락되었을 때
-                                        
-                    (4) 존재하지 않는 memoryId일 때
-                                        
-                    (5) 올바르지 않은 날짜 형식일 때
-                                        
-                    (6) 사진이 5장을 초과했을 때
-                                        
-                    (7) 스타카토 날짜가 추억 기간에 포함되지 않을 때
+                    (3) 사진의 총 갯수가 5장을 초과하였을 때
                     """,
                     responseCode = "400")
     })
     ResponseEntity<Void> updateMomentById(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "스타카토 ID", example = "1") @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
-            @Parameter(required = true) @Valid MomentRequest request);
+            @Parameter(required = true) @Valid MomentUpdateRequest request);
 
     @Operation(summary = "스타카토 삭제", description = "스타카토를 삭제합니다.")
     @ApiResponses(value = {

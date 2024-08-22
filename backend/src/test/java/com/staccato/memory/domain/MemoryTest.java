@@ -1,17 +1,19 @@
 package com.staccato.memory.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.moment.domain.Moment;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MemoryTest {
     @DisplayName("추억 생성 시 제목에는 앞뒤 공백이 잘린다.")
@@ -43,7 +45,7 @@ class MemoryTest {
 
     @DisplayName("주어진 문자열과 제목이 같으면 거짓을 반환한다.")
     @Test
-    void isNotSameTitle() {
+    void isNotSameTitle(){
         // given
         String title = "title";
         Memory memory = Memory.builder().title(title).build();

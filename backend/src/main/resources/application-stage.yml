@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: prod
+      on-profile: stage
   application:
     name: staccato
   sql:
@@ -19,7 +19,7 @@ spring:
       hibernate:
         format_sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
   servlet:
@@ -29,8 +29,6 @@ spring:
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
-  api-docs:
-    enabled: false
 security:
   jwt:
     token:
@@ -41,14 +39,14 @@ security:
 cloud:
   aws:
     s3:
-      bucket: ${AWS_S3_BUCKET}
-      endpoint: ${AWS_S3_ENDPOINT}
+      bucket: techcourse-project-2024
+      endpoint: https://techcourse-project-2024.s3.ap-northeast-2.amazonaws.com
     cloudfront:
-      endpoint: ${AWS_CLOUDFRONT_ENDPOINT}
+      endpoint: https://d25aribbn0gp8k.cloudfront.net
     region:
-      static: ${AWS_REGION_STATIC}
+      static: ap-northeast-2
     stack:
       auto: false
 image:
   folder:
-    name: image-prod/
+    name: image/

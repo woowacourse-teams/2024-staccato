@@ -1,6 +1,5 @@
 package com.staccato.comment.service;
 
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
-import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
@@ -21,7 +19,6 @@ import com.staccato.moment.repository.MomentRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Trace
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -41,8 +38,7 @@ public class CommentService {
     public CommentResponses readAllCommentsByMomentId(Member member, Long momentId) {
         Moment moment = getMoment(momentId);
         validateOwner(moment.getMemory(), member);
-        List<Comment> comments = commentRepository.findAllByMomentId(momentId);
-        sortByCreatedAtAscending(comments);
+        List<Comment> comments = commentRepository.findAllByMomentIdOrderByCreatedAtAsc(momentId);
 
         return CommentResponses.from(comments);
     }
@@ -68,10 +64,6 @@ public class CommentService {
         if (memory.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
-    }
-
-    private void sortByCreatedAtAscending(List<Comment> comments) {
-        comments.sort(Comparator.comparing(Comment::getCreatedAt));
     }
 
     private void validateCommentOwner(Comment comment, Member member) {

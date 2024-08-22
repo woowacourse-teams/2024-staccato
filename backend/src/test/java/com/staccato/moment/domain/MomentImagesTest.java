@@ -1,37 +1,21 @@
 package com.staccato.moment.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.memory.domain.Memory;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 class MomentImagesTest {
-    @DisplayName("생성하려는 사진의 갯수가 0장 이상, 5장 이하이면 생성에 성공한다.")
-    @ParameterizedTest
-    @ValueSource(ints = {0, 5})
-    void addMomentImages(int size) {
-        // given
-        List<String> images = new ArrayList<>();
-        for (int count = 1; count <= size; count++) {
-            images.add("image" + count + ".jpg");
-        }
-
-        // when & then
-        assertThatNoException().isThrownBy(() -> new MomentImages(images));
-    }
-
     @DisplayName("생성하려는 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
     @Test
     void failAddMomentImages() {

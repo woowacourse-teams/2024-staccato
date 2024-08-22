@@ -1,12 +1,11 @@
 package com.staccato.memory.service;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.staccato.comment.repository.CommentRepository;
-import com.staccato.config.log.annotation.Trace;
+
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
@@ -22,9 +21,9 @@ import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
+
 import lombok.RequiredArgsConstructor;
 
-@Trace
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -32,21 +31,18 @@ public class MemoryService {
     private final MemoryRepository memoryRepository;
     private final MemoryMemberRepository memoryMemberRepository;
     private final MomentRepository momentRepository;
-    private final CommentRepository commentRepository;
 
     @Transactional
     public MemoryIdResponse createMemory(MemoryRequest memoryRequest, Member member) {
+        validateMemoryTitle(memoryRequest.memoryTitle());
         Memory memory = memoryRequest.toMemory();
-        validateMemoryTitle(memory, member);
         memory.addMemoryMember(member);
         memoryRepository.save(memory);
         return new MemoryIdResponse(memory.getId());
     }
 
     public MemoryResponses readAllMemories(Member member) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdOrderByMemory(member.getId());
-        sortByCreatedAtDescending(memoryMembers);
-
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId());
         return MemoryResponses.from(
                 memoryMembers.stream()
                         .map(MemoryMember::getMemory)
@@ -55,18 +51,12 @@ public class MemoryService {
     }
 
     public MemoryNameResponses readAllMemoriesIncludingDate(Member member, LocalDate currentDate) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndIncludingDate(member.getId(), currentDate);
-        sortByCreatedAtDescending(memoryMembers);
-
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndIncludingDateOrderByCreatedAtDesc(member.getId(), currentDate);
         return MemoryNameResponses.from(
                 memoryMembers.stream()
                         .map(MemoryMember::getMemory)
                         .toList()
         );
-    }
-
-    private void sortByCreatedAtDescending(List<MemoryMember> memoryMembers) {
-        memoryMembers.sort(Comparator.comparing(MemoryMember::getCreatedAt).reversed());
     }
 
     public MemoryDetailResponse readMemoryById(long memoryId, Member member) {
@@ -93,10 +83,10 @@ public class MemoryService {
     public void updateMemory(MemoryRequest memoryRequest, Long memoryId, Member member) {
         Memory originMemory = getMemoryById(memoryId);
         validateOwner(originMemory, member);
-        Memory updatedMemory = memoryRequest.toMemory();
         if (originMemory.isNotSameTitle(memoryRequest.memoryTitle())) {
-            validateMemoryTitle(updatedMemory, member);
+            validateMemoryTitle(memoryRequest.memoryTitle());
         }
+        Memory updatedMemory = memoryRequest.toMemory();
         List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAt(memoryId);
         originMemory.update(updatedMemory, moments);
     }
@@ -106,8 +96,8 @@ public class MemoryService {
                 .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
     }
 
-    private void validateMemoryTitle(Memory memory, Member member) {
-        if (memoryMemberRepository.existsByMemberAndMemoryTitle(member, memory.getTitle())) {
+    private void validateMemoryTitle(String title) {
+        if (memoryRepository.existsByTitle(title)) {
             throw new StaccatoException("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
         }
     }
@@ -116,8 +106,6 @@ public class MemoryService {
     public void deleteMemory(long memoryId, Member member) {
         memoryRepository.findById(memoryId).ifPresent(memory -> {
             validateOwner(memory, member);
-            momentRepository.findAllByMemoryId(memoryId)
-                    .forEach(moment -> commentRepository.deleteAllByMomentId(moment.getId()));
             momentRepository.deleteAllByMemoryId(memoryId);
             memoryRepository.deleteById(memoryId);
         });

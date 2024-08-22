@@ -28,7 +28,7 @@ public interface MemoryControllerDocs {
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
-                    (1) 필수 값(추억 제목)이 누락되었을 때
+                    (1) 필수 값(추억 제목, 기간)이 누락되었을 때
                                         
                     (2) 날짜 형식(yyyy-MM-dd)이 잘못되었을 때
                                         
@@ -36,8 +36,8 @@ public interface MemoryControllerDocs {
                                         
                     (4) 내용이 공백 포함 500자를 초과했을 때
                                         
-                    (5) 기간 설정이 잘못되었을 때 (시작 날짜와 끝날짜 중 하나만 설정할 수 없음)
-                                        
+                    (5) 기간 설정이 잘못되었을 때
+                    
                     (6) 이미 존재하는 추억 이름일 때
                     """,
                     responseCode = "400")
@@ -81,7 +81,7 @@ public interface MemoryControllerDocs {
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
-                    (1) 필수 값(추억 제목)이 누락되었을 때
+                    (1) 필수 값(추억 제목, 기간)이 누락되었을 때
                                         
                     (2) 날짜 형식(yyyy-MM-dd)이 잘못되었을 때
                                         
