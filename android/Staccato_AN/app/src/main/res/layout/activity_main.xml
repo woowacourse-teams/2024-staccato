@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="handler"
+            type="com.woowacourse.staccato.presentation.main.MainHandler" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -18,44 +21,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_container_view_map"
+                android:name="com.woowacourse.staccato.presentation.maps.MapsFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/img_map"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
-                android:id="@+id/btn_main_timeline"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="30dp"
-                android:text="타임라인 보기"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <ImageView
-                android:id="@+id/btn_main_visit_creation"
-                android:layout_width="50dp"
-                android:layout_height="80dp"
-                android:layout_marginEnd="150dp"
-                android:layout_marginBottom="100dp"
-                android:src="@drawable/icon_pin"
-                app:layout_constraintBottom_toTopOf="@id/btn_main_memory_creation"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <ImageView
-                android:id="@+id/btn_main_memory_creation"
+                android:id="@+id/iv_main_creation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="85dp"
                 android:clickable="true"
                 android:focusable="true"
+                android:onClick="@{() -> handler.onCreationClicked()}"
+                android:paddingTop="10dp"
                 android:src="@drawable/icon_floating_button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />

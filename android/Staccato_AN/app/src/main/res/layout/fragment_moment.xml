@@ -8,7 +8,11 @@
 
         <variable
             name="toolbarHandler"
-            type="com.woowacourse.staccato.presentation.common.ToolbarHandler" />
+            type="com.woowacourse.staccato.presentation.moment.MomentToolbarHandler" />
+
+        <variable
+            name="viewModel"
+            type="com.woowacourse.staccato.presentation.moment.viewmodel.MomentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,13 +31,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <include
-                    android:id="@+id/include_moment_toolbar"
-                    layout="@layout/toolbar_detail"
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar_moment"
+                    style="@style/DefaultToolbarStyle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:toolbarHandler="@{toolbarHandler}" />
+                    android:paddingEnd="8dp">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_detail_delete"
+                        style="@style/ToolbarMenuStyle"
+                        android:onClick="@{() -> toolbarHandler.onDeleteClicked()}"
+                        android:text="@string/all_delete" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_detail_update"
+                        style="@style/ToolbarMenuStyle"
+                        android:onClick="@{() -> toolbarHandler.onUpdateClicked(viewModel.momentDetail.memoryId, viewModel.momentDetail.memoryTitle)}"
+                        android:text="@string/all_update" />
+
+                </com.google.android.material.appbar.MaterialToolbar>
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_moment_detail"
@@ -41,7 +59,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/include_moment_toolbar"
+                    app:layout_constraintTop_toBottomOf="@id/toolbar_moment"
                     tools:layout="@layout/fragment_moment_detail"/>
 
                 <androidx.fragment.app.FragmentContainerView
