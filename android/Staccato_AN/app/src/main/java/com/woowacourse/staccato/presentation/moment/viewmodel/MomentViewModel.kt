@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.presentation.moment.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -49,7 +48,6 @@ class MomentViewModel(private val momentRepository: MomentRepository) : ViewMode
                 _feeling.value = moment.feeling
                 _comments.value = moment.comments.map { it.toCommentUiModel() }
             }.onFailure {
-                Log.d("ㅌㅅㅌ moment", "error : ${it.message}")
                 _isError.postValue(true)
             }
         }

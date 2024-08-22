@@ -55,7 +55,9 @@ class MemoryCreationActivity :
     }
 
     override fun onPeriodSelectionClicked() {
-        dateRangePicker.show(supportFragmentManager, dateRangePicker.toString())
+        if (!dateRangePicker.isAdded) {
+            dateRangePicker.show(supportFragmentManager, dateRangePicker.toString())
+        }
     }
 
     override fun onSaveClicked() {

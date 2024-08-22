@@ -73,7 +73,6 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
                     android:ellipsize="end"
-                    android:maxLines="1"
                     android:text="@{viewModel.memory.title}"
                     android:textAppearance="@style/Typography.Title1"
                     app:layout_constraintEnd_toEndOf="parent"
