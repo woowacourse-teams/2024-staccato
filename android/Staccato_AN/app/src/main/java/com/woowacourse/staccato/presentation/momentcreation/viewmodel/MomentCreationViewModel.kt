@@ -1,6 +1,7 @@
 package com.woowacourse.staccato.presentation.momentcreation.viewmodel
 
 import android.content.Context
+import android.location.Location
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
@@ -30,8 +31,8 @@ class MomentCreationViewModel(
 ) : AttachedPhotoHandler, ViewModel() {
     val title = ObservableField<String>()
 
-    private val _address = MutableLiveData<String>("서울특별시 강남구 테헤란로 411")
-    val address: LiveData<String> get() = _address
+    private val _address = MutableLiveData<String?>(null)
+    val address: LiveData<String?> get() = _address
 
     private val _currentPhotos =
         MutableLiveData<AttachedPhotosUiModel>(AttachedPhotosUiModel(emptyList()))
@@ -43,11 +44,11 @@ class MomentCreationViewModel(
     private val _memory = MutableLiveData<MomentMemoryUiModel>()
     val memory: LiveData<MomentMemoryUiModel> get() = _memory
 
-    private val _latitude = MutableLiveData("32.123456")
-    private val latitude: LiveData<String> get() = _latitude
+    private val _latitude = MutableLiveData<Double>()
+    private val latitude: LiveData<Double> get() = _latitude
 
-    private val _longitude = MutableLiveData<String>("32.123456")
-    private val longitude: LiveData<String> get() = _longitude
+    private val _longitude = MutableLiveData<Double>()
+    private val longitude: LiveData<Double> get() = _longitude
 
     val nowDateTime = MutableLiveData<LocalDateTime>(LocalDateTime.now())
 
@@ -78,6 +79,15 @@ class MomentCreationViewModel(
         if (photoJobs[deletedPhoto.uri.toString()]?.isActive == true) {
             photoJobs[deletedPhoto.uri.toString()]?.cancel()
         }
+    }
+
+    fun setLocationInformation(
+        address: String?,
+        location: Location,
+    ) {
+        _address.postValue(address)
+        _latitude.postValue(location.latitude)
+        _longitude.postValue(location.longitude)
     }
 
     fun initMemoryInfo(
@@ -145,8 +155,8 @@ class MomentCreationViewModel(
             momentRepository.createMoment(
                 memoryId = memoryId,
                 placeName = title.get() ?: "",
-                latitude = latitude.value ?: "",
-                longitude = longitude.value ?: "",
+                latitude = latitude.value ?: return@launch,
+                longitude = longitude.value ?: return@launch,
                 address = address.value ?: "",
                 visitedAt = nowDateTime.value ?: LocalDateTime.now(),
                 momentImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },

@@ -29,8 +29,8 @@ class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSour
     override suspend fun createMoment(
         memoryId: Long,
         placeName: String,
-        latitude: String,
-        longitude: String,
+        latitude: Double,
+        longitude: Double,
         address: String,
         visitedAt: LocalDateTime,
         momentImageUrls: List<String>,

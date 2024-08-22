@@ -390,3 +390,15 @@ fun ImageView.setSelectedState(selected: Boolean) {
 fun ImageView.setImageResourceWithId(resId: Int) {
     setImageResource(resId)
 }
+
+@BindingAdapter("setAddress")
+fun TextView.setAddress(address: String?) {
+    text =
+        if (address == null) {
+            setTextColor(resources.getColor(R.color.gray3, null))
+            context.getString(R.string.staccato_loading_address)
+        } else {
+            setTextColor(resources.getColor(R.color.staccato_black, null))
+            address
+        }
+}
