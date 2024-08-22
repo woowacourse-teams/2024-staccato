@@ -121,6 +121,8 @@ dependencies {
 
     // Google Map
     implementation(libs.play.services.maps)
+
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 }
 
 secrets {

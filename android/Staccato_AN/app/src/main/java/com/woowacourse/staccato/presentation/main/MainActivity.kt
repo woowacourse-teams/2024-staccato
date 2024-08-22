@@ -1,6 +1,9 @@
 package com.woowacourse.staccato.presentation.main
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.PopupMenu
@@ -8,10 +11,13 @@ import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
@@ -33,6 +39,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val sharedViewModel: SharedViewModel by viewModels()
 
     private val memoryCreationLauncher =
@@ -97,6 +104,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
         setUpBottomSheetStateListener()
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
     override fun onCreationClicked() {
@@ -122,13 +130,34 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
     }
 
     private fun navigateToStaccatoCreation() {
-        // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
-        MomentCreationActivity.startWithResultLauncher(
-            1,
-            "임시 추억",
-            this,
-            visitCreationLauncher,
-        )
+        val isAccessFineLocationGranted =
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            ) == PackageManager.PERMISSION_GRANTED
+
+        val isAccessCoarseLocationGranted =
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+            ) == PackageManager.PERMISSION_GRANTED
+
+        if (isAccessFineLocationGranted || isAccessCoarseLocationGranted) {
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                // TODO: 역지오코딩, 위경도 올바른지 확인하기
+                Log.d("hye", "latitude : ${location.latitude}, longitude: ${location.longitude}")
+                MomentCreationActivity.startWithResultLauncher(
+                    1,
+                    "임시 추억",
+                    this,
+                    visitCreationLauncher,
+                )
+                // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
+            }
+            return
+        } else {
+            // requestPermission.launch(locationPermissions)
+        }
     }
 
     private fun navigateToMemoryCreation() {
