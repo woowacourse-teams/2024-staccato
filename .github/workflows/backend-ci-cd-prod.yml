@@ -2,8 +2,7 @@ name: Backend CI/CD prod
 
 on:
   push:
-    branches: [ "main" ]
-
+    branches: [ "main", "develop" ]
 jobs:
   ci:
     runs-on: ubuntu-latest
