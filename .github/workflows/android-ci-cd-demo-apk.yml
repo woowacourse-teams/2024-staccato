@@ -75,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-debug.apk
-          path: android/Staccato_AN/app/build/outputs/apk/debug/app-debug.apk
+          path: android/Staccato_AN/app/build/outputs/apk/debug/
           if-no-files-found: error
 
       - name: Upload Artifact to Firebase App Distribution
