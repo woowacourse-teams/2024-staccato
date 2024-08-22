@@ -9,8 +9,10 @@ import androidx.navigation.fragment.findNavController
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentTimelineBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
+import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.main.SharedViewModel
 import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
+import com.woowacourse.staccato.presentation.memorycreation.MemoryCreationActivity
 import com.woowacourse.staccato.presentation.timeline.adapter.TimelineAdapter
 import com.woowacourse.staccato.presentation.timeline.model.TimelineUiModel
 import com.woowacourse.staccato.presentation.timeline.viewmodel.TimelineViewModel
@@ -27,6 +29,7 @@ class TimelineFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
+        binding.handler = this
         setUpAdapter()
         setUpObserving()
     }
@@ -34,6 +37,14 @@ class TimelineFragment :
     override fun onMemoryClicked(memoryId: Long) {
         val bundle: Bundle = bundleOf(MEMORY_ID_KEY to memoryId)
         navigateToMemory(bundle)
+    }
+
+    override fun onMemoryCreationClicked() {
+        val memoryCreationLauncher = (activity as MainActivity).memoryCreationLauncher
+        MemoryCreationActivity.startWithResultLauncher(
+            requireActivity(),
+            memoryCreationLauncher,
+        )
     }
 
     private fun navigateToMemory(bundle: Bundle) {
@@ -67,9 +78,11 @@ class TimelineFragment :
         if (timeline.isEmpty()) {
             binding.ivTimelineEmpty.visibility = View.VISIBLE
             binding.tvTimelineEmpty.visibility = View.VISIBLE
+            binding.btnTimelineCreateMemory.visibility = View.VISIBLE
         } else {
             binding.ivTimelineEmpty.visibility = View.GONE
             binding.tvTimelineEmpty.visibility = View.GONE
+            binding.btnTimelineCreateMemory.visibility = View.GONE
         }
     }
 }

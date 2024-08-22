@@ -8,6 +8,10 @@
         <variable
             name="viewModel"
             type="com.woowacourse.staccato.presentation.timeline.viewmodel.TimelineViewModel" />
+
+        <variable
+            name="handler"
+            type="com.woowacourse.staccato.presentation.timeline.TimelineHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,10 +53,9 @@
             android:contentDescription="@string/all_image_content_description"
             android:paddingBottom="10dp"
             android:src="@drawable/staccato_character"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_timeline_empty"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tv_timeline_empty"
@@ -61,10 +64,22 @@
             android:gravity="center"
             android:text="@string/timeline_empty"
             android:textAppearance="@style/Typography.Body2"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_timeline_empty"
+            app:layout_constraintTop_toTopOf="@id/rv_timeline"
             tools:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_timeline_create_memory"
+            style="@style/ButtonStyle.Save.Active"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="36dp"
+            android:onClick="@{() -> handler.onMemoryCreationClicked()}"
+            android:text="추억 생성하기"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_timeline_empty" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
