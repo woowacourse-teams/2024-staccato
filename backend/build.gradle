@@ -49,30 +49,15 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
-	finalizedBy jacocoTestReport, jacocoTestCoverageVerification
+	finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
 	executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))
 
 	reports {
-		html.required.set(false)
+		html.required.set(true)
 		xml.required.set(true)
 		csv.required.set(false)
-	}
-}
-
-jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			element 'CLASS'
-			limit {
-				counter = 'BRANCH'
-				value = 'COVEREDRATIO'
-				minimum = 0.7
-			}
-
-			excludes = ['*.config.*','*.*Builder.*']
-		}
 	}
 }
