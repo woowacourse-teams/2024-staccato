@@ -219,8 +219,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
                     bind:address="@{viewModel.address}"
-                    bind:staccatoTitle="@{viewModel.title}"
                     bind:photos="@{viewModel.currentPhotos}"
+                    bind:staccatoTitle="@{viewModel.title}"
                     bind:visitedAt="@{viewModel.nowDateTime}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
