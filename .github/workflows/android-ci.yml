@@ -40,27 +40,22 @@ jobs:
       - name: Create local.properties
         run: |
           touch local.properties
-        shell: bash
 
       - name: Set Base Url in local.properties
         run: |
           echo "base_url=\"$BASE_URL\"" >> local.properties
-        shell: bash
 
       - name: Create google-services.json
         run: |
           echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
-        shell: bash
 
       - name: Create secrets.properties
         run: |
           echo $SECRETS_PROPERTIES > secrets.properties
-        shell: bash
 
       - name: Create local.defaults.properties
         run: |
           echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
-        shell: bash
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
