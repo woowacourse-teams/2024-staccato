@@ -78,14 +78,14 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-release.apk
-          path: app/release/app-release.apk
+          path: android/Staccato_AN/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
 
       - name: Upload Release AAB
         uses: actions/upload-artifact@v3
         with:
           name: app-release.aab
-          path: app/release/app-release.aab
+          path: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
 
       - name: Upload On Google Play
@@ -93,5 +93,5 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: com.woowacourse.staccato
-          releaseFiles: app/release/app-release.aab
+          releaseFiles: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
           track: internal
