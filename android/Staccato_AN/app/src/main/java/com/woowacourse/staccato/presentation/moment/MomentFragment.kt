@@ -11,7 +11,7 @@ import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
 import com.woowacourse.staccato.presentation.main.MainActivity
 import com.woowacourse.staccato.presentation.moment.comments.MomentCommentsFragment
-import com.woowacourse.staccato.presentation.moment.detail.MomentDetailFragment
+import com.woowacourse.staccato.presentation.moment.detail.ViewpagePhotoAdapter
 import com.woowacourse.staccato.presentation.moment.feeling.MomentFeelingSelectionFragment
 import com.woowacourse.staccato.presentation.moment.viewmodel.MomentViewModel
 import com.woowacourse.staccato.presentation.moment.viewmodel.MomentViewModelFactory
@@ -23,6 +23,7 @@ class MomentFragment :
     BindingFragment<FragmentMomentBinding>(R.layout.fragment_moment), MomentToolbarHandler {
     private val momentViewModel: MomentViewModel by viewModels { MomentViewModelFactory() }
     private var momentId by Delegates.notNull<Long>()
+    private lateinit var pagePhotoAdapter: ViewpagePhotoAdapter
     private val deleteDialog =
         DeleteDialogFragment {
             momentViewModel.deleteMoment(momentId)
@@ -32,12 +33,25 @@ class MomentFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        binding.viewModel = momentViewModel
         momentId = arguments?.getLong(MOMENT_ID_KEY) ?: return
+        initAdapter()
         initToolbarHandler()
         loadMomentData()
         observeData()
         createChildFragments(savedInstanceState)
+        observeViewModel()
+    }
+
+    private fun initAdapter() {
+        binding.viewModel = momentViewModel
+        pagePhotoAdapter = ViewpagePhotoAdapter()
+        binding.pagerPhotoHorizontal.adapter = pagePhotoAdapter
+    }
+
+    private fun observeViewModel() {
+        momentViewModel.momentDetail.observe(viewLifecycleOwner) { momentDetail ->
+            pagePhotoAdapter.submitList(momentDetail.momentImageUrls)
+        }
     }
 
     private fun loadMomentData() {
@@ -54,7 +68,6 @@ class MomentFragment :
                 }
             val momentCommentsFragment = MomentCommentsFragment().apply { arguments = bundle }
             childFragmentManager.beginTransaction()
-                .replace(R.id.container_moment_detail, MomentDetailFragment())
                 .replace(R.id.container_moment_feeling_selection, momentFeelingSelectionFragment)
                 .replace(R.id.container_moment_comments, momentCommentsFragment)
                 .commit()

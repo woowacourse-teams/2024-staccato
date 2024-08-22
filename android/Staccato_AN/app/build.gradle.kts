@@ -136,8 +136,10 @@ dependencies {
 
     // Google Map
     implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
 
-    implementation("com.google.android.gms:play-services-location:21.3.0")
+    // View Pager2
+    implementation(libs.androidx.viewpager2)
 }
 
 secrets {
