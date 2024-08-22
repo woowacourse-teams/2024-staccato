@@ -230,6 +230,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
                         slideOffset: Float,
                     ) {
                         binding.tvMainBottomSheetRemindYourMemories.alpha = 1 - slideOffset
+                        binding.ivMainBottomSheetRemindYourMemories.alpha = 1 - slideOffset
                     }
                 },
             )
@@ -237,7 +238,10 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
     }
 
     private fun setUpBottomSheetStateListener() {
-        supportFragmentManager.setFragmentResultListener(BOTTOM_SHEET_STATE_REQUEST_KEY, this) { _, bundle ->
+        supportFragmentManager.setFragmentResultListener(
+            BOTTOM_SHEET_STATE_REQUEST_KEY,
+            this,
+        ) { _, bundle ->
             val newState = bundle.getInt(BOTTOM_SHEET_NEW_STATE)
             behavior.state = newState
         }
