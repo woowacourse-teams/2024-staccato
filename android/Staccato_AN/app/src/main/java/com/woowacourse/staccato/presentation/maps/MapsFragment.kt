@@ -76,6 +76,11 @@ class MapsFragment : Fragment() {
         observeStaccatoId()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadMoments()
+    }
+
     private fun checkLocationPermissions(googleMap: GoogleMap) {
         val isAccessFineLocationGranted =
             ContextCompat.checkSelfPermission(

@@ -31,10 +31,6 @@ class MapsViewModel(
     private val _staccatoId = MutableLiveData<Long>()
     val staccatoId: LiveData<Long> get() = _staccatoId
 
-    init {
-        loadMoments()
-    }
-
     fun setMarkers(markers: List<MarkerUiModel>) {
         _markers.value = markers
     }
@@ -44,7 +40,7 @@ class MapsViewModel(
         _staccatoId.value = markers.first { it.markerId == markerId }.staccatoId
     }
 
-    private fun loadMoments() {
+    fun loadMoments() {
         viewModelScope.launch {
             val result = momentRepository.getMoments()
             result.onSuccess(::setMomentLocations)
