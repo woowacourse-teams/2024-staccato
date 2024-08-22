@@ -17,12 +17,3 @@ fun MomentResponse.toDomain() =
         feeling = Feeling.fromValue(feeling),
         comments = visitLogs.map { it.toDomain() },
     )
-
-fun CommentDto.toDomain() =
-    Comment(
-        commentId = commentId,
-        memberId = memberId,
-        nickname = nickname,
-        memberImageUrl = memberImageUrl,
-        content = content,
-    )
