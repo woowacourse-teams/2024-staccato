@@ -12,6 +12,8 @@ import com.woowacourse.staccato.presentation.visitupdate.model.VisitUpdateDefaul
 fun Moment.toMomentDetailUiModel(): MomentDetailUiModel {
     return MomentDetailUiModel(
         id = momentId,
+        memoryId = memoryId,
+        memoryTitle = memoryTitle,
         placeName = placeName,
         momentImageUrls = momentImageUrls,
         address = address,

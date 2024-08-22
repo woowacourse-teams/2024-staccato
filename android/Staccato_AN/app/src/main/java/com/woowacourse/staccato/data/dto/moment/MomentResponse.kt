@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MomentResponse(
     @SerialName("momentId") val momentId: Long,
+    @SerialName("memoryId") val memoryId: Long,
+    @SerialName("memoryTitle") val memoryTitle: String,
     @SerialName("placeName") val placeName: String,
     @SerialName("momentImageUrls") val momentImageUrls: List<String>,
     @SerialName("address") val address: String,

@@ -23,4 +23,8 @@
     <style name="ThemeOverlay.NumberPicker" parent="Theme.Staccato_AN">
         <item name="colorControlNormal">@color/gray2</item>
     </style>
+
+    <style name="Theme.Staccato_AN.PopupMenu" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@drawable/shape_dialog_10dp</item>
+    </style>
 </resources>
