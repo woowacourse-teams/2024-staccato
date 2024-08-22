@@ -24,7 +24,6 @@ import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEM
 import com.woowacourse.staccato.presentation.memorycreation.MemoryCreationActivity
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.woowacourse.staccato.presentation.momentcreation.MomentCreationActivity
-import com.woowacourse.staccato.presentation.momentcreation.MomentCreationActivity.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.util.showToast
 
 class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
@@ -68,13 +67,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
                 result.data?.let {
                     showToast(getString(R.string.main_moment_creation_success))
                     val createdVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
-                    val memoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
-                    val memoryTitle = it.getStringExtra(MEMORY_TITLE_KEY)
                     val bundle =
                         bundleOf(
                             MOMENT_ID_KEY to createdVisitId,
-                            MEMORY_ID_KEY to memoryId,
-                            MEMORY_TITLE_KEY to memoryTitle,
                         )
                     navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
                 }
@@ -87,13 +82,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
                 result.data?.let {
                     showToast(getString(R.string.main_moment_update_success))
                     val updatedVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
-                    val memoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
-                    val memoryTitle = it.getStringExtra(MEMORY_TITLE_KEY)
                     val bundle =
                         bundleOf(
                             MOMENT_ID_KEY to updatedVisitId,
-                            MEMORY_TITLE_KEY to memoryTitle,
-                            MEMORY_ID_KEY to memoryId,
                         )
                     navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
                 }

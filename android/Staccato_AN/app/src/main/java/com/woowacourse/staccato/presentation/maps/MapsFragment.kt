@@ -30,8 +30,6 @@ import com.woowacourse.staccato.data.moment.MomentDefaultRepository
 import com.woowacourse.staccato.data.moment.MomentRemoteDataSource
 import com.woowacourse.staccato.domain.model.MomentLocation
 import com.woowacourse.staccato.presentation.maps.model.MarkerUiModel
-import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.woowacourse.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.woowacourse.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 
 class MapsFragment : Fragment() {
@@ -161,11 +159,7 @@ class MapsFragment : Fragment() {
     private fun observeStaccatoId() {
         viewModel.staccatoId.observe(viewLifecycleOwner) { staccatoId ->
             val bundle =
-                bundleOf(
-                    MOMENT_ID_KEY to staccatoId,
-                    MEMORY_ID_KEY to 20,
-                    MEMORY_TITLE_KEY to "카공카공",
-                )
+                bundleOf(MOMENT_ID_KEY to staccatoId)
             findNavController().navigate(R.id.momentFragment, bundle)
             parentFragmentManager.setFragmentResult(
                 BOTTOM_SHEET_STATE_REQUEST_KEY,

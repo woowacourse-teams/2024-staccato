@@ -12,6 +12,8 @@ import java.time.LocalDateTime
 fun MomentResponse.toDomain() =
     Moment(
         momentId = momentId,
+        memoryId = memoryId,
+        memoryTitle = memoryTitle,
         placeName = placeName,
         momentImageUrls = momentImageUrls,
         address = address,
