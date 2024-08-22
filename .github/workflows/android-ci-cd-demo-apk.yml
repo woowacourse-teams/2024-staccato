@@ -72,15 +72,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-debug.apk
-          path: ${{ github.workspace }}/android/Staccato_AN/app/build/outputs/apk/debug/*.apk
-
-      - name: check APK directory 1
-        run: |
-          ls -R android/Staccato_AN/app/debug/
-
-      - name: check APK directory 2
-        run: |
-          ls -R android/Staccato_AN/app/build/outputs/apk/
+          path: android/Staccato_AN/app/build/outputs/apk/debug/*.apk
 
       - name: Debug APK Path Issue
         run: find android/Staccato_AN/app/build/outputs/apk/ -name "*.apk"
