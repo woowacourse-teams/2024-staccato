@@ -1,6 +1,6 @@
 package com.woowacourse.staccato.presentation.moment.model
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 sealed class MomentDetailUiModel {
     data class MomentDefaultUiModel(
@@ -8,7 +8,7 @@ sealed class MomentDetailUiModel {
         val placeName: String,
         val momentImageUrls: List<String>,
         val address: String,
-        val visitedAt: LocalDate,
+        val visitedAt: LocalDateTime,
     ) : MomentDetailUiModel()
 
     data class CommentsUiModel(

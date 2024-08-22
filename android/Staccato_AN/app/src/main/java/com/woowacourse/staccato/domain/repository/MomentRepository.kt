@@ -4,7 +4,6 @@ import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.moment.MomentCreationResponse
 import com.woowacourse.staccato.domain.model.Moment
 import com.woowacourse.staccato.domain.model.MomentLocation
-import okhttp3.MultipartBody
 import java.time.LocalDateTime
 
 interface MomentRepository {
@@ -19,14 +18,13 @@ interface MomentRepository {
         longitude: String,
         address: String,
         visitedAt: LocalDateTime,
-        momentImageMultiParts: List<MultipartBody.Part>,
+        momentImageUrls: List<String>,
     ): Result<MomentCreationResponse>
 
     suspend fun updateMoment(
         momentId: Long,
         placeName: String,
         momentImageUrls: List<String>,
-        momentImageMultiParts: List<MultipartBody.Part>,
     ): Result<Unit>
 
     suspend fun deleteMoment(momentId: Long): Result<Unit>
