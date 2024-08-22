@@ -11,6 +11,8 @@ env:
   GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
   SECRETS_PROPERTIES: ${{ secrets.SECRETS_PROPERTIES }}
   LOCAL_DEFAULTS_PROPERTIES: ${{ secrets.LOCAL_DEFAULTS_PROPERTIES }}
+  UPLOAD_KEY_STORE_JKS: ${{ secrets.UPLOAD_KEY_STORE_JKS }}
+  KEY_STORE_PROPERTIES: ${{ secrets.KEY_STORE_PROPERTIES }}
 
 jobs:
   test:
@@ -56,6 +58,12 @@ jobs:
       - name: Create local.defaults.properties
         run: |
           echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
+
+      - name: Create KeyStore File and Properties
+        run: |
+          mkdir ./app/signing
+          echo "$UPLOAD_KEY_STORE_JKS" | base64 --decode > ./app/signing/upload_key_store.jks
+          echo $KEY_STORE_PROPERTIES > ./app/signing/keystore.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -115,6 +123,12 @@ jobs:
         run: |
           echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
         shell: bash
+
+      - name: Create KeyStore File and Properties
+        run: |
+          mkdir -p ./app/signing
+          echo "$UPLOAD_KEY_STORE_JKS" | base64 --decode > ./app/signing/upload_key_store.jks
+          echo "$KEY_STORE_PROPERTIES" > ./app/signing/keystore.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew

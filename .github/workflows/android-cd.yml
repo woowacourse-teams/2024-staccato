@@ -1,8 +1,8 @@
-name: Android CI for generating APK
+name: Android CI/CD for release
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
 
@@ -11,10 +11,12 @@ env:
   GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
   SECRETS_PROPERTIES: ${{ secrets.SECRETS_PROPERTIES }}
   LOCAL_DEFAULTS_PROPERTIES: ${{ secrets.LOCAL_DEFAULTS_PROPERTIES }}
+  UPLOAD_KEY_STORE_JKS: ${{ secrets.UPLOAD_KEY_STORE_JKS }}
+  KEY_STORE_PROPERTIES: ${{ secrets.KEY_STORE_PROPERTIES }}
 
 jobs:
-  apk:
-    name: Generate APK
+  android-cd:
+    name: Run Android CI/CD for release
     runs-on: ubuntu-latest
 
     defaults:
@@ -54,14 +56,40 @@ jobs:
         run: |
           echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
 
+      - name: Create KeyStore File and Properties
+        run: |
+          mkdir -p ./app/signing
+          echo "$UPLOAD_KEY_STORE_JKS" | base64 --decode > ./app/signing/upload_key_store.jks
+          echo "$KEY_STORE_PROPERTIES" > ./app/signing/keystore.properties
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
 
-      - name: Upload Debug APK
+      - name: Build Release AAB
+        run: ./gradlew bundleRelease
+
+      - name: Run clean test
+        run: ./gradlew clean test
+
+      - name: Upload Release APK
         uses: actions/upload-artifact@v3
         with:
-          name: debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: app-release.apk
+          path: app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload Release AAB
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.aab
+          path: ./app/build/outputs/bundle/release/app-release.aab
+
+      - name: Upload On Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: com.woowacourse.staccato
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          track: internal
