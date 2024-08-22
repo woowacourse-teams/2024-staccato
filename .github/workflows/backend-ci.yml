@@ -4,17 +4,17 @@ on:
   pull_request:
     branches: [ "develop-be" ]
 
+permissions: write-all
+
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     defaults:
       run:
         shell: bash
         working-directory: ./backend
-
-    permissions:
-      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -32,3 +32,20 @@ jobs:
 
       - name: Test with Gradle
         run: ./gradlew build
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: ${{ github.workspace }}/backend/build/test-results/**/*.xml
+
+      - name: Jacoco Report to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.6.1
+        with:
+          paths: ${{ github.workspace }}/backend/build/reports/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 70
+          min-coverage-changed-files: 70
+          title: "🌻Test Coverage Report"
+          update-comment: true

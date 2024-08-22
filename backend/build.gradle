@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'jacoco'
 	id 'org.springframework.boot' version '3.3.1'
 	id 'io.spring.dependency-management' version '1.1.5'
 }
@@ -11,6 +12,10 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
+}
+
+jacoco {
+	toolVersion '0.8.8'
 }
 
 configurations {
@@ -44,4 +49,30 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
 }
+
+jacocoTestReport {
+	executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))
+
+	reports {
+		html.required.set(true)
+		xml.required.set(true)
+		csv.required.set(false)
+	}
+}
+
+/*jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			element 'CLASS'
+			limit {
+				counter = 'BRANCH'
+				value = 'COVEREDRATIO'
+				minimum = 0.7
+			}
+
+			excludes = ['*.config.*','*.*Builder.*']
+		}
+	}
+}*/
