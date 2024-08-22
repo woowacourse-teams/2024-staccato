@@ -6,20 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowacourse.staccato.databinding.FragmentMemorySelectionBinding
-import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
+import com.woowacourse.staccato.domain.model.MemoryCandidate
 
 class MemorySelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentMemorySelectionBinding? = null
     private val binding get() = _binding!!
-    private val items = mutableListOf<MomentMemoryUiModel>()
-
+    private val items = mutableListOf<MemoryCandidate>()
     private lateinit var handler: MemorySelectionHandler
 
     fun setOnMemorySelected(newHandler: MemorySelectionHandler) {
         handler = newHandler
     }
 
-    fun setItems(newItems: List<MomentMemoryUiModel>) {
+    fun setItems(newItems: List<MemoryCandidate>) {
         items.clear()
         items.addAll(newItems)
     }
@@ -45,7 +44,7 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
         binding.pickerMemorySelection.apply {
             minValue = 0
             maxValue = (items.size - 1).coerceAtLeast(0)
-            displayedValues = items.map { it.title }.toTypedArray()
+            displayedValues = items.map { it.memoryTitle }.toTypedArray()
             wrapSelectorWheel = false
         }
     }

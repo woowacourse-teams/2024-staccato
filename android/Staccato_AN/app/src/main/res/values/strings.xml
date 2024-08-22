@@ -10,7 +10,7 @@
     <string name="all_photo">사진</string>
     <string name="all_photo_number">(%s/%s)</string>
     <string name="all_photo_attach">사진을 첨부해주세요</string>
-    <string name="all_visited_date">날짜</string>
+    <string name="all_visited_date">순간</string>
     <string name="all_date_dots_format">%s. %s. %s</string>
     <string name="all_date_kr_format">%s년 %s월 %s일</string>
     <string name="all_date_time_am_pm_kr_format">%s년 %s월 %s일  %s %s시</string>
@@ -67,6 +67,7 @@
     <string name="visit_creation_visited_at_hint">날짜를 선택해주세요</string>
     <string name="visit_creation_memory_selection">추억 선택</string>
     <string name="visit_creation_memory_selection_hint">추억을 선택해주세요</string>
+    <string name="visit_creation_no_memory_hint">스타카토를 남길 수 있는 추억이 없어요</string>
     <string name="visit_creation_unselected_memory">추억을 먼저 선택해주세요!</string>
     <string name="visit_creation_posting">스타카토를 찍는 중이에요..</string>
     <string name="visit_update_posting">스타카토를 수정하는 중이에요...️</string>
