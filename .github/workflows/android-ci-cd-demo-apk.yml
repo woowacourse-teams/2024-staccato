@@ -74,8 +74,8 @@ jobs:
       - name: Upload Debug APK
         uses: actions/upload-artifact@v3
         with:
-          name: debug-apk
-          path: app/debug/app-debug.apk
+          name: app-debug.apk
+          path: android/Staccato_AN/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
       - name: Upload Artifact to Firebase App Distribution
@@ -84,4 +84,4 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: staccato_tester
-          file: app/debug/app-debug.apk
+          file: android/Staccato_AN/app/build/outputs/apk/debug/app-debug.apk
