@@ -34,7 +34,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "BASE_URL", "${localProperties["base_url"]}")
         buildConfigField("String", "TOKEN", "${localProperties["token"]}")
     }
 
@@ -54,8 +53,17 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "${localProperties["dev_base_url"]}")
+            manifestPlaceholders["appName"] = "@string/app_name_dev"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-DEV"
+        }
         release {
-            isMinifyEnabled = false
+            buildConfigField("String", "BASE_URL", "${localProperties["base_url"]}")
+            manifestPlaceholders["appName"] = "@string/app_name"
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
