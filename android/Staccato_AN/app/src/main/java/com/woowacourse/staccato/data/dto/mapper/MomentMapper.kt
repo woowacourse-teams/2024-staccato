@@ -4,7 +4,7 @@ import com.woowacourse.staccato.data.dto.moment.MomentResponse
 import com.woowacourse.staccato.data.dto.comment.CommentDto
 import com.woowacourse.staccato.domain.model.Feeling
 import com.woowacourse.staccato.domain.model.Moment
-import com.woowacourse.staccato.domain.model.VisitLog
+import com.woowacourse.staccato.domain.model.Comment
 import java.time.LocalDateTime
 
 fun MomentResponse.toDomain() =
@@ -19,7 +19,7 @@ fun MomentResponse.toDomain() =
     )
 
 fun CommentDto.toDomain() =
-    VisitLog(
+    Comment(
         visitLogId = commentId,
         memberId = memberId,
         nickname = nickname,
