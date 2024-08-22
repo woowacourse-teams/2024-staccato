@@ -114,7 +114,7 @@ class MapsFragment : Fragment() {
         snackBar.show()
     }
 
-    private fun makeSnackBar(message: String): Snackbar = Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
+    private fun makeSnackBar(message: String) = Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
 
     private fun Snackbar.setAction() {
         setAction(R.string.snack_bar_move_to_setting) {

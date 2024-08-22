@@ -33,7 +33,13 @@ data class AttachedPhotosUiModel(
         return AttachedPhotosUiModel(attachedPhotos.filterNot { it == targetPhoto })
     }
 
-    fun getPhotosWithoutUrls(): List<AttachedPhotoUiModel> = attachedPhotos.filter { it.imageUrl == null }
+    fun getPhotosWithoutUrls(): List<AttachedPhotoUiModel> {
+        return attachedPhotos.filter { it.imageUrl == null }
+    }
+
+    fun isLoading(): Boolean {
+        return (attachedPhotos.isNotEmpty()) && (getPhotosWithoutUrls().isNotEmpty())
+    }
 
     companion object {
         private const val MAX_PHOTO_NUMBER = 5

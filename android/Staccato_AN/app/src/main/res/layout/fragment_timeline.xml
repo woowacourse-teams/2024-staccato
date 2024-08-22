@@ -31,6 +31,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginEnd="3dp"
+            android:src="@drawable/ic_baseline_align_horizontal_left"
+            app:layout_constraintBottom_toBottomOf="@id/tv_timeline_order"
+            app:layout_constraintEnd_toStartOf="@id/tv_timeline_order"
+            app:layout_constraintTop_toTopOf="@id/tv_timeline_order" />
+
+        <TextView
+            android:id="@+id/tv_timeline_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/timeline_order"
+            android:textAppearance="@style/Typography.Body5"
+            android:textColor="@color/gray3"
+            app:layout_constraintBottom_toBottomOf="@id/tv_timeline_my_timeline"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_timeline"
             android:layout_width="0dp"

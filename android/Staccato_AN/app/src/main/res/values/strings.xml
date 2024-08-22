@@ -27,7 +27,8 @@
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
 
     // fragment_timeline
-    <string name="timeline_my_timeline">나의 추억 타임라인</string>
+    <string name="timeline_my_timeline">나의 추억들</string>
+    <string name="timeline_order">최근 생성 순</string>
     <string name="timeline_year">%s년</string>
     <string name="timeline_title">추억을 떠올려보세요 🎵</string>
     <string name="timeline_empty">아직 추억을 기록하지 않으셨군요!\n추억을 생성해보세요.</string>
@@ -93,8 +94,8 @@
     <string name="memory_delete_description">아직 스타카토가 남아있어요!</string>
 
     // dialog_delete
-    <string name="delete_title">삭제하시겠습니까?</string>
-    <string name="delete_description">삭제를 누르면 복구할 수 없습니다</string>
+    <string name="delete_title">정말 삭제할까요?</string>
+    <string name="delete_description">삭제를 누르면 복구할 수 없어요!</string>
     <string name="all_delete_image">이미지 삭제 버튼</string>
 
     // menu_creation

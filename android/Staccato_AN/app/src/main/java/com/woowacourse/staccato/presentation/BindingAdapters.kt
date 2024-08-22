@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.woowacourse.staccato.R
+import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
 import com.woowacourse.staccato.presentation.momentcreation.model.MomentMemoryUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
@@ -171,16 +172,10 @@ fun ImageView.setRoundedCornerImageByUriWithGlide(
         .into(this)
 }
 
-@BindingAdapter(
-    value = ["memoryTitle", "startDate", "endDate"],
-)
-fun Button.setMemorySaveButtonActive(
-    title: String?,
-    startDate: LocalDate?,
-    endDate: LocalDate?,
-) {
+@BindingAdapter("setLoginButtonActive")
+fun Button.setLoginButtonActive(nickName: String?) {
     isEnabled =
-        if (title.isNullOrEmpty() || startDate == null || endDate == null) {
+        if (nickName.isNullOrBlank()) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -190,15 +185,34 @@ fun Button.setMemorySaveButtonActive(
 }
 
 @BindingAdapter(
-    value = ["staccatoTitle", "address", "visitedAt"],
+    value = ["memoryTitle", "startDate", "endDate"],
+)
+fun Button.setMemorySaveButtonActive(
+    title: String?,
+    startDate: LocalDate?,
+    endDate: LocalDate?,
+) {
+    isEnabled =
+        if (title.isNullOrBlank() || startDate == null || endDate == null) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
+@BindingAdapter(
+    value = ["staccatoTitle", "address", "visitedAt", "photos"],
 )
 fun Button.setStaccatoSaveButtonActive(
     title: String?,
     address: String?,
     visitedAt: LocalDateTime?,
+    photos: AttachedPhotosUiModel?,
 ) {
     isEnabled =
-        if (title.isNullOrEmpty() || address == null || visitedAt == null) {
+        if (title.isNullOrBlank() || address == null || visitedAt == null || photos?.isLoading() == true) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -351,6 +365,11 @@ fun FrameLayout.setAttachedPhotoVisibility(items: Array<Uri>?) {
 @BindingAdapter("setEnabled")
 fun Button.setEnabled(isUpdateCompleted: Boolean?) {
     isEnabled = !(isUpdateCompleted ?: true)
+}
+
+@BindingAdapter("setLoginEnabled")
+fun Button.setLoginEnabled(nickName: String?) {
+    isEnabled = !nickName.isNullOrEmpty()
 }
 
 @BindingAdapter(value = ["currentPhotoNumbers", "maxPhotoNumbers"])
