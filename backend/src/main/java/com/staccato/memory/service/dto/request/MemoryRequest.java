@@ -1,6 +1,7 @@
 package com.staccato.memory.service.dto.request;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,6 +29,12 @@ public record MemoryRequest(
         @Schema(example = "2024-07-29")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate endAt) {
+    public MemoryRequest {
+        if (Objects.nonNull(memoryTitle)) {
+            memoryTitle = memoryTitle.trim();
+        }
+    }
+
     public Memory toMemory() {
         return Memory.builder()
                 .thumbnailUrl(memoryThumbnailUrl)

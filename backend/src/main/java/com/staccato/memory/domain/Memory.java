@@ -47,7 +47,7 @@ public class Memory extends BaseEntity {
     @Builder
     public Memory(String thumbnailUrl, @NonNull String title, String description, LocalDate startAt, LocalDate endAt) {
         this.thumbnailUrl = thumbnailUrl;
-        this.title = title;
+        this.title = title.trim();
         this.description = description;
         this.term = new Term(startAt, endAt);
     }
