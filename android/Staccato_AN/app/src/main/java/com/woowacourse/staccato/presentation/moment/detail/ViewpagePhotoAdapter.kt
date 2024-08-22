@@ -4,22 +4,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.woowacourse.staccato.databinding.ItemPhotoHorizontalBinding
+import com.woowacourse.staccato.databinding.ItemViewpagePhotoBinding
 
-class HorizontalPhotoAdapter :
-    ListAdapter<String, HorizontalPhotoViewHolder>(diffUtil) {
+class ViewpagePhotoAdapter :
+    ListAdapter<String, ViewpagePhotoViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): HorizontalPhotoViewHolder {
+    ): ViewpagePhotoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemPhotoHorizontalBinding.inflate(inflater, parent, false)
-        return HorizontalPhotoViewHolder(binding)
+        val binding = ItemViewpagePhotoBinding.inflate(inflater, parent, false)
+        return ViewpagePhotoViewHolder(binding)
     }
 
     override fun onBindViewHolder(
-        holder: HorizontalPhotoViewHolder,
+        holder: ViewpagePhotoViewHolder,
         position: Int,
     ) {
         holder.bind(getItem(position))
@@ -38,12 +37,5 @@ class HorizontalPhotoAdapter :
                     newItem: String,
                 ): Boolean = oldItem == newItem
             }
-    }
-}
-
-class HorizontalPhotoViewHolder(private val binding: ItemPhotoHorizontalBinding) :
-    RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: String) {
-        binding.photoUrl = item
     }
 }

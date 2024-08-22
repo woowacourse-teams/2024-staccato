@@ -32,19 +32,19 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="13dp"
-            android:layout_height="13dp"
-            android:layout_marginEnd="3dp"
-            android:src="@drawable/ic_baseline_align_horizontal_left"
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:layout_marginEnd="1dp"
+            android:src="@drawable/icon_filter"
             app:layout_constraintBottom_toBottomOf="@id/tv_timeline_order"
             app:layout_constraintEnd_toStartOf="@id/tv_timeline_order"
-            app:layout_constraintTop_toTopOf="@id/tv_timeline_order" />
+            app:layout_constraintTop_toTopOf="@id/tv_timeline_order"
+            app:tint="@color/gray3" />
 
         <TextView
             android:id="@+id/tv_timeline_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:layout_marginEnd="20dp"
             android:text="@string/timeline_order"
             android:textAppearance="@style/Typography.Body5"
