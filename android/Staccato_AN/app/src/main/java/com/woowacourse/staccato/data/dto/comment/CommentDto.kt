@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CommentDto(
-    @SerialName("commentId") val visitLogId: Long,
+    @SerialName("commentId") val commentId: Long,
     @SerialName("memberId") val memberId: Long,
     @SerialName("nickname") val nickname: String,
     @SerialName("memberImageUrl") val memberImageUrl: String,
