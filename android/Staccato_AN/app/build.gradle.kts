@@ -6,6 +6,11 @@ val localProperties =
         load(FileInputStream(rootProject.file("local.properties")))
     }
 
+val keystoreProperties =
+    Properties().apply {
+        load((FileInputStream(rootProject.file("app/signing/keystore.properties"))))
+    }
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -33,6 +38,15 @@ android {
         buildConfigField("String", "TOKEN", "${localProperties["token"]}")
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(keystoreProperties["store_file"] as String)
+            keyAlias = keystoreProperties["key_alias"] as String
+            keyPassword = keystoreProperties["key_password"] as String
+            storePassword = keystoreProperties["keystore_password"] as String
+        }
+    }
+
     buildFeatures {
         defaultConfig {
             buildConfig = true
@@ -46,6 +60,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
