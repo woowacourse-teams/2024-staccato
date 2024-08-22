@@ -3,6 +3,7 @@ package com.woowacourse.staccato.presentation.maps
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -17,6 +18,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -44,12 +48,12 @@ class MapsFragment : Fragment() {
         )
     }
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private val mapReadyCallback =
         OnMapReadyCallback { googleMap ->
             checkLocationPermissions(googleMap)
             observeMomentLocations(googleMap)
-            moveCamera(googleMap)
             onMarkerClicked(googleMap)
         }
 
@@ -66,6 +70,7 @@ class MapsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 
@@ -100,6 +105,14 @@ class MapsFragment : Fragment() {
 
         if (isAccessFineLocationGranted || isAccessCoarseLocationGranted) {
             googleMap.isMyLocationEnabled = true
+            val currentLocation =
+                fusedLocationProviderClient.getCurrentLocation(
+                    LocationRequest.PRIORITY_HIGH_ACCURACY,
+                    null,
+                )
+            currentLocation.addOnSuccessListener { location ->
+                moveCamera(googleMap, location)
+            }
             return
         } else {
             requestPermission.launch(locationPermissions)
@@ -155,9 +168,12 @@ class MapsFragment : Fragment() {
         viewModel.setMarkers(markers)
     }
 
-    private fun moveCamera(googleMap: GoogleMap) {
-        val woowacourse = LatLng(37.5057434, 127.0506698)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(woowacourse, 15f))
+    private fun moveCamera(
+        googleMap: GoogleMap,
+        location: Location,
+    ) {
+        val currentLocation = LatLng(location.latitude, location.longitude)
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
     }
 
     private fun onMarkerClicked(googleMap: GoogleMap) {
