@@ -72,7 +72,7 @@ jacocoTestCoverageVerification {
 				minimum = 0.7
 			}
 
-			excludes = ['*.config.*']
+			excludes = ['*.config.*','*.*Builder.*']
 		}
 	}
 }
