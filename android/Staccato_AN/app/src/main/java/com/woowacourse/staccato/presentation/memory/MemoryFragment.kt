@@ -75,8 +75,6 @@ class MemoryFragment :
             val bundle =
                 bundleOf(
                     MOMENT_ID_KEY to visitId,
-//                    MEMORY_ID_KEY to memoryId,
-//                    MEMORY_TITLE_KEY to it.title,
                 )
             findNavController().navigate(R.id.action_memoryFragment_to_momentFragment, bundle)
         }
