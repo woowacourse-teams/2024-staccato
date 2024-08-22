@@ -35,6 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.fixture.memory.MemoryNameResponsesFixture;
 import com.staccato.fixture.memory.MemoryRequestFixture;
@@ -92,7 +93,7 @@ class MemoryControllerTest {
     @MethodSource("memoryRequestProvider")
     void createMemory(MemoryRequest memoryRequest) throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         when(memoryService.createMemory(any(), any())).thenReturn(new MemoryIdResponse(1));
 
         // when & then
@@ -110,7 +111,7 @@ class MemoryControllerTest {
     @MethodSource("invalidMemoryRequestProvider")
     void failCreateMemory(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         when(memoryService.createMemory(any(MemoryRequest.class), any(Member.class))).thenReturn(new MemoryIdResponse(1));
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
@@ -127,7 +128,7 @@ class MemoryControllerTest {
     @Test
     void readAllMemory() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         MemoryResponses memoryResponses = MemoryResponsesFixture.create(MemoryFixture.create());
         when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
 
@@ -142,7 +143,7 @@ class MemoryControllerTest {
     @Test
     void readAllMemoryIncludingDate() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         MemoryNameResponses memoryNameResponses = MemoryNameResponsesFixture.create(MemoryFixture.create());
         when(memoryService.readAllMemoriesIncludingDate(any(Member.class), any())).thenReturn(memoryNameResponses);
         String currentDate = "2024-07-01";
@@ -160,7 +161,7 @@ class MemoryControllerTest {
     @ValueSource(strings = {"2024.07.01", "2024-07", "2024", "a"})
     void cannotReadAllMemoryByInvalidDateFormat(String currentDate) throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
 
         // when & then
@@ -176,7 +177,7 @@ class MemoryControllerTest {
     void readMemory() throws Exception {
         // given
         long memoryId = 1;
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(MemoryFixture.create(), List.of());
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
 
@@ -194,7 +195,7 @@ class MemoryControllerTest {
         // given
         long memoryId = 1L;
         MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(put("/memories/{memoryId}", memoryId)
@@ -210,7 +211,7 @@ class MemoryControllerTest {
     void failUpdateMemory(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
         // given
         long memoryId = 1L;
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
@@ -227,7 +228,7 @@ class MemoryControllerTest {
     void failUpdateMemoryByInvalidPath() throws Exception {
         // given
         long memoryId = 0L;
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "추억 식별자는 양수로 이루어져야 합니다.");
         MemoryRequest memoryRequest = MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
 
@@ -245,7 +246,7 @@ class MemoryControllerTest {
     void deleteMemory() throws Exception {
         // given
         long memoryId = 1;
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(delete("/memories/{memoryId}", memoryId)

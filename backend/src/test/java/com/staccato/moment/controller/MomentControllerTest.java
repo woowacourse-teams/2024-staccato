@@ -34,6 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.moment.MomentDetailResponseFixture;
 import com.staccato.fixture.moment.MomentLocationResponsesFixture;
 import com.staccato.member.domain.Member;
@@ -87,7 +88,7 @@ class MomentControllerTest {
                         "순간 장소의 주소를 입력해주세요."
                 ),
                 Arguments.of(
-                        getMomentRequest(null),
+                        new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, null, 1L, List.of("https://example.com/images/namsan_tower.jpg")),
                         "방문 날짜를 입력해주세요."
                 )
         );
@@ -105,7 +106,7 @@ class MomentControllerTest {
                         "https://example.com/images/namsan_tower5.jpg"));
         String momentRequestJson = objectMapper.writeValueAsString(momentRequest);
         MomentIdResponse momentIdResponse = new MomentIdResponse(1L);
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         when(momentService.createMoment(any(MomentRequest.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
 
         // when & then
@@ -132,7 +133,7 @@ class MomentControllerTest {
                         "memoryId": 1
                     }
                 """;
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         when(momentService.createMoment(any(MomentRequest.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
 
         // when & then
@@ -157,7 +158,7 @@ class MomentControllerTest {
                         "https://example.com/images/namsan_tower6.jpg"));
         String momentRequestJson = objectMapper.writeValueAsString(momentRequest);
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(post("/moments")
@@ -168,10 +169,6 @@ class MomentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    private static MomentRequest getMomentRequest(LocalDateTime visitedAt) {
-        return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, visitedAt, 1L, List.of("https://example.com/images/namsan_tower.jpg"));
-    }
-
     @DisplayName("사용자가 잘못된 요청 형식으로 정보를 입력하면, 순간을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidMomentRequestProvider")
@@ -179,7 +176,7 @@ class MomentControllerTest {
         // given
         String momentRequestJson = objectMapper.writeValueAsString(momentRequest);
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         when(momentService.createMoment(any(MomentRequest.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
 
         // when & then
@@ -195,7 +192,7 @@ class MomentControllerTest {
     @Test
     void readAllMoment() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         MomentLocationResponses responses = MomentLocationResponsesFixture.create();
         when(momentService.readAllMoment(any(Member.class))).thenReturn(responses);
 
@@ -211,7 +208,7 @@ class MomentControllerTest {
     void readMomentById() throws Exception {
         // given
         long momentId = 1L;
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         MomentDetailResponse response = MomentDetailResponseFixture.create(momentId, LocalDateTime.now());
         when(momentService.readMomentById(anyLong(), any(Member.class))).thenReturn(response);
 
@@ -241,7 +238,7 @@ class MomentControllerTest {
         long momentId = 1L;
         MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(put("/moments/{momentId}", momentId)
@@ -265,7 +262,7 @@ class MomentControllerTest {
                         "https://example.com/images/namsan_tower5.jpg",
                         "https://example.com/images/namsan_tower6.jpg"));
         String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(put("/moments/{momentId}", momentId)
@@ -284,7 +281,7 @@ class MomentControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
         MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
         String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(put("/moments/{momentId}", momentId)
@@ -303,7 +300,7 @@ class MomentControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 장소의 이름을 입력해주세요.");
         MomentUpdateRequest updateRequest = new MomentUpdateRequest(null, List.of("https://example1.com.jpg"));
         String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(put("/moments/{momentId}", momentId)
@@ -319,7 +316,7 @@ class MomentControllerTest {
     void deleteMomentById() throws Exception {
         // given
         long momentId = 1L;
-        when(authService.extractFromToken(anyString())).thenReturn(Member.builder().nickname("staccato").build());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(delete("/moments/{momentId}", momentId)
