@@ -24,11 +24,11 @@ public interface CommentControllerDocs {
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
-                    (1) 순간 식별자가 양수가 아닐 때
+                    (1) 스타카토 식별자가 양수가 아닐 때
                                         
-                    (2) 순간을 선택하지 않았을 때
+                    (2) 스타카토를 선택하지 않았을 때
                                         
-                    (3) 요청한 순간을 찾을 수 없을 때
+                    (3) 요청한 스타카토를 찾을 수 없을 때
                                         
                     (4) 댓글 내용이 공백 뿐이거나 없을 때
                                         
@@ -40,14 +40,14 @@ public interface CommentControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "댓글 생성 시 요구 형식") @Valid CommentRequest commentRequest);
 
-    @Operation(summary = "댓글 조회", description = "특정 순간에 속한 모든 댓글을 생성 순으로 조회합니다.")
+    @Operation(summary = "댓글 조회", description = "스타카토에 속한 모든 댓글을 생성 순으로 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "댓글 조회 성공", responseCode = "200"),
-            @ApiResponse(description = "순간 식별자가 양수가 아닐 때 발생", responseCode = "400"),
+            @ApiResponse(description = "스타카토 식별자가 양수가 아닐 때 발생", responseCode = "400"),
     })
     ResponseEntity<CommentResponses> readCommentsByMomentId(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "댓글이 속한 순간 식별자", example = "1") @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId);
+            @Parameter(description = "댓글이 속한 스타카토 식별자", example = "1") @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId);
 
     @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.")
     @ApiResponses(value = {

@@ -37,7 +37,6 @@ import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
-import com.staccato.member.domain.Member;
 
 @WebMvcTest(CommentController.class)
 public class CommentControllerTest {
@@ -65,11 +64,11 @@ public class CommentControllerTest {
         return Stream.of(
                 Arguments.of(
                         new CommentRequest(null, "예시 댓글 내용"),
-                        "순간을 선택해주세요."
+                        "스타카토를 선택해주세요."
                 ),
                 Arguments.of(
                         new CommentRequest(MIN_MOMENT_ID - 1, "예시 댓글 내용"),
-                        "순간 식별자는 양수로 이루어져야 합니다."
+                        "스타카토 식별자는 양수로 이루어져야 합니다."
                 ),
                 Arguments.of(
                         new CommentRequest(MIN_MOMENT_ID, null),
@@ -144,7 +143,7 @@ public class CommentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(commentResponses)));
     }
 
-    @DisplayName("순간 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
+    @DisplayName("스타카토 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
     @Test
     void readCommentsByMomentIdFail() throws Exception {
         // given
@@ -152,7 +151,7 @@ public class CommentControllerTest {
         CommentResponses commentResponses = new CommentResponses(List.of(
                 new CommentResponse(1L, 1L, "member", "image.jpg", "내용")
         ));
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "순간 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
         when(commentService.readAllCommentsByMomentId(any(), any())).thenReturn(commentResponses);
 
         // when & then

@@ -34,7 +34,7 @@ class MomentRepositoryTest {
     @Autowired
     private MemoryMemberRepository memoryMemberRepository;
 
-    @DisplayName("특정 사용자의 모든 순간을 조회한다.")
+    @DisplayName("사용자의 모든 스타카토를 조회한다.")
     @Test
     void findAllByMemory_MemoryMembers_Member() {
         // given

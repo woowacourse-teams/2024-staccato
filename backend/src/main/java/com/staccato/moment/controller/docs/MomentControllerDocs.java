@@ -22,9 +22,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Moment", description = "Moment API")
 public interface MomentControllerDocs {
-    @Operation(summary = "순간 생성", description = "순간을 생성합니다.")
+    @Operation(summary = "스타카토 생성", description = "스타카토를 생성합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "순간 생성 성공", responseCode = "201"),
+            @ApiResponse(description = "스타카토 생성 성공", responseCode = "201"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
@@ -36,7 +36,7 @@ public interface MomentControllerDocs {
                                         
                     (4) 사진이 5장을 초과했을 때
                                         
-                    (5) 방문 날짜가 추억 기간에 포함되지 않을 때
+                    (5) 스타카토 날짜가 추억 기간에 포함되지 않을 때
                     """,
                     responseCode = "400")
     })
@@ -45,17 +45,17 @@ public interface MomentControllerDocs {
             @Parameter(required = true) @Valid MomentRequest momentRequest
     );
 
-    @Operation(summary = "순간 목록 조회", description = "순간 목록을 조회합니다.")
-    @ApiResponse(description = "순간 목록 조회 성공", responseCode = "200")
+    @Operation(summary = "스타카토 목록 조회", description = "스타카토 목록을 조회합니다.")
+    @ApiResponse(description = "스타카토 목록 조회 성공", responseCode = "200")
     ResponseEntity<MomentLocationResponses> readAllMoment(@Parameter(hidden = true) Member member);
 
-    @Operation(summary = "순간 조회", description = "순간을 조회합니다.")
+    @Operation(summary = "스타카토 조회", description = "스타카토를 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "순간 조회 성공", responseCode = "200"),
+            @ApiResponse(description = "스타카토 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
-                    (1) 조회하려는 순간이 존재하지 않을 때
+                    (1) 조회하려는 스타카토가 존재하지 않을 때
                                         
                     (2) Path Variable 형식이 잘못되었을 때
                     """,
@@ -63,15 +63,15 @@ public interface MomentControllerDocs {
     })
     ResponseEntity<MomentDetailResponse> readMomentById(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "순간 ID", example = "1") @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId);
+            @Parameter(description = "스타카토 ID", example = "1") @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId);
 
-    @Operation(summary = "순간 수정", description = "순간을 수정합니다.")
+    @Operation(summary = "스타카토 수정", description = "스타카토를 수정합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "순간 수정 성공", responseCode = "200"),
+            @ApiResponse(description = "스타카토 수정 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
-                    (1) 조회하려는 순간이 존재하지 않을 때
+                    (1) 조회하려는 스타카토가 존재하지 않을 때
                                         
                     (2) Path Variable 형식이 잘못되었을 때
                                         
@@ -81,26 +81,26 @@ public interface MomentControllerDocs {
     })
     ResponseEntity<Void> updateMomentById(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "순간 ID", example = "1") @PathVariable @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @Parameter(description = "스타카토 ID", example = "1") @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
             @Parameter(required = true) @Valid MomentUpdateRequest request);
 
-    @Operation(summary = "순간 삭제", description = "순간을 삭제합니다.")
+    @Operation(summary = "스타카토 삭제", description = "스타카토를 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "순간 삭제에 성공했거나 해당 순간이 존재하지 않는 경우", responseCode = "200"),
-            @ApiResponse(description = "순간 식별자에 양수가 아닌 값을 기입했을 경우", responseCode = "400")
+            @ApiResponse(description = "스타카토 삭제에 성공했거나 해당 스타카토가 존재하지 않는 경우", responseCode = "200"),
+            @ApiResponse(description = "스타카토 식별자에 양수가 아닌 값을 기입했을 경우", responseCode = "400")
     })
     ResponseEntity<Void> deleteMomentById(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "순간 ID", example = "1") @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId
+            @Parameter(description = "스타카토 ID", example = "1") @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId
     );
 
-    @Operation(summary = "순간 기분 선택", description = "순간에 기분을 선택합니다.")
+    @Operation(summary = "스타카토 기분 선택", description = "스타카토의 기분을 선택합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "순간 기분 선택 성공", responseCode = "200"),
+            @ApiResponse(description = "스타카토 기분 선택 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
 
-                    (1) 조회하려는 순간이 존재하지 않을 때
+                    (1) 조회하려는 스타카토가 존재하지 않을 때
 
                     (2) Path Variable 형식이 잘못되었을 때
 
@@ -112,6 +112,6 @@ public interface MomentControllerDocs {
     })
     ResponseEntity<Void> updateMomentFeelingById(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "순간 ID", example = "1") @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @Parameter(description = "스타카토 ID", example = "1") @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
             @Parameter(required = true) @Valid FeelingRequest feelingRequest);
 }

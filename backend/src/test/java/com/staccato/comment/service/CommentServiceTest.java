@@ -39,7 +39,7 @@ class CommentServiceTest extends ServiceSliceTest {
     @Autowired
     private MomentRepository momentRepository;
 
-    @DisplayName("순간이 존재하면 댓글 생성에 성공한다.")
+    @DisplayName("스타카토가 존재하면 댓글 생성에 성공한다.")
     @Test
     void createComment() {
         // given
@@ -55,7 +55,7 @@ class CommentServiceTest extends ServiceSliceTest {
         assertThat(commentRepository.findById(commentId)).isNotEmpty();
     }
 
-    @DisplayName("존재하지 않는 순간에 댓글 생성을 시도하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 스타카토에 댓글 생성을 시도하면 예외가 발생한다.")
     @Test
     void createCommentFailByNotExistMoment() {
         // given
@@ -65,10 +65,10 @@ class CommentServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> commentService.createComment(commentRequest, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 순간을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 스타카토를 찾을 수 없어요.");
     }
 
-    @DisplayName("권한이 없는 순간에 댓글 생성을 시도하면 예외가 발생한다.")
+    @DisplayName("권한이 없는 스타카토에 댓글 생성을 시도하면 예외가 발생한다.")
     @Test
     void createCommentFailByForbidden() {
         // given
@@ -84,7 +84,7 @@ class CommentServiceTest extends ServiceSliceTest {
                 .hasMessageContaining("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("특정 순간에 속한 모든 댓글을 생성 순으로 조회한다.")
+    @DisplayName("특정 스타카토에 속한 모든 댓글을 생성 순으로 조회한다.")
     @Test
     void readAllByMomentId() {
         // given
@@ -107,7 +107,7 @@ class CommentServiceTest extends ServiceSliceTest {
                 .containsExactly(commentId1, commentId2);
     }
 
-    @DisplayName("조회 권한이 없는 순간에 달린 댓글들 조회를 시도하면 예외가 발생한다.")
+    @DisplayName("조회 권한이 없는 스타카토에 달린 댓글들 조회를 시도하면 예외가 발생한다.")
     @Test
     void readAllByMomentIdFailByForbidden() {
         // given

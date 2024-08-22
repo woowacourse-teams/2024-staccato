@@ -69,7 +69,7 @@ public class MomentService {
 
     private Moment getMomentById(long momentId) {
         return momentRepository.findById(momentId)
-                .orElseThrow(() -> new StaccatoException("요청하신 순간을 찾을 수 없어요."));
+                .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 
     @Transactional

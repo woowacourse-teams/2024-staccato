@@ -46,7 +46,7 @@ public class CommentController implements CommentControllerDocs {
     @GetMapping
     public ResponseEntity<CommentResponses> readCommentsByMomentId(
             @LoginMember Member member,
-            @RequestParam @Min(value = 1L, message = "순간 식별자는 양수로 이루어져야 합니다.") long momentId
+            @RequestParam @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId
     ) {
         CommentResponses commentResponses = commentService.readAllCommentsByMomentId(member, momentId);
         return ResponseEntity.ok().body(commentResponses);

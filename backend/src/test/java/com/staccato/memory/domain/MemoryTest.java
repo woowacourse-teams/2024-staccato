@@ -16,7 +16,7 @@ import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.moment.domain.Moment;
 
 class MemoryTest {
-    @DisplayName("추억을 수정 시 기존 순간 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
+    @DisplayName("추억을 수정 시 기존 스타카토 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
     @Test
     void validateDuration() {
         // given
@@ -27,7 +27,7 @@ class MemoryTest {
         // when & then
         assertThatThrownBy(() -> memory.update(updatedMemory, List.of(moment)))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("변경하려는 추억 기간이 이미 존재하는 순간을 포함하지 않습니다. 추억 기간을 다시 설정해주세요.");
+                .hasMessage("기간이 이미 존재하는 스타카토를 포함하지 않아요. 다시 설정해주세요.");
     }
 
     @DisplayName("주어진 문자열과 제목이 같으면 거짓을 반환한다.")
