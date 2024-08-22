@@ -33,6 +33,12 @@ jobs:
       - name: Test with Gradle
         run: ./gradlew build
 
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: ${{ github.workspace }}/backend/build/test-results/**/*.xml
+
       - name: Jacoco Report to PR
         id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
@@ -41,5 +47,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 70
           min-coverage-changed-files: 70
-          title: "⭐️Code Coverage"
+          title: "🌻Test Coverage Report"
           update-comment: true
