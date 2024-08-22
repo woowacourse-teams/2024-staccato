@@ -62,7 +62,7 @@ jobs:
       - name: Create KeyStore File and Properties
         run: |
           mkdir ./app/signing
-          echo $UPLOAD_KEY_STORE_JKS | base64 -d > ./app/signing/upload_key_store.jks
+          echo "$UPLOAD_KEY_STORE_JKS" | base64 --decode > ./app/signing/upload_key_store.jks
           echo $KEY_STORE_PROPERTIES > ./app/signing/keystore.properties
 
       - name: Grant execute permission for gradlew
