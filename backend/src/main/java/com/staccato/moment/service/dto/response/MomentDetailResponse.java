@@ -14,10 +14,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record MomentDetailResponse(
         @Schema(example = "1")
         long momentId,
+        @Schema(example = "1")
+        long memoryId,
+        @Schema(example = "2024 서울 투어")
+        String memoryTitle,
         @Schema(example = "남산 서울타워")
         String placeName,
-        @ArraySchema(
-                arraySchema = @Schema(example = "[\"https://example.com/images/namsan_tower.jpg\", \"https://example.com/images/namsan_tower2.jpg\"]"))
+        @ArraySchema(arraySchema = @Schema(example = "[\"https://example.com/images/namsan_tower.jpg\", \"https://example.com/images/namsan_tower2.jpg\"]"))
         List<String> momentImageUrls,
         @Schema(example = "2021-11-08T11:58:20")
         LocalDateTime visitedAt,
@@ -30,6 +33,8 @@ public record MomentDetailResponse(
     public MomentDetailResponse(Moment moment) {
         this(
                 moment.getId(),
+                moment.getMemory().getId(),
+                moment.getMemory().getTitle(),
                 moment.getPlaceName(),
                 moment.getMomentImages().getImages().stream().map(MomentImage::getImageUrl).toList(),
                 moment.getVisitedAt(),
