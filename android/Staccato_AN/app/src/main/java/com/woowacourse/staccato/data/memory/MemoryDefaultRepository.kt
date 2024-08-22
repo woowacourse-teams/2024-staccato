@@ -4,6 +4,7 @@ import com.woowacourse.staccato.data.ResponseResult
 import com.woowacourse.staccato.data.dto.mapper.toDomain
 import com.woowacourse.staccato.data.dto.memory.MemoryCreationResponse
 import com.woowacourse.staccato.domain.model.Memory
+import com.woowacourse.staccato.domain.model.MemoryCandidates
 import com.woowacourse.staccato.domain.model.NewMemory
 import com.woowacourse.staccato.domain.repository.MemoryRepository
 
@@ -13,15 +14,37 @@ class MemoryDefaultRepository(
     override suspend fun getMemory(memoryId: Long): ResponseResult<Memory> {
         return when (val responseResult = memoryDataSource.getMemory(memoryId)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
-            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
+            is ResponseResult.ServerError ->
+                ResponseResult.ServerError(
+                    responseResult.status,
+                    responseResult.message,
+                )
+
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
+        }
+    }
+
+    override suspend fun getMemories(currentDate: String?): ResponseResult<MemoryCandidates> {
+        return when (val responseResult = memoryDataSource.getMemories(currentDate)) {
+            is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
+            is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+            is ResponseResult.ServerError ->
+                ResponseResult.ServerError(
+                    responseResult.status,
+                    responseResult.message,
+                )
         }
     }
 
     override suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse> {
         return when (val responseResult = memoryDataSource.createMemory(newMemory)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
-            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
+            is ResponseResult.ServerError ->
+                ResponseResult.ServerError(
+                    responseResult.status,
+                    responseResult.message,
+                )
+
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
         }
     }
@@ -32,7 +55,12 @@ class MemoryDefaultRepository(
     ): ResponseResult<Unit> {
         return when (val responseResult = memoryDataSource.updateMemory(memoryId, newMemory)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
-            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
+            is ResponseResult.ServerError ->
+                ResponseResult.ServerError(
+                    responseResult.status,
+                    responseResult.message,
+                )
+
             is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
         }
     }
@@ -40,7 +68,12 @@ class MemoryDefaultRepository(
     override suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit> {
         return when (val responseResult = memoryDataSource.deleteMemory(memoryId)) {
             is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
-            is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
+            is ResponseResult.ServerError ->
+                ResponseResult.ServerError(
+                    responseResult.status,
+                    responseResult.message,
+                )
+
             is ResponseResult.Success -> ResponseResult.Success(Unit)
         }
     }
