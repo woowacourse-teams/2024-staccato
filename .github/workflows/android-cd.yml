@@ -71,9 +71,21 @@ jobs:
       - name: Build Release AAB
         run: ./gradlew bundleRelease
 
-      - name: check APK directory
+      - name: check APK directory 1
+        run: |
+          ls -R android/Staccato_AN/app/debug/
+
+      - name: check AAB directory 1
+        run: |
+          ls -R android/Staccato_AN/app/release/
+
+      - name: check APK directory 2
         run: |
           ls -R android/Staccato_AN/app/build/outputs/apk/
+
+      - name: check AAB directory 2
+        run: |
+          ls -R android/Staccato_AN/app/build/outputs/bundle/
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v3
