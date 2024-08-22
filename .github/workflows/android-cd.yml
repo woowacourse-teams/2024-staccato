@@ -71,25 +71,36 @@ jobs:
       - name: Build Release AAB
         run: ./gradlew bundleRelease
 
-      - name: Run clean test
-        run: ./gradlew clean test
+      - name: check APK directory
+        run: |
+          ls -R android/Staccato_AN/app/build/outputs/apk/
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v3
         with:
           name: app-release.apk
-          path: ./android/Staccato_AN/app/build/outputs/apk/release/app-release.apk
+          path: ${{ github.workspace }}/android/Staccato_AN/app/build/outputs/apk/release/*.apk
+
+      - name: Debug APK Path Issue
+        run: find android/Staccato_AN/app/build/outputs/apk/ -name "*.apk"
+
+      - name: check AAB directory
+        run: |
+          ls -R android/Staccato_AN/app/build/outputs/bundle/
 
       - name: Upload Release AAB
         uses: actions/upload-artifact@v3
         with:
           name: app-release.aab
-          path: ./android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
+          path: ${{ github.workspace }}/android/Staccato_AN/app/build/outputs/bundle/release/*.aab
+
+      - name: Debug AAB Path Issue
+        run: find android/Staccato_AN/app/build/outputs/bundle/ -name "*.aab"
 
       - name: Upload On Google Play
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: com.woowacourse.staccato
-          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          releaseFiles: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
           track: internal
