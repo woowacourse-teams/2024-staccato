@@ -1,10 +1,10 @@
-package com.woowacourse.staccato.data.dto.moment
+package com.woowacourse.staccato.data.dto.comment
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VisitLogDto(
+data class CommentDto(
     @SerialName("commentId") val visitLogId: Long,
     @SerialName("memberId") val memberId: Long,
     @SerialName("nickname") val nickname: String,

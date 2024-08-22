@@ -1,7 +1,7 @@
 package com.woowacourse.staccato.data.dto.mapper
 
 import com.woowacourse.staccato.data.dto.moment.MomentResponse
-import com.woowacourse.staccato.data.dto.moment.VisitLogDto
+import com.woowacourse.staccato.data.dto.comment.CommentDto
 import com.woowacourse.staccato.domain.model.Feeling
 import com.woowacourse.staccato.domain.model.Moment
 import com.woowacourse.staccato.domain.model.VisitLog
@@ -18,7 +18,7 @@ fun MomentResponse.toDomain() =
         comments = visitLogs.map { it.toDomain() },
     )
 
-fun VisitLogDto.toDomain() =
+fun CommentDto.toDomain() =
     VisitLog(
         visitLogId = visitLogId,
         memberId = memberId,

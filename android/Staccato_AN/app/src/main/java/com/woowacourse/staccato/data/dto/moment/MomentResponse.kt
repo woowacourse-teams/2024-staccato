@@ -1,5 +1,6 @@
 package com.woowacourse.staccato.data.dto.moment
 
+import com.woowacourse.staccato.data.dto.comment.CommentDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -11,5 +12,5 @@ data class MomentResponse(
     @SerialName("address") val address: String,
     @SerialName("visitedAt") val visitedAt: String,
     @SerialName("feeling") val feeling: String,
-    @SerialName("comments") val visitLogs: List<VisitLogDto>,
+    @SerialName("comments") val visitLogs: List<CommentDto>,
 )
