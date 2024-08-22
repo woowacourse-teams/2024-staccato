@@ -1,11 +1,13 @@
 package com.staccato.moment.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.memory.domain.Memory;
 
 class MomentTest {
@@ -57,6 +60,29 @@ class MomentTest {
                 .memory(memory)
                 .momentImages(new MomentImages(List.of()))
                 .build()).doesNotThrowAnyException();
+    }
+
+    @DisplayName("스타카토 생성 시 placeName의 앞 뒤 공백이 제거된다.")
+    @Test
+    void trimPlaceName() {
+        // given
+        Memory memory = MemoryFixture.create();
+        String placeName = " placeName ";
+        String expectedPlaceName = "placeName";
+
+        // when
+        Moment moment = Moment.builder()
+                .visitedAt(LocalDateTime.of(memory.getTerm().getStartAt(), LocalTime.MIN))
+                .placeName(placeName)
+                .latitude(BigDecimal.ONE)
+                .longitude(BigDecimal.ONE)
+                .address("address")
+                .memory(memory)
+                .momentImages(new MomentImages(List.of()))
+                .build();
+
+        // then
+        assertThat(moment.getPlaceName()).isEqualTo(expectedPlaceName);
     }
 
     @DisplayName("추억 날짜 안에 스타카토 날짜가 포함되지 않으면 예외를 발생시킨다.")

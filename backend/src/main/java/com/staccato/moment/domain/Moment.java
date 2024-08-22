@@ -68,7 +68,7 @@ public class Moment extends BaseEntity {
     ) {
         validateIsWithinMemoryDuration(visitedAt, memory);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
-        this.placeName = placeName;
+        this.placeName = placeName.trim();
         this.spot = new Spot(address, latitude, longitude);
         this.momentImages.addAll(momentImages, this);
         this.memory = memory;

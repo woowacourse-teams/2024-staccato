@@ -3,6 +3,7 @@ package com.staccato.moment.service.dto.request;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -46,6 +47,12 @@ public record MomentRequest(
         @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.")
         List<String> momentImageUrls
 ) {
+    public MomentRequest {
+        if (Objects.nonNull(placeName)) {
+            placeName = placeName.trim();
+        }
+    }
+
     public Moment toMoment(Memory memory) {
         return Moment.builder()
                 .visitedAt(visitedAt)
