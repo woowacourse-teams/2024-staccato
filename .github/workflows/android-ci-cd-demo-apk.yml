@@ -8,6 +8,7 @@ on:
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
+  DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
   GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
   SECRETS_PROPERTIES: ${{ secrets.SECRETS_PROPERTIES }}
   LOCAL_DEFAULTS_PROPERTIES: ${{ secrets.LOCAL_DEFAULTS_PROPERTIES }}
@@ -43,6 +44,10 @@ jobs:
       - name: Set Base Url in local.properties
         run: |
           echo "base_url=\"$BASE_URL\"" >> local.properties
+
+      - name: Set Develop Base Url in local.properties
+        run: |
+          echo "dev_base_url=\"$DEV_BASE_URL\"" >> local.properties
 
       - name: Create google-services.json
         run: |
