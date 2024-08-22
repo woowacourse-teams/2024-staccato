@@ -29,7 +29,7 @@ fun Moment.toVisitUpdateDefaultUiModel(): VisitUpdateDefaultUiModel {
 
 fun Comment.toCommentUiModel() =
     CommentUiModel(
-        id = visitLogId,
+        id = commentId,
         memberId = memberId,
         nickname = nickname,
         memberImageUrl = memberImageUrl,

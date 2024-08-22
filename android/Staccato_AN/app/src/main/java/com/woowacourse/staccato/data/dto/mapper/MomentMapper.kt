@@ -20,7 +20,7 @@ fun MomentResponse.toDomain() =
 
 fun CommentDto.toDomain() =
     Comment(
-        visitLogId = commentId,
+        commentId = commentId,
         memberId = memberId,
         nickname = nickname,
         memberImageUrl = memberImageUrl,
