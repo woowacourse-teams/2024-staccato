@@ -1,5 +1,5 @@
 ## ⭐️ Issue Number
-- #issue_number
+- #
 
 ## 🚩 Summary
 - 구현한 내용 설명1
