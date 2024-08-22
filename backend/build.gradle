@@ -61,3 +61,18 @@ jacocoTestReport {
 		csv.required.set(false)
 	}
 }
+
+/*jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			element 'CLASS'
+			limit {
+				counter = 'BRANCH'
+				value = 'COVEREDRATIO'
+				minimum = 0.7
+			}
+
+			excludes = ['*.config.*','*.*Builder.*']
+		}
+	}
+}*/
