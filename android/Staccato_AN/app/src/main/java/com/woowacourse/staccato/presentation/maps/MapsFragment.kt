@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -158,14 +159,22 @@ class MapsFragment : Fragment() {
 
     private fun observeStaccatoId() {
         viewModel.staccatoId.observe(viewLifecycleOwner) { staccatoId ->
-            val bundle =
-                bundleOf(MOMENT_ID_KEY to staccatoId)
-            findNavController().navigate(R.id.momentFragment, bundle)
+            navigateToStaccato(staccatoId)
             parentFragmentManager.setFragmentResult(
                 BOTTOM_SHEET_STATE_REQUEST_KEY,
                 bundleOf(BOTTOM_SHEET_NEW_STATE to BottomSheetBehavior.STATE_EXPANDED),
             )
         }
+    }
+
+    private fun navigateToStaccato(staccatoId: Long?) {
+        val navOptions =
+            NavOptions.Builder()
+                .setPopUpTo(R.id.momentFragment, true)
+                .build()
+        val bundle =
+            bundleOf(MOMENT_ID_KEY to staccatoId)
+        findNavController().navigate(R.id.momentFragment, bundle, navOptions)
     }
 
     companion object {
