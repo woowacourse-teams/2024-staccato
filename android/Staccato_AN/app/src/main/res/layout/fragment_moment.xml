@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -22,36 +21,39 @@
         android:background="@color/white"
         tools:context=".presentation.ui.staccato.StaccatoActivity">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_moment"
+            style="@style/DefaultToolbarStyle"
+            android:paddingEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_detail_delete"
+                style="@style/ToolbarMenuStyle"
+                android:onClick="@{() -> toolbarHandler.onDeleteClicked()}"
+                android:text="@string/all_delete" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_detail_update"
+                style="@style/ToolbarMenuStyle"
+                android:onClick="@{() -> toolbarHandler.onUpdateClicked(viewModel.momentDetail.memoryId, viewModel.momentDetail.memoryTitle)}"
+                android:text="@string/all_update" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_moment">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar_moment"
-                    style="@style/DefaultToolbarStyle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:paddingEnd="8dp">
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btn_detail_delete"
-                        style="@style/ToolbarMenuStyle"
-                        android:onClick="@{() -> toolbarHandler.onDeleteClicked()}"
-                        android:text="@string/all_delete" />
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btn_detail_update"
-                        style="@style/ToolbarMenuStyle"
-                        android:onClick="@{() -> toolbarHandler.onUpdateClicked(viewModel.momentDetail.memoryId, viewModel.momentDetail.memoryTitle)}"
-                        android:text="@string/all_update" />
-
-                </com.google.android.material.appbar.MaterialToolbar>
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_moment_detail"
@@ -59,8 +61,8 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/toolbar_moment"
-                    tools:layout="@layout/fragment_moment_detail"/>
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout="@layout/fragment_moment_detail" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_moment_feeling_selection"
@@ -69,7 +71,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/container_moment_detail"
-                    tools:layout="@layout/fragment_moment_feeling_selection"/>
+                    tools:layout="@layout/fragment_moment_feeling_selection" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_moment_comments"
@@ -78,7 +80,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/container_moment_feeling_selection"
-                    tools:layout="@layout/fragment_moment_comments"/>
+                    tools:layout="@layout/fragment_moment_comments" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

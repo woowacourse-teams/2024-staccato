@@ -42,7 +42,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val sharedViewModel: SharedViewModel by viewModels()
 
-    private val memoryCreationLauncher =
+    val memoryCreationLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
