@@ -9,6 +9,8 @@ on:
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
   GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+  SECRETS_PROPERTIES: ${{ secrets.SECRETS_PROPERTIES }}
+  LOCAL_DEFAULTS_PROPERTIES: ${{ secrets.LOCAL_DEFAULTS_PROPERTIES }}
 
 jobs:
   test:
@@ -48,6 +50,16 @@ jobs:
       - name: Create google-services.json
         run: |
           echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
+        shell: bash
+
+      - name: Create secrets.properties
+        run: |
+          echo $SECRETS_PROPERTIES > secrets.properties
+        shell: bash
+
+      - name: Create local.defaults.properties
+        run: |
+          echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
         shell: bash
 
       - name: Grant execute permission for gradlew
@@ -97,6 +109,16 @@ jobs:
       - name: Create google-services.json
         run: |
           echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
+        shell: bash
+
+      - name: Create secrets.properties
+        run: |
+          echo $SECRETS_PROPERTIES > secrets.properties
+        shell: bash
+
+      - name: Create local.defaults.properties
+        run: |
+          echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
         shell: bash
 
       - name: Grant execute permission for gradlew
