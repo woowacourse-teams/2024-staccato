@@ -40,7 +40,7 @@ class MapsViewModel(
         _staccatoId.value = markers.first { it.markerId == markerId }.staccatoId
     }
 
-    fun loadMoments() {
+    fun loadStaccatos() {
         viewModelScope.launch {
             val result = momentRepository.getMoments()
             result.onSuccess(::setMomentLocations)

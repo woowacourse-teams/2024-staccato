@@ -78,7 +78,7 @@ class MapsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.loadMoments()
+        viewModel.loadStaccatos()
     }
 
     private fun checkLocationPermissions(googleMap: GoogleMap) {
