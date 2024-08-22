@@ -8,7 +8,7 @@ val localProperties =
 
 val keystoreProperties =
     Properties().apply {
-        load((FileInputStream(rootProject.file("app/signing/keystore.properties"))))
+        load(FileInputStream(rootProject.file("app/signing/keystore.properties")))
     }
 
 plugins {
