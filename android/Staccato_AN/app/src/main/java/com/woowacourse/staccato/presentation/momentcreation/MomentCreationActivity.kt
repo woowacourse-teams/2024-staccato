@@ -154,8 +154,7 @@ class MomentCreationActivity :
         )
     }
 
-    private fun makeSnackBar(message: String): Snackbar =
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+    private fun makeSnackBar(message: String): Snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
 
     private fun Snackbar.setAction() {
         setAction(R.string.snack_bar_move_to_setting) {
@@ -219,7 +218,7 @@ class MomentCreationActivity :
                 listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
             )
         }
-        viewModel.memories.observe(this) { memories ->
+        viewModel.memoryCandidates.observe(this) { memories ->
             memorySelectionFragment.setItems(memories.memoryCandidate)
         }
         viewModel.createdMomentId.observe(this) { createdMomentId ->
@@ -255,7 +254,7 @@ class MomentCreationActivity :
             val currentLocation =
                 fusedLocationProviderClient.getCurrentLocation(
                     LocationRequest.PRIORITY_HIGH_ACCURACY,
-                    null
+                    null,
                 )
             currentLocation.addOnSuccessListener { location ->
                 fetchAddress(location)
@@ -284,8 +283,9 @@ class MomentCreationActivity :
             val geocodeListener = initGeocodeListener(location)
             geocoder.getFromLocation(location.latitude, location.longitude, 1, geocodeListener)
         } else {
-            address = geocoder.getFromLocation(location.latitude, location.longitude, 1)?.get(0)
-                ?.getAddressLine(0).toString()
+            address =
+                geocoder.getFromLocation(location.latitude, location.longitude, 1)?.get(0)
+                    ?.getAddressLine(0).toString()
             viewModel.setLocationInformation(address, location)
         }
     }

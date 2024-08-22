@@ -47,8 +47,8 @@ class MomentCreationViewModel(
     private val _selectedMemory = MutableLiveData<MemoryCandidate>()
     val selectedMemory: LiveData<MemoryCandidate> get() = _selectedMemory
 
-    private val _memories = MutableLiveData<MemoryCandidates>()
-    val memories: LiveData<MemoryCandidates> get() = _memories
+    private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
+    val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
 
     private val _latitude = MutableLiveData<Double>()
     private val latitude: LiveData<Double> get() = _latitude
@@ -103,7 +103,7 @@ class MomentCreationViewModel(
         viewModelScope.launch {
             memoryRepository.getMemories(localDateTime.toLocalDate().toString())
                 .onSuccess { memoryCandidates ->
-                    _memories.value = memoryCandidates
+                    _memoryCandidates.value = memoryCandidates
                 }
         }
     }

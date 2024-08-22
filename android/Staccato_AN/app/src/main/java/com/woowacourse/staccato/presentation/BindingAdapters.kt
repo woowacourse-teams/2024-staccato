@@ -18,6 +18,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.domain.model.MemoryCandidate
+import com.woowacourse.staccato.domain.model.MemoryCandidates
 import com.woowacourse.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
@@ -241,11 +242,21 @@ fun Button.setStaccatoUpdateButtonActive(
         }
 }
 
-@BindingAdapter("setSelectedMemory")
-fun TextView.setSelectedMemory(selectedMemory: MemoryCandidate?) {
-    if (selectedMemory == null) {
+@BindingAdapter(value = ["setSelectedMemory", "setMemoryCandidates"])
+fun TextView.setSelectedMemory(
+    selectedMemory: MemoryCandidate?,
+    memoryCandidates: MemoryCandidates?,
+) {
+    if (memoryCandidates?.memoryCandidate?.isEmpty() == true) {
+        text = resources.getString(R.string.visit_creation_no_memory_hint)
+        setTextColor(resources.getColor(R.color.gray3, null))
+        isClickable = false
+        isFocusable = false
+    } else if (selectedMemory == null) {
         text = resources.getString(R.string.visit_creation_memory_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
+        isClickable = true
+        isFocusable = true
     } else {
         text = selectedMemory.memoryTitle
         setTextColor(resources.getColor(R.color.staccato_black, null))
