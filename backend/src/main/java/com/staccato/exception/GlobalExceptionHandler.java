@@ -12,8 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.multipart.MultipartException;
-import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import com.staccato.config.log.LogForm;
 
@@ -24,6 +22,8 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final String INTERNAL_SERVER_ERROR_MESSAGE = "예기치 못한 서버 오류입니다. 다시 시도해주세요.";
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
                 .next()
                 .getMessage();
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), exceptionMessage);
-        log.warn(LogForm.CUSTOM_EXCEPTION_LOGGING_FORM, exceptionResponse);
+        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
@@ -66,25 +66,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(S3Exception.class)
+    @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleS3Exception(S3Exception e) {
         String exceptionMessage = "이미지 처리에 실패했습니다.";
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), exceptionMessage);
-        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
-        return ResponseEntity.badRequest().body(exceptionResponse);
-    }
-
-    @ExceptionHandler(MissingServletRequestPartException.class)
-    public ResponseEntity<ExceptionResponse> handleMissingServletRequestPartException(MissingServletRequestPartException e) {
-        String exceptionMessage = "요청된 파트가 누락되었습니다. 올바른 데이터를 제공해주세요.";
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), exceptionMessage);
-        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
-        return ResponseEntity.badRequest().body(exceptionResponse);
-    }
-
-    @ExceptionHandler(MultipartException.class)
-    public ResponseEntity<ExceptionResponse> handleMultipartException(MultipartException e) {
-        String exceptionMessage = "20MB 이하의 사진을 업로드해 주세요.";
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.PAYLOAD_TOO_LARGE.toString(), exceptionMessage);
         log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
@@ -93,7 +78,7 @@ public class GlobalExceptionHandler {
     @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleStaccatoException(StaccatoException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
-        log.warn(LogForm.CUSTOM_EXCEPTION_LOGGING_FORM, exceptionResponse);
+        log.info(LogForm.CUSTOM_EXCEPTION_LOGGING_FORM, exceptionResponse);
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
@@ -116,8 +101,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     @ApiResponse(responseCode = "500")
     public ResponseEntity<ExceptionResponse> handleInternalServerErrorException(RuntimeException e) {
-        String exceptionMessage = "예기치 못한 서버 오류입니다. 다시 시도해주세요.";
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), exceptionMessage);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
         log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage());
         return ResponseEntity.internalServerError().body(exceptionResponse);
     }
