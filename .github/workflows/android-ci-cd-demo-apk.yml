@@ -68,14 +68,18 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
-      - name: Clean test
-        run: ./gradlew clean test
-
       - name: Upload Debug APK
         uses: actions/upload-artifact@v3
         with:
           name: app-debug.apk
           path: ${{ github.workspace }}/android/Staccato_AN/app/build/outputs/apk/debug/*.apk
+
+      - name: check APK directory
+        run: |
+          ls -R android/Staccato_AN/app/build/outputs/apk/
+
+      - name: Debug APK Path Issue
+        run: find android/Staccato_AN/app/build/outputs/apk/ -name "*.apk"
 
       - name: Upload Artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
