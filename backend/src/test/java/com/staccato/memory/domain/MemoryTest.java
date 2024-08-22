@@ -16,6 +16,19 @@ import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.moment.domain.Moment;
 
 class MemoryTest {
+    @DisplayName("추억 생성 시 제목에는 앞뒤 공백이 잘린다.")
+    @Test
+    void trimMemoryTitle() {
+        // given
+        String expectedTitle = "title";
+
+        // when
+        Memory memory = Memory.builder().title(" title ").build();
+
+        // then
+        assertThat(memory.getTitle()).isEqualTo(expectedTitle);
+    }
+
     @DisplayName("추억을 수정 시 기존 스타카토 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
     @Test
     void validateDuration() {

@@ -79,7 +79,7 @@ class MemoryControllerTest {
                 ),
                 Arguments.of(
                         new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "가".repeat(31), "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                        "제목은 공백 포함 1자 이상 30자 이하로 설정해주세요."
+                        "제목은 공백 포함 30자 이하로 설정해주세요."
                 ),
                 Arguments.of(
                         new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", "가".repeat(501), LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
@@ -194,7 +194,6 @@ class MemoryControllerTest {
     void updateMemory(MemoryRequest memoryRequest) throws Exception {
         // given
         long memoryId = 1L;
-        MockMultipartFile file = new MockMultipartFile("memoryThumbnailUrl", "example.jpg".getBytes());
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then

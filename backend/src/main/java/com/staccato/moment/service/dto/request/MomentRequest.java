@@ -3,6 +3,7 @@ package com.staccato.moment.service.dto.request;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,7 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record MomentRequest(
         @Schema(example = "런던 박물관")
         @NotBlank(message = "스타카토 제목을 입력해주세요.")
-        @Size(min = 1, max = 30, message = "스타카토 제목은 공백 포함 1자 이상 30자 이하로 설정해주세요.")
+        @Size(max = 30, message = "스타카토 제목은 공백 포함 30자 이하로 설정해주세요.")
         String placeName,
         @Schema(example = "Great Russell St, London WC1B 3DG")
         @NotNull(message = "스타카토의 주소를 입력해주세요.")
@@ -46,6 +47,12 @@ public record MomentRequest(
         @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.")
         List<String> momentImageUrls
 ) {
+    public MomentRequest {
+        if (Objects.nonNull(placeName)) {
+            placeName = placeName.trim();
+        }
+    }
+
     public Moment toMoment(Memory memory) {
         return Moment.builder()
                 .visitedAt(visitedAt)
