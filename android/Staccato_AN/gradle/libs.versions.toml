@@ -1,6 +1,7 @@
 [versions]
 agp = "8.3.0"
 converterScalars = "2.9.0"
+dotsindicator = "5.0"
 kotlin = "1.9.0"
 ktlint = "12.1.0"
 coreKtx = "1.13.1"
@@ -37,6 +38,7 @@ viewpager2 = "1.1.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "converterScalars" }
+dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.tabs.TabLayoutMediator
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentMomentBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
@@ -34,18 +35,22 @@ class MomentFragment :
         savedInstanceState: Bundle?,
     ) {
         momentId = arguments?.getLong(MOMENT_ID_KEY) ?: return
-        initAdapter()
+        binding.viewModel = momentViewModel
         initToolbarHandler()
+        initViewPagerAdapter()
         loadMomentData()
         observeData()
         createChildFragments(savedInstanceState)
         observeViewModel()
     }
 
-    private fun initAdapter() {
-        binding.viewModel = momentViewModel
+    private fun initViewPagerAdapter() {
         pagePhotoAdapter = ViewpagePhotoAdapter()
-        binding.pagerPhotoHorizontal.adapter = pagePhotoAdapter
+        binding.vpPhotoHorizontal.adapter = pagePhotoAdapter
+        TabLayoutMediator(
+            binding.tabPhotoHorizontal,
+            binding.vpPhotoHorizontal
+        ) { _, _ -> }.attach()
     }
 
     private fun observeViewModel() {

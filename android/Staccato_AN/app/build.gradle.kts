@@ -140,6 +140,7 @@ dependencies {
 
     // View Pager2
     implementation(libs.androidx.viewpager2)
+    implementation(libs.dotsindicator)
 }
 
 secrets {
