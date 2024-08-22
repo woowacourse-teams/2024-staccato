@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -63,10 +64,12 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_start_staccato"
                 style="@style/ButtonStyle.Login"
+                android:layout_marginTop="32dp"
                 android:onClick="@{() -> handler.onStartClicked()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_login_user_nickname" />
+                app:layout_constraintTop_toBottomOf="@id/et_login_user_nickname"
+                bind:setLoginButtonActive="@{viewModel.nickname}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

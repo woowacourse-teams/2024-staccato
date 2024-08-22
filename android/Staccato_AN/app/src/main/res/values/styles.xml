@@ -104,10 +104,15 @@
     </style>
 
     <style name="ButtonStyle.Login" parent="ButtonStyle">
-        <item name="android:background">@drawable/shape_button_staccato_blue_5dp</item>
+        <item name="android:background">@drawable/selector_button_5dp</item>
         <item name="android:text">@string/login_start</item>
-        <item name="android:layout_marginTop">32dp</item>
+        <item name="android:textColor">@color/gray4</item>
+        <item name="android:enabled">false</item>
+    </style>
+
+    <style name="ButtonStyle.Login.Active" parent="ButtonStyle.Login">
         <item name="android:textColor">@color/white</item>
+        <item name="android:enabled">true</item>
     </style>
 
     <style name="ToolbarMenuStyle">

@@ -171,6 +171,18 @@ fun ImageView.setRoundedCornerImageByUriWithGlide(
         .into(this)
 }
 
+@BindingAdapter("setLoginButtonActive")
+fun Button.setLoginButtonActive(nickName: String?) {
+    isEnabled =
+        if (nickName.isNullOrBlank()) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
 @BindingAdapter(
     value = ["memoryTitle", "startDate", "endDate"],
 )
@@ -180,7 +192,7 @@ fun Button.setMemorySaveButtonActive(
     endDate: LocalDate?,
 ) {
     isEnabled =
-        if (title.isNullOrEmpty() || startDate == null || endDate == null) {
+        if (title.isNullOrBlank() || startDate == null || endDate == null) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -198,7 +210,7 @@ fun Button.setStaccatoSaveButtonActive(
     visitedAt: LocalDateTime?,
 ) {
     isEnabled =
-        if (title.isNullOrEmpty() || address == null || visitedAt == null) {
+        if (title.isNullOrBlank() || address == null || visitedAt == null) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -351,6 +363,11 @@ fun FrameLayout.setAttachedPhotoVisibility(items: Array<Uri>?) {
 @BindingAdapter("setEnabled")
 fun Button.setEnabled(isUpdateCompleted: Boolean?) {
     isEnabled = !(isUpdateCompleted ?: true)
+}
+
+@BindingAdapter("setLoginEnabled")
+fun Button.setLoginEnabled(nickName: String?) {
+    isEnabled = !nickName.isNullOrEmpty()
 }
 
 @BindingAdapter(value = ["currentPhotoNumbers", "maxPhotoNumbers"])
