@@ -78,13 +78,15 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-release.apk
-          path: ./android/Staccato_AN/app/release/app-release.apk
+          path: app/release/app-release.apk
+          if-no-files-found: error
 
       - name: Upload Release AAB
         uses: actions/upload-artifact@v3
         with:
           name: app-release.aab
-          path: ./android/Staccato_AN/app/release/app-release.aab
+          path: app/release/app-release.aab
+          if-no-files-found: error
 
       - name: Upload On Google Play
         uses: r0adkll/upload-google-play@v1
