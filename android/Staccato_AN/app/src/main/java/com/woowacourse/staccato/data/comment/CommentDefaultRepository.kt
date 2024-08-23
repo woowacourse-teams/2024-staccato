@@ -9,7 +9,7 @@ import com.woowacourse.staccato.domain.model.NewComment
 import com.woowacourse.staccato.domain.repository.CommentRepository
 
 class CommentDefaultRepository(
-    private val commentDataSource: CommentDataSource = CommentRemoteDataSource()
+    private val commentDataSource: CommentDataSource = CommentRemoteDataSource(),
 ) : CommentRepository {
     override suspend fun fetchComments(momentId: Long): ResponseResult<List<Comment>> =
         when (val responseResult = commentDataSource.getComments(momentId)) {
@@ -26,7 +26,6 @@ class CommentDefaultRepository(
             }
         }
 
-
     override suspend fun createComment(newComment: NewComment): ResponseResult<Unit> =
         when (val responseResult = commentDataSource.createComment(newComment.toDto())) {
             is ResponseResult.ServerError -> {
@@ -42,7 +41,10 @@ class CommentDefaultRepository(
             }
         }
 
-    override suspend fun updateComment(commentId: Long, content: String): ResponseResult<Unit> {
+    override suspend fun updateComment(
+        commentId: Long,
+        content: String,
+    ): ResponseResult<Unit> {
         val responseResult =
             commentDataSource.updateComment(
                 commentId,

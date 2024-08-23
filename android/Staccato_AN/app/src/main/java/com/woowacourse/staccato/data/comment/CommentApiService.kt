@@ -1,6 +1,5 @@
 package com.woowacourse.staccato.data.comment
 
-import com.woowacourse.staccato.data.comment.CommentApiService.Companion.COMMENTS_PATH_WITH_ID
 import com.woowacourse.staccato.data.dto.comment.CommentRequest
 import com.woowacourse.staccato.data.dto.comment.CommentUpdateRequest
 import com.woowacourse.staccato.data.dto.comment.CommentsResponse
@@ -10,7 +9,6 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CommentApiService {

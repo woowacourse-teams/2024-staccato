@@ -18,9 +18,14 @@ class CommentRemoteDataSource(
 
     override suspend fun updateComment(
         commentId: Long,
-        commentUpdateRequest: CommentUpdateRequest
+        commentUpdateRequest: CommentUpdateRequest,
     ): ResponseResult<Unit> =
-        handleApiResponse { commentApiService.putComment(commentId, commentUpdateRequest) }
+        handleApiResponse {
+            commentApiService.putComment(
+                commentId,
+                commentUpdateRequest,
+            )
+        }
 
     override suspend fun deleteComment(commentId: Long): ResponseResult<Unit> =
         handleApiResponse { commentApiService.deleteComment(commentId) }

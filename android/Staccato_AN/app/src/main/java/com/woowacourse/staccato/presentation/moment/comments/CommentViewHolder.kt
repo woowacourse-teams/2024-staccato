@@ -37,16 +37,19 @@ class CommentViewHolder(
     private fun setUpCreationMenu(popup: PopupMenu) {
         popup.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.comment_update -> binding.myComment?.id?.let {
-                    commentHandler.onUpdateButtonClicked(
-                        it
-                    )
-                }
-                R.id.comment_delete -> binding.myComment?.id?.let {
-                    commentHandler.onDeleteButtonClicked(
-                        it
-                    )
-                }
+                R.id.comment_update ->
+                    binding.myComment?.id?.let {
+                        commentHandler.onUpdateButtonClicked(
+                            it,
+                        )
+                    }
+
+                R.id.comment_delete ->
+                    binding.myComment?.id?.let {
+                        commentHandler.onDeleteButtonClicked(
+                            it,
+                        )
+                    }
             }
             false
         }
