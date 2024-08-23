@@ -9,7 +9,14 @@ class SharedViewModel : ViewModel() {
     val isTimelineUpdated: SingleLiveData<Boolean>
         get() = _isTimelineUpdated
 
+    private val _isStaccatosUpdated = MutableSingleLiveData(false)
+    val isStaccatosUpdated: SingleLiveData<Boolean> get() = _isStaccatosUpdated
+
     fun setTimelineHasUpdated() {
         _isTimelineUpdated.setValue(true)
+    }
+
+    fun setStaccatosHasUpdated() {
+        _isStaccatosUpdated.setValue(true)
     }
 }

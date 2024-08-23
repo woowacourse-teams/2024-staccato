@@ -3,6 +3,7 @@ package com.woowacourse.staccato.presentation.moment
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
@@ -11,6 +12,7 @@ import com.woowacourse.staccato.databinding.FragmentMomentBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.common.DeleteDialogFragment
 import com.woowacourse.staccato.presentation.main.MainActivity
+import com.woowacourse.staccato.presentation.main.SharedViewModel
 import com.woowacourse.staccato.presentation.moment.comments.MomentCommentsFragment
 import com.woowacourse.staccato.presentation.moment.detail.ViewpagePhotoAdapter
 import com.woowacourse.staccato.presentation.moment.feeling.MomentFeelingSelectionFragment
@@ -25,6 +27,7 @@ class MomentFragment :
     private val momentViewModel: MomentViewModel by viewModels { MomentViewModelFactory() }
     private var momentId by Delegates.notNull<Long>()
     private lateinit var pagePhotoAdapter: ViewpagePhotoAdapter
+    private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog =
         DeleteDialogFragment {
             momentViewModel.deleteMoment(momentId)
@@ -94,7 +97,10 @@ class MomentFragment :
             }
         }
         momentViewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
-            if (isDeleted) findNavController().popBackStack()
+            if (isDeleted) {
+                sharedViewModel.setStaccatosHasUpdated()
+                findNavController().popBackStack()
+            }
         }
     }
 
