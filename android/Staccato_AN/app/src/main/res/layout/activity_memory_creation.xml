@@ -206,7 +206,8 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_description"
                     bind:endDate="@{viewModel.endDate}"
                     bind:memoryTitle="@{viewModel.title}"
-                    bind:startDate="@{viewModel.startDate}" />
+                    bind:startDate="@{viewModel.startDate}"
+                    bind:isPhotoPosting="@{viewModel.isPhotoPosting}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

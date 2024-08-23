@@ -197,7 +197,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_memory_update_save"
-                    style="@style/ButtonStyle.Save.Active"
+                    style="@style/ButtonStyle.Save"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginVertical="24dp"
                     android:onClick="@{() -> handler.onSaveClicked()}"
@@ -207,7 +207,9 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_period_description"
                     bind:endDate="@{viewModel.endDate}"
                     bind:memoryTitle="@{viewModel.title}"
-                    bind:startDate="@{viewModel.startDate}" />
+                    bind:startDate="@{viewModel.startDate}"
+                    bind:photoUri="@{viewModel.thumbnailUri}"
+                    bind:photoUrl="@{viewModel.thumbnailUrl}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

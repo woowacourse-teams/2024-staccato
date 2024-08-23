@@ -2,7 +2,6 @@ package com.woowacourse.staccato.presentation.memorycreation.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -51,11 +50,15 @@ class MemoryCreationViewModel(
     private val _isPosting = MutableLiveData<Boolean>(false)
     val isPosting: LiveData<Boolean> get() = _isPosting
 
+    private val _isPhotoPosting = MutableLiveData<Boolean>(false)
+    val isPhotoPosting: LiveData<Boolean> get() = _isPhotoPosting
+
     fun createThumbnailUrl(
         context: Context,
         thumbnailUri: Uri,
     ) {
         _thumbnailUri.value = thumbnailUri
+        _isPhotoPosting.value = true
         val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
         viewModelScope.launch {
             val result: ResponseResult<ImageResponse> =
@@ -72,6 +75,7 @@ class MemoryCreationViewModel(
 
     fun setThumbnailUrl(imageResponse: ImageResponse?) {
         _thumbnailUrl.value = imageResponse?.imageUrl
+        _isPhotoPosting.value = false
     }
 
     fun setMemoryPeriod(

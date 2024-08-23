@@ -35,7 +35,7 @@ class MemoryUpdateViewModel(
     private val _thumbnailUri = MutableLiveData<Uri?>(null)
     val thumbnailUri: LiveData<Uri?> get() = _thumbnailUri
 
-    private val _thumbnailUrl = MutableLiveData<String?>()
+    private val _thumbnailUrl = MutableLiveData<String?>(null)
     val thumbnailUrl: LiveData<String?> get() = _thumbnailUrl
 
     val title = ObservableField<String>()
@@ -56,6 +56,9 @@ class MemoryUpdateViewModel(
     private val _isPosting = MutableLiveData<Boolean>()
     val isPosting: LiveData<Boolean> get() = _isPosting
 
+    private val _isPhotoPosting = MutableLiveData<Boolean>(false)
+    val isPhotoPosting: LiveData<Boolean> get() = _isPosting
+
     fun fetchMemory() {
         viewModelScope.launch {
             val result = memoryRepository.getMemory(memoryId)
@@ -70,7 +73,9 @@ class MemoryUpdateViewModel(
         context: Context,
         thumbnailUri: Uri,
     ) {
+        _thumbnailUrl.value = null
         _thumbnailUri.value = thumbnailUri
+        _isPhotoPosting.value = true
         val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
         viewModelScope.launch {
             val result: ResponseResult<ImageResponse> =
@@ -83,14 +88,16 @@ class MemoryUpdateViewModel(
 
     fun setThumbnailUri(thumbnailUri: Uri?) {
         _thumbnailUri.value = thumbnailUri
+        _thumbnailUrl.value = null
     }
 
     fun setThumbnailUrl(imageResponse: ImageResponse?) {
         _thumbnailUrl.value = imageResponse?.imageUrl
+//        _isPhotoPosting.value = false
     }
 
     fun updateMemory() {
-        _isPosting.value = true
+//        _isPhotoPosting.value = true
         viewModelScope.launch {
             val newMemory: NewMemory = makeNewMemory()
             val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory)

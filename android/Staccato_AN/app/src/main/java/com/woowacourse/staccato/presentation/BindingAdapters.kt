@@ -188,15 +188,36 @@ fun Button.setLoginButtonActive(nickName: String?) {
 }
 
 @BindingAdapter(
-    value = ["memoryTitle", "startDate", "endDate"],
+    value = ["memoryTitle", "startDate", "endDate", "isPhotoPosting"],
 )
 fun Button.setMemorySaveButtonActive(
     title: String?,
     startDate: LocalDate?,
     endDate: LocalDate?,
+    isPhotoPosting: Boolean?,
 ) {
     isEnabled =
-        if (title.isNullOrBlank() || startDate == null || endDate == null) {
+        if (title.isNullOrBlank() || startDate == null || endDate == null || isPhotoPosting == true) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
+@BindingAdapter(
+    value = ["memoryTitle", "startDate", "endDate", "photoUri", "photoUrl"],
+)
+fun Button.setMemorySaveButtonActive(
+    title: String?,
+    startDate: LocalDate?,
+    endDate: LocalDate?,
+    photoUri: Uri?,
+    photoUrl: String?,
+) {
+    isEnabled =
+        if (title.isNullOrBlank() || startDate == null || endDate == null || (photoUri != null && photoUrl == null)) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -452,11 +473,12 @@ fun ProgressBar.setThumbnailLoadingProgressBar(
     thumbnailUri: Uri?,
     thumbnailUrl: String?,
 ) {
-    visibility = if (thumbnailUri != null && thumbnailUrl == null) {
-        View.VISIBLE
-    } else {
-        View.GONE
-    }
+    visibility =
+        if (thumbnailUri != null && thumbnailUrl == null) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
 }
 
 @BindingAdapter(value = ["thumbnailUri", "thumbnailUrl"])
@@ -464,9 +486,10 @@ fun View.setThumbnail(
     thumbnailUri: Uri?,
     thumbnailUrl: String?,
 ) {
-    visibility = if (thumbnailUri == null && thumbnailUrl == null) {
-        View.VISIBLE
-    } else {
-        View.GONE
-    }
+    visibility =
+        if (thumbnailUri == null && thumbnailUrl == null) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
 }
