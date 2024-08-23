@@ -80,7 +80,7 @@ class MomentCommentsFragment :
     }
 
     override fun onScreenTouchEvent() {
-        requireParentFragment().view?.setOnTouchListener { _, _->
+        requireParentFragment().view?.setOnTouchListener { _, _ ->
             hideKeyboard()
             false
         }
