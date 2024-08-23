@@ -2,7 +2,7 @@ name: Backend CI
 
 on:
   pull_request:
-    branches: [ "develop-be", "develop" ]
+    branches: [ "develop-be", "develop", "main" ]
 
 permissions: write-all
 
