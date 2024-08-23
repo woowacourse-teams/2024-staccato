@@ -33,6 +33,10 @@ class MomentCommentsViewModel(
     val isDeleteSuccess: SingleLiveData<Boolean>
         get() = _isDeleteSuccess
 
+    private val _isLoading = MutableSingleLiveData(false)
+    val isLoading: SingleLiveData<Boolean>
+        get() = _isLoading
+
     fun fetchComments() {
         viewModelScope.launch {
             commentRepository.fetchComments(momentId)
@@ -50,12 +54,14 @@ class MomentCommentsViewModel(
 
     fun sendComment() {
         commentInput.value?.let {
+            _isLoading.setValue(true)
             val newComment = NewComment(momentId, it)
             viewModelScope.launch {
                 commentRepository.createComment(newComment)
                     .onSuccess {
                         commentInput.value = ""
                         fetchComments()
+                        _isLoading.postValue(false)
                     }
                     .onServerError(::handleServerError)
                     .onException(::handleException)
@@ -67,6 +73,7 @@ class MomentCommentsViewModel(
         status: Status,
         message: String,
     ) {
+        _isLoading.postValue(false)
         when (status) {
             is Status.Code ->
                 Log.e(
@@ -86,6 +93,7 @@ class MomentCommentsViewModel(
         e: Throwable,
         message: String,
     ) {
+        _isLoading.postValue(false)
         Log.e(this.javaClass.simpleName, "Exception($e): $message")
     }
 
