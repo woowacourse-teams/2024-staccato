@@ -54,8 +54,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    bind:coilImageUri="@{viewModel.thumbnailUri}"
+                    bind:coilImageUrl="@{viewModel.thumbnailUrl}"
                     bind:coilPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
-                    bind:coilRoundedCornerImageUrl="@{viewModel.thumbnailUrl}"
                     bind:coilRoundingRadius="@{12}" />
 
                 <ImageButton
@@ -76,11 +77,27 @@
                     layout="@layout/layout_photo_attach"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="@{viewModel.thumbnailUrl == null ? View.VISIBLE : View.GONE }"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
+                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}"
+                    tools:visibility="visible" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_memory_creation_attached_photo"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@color/white_80"
+                    android:padding="100dp"
+                    android:progress="30"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_memory_update_photo_attach"
+                    app:layout_constraintEnd_toEndOf="@id/iv_memory_update_photo_attach"
+                    app:layout_constraintStart_toStartOf="@id/iv_memory_update_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
+                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}"
                     tools:visibility="visible" />
 
                 <TextView

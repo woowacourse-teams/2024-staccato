@@ -28,9 +28,7 @@ import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.MemoryUpdate
 import com.woowacourse.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.woowacourse.staccato.presentation.util.showToast
 
-class MemoryUpdateActivity :
-    BindingActivity<ActivityMemoryUpdateBinding>(),
-    MemoryUpdateHandler,
+class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), MemoryUpdateHandler,
     OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_update
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_MEMORY_ID) }
@@ -74,10 +72,12 @@ class MemoryUpdateActivity :
     }
 
     override fun onPhotoDeletionClicked() {
+        viewModel.setThumbnailUri(null)
         viewModel.setThumbnailUrl(null)
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
+        viewModel.setThumbnailUri(uris.first())
         viewModel.createThumbnailUrl(this, uris.first())
         showToast(getString(R.string.all_posting_photo))
     }
@@ -94,9 +94,7 @@ class MemoryUpdateActivity :
     }
 
     private fun buildDateRangePicker() =
-        MaterialDatePicker.Builder.dateRangePicker()
-            .setTheme(R.style.DatePickerStyle)
-            .setSelection(
+        MaterialDatePicker.Builder.dateRangePicker().setTheme(R.style.DatePickerStyle).setSelection(
                 Pair(
                     MaterialDatePicker.thisMonthInUtcMilliseconds(),
                     MaterialDatePicker.todayInUtcMilliseconds(),

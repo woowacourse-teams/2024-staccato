@@ -32,6 +32,9 @@ class MemoryUpdateViewModel(
     private val _memory = MutableLiveData<NewMemory>()
     val memory: LiveData<NewMemory> get() = _memory
 
+    private val _thumbnailUri = MutableLiveData<Uri?>(null)
+    val thumbnailUri: LiveData<Uri?> get() = _thumbnailUri
+
     private val _thumbnailUrl = MutableLiveData<String?>()
     val thumbnailUrl: LiveData<String?> get() = _thumbnailUrl
 
@@ -67,6 +70,7 @@ class MemoryUpdateViewModel(
         context: Context,
         thumbnailUri: Uri,
     ) {
+        _thumbnailUri.value = thumbnailUri
         val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
         viewModelScope.launch {
             val result: ResponseResult<ImageResponse> =
@@ -75,6 +79,10 @@ class MemoryUpdateViewModel(
                 .onServerError(::handleServerError)
                 .onException(::handelException)
         }
+    }
+
+    fun setThumbnailUri(thumbnailUri: Uri?) {
+        _thumbnailUri.value = thumbnailUri
     }
 
     fun setThumbnailUrl(imageResponse: ImageResponse?) {
