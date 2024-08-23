@@ -19,7 +19,7 @@ class MomentCommentsFragment :
         MomentCommentsViewModelFactory(momentId)
     }
     private val momentViewModel: MomentViewModel by viewModels(
-        ownerProducer = { requireParentFragment() }
+        ownerProducer = { requireParentFragment() },
     ) {
         MomentViewModelFactory()
     }

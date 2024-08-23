@@ -6,8 +6,7 @@ import com.woowacourse.staccato.data.dto.comment.CommentsResponse
 import com.woowacourse.staccato.domain.model.Comment
 import com.woowacourse.staccato.domain.model.NewComment
 
-fun CommentsResponse.toDomain(): List<Comment> =
-    comments.map { it.toDomain() }
+fun CommentsResponse.toDomain(): List<Comment> = comments.map { it.toDomain() }
 
 fun CommentDto.toDomain(): Comment =
     Comment(

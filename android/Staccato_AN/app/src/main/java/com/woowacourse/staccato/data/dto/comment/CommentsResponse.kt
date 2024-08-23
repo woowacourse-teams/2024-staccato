@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CommentsResponse(
-    @SerialName("comments") val comments: List<CommentDto>
+    @SerialName("comments") val comments: List<CommentDto>,
 )

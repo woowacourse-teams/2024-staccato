@@ -2,7 +2,6 @@ package com.woowacourse.staccato.presentation
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
@@ -11,7 +10,6 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import coil.load

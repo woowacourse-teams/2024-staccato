@@ -44,9 +44,7 @@ class MomentCommentsViewModel(
         }
     }
 
-    fun setComments(
-        newComments: List<CommentUiModel>
-    ) {
+    fun setComments(newComments: List<CommentUiModel>) {
         _comments.value = newComments
     }
 
@@ -70,15 +68,17 @@ class MomentCommentsViewModel(
         message: String,
     ) {
         when (status) {
-            is Status.Code -> Log.e(
-                this.javaClass.simpleName,
-                "ServerError(${status.code}): $message"
-            )
+            is Status.Code ->
+                Log.e(
+                    this.javaClass.simpleName,
+                    "ServerError(${status.code}): $message",
+                )
 
-            is Status.Message -> Log.e(
-                this.javaClass.simpleName,
-                "ServerError(${status.message}): $message"
-            )
+            is Status.Message ->
+                Log.e(
+                    this.javaClass.simpleName,
+                    "ServerError(${status.message}): $message",
+                )
         }
     }
 
