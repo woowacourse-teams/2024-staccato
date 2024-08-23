@@ -4,19 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.staccato.databinding.ItemMomentMyCommentBinding
 
-class CommentsAdapter :
-    ListAdapter<CommentUiModel, CommentsAdapter.CommentViewHolder>(diffUtil) {
-    // Todo: 추후 나의 댓글, 다른 사용자의 댓글 구분하기
-    class CommentViewHolder(private val binding: ItemMomentMyCommentBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(commentUiModel: CommentUiModel) {
-            binding.myComment = commentUiModel
-        }
-    }
-
+class CommentsAdapter(private val commentHandler: CommentHandler) :
+    ListAdapter<CommentUiModel, CommentViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -27,8 +18,7 @@ class CommentsAdapter :
                 parent,
                 false,
             )
-        // Todo: 롱 클릭 이벤트 바인딩 적용하기
-        return CommentViewHolder(binding)
+        return CommentViewHolder(binding, commentHandler)
     }
 
     override fun onBindViewHolder(

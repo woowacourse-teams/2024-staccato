@@ -2,11 +2,11 @@ package com.woowacourse.staccato.data.dto.mapper
 
 import com.woowacourse.staccato.data.dto.moment.MomentLocationDto
 import com.woowacourse.staccato.data.dto.moment.MomentResponse
-import com.woowacourse.staccato.data.dto.moment.VisitLogDto
+import com.woowacourse.staccato.data.dto.comment.CommentDto
 import com.woowacourse.staccato.domain.model.Feeling
 import com.woowacourse.staccato.domain.model.Moment
 import com.woowacourse.staccato.domain.model.MomentLocation
-import com.woowacourse.staccato.domain.model.VisitLog
+import com.woowacourse.staccato.domain.model.Comment
 import java.time.LocalDateTime
 
 fun MomentResponse.toDomain() =
@@ -20,15 +20,6 @@ fun MomentResponse.toDomain() =
         visitedAt = LocalDateTime.parse(visitedAt),
         feeling = Feeling.fromValue(feeling),
         comments = visitLogs.map { it.toDomain() },
-    )
-
-fun VisitLogDto.toDomain() =
-    VisitLog(
-        visitLogId = visitLogId,
-        memberId = memberId,
-        nickname = nickname,
-        memberImageUrl = memberImageUrl,
-        content = content,
     )
 
 fun MomentLocationDto.toDomain() =

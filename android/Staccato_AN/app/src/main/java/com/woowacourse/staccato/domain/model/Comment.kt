@@ -1,9 +1,9 @@
 package com.woowacourse.staccato.domain.model
 
-data class VisitLog(
-    val visitLogId: Long,
+data class Comment(
+    val commentId: Long,
     val memberId: Long,
     val nickname: String,
-    val memberImageUrl: String,
+    val memberImageUrl: String? = null,
     val content: String,
 )

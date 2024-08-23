@@ -11,5 +11,5 @@ data class Moment(
     val address: String,
     val visitedAt: LocalDateTime,
     val feeling: Feeling,
-    val comments: List<VisitLog>,
+    val comments: List<Comment>,
 )
