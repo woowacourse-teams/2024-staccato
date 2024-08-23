@@ -1,0 +1,92 @@
+name: Android CI/CD for release
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  BASE_URL: ${{ secrets.BASE_URL }}
+  GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+  SECRETS_PROPERTIES: ${{ secrets.SECRETS_PROPERTIES }}
+  LOCAL_DEFAULTS_PROPERTIES: ${{ secrets.LOCAL_DEFAULTS_PROPERTIES }}
+  UPLOAD_KEY_STORE_JKS: ${{ secrets.UPLOAD_KEY_STORE_JKS }}
+  KEY_STORE_PROPERTIES: ${{ secrets.KEY_STORE_PROPERTIES }}
+
+jobs:
+  android-cd:
+    name: Run Android CI/CD for release
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./android/Staccato_AN
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Create local.properties
+        run: |
+          touch local.properties
+
+      - name: Set Base Url in local.properties
+        run: |
+          echo "base_url=\"$BASE_URL\"" >> local.properties
+
+      - name: Create google-services.json
+        run: |
+          echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
+
+      - name: Create secrets.properties
+        run: |
+          echo $SECRETS_PROPERTIES > secrets.properties
+
+      - name: Create local.defaults.properties
+        run: |
+          echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
+
+      - name: Create KeyStore File and Properties
+        run: |
+          mkdir -p ./app/signing
+          echo "$UPLOAD_KEY_STORE_JKS" | base64 --decode > ./app/signing/upload_key_store.jks
+          echo "$KEY_STORE_PROPERTIES" > ./app/signing/keystore.properties
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+
+      - name: Build Release AAB
+        run: ./gradlew bundleRelease
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.apk
+          path: android/Staccato_AN/app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload Release AAB
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.aab
+          path: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
+
+#      - name: Upload On Google Play
+#        uses: r0adkll/upload-google-play@v1
+#        with:
+#          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+#          packageName: com.woowacourse.staccato
+#          releaseFiles: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
+#          track: internal

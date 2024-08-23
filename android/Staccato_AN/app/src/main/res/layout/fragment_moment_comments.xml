@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.woowacourse.staccato.presentation.moment.comments.MomentCommentsViewModel" />
+
+        <variable
+            name="commentHandler"
+            type="com.woowacourse.staccato.presentation.moment.comments.CommentHandler" />
+
+        <variable
+            name="keyboardHandler"
+            type="com.woowacourse.staccato.presentation.moment.comments.KeyboardActionHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> keyboardHandler.onScreenTouchEvent()}"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/tv_moment_comments_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/visit_logs"
+            android:textAppearance="@style/Typography.Title2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_moment_comments_default_empty"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="90dp"
+            android:contentDescription="@string/all_image_content_description"
+            android:paddingBottom="10dp"
+            android:src="@drawable/staccato_character"
+            android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_moment_comments_title"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_moment_comments_empty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="100dp"
+            android:text="@string/moment_empty_comments"
+            android:textAppearance="@style/Typography.Body2"
+            android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_moment_comments_default_empty"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_moment_comments"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_moment_comments_title"
+            app:reverseLayout="false"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_moment_my_comment" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:layout_constraintTop_toBottomOf="@id/rv_moment_comments" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_moment_comments_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_moment_comments_input"
+                style="@style/TextInputEditTextStyle.Title"
+                android:layout_width="0dp"
+                android:layout_marginStart="10dp"
+                android:hint="@string/visit_enter_log"
+                android:imeOptions="actionDone"
+                android:maxLength="500"
+                android:maxLines="10"
+                android:text="@={viewModel.commentInput}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/iv_moment_comments_send"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_moment_comments_send"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="8dp"
+                android:src="@drawable/selector_comment_sendable"
+                android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
+                android:clickable="true"
+                android:focusable="true"
+                app:enableSendButton="@{viewModel.commentInput}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
