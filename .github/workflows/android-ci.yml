@@ -71,9 +71,6 @@ jobs:
       - name: Clean test
         run: ./gradlew clean test
 
-      - name: Test with Gradle
-        run: ./gradlew test
-
   build:
     needs: test
     name: Build and Run
@@ -135,12 +132,6 @@ jobs:
 
       - name: Run ktlint
         run: ./gradlew ktlintCheck
-
-      - name: Clean build
-        run: ./gradlew clean build
-
-      - name: Clean test
-        run: ./gradlew clean test
 
       - name: Build with Gradle
         run: ./gradlew build
