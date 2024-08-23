@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_photo_attach"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/view_photo_attach_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_camera"
+        app:tint="@color/gray4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/all_photo_attach"
+        android:textAppearance="@style/Typography.Body4"
+        android:textColor="@color/gray4"
+        app:layout_constraintEnd_toEndOf="@id/view_photo_attach_camera"
+        app:layout_constraintStart_toStartOf="@id/view_photo_attach_camera"
+        app:layout_constraintTop_toBottomOf="@id/view_photo_attach_camera" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
