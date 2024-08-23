@@ -1,7 +1,10 @@
 package com.woowacourse.staccato.presentation.moment.comments
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.viewModels
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.databinding.FragmentMomentCommentsBinding
@@ -12,7 +15,8 @@ import com.woowacourse.staccato.presentation.util.showToast
 import kotlin.properties.Delegates
 
 class MomentCommentsFragment :
-    BindingFragment<FragmentMomentCommentsBinding>(R.layout.fragment_moment_comments) {
+    BindingFragment<FragmentMomentCommentsBinding>(R.layout.fragment_moment_comments),
+    KeyboardActionHandler {
     private lateinit var commentsAdapter: CommentsAdapter
     private var momentId by Delegates.notNull<Long>()
     private val commentsViewModel: MomentCommentsViewModel by viewModels {
@@ -23,6 +27,9 @@ class MomentCommentsFragment :
     ) {
         MomentViewModelFactory()
     }
+    private val inputManager: InputMethodManager by lazy {
+        requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+    }
 
     override fun onViewCreated(
         view: View,
@@ -30,8 +37,7 @@ class MomentCommentsFragment :
     ) {
         momentId = arguments?.getLong(MOMENT_ID_KEY) ?: return
         initAdapter()
-        binding.viewModel = commentsViewModel
-        binding.handler = commentsViewModel
+        setUpBinding()
         observeMomentViewModel()
         observeCommentsViewModel()
     }
@@ -39,6 +45,12 @@ class MomentCommentsFragment :
     private fun initAdapter() {
         commentsAdapter = CommentsAdapter(commentsViewModel)
         binding.rvMomentComments.adapter = commentsAdapter
+    }
+
+    private fun setUpBinding() {
+        binding.viewModel = commentsViewModel
+        binding.commentHandler = commentsViewModel
+        binding.keyboardHandler = this
     }
 
     private fun observeMomentViewModel() {
@@ -56,6 +68,31 @@ class MomentCommentsFragment :
             if (issDeleted) {
                 showToast(getString(R.string.moment_comment_has_been_deleted))
             }
+        }
+
+        commentsViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                requireActivity().window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
+            } else {
+                requireActivity().window.clearFlags(FLAG_NOT_TOUCHABLE)
+            }
+        }
+    }
+
+    override fun onScreenTouchEvent() {
+        requireParentFragment().view?.setOnTouchListener { _, _ ->
+            hideKeyboard()
+            false
+        }
+    }
+
+    private fun hideKeyboard() {
+        requireActivity().currentFocus?.let { view ->
+            inputManager.hideSoftInputFromWindow(
+                view.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS,
+            )
+            view.clearFocus()
         }
     }
 

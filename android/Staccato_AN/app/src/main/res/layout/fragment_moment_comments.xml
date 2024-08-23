@@ -12,13 +12,18 @@
             type="com.woowacourse.staccato.presentation.moment.comments.MomentCommentsViewModel" />
 
         <variable
-            name="handler"
+            name="commentHandler"
             type="com.woowacourse.staccato.presentation.moment.comments.CommentHandler" />
+
+        <variable
+            name="keyboardHandler"
+            type="com.woowacourse.staccato.presentation.moment.comments.KeyboardActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> keyboardHandler.onScreenTouchEvent()}"
         android:layout_marginBottom="10dp">
 
         <TextView
@@ -92,8 +97,8 @@
                 android:layout_marginStart="10dp"
                 android:hint="@string/visit_enter_log"
                 android:imeOptions="actionDone"
-                android:maxLength="30"
-                android:maxLines="6"
+                android:maxLength="500"
+                android:maxLines="10"
                 android:text="@={viewModel.commentInput}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_moment_comments_send"
@@ -106,7 +111,7 @@
                 android:layout_height="48dp"
                 android:padding="8dp"
                 android:src="@drawable/selector_comment_sendable"
-                android:onClick="@{() -> handler.onSendButtonClicked()}"
+                android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
                 android:clickable="true"
                 android:focusable="true"
                 app:enableSendButton="@{viewModel.commentInput}"
