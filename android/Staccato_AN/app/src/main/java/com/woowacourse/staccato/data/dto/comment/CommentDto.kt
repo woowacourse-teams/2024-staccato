@@ -8,6 +8,6 @@ data class CommentDto(
     @SerialName("commentId") val commentId: Long,
     @SerialName("memberId") val memberId: Long,
     @SerialName("nickname") val nickname: String,
-    @SerialName("memberImageUrl") val memberImageUrl: String,
+    @SerialName("memberImageUrl") val memberImageUrl: String? = null,
     @SerialName("content") val content: String,
 )

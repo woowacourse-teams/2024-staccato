@@ -10,19 +10,28 @@ import com.woowacourse.staccato.data.ApiResponseHandler.onException
 import com.woowacourse.staccato.data.ApiResponseHandler.onServerError
 import com.woowacourse.staccato.data.ApiResponseHandler.onSuccess
 import com.woowacourse.staccato.data.dto.Status
+import com.woowacourse.staccato.domain.model.NewComment
 import com.woowacourse.staccato.domain.repository.CommentRepository
+import com.woowacourse.staccato.presentation.common.MutableSingleLiveData
+import com.woowacourse.staccato.presentation.common.SingleLiveData
 import com.woowacourse.staccato.presentation.mapper.toCommentUiModel
 import kotlinx.coroutines.launch
 
 class MomentCommentsViewModel(
     private val momentId: Long,
     private val commentRepository: CommentRepository,
-) : ViewModel() {
+) : ViewModel(), CommentHandler {
     private val _comments = MutableLiveData<List<CommentUiModel>>()
     val comments: LiveData<List<CommentUiModel>>
         get() = _comments
 
     val isEmpty: LiveData<Boolean> = _comments.map { it.isEmpty() }
+
+    val commentInput = MutableLiveData<String>()
+
+    private val _isDeleteSuccess = MutableSingleLiveData<Boolean>()
+    val isDeleteSuccess: SingleLiveData<Boolean>
+        get() = _isDeleteSuccess
 
     fun fetchComments() {
         viewModelScope.launch {
@@ -39,6 +48,21 @@ class MomentCommentsViewModel(
         newComments: List<CommentUiModel>
     ) {
         _comments.value = newComments
+    }
+
+    fun sendComment() {
+        commentInput.value?.let {
+            val newComment = NewComment(momentId, it)
+            viewModelScope.launch {
+                commentRepository.createComment(newComment)
+                    .onSuccess {
+                        commentInput.value = ""
+                        fetchComments()
+                    }
+                    .onServerError(::handleServerError)
+                    .onException(::handleException)
+            }
+        }
     }
 
     private fun handleServerError(
@@ -63,5 +87,27 @@ class MomentCommentsViewModel(
         message: String,
     ) {
         Log.e(this.javaClass.simpleName, "Exception($e): $message")
+    }
+
+    override fun onSendButtonClicked() {
+        viewModelScope.launch {
+            sendComment()
+        }
+    }
+
+    override fun onUpdateButtonClicked(commentId: Long) {
+        Log.d("hodu", "not implemented yet")
+    }
+
+    override fun onDeleteButtonClicked(commentId: Long) {
+        viewModelScope.launch {
+            commentRepository.deleteComment(commentId)
+                .onSuccess {
+                    fetchComments()
+                    _isDeleteSuccess.postValue(true)
+                }
+                .onServerError(::handleServerError)
+                .onException(::handleException)
+        }
     }
 }

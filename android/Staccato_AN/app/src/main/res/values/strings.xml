@@ -61,6 +61,7 @@
     <string name="visit_enter_log">코멘트 입력하기</string>
     <string name="moment_empty_comments">코멘트가 없어요! 코멘트를 달아보세요.</string>
     <string name="moment_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
+    <string name="moment_comment_has_been_deleted">코멘트를 삭제했어요!</string>
 
     // activity_visit_creation / activity_visit_update
     <string name="visit_creation_place_name">스타카토 제목</string>
@@ -104,6 +105,10 @@
     // menu_creation
     <string name="menu_creation_memory">추억 생성</string>
     <string name="menu_creation_staccato">스타카토 생성</string>
+
+    // menu_comment
+    <string name="menu_comment_update">수정하기</string>
+    <string name="menu_comment_delete">삭제하기</string>
 
     // MapsFragment
     <string name="maps_location_permission_granted_message">위치 서비스 사용을 위한 위치 권한이 설정 되었습니다.</string>

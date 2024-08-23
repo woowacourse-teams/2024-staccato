@@ -24,15 +24,15 @@ interface CommentApiService {
         @Body commentRequest: CommentRequest,
     ): Response<Unit>
 
-    @PUT(COMMENTS_PATH_WITH_ID)
+    @PUT(COMMENTS_PATH)
     suspend fun putComment(
-        @Path("commentId") commentId: Long,
+        @Query("commentId") commentId: Long,
         @Body commentUpdateRequest: CommentUpdateRequest,
     ): Response<Unit>
 
-    @DELETE(COMMENTS_PATH_WITH_ID)
+    @DELETE(COMMENTS_PATH)
     suspend fun deleteComment(
-        @Path("commentId") commentId: Long,
+        @Query("commentId") commentId: Long,
     ): Response<Unit>
 
     companion object {

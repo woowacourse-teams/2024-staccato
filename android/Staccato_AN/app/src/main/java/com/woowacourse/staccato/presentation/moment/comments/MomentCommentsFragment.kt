@@ -8,6 +8,7 @@ import com.woowacourse.staccato.databinding.FragmentMomentCommentsBinding
 import com.woowacourse.staccato.presentation.base.BindingFragment
 import com.woowacourse.staccato.presentation.moment.viewmodel.MomentViewModel
 import com.woowacourse.staccato.presentation.moment.viewmodel.MomentViewModelFactory
+import com.woowacourse.staccato.presentation.util.showToast
 import kotlin.properties.Delegates
 
 class MomentCommentsFragment :
@@ -29,12 +30,14 @@ class MomentCommentsFragment :
     ) {
         momentId = arguments?.getLong(MOMENT_ID_KEY) ?: return
         initAdapter()
+        binding.viewModel = commentsViewModel
+        binding.handler = commentsViewModel
         observeMomentViewModel()
         observeCommentsViewModel()
     }
 
     private fun initAdapter() {
-        commentsAdapter = CommentsAdapter()
+        commentsAdapter = CommentsAdapter(commentsViewModel)
         binding.rvMomentComments.adapter = commentsAdapter
     }
 
@@ -47,6 +50,12 @@ class MomentCommentsFragment :
     private fun observeCommentsViewModel() {
         commentsViewModel.comments.observe(viewLifecycleOwner) { comments ->
             commentsAdapter.updateComments(comments)
+        }
+
+        commentsViewModel.isDeleteSuccess.observe(viewLifecycleOwner) { issDeleted ->
+            if (issDeleted) {
+                showToast(getString(R.string.moment_comment_has_been_deleted))
+            }
         }
     }
 
