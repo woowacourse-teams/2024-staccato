@@ -3,7 +3,7 @@ package com.woowacourse.staccato.presentation.mapper
 import com.woowacourse.staccato.R
 import com.woowacourse.staccato.domain.model.Feeling
 import com.woowacourse.staccato.domain.model.Moment
-import com.woowacourse.staccato.domain.model.VisitLog
+import com.woowacourse.staccato.domain.model.Comment
 import com.woowacourse.staccato.presentation.moment.comments.CommentUiModel
 import com.woowacourse.staccato.presentation.moment.detail.MomentDetailUiModel
 import com.woowacourse.staccato.presentation.moment.feeling.FeelingUiModel
@@ -29,9 +29,9 @@ fun Moment.toVisitUpdateDefaultUiModel(): VisitUpdateDefaultUiModel {
     )
 }
 
-fun VisitLog.toCommentUiModel() =
+fun Comment.toCommentUiModel() =
     CommentUiModel(
-        id = visitLogId,
+        id = commentId,
         memberId = memberId,
         nickname = nickname,
         memberImageUrl = memberImageUrl,
