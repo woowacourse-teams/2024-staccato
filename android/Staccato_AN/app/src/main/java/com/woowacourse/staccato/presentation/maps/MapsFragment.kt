@@ -170,10 +170,12 @@ class MapsFragment : Fragment() {
 
     private fun moveCamera(
         googleMap: GoogleMap,
-        location: Location,
+        location: Location?,
     ) {
-        val currentLocation = LatLng(location.latitude, location.longitude)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
+        if (location != null) {
+            val currentLocation = LatLng(location.latitude, location.longitude)
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
+        }
     }
 
     private fun onMarkerClicked(googleMap: GoogleMap) {
