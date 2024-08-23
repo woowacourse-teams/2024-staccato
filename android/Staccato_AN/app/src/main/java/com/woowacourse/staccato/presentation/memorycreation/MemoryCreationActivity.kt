@@ -73,11 +73,13 @@ class MemoryCreationActivity :
     }
 
     override fun onImageDeletionClicked() {
+        viewModel.setThumbnailUri(null)
         viewModel.setThumbnailUrl(null)
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
         viewModel.createThumbnailUrl(this, uris.first())
+        viewModel.setThumbnailUri(uris.first())
         showToast(getString(R.string.all_posting_photo))
     }
 

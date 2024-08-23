@@ -74,10 +74,12 @@ class MemoryUpdateActivity :
     }
 
     override fun onPhotoDeletionClicked() {
+        viewModel.setThumbnailUri(null)
         viewModel.setThumbnailUrl(null)
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
+        viewModel.setThumbnailUri(uris.first())
         viewModel.createThumbnailUrl(this, uris.first())
         showToast(getString(R.string.all_posting_photo))
     }
@@ -94,14 +96,12 @@ class MemoryUpdateActivity :
     }
 
     private fun buildDateRangePicker() =
-        MaterialDatePicker.Builder.dateRangePicker()
-            .setTheme(R.style.DatePickerStyle)
-            .setSelection(
-                Pair(
-                    MaterialDatePicker.thisMonthInUtcMilliseconds(),
-                    MaterialDatePicker.todayInUtcMilliseconds(),
-                ),
-            ).build()
+        MaterialDatePicker.Builder.dateRangePicker().setTheme(R.style.DatePickerStyle).setSelection(
+            Pair(
+                MaterialDatePicker.thisMonthInUtcMilliseconds(),
+                MaterialDatePicker.todayInUtcMilliseconds(),
+            ),
+        ).build()
 
     private fun initBinding() {
         binding.lifecycleOwner = this
