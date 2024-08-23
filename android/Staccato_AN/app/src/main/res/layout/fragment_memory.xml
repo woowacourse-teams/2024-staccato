@@ -10,15 +10,15 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.memory.viewmodel.MemoryViewModel" />
+            type="com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModel" />
 
         <variable
             name="memoryHandler"
-            type="com.on.staccato.presentation.memory.MemoryHandler" />
+            type="com.woowacourse.staccato.presentation.memory.MemoryHandler" />
 
         <variable
             name="toolbarHandler"
-            type="com.on.staccato.presentation.common.ToolbarHandler" />
+            type="com.woowacourse.staccato.presentation.common.ToolbarHandler" />
 
         <import type="java.time.LocalDate" />
     </data>
@@ -58,23 +58,14 @@
                     android:layout_height="0dp"
                     android:contentDescription="@string/all_image_content_description"
                     android:scaleType="centerCrop"
-                    app:layout_constraintDimensionRatio="3:2"
+                    android:visibility="@{viewModel.memory.memoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     bind:coilImageUrl="@{viewModel.memory.memoryThumbnailUrl}"
-                    bind:coilPlaceHolder="@{@drawable/memory_gradient}"
+                    bind:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
                     tools:src="@drawable/shape_place_holder_rectangle" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@drawable/memory_gradient"
-                    android:visibility="@{viewModel.memory.memoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
-                    app:layout_constraintEnd_toEndOf="@id/iv_memory_thumbnail"
-                    app:layout_constraintStart_toStartOf="@id/iv_memory_thumbnail"
-                    app:layout_constraintTop_toTopOf="@id/iv_memory_thumbnail" />
 
                 <TextView
                     android:id="@+id/tv_memory_title"
@@ -82,26 +73,32 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
+                    android:ellipsize="end"
                     android:text="@{viewModel.memory.title}"
                     android:textAppearance="@style/Typography.Title1"
-                    android:textColor="@color/white"
-                    app:layout_constraintBottom_toTopOf="@id/tv_memory_period"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    tools:text="아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 긴 추억 제목" />
+                    app:layout_constraintTop_toBottomOf="@id/iv_memory_thumbnail"
+                    tools:text="여행 제목" />
 
                 <TextView
                     android:id="@+id/tv_memory_period"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:layout_marginBottom="16dp"
                     android:text="@{@string/memory_period(viewModel.memory.startAt.year, viewModel.memory.startAt.monthValue, viewModel.memory.startAt.dayOfMonth, viewModel.memory.endAt.year, viewModel.memory.endAt.monthValue, viewModel.memory.endAt.dayOfMonth)}"
                     android:textAppearance="@style/Typography.Body4"
-                    android:textColor="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_title"
                     tools:text="2023년 7월 1일 ~ 7월 5일" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_memory_first"
+                    style="@style/DividerStyle"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_period" />
 
                 <TextView
                     android:id="@+id/tv_memory_description"
@@ -112,8 +109,8 @@
                     android:visibility="@{viewModel.memory.description == null ? View.GONE : View.VISIBLE }"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_memory_thumbnail"
-                    tools:text="(추억 소개) Lorem Ipsum is simply dummy text of the printing and typesetting industry. " />
+                    app:layout_constraintTop_toBottomOf="@id/divider_memory_first"
+                    tools:text="(여행 소개) Lorem Ipsum is simply dummy text of the printing and typesetting industry. " />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider_memory_second"
@@ -167,54 +164,31 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_memory_third" />
 
-                <FrameLayout
-                    android:id="@+id/frame_memory_add_visits"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/tv_memory_add_visits"
+                    style="@style/ToolbarMenuStyle"
                     android:layout_marginEnd="20dp"
                     android:onClick="@{() -> memoryHandler.onVisitCreationClicked()}"
-                    android:paddingVertical="12dp"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_memory_visits"
+                    android:text="@string/visit_add"
+                    android:textColor="@color/gray5"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_memory_visits">
-
-                    <Button
-                        android:id="@+id/btn_memory_add_visits"
-                        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp"
-                        android:paddingVertical="3dp"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="10dp"
-                        android:text="@string/visit_add"
-                        android:textAppearance="@style/Typography.Body4"
-                        android:textColor="@color/gray3"
-                        app:icon="@drawable/icon_edit"
-                        app:iconTint="@color/gray3"
-                        app:rippleColor="@android:color/transparent"
-                        app:strokeColor="@color/gray3" />
-
-                </FrameLayout>
+                    app:layout_constraintTop_toBottomOf="@id/divider_memory_third" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_memory_visits"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="12dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="12dp"
                     android:nestedScrollingEnabled="false"
                     android:paddingBottom="48dp"
                     android:scrollbars="none"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/frame_memory_add_visits"
-                    app:spanCount="2"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_visits"
+                    app:layout_constraintVertical_bias="0.0"
                     tools:listitem="@layout/item_visits" />
 
                 <ImageView

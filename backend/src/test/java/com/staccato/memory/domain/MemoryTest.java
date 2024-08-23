@@ -45,7 +45,7 @@ class MemoryTest {
 
     @DisplayName("주어진 문자열과 제목이 같으면 거짓을 반환한다.")
     @Test
-    void isNotSameTitle() {
+    void isNotSameTitle(){
         // given
         String title = "title";
         Memory memory = Memory.builder().title(title).build();

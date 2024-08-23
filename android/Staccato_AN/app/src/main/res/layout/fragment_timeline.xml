@@ -7,11 +7,11 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel" />
+            type="com.woowacourse.staccato.presentation.timeline.viewmodel.TimelineViewModel" />
 
         <variable
             name="handler"
-            type="com.on.staccato.presentation.timeline.TimelineHandler" />
+            type="com.woowacourse.staccato.presentation.timeline.TimelineHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,71 +31,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <FrameLayout
-            android:id="@+id/frame_timeline_add_memory"
+        <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:onClick="@{() -> handler.onMemoryCreationClicked()}"
-            android:paddingVertical="10dp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_timeline_my_timeline"
-            app:layout_constraintEnd_toStartOf="@id/frame_timeline_sort_memory"
-            app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline">
+            android:layout_height="10dp"
+            android:layout_marginEnd="1dp"
+            android:src="@drawable/icon_filter"
+            app:layout_constraintBottom_toBottomOf="@id/tv_timeline_order"
+            app:layout_constraintEnd_toStartOf="@id/tv_timeline_order"
+            app:layout_constraintTop_toTopOf="@id/tv_timeline_order"
+            app:tint="@color/gray3" />
 
-            <Button
-                android:id="@+id/btn_timeline_add_visits"
-                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusable="false"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingVertical="3dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="10dp"
-                android:text="@string/timeline_add_memory"
-                android:textAppearance="@style/Typography.Body4"
-                android:textColor="@color/gray3"
-                app:icon="@drawable/icon_folder"
-                app:iconTint="@color/gray3"
-                app:rippleColor="@android:color/transparent"
-                app:strokeColor="@color/gray3" />
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/frame_timeline_sort_memory"
+        <TextView
+            android:id="@+id/tv_timeline_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:onClick="@{() -> handler.onSortClicked()}"
-            android:paddingVertical="10dp"
+            android:text="@string/timeline_order"
+            android:textAppearance="@style/Typography.Body5"
+            android:textColor="@color/gray3"
             app:layout_constraintBottom_toBottomOf="@id/tv_timeline_my_timeline"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline">
-
-            <Button
-                android:id="@+id/btn_timeline_sort_visits"
-                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusable="false"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingVertical="3dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="10dp"
-                android:text="@string/timeline_sort"
-                android:textAppearance="@style/Typography.Body4"
-                android:textColor="@color/gray3"
-                app:icon="@drawable/icon_filter"
-                app:iconTint="@color/gray3"
-                app:rippleColor="@android:color/transparent"
-                app:strokeColor="@color/gray3" />
-
-        </FrameLayout>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_timeline"
@@ -103,46 +58,46 @@
             android:layout_height="0dp"
             android:layout_marginTop="12dp"
             android:clipToPadding="false"
-            android:paddingHorizontal="18dp"
-            android:paddingBottom="10dp"
+            android:paddingHorizontal="10dp"
+            android:paddingBottom="60dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline"
-            tools:listitem="@layout/item_timeline" />
+            tools:listitem="@layout/item_timeline_middle" />
 
         <ImageView
             android:id="@+id/iv_timeline_empty"
             android:layout_width="0dp"
             android:layout_height="200dp"
-            android:layout_marginTop="50dp"
             android:contentDescription="@string/all_image_content_description"
+            android:paddingBottom="10dp"
             android:src="@drawable/staccato_character"
+            app:layout_constraintBottom_toTopOf="@id/tv_timeline_empty"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tv_timeline_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="@string/timeline_empty"
             android:textAppearance="@style/Typography.Body2"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_timeline_empty"
+            app:layout_constraintTop_toTopOf="@id/rv_timeline"
             tools:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_timeline_create_memory"
             style="@style/ButtonStyle.Save.Active"
             android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="36dp"
             android:onClick="@{() -> handler.onMemoryCreationClicked()}"
-            android:text="@string/timeline_create_memory"
+            android:text="추억 생성하기"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_timeline_empty" />

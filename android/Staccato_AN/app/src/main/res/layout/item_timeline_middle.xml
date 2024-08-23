@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="memory"
+            type="com.woowacourse.staccato.presentation.timeline.model.TimelineUiModel" />
+
+        <variable
+            name="eventHandler"
+            type="com.woowacourse.staccato.presentation.timeline.TimelineHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/view_timeline_point"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/shape_timeline_dot_gray2"
+            app:layout_constraintEnd_toStartOf="@id/layout_item_timeline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_timeline"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="6dp"
+            android:foreground="@color/gray2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/view_timeline_point"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/layout_item_timeline"
+            layout="@layout/layout_timeline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            app:eventHandler="@{eventHandler}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/view_timeline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:memory="@{memory}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

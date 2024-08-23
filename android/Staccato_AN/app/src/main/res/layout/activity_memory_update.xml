@@ -10,11 +10,11 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel" />
+            type="com.woowacourse.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel" />
 
         <variable
             name="handler"
-            type="com.on.staccato.presentation.memoryupdate.MemoryUpdateHandler" />
+            type="com.woowacourse.staccato.presentation.memoryupdate.MemoryUpdateHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,12 +25,10 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_memory_update"
-            style="@style/TitleToolbarStyle"
+            style="@style/DefaultToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:subtitle="@string/memory_update_toolbar_subtitle"
-            app:title="@string/memory_update_toolbar_title" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
             android:id="@+id/sv_memory_update"
@@ -209,9 +207,9 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_period_description"
                     bind:endDate="@{viewModel.endDate}"
                     bind:memoryTitle="@{viewModel.title}"
+                    bind:startDate="@{viewModel.startDate}"
                     bind:photoUri="@{viewModel.thumbnailUri}"
-                    bind:photoUrl="@{viewModel.thumbnailUrl}"
-                    bind:startDate="@{viewModel.startDate}" />
+                    bind:photoUrl="@{viewModel.thumbnailUrl}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

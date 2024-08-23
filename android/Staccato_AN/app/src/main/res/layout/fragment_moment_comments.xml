@@ -9,16 +9,21 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.moment.comments.MomentCommentsViewModel" />
+            type="com.woowacourse.staccato.presentation.moment.comments.MomentCommentsViewModel" />
 
         <variable
             name="commentHandler"
-            type="com.on.staccato.presentation.moment.comments.CommentHandler" />
+            type="com.woowacourse.staccato.presentation.moment.comments.CommentHandler" />
+
+        <variable
+            name="keyboardHandler"
+            type="com.woowacourse.staccato.presentation.moment.comments.KeyboardActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> keyboardHandler.onScreenTouchEvent()}"
         android:layout_marginBottom="10dp">
 
         <TextView
@@ -36,7 +41,7 @@
             android:id="@+id/iv_moment_comments_default_empty"
             android:layout_width="0dp"
             android:layout_height="200dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="90dp"
             android:contentDescription="@string/all_image_content_description"
             android:paddingBottom="10dp"
             android:src="@drawable/staccato_character"
@@ -49,8 +54,9 @@
         <TextView
             android:id="@+id/tv_moment_comments_empty"
             android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="100dp"
             android:text="@string/moment_empty_comments"
             android:textAppearance="@style/Typography.Body2"
             android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
@@ -63,8 +69,6 @@
             android:id="@+id/rv_moment_comments"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:minHeight="360dp"
-            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -105,11 +109,11 @@
                 android:id="@+id/iv_moment_comments_send"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
                 android:padding="8dp"
                 android:src="@drawable/selector_comment_sendable"
+                android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
+                android:clickable="true"
+                android:focusable="true"
                 app:enableSendButton="@{viewModel.commentInput}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

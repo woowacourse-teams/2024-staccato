@@ -7,7 +7,7 @@
 
         <variable
             name="handler"
-            type="com.on.staccato.presentation.main.MainHandler" />
+            type="com.woowacourse.staccato.presentation.main.MainHandler" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -23,7 +23,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragment_container_view_map"
-                android:name="com.on.staccato.presentation.maps.MapsFragment"
+                android:name="com.woowacourse.staccato.presentation.maps.MapsFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -36,10 +36,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="75dp"
+                android:layout_marginBottom="85dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:onClick="@{() -> handler.onStaccatoCreationClicked()}"
+                android:onClick="@{() -> handler.onCreationClicked()}"
                 android:paddingTop="10dp"
                 android:src="@drawable/icon_floating_button"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -52,9 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/shape_bottom_sheet_20dp"
-            app:behavior_fitToContents="false"
-            app:behavior_halfExpandedRatio="0.6"
-            app:behavior_peekHeight="70dp"
+            app:behavior_peekHeight="80dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -63,23 +61,44 @@
             <View
                 android:id="@+id/view_main_drag_bar"
                 style="@style/DragHandleStyle"
-                android:layout_marginBottom="10dp"
-                app:layout_constraintBottom_toTopOf="@id/fragment_container_view_main_bottom_sheet"
                 app:layout_constraintEnd_toEndOf="@id/constraint_main_bottom_sheet"
                 app:layout_constraintStart_toStartOf="@id/constraint_main_bottom_sheet"
                 app:layout_constraintTop_toTopOf="@id/constraint_main_bottom_sheet" />
+
+            <TextView
+                android:id="@+id/tv_main_bottom_sheet_remind_your_memories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
+                android:text="@string/timeline_title"
+                android:textAppearance="@style/Typography.Body3"
+                android:textColor="@color/gray4"
+                app:layout_constraintEnd_toEndOf="@id/view_main_drag_bar"
+                app:layout_constraintStart_toStartOf="@id/view_main_drag_bar"
+                app:layout_constraintTop_toBottomOf="@id/view_main_drag_bar" />
+
+            <ImageView
+                android:id="@+id/iv_main_bottom_sheet_remind_your_memories"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:src="@drawable/icon_wand_stars"
+                app:layout_constraintBottom_toBottomOf="@id/tv_main_bottom_sheet_remind_your_memories"
+                app:layout_constraintStart_toEndOf="@id/tv_main_bottom_sheet_remind_your_memories"
+                app:layout_constraintTop_toTopOf="@id/tv_main_bottom_sheet_remind_your_memories"
+                app:tint="@color/gray4" />
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragment_container_view_main_bottom_sheet"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="64dp"
                 app:defaultNavHost="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_main_drag_bar"
+                app:layout_constraintTop_toTopOf="parent"
                 app:navGraph="@navigation/bottom_navigation_graph" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

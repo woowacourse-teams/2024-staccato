@@ -47,10 +47,7 @@ public class AuthService {
 
     private Member createMember(LoginRequest loginRequest) {
         Member member = loginRequest.toMember();
-        //validateNickname(member.getNickname());
-        if (memberRepository.existsByNickname(member.getNickname())) {
-            return memberRepository.findByNickname(member.getNickname());
-        }
+        validateNickname(member.getNickname());
         return memberRepository.save(member);
     }
 

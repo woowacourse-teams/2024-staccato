@@ -6,15 +6,6 @@
         <item name="navigationIcon">@drawable/icon_arrow_left</item>
     </style>
 
-    <style name="TitleToolbarStyle" parent="DefaultToolbarStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="titleTextAppearance">@style/Typography.Title2</item>
-        <item name="subtitleTextAppearance">@style/Typography.Body4</item>
-        <item name="subtitleTextColor">@color/gray5</item>
-        <item name="titleTextColor">@color/gray5</item>
-    </style>
-
     <style name="SubTitleStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -170,9 +161,9 @@
     </style>
 
     <style name="DragHandleStyle">
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">4dp</item>
-        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">5dp</item>
+        <item name="android:layout_marginTop">16dp</item>
         <item name="android:background">@drawable/shape_drag_handle</item>
     </style>
 
@@ -193,6 +184,7 @@
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:layout_marginHorizontal">5dp</item>
+        <item name="android:background">@drawable/selector_feeling_oval</item>
         <item name="android:padding">5dp</item>
         <item name="android:gravity">center</item>
         <item name="android:clickable">true</item>

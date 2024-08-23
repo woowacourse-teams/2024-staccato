@@ -31,8 +31,8 @@
     <string name="timeline_my_timeline">나의 추억들</string>
     <string name="timeline_order">최근 생성 순</string>
     <string name="timeline_year">%s년</string>
-    <string name="timeline_empty">아직 추억이 없네요!\n스타카토를 담을 추억을 만들어보세요.</string>
-    <string name="timeline_add_memory">추가</string>
+    <string name="timeline_title">추억을 떠올려보세요</string>
+    <string name="timeline_empty">아직 추억을 기록하지 않으셨군요!\n추억을 생성해보세요.</string>
 
     // fragment_memory
     <string name="memory_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
@@ -53,17 +53,11 @@
     <string name="memory_creation_period_description">%s ~ %s</string>
     <string name="memory_creation_posting">추억을 만드는 중이에요..</string>
     <string name="memory_update_posting">추억을 수정하는 중이에요..</string>
-    <string name="memory_creation_toolbar_title">추억 만들기</string>
-    <string name="memory_creation_toolbar_subtitle">스타카토를 담을 추억을 만들어보세요!</string>
-
-    // activity_memory_update
-    <string name="memory_update_toolbar_title">추억 수정하기</string>
-    <string name="memory_update_toolbar_subtitle">스타카토를 담을 추억을 수정해 보세요!</string>
 
     // fragment_visit
     <string name="visit_history">%s년 %s월 %s일에 방문했어요</string>
     <string name="visit_logs">코멘트</string>
-    <string name="visit_add">기록하기</string>
+    <string name="visit_add">추가하기</string>
     <string name="visit_enter_log">코멘트 입력하기</string>
     <string name="moment_empty_comments">코멘트가 없어요! 코멘트를 달아보세요.</string>
     <string name="moment_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
@@ -81,12 +75,6 @@
     <string name="visit_creation_posting">스타카토를 찍는 중이에요..</string>
     <string name="visit_update_posting">스타카토를 수정하는 중이에요...️</string>
     <string name="moment_creation_memory_selection">추억 선택</string>
-    <string name="visit_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨보세요!</string>
-    <string name="visit_creation_toolbar_title">스타카토 기록하기</string>
-
-    // activity_visit_update
-    <string name="visit_update_toolbar_subtitle">기억하고 싶은 순간을 수정해보세요!</string>
-    <string name="visit_update_toolbar_title">스타카토 수정하기</string>
 
     // activity_login
     <string name="login_start">시작하기</string>
@@ -127,7 +115,4 @@
     <string name="maps_location_permission_required_message">위치 서비스 사용을 위해 위치 권한을 허용해주세요.</string>
     <string name="staccato_loading_address">주소를 불러오고 있어요</string>
     <string name="moment_creation_not_found_address">주소를 찾지 못했습니다</string>
-    <string name="timeline_sort">정렬</string>
-    <string name="timeline_create_memory">추억 생성하기</string>
-
 </resources>

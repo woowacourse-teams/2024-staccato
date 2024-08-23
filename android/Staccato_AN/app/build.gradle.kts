@@ -22,15 +22,15 @@ plugins {
 }
 
 android {
-    namespace = "com.on.staccato"
+    namespace = "com.woowacourse.staccato"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.on.staccato"
+        applicationId = "com.woowacourse.staccato"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
