@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--  카메라(추후 기능 추가) -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <!-- 인터넷 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 위치 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 앨범 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--  카메라(추후 기능 추가) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:name=".StaccatoApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="${appName}"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Staccato_AN"
+        android:usesCleartextTraffic="true"
+        tools:replace="label"
+        tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+        <activity
+            android:name=".presentation.login.LoginActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Staccato_AN.Starting">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".presentation.main.MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.visitupdate.VisitUpdateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.memoryupdate.MemoryUpdateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.momentcreation.MomentCreationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.memorycreation.MemoryCreationActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

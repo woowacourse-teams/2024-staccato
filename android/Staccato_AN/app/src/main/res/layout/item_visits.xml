@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="com.woowacourse.staccato.presentation.memory.MemoryHandler" />
+
+        <variable
+            name="visit"
+            type="com.woowacourse.staccato.presentation.memory.model.MemoryVisitUiModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/shape_all_gray1_4dp"
+        android:onClick="@{() -> handler.onVisitClicked(visit.id)}"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/tv_visits_visited_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginBottom="4dp"
+            android:text="@{@string/all_date_dots_format(visit.visitedAt.year, visit.visitedAt.monthValue, visit.visitedAt.dayOfMonth)}"
+            android:textAppearance="@style/Typography.Body4"
+            app:layout_constraintBottom_toTopOf="@id/divider_visits"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="2024. 03. 21" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_visits"
+            style="@style/DividerStyle"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_visits"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_visits_place_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="2dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{visit.placeName}"
+            android:textAppearance="@style/Typography.Title3"
+            app:layout_constraintEnd_toStartOf="@id/iv_visits"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider_visits"
+            tools:text="장소 이름" />
+
+        <ImageView
+            android:id="@+id/iv_visits"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/all_image_content_description"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="8:5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/divider_visits"
+            app:layout_constraintTop_toTopOf="parent"
+            bind:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            bind:coilRoundedCornerImageUrl="@{visit.visitImageUrl}"
+            bind:coilRoundingRadius="@{12}"
+            tools:src="@drawable/shape_all_gray2_4dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
