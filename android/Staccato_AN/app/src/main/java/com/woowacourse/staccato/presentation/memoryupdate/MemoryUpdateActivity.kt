@@ -28,7 +28,9 @@ import com.woowacourse.staccato.presentation.memoryupdate.viewmodel.MemoryUpdate
 import com.woowacourse.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.woowacourse.staccato.presentation.util.showToast
 
-class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), MemoryUpdateHandler,
+class MemoryUpdateActivity :
+    BindingActivity<ActivityMemoryUpdateBinding>(),
+    MemoryUpdateHandler,
     OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_update
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_MEMORY_ID) }
@@ -95,11 +97,11 @@ class MemoryUpdateActivity : BindingActivity<ActivityMemoryUpdateBinding>(), Mem
 
     private fun buildDateRangePicker() =
         MaterialDatePicker.Builder.dateRangePicker().setTheme(R.style.DatePickerStyle).setSelection(
-                Pair(
-                    MaterialDatePicker.thisMonthInUtcMilliseconds(),
-                    MaterialDatePicker.todayInUtcMilliseconds(),
-                ),
-            ).build()
+            Pair(
+                MaterialDatePicker.thisMonthInUtcMilliseconds(),
+                MaterialDatePicker.todayInUtcMilliseconds(),
+            ),
+        ).build()
 
     private fun initBinding() {
         binding.lifecycleOwner = this

@@ -133,4 +133,3 @@ class MemoryCreationViewModel(
         private const val MEMORY_CREATION_ERROR_MESSAGE = "추억 생성에 실패했습니다"
     }
 }
-
