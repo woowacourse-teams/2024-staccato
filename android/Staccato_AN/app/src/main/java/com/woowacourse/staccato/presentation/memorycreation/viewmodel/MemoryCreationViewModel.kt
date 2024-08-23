@@ -2,6 +2,7 @@ package com.woowacourse.staccato.presentation.memorycreation.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -41,7 +42,10 @@ class MemoryCreationViewModel(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
-    private val _thumbnailUrl = MutableLiveData<String?>()
+    private val _thumbnailUri = MutableLiveData<Uri?>(null)
+    val thumbnailUri: LiveData<Uri?> get() = _thumbnailUri
+
+    private val _thumbnailUrl = MutableLiveData<String?>(null)
     val thumbnailUrl: LiveData<String?> get() = _thumbnailUrl
 
     private val _isPosting = MutableLiveData<Boolean>(false)
@@ -51,6 +55,7 @@ class MemoryCreationViewModel(
         context: Context,
         thumbnailUri: Uri,
     ) {
+        _thumbnailUri.value = thumbnailUri
         val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
         viewModelScope.launch {
             val result: ResponseResult<ImageResponse> =
@@ -59,6 +64,10 @@ class MemoryCreationViewModel(
                 .onServerError(::handleServerError)
                 .onException(::handelException)
         }
+    }
+
+    fun setThumbnailUri(thumbnailUri: Uri?) {
+        _thumbnailUri.value = thumbnailUri
     }
 
     fun setThumbnailUrl(imageResponse: ImageResponse?) {
@@ -120,3 +129,4 @@ class MemoryCreationViewModel(
         private const val MEMORY_CREATION_ERROR_MESSAGE = "추억 생성에 실패했습니다"
     }
 }
+
