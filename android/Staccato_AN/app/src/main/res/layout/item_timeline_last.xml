@@ -6,11 +6,11 @@
 
         <variable
             name="memory"
-            type="com.woowacourse.staccato.presentation.timeline.model.TimelineUiModel" />
+            type="com.on.staccato.presentation.timeline.model.TimelineUiModel" />
 
         <variable
             name="eventHandler"
-            type="com.woowacourse.staccato.presentation.timeline.TimelineHandler" />
+            type="com.on.staccato.presentation.timeline.TimelineHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
