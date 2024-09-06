@@ -7,11 +7,11 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.timeline.viewmodel.TimelineViewModel" />
+            type="com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel" />
 
         <variable
             name="handler"
-            type="com.woowacourse.staccato.presentation.timeline.TimelineHandler" />
+            type="com.on.staccato.presentation.timeline.TimelineHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

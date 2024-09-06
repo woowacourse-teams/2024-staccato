@@ -9,15 +9,15 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.moment.comments.MomentCommentsViewModel" />
+            type="com.on.staccato.presentation.moment.comments.MomentCommentsViewModel" />
 
         <variable
             name="commentHandler"
-            type="com.woowacourse.staccato.presentation.moment.comments.CommentHandler" />
+            type="com.on.staccato.presentation.moment.comments.CommentHandler" />
 
         <variable
             name="keyboardHandler"
-            type="com.woowacourse.staccato.presentation.moment.comments.KeyboardActionHandler" />
+            type="com.on.staccato.presentation.moment.comments.KeyboardActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

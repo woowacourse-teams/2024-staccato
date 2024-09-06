@@ -10,11 +10,11 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModel" />
+            type="com.on.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModel" />
 
         <variable
             name="handler"
-            type="com.woowacourse.staccato.presentation.memorycreation.MemoryCreationHandler" />
+            type="com.on.staccato.presentation.memorycreation.MemoryCreationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,8 +54,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    bind:coilImageUri="@{viewModel.thumbnailUri}"
+                    bind:coilImageUrl="@{viewModel.thumbnailUrl}"
                     bind:coilPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
-                    bind:coilRoundedCornerImageUrl="@{viewModel.thumbnailUrl}"
                     bind:coilRoundingRadius="@{12f}" />
 
                 <ImageButton
@@ -76,11 +77,27 @@
                     layout="@layout/layout_photo_attach"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="@{viewModel.thumbnailUrl == null ? View.VISIBLE : View.GONE }"
+                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_memory_creation_attached_photo"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@color/white_80"
+                    android:padding="100dp"
+                    android:progress="30"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_memory_creation_photo_attach"
+                    app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
+                    app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
+                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}"
+                    tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/tv_memory_creation_title"
@@ -189,7 +206,8 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_description"
                     bind:endDate="@{viewModel.endDate}"
                     bind:memoryTitle="@{viewModel.title}"
-                    bind:startDate="@{viewModel.startDate}" />
+                    bind:startDate="@{viewModel.startDate}"
+                    bind:isPhotoPosting="@{viewModel.isPhotoPosting}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -10,15 +10,15 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.memory.viewmodel.MemoryViewModel" />
+            type="com.on.staccato.presentation.memory.viewmodel.MemoryViewModel" />
 
         <variable
             name="memoryHandler"
-            type="com.woowacourse.staccato.presentation.memory.MemoryHandler" />
+            type="com.on.staccato.presentation.memory.MemoryHandler" />
 
         <variable
             name="toolbarHandler"
-            type="com.woowacourse.staccato.presentation.common.ToolbarHandler" />
+            type="com.on.staccato.presentation.common.ToolbarHandler" />
 
         <import type="java.time.LocalDate" />
     </data>
