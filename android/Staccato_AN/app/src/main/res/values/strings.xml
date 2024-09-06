@@ -31,7 +31,6 @@
     <string name="timeline_my_timeline">나의 추억들</string>
     <string name="timeline_order">최근 생성 순</string>
     <string name="timeline_year">%s년</string>
-    <string name="timeline_title">추억을 떠올려보세요</string>
     <string name="timeline_empty">아직 추억을 기록하지 않으셨군요!\n추억을 생성해보세요.</string>
 
     // fragment_memory
