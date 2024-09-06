@@ -14,17 +14,12 @@
         <variable
             name="commentHandler"
             type="com.on.staccato.presentation.moment.comments.CommentHandler" />
-
-        <variable
-            name="keyboardHandler"
-            type="com.on.staccato.presentation.moment.comments.KeyboardActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:onClick="@{() -> keyboardHandler.onScreenTouchEvent()}">
+        android:layout_marginBottom="10dp">
 
         <TextView
             android:id="@+id/tv_moment_comments_title"

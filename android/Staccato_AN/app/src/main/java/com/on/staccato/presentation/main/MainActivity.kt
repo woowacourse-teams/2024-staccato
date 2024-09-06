@@ -2,7 +2,9 @@ package com.on.staccato.presentation.main
 
 import android.os.Bundle
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,6 +36,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
     private val sharedViewModel: SharedViewModel by viewModels()
+    private val inputManager: InputMethodManager by lazy {
+        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+    }
 
     val memoryCreationLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -217,5 +222,37 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
             val newState = bundle.getInt(BOTTOM_SHEET_NEW_STATE)
             behavior.state = newState
         }
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            currentFocus?.let { view ->
+                if (!isTouchInsideView(event, view)) {
+                    clearFocusAndHideKeyboard(view)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
+
+    private fun isTouchInsideView(
+        event: MotionEvent,
+        view: View,
+    ): Boolean {
+        val rect = android.graphics.Rect()
+        view.getGlobalVisibleRect(rect)
+        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
+    }
+
+    private fun clearFocusAndHideKeyboard(view: View) {
+        view.clearFocus()
+        hideKeyboard(view)
+    }
+
+    private fun hideKeyboard(view: View) {
+        inputManager.hideSoftInputFromWindow(
+            view.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
     }
 }
