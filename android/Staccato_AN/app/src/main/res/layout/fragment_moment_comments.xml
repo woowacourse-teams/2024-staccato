@@ -23,7 +23,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margidnBottom="10dp"
+        android:layout_marginBottom="10dp"
         android:onClick="@{() -> keyboardHandler.onScreenTouchEvent()}">
 
         <TextView
@@ -70,7 +70,6 @@
             android:layout_height="0dp"
             android:minHeight="380dp"
             android:overScrollMode="never"
-            app:itemAnimator="null"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
