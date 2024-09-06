@@ -7,7 +7,7 @@
 
         <variable
             name="handler"
-            type="com.woowacourse.staccato.presentation.main.MainHandler" />
+            type="com.on.staccato.presentation.main.MainHandler" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -23,7 +23,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragment_container_view_map"
-                android:name="com.woowacourse.staccato.presentation.maps.MapsFragment"
+                android:name="com.on.staccato.presentation.maps.MapsFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
