@@ -22,11 +22,11 @@ plugins {
 }
 
 android {
-    namespace = "com.woowacourse.staccato"
+    namespace = "com.on.staccato"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.woowacourse.staccato"
+        applicationId = "com.on.staccato"
         minSdk = 26
         targetSdk = 34
         versionCode = 3

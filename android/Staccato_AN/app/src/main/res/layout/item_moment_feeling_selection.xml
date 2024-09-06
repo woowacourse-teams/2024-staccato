@@ -7,11 +7,11 @@
 
         <variable
             name="feeling"
-            type="com.woowacourse.staccato.presentation.moment.feeling.FeelingUiModel" />
+            type="com.on.staccato.presentation.moment.feeling.FeelingUiModel" />
 
         <variable
             name="feelingHandler"
-            type="com.woowacourse.staccato.presentation.moment.feeling.FeelingHandler" />
+            type="com.on.staccato.presentation.moment.feeling.FeelingHandler" />
     </data>
 
     <ImageView

@@ -10,11 +10,11 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel" />
+            type="com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel" />
 
         <variable
             name="handler"
-            type="com.woowacourse.staccato.presentation.memoryupdate.MemoryUpdateHandler" />
+            type="com.on.staccato.presentation.memoryupdate.MemoryUpdateHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
