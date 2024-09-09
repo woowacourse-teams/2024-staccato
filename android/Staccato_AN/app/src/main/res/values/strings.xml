@@ -53,6 +53,12 @@
     <string name="memory_creation_period_description">%s ~ %s</string>
     <string name="memory_creation_posting">추억을 만드는 중이에요..</string>
     <string name="memory_update_posting">추억을 수정하는 중이에요..</string>
+    <string name="memory_creation_toolbar_title">추억 만들기</string>
+    <string name="memory_creation_toolbar_subtitle">스타카토를 담을 추억을 만들어보세요!</string>
+
+    // activity_memory_update
+    <string name="memory_update_toolbar_title">추억 수정하기</string>
+    <string name="memory_update_toolbar_subtitle">스타카토를 담을 추억을 수정해 보세요!</string>
 
     // fragment_visit
     <string name="visit_history">%s년 %s월 %s일에 방문했어요</string>
@@ -115,4 +121,5 @@
     <string name="maps_location_permission_required_message">위치 서비스 사용을 위해 위치 권한을 허용해주세요.</string>
     <string name="staccato_loading_address">주소를 불러오고 있어요</string>
     <string name="moment_creation_not_found_address">주소를 찾지 못했습니다</string>
+
 </resources>

@@ -6,6 +6,15 @@
         <item name="navigationIcon">@drawable/icon_arrow_left</item>
     </style>
 
+    <style name="TitleToolbarStyle" parent="DefaultToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="titleTextAppearance">@style/Typography.Title2</item>
+        <item name="subtitleTextAppearance">@style/Typography.Body4</item>
+        <item name="subtitleTextColor">@color/gray5</item>
+        <item name="titleTextColor">@color/gray5</item>
+    </style>
+
     <style name="SubTitleStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
