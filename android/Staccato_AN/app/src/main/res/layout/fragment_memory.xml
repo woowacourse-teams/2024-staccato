@@ -58,14 +58,23 @@
                     android:layout_height="0dp"
                     android:contentDescription="@string/all_image_content_description"
                     android:scaleType="centerCrop"
-                    android:visibility="@{viewModel.memory.memoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintDimensionRatio="3:2"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     bind:coilImageUrl="@{viewModel.memory.memoryThumbnailUrl}"
-                    bind:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}"
+                    bind:coilPlaceHolder="@{@drawable/memory_gradient}"
                     tools:src="@drawable/shape_place_holder_rectangle" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/memory_gradient"
+                    android:visibility="@{viewModel.memory.memoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
+                    app:layout_constraintEnd_toEndOf="@id/iv_memory_thumbnail"
+                    app:layout_constraintStart_toStartOf="@id/iv_memory_thumbnail"
+                    app:layout_constraintTop_toTopOf="@id/iv_memory_thumbnail" />
 
                 <TextView
                     android:id="@+id/tv_memory_title"
@@ -73,32 +82,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
-                    android:ellipsize="end"
                     android:text="@{viewModel.memory.title}"
                     android:textAppearance="@style/Typography.Title1"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toTopOf="@id/tv_memory_period"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_memory_thumbnail"
-                    tools:text="여행 제목" />
+                    tools:text="아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 긴 추억 제목" />
 
                 <TextView
                     android:id="@+id/tv_memory_period"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:layout_marginBottom="16dp"
                     android:text="@{@string/memory_period(viewModel.memory.startAt.year, viewModel.memory.startAt.monthValue, viewModel.memory.startAt.dayOfMonth, viewModel.memory.endAt.year, viewModel.memory.endAt.monthValue, viewModel.memory.endAt.dayOfMonth)}"
                     android:textAppearance="@style/Typography.Body4"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_title"
                     tools:text="2023년 7월 1일 ~ 7월 5일" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_memory_first"
-                    style="@style/DividerStyle"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_period" />
 
                 <TextView
                     android:id="@+id/tv_memory_description"
@@ -109,8 +112,8 @@
                     android:visibility="@{viewModel.memory.description == null ? View.GONE : View.VISIBLE }"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_memory_first"
-                    tools:text="(여행 소개) Lorem Ipsum is simply dummy text of the printing and typesetting industry. " />
+                    app:layout_constraintTop_toBottomOf="@id/iv_memory_thumbnail"
+                    tools:text="(추억 소개) Lorem Ipsum is simply dummy text of the printing and typesetting industry. " />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider_memory_second"
@@ -178,17 +181,18 @@
                     android:id="@+id/rv_memory_visits"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginHorizontal="12dp"
                     android:layout_marginTop="12dp"
                     android:nestedScrollingEnabled="false"
                     android:paddingBottom="48dp"
                     android:scrollbars="none"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_visits"
                     app:layout_constraintVertical_bias="0.0"
+                    app:spanCount="2"
                     tools:listitem="@layout/item_visits" />
 
                 <ImageView
