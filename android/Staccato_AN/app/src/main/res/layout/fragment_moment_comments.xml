@@ -70,7 +70,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_moment_comments_title"
             app:reverseLayout="false"
-            tools:itemCount="0"
+            tools:itemCount="3"
             tools:listitem="@layout/item_moment_my_comment" />
 
         <Space
