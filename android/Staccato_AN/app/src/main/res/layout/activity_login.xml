@@ -7,11 +7,11 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.login.viewmodel.LoginViewModel" />
+            type="com.on.staccato.presentation.login.viewmodel.LoginViewModel" />
 
         <variable
             name="handler"
-            type="com.woowacourse.staccato.presentation.login.LoginHandler" />
+            type="com.on.staccato.presentation.login.LoginHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

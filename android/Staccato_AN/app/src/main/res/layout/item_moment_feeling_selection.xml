@@ -7,18 +7,19 @@
 
         <variable
             name="feeling"
-            type="com.woowacourse.staccato.presentation.moment.feeling.FeelingUiModel" />
+            type="com.on.staccato.presentation.moment.feeling.FeelingUiModel" />
 
         <variable
             name="feelingHandler"
-            type="com.woowacourse.staccato.presentation.moment.feeling.FeelingHandler" />
+            type="com.on.staccato.presentation.moment.feeling.FeelingHandler" />
     </data>
 
     <ImageView
         style="@style/FeelingStyle"
         android:contentDescription="@string/all_image_content_description"
         android:onClick="@{() -> feelingHandler.onFeelingClicked(feeling)}"
-        bind:setImageResource="@{feeling.src}"
+        bind:colorImageResource="@{feeling.colorSrc}"
+        bind:grayImageResource="@{feeling.graySrc}"
         bind:setSelected="@{feeling.isSelected}"
         tools:src="@drawable/feeling_excited" />
 

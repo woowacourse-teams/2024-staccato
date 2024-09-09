@@ -10,7 +10,7 @@
     : 내부저장소 / getCacheDir()
     <external-path
         name="external_path"
-        path="Android/data/com.woowacourse.staccato/files/Pictures" />
+        path="Android/data/com.on.staccato/files/Pictures" />
     : 외부저장소 / Environment.getExternalStorageDirectory()
     <external-files-path
         name="external_file_path"
