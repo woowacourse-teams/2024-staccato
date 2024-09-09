@@ -1,5 +1,6 @@
 package com.staccato.auth.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -7,25 +8,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
-import com.staccato.exception.ExceptionResponse;
 
 @WebMvcTest(AuthController.class)
 class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
     @MockBean
     private AuthService authService;
 
@@ -33,45 +32,71 @@ class AuthControllerTest {
     @Test
     void login() throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest("staccato");
+        String loginRequest = """
+                {
+                  "nickname": "staccato"
+                }
+                """;
+        String expectedResponse = """
+                {
+                  "token": "staccatotoken"
+                }
+                """;
         LoginResponse loginResponse = new LoginResponse("staccatotoken");
-        when(authService.login(loginRequest)).thenReturn(loginResponse);
+        when(authService.login(any(LoginRequest.class))).thenReturn(loginResponse);
 
         // when & then
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
+                        .content(loginRequest))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(loginResponse)));
+                .andExpect(content().json(expectedResponse));
     }
 
     @DisplayName("닉네임을 입력하지 않으면 400을 반환한다.")
-    @Test
-    void cannotLoginIfBadRequest() throws Exception {
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"\"\"", "\" \""})
+    void cannotLoginIfBadRequest(String nickname) throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest(null);
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "닉네임을 입력해주세요.");
+        String loginRequest = "{"
+                + "\"nickname\": " + nickname
+                + "}";
+        String expectedResponse = """
+                {
+                  "status": "400 BAD_REQUEST",
+                  "message": "닉네임을 입력해주세요."
+                }
+                """;
 
         // when & then
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
+                        .content(loginRequest))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+                .andExpect(content().json(expectedResponse));
     }
 
     @DisplayName("20자를 초과하면 400을 반환한다.")
     @Test
     void cannotLoginIfLengthExceeded() throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest("가".repeat(21));
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "1자 이상 20자 이하의 닉네임으로 설정해주세요.");
+        String nickname = "가".repeat(21);
+        String loginRequest = "{"
+                + "\"nickname\": \"" + nickname + "\""
+                + "}";
+        String expectedResponse = """
+                {
+                  "status": "400 BAD_REQUEST",
+                  "message": "1자 이상 20자 이하의 닉네임으로 설정해주세요."
+                }
+                """;
 
         // when & then
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
+                        .content(loginRequest))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+                .andExpect(content().json(expectedResponse));
     }
 }
