@@ -223,6 +223,22 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("기간이 존재하는 추억에 대해 기간이 존재하지 않도록 변경할 수 있다.")
+    @Test
+    void updateMemoryWithNullableTerm() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        MemoryIdResponse memoryResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
+
+        // when
+        MemoryRequest memoryUpdateRequest = MemoryRequestFixture.create(null, null);
+        memoryService.updateMemory(memoryUpdateRequest, memoryResponse.memoryId(), member);
+        Memory foundedMemory = memoryRepository.findById(memoryResponse.memoryId()).get();
+
+        // then
+        assertThat(foundedMemory.getTerm()).isEqualTo(null);
+    }
+
     @DisplayName("존재하지 않는 추억을 수정하려 할 경우 예외가 발생한다.")
     @Test
     void failUpdateMemory() {
