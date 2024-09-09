@@ -18,7 +18,8 @@ import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
 import com.on.staccato.presentation.util.showToast
 
-class TimelineFragment : BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
+class TimelineFragment :
+    BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
     TimelineHandler {
     private val timelineViewModel: TimelineViewModel by viewModels { TimelineViewModel.factory() }
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
