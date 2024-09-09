@@ -5,9 +5,12 @@ import java.util.Optional;
 import jakarta.validation.ConstraintViolationException;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.transaction.CannotCreateTransactionException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -103,6 +106,30 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleInternalServerErrorException(RuntimeException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
         log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage());
+        return ResponseEntity.internalServerError().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(CannotCreateTransactionException.class)
+    @ApiResponse(responseCode = "500")
+    public ResponseEntity<ExceptionResponse> handleCannotCreateTransactionException(CannotCreateTransactionException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
+        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage(), e.getStackTrace());
+        return ResponseEntity.internalServerError().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    @ApiResponse(responseCode = "500")
+    public ResponseEntity<ExceptionResponse> handleDataAccessException(DataAccessException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
+        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage(), e.getStackTrace());
+        return ResponseEntity.internalServerError().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(TransactionSystemException.class)
+    @ApiResponse(responseCode = "500")
+    public ResponseEntity<ExceptionResponse> handleTransactionSystemException(TransactionSystemException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
+        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage(), e.getStackTrace());
         return ResponseEntity.internalServerError().body(exceptionResponse);
     }
 }
