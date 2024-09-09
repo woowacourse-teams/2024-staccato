@@ -1,5 +1,6 @@
 package com.staccato.moment.controller;
 
+import java.lang.annotation.Target;
 import java.net.URI;
 
 import jakarta.validation.Valid;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.staccato.config.auth.LoginMember;
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.controller.docs.MomentControllerDocs;
 import com.staccato.moment.service.MomentService;

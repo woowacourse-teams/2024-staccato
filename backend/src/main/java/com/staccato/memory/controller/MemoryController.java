@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.staccato.config.auth.LoginMember;
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.controller.docs.MemoryControllerDocs;
 import com.staccato.memory.service.MemoryService;
@@ -37,6 +38,7 @@ import lombok.RequiredArgsConstructor;
 public class MemoryController implements MemoryControllerDocs {
     private final MemoryService memoryService;
 
+    @Trace
     @PostMapping
     public ResponseEntity<MemoryIdResponse> createMemory(
             @Valid @RequestBody MemoryRequest memoryRequest,
