@@ -4,4 +4,6 @@ interface TimelineHandler {
     fun onMemoryClicked(memoryId: Long)
 
     fun onMemoryCreationClicked()
+
+    fun onSortClicked()
 }

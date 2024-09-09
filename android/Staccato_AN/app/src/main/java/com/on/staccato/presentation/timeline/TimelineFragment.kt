@@ -47,6 +47,10 @@ class TimelineFragment :
         )
     }
 
+    override fun onSortClicked() {
+        showToast(getString(R.string.all_default_not_supported))
+    }
+
     private fun navigateToMemory(bundle: Bundle) {
         findNavController().navigate(R.id.action_timelineFragment_to_memoryFragment, bundle)
     }
@@ -76,10 +80,12 @@ class TimelineFragment :
     private fun checkTimelineEmpty(timeline: List<TimelineUiModel>) {
         // TODO: data binding 으로 가시성 설정되지 않는 오류 해결하기
         if (timeline.isEmpty()) {
+            binding.frameTimelineAddMemory.visibility = View.GONE
             binding.ivTimelineEmpty.visibility = View.VISIBLE
             binding.tvTimelineEmpty.visibility = View.VISIBLE
             binding.btnTimelineCreateMemory.visibility = View.VISIBLE
         } else {
+            binding.frameTimelineAddMemory.visibility = View.VISIBLE
             binding.ivTimelineEmpty.visibility = View.GONE
             binding.tvTimelineEmpty.visibility = View.GONE
             binding.btnTimelineCreateMemory.visibility = View.GONE
