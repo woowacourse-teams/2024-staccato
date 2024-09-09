@@ -1,14 +1,16 @@
 package com.on.staccato.presentation.timeline.adapter
 
-import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.on.staccato.databinding.ItemTimelineBinding
 import com.on.staccato.presentation.timeline.TimelineHandler
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 
-sealed class TimelineViewHolder(
-    binding: ViewDataBinding,
+class TimelineViewHolder(
+    private val binding: ItemTimelineBinding,
     private val eventHandler: TimelineHandler,
-) :
-    RecyclerView.ViewHolder(binding.root) {
-    abstract fun bind(item: TimelineUiModel)
+) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(item: TimelineUiModel) {
+        binding.memory = item
+        binding.eventHandler = eventHandler
+    }
 }

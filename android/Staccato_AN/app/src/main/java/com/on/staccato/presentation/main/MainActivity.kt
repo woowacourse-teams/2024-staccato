@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.presentation.base.BindingActivity
@@ -110,6 +111,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
         var backPressedTime = 0L
         onBackPressedDispatcher.addCallback {
             if (behavior.state == STATE_EXPANDED) {
+                behavior.state = STATE_HALF_EXPANDED
+            } else if (behavior.state == STATE_HALF_EXPANDED) {
                 behavior.state = STATE_COLLAPSED
             } else {
                 handleBackPressedTwice(backPressedTime).also {
@@ -130,7 +133,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
     }
 
     private fun setupBottomSheetController() {
-        behavior = BottomSheetBehavior.from(binding.constraintMainBottomSheet)
+        behavior =
+            BottomSheetBehavior.from(binding.constraintMainBottomSheet)
+                .apply { setState(STATE_HALF_EXPANDED) }
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container_view_main_bottom_sheet) as NavHostFragment
         navController = navHostFragment.navController
@@ -163,14 +168,28 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
                         bottomSheet: View,
                         newState: Int,
                     ) {
+                        when (newState) {
+                            STATE_EXPANDED -> {
+                                binding.viewMainDragBar.visibility =
+                                    View.INVISIBLE
+                                binding.constraintMainBottomSheet.setBackgroundResource(
+                                    R.drawable.shape_bottom_sheet_square,
+                                )
+                            }
+
+                            else -> {
+                                binding.viewMainDragBar.visibility = View.VISIBLE
+                                binding.constraintMainBottomSheet.setBackgroundResource(
+                                    R.drawable.shape_bottom_sheet_20dp,
+                                )
+                            }
+                        }
                     }
 
                     override fun onSlide(
-                        bottomSheet: View,
-                        slideOffset: Float,
+                        p0: View,
+                        p1: Float,
                     ) {
-                        binding.tvMainBottomSheetRemindYourMemories.alpha = 1 - slideOffset
-                        binding.ivMainBottomSheetRemindYourMemories.alpha = 1 - slideOffset
                     }
                 },
             )

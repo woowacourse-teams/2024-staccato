@@ -22,15 +22,34 @@
         android:layout_height="wrap_content"
         android:background="@drawable/shape_all_gray1_4dp"
         android:onClickListener="@{() -> eventHandler.onMemoryClicked(memory.memoryId)}"
-        android:padding="8dp">
+        android:padding="9dp">
+
+        <ImageView
+            android:id="@+id/iv_timeline_folder"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/icon_folder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:foreground="@color/gray2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_timeline_folder"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_memory_period"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:textAppearance="@style/Typography.Body4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@id/view_line"
+            app:layout_constraintTop_toBottomOf="@id/tv_memory_title"
             bind:endAt="@{memory.endAt}"
             bind:startAt="@{memory.startAt}"
             tools:text="2024.07.23" />
@@ -39,15 +58,14 @@
             android:id="@+id/tv_memory_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginHorizontal="8dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{memory.memoryTitle}"
             android:textAppearance="@style/Typography.Title3"
             app:layout_constraintEnd_toStartOf="@id/iv_memory_thumbnail"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_memory_period"
+            app:layout_constraintStart_toEndOf="@id/view_line"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="제주도 가족 여행" />
 
         <ImageView
@@ -58,10 +76,10 @@
             android:scaleType="centerCrop"
             android:visibility="@{memory.memoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="8:5"
+            app:layout_constraintDimensionRatio="10:7"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.527"
+            app:layout_constraintWidth_percent="0.35"
             bind:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
             bind:coilRoundedCornerImageUrl="@{memory.memoryThumbnailUrl}"
             bind:coilRoundingRadius="@{12f}"

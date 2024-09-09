@@ -4,53 +4,23 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.on.staccato.databinding.ItemTimelineFirstBinding
-import com.on.staccato.databinding.ItemTimelineLastBinding
-import com.on.staccato.databinding.ItemTimelineMiddleBinding
+import com.on.staccato.databinding.ItemTimelineBinding
 import com.on.staccato.presentation.timeline.TimelineHandler
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 
 class TimelineAdapter(private val eventHandler: TimelineHandler) :
     ListAdapter<TimelineUiModel, TimelineViewHolder>(diffUtil) {
-    override fun getItemViewType(position: Int): Int {
-        return TimelineViewType.fromPosition(position, itemCount).viewType
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): TimelineViewHolder {
-        return when (TimelineViewType.byViewType(viewType)) {
-            TimelineViewType.FIRST_ITEM -> {
-                val binding =
-                    ItemTimelineFirstBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false,
-                    )
-                FirstTimelineViewHolder(binding, eventHandler, currentList.size == LIST_SIZE_ONE)
-            }
-
-            TimelineViewType.MIDDLE_ITEM -> {
-                val binding =
-                    ItemTimelineMiddleBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false,
-                    )
-                MiddleTimelineViewHolder(binding, eventHandler)
-            }
-
-            TimelineViewType.LAST_ITEM -> {
-                val binding =
-                    ItemTimelineLastBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false,
-                    )
-                LastTimelineViewHolder(binding, eventHandler)
-            }
-        }
+        val binding =
+            ItemTimelineBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
+        return TimelineViewHolder(binding, eventHandler)
     }
 
     override fun onBindViewHolder(
@@ -65,8 +35,6 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
     }
 
     companion object {
-        private const val LIST_SIZE_ONE = 1
-
         val diffUtil =
             object : DiffUtil.ItemCallback<TimelineUiModel>() {
                 override fun areContentsTheSame(
