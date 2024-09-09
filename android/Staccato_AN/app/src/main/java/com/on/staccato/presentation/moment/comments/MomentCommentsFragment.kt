@@ -1,10 +1,8 @@
 package com.on.staccato.presentation.moment.comments
 
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.viewModels
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentMomentCommentsBinding
@@ -15,8 +13,7 @@ import com.on.staccato.presentation.util.showToast
 import kotlin.properties.Delegates
 
 class MomentCommentsFragment :
-    BindingFragment<FragmentMomentCommentsBinding>(R.layout.fragment_moment_comments),
-    KeyboardActionHandler {
+    BindingFragment<FragmentMomentCommentsBinding>(R.layout.fragment_moment_comments) {
     private lateinit var commentsAdapter: CommentsAdapter
     private var momentId by Delegates.notNull<Long>()
     private val commentsViewModel: MomentCommentsViewModel by viewModels {
@@ -27,30 +24,27 @@ class MomentCommentsFragment :
     ) {
         MomentViewModelFactory()
     }
-    private val inputManager: InputMethodManager by lazy {
-        requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-    }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         momentId = arguments?.getLong(MOMENT_ID_KEY) ?: return
-        initAdapter()
+        setUpRecyclerView()
         setUpBinding()
         observeMomentViewModel()
         observeCommentsViewModel()
     }
 
-    private fun initAdapter() {
+    private fun setUpRecyclerView() {
         commentsAdapter = CommentsAdapter(commentsViewModel)
         binding.rvMomentComments.adapter = commentsAdapter
+        binding.rvMomentComments.itemAnimator = null
     }
 
     private fun setUpBinding() {
         binding.viewModel = commentsViewModel
         binding.commentHandler = commentsViewModel
-        binding.keyboardHandler = this
     }
 
     private fun observeMomentViewModel() {
@@ -76,23 +70,6 @@ class MomentCommentsFragment :
             } else {
                 requireActivity().window.clearFlags(FLAG_NOT_TOUCHABLE)
             }
-        }
-    }
-
-    override fun onScreenTouchEvent() {
-        requireParentFragment().view?.setOnTouchListener { _, _ ->
-            hideKeyboard()
-            false
-        }
-    }
-
-    private fun hideKeyboard() {
-        requireActivity().currentFocus?.let { view ->
-            inputManager.hideSoftInputFromWindow(
-                view.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS,
-            )
-            view.clearFocus()
         }
     }
 
