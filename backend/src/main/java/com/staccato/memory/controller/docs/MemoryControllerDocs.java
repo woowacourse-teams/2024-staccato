@@ -37,7 +37,7 @@ public interface MemoryControllerDocs {
                     (4) 내용이 공백 포함 500자를 초과했을 때
                                         
                     (5) 기간 설정이 잘못되었을 때
-                    
+                                        
                     (6) 이미 존재하는 추억 이름일 때
                     """,
                     responseCode = "400")

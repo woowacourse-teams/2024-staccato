@@ -1,0 +1,9 @@
+package com.on.staccato.domain.model
+
+data class Comment(
+    val commentId: Long,
+    val memberId: Long,
+    val nickname: String,
+    val memberImageUrl: String? = null,
+    val content: String,
+)
