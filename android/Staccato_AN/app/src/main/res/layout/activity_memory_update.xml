@@ -25,10 +25,12 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_memory_update"
-            style="@style/DefaultToolbarStyle"
+            style="@style/TitleToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:subtitle="@string/memory_update_toolbar_subtitle"
+            app:title="@string/memory_update_toolbar_title" />
 
         <ScrollView
             android:id="@+id/sv_memory_update"
@@ -207,9 +209,9 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_period_description"
                     bind:endDate="@{viewModel.endDate}"
                     bind:memoryTitle="@{viewModel.title}"
-                    bind:startDate="@{viewModel.startDate}"
                     bind:photoUri="@{viewModel.thumbnailUri}"
-                    bind:photoUrl="@{viewModel.thumbnailUrl}" />
+                    bind:photoUrl="@{viewModel.thumbnailUrl}"
+                    bind:startDate="@{viewModel.startDate}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
