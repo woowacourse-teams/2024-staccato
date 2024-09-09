@@ -17,7 +17,7 @@ public record LoginRequest(
         String nickname
 ) {
     public LoginRequest {
-        if(!Objects.isNull(nickname)){
+        if (!Objects.isNull(nickname)) {
             nickname = nickname.trim();
         }
     }

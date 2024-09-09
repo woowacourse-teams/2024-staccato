@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/timelineFragment"
-        android:name="com.woowacourse.staccato.presentation.timeline.TimelineFragment"
+        android:name="com.on.staccato.presentation.timeline.TimelineFragment"
         android:label="fragment_timeline"
         tools:layout="@layout/fragment_timeline">
 
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/memoryFragment"
-        android:name="com.woowacourse.staccato.presentation.memory.MemoryFragment"
+        android:name="com.on.staccato.presentation.memory.MemoryFragment"
         android:label="fragment_memory"
         tools:layout="@layout/fragment_memory">
 
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/momentFragment"
-        android:name="com.woowacourse.staccato.presentation.moment.MomentFragment"
+        android:name="com.on.staccato.presentation.moment.MomentFragment"
         android:label="fragment_moment"
         tools:layout="@layout/fragment_moment" />
 
