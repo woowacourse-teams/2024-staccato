@@ -22,7 +22,7 @@ class UserInfoPreferencesManager(context: Context) {
     }
 
     companion object {
-        private const val USER_INFO_PREF_NAME = "com.woowacourse.staccato.user_info_prefs"
-        private const val TOKEN_KEY_NAME = "com.woowacourse.staccato.token"
+        private const val USER_INFO_PREF_NAME = "com.on.staccato.user_info_prefs"
+        private const val TOKEN_KEY_NAME = "com.on.staccato.token"
     }
 }

@@ -440,9 +440,23 @@ fun ImageView.setSelectedState(selected: Boolean) {
     isSelected = selected
 }
 
-@BindingAdapter("setImageResource")
-fun ImageView.setImageResourceWithId(resId: Int) {
-    setImageResource(resId)
+@BindingAdapter(
+    value = [
+        "colorImageResource",
+        "grayImageResource",
+    ],
+)
+fun ImageView.setImageResourceWithId(
+    colorResId: Int,
+    grayResId: Int,
+) {
+    setImageResource(
+        if (isSelected) {
+            colorResId
+        } else {
+            grayResId
+        },
+    )
 }
 
 @BindingAdapter("setAddress")

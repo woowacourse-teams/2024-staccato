@@ -18,7 +18,8 @@
         style="@style/FeelingStyle"
         android:contentDescription="@string/all_image_content_description"
         android:onClick="@{() -> feelingHandler.onFeelingClicked(feeling)}"
-        bind:setImageResource="@{feeling.src}"
+        bind:colorImageResource="@{feeling.colorSrc}"
+        bind:grayImageResource="@{feeling.graySrc}"
         bind:setSelected="@{feeling.isSelected}"
         tools:src="@drawable/feeling_excited" />
 
