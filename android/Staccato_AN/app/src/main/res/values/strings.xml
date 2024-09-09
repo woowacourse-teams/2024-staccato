@@ -32,6 +32,7 @@
     <string name="timeline_order">최근 생성 순</string>
     <string name="timeline_year">%s년</string>
     <string name="timeline_empty">아직 추억이 없네요!\n스타카토를 담을 추억을 만들어보세요.</string>
+    <string name="timeline_add_memory">추가</string>
 
     // fragment_memory
     <string name="memory_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
@@ -126,5 +127,7 @@
     <string name="maps_location_permission_required_message">위치 서비스 사용을 위해 위치 권한을 허용해주세요.</string>
     <string name="staccato_loading_address">주소를 불러오고 있어요</string>
     <string name="moment_creation_not_found_address">주소를 찾지 못했습니다</string>
+    <string name="timeline_sort">정렬</string>
+    <string name="timeline_create_memory">추억 생성하기</string>
 
 </resources>

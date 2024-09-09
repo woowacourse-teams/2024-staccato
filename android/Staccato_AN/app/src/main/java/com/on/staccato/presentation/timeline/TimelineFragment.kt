@@ -18,8 +18,7 @@ import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
 import com.on.staccato.presentation.util.showToast
 
-class TimelineFragment :
-    BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
+class TimelineFragment : BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
     TimelineHandler {
     private val timelineViewModel: TimelineViewModel by viewModels { TimelineViewModel.factory() }
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
@@ -45,6 +44,10 @@ class TimelineFragment :
             requireActivity(),
             memoryCreationLauncher,
         )
+    }
+
+    override fun onSortClicked() {
+        showToast(getString(R.string.all_default_not_supported))
     }
 
     private fun navigateToMemory(bundle: Bundle) {
@@ -76,10 +79,12 @@ class TimelineFragment :
     private fun checkTimelineEmpty(timeline: List<TimelineUiModel>) {
         // TODO: data binding 으로 가시성 설정되지 않는 오류 해결하기
         if (timeline.isEmpty()) {
+            binding.frameTimelineAddMemory.visibility = View.GONE
             binding.ivTimelineEmpty.visibility = View.VISIBLE
             binding.tvTimelineEmpty.visibility = View.VISIBLE
             binding.btnTimelineCreateMemory.visibility = View.VISIBLE
         } else {
+            binding.frameTimelineAddMemory.visibility = View.VISIBLE
             binding.ivTimelineEmpty.visibility = View.GONE
             binding.tvTimelineEmpty.visibility = View.GONE
             binding.btnTimelineCreateMemory.visibility = View.GONE
