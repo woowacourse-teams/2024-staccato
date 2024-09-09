@@ -1,7 +1,9 @@
 package com.on.staccato.presentation.main
 
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -32,6 +34,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
     private val sharedViewModel: SharedViewModel by viewModels()
+    private val inputManager: InputMethodManager by lazy {
+        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+    }
 
     val memoryCreationLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -98,7 +103,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
     }
 
     override fun onStaccatoCreationClicked() {
-        // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
         MomentCreationActivity.startWithResultLauncher(
             0L,
             "임시 추억",
@@ -204,5 +208,37 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
             val newState = bundle.getInt(BOTTOM_SHEET_NEW_STATE)
             behavior.state = newState
         }
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            currentFocus?.let { view ->
+                if (!isTouchInsideView(event, view)) {
+                    clearFocusAndHideKeyboard(view)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
+
+    private fun isTouchInsideView(
+        event: MotionEvent,
+        view: View,
+    ): Boolean {
+        val rect = android.graphics.Rect()
+        view.getGlobalVisibleRect(rect)
+        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
+    }
+
+    private fun clearFocusAndHideKeyboard(view: View) {
+        view.clearFocus()
+        hideKeyboard(view)
+    }
+
+    private fun hideKeyboard(view: View) {
+        inputManager.hideSoftInputFromWindow(
+            view.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
     }
 }
