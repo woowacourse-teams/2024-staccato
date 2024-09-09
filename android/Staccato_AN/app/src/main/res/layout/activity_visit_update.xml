@@ -24,13 +24,15 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_visit_update"
-            style="@style/DefaultToolbarStyle"
+            style="@style/TitleToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:subtitle="@string/visit_creation_toolbar_subtitle"
+            app:title="@string/visit_creation_toolbar_title" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

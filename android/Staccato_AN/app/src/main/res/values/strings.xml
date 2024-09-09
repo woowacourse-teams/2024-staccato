@@ -81,6 +81,12 @@
     <string name="visit_creation_posting">스타카토를 찍는 중이에요..</string>
     <string name="visit_update_posting">스타카토를 수정하는 중이에요...️</string>
     <string name="moment_creation_memory_selection">추억 선택</string>
+    <string name="visit_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨보세요!</string>
+    <string name="visit_creation_toolbar_title">스타카토 기록하기</string>
+
+    // activity_visit_update
+    <string name="visit_update_toolbar_subtitle">기억하고 싶은 순간을 수정해보세요!</string>
+    <string name="visit_update_toolbar_title">스타카토 수정하기</string>
 
     // activity_login
     <string name="login_start">시작하기</string>
