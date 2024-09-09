@@ -10,11 +10,11 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModel" />
+            type="com.on.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModel" />
 
         <variable
             name="handler"
-            type="com.woowacourse.staccato.presentation.memorycreation.MemoryCreationHandler" />
+            type="com.on.staccato.presentation.memorycreation.MemoryCreationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,10 +25,12 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_memory_creation"
-            style="@style/DefaultToolbarStyle"
+            style="@style/TitleToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:subtitle="@string/memory_creation_toolbar_subtitle"
+            app:title="@string/memory_creation_toolbar_title" />
 
         <ScrollView
             android:id="@+id/sv_memory_creation"
@@ -77,12 +79,12 @@
                     layout="@layout/layout_photo_attach"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
-                    app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach" />
+                    app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
+                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}" />
 
                 <ProgressBar
                     android:id="@+id/progress_bar_memory_creation_attached_photo"
@@ -205,9 +207,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_description"
                     bind:endDate="@{viewModel.endDate}"
+                    bind:isPhotoPosting="@{viewModel.isPhotoPosting}"
                     bind:memoryTitle="@{viewModel.title}"
-                    bind:startDate="@{viewModel.startDate}"
-                    bind:isPhotoPosting="@{viewModel.isPhotoPosting}"/>
+                    bind:startDate="@{viewModel.startDate}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

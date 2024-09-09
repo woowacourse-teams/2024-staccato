@@ -10,11 +10,11 @@
 
         <variable
             name="viewModel"
-            type="com.woowacourse.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel" />
+            type="com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel" />
 
         <variable
             name="visitCreationHandler"
-            type="com.woowacourse.staccato.presentation.momentcreation.MomentCreationHandler" />
+            type="com.on.staccato.presentation.momentcreation.MomentCreationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,13 +24,15 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_visit_creation"
-            style="@style/DefaultToolbarStyle"
+            style="@style/TitleToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:subtitle="@string/visit_creation_toolbar_subtitle"
+            app:title="@string/visit_creation_toolbar_title" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
