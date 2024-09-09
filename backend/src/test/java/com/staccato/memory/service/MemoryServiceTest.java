@@ -82,6 +82,25 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("추억의 기간이 null이더라도 추억을 생성할 수 있다.")
+    @Test
+    void createMemoryWithoutTerm() {
+        // given
+        MemoryRequest memoryRequest = MemoryRequestFixture.create(null, null);
+        Member member = memberRepository.save(MemberFixture.create());
+
+        // when
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, member);
+        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId())
+                .get(0);
+
+        // then
+        assertAll(
+                () -> assertThat(memoryMember.getMember().getId()).isEqualTo(member.getId()),
+                () -> assertThat(memoryMember.getMemory().getId()).isEqualTo(memoryIdResponse.memoryId())
+        );
+    }
+
     @DisplayName("이미 존재하는 추억 이름으로 추억을 생성할 수 없다.")
     @Test
     void cannotCreateMemoryByDuplicatedTitle() {
