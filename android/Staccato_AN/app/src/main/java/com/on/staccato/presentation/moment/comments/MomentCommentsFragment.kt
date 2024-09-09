@@ -1,10 +1,8 @@
 package com.on.staccato.presentation.moment.comments
 
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.viewModels
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentMomentCommentsBinding
@@ -32,15 +30,16 @@ class MomentCommentsFragment :
         savedInstanceState: Bundle?,
     ) {
         momentId = arguments?.getLong(MOMENT_ID_KEY) ?: return
-        initAdapter()
+        setUpRecyclerView()
         setUpBinding()
         observeMomentViewModel()
         observeCommentsViewModel()
     }
 
-    private fun initAdapter() {
+    private fun setUpRecyclerView() {
         commentsAdapter = CommentsAdapter(commentsViewModel)
         binding.rvMomentComments.adapter = commentsAdapter
+        binding.rvMomentComments.itemAnimator = null
     }
 
     private fun setUpBinding() {
