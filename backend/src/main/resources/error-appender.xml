@@ -8,7 +8,9 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] [%thread] [request_id=%X{request_id:-startup}] %-5level [%C.%M.-%L] - %msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] [%thread] [request_id=%X{request_id:-startup}] %-5level
+                [%C.%M.-%L] - %msg%n
+            </pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>./backup/error/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>

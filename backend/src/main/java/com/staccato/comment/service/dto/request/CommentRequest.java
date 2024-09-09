@@ -22,11 +22,11 @@ public record CommentRequest(
         @Size(max = 500, message = "댓글은 공백 포함 500자 이하로 입력해주세요.")
         String content
 ) {
-        public Comment toComment(Moment moment, Member member) {
-                return Comment.builder()
-                        .content(content)
-                        .moment(moment)
-                        .member(member)
-                        .build();
-        }
+    public Comment toComment(Moment moment, Member member) {
+        return Comment.builder()
+                .content(content)
+                .moment(moment)
+                .member(member)
+                .build();
+    }
 }
