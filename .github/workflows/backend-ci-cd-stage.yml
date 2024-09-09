@@ -2,7 +2,7 @@ name: Backend CI/CD stage
 
 on:
   push:
-    branches: [ "develop-be" ]
+    branches: [ "develop-be", "develop" ]
 
 jobs:
   ci:

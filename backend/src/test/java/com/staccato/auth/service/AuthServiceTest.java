@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,22 @@ class AuthServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("입력받은 닉네임이 이미 존재하는 닉네임인 경우 기존에 존재하던 사용자를 반환한다.")
+    @Test
+    void loginByDuplicated() {
+        // given
+        String nickname = "staccato";
+        memberRepository.save(Member.builder().nickname(nickname).build());
+        LoginRequest loginRequest = new LoginRequest(nickname);
+
+        // when
+        LoginResponse response = authService.login(loginRequest);
+
+        // then
+        assertThat(response.token()).isNotBlank();
+    }
+
+    @Disabled
     @DisplayName("입력받은 닉네임이 이미 존재하는 닉네임인 경우 예외가 발생한다.")
     @Test
     void cannotLoginByDuplicated() {
