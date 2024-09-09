@@ -1,9 +1,7 @@
 package com.on.staccato.presentation.main
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
-import android.widget.PopupMenu
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -21,7 +19,6 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_NEW_STATE
 import com.on.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_STATE_REQUEST_KEY
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.on.staccato.presentation.memorycreation.MemoryCreationActivity
 import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
 import com.on.staccato.presentation.util.showToast
@@ -99,36 +96,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
         setUpBottomSheetStateListener()
     }
 
-    override fun onCreationClicked() {
-        val popup = inflateCreationMenu(binding.ivMainCreation)
-        setUpCreationMenu(popup)
-        popup.show()
-    }
-
-    private fun inflateCreationMenu(view: View): PopupMenu {
-        val popup = PopupMenu(this, view, Gravity.END, 0, R.style.Theme_Staccato_AN_PopupMenu)
-        popup.menuInflater.inflate(R.menu.menu_creation, popup.menu)
-        return popup
-    }
-
-    private fun setUpCreationMenu(popup: PopupMenu) {
-        popup.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.memory_creation -> navigateToMemoryCreation()
-                R.id.staccato_creation -> navigateToStaccatoCreation()
-            }
-            false
-        }
-    }
-
-    private fun navigateToMemoryCreation() {
-        MemoryCreationActivity.startWithResultLauncher(
-            this,
-            memoryCreationLauncher,
-        )
-    }
-
-    private fun navigateToStaccatoCreation() {
+    override fun onStaccatoCreationClicked() {
         // TODO : 현재 날짜, 시간을 기준으로 여행이 있으면 메인 -> 방문 기록 생성 플로우 구현
         MomentCreationActivity.startWithResultLauncher(
             0L,

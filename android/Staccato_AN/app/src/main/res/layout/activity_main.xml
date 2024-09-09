@@ -39,7 +39,7 @@
                 android:layout_marginBottom="85dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:onClick="@{() -> handler.onCreationClicked()}"
+                android:onClick="@{() -> handler.onStaccatoCreationClicked()}"
                 android:paddingTop="10dp"
                 android:src="@drawable/icon_floating_button"
                 app:layout_constraintBottom_toBottomOf="parent"
