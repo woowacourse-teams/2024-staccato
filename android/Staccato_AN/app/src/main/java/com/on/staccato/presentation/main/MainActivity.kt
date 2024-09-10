@@ -1,5 +1,8 @@
 package com.on.staccato.presentation.main
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -8,6 +11,9 @@ import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -29,13 +35,22 @@ import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KE
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
 import com.on.staccato.presentation.util.showToast
 
-class MainActivity : BindingActivity<ActivityMainBinding>(), OnMapReadyCallback, MainHandler {
+class MainActivity : BindingActivity<ActivityMainBinding>(),
+    OnMapReadyCallback,
+    OnRequestPermissionsResultCallback,
+    MainHandler {
     override val layoutResourceId: Int
         get() = R.layout.activity_main
 
+    private lateinit var map: GoogleMap
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+    private val locationPermissions: Array<String> =
+        arrayOf(
+            ACCESS_FINE_LOCATION,
+            ACCESS_COARSE_LOCATION,
+        )
     private val sharedViewModel: SharedViewModel by viewModels()
     private val inputManager: InputMethodManager by lazy {
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -107,7 +122,28 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), OnMapReadyCallback,
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        // TODO("Not yet implemented")
+        map = googleMap
+        enableMyLocation()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            return
+        }
+
+        when (requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if ((grantResults.isNotEmpty()) && grantResults.all { it == PackageManager.PERMISSION_GRANTED } )  {
+                    enableMyLocation()
+                }
+                return
+            }
+        }
     }
 
     override fun onStaccatoCreationClicked() {
@@ -119,8 +155,65 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), OnMapReadyCallback,
         )
     }
 
+    private fun enableMyLocation() {
+        if (checkLocationPermissions()) return
+        if (shouldShowRequestPermission()) return
+        requestLocationPermissions()
+    }
+
+    // 권한이 이미 부여된 경우
+    private fun checkLocationPermissions(): Boolean {
+        val isFineLocationGranted =
+            ContextCompat.checkSelfPermission(
+                this,
+                ACCESS_FINE_LOCATION,
+            ) == PackageManager.PERMISSION_GRANTED
+
+        val isCoarseLocationGranted =
+            ContextCompat.checkSelfPermission(
+                this,
+                ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+        if (isFineLocationGranted || isCoarseLocationGranted) {
+            map.isMyLocationEnabled = true
+            return true
+        } else {
+            requestLocationPermissions()
+        }
+        return false
+    }
+
+    // 앱에서 요청 권한 근거를 표시해야 한다고 판단하는 경우
+    private fun shouldShowRequestPermission(): Boolean {
+        val shouldRequestFineLocation: Boolean =
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                ACCESS_FINE_LOCATION,
+            )
+
+        val shouldRequestCoarseLocation: Boolean = ActivityCompat.shouldShowRequestPermissionRationale(
+            this,
+            ACCESS_COARSE_LOCATION,
+        )
+
+        if (shouldRequestFineLocation || shouldRequestCoarseLocation) {
+            requestLocationPermissions()
+            return true
+        }
+        return false
+    }
+
+    private fun requestLocationPermissions() {
+        ActivityCompat.requestPermissions(
+            this,
+            locationPermissions,
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
+    }
+
     private fun setupGoogleMap() {
-        val map: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
+        val map: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.fragment_container_view_map) as? SupportMapFragment
         map?.getMapAsync(this)
     }
 
@@ -253,5 +346,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), OnMapReadyCallback,
             view.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS,
         )
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 }
