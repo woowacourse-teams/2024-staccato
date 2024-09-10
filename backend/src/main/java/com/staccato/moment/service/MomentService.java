@@ -67,6 +67,20 @@ public class MomentService {
         moment.update(momentUpdateRequest.placeName(), momentUpdateRequest.toMomentImages());
     }
 
+    @Transactional
+    public void updateMomentByIdV2(
+            long momentId,
+            MomentRequest momentUpdateRequest,
+            Member member
+    ) {
+        Moment moment = getMomentById(momentId);
+        validateOwner(moment.getMemory(), member);
+        Memory memory = getMemoryById(momentUpdateRequest.memoryId());
+        validateOwner(memory, member);
+        Moment updatedMoment = momentUpdateRequest.toMoment(memory);
+        moment.update(updatedMoment);
+    }
+
     private Moment getMomentById(long momentId) {
         return momentRepository.findById(momentId)
                 .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
@@ -80,17 +94,17 @@ public class MomentService {
         });
     }
 
-    private void validateOwner(Memory memory, Member member) {
-        if (memory.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
     @Transactional
     public void updateMomentFeelingById(long momentId, Member member, FeelingRequest feelingRequest) {
         Moment moment = getMomentById(momentId);
         validateOwner(moment.getMemory(), member);
         Feeling feeling = feelingRequest.toFeeling();
         moment.changeFeeling(feeling);
+    }
+
+    private void validateOwner(Memory memory, Member member) {
+        if (memory.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
     }
 }
