@@ -12,6 +12,9 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
@@ -26,7 +29,7 @@ import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KE
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
 import com.on.staccato.presentation.util.showToast
 
-class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
+class MainActivity : BindingActivity<ActivityMainBinding>(), OnMapReadyCallback, MainHandler {
     override val layoutResourceId: Int
         get() = R.layout.activity_main
 
@@ -96,10 +99,15 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
 
     override fun initStartView(savedInstanceState: Bundle?) {
         binding.handler = this
+        setupGoogleMap()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
         setUpBottomSheetStateListener()
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        // TODO("Not yet implemented")
     }
 
     override fun onStaccatoCreationClicked() {
@@ -109,6 +117,11 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
             this,
             visitCreationLauncher,
         )
+    }
+
+    private fun setupGoogleMap() {
+        val map: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
+        map?.getMapAsync(this)
     }
 
     private fun setupBackPressedHandler() {
