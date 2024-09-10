@@ -1,7 +1,6 @@
 package com.on.staccato.presentation.main
 
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
@@ -186,6 +185,13 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
                                 binding.constraintMainBottomSheet.setBackgroundResource(
                                     R.drawable.shape_bottom_sheet_20dp,
                                 )
+                                currentFocus?.let {
+                                    inputMethodManager.hideSoftInputFromWindow(
+                                        it.windowToken,
+                                        InputMethodManager.HIDE_NOT_ALWAYS,
+                                    )
+                                    it.clearFocus()
+                                }
                             }
                         }
                     }
@@ -210,35 +216,33 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
         }
     }
 
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            currentFocus?.let { view ->
-                if (!isTouchInsideView(event, view)) {
-                    clearFocusAndHideKeyboard(view)
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event)
-    }
+//    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+//        if (event.action == MotionEvent.ACTION_UP)
+//            prevFocus = currentFocus
+//        if (hideKeyboardOnMotionEvent(prevFocus, currentFocus, event, inputManager)) {
+//            prevFocus = currentFocus
+//        }
+//        return super.dispatchTouchEvent(event)
+//    }
 
-    private fun isTouchInsideView(
-        event: MotionEvent,
-        view: View,
-    ): Boolean {
-        val rect = android.graphics.Rect()
-        view.getGlobalVisibleRect(rect)
-        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
-    }
-
-    private fun clearFocusAndHideKeyboard(view: View) {
-        view.clearFocus()
-        hideKeyboard(view)
-    }
-
-    private fun hideKeyboard(view: View) {
-        inputManager.hideSoftInputFromWindow(
-            view.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS,
-        )
-    }
+//    private fun isTouchInsideView(
+//        event: MotionEvent,
+//        view: View,
+//    ): Boolean {
+//        val rect = android.graphics.Rect()
+//        view.getGlobalVisibleRect(rect)
+//        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
+//    }
+//
+//    private fun clearFocusAndHideKeyboard(view: View) {
+//        view.clearFocus()
+//        hideKeyboard(view)
+//    }
+//
+//    private fun hideKeyboard(view: View) {
+//        inputManager.hideSoftInputFromWindow(
+//            view.windowToken,
+//            InputMethodManager.HIDE_NOT_ALWAYS,
+//        )
+//    }
 }
