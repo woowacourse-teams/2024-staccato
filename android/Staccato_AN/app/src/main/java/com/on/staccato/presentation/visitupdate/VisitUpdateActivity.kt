@@ -21,6 +21,7 @@ import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KE
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
+import com.on.staccato.presentation.momentcreation.PlaceSearchHandler
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.util.showToast
@@ -32,7 +33,8 @@ import com.on.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModelFa
 class VisitUpdateActivity :
     BindingActivity<ActivityVisitUpdateBinding>(),
     OnUrisSelectedListener,
-    VisitUpdateHandler {
+    VisitUpdateHandler,
+    PlaceSearchHandler {
     override val layoutResourceId = R.layout.activity_visit_update
     private val viewModel: VisitUpdateViewModel by viewModels { VisitUpdateViewModelFactory() }
     private val photoAttachFragment by lazy {
@@ -103,6 +105,7 @@ class VisitUpdateActivity :
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.visitUpdateHandler = this
+        binding.placeSearchHandler = this
     }
 
     private fun initToolbar() {
@@ -188,5 +191,9 @@ class VisitUpdateActivity :
                 activityLauncher.launch(this)
             }
         }
+    }
+
+    override fun onSearchClicked() {
+        showToast("플레이스 검색창 띄우기")
     }
 }

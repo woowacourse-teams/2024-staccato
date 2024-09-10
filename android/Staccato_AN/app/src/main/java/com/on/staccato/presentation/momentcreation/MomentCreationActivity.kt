@@ -47,7 +47,8 @@ import java.time.LocalDateTime
 class MomentCreationActivity :
     BindingActivity<ActivityVisitCreationBinding>(),
     OnUrisSelectedListener,
-    MomentCreationHandler {
+    MomentCreationHandler,
+    PlaceSearchHandler {
     override val layoutResourceId = R.layout.activity_visit_creation
     private val viewModel: MomentCreationViewModel by viewModels { MomentCreationViewModelFactory() }
 
@@ -168,6 +169,7 @@ class MomentCreationActivity :
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.visitCreationHandler = this
+        binding.placeSearchHandler = this
     }
 
     private fun initAdapter() {
@@ -319,5 +321,9 @@ class MomentCreationActivity :
                 activityLauncher.launch(this)
             }
         }
+    }
+
+    override fun onSearchClicked() {
+        showToast("플레이스 검색창 띄우기")
     }
 }

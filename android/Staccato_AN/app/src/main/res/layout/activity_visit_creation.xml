@@ -15,6 +15,10 @@
         <variable
             name="visitCreationHandler"
             type="com.on.staccato.presentation.momentcreation.MomentCreationHandler" />
+
+        <variable
+            name="placeSearchHandler"
+            type="com.on.staccato.presentation.momentcreation.PlaceSearchHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -103,12 +107,26 @@
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
+                    android:paddingEnd="40dp"
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address_title"
                     bind:setAddress="@{viewModel.address}"
                     tools:text="장소 주소 (고정)" />
+
+                <ImageView
+                    android:id="@+id/iv_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:onClick="@{()->placeSearchHandler.onSearchClicked()}"
+                    android:padding="10dp"
+                    android:src="@drawable/icon_search"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_place_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_place_address"
+                    app:tint="@color/gray3" />
 
                 <TextView
                     android:id="@+id/tv_photo_title"
