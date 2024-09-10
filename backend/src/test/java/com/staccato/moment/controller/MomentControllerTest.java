@@ -326,7 +326,7 @@ class MomentControllerTest {
 
     @Nested
     @DisplayName("updateMomentByIdV2 테스트")
-    class UpdateMomentTests {
+    class updateMomentByIdV2Test {
         @DisplayName("적합한 경로변수를 통해 스타카토 수정에 성공한다.")
         @Test
         void updateMomentById() throws Exception {
