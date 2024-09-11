@@ -15,6 +15,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import com.staccato.config.log.LogForm;
 
@@ -75,6 +77,24 @@ public class GlobalExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), exceptionMessage);
         log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
         return ResponseEntity.badRequest().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    @ApiResponse(responseCode = "400")
+    public ResponseEntity<ExceptionResponse> handleMissingServletRequestPartException(MissingServletRequestPartException e) {
+        String exceptionMessage = "요청된 파트가 누락되었습니다. 올바른 데이터를 제공해주세요.";
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), exceptionMessage);
+        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
+        return ResponseEntity.badRequest().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    @ApiResponse(responseCode = "413")
+    public ResponseEntity<ExceptionResponse> handleMultipartException(MultipartException e) {
+        String exceptionMessage = "20MB 이하의 사진을 업로드해 주세요.";
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.PAYLOAD_TOO_LARGE.toString(), exceptionMessage);
+        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(exceptionResponse);
     }
 
     @ExceptionHandler(StaccatoException.class)
