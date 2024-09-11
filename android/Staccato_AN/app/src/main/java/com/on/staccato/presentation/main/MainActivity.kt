@@ -2,12 +2,14 @@ package com.on.staccato.presentation.main
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +37,8 @@ import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KE
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
 import com.on.staccato.presentation.util.showToast
 
-class MainActivity : BindingActivity<ActivityMainBinding>(),
+class MainActivity :
+    BindingActivity<ActivityMainBinding>(),
     OnMapReadyCallback,
     OnRequestPermissionsResultCallback,
     MainHandler {
@@ -56,61 +59,10 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
-    val memoryCreationLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                result.data?.let {
-                    sharedViewModel.setTimelineHasUpdated()
-                    showToast(getString(R.string.main_memory_creation_success))
-                    val createdMemoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
-                    val bundle = bundleOf(MEMORY_ID_KEY to createdMemoryId)
-                    navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
-                }
-            }
-        }
-
-    val memoryUpdateLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                result.data?.let {
-                    sharedViewModel.setTimelineHasUpdated()
-                    showToast(getString(R.string.main_memory_update_success))
-                    val updatedMemoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
-                    val bundle = bundleOf(MEMORY_ID_KEY to updatedMemoryId)
-                    navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
-                }
-            }
-        }
-
-    val visitCreationLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                result.data?.let {
-                    showToast(getString(R.string.main_moment_creation_success))
-                    val createdVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
-                    val bundle =
-                        bundleOf(
-                            MOMENT_ID_KEY to createdVisitId,
-                        )
-                    navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
-                }
-            }
-        }
-
-    val visitUpdateLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                result.data?.let {
-                    showToast(getString(R.string.main_moment_update_success))
-                    val updatedVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
-                    val bundle =
-                        bundleOf(
-                            MOMENT_ID_KEY to updatedVisitId,
-                        )
-                    navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
-                }
-            }
-        }
+    val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult(messageId = R.string.main_memory_creation_success)
+    val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult(messageId = R.string.main_memory_update_success)
+    val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult(messageId = R.string.main_moment_creation_success)
+    val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult(messageId = R.string.main_moment_update_success)
 
     override fun initStartView(savedInstanceState: Bundle?) {
         binding.handler = this
@@ -129,7 +81,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -138,7 +90,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),
 
         when (requestCode) {
             LOCATION_PERMISSION_REQUEST_CODE -> {
-                if ((grantResults.isNotEmpty()) && grantResults.all { it == PackageManager.PERMISSION_GRANTED } )  {
+                if ((grantResults.isNotEmpty()) &&
+                    grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+                ) {
                     enableMyLocation()
                 }
                 return
@@ -151,7 +105,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),
             0L,
             "임시 추억",
             this,
-            visitCreationLauncher,
+            staccatoCreationLauncher,
         )
     }
 
@@ -172,7 +126,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),
         val isCoarseLocationGranted =
             ContextCompat.checkSelfPermission(
                 this,
-                ACCESS_COARSE_LOCATION
+                ACCESS_COARSE_LOCATION,
             ) == PackageManager.PERMISSION_GRANTED
 
         if (isFineLocationGranted || isCoarseLocationGranted) {
@@ -192,10 +146,11 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),
                 ACCESS_FINE_LOCATION,
             )
 
-        val shouldRequestCoarseLocation: Boolean = ActivityCompat.shouldShowRequestPermissionRationale(
-            this,
-            ACCESS_COARSE_LOCATION,
-        )
+        val shouldRequestCoarseLocation: Boolean =
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                ACCESS_COARSE_LOCATION,
+            )
 
         if (shouldRequestFineLocation || shouldRequestCoarseLocation) {
             requestLocationPermissions()
@@ -208,7 +163,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),
         ActivityCompat.requestPermissions(
             this,
             locationPermissions,
-            LOCATION_PERMISSION_REQUEST_CODE
+            LOCATION_PERMISSION_REQUEST_CODE,
         )
     }
 
@@ -249,6 +204,37 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container_view_main_bottom_sheet) as NavHostFragment
         navController = navHostFragment.navController
+    }
+
+    private fun handleMemoryResult(messageId: Int) =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let {
+                    sharedViewModel.setTimelineHasUpdated()
+                    showToast(getString(messageId))
+                    val bundle: Bundle = makeBundle(it, MEMORY_ID_KEY)
+                    navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
+                }
+            }
+        }
+
+    private fun handleStaccatoResult(messageId: Int) =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let {
+                    showToast(getString(messageId))
+                    val bundle: Bundle = makeBundle(it, MOMENT_ID_KEY)
+                    navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
+                }
+            }
+        }
+
+    private fun makeBundle(
+        it: Intent,
+        keyName: String,
+    ): Bundle {
+        val id = it.getLongExtra(keyName, 0L)
+        return bundleOf(keyName to id)
     }
 
     private fun navigateTo(

@@ -112,7 +112,7 @@ class MomentFragment :
         memoryId: Long,
         memoryTitle: String,
     ) {
-        val momentUpdateLauncher = (activity as MainActivity).visitUpdateLauncher
+        val momentUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
         VisitUpdateActivity.startWithResultLauncher(
             visitId = momentId,
             memoryId = memoryId,

@@ -87,7 +87,7 @@ class MemoryFragment :
     override fun onVisitCreationClicked() {
         if (viewModel.isInPeriod()) {
             viewModel.memory.value?.let {
-                val visitCreationLauncher = (activity as MainActivity).visitCreationLauncher
+                val visitCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
                 MomentCreationActivity.startWithResultLauncher(
                     memoryId,
                     it.title,
