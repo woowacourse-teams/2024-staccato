@@ -17,16 +17,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
-import com.staccato.fixture.Member.LoginRequestFixture;
-import com.staccato.fixture.exception.ExceptionResponseFixture;
+import com.staccato.exception.ExceptionResponse;
 
 @WebMvcTest(AuthController.class)
 class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
     @MockBean
     private AuthService authService;
 
@@ -34,7 +36,11 @@ class AuthControllerTest {
     @Test
     void login() throws Exception {
         // given
-        String loginRequest = LoginRequestFixture.create("staccato");
+        String loginRequest = """
+                {
+                    "nickname": "staccato"
+                }
+                """;
         String expectedResponse = """
                 {
                   "token": "staccatotoken"
@@ -56,30 +62,30 @@ class AuthControllerTest {
     @ValueSource(strings = {"", " "})
     void cannotLoginIfInvalidNicknameLength(String nickname) throws Exception {
         // given
-        String loginRequest = LoginRequestFixture.create(nickname);
-        String expectedResponse = ExceptionResponseFixture.create(HttpStatus.BAD_REQUEST, "1자 이상 20자 이하의 닉네임으로 설정해주세요.");
+        LoginRequest loginRequest = new LoginRequest(nickname);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "1자 이상 20자 이하의 닉네임으로 설정해주세요.");
 
         // when & then
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(loginRequest))
+                        .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("닉네임을 입력하지 않으면 400을 반환한다.")
     @Test
     void cannotLoginIfNicknameNull() throws Exception {
         // given
-        String loginRequest = LoginRequestFixture.create(null);
-        String expectedResponse = ExceptionResponseFixture.create(HttpStatus.BAD_REQUEST, "닉네임을 입력해주세요.");
+        LoginRequest loginRequest = new LoginRequest(null);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "닉네임을 입력해주세요.");
 
         // when & then
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(loginRequest))
+                        .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("20자를 초과하면 400을 반환한다.")
@@ -87,14 +93,14 @@ class AuthControllerTest {
     void cannotLoginIfLengthExceeded() throws Exception {
         // given
         String nickname = "가".repeat(21);
-        String loginRequest = LoginRequestFixture.create(nickname);
-        String expectedResponse = ExceptionResponseFixture.create(HttpStatus.BAD_REQUEST, "1자 이상 20자 이하의 닉네임으로 설정해주세요.");
+        LoginRequest loginRequest = new LoginRequest(nickname);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "1자 이상 20자 이하의 닉네임으로 설정해주세요.");
 
         // when & then
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(loginRequest))
+                        .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 }
