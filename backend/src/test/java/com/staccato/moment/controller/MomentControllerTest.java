@@ -256,7 +256,7 @@ class MomentControllerTest {
         // given
         long momentId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 제목을 입력해주세요.");
-        MomentUpdateRequest updateRequest = MomentUpdateRequestFixture.create();
+        MomentUpdateRequest updateRequest = MomentUpdateRequestFixture.create(null);
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
