@@ -2,7 +2,7 @@ name: Android CI/CD for generating demo APK
 
 on:
   push:
-    paths: './android/**'
+    paths: 'android/**'
     branches: [ "develop" ]
 
 env:

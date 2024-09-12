@@ -2,7 +2,7 @@ name: Android CI for develop-an
 
 on:
   pull_request:
-    paths: './android/**'
+    paths: 'android/**'
     branches: [ "develop-an" ]
 
 env:
