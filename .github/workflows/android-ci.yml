@@ -1,9 +1,8 @@
 name: Android CI for develop-an
 
 on:
-  push:
-    branches: [ "develop-an" ]
   pull_request:
+    paths: './android/**'
     branches: [ "develop-an" ]
 
 env:
@@ -68,70 +67,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Clean test
-        run: ./gradlew clean test
-
-  build:
-    needs: test
-    name: Build and Run
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./android/Staccato_AN
-
-    permissions:
-      contents: read
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: gradle
-
-      - name: Create local.properties
-        run: |
-          touch local.properties
-        shell: bash
-
-      - name: Set Base Url in local.properties
-        run: |
-          echo "base_url=\"$BASE_URL\"" >> local.properties
-        shell: bash
-
-      - name: Create google-services.json
-        run: |
-          echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
-        shell: bash
-
-      - name: Create secrets.properties
-        run: |
-          echo $SECRETS_PROPERTIES > secrets.properties
-        shell: bash
-
-      - name: Create local.defaults.properties
-        run: |
-          echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
-        shell: bash
-
-      - name: Create KeyStore File and Properties
-        run: |
-          mkdir -p ./app/signing
-          echo "$UPLOAD_KEY_STORE_JKS" | base64 --decode > ./app/signing/upload_key_store.jks
-          echo "$KEY_STORE_PROPERTIES" > ./app/signing/keystore.properties
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
       - name: Run ktlint
         run: ./gradlew ktlintCheck
+
+      - name: Run test
+        run: ./gradlew test
 
       - name: Build with Gradle
         run: ./gradlew build
