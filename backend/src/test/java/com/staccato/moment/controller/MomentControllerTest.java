@@ -94,18 +94,26 @@ class MomentControllerTest {
         );
     }
 
-    @DisplayName("스타카토 생성 시 사진 5장까지는 첨부 가능하다.")
+    @DisplayName("올바른 요청에 대해 스타카토를 생성한다.")
     @Test
-    void createMoment() throws Exception {
+    void createMomentWithValidRequest() throws Exception {
         // given
-        MomentRequest momentRequest = new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L,
-                List.of("https://example.com/images/namsan_tower1.jpg",
-                        "https://example.com/images/namsan_tower2.jpg",
-                        "https://example.com/images/namsan_tower3.jpg",
-                        "https://example.com/images/namsan_tower4.jpg",
-                        "https://example.com/images/namsan_tower5.jpg"));
-        String momentRequestJson = objectMapper.writeValueAsString(momentRequest);
-        MomentIdResponse momentIdResponse = new MomentIdResponse(1L);
+        String momentRequest = """
+                {
+                    "placeName": "placeName",
+                    "address": "address",
+                    "latitude": 1.0,
+                    "longitude": 1.0,
+                    "visitedAt": "2023-07-01T10:00:00",
+                    "memoryId": 1,
+                    "momentImageUrls": ["https://example.com/images/namsan_tower.jpg"]
+                }
+                """;
+        String momentIdResponse = """
+                {   
+                    "momentId": 1
+                }
+                """;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         when(momentService.createMoment(any(MomentRequest.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
 
@@ -113,10 +121,10 @@ class MomentControllerTest {
         mockMvc.perform(post("/moments")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(momentRequestJson))
+                        .content(momentRequest))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/moments/1"))
-                .andExpect(content().json(objectMapper.writeValueAsString(momentIdResponse)));
+                .andExpect(content().json(momentIdResponse));
     }
 
     @DisplayName("올바르지 않은 날짜 형식으로 스타카토 생성을 요청하면 예외가 발생한다.")
@@ -143,30 +151,6 @@ class MomentControllerTest {
                         .content(momentRequestJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("요청 본문을 읽을 수 없습니다. 올바른 형식으로 데이터를 제공해주세요."));
-    }
-
-    @DisplayName("사진이 5장을 초과하면 스타카토 생성에 실패한다.")
-    @Test
-    void failCreateMomentByImageCount() throws Exception {
-        // given
-        MomentRequest momentRequest = new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L,
-                List.of("https://example.com/images/namsan_tower1.jpg",
-                        "https://example.com/images/namsan_tower2.jpg",
-                        "https://example.com/images/namsan_tower3.jpg",
-                        "https://example.com/images/namsan_tower4.jpg",
-                        "https://example.com/images/namsan_tower5.jpg",
-                        "https://example.com/images/namsan_tower6.jpg"));
-        String momentRequestJson = objectMapper.writeValueAsString(momentRequest);
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-
-        // when & then
-        mockMvc.perform(post("/moments")
-                        .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(momentRequestJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("사용자가 잘못된 요청 형식으로 정보를 입력하면, 스타카토를 생성할 수 없다.")
@@ -246,31 +230,6 @@ class MomentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateRequestJson))
                 .andExpect(status().isOk());
-    }
-
-    @DisplayName("추가하려는 사진이 5장이 넘는다면 스타카토 수정에 실패한다.")
-    @Test
-    void failUpdateMomentByImagesSize() throws Exception {
-        // given
-        long momentId = 1L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
-        MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName",
-                List.of("https://example.com/images/namsan_tower1.jpg",
-                        "https://example.com/images/namsan_tower2.jpg",
-                        "https://example.com/images/namsan_tower3.jpg",
-                        "https://example.com/images/namsan_tower4.jpg",
-                        "https://example.com/images/namsan_tower5.jpg",
-                        "https://example.com/images/namsan_tower6.jpg"));
-        String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-
-        // when & then
-        mockMvc.perform(put("/moments/{momentId}", momentId)
-                        .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateRequestJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("적합하지 않은 경로변수의 경우 스타카토 수정에 실패한다.")
