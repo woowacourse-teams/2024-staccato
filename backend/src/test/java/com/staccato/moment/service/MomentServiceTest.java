@@ -21,7 +21,7 @@ import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.memory.MemoryFixture;
-import com.staccato.fixture.moment.CommentFixture;
+import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
