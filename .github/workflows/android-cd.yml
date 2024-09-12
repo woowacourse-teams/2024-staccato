@@ -2,8 +2,8 @@ name: Android CI/CD for release
 
 on:
   push:
+    paths:  './android/**'
     branches: [ "main" ]
-  paths:  './android/**'
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}

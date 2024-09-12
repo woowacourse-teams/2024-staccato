@@ -2,8 +2,8 @@ name: Android CI for develop-an
 
 on:
   pull_request:
+    paths: './android/**'
     branches: [ "develop-an" ]
-  paths: './android/**'
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
