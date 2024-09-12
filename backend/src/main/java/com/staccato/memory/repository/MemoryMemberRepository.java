@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.MemoryMember;
 
 public interface MemoryMemberRepository extends JpaRepository<MemoryMember, Long> {
@@ -19,4 +20,6 @@ public interface MemoryMemberRepository extends JpaRepository<MemoryMember, Long
             ORDER BY mm.memory.createdAt DESC
             """)
     List<MemoryMember> findAllByMemberIdAndIncludingDateOrderByCreatedAtDesc(@Param("memberId") long memberId, @Param("date") LocalDate date);
+
+    boolean existsByMemberAndMemoryTitle(Member member, String title);
 }
