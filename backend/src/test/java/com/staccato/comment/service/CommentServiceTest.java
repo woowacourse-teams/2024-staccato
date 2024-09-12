@@ -16,9 +16,11 @@ import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.CommentRequestFixture;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.fixture.moment.CommentFixture;
+import com.staccato.fixture.moment.CommentUpdateRequestFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -60,7 +62,7 @@ class CommentServiceTest extends ServiceSliceTest {
     void createCommentFailByNotExistMoment() {
         // given
         Member member = memberRepository.save(MemberFixture.create("nickname"));
-        CommentRequest commentRequest = new CommentRequest(1L, "content");
+        CommentRequest commentRequest = CommentRequestFixture.create();
 
         // when & then
         assertThatThrownBy(() -> commentService.createComment(commentRequest, member))
@@ -76,7 +78,7 @@ class CommentServiceTest extends ServiceSliceTest {
         Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
         Memory memory = memoryRepository.save(MemoryFixture.create(momentOwner));
         momentRepository.save(MomentFixture.create(memory));
-        CommentRequest commentRequest = new CommentRequest(1L, "content");
+        CommentRequest commentRequest = CommentRequestFixture.create();
 
         // when & then
         assertThatThrownBy(() -> commentService.createComment(commentRequest, unexpectedMember))
@@ -92,9 +94,9 @@ class CommentServiceTest extends ServiceSliceTest {
         Memory memory = memoryRepository.save(MemoryFixture.create(member));
         Moment moment = momentRepository.save(MomentFixture.create(memory));
         Moment anotherMoment = momentRepository.save(MomentFixture.create(memory));
-        CommentRequest commentRequest1 = new CommentRequest(moment.getId(), "content");
-        CommentRequest commentRequest2 = new CommentRequest(moment.getId(), "content");
-        CommentRequest commentRequestOfAnotherMoment = new CommentRequest(anotherMoment.getId(), "content");
+        CommentRequest commentRequest1 = CommentRequestFixture.create(moment.getId());
+        CommentRequest commentRequest2 = CommentRequestFixture.create(moment.getId());
+        CommentRequest commentRequestOfAnotherMoment = CommentRequestFixture.create(anotherMoment.getId());
         long commentId1 = commentService.createComment(commentRequest1, member);
         long commentId2 = commentService.createComment(commentRequest2, member);
         commentService.createComment(commentRequestOfAnotherMoment, member);
@@ -131,15 +133,13 @@ class CommentServiceTest extends ServiceSliceTest {
         Memory memory = memoryRepository.save(MemoryFixture.create(member));
         Moment moment = momentRepository.save(MomentFixture.create(memory));
         Comment comment = commentRepository.save(CommentFixture.create(moment, member));
-
-        String updatedContent = "updated content";
-        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
 
         // when
         commentService.updateComment(member, comment.getId(), commentUpdateRequest);
 
         // then
-        assertThat(commentRepository.findById(comment.getId()).get().getContent()).isEqualTo(updatedContent);
+        assertThat(commentRepository.findById(comment.getId()).get().getContent()).isEqualTo(commentUpdateRequest.content());
     }
 
     @DisplayName("수정하려는 댓글을 찾을 수 없는 경우 예외가 발생한다.")
@@ -147,8 +147,7 @@ class CommentServiceTest extends ServiceSliceTest {
     void updateCommentFailByNotExist() {
         // given
         long notExistCommentId = 1;
-        String updatedContent = "updated content";
-        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
 
         // when & then
         assertThatThrownBy(() -> commentService.updateComment(MemberFixture.create(), notExistCommentId, commentUpdateRequest))
@@ -165,9 +164,7 @@ class CommentServiceTest extends ServiceSliceTest {
         Memory memory = memoryRepository.save(MemoryFixture.create(momentOwner));
         Moment moment = momentRepository.save(MomentFixture.create(memory));
         Comment comment = commentRepository.save(CommentFixture.create(moment, momentOwner));
-
-        String updatedContent = "updated content";
-        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
 
         // when & then
         assertThatThrownBy(() -> commentService.updateComment(unexpectedMember, comment.getId(), commentUpdateRequest))
