@@ -2,7 +2,7 @@ name: Android CI/CD for release
 
 on:
   push:
-    paths:  './android/**'
+    paths:  'android/**'
     branches: [ "main" ]
 
 env:
