@@ -37,6 +37,7 @@ import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.comment.CommentUpdateRequestFixture;
 
 @WebMvcTest(CommentController.class)
 public class CommentControllerTest {
@@ -193,7 +194,7 @@ public class CommentControllerTest {
     void updateCommentFail() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
-        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest("updated content");
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
