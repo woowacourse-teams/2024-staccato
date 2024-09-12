@@ -37,6 +37,7 @@ import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.moment.MomentDetailResponseFixture;
 import com.staccato.fixture.moment.MomentLocationResponsesFixture;
+import com.staccato.fixture.moment.MomentUpdateRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.MomentService;
 import com.staccato.moment.service.dto.request.FeelingRequest;
@@ -110,7 +111,7 @@ class MomentControllerTest {
                 }
                 """;
         String momentIdResponse = """
-                {   
+                {
                     "momentId": 1
                 }
                 """;
@@ -158,7 +159,6 @@ class MomentControllerTest {
     @MethodSource("invalidMomentRequestProvider")
     void failCreateMoment(MomentRequest momentRequest, String expectedMessage) throws Exception {
         // given
-        String momentRequestJson = objectMapper.writeValueAsString(momentRequest);
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         when(momentService.createMoment(any(MomentRequest.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
@@ -167,7 +167,7 @@ class MomentControllerTest {
         mockMvc.perform(post("/moments")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(momentRequestJson))
+                        .content(objectMapper.writeValueAsString(momentRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -220,7 +220,7 @@ class MomentControllerTest {
     void updateMomentById() throws Exception {
         // given
         long momentId = 1L;
-        MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
+        MomentUpdateRequest updateRequest = MomentUpdateRequestFixture.create();
         String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
@@ -238,15 +238,14 @@ class MomentControllerTest {
         // given
         long momentId = 0L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
-        MomentUpdateRequest updateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
-        String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
+        MomentUpdateRequest updateRequest = MomentUpdateRequestFixture.create();
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(put("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateRequestJson))
+                        .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -257,15 +256,14 @@ class MomentControllerTest {
         // given
         long momentId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 제목을 입력해주세요.");
-        MomentUpdateRequest updateRequest = new MomentUpdateRequest(null, List.of("https://example1.com.jpg"));
-        String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
+        MomentUpdateRequest updateRequest = MomentUpdateRequestFixture.create();
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(put("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateRequestJson))
+                        .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
