@@ -14,6 +14,8 @@ import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.exception.StaccatoException;
 import com.staccato.exception.UnauthorizedException;
+import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.auth.LoginRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
@@ -27,8 +29,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void login() {
         // given
-        String nickname = "staccato";
-        LoginRequest loginRequest = new LoginRequest(nickname);
+        LoginRequest loginRequest = LoginRequestFixture.create();
 
         // when
         LoginResponse loginResponse = authService.login(loginRequest);
@@ -44,9 +45,8 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void loginByDuplicated() {
         // given
-        String nickname = "staccato";
-        memberRepository.save(Member.builder().nickname(nickname).build());
-        LoginRequest loginRequest = new LoginRequest(nickname);
+        memberRepository.save(MemberFixture.create());
+        LoginRequest loginRequest = LoginRequestFixture.create();
 
         // when
         LoginResponse response = authService.login(loginRequest);
@@ -60,9 +60,8 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void cannotLoginByDuplicated() {
         // given
-        String nickname = "staccato";
-        memberRepository.save(Member.builder().nickname(nickname).build());
-        LoginRequest loginRequest = new LoginRequest(nickname);
+        memberRepository.save(MemberFixture.create());
+        LoginRequest loginRequest = LoginRequestFixture.create();
 
         // when & then
         assertThatThrownBy(() -> authService.login(loginRequest))
@@ -74,8 +73,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void cannotExtractMemberByUnknown() {
         // given
-        String nickname = "staccato";
-        memberRepository.save(Member.builder().nickname(nickname).build());
+        memberRepository.save(MemberFixture.create());
 
         // when & then
         assertThatThrownBy(() -> authService.extractFromToken(null))
