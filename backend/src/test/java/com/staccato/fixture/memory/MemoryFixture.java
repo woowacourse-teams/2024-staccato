@@ -24,7 +24,7 @@ public class MemoryFixture {
                 .startAt(LocalDate.of(2024, 7, 1))
                 .endAt(LocalDate.of(2024, 7, 10))
                 .build();
-       memory.addMemoryMember(member);
+        memory.addMemoryMember(member);
 
         return memory;
     }

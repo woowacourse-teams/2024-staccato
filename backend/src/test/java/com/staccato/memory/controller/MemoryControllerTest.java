@@ -235,7 +235,7 @@ class MemoryControllerTest {
         long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.create(MemberFixture.create());
-        MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory),"image.jpg");
+        MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
         MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
         String expectedResponse = """

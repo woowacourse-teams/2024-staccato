@@ -16,7 +16,6 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.exception.UnauthorizedException;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.auth.LoginRequestFixture;
-import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
 class AuthServiceTest extends ServiceSliceTest {
