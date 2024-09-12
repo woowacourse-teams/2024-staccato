@@ -3,6 +3,7 @@ name: Backend CI/CD prod
 on:
   push:
     branches: ["main"]
+    paths: './backend/**'
 
 jobs:
   ci:
