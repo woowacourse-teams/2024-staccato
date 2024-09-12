@@ -2,8 +2,8 @@ name: Backend CI/CD prod
 
 on:
   push:
-    paths: [ 'backend/**', '.github/**' ]
-    branches: [ "main" ]
+    paths: 'backend/**'
+    branches: ["main"]
 
 jobs:
   ci:
@@ -51,12 +51,7 @@ jobs:
 
   cd:
     needs: ci
-    runs-on: [ self-hosted, prod ]
-
-    strategy:
-      matrix:
-        runner: [ prod-a, prod-b ]
-
+    runs-on: [self-hosted, prod]
     steps:
       - name: Pull Docker image
         run: |
