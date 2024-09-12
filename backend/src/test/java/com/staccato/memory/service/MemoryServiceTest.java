@@ -82,7 +82,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("이미 존재하는 추억 이름으로 추억을 생성할 수 없다.")
+    @DisplayName("사용자의 추억 중 이미 존재하는 추억 이름으로 추억을 생성할 수 없다.")
     @Test
     void cannotCreateMemoryByDuplicatedTitle() {
         // given
@@ -94,6 +94,19 @@ class MemoryServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> memoryService.createMemory(memoryRequest, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
+    }
+
+    @DisplayName("다른 사용자의 이미 존재하는 추억 이름으로 추억을 생성할 수 있다.")
+    @Test
+    void canCreateMemoryByDuplicatedTitleOfOther() {
+        // given
+        MemoryRequest memoryRequest = MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10));
+        Member member = memberRepository.save(MemberFixture.create());
+        Member otherMember = memberRepository.save(MemberFixture.create("other"));
+        memoryService.createMemory(memoryRequest, otherMember);
+
+        // when & then
+        assertThatNoException().isThrownBy(() -> memoryService.createMemory(memoryRequest, member));
     }
 
     @DisplayName("현재 날짜를 포함하는 모든 추억 목록을 조회한다.")
