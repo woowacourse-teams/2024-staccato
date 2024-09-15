@@ -49,18 +49,6 @@ import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 @WebMvcTest(controllers = MomentController.class)
 class MomentControllerTest {
-    private static final String VALID_UPDATE_REQUEST_JSON = "{"
-            + "\"placeName\": \"placeName\","
-            + "\"address\": \"address\","
-            + "\"latitude\": 1.0,"
-            + "\"longitude\": 1.0,"
-            + "\"visitedAt\": \"2023-07-01T10:00:00\","
-            + "\"memoryId\": 1,"
-            + "\"momentImageUrls\": ["
-            + "  \"https://example.com/images/namsan_tower.jpg\""
-            + "]"
-            + "}";
-
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -332,13 +320,26 @@ class MomentControllerTest {
         void updateMomentById() throws Exception {
             // given
             long momentId = 1L;
+            String momentRequest = """
+                    {
+                        "placeName": "placeName",
+                        "address": "address",
+                        "latitude": 1.0,
+                        "longitude": 1.0,
+                        "visitedAt": "2023-07-01T10:00:00",
+                        "memoryId": 1,
+                        "momentImageUrls": [
+                            "https://example.com/images/namsan_tower.jpg"
+                        ]
+                    }
+                    """;
             when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
             // when & then
             mockMvc.perform(put("/moments/v2/{momentId}", momentId)
                             .header(HttpHeaders.AUTHORIZATION, "token")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(VALID_UPDATE_REQUEST_JSON))
+                            .content(momentRequest))
                     .andExpect(status().isOk());
         }
 
@@ -371,6 +372,7 @@ class MomentControllerTest {
         void failUpdateMomentById() throws Exception {
             // given
             long momentId = 0L;
+            MomentRequest momentRequest = new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
             ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
             when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
@@ -378,15 +380,10 @@ class MomentControllerTest {
             mockMvc.perform(put("/moments/v2/{momentId}", momentId)
                             .header(HttpHeaders.AUTHORIZATION, "token")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(VALID_UPDATE_REQUEST_JSON))
+                            .content(objectMapper.writeValueAsString(momentRequest)))
                     .andExpect(status().isBadRequest())
                     .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
         }
-
-        /*
-        TODO: 컨트롤러 테스트 코드 리팩토링 PR이 머지되면
-         해당 코드 참고하여 MomentRequest의 필수값 필드가 빠져있는 경우에 대한 테스트 추가
-         */
     }
 
     @DisplayName("스타카토를 삭제한다.")
