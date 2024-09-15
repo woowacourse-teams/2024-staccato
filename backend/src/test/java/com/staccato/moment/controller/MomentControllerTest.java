@@ -348,29 +348,20 @@ class MomentControllerTest {
             // given
             long momentId = 1L;
             ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
-            String updateRequestWithTooManyImagesJson = "{"
-                    + "\"placeName\": \"placeName\","
-                    + "\"address\": \"address\","
-                    + "\"latitude\": 1.0,"
-                    + "\"longitude\": 1.0,"
-                    + "\"visitedAt\": \"2023-07-01T10:00:00\","
-                    + "\"memoryId\": 1,"
-                    + "\"momentImageUrls\": ["
-                    + "  \"https://example.com/images/namsan_tower1.jpg\","
-                    + "  \"https://example.com/images/namsan_tower2.jpg\","
-                    + "  \"https://example.com/images/namsan_tower3.jpg\","
-                    + "  \"https://example.com/images/namsan_tower4.jpg\","
-                    + "  \"https://example.com/images/namsan_tower5.jpg\","
-                    + "  \"https://example.com/images/namsan_tower6.jpg\""
-                    + "]"
-                    + "}";
+            MomentRequest momentRequest = new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L,
+                    List.of("https://example.com/images/namsan_tower1.jpg",
+                            "https://example.com/images/namsan_tower2.jpg",
+                            "https://example.com/images/namsan_tower3.jpg",
+                            "https://example.com/images/namsan_tower4.jpg",
+                            "https://example.com/images/namsan_tower5.jpg",
+                            "https://example.com/images/namsan_tower6.jpg"));
             when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
             // when & then
             mockMvc.perform(put("/moments/v2/{momentId}", momentId)
                             .header(HttpHeaders.AUTHORIZATION, "token")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(updateRequestWithTooManyImagesJson))
+                            .content(objectMapper.writeValueAsString(momentRequest)))
                     .andExpect(status().isBadRequest())
                     .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
         }
