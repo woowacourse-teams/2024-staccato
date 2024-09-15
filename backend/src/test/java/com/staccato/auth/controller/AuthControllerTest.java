@@ -60,7 +60,7 @@ class AuthControllerTest {
     @DisplayName("닉네임이 1자 미만이면 400을 반환한다.")
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    void cannotLoginIfInvalidNicknameLength(String nickname) throws Exception {
+    void cannotLoginIfNicknameTooShort(String nickname) throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest(nickname);
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "1자 이상 20자 이하의 닉네임으로 설정해주세요.");
