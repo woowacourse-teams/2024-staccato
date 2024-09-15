@@ -31,7 +31,7 @@ public class MomentService {
     @Transactional
     public MomentIdResponse createMoment(MomentRequest momentRequest, Member member) {
         Memory memory = getMemoryById(momentRequest.memoryId());
-        validateOwner(memory, member);
+        validateMemoryOwner(memory, member);
         Moment moment = momentRequest.toMoment(memory);
 
         momentRepository.save(moment);
@@ -52,7 +52,7 @@ public class MomentService {
 
     public MomentDetailResponse readMomentById(long momentId, Member member) {
         Moment moment = getMomentById(momentId);
-        validateOwner(moment.getMemory(), member);
+        validateMemoryOwner(moment.getMemory(), member);
         return new MomentDetailResponse(moment);
     }
 
@@ -63,7 +63,7 @@ public class MomentService {
             Member member
     ) {
         Moment moment = getMomentById(momentId);
-        validateOwner(moment.getMemory(), member);
+        validateMemoryOwner(moment.getMemory(), member);
         moment.update(momentUpdateRequest.placeName(), momentUpdateRequest.toMomentImages());
     }
 
@@ -74,10 +74,12 @@ public class MomentService {
             Member member
     ) {
         Moment moment = getMomentById(momentId);
-        validateOwner(moment.getMemory(), member);
-        Memory memory = getMemoryById(momentUpdateRequest.memoryId());
-        validateOwner(memory, member);
-        Moment updatedMoment = momentUpdateRequest.toMoment(memory);
+        validateMemoryOwner(moment.getMemory(), member);
+
+        Memory targetMemory = getMemoryById(momentUpdateRequest.memoryId());
+        validateMemoryOwner(targetMemory, member);
+
+        Moment updatedMoment = momentUpdateRequest.toMoment(targetMemory);
         moment.update(updatedMoment);
     }
 
@@ -89,7 +91,7 @@ public class MomentService {
     @Transactional
     public void deleteMomentById(long momentId, Member member) {
         momentRepository.findById(momentId).ifPresent(moment -> {
-            validateOwner(moment.getMemory(), member);
+            validateMemoryOwner(moment.getMemory(), member);
             momentRepository.deleteById(momentId);
         });
     }
@@ -97,12 +99,12 @@ public class MomentService {
     @Transactional
     public void updateMomentFeelingById(long momentId, Member member, FeelingRequest feelingRequest) {
         Moment moment = getMomentById(momentId);
-        validateOwner(moment.getMemory(), member);
+        validateMemoryOwner(moment.getMemory(), member);
         Feeling feeling = feelingRequest.toFeeling();
         moment.changeFeeling(feeling);
     }
 
-    private void validateOwner(Memory memory, Member member) {
+    private void validateMemoryOwner(Memory memory, Member member) {
         if (memory.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
