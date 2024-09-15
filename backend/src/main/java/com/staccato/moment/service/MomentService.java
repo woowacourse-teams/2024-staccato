@@ -70,16 +70,16 @@ public class MomentService {
     @Transactional
     public void updateMomentByIdV2(
             long momentId,
-            MomentRequest momentUpdateRequest,
+            MomentRequest momentRequest,
             Member member
     ) {
         Moment moment = getMomentById(momentId);
         validateMemoryOwner(moment.getMemory(), member);
 
-        Memory targetMemory = getMemoryById(momentUpdateRequest.memoryId());
+        Memory targetMemory = getMemoryById(momentRequest.memoryId());
         validateMemoryOwner(targetMemory, member);
 
-        Moment updatedMoment = momentUpdateRequest.toMoment(targetMemory);
+        Moment updatedMoment = momentRequest.toMoment(targetMemory);
         moment.update(updatedMoment);
     }
 
