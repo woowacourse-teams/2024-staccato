@@ -95,7 +95,7 @@ class MomentControllerTest {
         );
     }
 
-    @DisplayName("올바른 요청에 대해 스타카토를 생성한다.")
+    @DisplayName("스타카토 생성 요청/응답을 역직렬화/직렬화하는 것을 성공한다.")
     @Test
     void createMomentWithValidRequest() throws Exception {
         // given

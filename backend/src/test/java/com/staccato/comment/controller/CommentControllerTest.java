@@ -82,7 +82,7 @@ public class CommentControllerTest {
         );
     }
 
-    @DisplayName("올바른 형식으로 댓글을 생성하면 성공한다.")
+    @DisplayName("댓글 생성 요청/응답에 대한 직렬화/역직렬화에 성공한다.")
     @Test
     void createComment() throws Exception {
         // given
@@ -121,7 +121,7 @@ public class CommentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("올바른 형식으로 댓글 읽기를 시도하면 성공한다.")
+    @DisplayName("댓글을 조회했을 때 응답 직렬화에 성공한다.")
     @Test
     void readCommentsByMomentId() throws Exception {
         // given
@@ -168,14 +168,13 @@ public class CommentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("올바른 형식으로 댓글 수정을 시도하면 성공한다.")
+    @DisplayName("댓글 수정 요청 역직렬화에 성공한다.")
     @Test
     void updateComment() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         String commentUpdateRequest = """
                 {
-                    "momentId": 1,
                     "content": "content"
                 }
                 """;

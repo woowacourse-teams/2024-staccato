@@ -32,7 +32,7 @@ class AuthControllerTest {
     @MockBean
     private AuthService authService;
 
-    @DisplayName("유효한 로그인 요청이 들어오면 성공 응답을 한다.")
+    @DisplayName("로그인 요청/응답에 대한 역직렬화/직렬화에 성공한다.")
     @Test
     void login() throws Exception {
         // given
