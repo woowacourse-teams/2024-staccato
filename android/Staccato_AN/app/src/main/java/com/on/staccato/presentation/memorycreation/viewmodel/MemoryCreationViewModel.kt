@@ -29,11 +29,11 @@ class MemoryCreationViewModel(
     val title = ObservableField<String>()
     val description = ObservableField<String>()
 
-    private val _startDate = MutableLiveData<LocalDate>(null)
-    val startDate: LiveData<LocalDate> get() = _startDate
+    private val _startDate = MutableLiveData<LocalDate?>(null)
+    val startDate: LiveData<LocalDate?> get() = _startDate
 
-    private val _endDate = MutableLiveData<LocalDate>(null)
-    val endDate: LiveData<LocalDate> get() = _endDate
+    private val _endDate = MutableLiveData<LocalDate?>(null)
+    val endDate: LiveData<LocalDate?> get() = _endDate
 
     private val _createdMemoryId = MutableLiveData<Long>()
     val createdMemoryId: LiveData<Long> get() = _createdMemoryId
@@ -107,8 +107,8 @@ class MemoryCreationViewModel(
         NewMemory(
             memoryThumbnailUrl = thumbnailUrl.value,
             memoryTitle = title.get() ?: throw IllegalArgumentException(),
-            startAt = startDate.value ?: throw IllegalArgumentException(),
-            endAt = endDate.value ?: throw IllegalArgumentException(),
+            startAt = startDate.value,
+            endAt = endDate.value,
             description = description.get(),
         )
 
