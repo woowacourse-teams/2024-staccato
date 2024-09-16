@@ -16,6 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.memory.domain.Memory;
 
@@ -66,7 +67,7 @@ class MomentTest {
     @Test
     void trimPlaceName() {
         // given
-        Memory memory = MemoryFixture.create();
+        Memory memory = MemoryFixture.create(MemberFixture.create());
         String placeName = " placeName ";
         String expectedPlaceName = "placeName";
 
