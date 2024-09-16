@@ -17,6 +17,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        create_empty_composites.enabled: true
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true

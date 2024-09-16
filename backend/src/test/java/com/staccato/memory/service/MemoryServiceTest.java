@@ -50,8 +50,8 @@ class MemoryServiceTest extends ServiceSliceTest {
 
     static Stream<Arguments> dateProvider() {
         return Stream.of(
-                Arguments.of(LocalDate.of(2024, 7, 1), 2),
-                Arguments.of(LocalDate.of(2024, 7, 2), 1)
+                Arguments.of(LocalDate.of(2024, 7, 1), 3),
+                Arguments.of(LocalDate.of(2024, 7, 2), 2)
         );
     }
 
@@ -123,6 +123,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create());
         memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 1), "title1"), member);
         memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2), "title2"), member);
+        memoryService.createMemory(MemoryRequestFixture.create(null, null, "title3"), member);
 
         // when
         MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
@@ -146,6 +147,26 @@ class MemoryServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(memoryDetailResponse.memoryId()).isEqualTo(memoryIdResponse.memoryId()),
                 () -> assertThat(memoryDetailResponse.mates()).hasSize(1)
+        );
+    }
+
+    @DisplayName("기간이 없는 특정 추억을 조회한다.")
+    @Test
+    void readMemoryByIdWithoutTerm() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(null, null), member);
+
+        // when
+        MemoryDetailResponse memoryDetailResponse = memoryService.readMemoryById(memoryIdResponse.memoryId(), member);
+
+        // then
+        assertAll(
+                () -> assertThat(memoryDetailResponse.memoryId()).isEqualTo(memoryIdResponse.memoryId()),
+                () -> assertThat(memoryDetailResponse.mates()).hasSize(1),
+                () -> assertThat(memoryDetailResponse.startAt()).isNull(),
+                () -> assertThat(memoryDetailResponse.endAt()).isNull()
         );
     }
 
@@ -236,7 +257,10 @@ class MemoryServiceTest extends ServiceSliceTest {
         Memory foundedMemory = memoryRepository.findById(memoryResponse.memoryId()).get();
 
         // then
-        assertThat(foundedMemory.getTerm()).isEqualTo(null);
+        assertAll(
+                () -> assertThat(foundedMemory.getTerm().getStartAt()).isNull(),
+                () -> assertThat(foundedMemory.getTerm().getEndAt()).isNull()
+        );
     }
 
     @DisplayName("존재하지 않는 추억을 수정하려 할 경우 예외가 발생한다.")
