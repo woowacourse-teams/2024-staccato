@@ -2,10 +2,8 @@ package com.staccato.memory.controller;
 
 import java.net.URI;
 import java.time.LocalDate;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
@@ -26,11 +23,11 @@ import com.staccato.memory.service.MemoryService;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
-import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MemoryNameResponses;
-
+import com.staccato.memory.service.dto.response.MemoryResponses;
 import lombok.RequiredArgsConstructor;
 
+@Trace
 @Validated
 @RestController
 @RequestMapping("/memories")
@@ -38,7 +35,6 @@ import lombok.RequiredArgsConstructor;
 public class MemoryController implements MemoryControllerDocs {
     private final MemoryService memoryService;
 
-    @Trace
     @PostMapping
     public ResponseEntity<MemoryIdResponse> createMemory(
             @Valid @RequestBody MemoryRequest memoryRequest,

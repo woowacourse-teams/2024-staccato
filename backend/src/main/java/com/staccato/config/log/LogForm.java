@@ -13,8 +13,8 @@ public class LogForm {
             "}";
 
     public static final String TRACE_LOGGING_FORM = "\n{\n" +
-            INDENT + "\"Method\": \"{}\"" + DELIMITER +
-            "\"Args\": \"{}\"\n" +
+            INDENT + "\"Invoked Class\": \"{}\"" + DELIMITER +
+            "\"Invoked Method\": \"{}\"\n" +
             "}";
 
     public static final String LOGIN_MEMBER_FORM = "\n{\n" +
