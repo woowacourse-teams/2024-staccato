@@ -1,5 +1,6 @@
 package com.staccato.auth.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -7,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,25 +32,50 @@ class AuthControllerTest {
     @MockBean
     private AuthService authService;
 
-    @DisplayName("유효한 로그인 요청이 들어오면 성공 응답을 한다.")
+    @DisplayName("로그인 요청/응답에 대한 역직렬화/직렬화에 성공한다.")
     @Test
     void login() throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest("staccato");
+        String loginRequest = """
+                {
+                    "nickname": "staccato"
+                }
+                """;
+        String expectedResponse = """
+                {
+                  "token": "staccatotoken"
+                }
+                """;
         LoginResponse loginResponse = new LoginResponse("staccatotoken");
-        when(authService.login(loginRequest)).thenReturn(loginResponse);
+        when(authService.login(any(LoginRequest.class))).thenReturn(loginResponse);
+
+        // when & then
+        mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(loginRequest))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("닉네임이 1자 미만이면 400을 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    void cannotLoginIfNicknameTooShort(String nickname) throws Exception {
+        // given
+        LoginRequest loginRequest = new LoginRequest(nickname);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "1자 이상 20자 이하의 닉네임으로 설정해주세요.");
 
         // when & then
         mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(loginResponse)));
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("닉네임을 입력하지 않으면 400을 반환한다.")
     @Test
-    void cannotLoginIfBadRequest() throws Exception {
+    void cannotLoginIfNicknameNull() throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest(null);
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "닉네임을 입력해주세요.");
@@ -64,7 +92,8 @@ class AuthControllerTest {
     @Test
     void cannotLoginIfLengthExceeded() throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest("가".repeat(21));
+        String nickname = "가".repeat(21);
+        LoginRequest loginRequest = new LoginRequest(nickname);
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "1자 이상 20자 이하의 닉네임으로 설정해주세요.");
 
         // when & then

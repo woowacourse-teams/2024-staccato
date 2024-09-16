@@ -37,11 +37,11 @@ import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.comment.CommentUpdateRequestFixture;
 
 @WebMvcTest(CommentController.class)
 public class CommentControllerTest {
     private static final int MAX_CONTENT_LENGTH = 500;
-    private static final int MIN_CONTENT_LENGTH = 1;
     private static final long MIN_MOMENT_ID = 1L;
 
     @Autowired
@@ -52,13 +52,6 @@ public class CommentControllerTest {
     private CommentService commentService;
     @MockBean
     private AuthService authService;
-
-    static Stream<CommentRequest> commentRequestProvider() {
-        return Stream.of(
-                new CommentRequest(MIN_MOMENT_ID, "1".repeat(MIN_CONTENT_LENGTH)),
-                new CommentRequest(MIN_MOMENT_ID, "1".repeat(MAX_CONTENT_LENGTH))
-        );
-    }
 
     static Stream<Arguments> invalidCommentRequestProvider() {
         return Stream.of(
@@ -89,18 +82,23 @@ public class CommentControllerTest {
         );
     }
 
-    @DisplayName("올바른 형식으로 댓글을 생성하면 성공한다.")
-    @ParameterizedTest
-    @MethodSource("commentRequestProvider")
-    void createComment(CommentRequest commentRequest) throws Exception {
+    @DisplayName("댓글 생성 요청/응답에 대한 직렬화/역직렬화에 성공한다.")
+    @Test
+    void createComment() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
+        String commentRequest = """
+                {
+                    "momentId": 1,
+                    "content": "content"
+                }
+                """;
         when(commentService.createComment(any(), any())).thenReturn(1L);
 
         // when & then
         mockMvc.perform(post("/comments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(commentRequest))
+                        .content(commentRequest)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/comments/1"));
@@ -112,7 +110,6 @@ public class CommentControllerTest {
     void createCommentFail(CommentRequest commentRequest, String expectedMessage) throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
-        when(commentService.createComment(any(), any())).thenReturn(1L);
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
@@ -124,15 +121,27 @@ public class CommentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("올바른 형식으로 댓글 읽기를 시도하면 성공한다.")
+    @DisplayName("댓글을 조회했을 때 응답 직렬화에 성공한다.")
     @Test
     void readCommentsByMomentId() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
-        CommentResponses commentResponses = new CommentResponses(List.of(
-                new CommentResponse(1L, 1L, "member", "image.jpg", "내용")
-        ));
+        CommentResponse commentResponse = new CommentResponse(1L, 1L, "member", "image.jpg", "내용");
+        CommentResponses commentResponses = new CommentResponses(List.of(commentResponse));
         when(commentService.readAllCommentsByMomentId(any(), any())).thenReturn(commentResponses);
+        String expectedResponse = """
+                {
+                    "comments": [
+                	        {
+                            "commentId": 1,
+                            "memberId": 1,
+                            "nickname": "member",
+                            "memberImageUrl": "image.jpg",
+                            "content": "내용"
+                        }
+                    ]
+                }
+                """;
 
         // when & then
         mockMvc.perform(get("/comments")
@@ -140,7 +149,7 @@ public class CommentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(commentResponses)));
+                .andExpect(content().json(expectedResponse));
     }
 
     @DisplayName("스타카토 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
@@ -148,11 +157,7 @@ public class CommentControllerTest {
     void readCommentsByMomentIdFail() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
-        CommentResponses commentResponses = new CommentResponses(List.of(
-                new CommentResponse(1L, 1L, "member", "image.jpg", "내용")
-        ));
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
-        when(commentService.readAllCommentsByMomentId(any(), any())).thenReturn(commentResponses);
 
         // when & then
         mockMvc.perform(get("/comments")
@@ -163,17 +168,21 @@ public class CommentControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("올바른 형식으로 댓글 수정을 시도하면 성공한다.")
+    @DisplayName("댓글 수정 요청 역직렬화에 성공한다.")
     @Test
     void updateComment() throws Exception {
         // given
-        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest("updated content");
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
+        String commentUpdateRequest = """
+                {
+                    "content": "content"
+                }
+                """;
 
         // when & then
         mockMvc.perform(put("/comments")
                         .param("commentId", "1")
-                        .content(objectMapper.writeValueAsString(commentUpdateRequest))
+                        .content(commentUpdateRequest)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
@@ -184,7 +193,7 @@ public class CommentControllerTest {
     void updateCommentFail() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
-        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest("updated content");
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
