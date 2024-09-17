@@ -196,8 +196,10 @@ fun Button.setMemorySaveButtonActive(
     endDate: LocalDate?,
     isPhotoPosting: Boolean?,
 ) {
+    // Todo: 날짜 범위가 있거나(둘다 null X) 없을 때(둘다 null) 조건 추가
+    val areBothNullOrNotNull = (startDate == null) || (endDate == null)
     isEnabled =
-        if (title.isNullOrBlank() || startDate == null || endDate == null || isPhotoPosting == true) {
+        if (title.isNullOrBlank() || isPhotoPosting == true || !areBothNullOrNotNull) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -216,8 +218,10 @@ fun Button.setMemorySaveButtonActive(
     photoUri: Uri?,
     photoUrl: String?,
 ) {
+    // Todo: 날짜 범위가 있거나(둘다 null X) 없을 때(둘다 null) 조건 추가
+    val areBothNullOrNotNull = (startDate == null) == (endDate == null)
     isEnabled =
-        if (title.isNullOrBlank() || startDate == null || endDate == null || (photoUri != null && photoUrl == null)) {
+        if (title.isNullOrBlank() || (photoUri != null && photoUrl == null) || !areBothNullOrNotNull) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {

@@ -47,6 +47,6 @@ fun NewMemory.toDto() =
         memoryThumbnailUrl = memoryThumbnailUrl,
         memoryTitle = memoryTitle,
         description = description,
-        startAt = startAt.toString(),
-        endAt = endAt.toString(),
+        startAt = startAt?.toString(),
+        endAt = endAt?.toString(),
     )
