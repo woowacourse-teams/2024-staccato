@@ -318,7 +318,7 @@ fun TextView.setMemoryPeriod(
         text = resources.getString(R.string.memory_creation_period_hint)
     } else {
         text =
-            resources.getString(R.string.memory_creation_period_description)
+            resources.getString(R.string.memory_creation_period_selected)
                 .format(startDate, endDate)
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
