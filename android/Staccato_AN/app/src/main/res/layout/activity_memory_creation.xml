@@ -173,9 +173,12 @@
                     android:id="@+id/switch_memory_creation_period_set"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@android:color/transparent"
+                    android:checked="@={viewModel.isPeriodSet}"
                     android:thumb="@drawable/shape_switch_thumb_oval"
                     app:layout_constraintBottom_toBottomOf="@id/tv_memory_creation_period_title"
-                    app:layout_constraintEnd_toEndOf="@id/tv_memory_creation_period_selection"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_memory_creation_period_title"
                     app:switchMinWidth="48dp"
                     app:thumbTint="@color/white"
@@ -208,11 +211,11 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
-                    android:textColor="@color/gray3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_description"
                     bind:endDate="@{viewModel.endDate}"
+                    bind:periodVisibility="@{viewModel.isPeriodSet}"
                     bind:startDate="@{viewModel.startDate}" />
 
                 <androidx.appcompat.widget.AppCompatButton

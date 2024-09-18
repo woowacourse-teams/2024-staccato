@@ -316,6 +316,7 @@ fun TextView.setMemoryPeriod(
 ) {
     if (startDate == null || endDate == null) {
         text = resources.getString(R.string.memory_creation_period_hint)
+        setTextColor(resources.getColor(R.color.gray3, null))
     } else {
         text =
             resources.getString(R.string.memory_creation_period_selected)
@@ -510,4 +511,9 @@ fun View.setThumbnail(
         } else {
             View.GONE
         }
+}
+
+@BindingAdapter("periodVisibility")
+fun TextView.setPeriodVisibility(isChecked: Boolean) {
+    isGone = !isChecked
 }
