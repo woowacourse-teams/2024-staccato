@@ -34,6 +34,9 @@ class MomentCreationViewModel(
 ) : AttachedPhotoHandler, ViewModel() {
     val title = ObservableField<String>()
 
+    private val _placeName = MutableLiveData<String?>(null)
+    val placeName: LiveData<String?> get() = _placeName
+
     private val _address = MutableLiveData<String?>(null)
     val address: LiveData<String?> get() = _address
 
@@ -50,11 +53,11 @@ class MomentCreationViewModel(
     private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
     val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
 
-    private val _latitude = MutableLiveData<Double>()
-    private val latitude: LiveData<Double> get() = _latitude
+    private val _latitude = MutableLiveData<Double?>()
+    private val latitude: LiveData<Double?> get() = _latitude
 
-    private val _longitude = MutableLiveData<Double>()
-    private val longitude: LiveData<Double> get() = _longitude
+    private val _longitude = MutableLiveData<Double?>()
+    private val longitude: LiveData<Double?> get() = _longitude
 
     private val _nowDateTime = MutableLiveData<LocalDateTime>(LocalDateTime.now())
     val nowDateTime: LiveData<LocalDateTime> get() = _nowDateTime
@@ -99,6 +102,36 @@ class MomentCreationViewModel(
             )
     }
 
+    fun selectNewPlace(
+        id: String,
+        name: String,
+        address: String,
+        longitude: Double,
+        latitude: Double,
+    ) {
+        _placeName.value = name
+        _address.value = address
+        _longitude.value = longitude
+        _latitude.value = latitude
+    }
+
+    fun clearPlace() {
+        _placeName.value = null
+        _address.value = null
+        _longitude.value = null
+        _latitude.value = null
+    }
+
+    fun setPlaceByCurrentAddress(
+        address: String?,
+        location: Location,
+    ) {
+        _placeName.postValue(address)
+        _address.postValue(address)
+        _latitude.postValue(location.latitude)
+        _longitude.postValue(location.longitude)
+    }
+
     fun fetchMemoriesWithDate(localDateTime: LocalDateTime) {
         viewModelScope.launch {
             memoryRepository.getMemories(localDateTime.toLocalDate().toString())
@@ -106,15 +139,6 @@ class MomentCreationViewModel(
                     _memoryCandidates.value = memoryCandidates
                 }
         }
-    }
-
-    fun setLocationInformation(
-        address: String?,
-        location: Location,
-    ) {
-        _address.postValue(address)
-        _latitude.postValue(location.latitude)
-        _longitude.postValue(location.longitude)
     }
 
     fun updateSelectedImageUris(newUris: Array<Uri>) {
@@ -173,7 +197,7 @@ class MomentCreationViewModel(
                 placeName = title.get() ?: "",
                 latitude = latitude.value ?: return@launch,
                 longitude = longitude.value ?: return@launch,
-                address = address.value ?: "",
+                address = placeName.value ?: "",
                 visitedAt = nowDateTime.value ?: LocalDateTime.now(),
                 momentImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
             ).onSuccess { response ->
@@ -183,6 +207,9 @@ class MomentCreationViewModel(
                 _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")
             }
         }
+
+    fun searchPlaceByText() {
+    }
 
     companion object {
         const val MAX_PHOTO_NUMBER = 5

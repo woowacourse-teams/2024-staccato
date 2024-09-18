@@ -22,15 +22,18 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.libraries.places.api.model.Place
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityVisitCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
@@ -70,6 +73,10 @@ class MomentCreationActivity :
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
+    private val autocompleteFragment by lazy {
+        supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
+    }
+
     override fun onUrisSelected(vararg uris: Uri) {
         viewModel.updateSelectedImageUris(arrayOf(*uris))
     }
@@ -99,13 +106,14 @@ class MomentCreationActivity :
 
     override fun initStartView(savedInstanceState: Bundle?) {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        initAddress()
+        fetchCurrentLocationAddress()
         initBinding()
         initAdapter()
         initItemTouchHelper()
         initToolbar()
         initMemorySelectionFragment()
         observeViewModelData()
+        initGooglePlaceSearch()
         if (memoryId == 0L) {
             viewModel.fetchMemoriesWithDate(LocalDateTime.now())
         } else {
@@ -207,6 +215,9 @@ class MomentCreationActivity :
     }
 
     private fun observeViewModelData() {
+        viewModel.placeName.observe(this) {
+            autocompleteFragment.setText(it)
+        }
         viewModel.isAddPhotoClicked.observe(this) {
             if (!photoAttachFragment.isAdded && it) {
                 photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
@@ -239,7 +250,7 @@ class MomentCreationActivity :
         }
     }
 
-    private fun initAddress() {
+    private fun fetchCurrentLocationAddress() {
         val isAccessFineLocationGranted =
             ContextCompat.checkSelfPermission(
                 this,
@@ -267,6 +278,33 @@ class MomentCreationActivity :
         }
     }
 
+    private fun fetchAddress(location: Location) {
+        val geocoder = Geocoder(this)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val geocodeListener = initGeocodeListener(location)
+            geocoder.getFromLocation(location.latitude, location.longitude, 1, geocodeListener)
+        } else {
+            address =
+                geocoder.getFromLocation(location.latitude, location.longitude, 1)?.get(0)
+                    ?.getAddressLine(0).toString()
+            viewModel.setPlaceByCurrentAddress(address, location)
+        }
+    }
+
+    private fun initGeocodeListener(location: Location) =
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        object : Geocoder.GeocodeListener {
+            override fun onGeocode(addresses: MutableList<Address>) {
+                address = addresses[0].getAddressLine(0)
+                viewModel.setPlaceByCurrentAddress(address, location)
+            }
+
+            override fun onError(errorMessage: String?) {
+                showToast(getString(R.string.moment_creation_not_found_address))
+            }
+        }
+
     private fun requestLocationPermissions() {
         ActivityCompat.requestPermissions(
             this,
@@ -278,32 +316,19 @@ class MomentCreationActivity :
         )
     }
 
-    private fun fetchAddress(location: Location) {
-        val geocoder = Geocoder(this)
+    private fun initGooglePlaceSearch() {
+        val placeFields: List<Place.Field> =
+            listOf(Place.Field.NAME, Place.Field.ID, Place.Field.ADDRESS, Place.Field.LAT_LNG)
+        autocompleteFragment.setPlaceFields(placeFields)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val geocodeListener = initGeocodeListener(location)
-            geocoder.getFromLocation(location.latitude, location.longitude, 1, geocodeListener)
-        } else {
-            address =
-                geocoder.getFromLocation(location.latitude, location.longitude, 1)?.get(0)
-                    ?.getAddressLine(0).toString()
-            viewModel.setLocationInformation(address, location)
+        lifecycleScope.launchWhenCreated {
+            autocompleteFragment.setHint(getString(R.string.visit_creation_place_search))
         }
     }
 
-    private fun initGeocodeListener(location: Location) =
-        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-        object : Geocoder.GeocodeListener {
-            override fun onGeocode(addresses: MutableList<Address>) {
-                address = addresses[0].getAddressLine(0)
-                viewModel.setLocationInformation(address, location)
-            }
-
-            override fun onError(errorMessage: String?) {
-                showToast(getString(R.string.moment_creation_not_found_address))
-            }
-        }
+    override fun onSearchClicked() {
+        fetchCurrentLocationAddress()
+    }
 
     companion object {
         const val MEMORY_TITLE_KEY = "memoryTitle"
@@ -321,9 +346,5 @@ class MomentCreationActivity :
                 activityLauncher.launch(this)
             }
         }
-    }
-
-    override fun onSearchClicked() {
-        showToast("플레이스 검색창 띄우기")
     }
 }

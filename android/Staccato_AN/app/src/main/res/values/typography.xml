@@ -53,4 +53,12 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <style name="CustomAutocompleteTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/staccato_black</item>
+        <item name="android:textColorHint">@color/gray3</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">17sp</item>
+        <item name="lineHeight">20dp</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
 </resources>

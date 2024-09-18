@@ -41,7 +41,7 @@
     <string name="memory_daily_visits">%s월 %s일의 스타카토</string>
     <string name="memory_delete_complete">추억이 삭제 되었습니다.</string>
     <string name="memory_visit_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
-    <string name="memory_unable_to_create_moment">아직은 지난 추억에 스타카토를 찍을 수 없어요!</string>
+    <string name="memory_unable_to_create_moment">스타카토가 추억 기간에 포함되지 않아요!</string>
 
     // activity_memory_creation / activity_memory_update
     <string name="memory_creation_title">추억 제목</string>
@@ -70,9 +70,12 @@
     <string name="moment_comment_has_been_deleted">코멘트를 삭제했어요!</string>
 
     // activity_visit_creation / activity_visit_update
-    <string name="visit_creation_place_name">스타카토 제목</string>
-    <string name="visit_creation_place_name_hint">제목을 입력해주세요</string>
-    <string name="visit_creation_address">주소</string>
+    <string name="visit_creation_staccato_name">스타카토 제목</string>
+    <string name="visit_creation_staccato_name_hint">제목을 입력해주세요</string>
+    <string name="visit_creation_place">장소</string>
+    <string name="visit_creation_place_search">"장소명, 주소, 위치로 검색해 보세요"</string>
+    <string name="visit_creation_empty_address">"장소를 선택하면 상세 주소가 나타나요"</string>
+    <string name="visit_creation_address">상세 주소</string>
     <string name="visit_creation_visited_at_hint">날짜를 선택해주세요</string>
     <string name="visit_creation_memory_selection">추억 선택</string>
     <string name="visit_creation_memory_selection_hint">추억을 선택해주세요</string>
@@ -125,7 +128,7 @@
     // MapsFragment
     <string name="maps_location_permission_granted_message">위치 서비스 사용을 위한 위치 권한이 설정 되었습니다.</string>
     <string name="maps_location_permission_required_message">위치 서비스 사용을 위해 위치 권한을 허용해주세요.</string>
-    <string name="staccato_loading_address">주소를 불러오고 있어요</string>
+    <string name="staccato_loading_current_address">현위치를 불러오고 있어요</string>
     <string name="moment_creation_not_found_address">주소를 찾지 못했습니다</string>
     <string name="timeline_sort">정렬</string>
     <string name="timeline_create_memory">추억 생성하기</string>

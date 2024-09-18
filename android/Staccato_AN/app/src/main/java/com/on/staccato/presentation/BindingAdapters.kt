@@ -461,14 +461,7 @@ fun ImageView.setImageResourceWithId(
 
 @BindingAdapter("setAddress")
 fun TextView.setAddress(address: String?) {
-    text =
-        if (address == null) {
-            setTextColor(resources.getColor(R.color.gray3, null))
-            context.getString(R.string.staccato_loading_address)
-        } else {
-            setTextColor(resources.getColor(R.color.staccato_black, null))
-            address
-        }
+    text = address ?: context.getString(R.string.visit_creation_empty_address)
 }
 
 @BindingAdapter("app:enableSendButton")
