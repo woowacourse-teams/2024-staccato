@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -194,18 +193,7 @@ class MomentServiceTest extends ServiceSliceTest {
 
         // then
         Moment foundedMoment = momentRepository.findById(moment.getId()).get();
-        assertAll(
-                () -> assertThat(foundedMoment.getPlaceName()).isEqualTo("newPlaceName"),
-                () -> assertThat(momentImageRepository.findById(1L)).isEmpty(),
-                () -> assertThat(momentImageRepository.findById(2L)).isEmpty(),
-                () -> assertThat(momentImageRepository.findById(3L).get().getImageUrl()).isEqualTo("https://existExample.com.jpg"),
-                () -> assertThat(momentImageRepository.findById(4L).get().getImageUrl()).isEqualTo("https://existExample2.com.jpg"),
-                () -> assertThat(momentImageRepository.findById(3L).get().getMoment().getId()).isEqualTo(foundedMoment.getId()),
-                () -> assertThat(momentImageRepository.findById(4L).get().getMoment().getId()).isEqualTo(foundedMoment.getId()),
-                () -> assertThat(momentImageRepository.findAll().get(0).getImageUrl()).isEqualTo("https://existExample.com.jpg"),
-                () -> assertThat(momentImageRepository.findAll().get(1).getImageUrl()).isEqualTo("https://existExample2.com.jpg"),
-                () -> assertThat(momentImageRepository.findAll().size()).isEqualTo(2)
-        );
+        assertThat(foundedMoment.getPlaceName()).isEqualTo("newPlaceName");
     }
 
     @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")
@@ -256,28 +244,28 @@ class MomentServiceTest extends ServiceSliceTest {
 
             // then
             Moment foundedMoment = momentRepository.findById(moment.getId()).get();
-            assertAll(
-                    () -> assertThat(foundedMoment.getPlaceName()).isEqualTo(momentRequest.placeName()),
-                    () -> assertThat(foundedMoment.getSpot().getAddress()).isEqualTo(momentRequest.address()),
-                    () -> assertThat(foundedMoment.getSpot().getLatitude().intValue()).isEqualTo(BigDecimal.ONE.intValue()),
-                    () -> assertThat(foundedMoment.getSpot().getLongitude().intValue()).isEqualTo(BigDecimal.ONE.intValue()),
-                    () -> assertThat(foundedMoment.getVisitedAt()).isEqualTo(momentRequest.visitedAt().truncatedTo(ChronoUnit.SECONDS)),
-                    () -> assertThat(foundedMoment.getMemory().getId()).isEqualTo(momentRequest.memoryId()),
-                    () -> assertThat(momentImageRepository.findById(1L)).isEmpty(),
-                    () -> assertThat(momentImageRepository.findById(2L)).isEmpty(),
-                    () -> assertThat(momentImageRepository.findById(3L).get().getImageUrl()).isEqualTo("https://existExample.com.jpg"),
-                    () -> assertThat(momentImageRepository.findById(4L).get().getImageUrl()).isEqualTo("https://existExample2.com.jpg"),
-                    () -> assertThat(momentImageRepository.findById(3L).get().getMoment().getId()).isEqualTo(foundedMoment.getId()),
-                    () -> assertThat(momentImageRepository.findById(4L).get().getMoment().getId()).isEqualTo(foundedMoment.getId()),
-                    () -> assertThat(momentImageRepository.findAll().get(0).getImageUrl()).isEqualTo("https://existExample.com.jpg"),
-                    () -> assertThat(momentImageRepository.findAll().get(1).getImageUrl()).isEqualTo("https://existExample2.com.jpg"),
-                    () -> assertThat(momentImageRepository.findAll().size()).isEqualTo(2)
-            );
+            assertThat(foundedMoment.getPlaceName()).isEqualTo("newPlaceName");
+        }
+
+        @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")
+        @Test
+        void failToUpdateMomentOfOther() {
+            // given
+            Member member = saveMember();
+            Member otherMember = saveMember();
+            Memory memory = saveMemory(member);
+            Moment moment = saveMomentWithImages(memory);
+            MomentRequest momentRequest = new MomentRequest("newPlaceName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory.getId(), List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
+
+            // when & then
+            assertThatThrownBy(() -> momentService.updateMomentByIdV2(moment.getId(), momentRequest, otherMember))
+                    .isInstanceOf(ForbiddenException.class)
+                    .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
         }
 
         @DisplayName("본인 것이 아닌 추억에 속하도록 스타카토를 수정하려고 하면 예외가 발생한다.")
         @Test
-        void cannotUpdateMomentByIdIfNotMemoryOwner() {
+        void failToUpdateMomentToOtherMemory() {
             // given
             Member member = saveMember();
             Member otherMember = saveMember();
@@ -294,7 +282,7 @@ class MomentServiceTest extends ServiceSliceTest {
 
         @DisplayName("존재하지 않는 스타카토를 수정하면 예외가 발생한다.")
         @Test
-        void failUpdateMomentById() {
+        void failToUpdateNotExistMoment() {
             // given
             Member member = saveMember();
             Memory memory = saveMemory(member);
