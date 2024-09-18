@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,8 @@ import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.exception.StaccatoException;
 import com.staccato.exception.UnauthorizedException;
-import com.staccato.member.domain.Member;
+import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.auth.LoginRequestFixture;
 import com.staccato.member.repository.MemberRepository;
 
 class AuthServiceTest extends ServiceSliceTest {
@@ -26,8 +28,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void login() {
         // given
-        String nickname = "staccato";
-        LoginRequest loginRequest = new LoginRequest(nickname);
+        LoginRequest loginRequest = LoginRequestFixture.create();
 
         // when
         LoginResponse loginResponse = authService.login(loginRequest);
@@ -39,13 +40,27 @@ class AuthServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("입력받은 닉네임이 이미 존재하는 닉네임인 경우 기존에 존재하던 사용자를 반환한다.")
+    @Test
+    void loginByDuplicated() {
+        // given
+        memberRepository.save(MemberFixture.create());
+        LoginRequest loginRequest = LoginRequestFixture.create();
+
+        // when
+        LoginResponse response = authService.login(loginRequest);
+
+        // then
+        assertThat(response.token()).isNotBlank();
+    }
+
+    @Disabled
     @DisplayName("입력받은 닉네임이 이미 존재하는 닉네임인 경우 예외가 발생한다.")
     @Test
     void cannotLoginByDuplicated() {
         // given
-        String nickname = "staccato";
-        memberRepository.save(Member.builder().nickname(nickname).build());
-        LoginRequest loginRequest = new LoginRequest(nickname);
+        memberRepository.save(MemberFixture.create());
+        LoginRequest loginRequest = LoginRequestFixture.create();
 
         // when & then
         assertThatThrownBy(() -> authService.login(loginRequest))
@@ -57,8 +72,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void cannotExtractMemberByUnknown() {
         // given
-        String nickname = "staccato";
-        memberRepository.save(Member.builder().nickname(nickname).build());
+        memberRepository.save(MemberFixture.create());
 
         // when & then
         assertThatThrownBy(() -> authService.extractFromToken(null))
