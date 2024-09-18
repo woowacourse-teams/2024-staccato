@@ -197,7 +197,7 @@ fun Button.setMemorySaveButtonActive(
     isPhotoPosting: Boolean?,
 ) {
     // Todo: 날짜 범위가 있거나(둘다 null X) 없을 때(둘다 null) 조건 추가
-    val areBothNullOrNotNull = (startDate == null) || (endDate == null)
+    val areBothNullOrNotNull = (startDate == null) == (endDate == null)
     isEnabled =
         if (title.isNullOrBlank() || isPhotoPosting == true || !areBothNullOrNotNull) {
             setTextColor(resources.getColor(R.color.gray4, null))
