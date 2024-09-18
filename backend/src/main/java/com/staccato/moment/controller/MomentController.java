@@ -70,6 +70,16 @@ public class MomentController implements MomentControllerDocs {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping(path = "/v2/{momentId}")
+    public ResponseEntity<Void> updateMomentByIdV2(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @Valid @RequestBody MomentRequest request
+    ) {
+        momentService.updateMomentByIdV2(momentId, request, member);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{momentId}")
     public ResponseEntity<Void> deleteMomentById(
             @LoginMember Member member,
