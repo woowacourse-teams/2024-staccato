@@ -63,4 +63,8 @@ public class AuthService {
         log.info(LogForm.LOGIN_MEMBER_FORM, member.getId(), member.getNickname().getNickname());
         return member;
     }
+
+    public LoginResponse createTokenByCode(String code) {
+        return null;
+    }
 }
