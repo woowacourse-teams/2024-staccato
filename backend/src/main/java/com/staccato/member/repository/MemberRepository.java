@@ -7,6 +7,4 @@ import com.staccato.member.domain.Nickname;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByNickname(Nickname nickname);
-
-    Member findByNickname(Nickname nickname);
 }
