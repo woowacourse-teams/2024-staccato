@@ -41,7 +41,7 @@ public class Moment extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime visitedAt;
     @Column(nullable = false)
-    private String placeName;
+    private String title;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Feeling feeling = Feeling.NOTHING;
@@ -59,7 +59,7 @@ public class Moment extends BaseEntity {
     @Builder
     public Moment(
             @NonNull LocalDateTime visitedAt,
-            @NonNull String placeName,
+            @NonNull String title,
             @NonNull String address,
             @NonNull BigDecimal latitude,
             @NonNull BigDecimal longitude,
@@ -68,7 +68,7 @@ public class Moment extends BaseEntity {
     ) {
         validateIsWithinMemoryDuration(visitedAt, memory);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
-        this.placeName = placeName.trim();
+        this.title = title.trim();
         this.spot = new Spot(address, latitude, longitude);
         this.momentImages.addAll(momentImages, this);
         this.memory = memory;
@@ -84,14 +84,14 @@ public class Moment extends BaseEntity {
         this.comments.add(comment);
     }
 
-    public void update(String placeName, MomentImages newMomentImages) {
-        this.placeName = placeName;
+    public void update(String title, MomentImages newMomentImages) {
+        this.title = title;
         this.momentImages.update(newMomentImages, this);
     }
 
     public void update(Moment updatedMoment) {
         this.visitedAt = updatedMoment.getVisitedAt();
-        this.placeName = updatedMoment.getPlaceName();
+        this.title = updatedMoment.getTitle();
         this.spot = updatedMoment.getSpot();
         this.momentImages.update(updatedMoment.momentImages, this);
         this.memory = updatedMoment.getMemory();

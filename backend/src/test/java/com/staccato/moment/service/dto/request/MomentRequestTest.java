@@ -10,16 +10,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class MomentRequestTest {
-    @DisplayName("MomentRequest를 생성할 때 placeName에는 trim이 적용된다.")
+    @DisplayName("MomentRequest를 생성할 때 staccatoTitle에는 trim이 적용된다.")
     @Test
     void trimPlaceName() {
         // given
-        String placeName = " placeName ";
-        String expectedPlaceName = "placeName";
+        String staccatoTitle = " staccatoTitle ";
+        String expectedPlaceName = "staccatoTitle";
 
         // when
         MomentRequest momentRequest = new MomentRequest(
-                placeName,
+                staccatoTitle,
                 "address",
                 BigDecimal.ONE,
                 BigDecimal.ONE,
@@ -29,6 +29,6 @@ class MomentRequestTest {
         );
 
         // then
-        assertThat(momentRequest.placeName()).isEqualTo(expectedPlaceName);
+        assertThat(momentRequest.staccatoTitle()).isEqualTo(expectedPlaceName);
     }
 }

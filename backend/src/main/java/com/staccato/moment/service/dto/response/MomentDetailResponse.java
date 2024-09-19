@@ -18,8 +18,8 @@ public record MomentDetailResponse(
         long memoryId,
         @Schema(example = "2024 서울 투어")
         String memoryTitle,
-        @Schema(example = "남산 서울타워")
-        String placeName,
+        @Schema(example = "즐거웠던 남산에서의 기억")
+        String staccatoTitle,
         @ArraySchema(arraySchema = @Schema(example = "[\"https://example.com/images/namsan_tower.jpg\", \"https://example.com/images/namsan_tower2.jpg\"]"))
         List<String> momentImageUrls,
         @Schema(example = "2021-11-08T11:58:20")
@@ -35,7 +35,7 @@ public record MomentDetailResponse(
                 moment.getId(),
                 moment.getMemory().getId(),
                 moment.getMemory().getTitle(),
-                moment.getPlaceName(),
+                moment.getTitle(),
                 moment.getMomentImages().getImages().stream().map(MomentImage::getImageUrl).toList(),
                 moment.getVisitedAt(),
                 moment.getFeeling().getValue(),

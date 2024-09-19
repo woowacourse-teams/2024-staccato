@@ -11,7 +11,7 @@ public class MomentDetailResponseFixture {
                 momentId,
                 1,
                 "memoryTitle",
-                "placeName",
+                "staccatoTitle",
                 List.of("https://example1.com.jpg"),
                 visitedAt,
                 "happy",
