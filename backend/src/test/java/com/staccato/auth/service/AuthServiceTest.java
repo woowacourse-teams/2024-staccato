@@ -87,4 +87,16 @@ class AuthServiceTest extends ServiceSliceTest {
         // then
         assertThat(tokenProvider.extractMemberId(loginResponse.token())).isEqualTo(member.getId());
     }
+
+    @DisplayName("존재하지 않는 고유 코드로 사용자를 조회하면 예외가 발생한다.")
+    @Test
+    void cannotCreateTokenByCode() {
+        // given
+        String code = UUID.randomUUID().toString();
+
+        // when
+        assertThatThrownBy(() -> authService.loginByCode(code))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("유효하지 않은 코드입니다. 올바른 코드인지 확인해주세요.");
+    }
 }
