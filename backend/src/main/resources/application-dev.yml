@@ -22,7 +22,7 @@ spring:
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    defer-datasource-initialization: true
+    defer-datasource-initialization: false
   flyway:
     enabled: true
     locations: classpath:db/migration
