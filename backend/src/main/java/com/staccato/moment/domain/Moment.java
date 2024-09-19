@@ -60,6 +60,7 @@ public class Moment extends BaseEntity {
     public Moment(
             @NonNull LocalDateTime visitedAt,
             @NonNull String title,
+            @NonNull String placeName,
             @NonNull String address,
             @NonNull BigDecimal latitude,
             @NonNull BigDecimal longitude,
@@ -69,7 +70,7 @@ public class Moment extends BaseEntity {
         validateIsWithinMemoryDuration(visitedAt, memory);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
         this.title = title.trim();
-        this.spot = new Spot(address, latitude, longitude);
+        this.spot = new Spot(placeName, address, latitude, longitude);
         this.momentImages.addAll(momentImages, this);
         this.memory = memory;
     }

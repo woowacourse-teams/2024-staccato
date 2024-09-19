@@ -26,6 +26,9 @@ public record MomentRequest(
         @Size(max = 30, message = "스타카토 제목은 공백 포함 30자 이하로 설정해주세요.")
         String staccatoTitle,
         @Schema(example = "Great Russell St, London WC1B 3DG")
+        @NotNull(message = "장소 이름을 입력해주세요.")
+        String placeName,
+        @Schema(example = "British Museum")
         @NotNull(message = "스타카토의 주소를 입력해주세요.")
         String address,
         @Schema(example = "51.51978412729915")
@@ -57,6 +60,7 @@ public record MomentRequest(
         return Moment.builder()
                 .visitedAt(visitedAt)
                 .title(staccatoTitle)
+                .placeName(placeName)
                 .latitude(latitude)
                 .longitude(longitude)
                 .address(address)

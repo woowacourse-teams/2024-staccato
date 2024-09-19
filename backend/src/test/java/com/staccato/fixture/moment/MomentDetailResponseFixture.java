@@ -15,6 +15,7 @@ public class MomentDetailResponseFixture {
                 List.of("https://example1.com.jpg"),
                 visitedAt,
                 "happy",
+                "placeName",
                 "address",
                 List.of());
     }

@@ -19,6 +19,7 @@ public class MomentFixture {
                 .latitude(latitude)
                 .longitude(longitude)
                 .address("address")
+                .placeName("placeName")
                 .memory(memory)
                 .momentImages(new MomentImages(List.of()))
                 .build();
@@ -30,6 +31,7 @@ public class MomentFixture {
                 .title("staccatoTitle")
                 .latitude(latitude)
                 .longitude(longitude)
+                .placeName("placeName")
                 .address("address")
                 .memory(memory)
                 .momentImages(new MomentImages(List.of()))
@@ -42,6 +44,7 @@ public class MomentFixture {
                 .title("staccatoTitle")
                 .latitude(latitude)
                 .longitude(longitude)
+                .placeName("placeName")
                 .address("address")
                 .memory(memory)
                 .momentImages(momentImages)

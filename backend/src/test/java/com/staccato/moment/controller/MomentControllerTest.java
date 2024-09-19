@@ -62,35 +62,39 @@ class MomentControllerTest {
     static Stream<Arguments> invalidMomentRequestProvider() {
         return Stream.of(
                 Arguments.of(
-                        new MomentRequest("staccatoTitle", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 0L, List.of("https://example.com/images/namsan_tower.jpg")),
+                        new MomentRequest("staccatoTitle", "placeName","address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 0L, List.of("https://example.com/images/namsan_tower.jpg")),
                         "추억 식별자는 양수로 이루어져야 합니다."
                 ),
                 Arguments.of(
-                        new MomentRequest(null, "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
+                        new MomentRequest(null, "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
                         "스타카토 제목을 입력해주세요."
                 ),
                 Arguments.of(
-                        new MomentRequest("  ", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
+                        new MomentRequest("  ", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
                         "스타카토 제목을 입력해주세요."
                 ),
                 Arguments.of(
-                        new MomentRequest("가".repeat(31), "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
+                        new MomentRequest("staccatoTitle", null, "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
+                        "장소 이름을 입력해주세요."
+                ),
+                Arguments.of(
+                        new MomentRequest("가".repeat(31), "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
                         "스타카토 제목은 공백 포함 30자 이하로 설정해주세요."
                 ),
                 Arguments.of(
-                        new MomentRequest("staccatoTitle", "address", null, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
+                        new MomentRequest("staccatoTitle", "placeName", "address", null, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
                         "스타카토의 위도를 입력해주세요."
                 ),
                 Arguments.of(
-                        new MomentRequest("staccatoTitle", "address", BigDecimal.ONE, null, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
+                        new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, null, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
                         "스타카토의 경도를 입력해주세요."
                 ),
                 Arguments.of(
-                        new MomentRequest("staccatoTitle", null, BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
+                        new MomentRequest("staccatoTitle", "placeName", null, BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg")),
                         "스타카토의 주소를 입력해주세요."
                 ),
                 Arguments.of(
-                        new MomentRequest("staccatoTitle", "address", BigDecimal.ONE, BigDecimal.ONE, null, 1L, List.of("https://example.com/images/namsan_tower.jpg")),
+                        new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, null, 1L, List.of("https://example.com/images/namsan_tower.jpg")),
                         "스타카토 날짜를 입력해주세요."
                 )
         );
@@ -103,6 +107,7 @@ class MomentControllerTest {
         String momentRequest = """
                 {
                     "staccatoTitle": "staccatoTitle",
+                    "placeName": "placeName",
                     "address": "address",
                     "latitude": 1.0,
                     "longitude": 1.0,
@@ -133,9 +138,10 @@ class MomentControllerTest {
     @Test
     void failCreateMomentWithInvalidVisitedAt() throws Exception {
         // given
-        String momentRequestJson = """
+        String momentRequest = """
                     {
                         "staccatoTitle": "재밌었던 런던 박물관에서의 기억",
+                        "placeName": "British Museum",
                         "address": "Great Russell St, London WC1B 3DG",
                         "latitude": 51.51978412729915,
                         "longitude": -0.12712788587027796,
@@ -150,7 +156,7 @@ class MomentControllerTest {
         mockMvc.perform(post("/moments")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(momentRequestJson))
+                        .content(momentRequest))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("요청 본문을 읽을 수 없습니다. 올바른 형식으로 데이터를 제공해주세요."));
     }
@@ -280,6 +286,7 @@ class MomentControllerTest {
             String momentRequest = """
                     {
                         "staccatoTitle": "staccatoTitle",
+                        "placeName": "placeName",
                         "address": "address",
                         "latitude": 1.0,
                         "longitude": 1.0,
@@ -306,7 +313,7 @@ class MomentControllerTest {
             // given
             long momentId = 1L;
             ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
-            MomentRequest momentRequest = new MomentRequest("staccatoTitle", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L,
+            MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L,
                     List.of("https://example.com/images/namsan_tower1.jpg",
                             "https://example.com/images/namsan_tower2.jpg",
                             "https://example.com/images/namsan_tower3.jpg",
@@ -329,7 +336,7 @@ class MomentControllerTest {
         void failUpdateMomentById() throws Exception {
             // given
             long momentId = 0L;
-            MomentRequest momentRequest = new MomentRequest("staccatoTitle", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
+            MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
             ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
             when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 

@@ -20,6 +20,7 @@ class MomentRequestTest {
         // when
         MomentRequest momentRequest = new MomentRequest(
                 staccatoTitle,
+                "placeName",
                 "address",
                 BigDecimal.ONE,
                 BigDecimal.ONE,
