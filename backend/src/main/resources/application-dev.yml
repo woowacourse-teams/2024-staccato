@@ -23,6 +23,10 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
   servlet:
     multipart:
       max-file-size: 20MB
