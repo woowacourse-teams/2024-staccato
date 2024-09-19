@@ -89,6 +89,14 @@ public class Moment extends BaseEntity {
         this.momentImages.update(newMomentImages, this);
     }
 
+    public void update(Moment updatedMoment) {
+        this.visitedAt = updatedMoment.getVisitedAt();
+        this.placeName = updatedMoment.getPlaceName();
+        this.spot = updatedMoment.getSpot();
+        this.momentImages.update(updatedMoment.momentImages, this);
+        this.memory = updatedMoment.getMemory();
+    }
+
     public String getThumbnailUrl() {
         return momentImages.getImages().get(0).getImageUrl();
     }
