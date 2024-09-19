@@ -113,7 +113,7 @@ class AuthControllerTest {
         // given
         String code = UUID.randomUUID().toString();
         LoginResponse loginResponse = new LoginResponse("token");
-        when(authService.createTokenByCode(any(String.class))).thenReturn(loginResponse);
+        when(authService.loginByCode(any(String.class))).thenReturn(loginResponse);
         String response = """
                 {
                     "token" : "token"
@@ -122,7 +122,7 @@ class AuthControllerTest {
 
         // when & then
         mockMvc.perform(get("/members")
-                .param("code", code))
+                        .param("code", code))
                 .andExpect(status().isOk())
                 .andExpect(content().json(response));
     }

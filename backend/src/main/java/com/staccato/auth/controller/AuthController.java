@@ -27,8 +27,8 @@ public class AuthController implements AuthControllerDocs {
     }
 
     @GetMapping("/members")
-    public ResponseEntity<LoginResponse> createToken(@RequestParam(name = "code") String code){
-        LoginResponse loginResponse = authService.createTokenByCode(code);
+    public ResponseEntity<LoginResponse> loginByCode(@RequestParam(name = "code") String code) {
+        LoginResponse loginResponse = authService.loginByCode(code);
         return ResponseEntity.ok(loginResponse);
     }
 }
