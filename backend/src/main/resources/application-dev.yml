@@ -25,8 +25,8 @@ spring:
     defer-datasource-initialization: true
   flyway:
     enabled: true
-    baseline-on-migrate: true
     locations: classpath:db/migration
+    baseline-on-migrate: true
   servlet:
     multipart:
       max-file-size: 20MB
