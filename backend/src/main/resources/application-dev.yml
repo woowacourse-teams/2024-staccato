@@ -20,7 +20,7 @@ spring:
         format_sql: true
         create_empty_composites.enabled: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
   flyway:
