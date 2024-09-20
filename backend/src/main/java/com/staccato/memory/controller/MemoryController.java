@@ -25,8 +25,8 @@ import com.staccato.memory.service.MemoryService;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
-import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MemoryNameResponses;
+import com.staccato.memory.service.dto.response.MemoryResponses;
 
 import lombok.RequiredArgsConstructor;
 
