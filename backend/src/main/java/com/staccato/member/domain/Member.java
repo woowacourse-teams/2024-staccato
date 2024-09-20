@@ -42,4 +42,12 @@ public class Member extends BaseEntity {
         this.nickname = new Nickname(nickname);
         this.imageUrl = imageUrl;
     }
+
+    public void updateImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public boolean isNotSame(Member member) {
+        return !this.equals(member);
+    }
 }
