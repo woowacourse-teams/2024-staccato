@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.image.service.ImageService;
 import com.staccato.image.service.dto.ImageUrlResponse;
+import com.staccato.member.controller.docs.MemberControllerDocs;
 import com.staccato.member.domain.Member;
 import com.staccato.member.service.MemberService;
 import com.staccato.member.service.dto.response.MemberProfileResponse;
@@ -26,12 +27,12 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
-public class MemberController {
+public class MemberController implements MemberControllerDocs {
     private final MemberService memberService;
     private final ImageService imageService;
 
     @PostMapping(path = "/{memberId}/profiles/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<MemberProfileResponse> uploadImage(
+    public ResponseEntity<MemberProfileResponse> changeProfileImage(
             @RequestPart(value = "imageFile") MultipartFile image,
             @LoginMember Member member,
             @PathVariable("memberId") @Min(value = 1L, message = "사용자 식별자는 양수로 이루어져야 합니다.") long memberId
