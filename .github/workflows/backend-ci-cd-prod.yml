@@ -55,7 +55,7 @@ jobs:
 
     strategy:
       matrix:
-        runner: [ prod-a ]
+        runner: [ prod-a, prod ]
 
     steps:
       - name: Pull Docker image
