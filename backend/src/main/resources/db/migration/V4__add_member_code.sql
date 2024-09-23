@@ -1,0 +1,8 @@
+ALTER TABLE member
+    ADD COLUMN code VARCHAR(36);
+
+UPDATE member
+SET code = UUID();
+
+ALTER TABLE member
+    MODIFY COLUMN code VARCHAR(36) NOT NULL UNIQUE;
