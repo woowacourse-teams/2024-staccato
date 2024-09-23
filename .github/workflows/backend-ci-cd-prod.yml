@@ -2,7 +2,7 @@ name: Backend CI/CD prod
 
 on:
   pull_request:
-    paths: 'backend/**'
+    paths: ['backend/**', '.github/**']
     branches: ["main"]
 
 jobs:
