@@ -15,10 +15,11 @@ public class MomentFixture {
     public static Moment create(Memory memory) {
         return Moment.builder()
                 .visitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
-                .placeName("placeName")
+                .title("staccatoTitle")
                 .latitude(latitude)
                 .longitude(longitude)
                 .address("address")
+                .placeName("placeName")
                 .memory(memory)
                 .momentImages(new MomentImages(List.of()))
                 .build();
@@ -27,9 +28,10 @@ public class MomentFixture {
     public static Moment create(Memory memory, LocalDateTime visitedAt) {
         return Moment.builder()
                 .visitedAt(visitedAt)
-                .placeName("placeName")
+                .title("staccatoTitle")
                 .latitude(latitude)
                 .longitude(longitude)
+                .placeName("placeName")
                 .address("address")
                 .memory(memory)
                 .momentImages(new MomentImages(List.of()))
@@ -39,9 +41,10 @@ public class MomentFixture {
     public static Moment createWithImages(Memory memory, LocalDateTime visitedAt, MomentImages momentImages) {
         return Moment.builder()
                 .visitedAt(visitedAt)
-                .placeName("placeName")
+                .title("staccatoTitle")
                 .latitude(latitude)
                 .longitude(longitude)
+                .placeName("placeName")
                 .address("address")
                 .memory(memory)
                 .momentImages(momentImages)

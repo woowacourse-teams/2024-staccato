@@ -60,7 +60,7 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         saveMemory(member);
-        MomentRequest momentRequest = new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of());
+        MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of());
 
         // when
         long momentId = momentService.createMoment(momentRequest, member).momentId();
@@ -114,7 +114,7 @@ class MomentServiceTest extends ServiceSliceTest {
     }
 
     private MomentRequest getMomentRequest() {
-        return new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
+        return new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
     }
 
     @DisplayName("스타카토 목록 조회에 성공한다.")
@@ -193,7 +193,7 @@ class MomentServiceTest extends ServiceSliceTest {
 
         // then
         Moment foundedMoment = momentRepository.findById(moment.getId()).get();
-        assertThat(foundedMoment.getPlaceName()).isEqualTo("newPlaceName");
+        assertThat(foundedMoment.getTitle()).isEqualTo("newPlaceName");
     }
 
     @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")
@@ -204,7 +204,7 @@ class MomentServiceTest extends ServiceSliceTest {
         Member otherMember = saveMember();
         Memory memory = saveMemory(member);
         Moment moment = saveMomentWithImages(memory);
-        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
+        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("staccatoTitle", List.of("https://example1.com.jpg"));
 
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentUpdateRequest, otherMember))
@@ -217,7 +217,7 @@ class MomentServiceTest extends ServiceSliceTest {
     void failUpdateMomentById() {
         // given
         Member member = saveMember();
-        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("placeName", List.of("https://example1.com.jpg"));
+        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("staccatoTitle", List.of("https://example1.com.jpg"));
 
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, member))
@@ -239,12 +239,12 @@ class MomentServiceTest extends ServiceSliceTest {
             Moment moment = saveMomentWithImages(memory);
 
             // when
-            MomentRequest momentRequest = new MomentRequest("newPlaceName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory2.getId(), List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
+            MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory2.getId(), List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
             momentService.updateMomentByIdV2(moment.getId(), momentRequest, member);
 
             // then
             Moment foundedMoment = momentRepository.findById(moment.getId()).get();
-            assertThat(foundedMoment.getPlaceName()).isEqualTo("newPlaceName");
+            assertThat(foundedMoment.getTitle()).isEqualTo("newStaccatoTitle");
         }
 
         @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")
@@ -255,7 +255,7 @@ class MomentServiceTest extends ServiceSliceTest {
             Member otherMember = saveMember();
             Memory memory = saveMemory(member);
             Moment moment = saveMomentWithImages(memory);
-            MomentRequest momentRequest = new MomentRequest("newPlaceName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory.getId(), List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
+            MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory.getId(), List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
 
             // when & then
             assertThatThrownBy(() -> momentService.updateMomentByIdV2(moment.getId(), momentRequest, otherMember))
@@ -272,7 +272,7 @@ class MomentServiceTest extends ServiceSliceTest {
             Memory memory = saveMemory(member);
             Memory otherMemory = saveMemory(otherMember);
             Moment moment = saveMomentWithImages(memory);
-            MomentRequest momentRequest = new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), otherMemory.getId(), List.of());
+            MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), otherMemory.getId(), List.of());
 
             // when & then
             assertThatThrownBy(() -> momentService.updateMomentByIdV2(moment.getId(), momentRequest, member))
@@ -286,7 +286,7 @@ class MomentServiceTest extends ServiceSliceTest {
             // given
             Member member = saveMember();
             Memory memory = saveMemory(member);
-            MomentRequest momentUpdateRequest = new MomentRequest("placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory.getId(), List.of());
+            MomentRequest momentUpdateRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory.getId(), List.of());
 
             // when & then
             assertThatThrownBy(() -> momentService.updateMomentByIdV2(1L, momentUpdateRequest, member))
