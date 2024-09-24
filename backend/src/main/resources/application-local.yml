@@ -15,12 +15,12 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: staccato
       password: 1234
-      url: jdbc:mysql://localhost:3307/staccato?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:mysql://localhost:3307/staccato?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
     reader:
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: staccato
       password: 1234
-      url: jdbc:mysql://localhost:3305/staccato?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:mysql://localhost:3305/staccato?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
   jpa:
     database: MYSQL
     show-sql: true
