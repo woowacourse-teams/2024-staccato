@@ -4,7 +4,9 @@ import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -14,7 +16,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
@@ -27,9 +28,12 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.maps.MapsFragment
 import com.on.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_NEW_STATE
 import com.on.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_STATE_REQUEST_KEY
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
@@ -40,7 +44,6 @@ import com.on.staccato.presentation.util.showToast
 class MainActivity :
     BindingActivity<ActivityMainBinding>(),
     OnMapReadyCallback,
-    OnRequestPermissionsResultCallback,
     MainHandler {
     override val layoutResourceId: Int
         get() = R.layout.activity_main
@@ -59,6 +62,7 @@ class MainActivity :
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
+    private val requestPermissionLauncher = initRequestPermissionsLauncher()
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult(messageId = R.string.main_memory_creation_success)
     val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult(messageId = R.string.main_memory_update_success)
     val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult(messageId = R.string.main_moment_creation_success)
@@ -73,31 +77,14 @@ class MainActivity :
         setUpBottomSheetStateListener()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (this::map.isInitialized) enableMyLocation()
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         enableMyLocation()
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray,
-    ) {
-        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-            return
-        }
-
-        when (requestCode) {
-            LOCATION_PERMISSION_REQUEST_CODE -> {
-                if ((grantResults.isNotEmpty()) &&
-                    grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-                ) {
-                    enableMyLocation()
-                }
-                return
-            }
-        }
     }
 
     override fun onStaccatoCreationClicked() {
@@ -109,63 +96,97 @@ class MainActivity :
         )
     }
 
+    // TODO: 하드 코딩된 String 제거
+    private fun initRequestPermissionsLauncher() =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            permissions.forEach { (_, isGranted) ->
+                if (isGranted) {
+                    makeSnackBar(
+                        getString(R.string.maps_location_permission_granted_message),
+                    ).show()
+                    enableMyLocation()
+                } else {
+                    makeSnackBar(
+                        "위치 권한을 거부하셨습니다.",
+                    ).show()
+                }
+            }
+        }
+
     private fun enableMyLocation() {
-        if (checkLocationPermissions()) return
-        if (shouldShowRequestPermission()) return
-        requestLocationPermissions()
+        when {
+            checkSelfLocationPermission() -> {
+                map.isMyLocationEnabled = true
+            }
+            shouldShowRequestLocationPermissionsRationale() -> {
+                sharedViewModel.isLocationDenial.observe(this) { isCancel ->
+                    if (!isCancel) showPermissionRequestDialog()
+                }
+            }
+            else -> {
+                sharedViewModel.isLocationDenial.observe(this) { isCancel ->
+                    if (!isCancel) requestPermissionLauncher.launch(locationPermissions)
+                }
+            }
+        }
     }
 
-    // 권한이 이미 부여된 경우
-    private fun checkLocationPermissions(): Boolean {
-        val isFineLocationGranted =
-            ContextCompat.checkSelfPermission(
-                this,
-                ACCESS_FINE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED
-
-        val isCoarseLocationGranted =
+    private fun checkSelfLocationPermission(): Boolean {
+        val isGrantedCoarseLocation =
             ContextCompat.checkSelfPermission(
                 this,
                 ACCESS_COARSE_LOCATION,
             ) == PackageManager.PERMISSION_GRANTED
 
-        if (isFineLocationGranted || isCoarseLocationGranted) {
-            map.isMyLocationEnabled = true
-            return true
-        } else {
-            requestLocationPermissions()
-        }
-        return false
-    }
-
-    // 앱에서 요청 권한 근거를 표시해야 한다고 판단하는 경우
-    private fun shouldShowRequestPermission(): Boolean {
-        val shouldRequestFineLocation: Boolean =
-            ActivityCompat.shouldShowRequestPermissionRationale(
+        val isGrantedFineLocation =
+            ContextCompat.checkSelfPermission(
                 this,
                 ACCESS_FINE_LOCATION,
-            )
+            ) == PackageManager.PERMISSION_GRANTED
 
-        val shouldRequestCoarseLocation: Boolean =
+        return isGrantedCoarseLocation && isGrantedFineLocation
+    }
+
+    private fun shouldShowRequestLocationPermissionsRationale(): Boolean {
+        val shouldRequestCoarseLocation =
             ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 ACCESS_COARSE_LOCATION,
             )
 
-        if (shouldRequestFineLocation || shouldRequestCoarseLocation) {
-            requestLocationPermissions()
-            return true
-        }
-        return false
+        val shouldRequestFineLocation =
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                ACCESS_FINE_LOCATION,
+            )
+
+        return shouldRequestCoarseLocation && shouldRequestFineLocation
     }
 
-    private fun requestLocationPermissions() {
-        ActivityCompat.requestPermissions(
-            this,
-            locationPermissions,
-            LOCATION_PERMISSION_REQUEST_CODE,
-        )
+    // TODO: CustomDialog 로 변경, 하드 코딩된 String 제거
+    private fun showPermissionRequestDialog() {
+        val dialog =
+            MaterialAlertDialogBuilder(this)
+                .setTitle("위치 권한 설정")
+                .setMessage(getString(R.string.maps_location_permission_required_message))
+                .setNegativeButton("취소") { dialog, _ ->
+                    sharedViewModel.updateIsLocationDenial()
+                    dialog.dismiss()
+                }
+                .setPositiveButton("설정") { dialog, _ ->
+                    navigateToSetting()
+                    dialog.dismiss()
+                }
+        dialog.show()
     }
+
+    private fun navigateToSetting() {
+        val uri = Uri.fromParts(MapsFragment.PACKAGE_SCHEME, this.packageName, null)
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri)
+        startActivity(intent)
+    }
+
+    private fun makeSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
 
     private fun setupGoogleMap() {
         val map: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.fragment_container_view_map) as? SupportMapFragment
