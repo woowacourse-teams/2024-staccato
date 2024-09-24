@@ -64,7 +64,7 @@ public class MomentService {
     ) {
         Moment moment = getMomentById(momentId);
         validateMemoryOwner(moment.getMemory(), member);
-        moment.update(momentUpdateRequest.placeName(), momentUpdateRequest.toMomentImages());
+        moment.update(momentUpdateRequest.staccatoTitle(), momentUpdateRequest.toMomentImages());
     }
 
     @Transactional
