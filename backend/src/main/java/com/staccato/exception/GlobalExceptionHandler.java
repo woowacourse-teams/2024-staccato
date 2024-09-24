@@ -5,9 +5,12 @@ import java.util.Optional;
 import jakarta.validation.ConstraintViolationException;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.transaction.CannotCreateTransactionException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -82,6 +85,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MultipartException.class)
+    @ApiResponse(description = "20MB 초과의 사진을 업로드 하려고 할 때", responseCode = "413")
     public ResponseEntity<ExceptionResponse> handleMultipartException(MultipartException e) {
         String exceptionMessage = "20MB 이하의 사진을 업로드해 주세요.";
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.PAYLOAD_TOO_LARGE.toString(), exceptionMessage);
