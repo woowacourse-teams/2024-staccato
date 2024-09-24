@@ -26,11 +26,12 @@ public class MemberService {
     }
 
     private Member getMemberById(long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() -> new StaccatoException("요청하신 사용자 정보를 찾을 수 없어요."));
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new StaccatoException("요청하신 사용자 정보를 찾을 수 없어요."));
     }
 
     private void validate(Member member, Member target) {
-        if(target.isNotSame(member)){
+        if (target.isNotSame(member)) {
             throw new ForbiddenException();
         }
     }

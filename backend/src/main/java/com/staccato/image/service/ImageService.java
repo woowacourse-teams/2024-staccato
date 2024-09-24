@@ -18,11 +18,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ImageService {
     private static final String TEAM_FOLDER_NAME = "staccato/";
-
+    private final S3ObjectClient s3ObjectClient;
     @Value("${image.folder.name}")
     private String imageFolderName;
-
-    private final S3ObjectClient s3ObjectClient;
 
     public ImageUrlResponse uploadImage(MultipartFile image) {
         String imageExtension = getImageExtension(image);

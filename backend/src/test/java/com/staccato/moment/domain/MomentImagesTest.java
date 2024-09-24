@@ -22,12 +22,12 @@ import com.staccato.memory.domain.Memory;
 class MomentImagesTest {
     @DisplayName("생성하려는 사진의 갯수가 0장 이상, 5장 이하이면 생성에 성공한다.")
     @ParameterizedTest
-    @ValueSource(ints={0,5})
+    @ValueSource(ints = {0, 5})
     void addMomentImages(int size) {
         // given
         List<String> images = new ArrayList<>();
-        for(int count=1;count<=size;count++){
-            images.add("image"+count+".jpg");
+        for (int count = 1; count <= size; count++) {
+            images.add("image" + count + ".jpg");
         }
 
         // when & then
