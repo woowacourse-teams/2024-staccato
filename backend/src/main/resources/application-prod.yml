@@ -29,6 +29,7 @@ spring:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
+    open-in-view: false
   servlet:
     multipart:
       max-file-size: 20MB
