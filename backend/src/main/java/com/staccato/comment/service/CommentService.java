@@ -10,6 +10,7 @@ import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
@@ -19,6 +20,7 @@ import com.staccato.moment.repository.MomentRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@Trace
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor

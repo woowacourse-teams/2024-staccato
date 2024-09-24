@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.StaccatoException;
 import com.staccato.image.domain.ImageExtension;
 import com.staccato.image.infrastructure.S3ObjectClient;
@@ -14,6 +15,7 @@ import com.staccato.image.service.dto.ImageUrlResponse;
 
 import lombok.RequiredArgsConstructor;
 
+@Trace
 @Service
 @RequiredArgsConstructor
 public class ImageService {

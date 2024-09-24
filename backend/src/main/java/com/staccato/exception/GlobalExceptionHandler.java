@@ -5,9 +5,12 @@ import java.util.Optional;
 import jakarta.validation.ConstraintViolationException;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.transaction.CannotCreateTransactionException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,6 +27,8 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final String INTERNAL_SERVER_ERROR_MESSAGE = "예기치 못한 서버 오류입니다. 다시 시도해주세요.";
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
@@ -52,7 +57,7 @@ public class GlobalExceptionHandler {
                 .next()
                 .getMessage();
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), exceptionMessage);
-        log.warn(LogForm.CUSTOM_EXCEPTION_LOGGING_FORM, exceptionResponse);
+        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
@@ -66,6 +71,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(S3Exception.class)
+    @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleS3Exception(S3Exception e) {
         String exceptionMessage = "이미지 처리에 실패했습니다.";
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), exceptionMessage);
@@ -74,6 +80,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MissingServletRequestPartException.class)
+    @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleMissingServletRequestPartException(MissingServletRequestPartException e) {
         String exceptionMessage = "요청된 파트가 누락되었습니다. 올바른 데이터를 제공해주세요.";
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), exceptionMessage);
@@ -87,14 +94,14 @@ public class GlobalExceptionHandler {
         String exceptionMessage = "20MB 이하의 사진을 업로드해 주세요.";
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.PAYLOAD_TOO_LARGE.toString(), exceptionMessage);
         log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
-        return ResponseEntity.badRequest().body(exceptionResponse);
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(exceptionResponse);
     }
 
     @ExceptionHandler(StaccatoException.class)
     @ApiResponse(responseCode = "400")
     public ResponseEntity<ExceptionResponse> handleStaccatoException(StaccatoException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
-        log.warn(LogForm.CUSTOM_EXCEPTION_LOGGING_FORM, exceptionResponse);
+        log.info(LogForm.CUSTOM_EXCEPTION_LOGGING_FORM, exceptionResponse);
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
@@ -117,9 +124,32 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     @ApiResponse(responseCode = "500")
     public ResponseEntity<ExceptionResponse> handleInternalServerErrorException(RuntimeException e) {
-        String exceptionMessage = "예기치 못한 서버 오류입니다. 다시 시도해주세요.";
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), exceptionMessage);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
         log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage());
+        return ResponseEntity.internalServerError().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(CannotCreateTransactionException.class)
+    @ApiResponse(responseCode = "500")
+    public ResponseEntity<ExceptionResponse> handleCannotCreateTransactionException(CannotCreateTransactionException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
+        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage(), e.getStackTrace());
+        return ResponseEntity.internalServerError().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    @ApiResponse(responseCode = "500")
+    public ResponseEntity<ExceptionResponse> handleDataAccessException(DataAccessException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
+        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage(), e.getStackTrace());
+        return ResponseEntity.internalServerError().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(TransactionSystemException.class)
+    @ApiResponse(responseCode = "500")
+    public ResponseEntity<ExceptionResponse> handleTransactionSystemException(TransactionSystemException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), INTERNAL_SERVER_ERROR_MESSAGE);
+        log.error(LogForm.ERROR_LOGGING_FORM, exceptionResponse, e.getMessage(), e.getStackTrace());
         return ResponseEntity.internalServerError().body(exceptionResponse);
     }
 }

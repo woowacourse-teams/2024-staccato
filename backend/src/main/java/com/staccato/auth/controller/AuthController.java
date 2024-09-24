@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.staccato.auth.service.AuthService;
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
+import com.staccato.config.log.annotation.Trace;
 
 import lombok.RequiredArgsConstructor;
 
+@Trace
 @RestController
 @RequiredArgsConstructor
 public class AuthController implements AuthControllerDocs {

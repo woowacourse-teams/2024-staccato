@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
@@ -24,6 +25,7 @@ import com.staccato.moment.repository.MomentRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@Trace
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

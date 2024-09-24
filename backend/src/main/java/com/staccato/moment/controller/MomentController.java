@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.staccato.config.auth.LoginMember;
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.controller.docs.MomentControllerDocs;
 import com.staccato.moment.service.MomentService;
@@ -29,6 +30,7 @@ import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 import lombok.RequiredArgsConstructor;
 
+@Trace
 @RestController
 @RequestMapping("/moments")
 @RequiredArgsConstructor
@@ -67,6 +69,16 @@ public class MomentController implements MomentControllerDocs {
             @Valid @RequestBody MomentUpdateRequest request
     ) {
         momentService.updateMomentById(momentId, request, member);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(path = "/v2/{momentId}")
+    public ResponseEntity<Void> updateMomentByIdV2(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @Valid @RequestBody MomentRequest request
+    ) {
+        momentService.updateMomentByIdV2(momentId, request, member);
         return ResponseEntity.ok().build();
     }
 

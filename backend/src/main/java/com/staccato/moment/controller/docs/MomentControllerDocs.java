@@ -71,7 +71,7 @@ public interface MomentControllerDocs {
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
-                    (1) 조회하려는 스타카토가 존재하지 않을 때
+                    (1) 수정하려는 스타카토가 존재하지 않을 때
                                         
                     (2) Path Variable 형식이 잘못되었을 때
                                         
@@ -83,6 +83,33 @@ public interface MomentControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "스타카토 ID", example = "1") @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
             @Parameter(required = true) @Valid MomentUpdateRequest request);
+
+    @Operation(summary = "스타카토 수정", description = "스타카토를 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "스타카토 수정 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                                        
+                    (1) 수정하려는 스타카토가 존재하지 않을 때
+                                        
+                    (2) Path Variable 형식이 잘못되었을 때
+                                        
+                    (3) 필수 값(사진을 제외한 모든 값)이 누락되었을 때
+                                        
+                    (4) 존재하지 않는 memoryId일 때
+                                        
+                    (5) 올바르지 않은 날짜 형식일 때
+                                        
+                    (6) 사진이 5장을 초과했을 때
+                                        
+                    (7) 스타카토 날짜가 추억 기간에 포함되지 않을 때
+                    """,
+                    responseCode = "400")
+    })
+    ResponseEntity<Void> updateMomentByIdV2(
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "스타카토 ID", example = "1") @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
+            @Parameter(required = true) @Valid MomentRequest request);
 
     @Operation(summary = "스타카토 삭제", description = "스타카토를 삭제합니다.")
     @ApiResponses(value = {
