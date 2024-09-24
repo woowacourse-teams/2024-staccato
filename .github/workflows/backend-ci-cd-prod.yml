@@ -1,9 +1,9 @@
 name: Backend CI/CD prod
 
 on:
-  pull_request:
+  push:
     paths: ['backend/**', '.github/**']
-    branches: ["develop"]
+    branches: ["main"]
 
 jobs:
   ci:
