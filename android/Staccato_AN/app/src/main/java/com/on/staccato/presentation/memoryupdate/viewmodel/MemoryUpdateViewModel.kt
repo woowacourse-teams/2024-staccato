@@ -131,11 +131,12 @@ class MemoryUpdateViewModel(
     ) {
         with(date) {
             addSource(isPeriodSet) { isSet ->
-                value = if (isSet) {
-                    lastDate.value
-                } else {
-                    null
-                }
+                value =
+                    if (isSet) {
+                        lastDate.value
+                    } else {
+                        null
+                    }
             }
         }
         updateLastDateMediator(lastDate, date)
@@ -143,7 +144,7 @@ class MemoryUpdateViewModel(
 
     private fun updateLastDateMediator(
         lastDate: MediatorLiveData<LocalDate?>,
-        date: MediatorLiveData<LocalDate?>
+        date: MediatorLiveData<LocalDate?>,
     ) {
         with(lastDate) {
             addSource(date) { updatedDate ->

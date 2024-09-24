@@ -25,7 +25,6 @@ import com.on.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @BindingAdapter(
     value = ["coilImageUrl", "coilPlaceHolder"],
@@ -364,16 +363,17 @@ fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDate>?) {
 
 @BindingAdapter("visitedAt")
 fun TextView.combineVisitedAt(visitedAt: LocalDateTime?) {
-    text = if (visitedAt != null) {
-        format(
-            resources.getString(R.string.visit_history),
-            visitedAt.year,
-            visitedAt.monthValue,
-            visitedAt.dayOfMonth,
-        )
-    } else {
-        ""
-    }
+    text =
+        if (visitedAt != null) {
+            format(
+                resources.getString(R.string.visit_history),
+                visitedAt.year,
+                visitedAt.monthValue,
+                visitedAt.dayOfMonth,
+            )
+        } else {
+            ""
+        }
 }
 
 @BindingAdapter(
@@ -384,21 +384,22 @@ fun TextView.convertLocalDateToDatePeriodString(
     endAt: LocalDate?,
 ) {
     val periodFormatString = resources.getString(R.string.memory_period)
-    text = if (startAt != null && endAt != null) {
-        visibility = View.VISIBLE
-        format(
-            periodFormatString,
-            startAt.year,
-            startAt.monthValue,
-            startAt.dayOfMonth,
-            endAt.year,
-            endAt.monthValue,
-            endAt.dayOfMonth,
-        )
-    } else {
-        visibility = View.INVISIBLE
-        null
-    }
+    text =
+        if (startAt != null && endAt != null) {
+            visibility = View.VISIBLE
+            format(
+                periodFormatString,
+                startAt.year,
+                startAt.monthValue,
+                startAt.dayOfMonth,
+                endAt.year,
+                endAt.monthValue,
+                endAt.dayOfMonth,
+            )
+        } else {
+            visibility = View.INVISIBLE
+            null
+        }
 }
 
 @BindingAdapter("setAttachedPhotoVisibility")
