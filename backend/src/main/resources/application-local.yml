@@ -11,8 +11,18 @@ spring:
     console:
       enabled: true
   datasource:
-    url: jdbc:h2:mem:staccato
+    writer:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: staccato
+      password: 1234
+      url: jdbc:mysql://localhost:3307/staccato?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    reader:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: staccato
+      password: 1234
+      url: jdbc:mysql://localhost:3305/staccato?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
   jpa:
+    database: MYSQL
     show-sql: true
     properties:
       hibernate:
@@ -20,6 +30,7 @@ spring:
         create_empty_composites.enabled: true
     hibernate:
       ddl-auto: create
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
   servlet:
     multipart:
