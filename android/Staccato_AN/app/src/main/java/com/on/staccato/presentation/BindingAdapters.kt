@@ -196,7 +196,6 @@ fun Button.setMemorySaveButtonActive(
     endDate: LocalDate?,
     isPhotoPosting: Boolean?,
 ) {
-    // Todo: 날짜 범위가 있거나(둘다 null X) 없을 때(둘다 null) 조건 추가
     val areBothNullOrNotNull = (startDate == null) == (endDate == null)
     isEnabled =
         if (title.isNullOrBlank() || isPhotoPosting == true || !areBothNullOrNotNull) {
@@ -218,7 +217,6 @@ fun Button.setMemorySaveButtonActive(
     photoUri: Uri?,
     photoUrl: String?,
 ) {
-    // Todo: 날짜 범위가 있거나(둘다 null X) 없을 때(둘다 null) 조건 추가
     val areBothNullOrNotNull = (startDate == null) == (endDate == null)
     isEnabled =
         if (title.isNullOrBlank() || (photoUri != null && photoUrl == null) || !areBothNullOrNotNull) {
@@ -366,16 +364,15 @@ fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDate>?) {
 
 @BindingAdapter("visitedAt")
 fun TextView.combineVisitedAt(visitedAt: LocalDateTime?) {
-    if (visitedAt != null) {
-        text =
-            format(
-                resources.getString(R.string.visit_history),
-                visitedAt.year,
-                visitedAt.monthValue,
-                visitedAt.dayOfMonth,
-            )
+    text = if (visitedAt != null) {
+        format(
+            resources.getString(R.string.visit_history),
+            visitedAt.year,
+            visitedAt.monthValue,
+            visitedAt.dayOfMonth,
+        )
     } else {
-        text = ""
+        ""
     }
 }
 
@@ -383,24 +380,25 @@ fun TextView.combineVisitedAt(visitedAt: LocalDateTime?) {
     value = ["startAt", "endAt"],
 )
 fun TextView.convertLocalDateToDatePeriodString(
-    startAt: LocalDate,
-    endAt: LocalDate,
+    startAt: LocalDate?,
+    endAt: LocalDate?,
 ) {
-    val fullFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-    val monthFormatter = DateTimeFormatter.ofPattern("MM.dd")
-    val dayFormatter = DateTimeFormatter.ofPattern("dd")
-
-    val datePeriod =
-        if (startAt.year != endAt.year) {
-            "${startAt.format(fullFormatter)} - ${endAt.format(fullFormatter)}"
-        } else if (startAt.monthValue != endAt.monthValue) {
-            "${startAt.format(fullFormatter)} - ${endAt.format(monthFormatter)}"
-        } else if (startAt.dayOfMonth != endAt.dayOfMonth) {
-            "${startAt.format(fullFormatter)} - ${endAt.format(dayFormatter)}"
-        } else {
-            startAt.format(fullFormatter)
-        }
-    text = datePeriod
+    val periodFormatString = resources.getString(R.string.memory_period)
+    text = if (startAt != null && endAt != null) {
+        visibility = View.VISIBLE
+        format(
+            periodFormatString,
+            startAt.year,
+            startAt.monthValue,
+            startAt.dayOfMonth,
+            endAt.year,
+            endAt.monthValue,
+            endAt.dayOfMonth,
+        )
+    } else {
+        visibility = View.INVISIBLE
+        null
+    }
 }
 
 @BindingAdapter("setAttachedPhotoVisibility")
