@@ -513,7 +513,7 @@ fun View.setThumbnail(
         }
 }
 
-@BindingAdapter("periodVisibility")
-fun TextView.setPeriodVisibility(isChecked: Boolean) {
+@BindingAdapter("periodSelectionVisibility")
+fun TextView.setPeriodSelectionVisibility(isChecked: Boolean) {
     isGone = !isChecked
 }
