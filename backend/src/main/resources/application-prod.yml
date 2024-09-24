@@ -8,20 +8,28 @@ spring:
     init:
       mode: always
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    writer:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbcUrl: ${SPRING_WRITER_DATASOURCE_URL}
+      username: ${SPRING_DATASOURCE_USERNAME}
+      password: ${SPRING_DATASOURCE_PASSWORD}
+    reader:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbcUrl: ${SPRING_READER_DATASOURCE_URL}
+      username: ${SPRING_DATASOURCE_USERNAME}
+      password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     database: MYSQL
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+        create_empty_composites.enabled: true
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
+    open-in-view: false
   servlet:
     multipart:
       max-file-size: 20MB
