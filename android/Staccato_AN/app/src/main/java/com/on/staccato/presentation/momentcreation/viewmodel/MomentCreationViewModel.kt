@@ -13,8 +13,8 @@ import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
-import com.on.staccato.domain.repository.MemoryRepository
 import com.on.staccato.domain.repository.MomentRepository
+import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
@@ -28,21 +28,30 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 class MomentCreationViewModel(
-    private val memoryRepository: MemoryRepository,
+    private val timelineRepository: TimelineRepository,
     private val momentRepository: MomentRepository,
     private val imageRepository: ImageDefaultRepository,
 ) : AttachedPhotoHandler, ViewModel() {
-    val title = ObservableField<String>()
+    val staccatoTitle = ObservableField<String>()
+
+    private val _placeName = MutableLiveData<String?>(null)
+    val placeName: LiveData<String?> get() = _placeName
 
     private val _address = MutableLiveData<String?>(null)
     val address: LiveData<String?> get() = _address
 
     private val _currentPhotos =
-        MutableLiveData<AttachedPhotosUiModel>(AttachedPhotosUiModel(emptyList()))
+        MutableLiveData(AttachedPhotosUiModel(emptyList()))
     val currentPhotos: LiveData<AttachedPhotosUiModel> get() = _currentPhotos
 
     private val _pendingPhotos = MutableSingleLiveData<List<AttachedPhotoUiModel>>()
     val pendingPhotos: SingleLiveData<List<AttachedPhotoUiModel>> get() = _pendingPhotos
+
+    private val _latitude = MutableLiveData<Double?>()
+    private val latitude: LiveData<Double?> get() = _latitude
+
+    private val _longitude = MutableLiveData<Double?>()
+    private val longitude: LiveData<Double?> get() = _longitude
 
     private val _selectedMemory = MutableLiveData<MemoryCandidate>()
     val selectedMemory: LiveData<MemoryCandidate> get() = _selectedMemory
@@ -50,17 +59,11 @@ class MomentCreationViewModel(
     private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
     val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
 
-    private val _latitude = MutableLiveData<Double>()
-    private val latitude: LiveData<Double> get() = _latitude
+    private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>(LocalDateTime.now())
+    val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
 
-    private val _longitude = MutableLiveData<Double>()
-    private val longitude: LiveData<Double> get() = _longitude
-
-    private val _nowDateTime = MutableLiveData<LocalDateTime>(LocalDateTime.now())
-    val nowDateTime: LiveData<LocalDateTime> get() = _nowDateTime
-
-    private val _createdMomentId = MutableSingleLiveData<Long>()
-    val createdMomentId: SingleLiveData<Long> get() = _createdMomentId
+    private val _createdStaccatoId = MutableSingleLiveData<Long>()
+    val createdStaccatoId: SingleLiveData<Long> get() = _createdStaccatoId
 
     private val _errorMessage = MutableSingleLiveData<String>()
     val errorMessage: SingleLiveData<String> get() = _errorMessage
@@ -99,22 +102,43 @@ class MomentCreationViewModel(
             )
     }
 
-    fun fetchMemoriesWithDate(localDateTime: LocalDateTime) {
+    fun selectNewPlace(
+        placeId: String,
+        name: String,
+        address: String,
+        longitude: Double,
+        latitude: Double,
+    ) {
+        _placeName.value = name
+        _address.value = address
+        _longitude.value = longitude
+        _latitude.value = latitude
+    }
+
+    fun clearPlace() {
+        _placeName.value = null
+        _address.value = null
+        _longitude.value = null
+        _latitude.value = null
+    }
+
+    fun setPlaceByCurrentAddress(
+        address: String?,
+        location: Location,
+    ) {
+        _placeName.postValue(address)
+        _address.postValue(address)
+        _latitude.postValue(location.latitude)
+        _longitude.postValue(location.longitude)
+    }
+
+    fun fetchMemoriesWithDate() {
         viewModelScope.launch {
-            memoryRepository.getMemories(localDateTime.toLocalDate().toString())
+            timelineRepository.getMemoryCandidates()
                 .onSuccess { memoryCandidates ->
                     _memoryCandidates.value = memoryCandidates
                 }
         }
-    }
-
-    fun setLocationInformation(
-        address: String?,
-        location: Location,
-    ) {
-        _address.postValue(address)
-        _latitude.postValue(location.latitude)
-        _longitude.postValue(location.longitude)
     }
 
     fun updateSelectedImageUris(newUris: Array<Uri>) {
@@ -136,6 +160,30 @@ class MomentCreationViewModel(
             photoJobs[photo.uri.toString()] = job
         }
     }
+
+    fun updateSelectedVisitedAt(newSelectedVisitedAt: LocalDateTime?) {
+        _selectedVisitedAt.value = newSelectedVisitedAt
+    }
+
+    fun createMoment() =
+        viewModelScope.launch {
+            _isPosting.value = true
+            momentRepository.createMoment(
+                memoryId = selectedMemory.value!!.memoryId,
+                staccatoTitle = staccatoTitle.get() ?: return@launch,
+                placeName = placeName.value ?: return@launch,
+                latitude = latitude.value ?: return@launch,
+                longitude = longitude.value ?: return@launch,
+                address = address.value ?: return@launch,
+                visitedAt = selectedVisitedAt.value ?: return@launch,
+                momentImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
+            ).onSuccess { response ->
+                _createdStaccatoId.postValue(response.momentId)
+            }.onFailure {
+                _isPosting.value = false
+                _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")
+            }
+        }
 
     private fun createPhotoUploadJob(
         context: Context,
@@ -164,25 +212,6 @@ class MomentCreationViewModel(
         val updatedPhoto = targetPhoto.updateUrl(url)
         _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
     }
-
-    fun createMoment() =
-        viewModelScope.launch {
-            _isPosting.value = true
-            momentRepository.createMoment(
-                memoryId = selectedMemory.value!!.memoryId,
-                placeName = title.get() ?: "",
-                latitude = latitude.value ?: return@launch,
-                longitude = longitude.value ?: return@launch,
-                address = address.value ?: "",
-                visitedAt = nowDateTime.value ?: LocalDateTime.now(),
-                momentImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
-            ).onSuccess { response ->
-                _createdMomentId.postValue(response.momentId)
-            }.onFailure {
-                _isPosting.value = false
-                _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")
-            }
-        }
 
     companion object {
         const val MAX_PHOTO_NUMBER = 5

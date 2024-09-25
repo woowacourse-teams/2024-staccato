@@ -43,7 +43,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     sharedViewModel.setTimelineHasUpdated()
-                    showToast(getString(R.string.main_memory_creation_success))
                     val createdMemoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
                     val bundle = bundleOf(MEMORY_ID_KEY to createdMemoryId)
                     navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
@@ -56,7 +55,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     sharedViewModel.setTimelineHasUpdated()
-                    showToast(getString(R.string.main_memory_update_success))
                     val updatedMemoryId = it.getLongExtra(MEMORY_ID_KEY, 0L)
                     val bundle = bundleOf(MEMORY_ID_KEY to updatedMemoryId)
                     navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
@@ -68,7 +66,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    showToast(getString(R.string.main_moment_creation_success))
                     val createdVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
                     val bundle =
                         bundleOf(
@@ -83,7 +80,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), MainHandler {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    showToast(getString(R.string.main_moment_update_success))
                     val updatedVisitId = it.getLongExtra(MOMENT_ID_KEY, 0L)
                     val bundle =
                         bundleOf(

@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MomentCreationRequest(
+    @SerialName("staccatoTitle") val staccatoTitle: String,
     @SerialName("memoryId") val memoryId: Long,
     @SerialName("placeName") val placeName: String,
     @SerialName("latitude") val latitude: Double,

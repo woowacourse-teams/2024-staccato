@@ -247,25 +247,6 @@ fun Button.setStaccatoCreationButtonActive(
         }
 }
 
-@BindingAdapter(
-    value = ["staccatoTitle", "address", "visitedAt", "photos"],
-)
-fun Button.setStaccatoUpdateButtonActive(
-    title: String?,
-    address: String?,
-    visitedAt: LocalDateTime?,
-    photos: AttachedPhotosUiModel?,
-) {
-    isEnabled =
-        if (title.isNullOrBlank() || address == null || visitedAt == null || photos?.isLoading() == true) {
-            setTextColor(resources.getColor(R.color.gray4, null))
-            false
-        } else {
-            setTextColor(resources.getColor(R.color.white, null))
-            true
-        }
-}
-
 @BindingAdapter(value = ["setSelectedMemory", "setMemoryCandidates"])
 fun TextView.setSelectedMemory(
     selectedMemory: MemoryCandidate?,
@@ -288,23 +269,6 @@ fun TextView.setSelectedMemory(
 }
 
 @BindingAdapter(
-    value = ["selectedMemory", "visitedAt"],
-)
-fun Button.setVisitUpdateButtonActive(
-    memory: MemoryCandidate?,
-    visitedAt: LocalDate?,
-) {
-    isEnabled =
-        if (memory == null || visitedAt == null) {
-            setTextColor(resources.getColor(R.color.gray4, null))
-            false
-        } else {
-            setTextColor(resources.getColor(R.color.white, null))
-            true
-        }
-}
-
-@BindingAdapter(
     value = ["startDate", "endDate"],
 )
 fun TextView.setMemoryPeriod(
@@ -323,7 +287,19 @@ fun TextView.setMemoryPeriod(
 }
 
 @BindingAdapter("visitedAtConfirmButtonActive")
-fun Button.setVisitedAtConfirmButtonActive(items: List<LocalDate>?) {
+fun Button.setVisitedAtConfirmButtonActive(items: List<LocalDateTime>?) {
+    isEnabled =
+        if (items.isNullOrEmpty()) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
+@BindingAdapter("memoryVisitedAtConfirmButtonActive")
+fun Button.setMemoryVisitedAtConfirmButtonActive(items: List<LocalDate>?) {
     isEnabled =
         if (items.isNullOrEmpty()) {
             setTextColor(resources.getColor(R.color.gray4, null))
@@ -336,7 +312,39 @@ fun Button.setVisitedAtConfirmButtonActive(items: List<LocalDate>?) {
 
 @BindingAdapter("setDateTimeWithAmPm")
 fun TextView.setDateTimeWithAmPm(setNowDateTime: LocalDateTime?) {
-    text = setNowDateTime?.let {
+    text = setNowDateTime?.let(::getFormattedLocalDateTime) ?: ""
+}
+
+@BindingAdapter("visitedAtNumberPickerItems")
+fun NumberPicker.setVisitedAtNumberPickerItems(items: List<LocalDateTime>?) {
+    items?.map { it.toLocalDate() }
+    if (items.isNullOrEmpty()) {
+        isGone = true
+    } else {
+        displayedValues = items.map(::getFormattedLocalDateTime).toTypedArray()
+    }
+}
+
+@BindingAdapter("localDateNumberPickerItems")
+fun NumberPicker.setLocalDateNumberPickerItems(items: List<LocalDate>?) {
+    if (items.isNullOrEmpty()) {
+        isGone = true
+    } else {
+        displayedValues = items.map(::getFormattedLocalDate).toTypedArray()
+    }
+}
+
+private fun View.getFormattedLocalDate(setNowDate: LocalDate) =
+    setNowDate.let {
+        val year = setNowDate.year
+        val month = setNowDate.monthValue
+        val day = setNowDate.dayOfMonth
+        resources.getString(R.string.all_date_kr_format)
+            .format(year, month, day)
+    }
+
+private fun View.getFormattedLocalDateTime(setNowDateTime: LocalDateTime) =
+    setNowDateTime.let {
         val year = setNowDateTime.year
         val month = setNowDateTime.monthValue
         val day = setNowDateTime.dayOfMonth
@@ -344,20 +352,15 @@ fun TextView.setDateTimeWithAmPm(setNowDateTime: LocalDateTime?) {
         val noonText = if (setNowDateTime.hour < 12) "오전" else "오후"
         resources.getString(R.string.all_date_time_am_pm_kr_format)
             .format(year, month, day, noonText, hour)
-    } ?: ""
-}
-
-@BindingAdapter("visitedAtNumberPickerItems")
-fun NumberPicker.setVisitedAtNumberPickerItems(items: List<LocalDate>?) {
-    if (items.isNullOrEmpty()) {
-        isGone = true
-    } else {
-        displayedValues = items.map { it.toString() }.toTypedArray()
     }
+
+@BindingAdapter("memoryIsEmptyVisibility")
+fun TextView.setMemoryIsEmptyVisibility(memoryCandidates: MemoryCandidates?) {
+    isGone = !memoryCandidates?.memoryCandidate.isNullOrEmpty()
 }
 
 @BindingAdapter("visitedAtIsEmptyVisibility")
-fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDate>?) {
+fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDateTime>?) {
     isGone = !items.isNullOrEmpty()
 }
 
@@ -370,6 +373,7 @@ fun TextView.combineVisitedAt(visitedAt: LocalDateTime?) {
                 visitedAt.year,
                 visitedAt.monthValue,
                 visitedAt.dayOfMonth,
+                visitedAt.hour,
             )
         } else {
             ""
@@ -383,7 +387,7 @@ fun TextView.convertLocalDateToDatePeriodString(
     startAt: LocalDate?,
     endAt: LocalDate?,
 ) {
-    val periodFormatString = resources.getString(R.string.memory_period)
+    val periodFormatString = resources.getString(R.string.memory_period_dot)
     text =
         if (startAt != null && endAt != null) {
             visibility = View.VISIBLE
@@ -439,6 +443,11 @@ fun TextView.setPhotoNumbers(
         resources.getString(R.string.all_photo_number).format(currentPhotoNumbers, maxPhotoNumbers)
 }
 
+@BindingAdapter("photoDragHintVisibility")
+fun TextView.setPhotoDragHintVisibility(currentPhotoNumbers: Int) {
+    isGone = currentPhotoNumbers < 2
+}
+
 @BindingAdapter("setSelected")
 fun ImageView.setSelectedState(selected: Boolean) {
     isSelected = selected
@@ -465,14 +474,7 @@ fun ImageView.setImageResourceWithId(
 
 @BindingAdapter("setAddress")
 fun TextView.setAddress(address: String?) {
-    text =
-        if (address == null) {
-            setTextColor(resources.getColor(R.color.gray3, null))
-            context.getString(R.string.staccato_loading_address)
-        } else {
-            setTextColor(resources.getColor(R.color.staccato_black, null))
-            address
-        }
+    text = address ?: context.getString(R.string.visit_creation_empty_address)
 }
 
 @BindingAdapter("app:enableSendButton")

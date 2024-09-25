@@ -15,6 +15,10 @@
         <variable
             name="visitUpdateHandler"
             type="com.on.staccato.presentation.visitupdate.VisitUpdateHandler" />
+
+        <variable
+            name="currentLocationHandler"
+            type="com.on.staccato.presentation.momentcreation.PlaceSearchHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,77 +50,12 @@
                 tools:context=".presentation.momentcreation.MomentCreationActivity">
 
                 <TextView
-                    android:id="@+id/tv_visit_update_place_name_title"
-                    style="@style/SubTitleStyle"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="12dp"
-                    android:text="@string/visit_creation_place_name"
-                    android:textAppearance="@style/Typography.Title2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_visit_update_required_mark_first"
-                    style="@style/RequiredMarkStyle"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_visit_update_place_name_title"
-                    app:layout_constraintStart_toEndOf="@id/tv_visit_update_place_name_title"
-                    app:layout_constraintTop_toTopOf="@id/tv_visit_update_place_name_title" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/text_input_visit_update_title"
-                    style="@style/TextInputLayoutStyle"
-                    app:counterMaxLength="30"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visit_update_place_name_title">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        style="@style/TextInputEditTextStyle.Title"
-                        android:hint="@string/visit_creation_place_name_hint"
-                        android:imeOptions="actionDone"
-                        android:maxLength="30"
-                        android:text="@={viewModel.title}" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/tv_place_address_title"
-                    style="@style/SubTitleStyle"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/visit_creation_address"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_visit_update_title" />
-
-                <TextView
-                    android:id="@+id/tv_visit_update_required_mark_second"
-                    style="@style/RequiredMarkStyle"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_place_address_title"
-                    app:layout_constraintStart_toEndOf="@id/tv_place_address_title"
-                    app:layout_constraintTop_toTopOf="@id/tv_place_address_title" />
-
-                <TextView
-                    android:id="@+id/tv_place_address"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/shape_button_gray1_5dp"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
-                    android:text="@{viewModel.visitUpdateDefault.address}"
-                    android:textAppearance="@style/Typography.Body1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_place_address_title"
-                    tools:text="장소 주소 (고정)" />
-
-                <TextView
                     android:id="@+id/tv_photo_title"
                     style="@style/SubTitleStyle"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/all_photo"
-                    app:layout_constraintStart_toStartOf="@id/tv_place_address_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_place_address" />
+                    app:layout_constraintStart_toStartOf="@id/tv_place_name_title"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_photo_title_size"
@@ -147,12 +86,138 @@
                     tools:listitem="@layout/item_attached_photo" />
 
                 <TextView
+                    android:id="@+id/tv_photo_drag_hint"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="24dp"
+                    android:text="@string/visit_creation_photo_drag_hint"
+                    android:textAppearance="@style/Typography.Body4"
+                    android:textColor="@color/gray3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_photo_attach"
+                    bind:photoDragHintVisibility="@{viewModel.currentPhotos.size}" />
+
+                <TextView
+                    android:id="@+id/tv_visit_update_place_name_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="40dp"
+                    android:text="@string/visit_creation_staccato_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
+
+                <TextView
+                    android:id="@+id/tv_visit_update_required_mark_first"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_visit_update_place_name_title" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_visit_update_title"
+                    style="@style/TextInputLayoutStyle"
+                    app:counterMaxLength="30"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_visit_update_place_name_title">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/TextInputEditTextStyle.Title"
+                        android:hint="@string/visit_creation_staccato_name_hint"
+                        android:imeOptions="actionDone"
+                        android:maxLength="30"
+                        android:text="@={viewModel.staccatoTitle}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/tv_place_name_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/visit_creation_place"
+                    android:textAppearance="@style/Typography.Title2"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_visit_update_title" />
+
+                <TextView
+                    android:id="@+id/tv_visit_creation_required_mark_second"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_place_name_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_place_name_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_place_name_title" />
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/autocomplete_fragment"
+                    android:name="com.on.staccato.presentation.common.CustomAutocompleteSupportFragment"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/shape_all_gray1_8dp"
+                    android:textAppearance="@style/Typography.Body1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_place_name_title" />
+
+                <TextView
+                    android:id="@+id/tv_place_address_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/visit_creation_address"
+                    android:textAppearance="@style/Typography.Title3"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintTop_toBottomOf="@id/autocomplete_fragment" />
+
+
+                <TextView
+                    android:id="@+id/tv_place_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/shape_all_gray1_4dp"
+                    android:paddingVertical="12dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="50dp"
+                    android:textAppearance="@style/Typography.Body1"
+                    android:textColor="@color/gray3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_place_address_title"
+                    bind:setAddress="@{viewModel.address}"
+                    tools:text="상세 주소 (고정)" />
+
+                <Button
+                    android:id="@+id/btn_current_location"
+                    style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:onClick="@{()->currentLocationHandler.onSearchClicked()}"
+                    android:paddingStart="90dp"
+                    android:text="@string/visit_creation_load_current_location"
+                    android:textAppearance="@style/Typography.Body4"
+                    android:textColor="@color/gray4"
+                    app:icon="@drawable/icon_crosshair"
+                    app:iconPadding="-60dp"
+                    app:iconTint="@color/gray3"
+                    app:layout_constraintEnd_toEndOf="@id/tv_place_address"
+                    app:layout_constraintStart_toStartOf="@id/tv_place_address"
+                    app:layout_constraintTop_toBottomOf="@id/tv_place_address"
+                    app:rippleColor="@android:color/transparent"
+                    app:strokeColor="@color/gray3" />
+
+                <TextView
                     android:id="@+id/tv_memory_selection_title"
                     style="@style/SubTitleStyle"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="35dp"
                     android:text="추억 선택"
                     app:layout_constraintStart_toStartOf="@id/tv_photo_title"
-                    app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
+                    app:layout_constraintTop_toBottomOf="@id/btn_current_location" />
 
                 <TextView
                     android:id="@+id/tv_visit_update_required_mark_third"
@@ -207,7 +272,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
-                    bind:setDateTimeWithAmPm="@{viewModel.visitUpdateDefault.visitedAt}" />
+                    bind:setDateTimeWithAmPm="@{viewModel.selectedVisitedAt}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_visit_update_done"
@@ -222,10 +287,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
-                    bind:address="@{viewModel.visitUpdateDefault.address}"
+                    bind:address="@{viewModel.address}"
                     bind:photos="@{viewModel.currentPhotos}"
-                    bind:staccatoTitle="@{viewModel.title}"
-                    bind:visitedAt="@{viewModel.visitUpdateDefault.visitedAt}" />
+                    bind:selectedMemory="@{viewModel.memory}"
+                    bind:staccatoTitle="@{viewModel.staccatoTitle}"
+                    bind:visitedAt="@{viewModel.selectedVisitedAt}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
