@@ -5,7 +5,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,13 +19,12 @@ import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
-@RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController implements MemberControllerDocs {
     private final MemberService memberService;
     private final ImageService imageService;
 
-    @PostMapping(path = "/profiles/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/mypage/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MemberProfileResponse> changeProfileImage(
             @RequestPart(value = "imageFile") MultipartFile image,
             @LoginMember Member member

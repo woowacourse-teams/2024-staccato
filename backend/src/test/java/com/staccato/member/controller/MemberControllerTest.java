@@ -55,7 +55,7 @@ class MemberControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(multipart("/members/profiles/images")
+        mockMvc.perform(multipart("/mypage/images")
                         .file(image)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.MULTIPART_FORM_DATA))
