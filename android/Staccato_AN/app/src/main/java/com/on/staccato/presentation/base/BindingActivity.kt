@@ -43,7 +43,7 @@ abstract class BindingActivity<T : ViewDataBinding> : AppCompatActivity() {
         gestureDetector.onTouchEvent(motionEvent)
         return dispatchedTouchEventResult
     }
-    
+
     private fun hideKeyboardAndClearFocus(focusedView: View) {
         inputMethodManager.hideSoftInputFromWindow(
             focusedView.windowToken,
@@ -72,7 +72,7 @@ abstract class BindingActivity<T : ViewDataBinding> : AppCompatActivity() {
 
         private fun didTouchOutsideFocusedView(
             hitRect: Rect,
-            motionEvent: MotionEvent
+            motionEvent: MotionEvent,
         ) = !hitRect.contains(motionEvent.x.toInt(), motionEvent.y.toInt())
     }
 }
