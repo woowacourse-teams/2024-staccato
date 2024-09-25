@@ -21,10 +21,15 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
+import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -52,7 +57,6 @@ import com.on.staccato.presentation.maps.MapsViewModel
 import com.on.staccato.presentation.maps.MapsViewModelFactory
 import com.on.staccato.presentation.maps.model.MarkerUiModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.on.staccato.presentation.moment.MomentFragment
 import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
 import com.on.staccato.presentation.util.showToast
@@ -110,14 +114,14 @@ class MainActivity :
 
     override fun onResume() {
         super.onResume()
-        if (this::googleMap.isInitialized) enableMyLocation()
+        if (this::googleMap.isInitialized) checkLocationSetting()
         mapsViewModel.loadStaccatos()
     }
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
         moveDefaultLocation()
-        enableMyLocation()
+        checkLocationSetting()
         onMarkerClicked(map)
     }
 
@@ -143,7 +147,7 @@ class MainActivity :
                     makeSnackBar(
                         getString(R.string.maps_location_permission_granted_message),
                     ).show()
-                    enableMyLocation()
+                    checkLocationSetting()
                 } else {
                     makeSnackBar(
                         getString(R.string.all_location_permission_denial),
@@ -157,13 +161,51 @@ class MainActivity :
         map?.getMapAsync(this)
     }
 
+    private fun checkLocationSetting() {
+        val locationRequest: LocationRequest = buildLocationRequest()
+
+        val builder =
+            LocationSettingsRequest
+                .Builder()
+                .addLocationRequest(locationRequest)
+
+        val settingsClient: SettingsClient = LocationServices.getSettingsClient(this)
+        val locationSettingsResponse: Task<LocationSettingsResponse> = settingsClient.checkLocationSettings(builder.build())
+
+        succeedLocationSettings(locationSettingsResponse)
+        failLocationSettings(locationSettingsResponse)
+    }
+
+    private fun succeedLocationSettings(locationSettingsResponse: Task<LocationSettingsResponse>) {
+        locationSettingsResponse.addOnSuccessListener {
+            enableMyLocation()
+        }
+    }
+
+    private fun failLocationSettings(locationSettingsResponse: Task<LocationSettingsResponse>) {
+        locationSettingsResponse.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException) {
+                exception.startResolutionForResult(
+                    this,
+                    REQUEST_CODE_LOCATION,
+                )
+            }
+        }
+    }
+
+    private fun buildLocationRequest(): LocationRequest =
+        LocationRequest.Builder(PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS).apply {
+            setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
+            setWaitForAccurateLocation(true)
+        }.build()
+
     private fun enableMyLocation() {
         when {
             checkSelfLocationPermission() -> {
                 googleMap.isMyLocationEnabled = true
                 val currentLocation: Task<Location> =
                     fusedLocationProviderClient.getCurrentLocation(
-                        LocationRequest.PRIORITY_HIGH_ACCURACY,
+                        PRIORITY_HIGH_ACCURACY,
                         null,
                     )
                 mapsViewModel.setCurrentLocation(currentLocation)
@@ -479,9 +521,11 @@ class MainActivity :
     }
 
     companion object {
-        const val DEFAULT_MAP_PADDING = 0
-        const val DEFAULT_ZOOM = 15f
-        const val SEOUL_STATION_LATITUDE = 37.554677038139815
-        const val SEOUL_STATION_LONGITUDE = 126.97061201084968
+        private const val INTERVAL_MILLIS = 10000L
+        private const val REQUEST_CODE_LOCATION = 100
+        private const val DEFAULT_MAP_PADDING = 0
+        private const val DEFAULT_ZOOM = 15f
+        private const val SEOUL_STATION_LATITUDE = 37.554677038139815
+        private const val SEOUL_STATION_LONGITUDE = 126.97061201084968
     }
 }
