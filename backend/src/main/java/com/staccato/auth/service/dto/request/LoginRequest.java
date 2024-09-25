@@ -23,8 +23,6 @@ public record LoginRequest(
     }
 
     public Member toMember() {
-        return Member.builder()
-                .nickname(nickname)
-                .build();
+        return Member.create(nickname);
     }
 }

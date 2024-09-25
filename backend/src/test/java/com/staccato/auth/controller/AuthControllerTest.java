@@ -1,5 +1,6 @@
 package com.staccato.auth.controller;
 
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -101,5 +102,25 @@ class AuthControllerTest {
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("고유 코드로 사용자를 조회해서 토큰을 발급하는 응답을 직렬화한다.")
+    @Test
+    void findMemberByCodeAndCreateToken() throws Exception {
+        // given
+        String code = UUID.randomUUID().toString();
+        LoginResponse loginResponse = new LoginResponse("token");
+        when(authService.loginByCode(any(String.class))).thenReturn(loginResponse);
+        String response = """
+                {
+                    "token" : "token"
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(post("/members")
+                        .param("code", code))
+                .andExpect(status().isOk())
+                .andExpect(content().json(response));
     }
 }

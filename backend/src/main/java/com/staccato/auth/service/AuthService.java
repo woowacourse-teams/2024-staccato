@@ -49,10 +49,7 @@ public class AuthService {
 
     private Member createMember(LoginRequest loginRequest) {
         Member member = loginRequest.toMember();
-        //validateNickname(member.getNickname());
-        if (memberRepository.existsByNickname(member.getNickname())) {
-            return memberRepository.findByNickname(member.getNickname());
-        }
+        validateNickname(member.getNickname());
         return memberRepository.save(member);
     }
 
@@ -67,5 +64,16 @@ public class AuthService {
                 .orElseThrow(UnauthorizedException::new);
         log.info(LogForm.LOGIN_MEMBER_FORM, member.getId(), member.getNickname().getNickname());
         return member;
+    }
+
+    public LoginResponse loginByCode(String code) {
+        Member member = getMemberByCode(code);
+        String token = tokenProvider.create(member);
+        return new LoginResponse(token);
+    }
+
+    private Member getMemberByCode(String code) {
+        return memberRepository.findByCode(code)
+                .orElseThrow(() -> new StaccatoException("유효하지 않은 코드입니다. 올바른 코드인지 확인해주세요."));
     }
 }

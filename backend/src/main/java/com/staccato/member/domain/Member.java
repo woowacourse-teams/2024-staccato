@@ -1,5 +1,7 @@
 package com.staccato.member.domain;
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -35,12 +37,22 @@ public class Member extends BaseEntity {
     private Nickname nickname;
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
+    @Column(columnDefinition = "VARCHAR(36)", nullable = false, unique = true)
+    private String code;
     private Boolean isDeleted = false;
 
     @Builder
-    public Member(@NonNull String nickname, String imageUrl) {
+    public Member(@NonNull String nickname, String imageUrl, String code) {
         this.nickname = new Nickname(nickname);
         this.imageUrl = imageUrl;
+        this.code = code;
+    }
+
+    public static Member create(String nickname) {
+        return Member.builder()
+                .nickname(nickname)
+                .code(UUID.randomUUID().toString())
+                .build();
     }
 
     public void updateImage(String imageUrl) {
