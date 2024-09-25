@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
-import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.member.domain.Member;
@@ -30,7 +29,7 @@ class MemberServiceTest extends ServiceSliceTest {
         String imageUrl = "image.jpg";
 
         // when
-        MemberProfileResponse memberProfileResponse = memberService.changeProfileImage(member, member.getId(), imageUrl);
+        MemberProfileResponse memberProfileResponse = memberService.changeProfileImage(member, imageUrl);
 
         // then
         Member result = memberRepository.findById(member.getId()).get();
@@ -44,27 +43,13 @@ class MemberServiceTest extends ServiceSliceTest {
     @Test
     void cannotChangeUnknownProfileImage() {
         // given
-        long unknownId = 0;
         Member member = memberRepository.save(MemberFixture.create("staccato"));
+        memberRepository.delete(member);
         String imageUrl = "image.jpg";
 
         // when
-        assertThatThrownBy(() -> memberService.changeProfileImage(member, unknownId, imageUrl))
+        assertThatThrownBy(() -> memberService.changeProfileImage(member, imageUrl))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 사용자 정보를 찾을 수 없어요.");
-    }
-
-    @DisplayName("사용자가 다른 사용자의 프로필을 변경할 수 없다.")
-    @Test
-    void cannotChangeOtherProfileImage() {
-        // given
-        Member member = memberRepository.save(MemberFixture.create("staccato"));
-        Member otherMember = memberRepository.save(MemberFixture.create("other"));
-        String imageUrl = "image.jpg";
-
-        // when
-        assertThatThrownBy(() -> memberService.changeProfileImage(member, otherMember.getId(), imageUrl))
-                .isInstanceOf(ForbiddenException.class)
-                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 }
