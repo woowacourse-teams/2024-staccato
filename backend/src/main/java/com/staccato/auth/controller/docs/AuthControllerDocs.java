@@ -1,13 +1,15 @@
-package com.staccato.auth.controller;
+package com.staccato.auth.controller.docs;
 
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,4 +33,11 @@ public interface AuthControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<LoginResponse> login(@Valid LoginRequest loginRequest);
+
+    @Operation(summary = "고유 코드로 이전 기록 불러오기", description = "사용자에게 발급된 고유 코드로 사용자를 조회하여 토큰을 발급합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "고유 코드로 사용자 조회 및 토큰 발급 성공", responseCode = "200"),
+            @ApiResponse(description = "유효하지 않은 고유 코드일 때", responseCode = "400")
+    })
+    ResponseEntity<LoginResponse> loginByCode(@Parameter(description = "사용자에게 발급된 고유 코드") @RequestParam(name = "code") String code);
 }
