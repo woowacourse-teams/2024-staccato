@@ -169,19 +169,41 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_memory_creation_description" />
 
-                <TextView
-                    android:id="@+id/tv_memory_creation_required_mark_second"
-                    style="@style/RequiredMarkStyle"
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switch_memory_creation_period_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@android:color/transparent"
+                    android:checked="@={viewModel.isPeriodSet}"
+                    android:thumb="@drawable/shape_switch_thumb_oval"
                     app:layout_constraintBottom_toBottomOf="@id/tv_memory_creation_period_title"
-                    app:layout_constraintStart_toEndOf="@id/tv_memory_creation_period_title"
-                    app:layout_constraintTop_toTopOf="@id/tv_memory_creation_period_title" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_memory_creation_period_title"
+                    app:switchMinWidth="48dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/shape_switch_track_50dp"
+                    app:trackTint="@drawable/selector_switch_track_colors"
+                    app:trackTintMode="src_in" />
 
                 <TextView
                     android:id="@+id/tv_memory_creation_period_description"
+                    style="@style/Typography.Body4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/memory_creation_period_descripton"
+                    android:textColor="@color/gray3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_title" />
+
+                <TextView
+                    android:id="@+id/tv_memory_creation_period_selection"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:background="@drawable/shape_all_gray1_8dp"
                     android:clickable="true"
                     android:focusable="true"
@@ -189,11 +211,11 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
-                    android:textColor="@color/gray3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_description"
                     bind:endDate="@{viewModel.endDate}"
+                    bind:periodSelectionVisibility="@{viewModel.isPeriodSet}"
                     bind:startDate="@{viewModel.startDate}" />
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -205,7 +227,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_description"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_selection"
                     bind:endDate="@{viewModel.endDate}"
                     bind:isPhotoPosting="@{viewModel.isPhotoPosting}"
                     bind:memoryTitle="@{viewModel.title}"

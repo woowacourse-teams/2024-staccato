@@ -25,7 +25,6 @@ import com.on.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @BindingAdapter(
     value = ["coilImageUrl", "coilPlaceHolder"],
@@ -196,8 +195,9 @@ fun Button.setMemorySaveButtonActive(
     endDate: LocalDate?,
     isPhotoPosting: Boolean?,
 ) {
+    val areBothNullOrNotNull = (startDate == null) == (endDate == null)
     isEnabled =
-        if (title.isNullOrBlank() || startDate == null || endDate == null || isPhotoPosting == true) {
+        if (title.isNullOrBlank() || isPhotoPosting == true || !areBothNullOrNotNull) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -216,8 +216,9 @@ fun Button.setMemorySaveButtonActive(
     photoUri: Uri?,
     photoUrl: String?,
 ) {
+    val areBothNullOrNotNull = (startDate == null) == (endDate == null)
     isEnabled =
-        if (title.isNullOrBlank() || startDate == null || endDate == null || (photoUri != null && photoUrl == null)) {
+        if (title.isNullOrBlank() || (photoUri != null && photoUrl == null) || !areBothNullOrNotNull) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -312,9 +313,10 @@ fun TextView.setMemoryPeriod(
 ) {
     if (startDate == null || endDate == null) {
         text = resources.getString(R.string.memory_creation_period_hint)
+        setTextColor(resources.getColor(R.color.gray3, null))
     } else {
         text =
-            resources.getString(R.string.memory_creation_period_description)
+            resources.getString(R.string.memory_creation_period_selected)
                 .format(startDate, endDate)
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
@@ -361,41 +363,43 @@ fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDate>?) {
 
 @BindingAdapter("visitedAt")
 fun TextView.combineVisitedAt(visitedAt: LocalDateTime?) {
-    if (visitedAt != null) {
-        text =
+    text =
+        if (visitedAt != null) {
             format(
                 resources.getString(R.string.visit_history),
                 visitedAt.year,
                 visitedAt.monthValue,
                 visitedAt.dayOfMonth,
             )
-    } else {
-        text = ""
-    }
+        } else {
+            ""
+        }
 }
 
 @BindingAdapter(
     value = ["startAt", "endAt"],
 )
 fun TextView.convertLocalDateToDatePeriodString(
-    startAt: LocalDate,
-    endAt: LocalDate,
+    startAt: LocalDate?,
+    endAt: LocalDate?,
 ) {
-    val fullFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-    val monthFormatter = DateTimeFormatter.ofPattern("MM.dd")
-    val dayFormatter = DateTimeFormatter.ofPattern("dd")
-
-    val datePeriod =
-        if (startAt.year != endAt.year) {
-            "${startAt.format(fullFormatter)} - ${endAt.format(fullFormatter)}"
-        } else if (startAt.monthValue != endAt.monthValue) {
-            "${startAt.format(fullFormatter)} - ${endAt.format(monthFormatter)}"
-        } else if (startAt.dayOfMonth != endAt.dayOfMonth) {
-            "${startAt.format(fullFormatter)} - ${endAt.format(dayFormatter)}"
+    val periodFormatString = resources.getString(R.string.memory_period)
+    text =
+        if (startAt != null && endAt != null) {
+            visibility = View.VISIBLE
+            format(
+                periodFormatString,
+                startAt.year,
+                startAt.monthValue,
+                startAt.dayOfMonth,
+                endAt.year,
+                endAt.monthValue,
+                endAt.dayOfMonth,
+            )
         } else {
-            startAt.format(fullFormatter)
+            visibility = View.INVISIBLE
+            null
         }
-    text = datePeriod
 }
 
 @BindingAdapter("setAttachedPhotoVisibility")
@@ -506,4 +510,9 @@ fun View.setThumbnail(
         } else {
             View.GONE
         }
+}
+
+@BindingAdapter("periodSelectionVisibility")
+fun TextView.setPeriodSelectionVisibility(isChecked: Boolean) {
+    isGone = !isChecked
 }
