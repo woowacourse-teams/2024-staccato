@@ -30,6 +30,9 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
@@ -37,11 +40,18 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EX
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
+import com.on.staccato.data.StaccatoClient
+import com.on.staccato.data.moment.MomentDefaultRepository
+import com.on.staccato.data.moment.MomentRemoteDataSource
 import com.on.staccato.databinding.ActivityMainBinding
+import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.maps.MapsFragment
 import com.on.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_NEW_STATE
 import com.on.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_STATE_REQUEST_KEY
+import com.on.staccato.presentation.maps.MapsViewModel
+import com.on.staccato.presentation.maps.MapsViewModelFactory
+import com.on.staccato.presentation.maps.model.MarkerUiModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
@@ -54,7 +64,7 @@ class MainActivity :
     override val layoutResourceId: Int
         get() = R.layout.activity_main
 
-    private lateinit var map: GoogleMap
+    private lateinit var googleMap: GoogleMap
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
@@ -66,6 +76,14 @@ class MainActivity :
             ACCESS_COARSE_LOCATION,
         )
     private val sharedViewModel: SharedViewModel by viewModels()
+    private val mapsViewModel: MapsViewModel by viewModels {
+        MapsViewModelFactory(
+            MomentDefaultRepository(
+                MomentRemoteDataSource(StaccatoClient.momentApiService),
+            ),
+        )
+    }
+
     private val inputManager: InputMethodManager by lazy {
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
     }
@@ -80,6 +98,7 @@ class MainActivity :
         binding.handler = this
         setupGoogleMap()
         setupFusedLocationProviderClient()
+        observeMomentLocations()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
@@ -88,11 +107,12 @@ class MainActivity :
 
     override fun onResume() {
         super.onResume()
-        if (this::map.isInitialized) enableMyLocation()
+        if (this::googleMap.isInitialized) enableMyLocation()
+        mapsViewModel.loadStaccatos()
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
+    override fun onMapReady(map: GoogleMap) {
+        googleMap = map
         enableMyLocation()
     }
 
@@ -134,15 +154,13 @@ class MainActivity :
     private fun enableMyLocation() {
         when {
             checkSelfLocationPermission() -> {
-                map.isMyLocationEnabled = true
-                val currentLocation =
+                googleMap.isMyLocationEnabled = true
+                val currentLocation: Task<Location> =
                     fusedLocationProviderClient.getCurrentLocation(
                         LocationRequest.PRIORITY_HIGH_ACCURACY,
                         null,
                     )
-                currentLocation.addOnSuccessListener { location ->
-                    moveCamera(map, location)
-                }
+                moveCurrentLocation(currentLocation)
             }
             shouldShowRequestLocationPermissionsRationale() -> {
                 sharedViewModel.isLocationDenial.observe(this) { isCancel ->
@@ -157,10 +175,13 @@ class MainActivity :
         }
     }
 
-    private fun moveCamera(
-        googleMap: GoogleMap,
-        location: Location?,
-    ) {
+    private fun moveCurrentLocation(currentLocation: Task<Location>) {
+        currentLocation.addOnSuccessListener { location ->
+            moveCamera(location)
+        }
+    }
+
+    private fun moveCamera(location: Location?) {
         if (location != null) {
             val currentLocation = LatLng(location.latitude, location.longitude)
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
@@ -220,6 +241,25 @@ class MainActivity :
         val uri = Uri.fromParts(MapsFragment.PACKAGE_SCHEME, this.packageName, null)
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri)
         startActivity(intent)
+    }
+
+    private fun observeMomentLocations() {
+        mapsViewModel.momentLocations.observe(this) { momentLocations ->
+            if (this::googleMap.isInitialized) googleMap.clear()
+            addMarkers(momentLocations)
+        }
+    }
+
+    private fun addMarkers(momentLocations: List<MomentLocation>) {
+        val markers: MutableList<MarkerUiModel> = mutableListOf()
+        momentLocations.forEach { momentLocation ->
+            val latLng = LatLng(momentLocation.latitude, momentLocation.longitude)
+            val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
+            val marker: Marker = googleMap.addMarker(markerOptions) ?: return
+            val markerId: String = marker.id
+            markers.add(MarkerUiModel(momentLocation.momentId, markerId))
+        }
+        mapsViewModel.setMarkers(markers)
     }
 
     private fun makeSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
@@ -384,9 +424,5 @@ class MainActivity :
             view.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS,
         )
-    }
-
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 }
