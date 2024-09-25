@@ -27,7 +27,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:coilCircleImageUrl="@{othersComment.memberImageUrl}"
-            bind:coilPlaceHolder="@{@drawable/shape_place_holder_rectangle}" />
+            bind:coilPlaceHolder="@{@drawable/shape_place_holder_oval}" />
 
         <TextView
             android:id="@+id/tv_moment_others_comment_name"
