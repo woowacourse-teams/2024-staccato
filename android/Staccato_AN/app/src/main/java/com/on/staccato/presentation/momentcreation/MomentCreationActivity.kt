@@ -368,8 +368,7 @@ class MomentCreationActivity :
         }
     }
 
-    private fun makeSnackBar(message: String): Snackbar =
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+    private fun makeSnackBar(message: String): Snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
 
     companion object {
         const val MEMORY_TITLE_KEY = "memoryTitle"
