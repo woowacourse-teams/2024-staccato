@@ -9,8 +9,8 @@ import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;
 
 public class MomentFixture {
-    private static final BigDecimal latitude = new BigDecimal("37.7749");
-    private static final BigDecimal longitude = new BigDecimal("-122.4194");
+    private static final BigDecimal latitude = new BigDecimal("37.77490000000000");
+    private static final BigDecimal longitude = new BigDecimal("-122.41940000000000");
 
     public static Moment create(Memory memory) {
         return Moment.builder()

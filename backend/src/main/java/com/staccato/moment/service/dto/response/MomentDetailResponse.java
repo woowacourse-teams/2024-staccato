@@ -1,5 +1,6 @@
 package com.staccato.moment.service.dto.response;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,6 +31,10 @@ public record MomentDetailResponse(
         String placeName,
         @Schema(example = "서울 용산구 남산공원길 105")
         String address,
+        @Schema(example = "51.51978412729915")
+        BigDecimal latitude,
+        @Schema(example = "-0.12712788587027796")
+        BigDecimal longitude,
         List<CommentResponse> comments
 ) {
     public MomentDetailResponse(Moment moment) {
@@ -43,6 +48,8 @@ public record MomentDetailResponse(
                 moment.getFeeling().getValue(),
                 moment.getSpot().getPlaceName(),
                 moment.getSpot().getAddress(),
+                moment.getSpot().getLatitude(),
+                moment.getSpot().getLongitude(),
                 moment.getComments().stream().map(CommentResponse::new).toList()
         );
     }
