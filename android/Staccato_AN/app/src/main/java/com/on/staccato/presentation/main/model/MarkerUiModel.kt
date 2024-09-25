@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.maps.model
+package com.on.staccato.presentation.main.model
 
 data class MarkerUiModel(
     val staccatoId: Long,
