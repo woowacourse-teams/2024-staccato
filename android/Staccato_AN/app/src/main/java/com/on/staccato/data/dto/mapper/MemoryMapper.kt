@@ -37,8 +37,8 @@ fun MemoriesResponse.toDomain(): MemoryCandidates =
 fun MemoryMomentDto.toDomain() =
     MemoryMoment(
         momentId = momentId,
-        placeName = placeName,
-        momentImageUrl = momentImageUrl,
+        momentTitle = staccatoTitle,
+        momentImageUrl = staccatoImageUrl,
         visitedAt = LocalDateTime.parse(visitedAt),
     )
 
