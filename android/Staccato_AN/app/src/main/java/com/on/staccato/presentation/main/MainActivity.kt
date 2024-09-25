@@ -93,10 +93,10 @@ class MainActivity :
     }
     private val requestPermissionLauncher = initRequestPermissionsLauncher()
 
-    val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult(messageId = R.string.main_memory_creation_success)
-    val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult(messageId = R.string.main_memory_update_success)
-    val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult(messageId = R.string.main_moment_creation_success)
-    val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult(messageId = R.string.main_moment_update_success)
+    val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
+    val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
+    val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
+    val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
 
     override fun initStartView(savedInstanceState: Bundle?) {
         binding.handler = this
@@ -385,23 +385,21 @@ class MainActivity :
         navController = navHostFragment.navController
     }
 
-    private fun handleMemoryResult(messageId: Int) =
+    private fun handleMemoryResult() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     sharedViewModel.setTimelineHasUpdated()
-                    showToast(getString(messageId))
                     val bundle: Bundle = makeBundle(it, MEMORY_ID_KEY)
                     navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
                 }
             }
         }
 
-    private fun handleStaccatoResult(messageId: Int) =
+    private fun handleStaccatoResult() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    showToast(getString(messageId))
                     val bundle: Bundle = makeBundle(it, MOMENT_ID_KEY)
                     navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
                 }

@@ -41,7 +41,11 @@ class MemoryViewModel(private val memoryRepository: MemoryRepository) : ViewMode
     fun isInPeriod(): Boolean {
         return memory.value?.let { memory ->
             val nowDate = LocalDate.now()
-            memory.startAt <= nowDate && nowDate <= memory.endAt
+            when {
+                memory.startAt != null && memory.endAt != null -> memory.startAt <= nowDate && nowDate <= memory.endAt
+                memory.startAt == null && memory.endAt == null -> true
+                else -> false
+            }
         } ?: false
     }
 

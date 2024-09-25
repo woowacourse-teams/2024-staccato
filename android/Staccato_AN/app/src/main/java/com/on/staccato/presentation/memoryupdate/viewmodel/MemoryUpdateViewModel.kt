@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,11 +42,11 @@ class MemoryUpdateViewModel(
     val title = ObservableField<String>()
     val description = ObservableField<String>()
 
-    private val _startDate = MutableLiveData<LocalDate>(null)
-    val startDate: LiveData<LocalDate> get() = _startDate
+    private val _startDate = MediatorLiveData<LocalDate?>(null)
+    val startDate: LiveData<LocalDate?> get() = _startDate
 
-    private val _endDate = MutableLiveData<LocalDate>(null)
-    val endDate: LiveData<LocalDate> get() = _endDate
+    private val _endDate = MediatorLiveData<LocalDate?>(null)
+    val endDate: LiveData<LocalDate?> get() = _endDate
 
     private val _isUpdateSuccess = MutableSingleLiveData<Boolean>(false)
     val isUpdateSuccess: SingleLiveData<Boolean> get() = _isUpdateSuccess
@@ -58,6 +59,16 @@ class MemoryUpdateViewModel(
 
     private val _isPhotoPosting = MutableLiveData<Boolean>(false)
     val isPhotoPosting: LiveData<Boolean> get() = _isPosting
+
+    val isPeriodSet = MutableLiveData<Boolean>()
+
+    private val lastStartDate = MediatorLiveData<LocalDate?>(null)
+    private val lastEndDate = MediatorLiveData<LocalDate?>(null)
+
+    init {
+        setDateMediator(_startDate, lastStartDate)
+        setDateMediator(_endDate, lastEndDate)
+    }
 
     fun fetchMemory() {
         viewModelScope.launch {
@@ -93,11 +104,9 @@ class MemoryUpdateViewModel(
 
     fun setThumbnailUrl(imageResponse: ImageResponse?) {
         _thumbnailUrl.value = imageResponse?.imageUrl
-//        _isPhotoPosting.value = false
     }
 
     fun updateMemory() {
-//        _isPhotoPosting.value = true
         viewModelScope.launch {
             val newMemory: NewMemory = makeNewMemory()
             val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory)
@@ -116,20 +125,61 @@ class MemoryUpdateViewModel(
         _endDate.value = convertLongToLocalDate(endAt)
     }
 
+    private fun setDateMediator(
+        date: MediatorLiveData<LocalDate?>,
+        lastDate: MediatorLiveData<LocalDate?>,
+    ) {
+        with(date) {
+            addSource(isPeriodSet) { isSet ->
+                value =
+                    if (isSet) {
+                        lastDate.value
+                    } else {
+                        null
+                    }
+            }
+        }
+        updateLastDateMediator(lastDate, date)
+    }
+
+    private fun updateLastDateMediator(
+        lastDate: MediatorLiveData<LocalDate?>,
+        date: MediatorLiveData<LocalDate?>,
+    ) {
+        with(lastDate) {
+            addSource(date) { updatedDate ->
+                if (updatedDate != null) {
+                    value = updatedDate
+                }
+            }
+        }
+    }
+
     private fun initializeMemory(memory: Memory) {
         _thumbnailUrl.value = memory.memoryThumbnailUrl
         title.set(memory.memoryTitle)
         description.set(memory.description)
         _startDate.value = memory.startAt
         _endDate.value = memory.endAt
+        initializeLastDates(memory)
+        checkMemoryHasPeriod(memory)
+    }
+
+    private fun initializeLastDates(memory: Memory) {
+        lastStartDate.value = memory.startAt
+        lastEndDate.value = memory.endAt
+    }
+
+    private fun checkMemoryHasPeriod(memory: Memory) {
+        isPeriodSet.value = memory.startAt != null && memory.endAt != null
     }
 
     private fun makeNewMemory() =
         NewMemory(
             memoryThumbnailUrl = thumbnailUrl.value,
             memoryTitle = title.get() ?: throw IllegalArgumentException(),
-            startAt = startDate.value ?: throw IllegalArgumentException(),
-            endAt = endDate.value ?: throw IllegalArgumentException(),
+            startAt = startDate.value,
+            endAt = endDate.value,
             description = description.get(),
         )
 

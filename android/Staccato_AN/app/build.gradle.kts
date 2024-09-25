@@ -146,6 +146,10 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
 
+    // Google Place
+    implementation(libs.places)
+    implementation(platform(libs.kotlin.bom))
+
     // View Pager2
     implementation(libs.androidx.viewpager2)
     implementation(libs.dotsindicator)
