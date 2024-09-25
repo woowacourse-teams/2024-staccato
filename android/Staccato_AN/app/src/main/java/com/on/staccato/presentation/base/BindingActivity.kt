@@ -16,7 +16,7 @@ abstract class BindingActivity<T : ViewDataBinding> : AppCompatActivity() {
     private var _binding: T? = null
     val binding
         get() = requireNotNull(_binding)
-    private val mDetector by lazy { GestureDetector(this, SingleTapListener()) }
+    private val gestureDetector by lazy { GestureDetector(this, SingleTapListener()) }
     protected val inputMethodManager by lazy {
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
     }
@@ -35,33 +35,44 @@ abstract class BindingActivity<T : ViewDataBinding> : AppCompatActivity() {
         _binding = null
     }
 
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (ev.action == MotionEvent.ACTION_UP)
+    override fun dispatchTouchEvent(motionEvent: MotionEvent): Boolean {
+        if (motionEvent.action == MotionEvent.ACTION_UP) {
             prevFocus = currentFocus
-        mDetector.onTouchEvent(ev)
-        return super.dispatchTouchEvent(ev)
+        }
+        val dispatchedTouchEventResult = super.dispatchTouchEvent(motionEvent)
+        gestureDetector.onTouchEvent(motionEvent)
+        return dispatchedTouchEventResult
+    }
+    
+    private fun hideKeyboardAndClearFocus(focusedView: View) {
+        inputMethodManager.hideSoftInputFromWindow(
+            focusedView.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
+        focusedView.clearFocus()
     }
 
     private inner class SingleTapListener : GestureDetector.SimpleOnGestureListener() {
-        override fun onSingleTapUp(e: MotionEvent): Boolean {
-            if (e.action == MotionEvent.ACTION_UP && prevFocus is EditText) {
+        override fun onSingleTapUp(motionEvent: MotionEvent): Boolean {
+            if (motionEvent.action == MotionEvent.ACTION_UP && prevFocus is EditText) {
                 val prevFocus = prevFocus ?: return false
                 val hitRect = Rect()
                 prevFocus.getGlobalVisibleRect(hitRect)
 
-                if (!hitRect.contains(e.x.toInt(), e.y.toInt())) {
+                if (didTouchOutsideFocusedView(hitRect, motionEvent)) {
                     if (currentFocus is EditText && currentFocus != prevFocus) {
                         return false
                     } else {
-                        inputMethodManager.hideSoftInputFromWindow(
-                            prevFocus.windowToken,
-                            InputMethodManager.HIDE_NOT_ALWAYS,
-                        )
-                        prevFocus.clearFocus()
+                        hideKeyboardAndClearFocus(focusedView = prevFocus)
                     }
                 }
             }
-            return super.onSingleTapUp(e)
+            return super.onSingleTapUp(motionEvent)
         }
+
+        private fun didTouchOutsideFocusedView(
+            hitRect: Rect,
+            motionEvent: MotionEvent
+        ) = !hitRect.contains(motionEvent.x.toInt(), motionEvent.y.toInt())
     }
 }
