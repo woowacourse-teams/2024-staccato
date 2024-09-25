@@ -106,14 +106,15 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:clickable="true"
+                android:contentDescription="@string/all_image_content_description"
                 android:focusable="true"
                 android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
                 android:padding="8dp"
                 android:src="@drawable/selector_comment_sendable"
-                app:enableSendButton="@{viewModel.commentInput}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:sendEnabled="@{viewModel.commentInput}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

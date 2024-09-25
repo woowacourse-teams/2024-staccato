@@ -175,18 +175,6 @@ fun ImageView.setRoundedCornerImageByUriWithGlide(
         .into(this)
 }
 
-@BindingAdapter("setLoginButtonActive")
-fun Button.setLoginButtonActive(nickName: String?) {
-    isEnabled =
-        if (nickName.isNullOrBlank()) {
-            setTextColor(resources.getColor(R.color.gray4, null))
-            false
-        } else {
-            setTextColor(resources.getColor(R.color.white, null))
-            true
-        }
-}
-
 @BindingAdapter(
     value = ["memoryTitle", "startDate", "endDate", "isPhotoPosting"],
 )
@@ -421,9 +409,16 @@ fun Button.setEnabled(isUpdateCompleted: Boolean?) {
     isEnabled = !(isUpdateCompleted ?: true)
 }
 
-@BindingAdapter("setLoginEnabled")
+@BindingAdapter("loginEnabled")
 fun Button.setLoginEnabled(nickName: String?) {
-    isEnabled = !nickName.isNullOrEmpty()
+    isEnabled =
+        if (nickName.isNullOrBlank()) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
 }
 
 @BindingAdapter(value = ["currentPhotoNumbers", "maxPhotoNumbers"])
@@ -471,15 +466,9 @@ fun TextView.setAddress(address: String?) {
         }
 }
 
-@BindingAdapter("app:enableSendButton")
-fun ImageView.enableSendButton(commentInput: MutableLiveData<String>) {
-    commentInput.observeForever { inputText ->
-        isEnabled = !inputText.isBlankOrEmpty()
-    }
-}
-
-fun String?.isBlankOrEmpty(): Boolean {
-    return this == null || this.trim().isEmpty()
+@BindingAdapter("sendEnabled")
+fun ImageView.setSendEnabled(comment: String?) {
+    isEnabled = !comment.isNullOrBlank()
 }
 
 @BindingAdapter(value = ["thumbnailUri", "thumbnailUrl"])
