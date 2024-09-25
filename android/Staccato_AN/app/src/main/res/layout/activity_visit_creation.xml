@@ -26,16 +26,6 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <TextView
-            android:id="@+id/autocomplete_response_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:textIsSelectable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_visit_creation"
             style="@style/TitleToolbarStyle"
@@ -144,7 +134,7 @@
                 <TextView
                     android:id="@+id/tv_place_name_title"
                     style="@style/SubTitleStyle"
-                    android:layout_marginTop="22dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/visit_creation_place"
                     android:textAppearance="@style/Typography.Title2"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_creation_place_name_title"

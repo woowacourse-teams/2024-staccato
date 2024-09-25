@@ -89,8 +89,8 @@
                     android:id="@+id/tv_photo_drag_hint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginEnd="24dp"
                     android:text="@string/visit_creation_photo_drag_hint"
                     android:textAppearance="@style/Typography.Body4"
                     android:textColor="@color/gray3"
@@ -105,7 +105,7 @@
                     android:layout_marginTop="40dp"
                     android:text="@string/visit_creation_staccato_title"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
 
                 <TextView
                     android:id="@+id/tv_visit_update_required_mark_first"
@@ -134,7 +134,7 @@
                 <TextView
                     android:id="@+id/tv_place_name_title"
                     style="@style/SubTitleStyle"
-                    android:layout_marginTop="22dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/visit_creation_place"
                     android:textAppearance="@style/Typography.Title2"
                     app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
