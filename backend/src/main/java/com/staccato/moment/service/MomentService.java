@@ -15,6 +15,7 @@ import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
+import com.staccato.moment.service.dto.response.MomentDetailResponseOldV;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
@@ -54,6 +55,12 @@ public class MomentService {
         Moment moment = getMomentById(momentId);
         validateMemoryOwner(moment.getMemory(), member);
         return new MomentDetailResponse(moment);
+    }
+
+    public MomentDetailResponseOldV readMomentByIdOldV(long momentId, Member member) {
+        Moment moment = getMomentById(momentId);
+        validateMemoryOwner(moment.getMemory(), member);
+        return new MomentDetailResponseOldV(moment);
     }
 
     @Transactional
