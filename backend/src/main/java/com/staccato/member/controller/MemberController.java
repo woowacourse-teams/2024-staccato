@@ -40,6 +40,6 @@ public class MemberController implements MemberControllerDocs {
         ImageUrlResponse imageUrlResponse = imageService.uploadImage(image);
         MemberProfileResponse memberProfileResponse = memberService.changeProfileImage(member, memberId, imageUrlResponse.imageUrl());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberProfileResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(memberProfileResponse);
     }
 }
