@@ -4,6 +4,7 @@ import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -21,9 +22,14 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
@@ -52,6 +58,8 @@ class MainActivity :
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
     private val locationPermissions: Array<String> =
         arrayOf(
             ACCESS_FINE_LOCATION,
@@ -61,8 +69,8 @@ class MainActivity :
     private val inputManager: InputMethodManager by lazy {
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
     }
-
     private val requestPermissionLauncher = initRequestPermissionsLauncher()
+
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult(messageId = R.string.main_memory_creation_success)
     val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult(messageId = R.string.main_memory_update_success)
     val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult(messageId = R.string.main_moment_creation_success)
@@ -71,6 +79,7 @@ class MainActivity :
     override fun initStartView(savedInstanceState: Bundle?) {
         binding.handler = this
         setupGoogleMap()
+        setupFusedLocationProviderClient()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
@@ -113,10 +122,27 @@ class MainActivity :
             }
         }
 
+    private fun setupGoogleMap() {
+        val map: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.fragment_container_view_map) as? SupportMapFragment
+        map?.getMapAsync(this)
+    }
+
+    private fun setupFusedLocationProviderClient() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+    }
+
     private fun enableMyLocation() {
         when {
             checkSelfLocationPermission() -> {
                 map.isMyLocationEnabled = true
+                val currentLocation =
+                    fusedLocationProviderClient.getCurrentLocation(
+                        LocationRequest.PRIORITY_HIGH_ACCURACY,
+                        null,
+                    )
+                currentLocation.addOnSuccessListener { location ->
+                    moveCamera(map, location)
+                }
             }
             shouldShowRequestLocationPermissionsRationale() -> {
                 sharedViewModel.isLocationDenial.observe(this) { isCancel ->
@@ -128,6 +154,16 @@ class MainActivity :
                     if (!isCancel) requestPermissionLauncher.launch(locationPermissions)
                 }
             }
+        }
+    }
+
+    private fun moveCamera(
+        googleMap: GoogleMap,
+        location: Location?,
+    ) {
+        if (location != null) {
+            val currentLocation = LatLng(location.latitude, location.longitude)
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
         }
     }
 
@@ -187,11 +223,6 @@ class MainActivity :
     }
 
     private fun makeSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
-
-    private fun setupGoogleMap() {
-        val map: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.fragment_container_view_map) as? SupportMapFragment
-        map?.getMapAsync(this)
-    }
 
     private fun setupBackPressedHandler() {
         var backPressedTime = 0L
