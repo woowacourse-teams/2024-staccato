@@ -40,7 +40,7 @@ class MemberServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("사용자가 다른 사용자의 프로필을 변경할 수 없다.")
+    @DisplayName("프로필 이미지를 수정하려는 사용자의 정보를 찾을 수 없다.")
     @Test
     void cannotChangeUnknownProfileImage() {
         // given
