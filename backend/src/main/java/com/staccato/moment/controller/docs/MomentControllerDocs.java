@@ -11,6 +11,7 @@ import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
+import com.staccato.moment.service.dto.response.MomentDetailResponseOldV;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
@@ -62,6 +63,22 @@ public interface MomentControllerDocs {
                     responseCode = "400")
     })
     ResponseEntity<MomentDetailResponse> readMomentById(
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "스타카토 ID", example = "1") @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId);
+
+    @Operation(summary = "스타카토 조회", description = "스타카토를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "스타카토 조회 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                                        
+                    (1) 조회하려는 스타카토가 존재하지 않을 때
+                                        
+                    (2) Path Variable 형식이 잘못되었을 때
+                    """,
+                    responseCode = "400")
+    })
+    ResponseEntity<MomentDetailResponseOldV> readMomentByIdOldV(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "스타카토 ID", example = "1") @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId);
 

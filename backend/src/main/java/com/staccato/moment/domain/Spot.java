@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class Spot {
     @Column(nullable = false)
+    private String placeName;
+    @Column(nullable = false)
     private String address;
     @Column(nullable = false, columnDefinition = "DECIMAL(16, 14)")
     private BigDecimal latitude;

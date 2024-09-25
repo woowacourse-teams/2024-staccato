@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record MomentUpdateRequest(
         @Schema(example = "남산 서울타워")
         @NotNull(message = "스타카토 제목을 입력해주세요.")
-        String placeName,
+        String staccatoTitle,
         @ArraySchema(
                 arraySchema = @Schema(example = "[\"https://example.com/images/namsan_tower.jpg\", \"https://example.com/images/namsan_tower2.jpg\"]"))
         @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.")

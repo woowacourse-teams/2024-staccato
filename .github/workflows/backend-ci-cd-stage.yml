@@ -57,7 +57,16 @@ jobs:
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
           sudo docker pull staccato/staccato:stage
 
-      - name: Docker Compose up
+      - name: Stop and remove existing container
         run: |
-          sudo docker-compose -f /home/ubuntu/staccato/docker-compose.yml up -d
+          sudo docker stop staccato-backend-app || true
+          sudo docker rm staccato-backend-app || true
+
+      - name: Docker run
+        run: |
+          sudo docker run --env-file /home/ubuntu/staccato/.env \
+          -v /home/ubuntu/staccato/logs:/logs \
+          -p 8080:8080 \
+          -d --name staccato-backend-app staccato/staccato:stage
           sudo docker image prune -af
+

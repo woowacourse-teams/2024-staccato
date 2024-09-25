@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "스타카토를 조회했을 때 응답 형식입니다.")
-public record MomentDetailResponse(
+public record MomentDetailResponseOldV(
         @Schema(example = "1")
         long momentId,
         @Schema(example = "1")
@@ -20,15 +20,13 @@ public record MomentDetailResponse(
         @Schema(example = "2024 서울 투어")
         String memoryTitle,
         @Schema(example = "즐거웠던 남산에서의 기억")
-        String staccatoTitle,
+        String placeName,
         @ArraySchema(arraySchema = @Schema(example = "[\"https://example.com/images/namsan_tower.jpg\", \"https://example.com/images/namsan_tower2.jpg\"]"))
         List<String> momentImageUrls,
         @Schema(example = "2021-11-08T11:58:20")
         LocalDateTime visitedAt,
         @Schema(example = "happy")
         String feeling,
-        @Schema(example = "남산서울타워")
-        String placeName,
         @Schema(example = "서울 용산구 남산공원길 105")
         String address,
         @Schema(example = "51.51978412729915")
@@ -37,7 +35,7 @@ public record MomentDetailResponse(
         BigDecimal longitude,
         List<CommentResponse> comments
 ) {
-    public MomentDetailResponse(Moment moment) {
+    public MomentDetailResponseOldV(Moment moment) {
         this(
                 moment.getId(),
                 moment.getMemory().getId(),
@@ -46,7 +44,6 @@ public record MomentDetailResponse(
                 moment.getMomentImages().getImages().stream().map(MomentImage::getImageUrl).toList(),
                 moment.getVisitedAt(),
                 moment.getFeeling().getValue(),
-                moment.getSpot().getPlaceName(),
                 moment.getSpot().getAddress(),
                 moment.getSpot().getLatitude(),
                 moment.getSpot().getLongitude(),
