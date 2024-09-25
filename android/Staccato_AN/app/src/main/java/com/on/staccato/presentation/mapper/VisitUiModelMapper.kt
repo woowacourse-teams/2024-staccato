@@ -7,23 +7,17 @@ import com.on.staccato.domain.model.Moment
 import com.on.staccato.presentation.moment.comments.CommentUiModel
 import com.on.staccato.presentation.moment.detail.MomentDetailUiModel
 import com.on.staccato.presentation.moment.feeling.FeelingUiModel
-import com.on.staccato.presentation.visitupdate.model.VisitUpdateDefaultUiModel
 
 fun Moment.toMomentDetailUiModel(): MomentDetailUiModel {
     return MomentDetailUiModel(
         id = momentId,
         memoryId = memoryId,
         memoryTitle = memoryTitle,
+        staccatoTitle = staccatoTitle,
         placeName = placeName,
+        latitude = latitude,
+        longitude = longitude,
         momentImageUrls = momentImageUrls,
-        address = address,
-        visitedAt = visitedAt,
-    )
-}
-
-fun Moment.toVisitUpdateDefaultUiModel(): VisitUpdateDefaultUiModel {
-    return VisitUpdateDefaultUiModel(
-        id = momentId,
         address = address,
         visitedAt = visitedAt,
     )
