@@ -302,7 +302,7 @@ class MainActivity :
             DEFAULT_MAP_PADDING,
             DEFAULT_MAP_PADDING,
             DEFAULT_MAP_PADDING,
-            mapPaddingBottom
+            mapPaddingBottom,
         )
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
     }
@@ -354,8 +354,7 @@ class MainActivity :
         navController.navigate(R.id.momentFragment, bundle, navOptions)
     }
 
-    private fun makeSnackBar(message: String) =
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+    private fun makeSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
 
     private fun setupBackPressedHandler() {
         var backPressedTime = 0L
