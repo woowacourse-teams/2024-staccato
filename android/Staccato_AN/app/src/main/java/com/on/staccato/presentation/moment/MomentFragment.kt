@@ -12,7 +12,7 @@ import com.on.staccato.databinding.FragmentMomentBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.main.MainActivity
-import com.on.staccato.presentation.main.SharedViewModel
+import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.moment.comments.MomentCommentsFragment
 import com.on.staccato.presentation.moment.detail.ViewpagePhotoAdapter
 import com.on.staccato.presentation.moment.feeling.MomentFeelingSelectionFragment

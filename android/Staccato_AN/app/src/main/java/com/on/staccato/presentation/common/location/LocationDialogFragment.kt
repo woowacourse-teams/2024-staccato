@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.on.staccato.databinding.FragmentLocationDialogBinding
-import com.on.staccato.presentation.main.SharedViewModel
+import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 
 class LocationDialogFragment : DialogFragment(), LocationDialogHandler {
     private var _binding: FragmentLocationDialogBinding? = null

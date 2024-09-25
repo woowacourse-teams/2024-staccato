@@ -10,7 +10,7 @@ import com.on.staccato.R
 import com.on.staccato.databinding.FragmentTimelineBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.main.MainActivity
-import com.on.staccato.presentation.main.SharedViewModel
+import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memorycreation.MemoryCreationActivity
 import com.on.staccato.presentation.timeline.adapter.TimelineAdapter

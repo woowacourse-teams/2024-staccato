@@ -16,7 +16,7 @@ import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.DialogHandler
 import com.on.staccato.presentation.common.ToolbarHandler
 import com.on.staccato.presentation.main.MainActivity
-import com.on.staccato.presentation.main.SharedViewModel
+import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.adapter.MatesAdapter
 import com.on.staccato.presentation.memory.adapter.VisitsAdapter
 import com.on.staccato.presentation.memory.viewmodel.MemoryViewModel

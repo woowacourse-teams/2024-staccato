@@ -51,11 +51,10 @@ import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.location.LocationDialogFragment
-import com.on.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_NEW_STATE
-import com.on.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_STATE_REQUEST_KEY
-import com.on.staccato.presentation.maps.MapsViewModel
-import com.on.staccato.presentation.maps.MapsViewModelFactory
-import com.on.staccato.presentation.maps.model.MarkerUiModel
+import com.on.staccato.presentation.main.model.MarkerUiModel
+import com.on.staccato.presentation.main.viewmodel.MapsViewModel
+import com.on.staccato.presentation.main.viewmodel.MapsViewModelFactory
+import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
@@ -527,5 +526,7 @@ class MainActivity :
         private const val DEFAULT_ZOOM = 15f
         private const val SEOUL_STATION_LATITUDE = 37.554677038139815
         private const val SEOUL_STATION_LONGITUDE = 126.97061201084968
+        private const val BOTTOM_SHEET_STATE_REQUEST_KEY = "requestKey"
+        private const val BOTTOM_SHEET_NEW_STATE = "newState"
     }
 }

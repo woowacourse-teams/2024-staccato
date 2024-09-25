@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.maps
+package com.on.staccato.presentation.main.viewmodel
 
 import android.location.Location
 import androidx.lifecycle.LiveData
@@ -14,7 +14,7 @@ import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.domain.repository.MomentRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.maps.model.MarkerUiModel
+import com.on.staccato.presentation.main.model.MarkerUiModel
 import kotlinx.coroutines.launch
 
 class MapsViewModel(

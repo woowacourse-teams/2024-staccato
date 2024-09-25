@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.main
+package com.on.staccato.presentation.main.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
