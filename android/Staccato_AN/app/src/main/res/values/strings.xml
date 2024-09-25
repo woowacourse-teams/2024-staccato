@@ -22,10 +22,6 @@
     <string name="all_posting_photo">사진을 게시하는 중이에요</string>
 
     // MainActivity
-    <string name="main_moment_creation_success">새로운 스타카토를 찍었어요!</string>
-    <string name="main_moment_update_success">스타카토를 수정했어요!</string>
-    <string name="main_memory_update_success">추억을 수정했어요!</string>
-    <string name="main_memory_creation_success">새로운 추억을 만들었어요!</string>
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
 
     // fragment_timeline
@@ -37,6 +33,7 @@
 
     // fragment_memory
     <string name="memory_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
+    <string name="memory_period_dot">%s. %s. %s ~ %s. %s. %s</string>
     <string name="memory_mates">함께 한 사람들</string>
     <string name="memory_visits">스타카토</string>
     <string name="memory_daily_visits">%s월 %s일의 스타카토</string>
@@ -49,11 +46,10 @@
     <string name="memory_creation_title_hint">추억 제목을 입력해 주세요</string>
     <string name="memory_creation_description">추억 소개</string>
     <string name="memory_creation_description_hint">추억 소개를 입력해 주세요</string>
-    <string name="memory_creation_period">추억 기간</string>
+    <string name="memory_creation_period">기간 설정</string>
     <string name="memory_creation_period_hint">추억 기간을 선택해 주세요</string>
-    <string name="memory_creation_period_description">%s ~ %s</string>
-    <string name="memory_creation_posting">추억을 만드는 중이에요..</string>
-    <string name="memory_update_posting">추억을 수정하는 중이에요..</string>
+    <string name="memory_creation_period_selected">%s ~ %s</string>
+    <string name="memory_creation_period_descripton">‘여행’ 과 같은 추억이라면 기간을 설정할 수 있어요</string>
     <string name="memory_creation_toolbar_title">추억 만들기</string>
     <string name="memory_creation_toolbar_subtitle">스타카토를 담을 추억을 만들어보세요!</string>
 

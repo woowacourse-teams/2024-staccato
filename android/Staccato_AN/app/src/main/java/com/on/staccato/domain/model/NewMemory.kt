@@ -5,7 +5,7 @@ import java.time.LocalDate
 data class NewMemory(
     val memoryThumbnailUrl: String? = null,
     val memoryTitle: String,
-    val startAt: LocalDate,
-    val endAt: LocalDate,
+    val startAt: LocalDate? = null,
+    val endAt: LocalDate? = null,
     val description: String? = null,
 )

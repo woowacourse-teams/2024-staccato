@@ -96,11 +96,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="16dp"
-                    android:text="@{@string/memory_period(viewModel.memory.startAt.year, viewModel.memory.startAt.monthValue, viewModel.memory.startAt.dayOfMonth, viewModel.memory.endAt.year, viewModel.memory.endAt.monthValue, viewModel.memory.endAt.dayOfMonth)}"
                     android:textAppearance="@style/Typography.Body4"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_title"
+                    bind:startAt="@{viewModel.memory.startAt}"
+                    bind:endAt="@{viewModel.memory.endAt}"
                     tools:text="2023년 7월 1일 ~ 7월 5일" />
 
                 <TextView

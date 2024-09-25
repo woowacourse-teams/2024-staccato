@@ -7,16 +7,16 @@ data class MemoryUiModel(
     val id: Long,
     val title: String,
     val memoryThumbnailUrl: String? = null,
-    val startAt: LocalDate,
-    val endAt: LocalDate,
+    val startAt: LocalDate? = null,
+    val endAt: LocalDate? = null,
     val description: String? = null,
     val mates: List<MemberUiModel>,
     val visits: List<MemoryVisitUiModel>,
 ) {
     companion object {
         fun buildDatesInRange(
-            startAt: LocalDate,
-            endAt: LocalDate,
+            startAt: LocalDate?,
+            endAt: LocalDate?,
         ): List<LocalDate> {
             return generateSequence(startAt) { it.plusDays(1) }
                 .takeWhile { !it.isAfter(endAt) }

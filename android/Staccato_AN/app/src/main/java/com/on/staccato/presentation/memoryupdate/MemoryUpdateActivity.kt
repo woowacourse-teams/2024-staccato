@@ -63,7 +63,6 @@ class MemoryUpdateActivity :
 
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        showToast(getString(R.string.memory_update_posting))
         viewModel.updateMemory()
     }
 
