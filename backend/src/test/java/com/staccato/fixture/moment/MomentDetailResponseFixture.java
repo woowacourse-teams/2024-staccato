@@ -2,7 +2,6 @@ package com.staccato.fixture.moment;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 
 public class MomentDetailResponseFixture {

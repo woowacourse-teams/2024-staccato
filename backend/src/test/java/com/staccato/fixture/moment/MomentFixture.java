@@ -3,7 +3,6 @@ package com.staccato.fixture.moment;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.staccato.memory.domain.Memory;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;

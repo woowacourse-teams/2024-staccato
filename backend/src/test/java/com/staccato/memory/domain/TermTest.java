@@ -1,16 +1,14 @@
 package com.staccato.memory.domain;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import com.staccato.exception.StaccatoException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import com.staccato.exception.StaccatoException;
 
 class TermTest {
     @DisplayName("끝 날짜는 시작 날짜보다 앞설 수 없다.")

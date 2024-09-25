@@ -1,11 +1,10 @@
 package com.staccato.memory.service.dto.request;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.LocalDate;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MemoryRequestTest {
     @DisplayName("MemoryRequest를 생성할 때 title에는 trim이 적용된다.")
