@@ -27,7 +27,7 @@ class MomentCommentsViewModel(
 
     val isEmpty: LiveData<Boolean> = _comments.map { it.isEmpty() }
 
-    val commentInput = MutableLiveData<String>()
+    val commentInput = MutableLiveData<String>("")
 
     private val _isDeleteSuccess = MutableSingleLiveData<Boolean>()
     val isDeleteSuccess: SingleLiveData<Boolean>
@@ -37,11 +37,22 @@ class MomentCommentsViewModel(
     val isLoading: SingleLiveData<Boolean>
         get() = _isLoading
 
-    fun fetchComments() {
+    override fun onSendButtonClicked() {
         viewModelScope.launch {
-            commentRepository.fetchComments(momentId)
-                .onSuccess { comments ->
-                    setComments(comments.map { it.toCommentUiModel() })
+            sendComment()
+        }
+    }
+
+    override fun onUpdateButtonClicked(commentId: Long) {
+        Log.d("hodu", "not implemented yet")
+    }
+
+    override fun onDeleteButtonClicked(commentId: Long) {
+        viewModelScope.launch {
+            commentRepository.deleteComment(commentId)
+                .onSuccess {
+                    fetchComments()
+                    _isDeleteSuccess.postValue(true)
                 }
                 .onServerError(::handleServerError)
                 .onException(::handleException)
@@ -52,7 +63,7 @@ class MomentCommentsViewModel(
         _comments.value = newComments
     }
 
-    fun sendComment() {
+    private fun sendComment() {
         commentInput.value?.let {
             _isLoading.setValue(true)
             val newComment = NewComment(momentId, it)
@@ -66,6 +77,17 @@ class MomentCommentsViewModel(
                     .onServerError(::handleServerError)
                     .onException(::handleException)
             }
+        }
+    }
+
+    private fun fetchComments() {
+        viewModelScope.launch {
+            commentRepository.fetchComments(momentId)
+                .onSuccess { comments ->
+                    setComments(comments.map { it.toCommentUiModel() })
+                }
+                .onServerError(::handleServerError)
+                .onException(::handleException)
         }
     }
 
@@ -95,27 +117,5 @@ class MomentCommentsViewModel(
     ) {
         _isLoading.postValue(false)
         Log.e(this.javaClass.simpleName, "Exception($e): $message")
-    }
-
-    override fun onSendButtonClicked() {
-        viewModelScope.launch {
-            sendComment()
-        }
-    }
-
-    override fun onUpdateButtonClicked(commentId: Long) {
-        Log.d("hodu", "not implemented yet")
-    }
-
-    override fun onDeleteButtonClicked(commentId: Long) {
-        viewModelScope.launch {
-            commentRepository.deleteComment(commentId)
-                .onSuccess {
-                    fetchComments()
-                    _isDeleteSuccess.postValue(true)
-                }
-                .onServerError(::handleServerError)
-                .onException(::handleException)
-        }
     }
 }
