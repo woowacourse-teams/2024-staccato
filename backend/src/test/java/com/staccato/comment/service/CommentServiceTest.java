@@ -1,12 +1,8 @@
 package com.staccato.comment.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.staccato.ServiceSliceTest;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
@@ -28,6 +24,9 @@ import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CommentServiceTest extends ServiceSliceTest {
     @Autowired
@@ -139,7 +138,8 @@ class CommentServiceTest extends ServiceSliceTest {
         commentService.updateComment(member, comment.getId(), commentUpdateRequest);
 
         // then
-        assertThat(commentRepository.findById(comment.getId()).get().getContent()).isEqualTo(commentUpdateRequest.content());
+        assertThat(commentRepository.findById(comment.getId()).get()
+                .getContent()).isEqualTo(commentUpdateRequest.content());
     }
 
     @DisplayName("수정하려는 댓글을 찾을 수 없는 경우 예외가 발생한다.")

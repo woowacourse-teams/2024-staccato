@@ -1,13 +1,12 @@
 package com.staccato.moment.service.dto.request;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MomentRequestTest {
     @DisplayName("MomentRequest를 생성할 때 staccatoTitle에는 trim이 적용된다.")

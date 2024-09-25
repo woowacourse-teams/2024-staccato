@@ -1,8 +1,10 @@
 package com.staccato.comment.service;
 
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.request.CommentRequest;
@@ -15,6 +17,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace

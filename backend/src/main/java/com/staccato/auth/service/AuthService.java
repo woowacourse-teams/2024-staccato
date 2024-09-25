@@ -5,6 +5,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.config.auth.AdminProperties;
@@ -16,6 +17,7 @@ import com.staccato.exception.UnauthorizedException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.domain.Nickname;
 import com.staccato.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

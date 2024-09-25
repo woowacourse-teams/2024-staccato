@@ -1,7 +1,6 @@
 package com.staccato.fixture.memory;
 
 import java.time.LocalDate;
-
 import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
 

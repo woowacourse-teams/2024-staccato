@@ -54,4 +54,12 @@ public class Member extends BaseEntity {
                 .code(UUID.randomUUID().toString())
                 .build();
     }
+
+    public void updateImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public boolean isNotSame(Member member) {
+        return !this.equals(member);
+    }
 }

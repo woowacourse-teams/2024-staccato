@@ -89,7 +89,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MultipartException.class)
-    @ApiResponse(responseCode = "413")
+    @ApiResponse(description = "20MB 초과의 사진을 업로드 하려고 할 때", responseCode = "413")
     public ResponseEntity<ExceptionResponse> handleMultipartException(MultipartException e) {
         String exceptionMessage = "20MB 이하의 사진을 업로드해 주세요.";
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.PAYLOAD_TOO_LARGE.toString(), exceptionMessage);

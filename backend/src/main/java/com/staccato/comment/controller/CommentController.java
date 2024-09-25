@@ -1,8 +1,10 @@
 package com.staccato.comment.controller;
 
 import java.net.URI;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.staccato.comment.controller.docs.CommentControllerDocs;
 import com.staccato.comment.service.CommentService;
 import com.staccato.comment.service.dto.request.CommentRequest;
@@ -21,6 +24,7 @@ import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace

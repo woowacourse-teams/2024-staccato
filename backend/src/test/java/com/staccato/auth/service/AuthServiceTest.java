@@ -1,15 +1,9 @@
 package com.staccato.auth.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import java.util.UUID;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.staccato.ServiceSliceTest;
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
@@ -20,6 +14,10 @@ import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.auth.LoginRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class AuthServiceTest extends ServiceSliceTest {
     @Autowired
