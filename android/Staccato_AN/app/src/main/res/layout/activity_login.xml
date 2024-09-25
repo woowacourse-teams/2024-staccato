@@ -81,6 +81,7 @@
             android:layout_marginTop="32dp"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="@{() -> handler.onRecoveryClicked()}"
             android:text="@string/login_recovery_click_here_if_need_recovery"
             app:layout_constraintEnd_toEndOf="@id/constraint_login_center_layout"
             app:layout_constraintStart_toStartOf="@id/constraint_login_center_layout"

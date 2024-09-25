@@ -17,6 +17,7 @@ import com.on.staccato.databinding.ActivityLoginBinding
 import com.on.staccato.presentation.login.viewmodel.LoginViewModel
 import com.on.staccato.presentation.login.viewmodel.LoginViewModelFactory
 import com.on.staccato.presentation.main.MainActivity
+import com.on.staccato.presentation.recovery.RecoveryActivity
 import com.on.staccato.presentation.util.showToast
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -56,6 +57,20 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
                 InputMethodManager.HIDE_NOT_ALWAYS,
             )
         }
+    }
+
+    override fun onRecoveryClicked() {
+        navigateToRecoveryActivity()
+    }
+
+    private fun navigateToRecoveryActivity() {
+        val intent = Intent(this, RecoveryActivity::class.java)
+        val options = ActivityOptionsCompat.makeCustomAnimation(
+            this,
+            R.anim.anim_slide_in_from_left_fade_in, // 새 액티비티의 진입 애니메이션
+            R.anim.anim_fade_out,  // 현재 액티비티의 종료 애니메이션
+        )
+        startActivity(intent, options.toBundle())
     }
 
     private fun checkIfLoggedIn(splashScreen: SplashScreen) {

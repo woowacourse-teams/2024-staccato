@@ -2,7 +2,6 @@ package com.on.staccato.presentation.recovery
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.viewModels
 import androidx.core.app.ActivityOptionsCompat
 import com.on.staccato.R
@@ -23,6 +22,7 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
     override fun initStartView(savedInstanceState: Bundle?) {
         setBinding()
         observeViewModel()
+        navigateToLogin()
     }
 
     private fun setBinding() {
@@ -54,6 +54,12 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
             )
         startActivity(intent, options.toBundle())
         finish()
+    }
+
+    private fun navigateToLogin() {
+        binding.toolbarRecovery.setNavigationOnClickListener {
+            finish()
+        }
     }
 
     companion object {
