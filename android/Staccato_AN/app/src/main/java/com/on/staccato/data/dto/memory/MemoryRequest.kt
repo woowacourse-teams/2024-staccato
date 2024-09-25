@@ -8,6 +8,6 @@ data class MemoryRequest(
     @SerialName("memoryThumbnailUrl") val memoryThumbnailUrl: String? = null,
     @SerialName("memoryTitle") val memoryTitle: String,
     @SerialName("description") val description: String? = null,
-    @SerialName("startAt") val startAt: String,
-    @SerialName("endAt") val endAt: String,
+    @SerialName("startAt") val startAt: String? = null,
+    @SerialName("endAt") val endAt: String? = null,
 )
