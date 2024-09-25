@@ -1,9 +1,11 @@
-package com.on.staccato.presentation.maps
+package com.on.staccato.presentation.main.viewmodel
 
+import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.Task
 import com.on.staccato.data.ApiResponseHandler.onException
 import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
@@ -12,7 +14,7 @@ import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.domain.repository.MomentRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.maps.model.MarkerUiModel
+import com.on.staccato.presentation.main.model.MarkerUiModel
 import kotlinx.coroutines.launch
 
 class MapsViewModel(
@@ -29,6 +31,20 @@ class MapsViewModel(
 
     private val _staccatoId = MutableLiveData<Long>()
     val staccatoId: LiveData<Long> get() = _staccatoId
+
+    private val _isHalf = MutableLiveData(true)
+    val isHalf: LiveData<Boolean> get() = _isHalf
+
+    private val _currentLocation = MutableLiveData<Task<Location>>()
+    val currentLocation: LiveData<Task<Location>> get() = _currentLocation
+
+    fun setCurrentLocation(currentLocation: Task<Location>) {
+        _currentLocation.value = currentLocation
+    }
+
+    fun setIsHalf(isHalf: Boolean) {
+        _isHalf.value = isHalf
+    }
 
     fun setMarkers(markers: List<MarkerUiModel>) {
         _markers.value = markers
