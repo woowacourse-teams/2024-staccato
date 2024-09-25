@@ -92,6 +92,12 @@
     <string name="login_start">시작하기</string>
     <string name="login_nickname_hint">닉네임을 입력해주세요</string>
 
+    // activity_recovery
+    <string name="recovery_title">이전 기록을 불러올게요</string>
+    <string name="recovery_subtitle">고유 코드를 입력해주세요</string>
+    <string name="recovery_code_hint">ex) bt2hnhd4-07kght-0pp2ln</string>
+    <string name="recovery_load">불러오기</string>
+
     // fragment_photo_attach
     <string name="photo_attach_title">사진을 등록해주세요</string>
     <string name="photo_attach_camera">카메라 열기</string>
