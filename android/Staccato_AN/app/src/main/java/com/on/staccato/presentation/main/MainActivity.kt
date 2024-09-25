@@ -8,6 +8,7 @@ import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -98,6 +99,7 @@ class MainActivity :
         binding.handler = this
         setupGoogleMap()
         setupFusedLocationProviderClient()
+        observeCurrentLocation()
         observeMomentLocations()
         setupBottomSheetController()
         setupBackPressedHandler()
@@ -113,7 +115,14 @@ class MainActivity :
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        moveDefaultLocation()
         enableMyLocation()
+    }
+
+    private fun moveDefaultLocation() {
+        val defaultLocation =
+            LatLng(SEOUL_STATION_LATITUDE, SEOUL_STATION_LONGITUDE)
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM))
     }
 
     override fun onStaccatoCreationClicked() {
@@ -156,18 +165,20 @@ class MainActivity :
                         LocationRequest.PRIORITY_HIGH_ACCURACY,
                         null,
                     )
-                moveCurrentLocation(currentLocation)
+                mapsViewModel.setCurrentLocation(currentLocation)
             }
             shouldShowRequestLocationPermissionsRationale() -> {
-                sharedViewModel.isLocationDenial.observe(this) { isCancel ->
-                    if (!isCancel) showPermissionRequestDialog()
-                }
+                observeIsLocationDenial { showPermissionRequestDialog() }
             }
             else -> {
-                sharedViewModel.isLocationDenial.observe(this) { isCancel ->
-                    if (!isCancel) requestPermissionLauncher.launch(locationPermissions)
-                }
+                observeIsLocationDenial { requestPermissionLauncher.launch(locationPermissions) }
             }
+        }
+    }
+
+    private fun observeIsLocationDenial(action: () -> Unit) {
+        sharedViewModel.isLocationDenial.observe(this) { isCancel ->
+            if (!isCancel) action()
         }
     }
 
@@ -230,6 +241,12 @@ class MainActivity :
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
+    private fun observeCurrentLocation() {
+        mapsViewModel.currentLocation.observe(this) { currentLocation ->
+            moveCurrentLocation(currentLocation)
+        }
+    }
+
     private fun moveCurrentLocation(currentLocation: Task<Location>) {
         currentLocation.addOnSuccessListener { location ->
             moveCamera(location)
@@ -237,10 +254,27 @@ class MainActivity :
     }
 
     private fun moveCamera(location: Location?) {
-        if (location != null) {
-            val currentLocation = LatLng(location.latitude, location.longitude)
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
+        if (location != null) observeMapIsHalf(location)
+    }
+
+    private fun observeMapIsHalf(location: Location) {
+        val currentLocation = LatLng(location.latitude, location.longitude)
+        mapsViewModel.isHalf.observe(this) { isHalf ->
+            if (isHalf) {
+                val mapPaddingBottom = (binding.root.height / 1.8).toInt()
+                setMapPadding(currentLocation, mapPaddingBottom)
+            } else {
+                setMapPadding(currentLocation)
+            }
         }
+    }
+
+    private fun setMapPadding(
+        currentLocation: LatLng,
+        mapPaddingBottom: Int = DEFAULT_MAP_PADDING,
+    ) {
+        googleMap.setPadding(DEFAULT_MAP_PADDING, DEFAULT_MAP_PADDING, DEFAULT_MAP_PADDING, mapPaddingBottom)
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
     }
 
     private fun observeMomentLocations() {
@@ -365,11 +399,16 @@ class MainActivity :
                                 )
                             }
 
+                            STATE_HALF_EXPANDED -> {
+                                mapsViewModel.setIsHalf(isHalf = true)
+                            }
+
                             else -> {
                                 binding.viewMainDragBar.visibility = View.VISIBLE
                                 binding.constraintMainBottomSheet.setBackgroundResource(
                                     R.drawable.shape_bottom_sheet_20dp,
                                 )
+                                mapsViewModel.setIsHalf(isHalf = false)
                             }
                         }
                     }
@@ -391,6 +430,7 @@ class MainActivity :
         ) { _, bundle ->
             val newState = bundle.getInt(BOTTOM_SHEET_NEW_STATE)
             behavior.state = newState
+            Log.d("hye", "$newState")
         }
     }
 
@@ -424,5 +464,12 @@ class MainActivity :
             view.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS,
         )
+    }
+
+    companion object {
+        const val DEFAULT_MAP_PADDING = 0
+        const val DEFAULT_ZOOM = 15f
+        const val SEOUL_STATION_LATITUDE = 37.554677038139815
+        const val SEOUL_STATION_LONGITUDE = 126.97061201084968
     }
 }
