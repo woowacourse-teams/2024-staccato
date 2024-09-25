@@ -19,6 +19,8 @@
     <string name="all_default_not_supported">아직 지원하지 않는 기능이에요.</string>
     <string name="all_required_mark">*</string>
     <string name="all_posting_photo">사진을 게시하는 중이에요</string>
+    <string name="all_setting">설정</string>
+    <string name="all_location_permission_denial">위치 권한을 거부 하셨습니다.</string>
 
     // MainActivity
     <string name="main_moment_creation_success">새로운 스타카토를 찍었어요!</string>
@@ -33,6 +35,8 @@
     <string name="timeline_year">%s년</string>
     <string name="timeline_empty">아직 추억이 없네요!\n스타카토를 담을 추억을 만들어보세요.</string>
     <string name="timeline_add_memory">추가</string>
+    <string name="timeline_sort">정렬</string>
+    <string name="timeline_create_memory">추억 생성하기</string>
 
     // fragment_memory
     <string name="memory_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
@@ -79,14 +83,16 @@
     <string name="visit_creation_no_memory_hint">스타카토를 남길 수 있는 추억이 없어요</string>
     <string name="visit_creation_unselected_memory">추억을 먼저 선택해주세요!</string>
     <string name="visit_creation_posting">스타카토를 찍는 중이에요..</string>
-    <string name="visit_update_posting">스타카토를 수정하는 중이에요...️</string>
     <string name="moment_creation_memory_selection">추억 선택</string>
     <string name="visit_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨보세요!</string>
     <string name="visit_creation_toolbar_title">스타카토 기록하기</string>
+    <string name="staccato_loading_address">주소를 불러오고 있어요</string>
+    <string name="moment_creation_not_found_address">주소를 찾지 못했습니다</string>
 
     // activity_visit_update
     <string name="visit_update_toolbar_subtitle">기억하고 싶은 순간을 수정해보세요!</string>
     <string name="visit_update_toolbar_title">스타카토 수정하기</string>
+    <string name="visit_update_posting">스타카토를 수정하는 중이에요...️</string>
 
     // activity_login
     <string name="login_start">시작하기</string>
@@ -122,12 +128,11 @@
     <string name="menu_comment_update">수정하기</string>
     <string name="menu_comment_delete">삭제하기</string>
 
-    // MapsFragment
     <string name="maps_location_permission_granted_message">위치 서비스 사용을 위한 위치 권한이 설정 되었습니다.</string>
     <string name="maps_location_permission_required_message">위치 서비스 사용을 위해 위치 권한을 허용해주세요.</string>
-    <string name="staccato_loading_address">주소를 불러오고 있어요</string>
-    <string name="moment_creation_not_found_address">주소를 찾지 못했습니다</string>
-    <string name="timeline_sort">정렬</string>
-    <string name="timeline_create_memory">추억 생성하기</string>
+
+    // fragment_location_dialog
+    <string name="location_dialog_title">위치 권한 설정</string>
+    <string name="location_dialog_permission_rationale">위치 권한을 활성화하면 아래 기능들을 사용할 수 있어요. \n ▪️현 위치를 조회할 수 있어요 \n ▪️현 위치를 기반으로 빠르게 스타카토를\n &#160;생성할 수 있어요 \n\n더 나은 서비스 경험을 원하신다면 위치 권한을 허용해 주세요!</string>
 
 </resources>

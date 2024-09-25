@@ -5,9 +5,7 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -38,7 +36,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.data.StaccatoClient
@@ -47,7 +44,7 @@ import com.on.staccato.data.moment.MomentRemoteDataSource
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.presentation.base.BindingActivity
-import com.on.staccato.presentation.maps.MapsFragment
+import com.on.staccato.presentation.common.location.LocationDialogFragment
 import com.on.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_NEW_STATE
 import com.on.staccato.presentation.maps.MapsFragment.Companion.BOTTOM_SHEET_STATE_REQUEST_KEY
 import com.on.staccato.presentation.maps.MapsViewModel
@@ -84,6 +81,7 @@ class MainActivity :
             ),
         )
     }
+    private val locationDialog = LocationDialogFragment()
 
     private val inputManager: InputMethodManager by lazy {
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -134,7 +132,6 @@ class MainActivity :
         )
     }
 
-    // TODO: 하드 코딩된 String 제거
     private fun initRequestPermissionsLauncher() =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             permissions.forEach { (_, isGranted) ->
@@ -145,7 +142,7 @@ class MainActivity :
                     enableMyLocation()
                 } else {
                     makeSnackBar(
-                        "위치 권한을 거부하셨습니다.",
+                        getString(R.string.all_location_permission_denial),
                     ).show()
                 }
             }
@@ -168,7 +165,7 @@ class MainActivity :
                 mapsViewModel.setCurrentLocation(currentLocation)
             }
             shouldShowRequestLocationPermissionsRationale() -> {
-                observeIsLocationDenial { showPermissionRequestDialog() }
+                observeIsLocationDenial { showLocationRequestRationaleDialog() }
             }
             else -> {
                 observeIsLocationDenial { requestPermissionLauncher.launch(locationPermissions) }
@@ -214,27 +211,10 @@ class MainActivity :
         return shouldRequestCoarseLocation && shouldRequestFineLocation
     }
 
-    // TODO: CustomDialog 로 변경, 하드 코딩된 String 제거
-    private fun showPermissionRequestDialog() {
-        val dialog =
-            MaterialAlertDialogBuilder(this)
-                .setTitle("위치 권한 설정")
-                .setMessage(getString(R.string.maps_location_permission_required_message))
-                .setNegativeButton("취소") { dialog, _ ->
-                    sharedViewModel.updateIsLocationDenial()
-                    dialog.dismiss()
-                }
-                .setPositiveButton("설정") { dialog, _ ->
-                    navigateToSetting()
-                    dialog.dismiss()
-                }
-        dialog.show()
-    }
-
-    private fun navigateToSetting() {
-        val uri = Uri.fromParts(MapsFragment.PACKAGE_SCHEME, this.packageName, null)
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri)
-        startActivity(intent)
+    private fun showLocationRequestRationaleDialog() {
+        if (!locationDialog.isAdded) {
+            locationDialog.show(supportFragmentManager, LocationDialogFragment.TAG)
+        }
     }
 
     private fun setupFusedLocationProviderClient() {
