@@ -507,3 +507,15 @@ fun View.setThumbnail(
             View.GONE
         }
 }
+
+@BindingAdapter("recoveryEnabled")
+fun Button.setRecoveryEnabled(recoveryCode: String?) {
+    isEnabled =
+        if (recoveryCode.isNullOrBlank() || recoveryCode.length < 36) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
