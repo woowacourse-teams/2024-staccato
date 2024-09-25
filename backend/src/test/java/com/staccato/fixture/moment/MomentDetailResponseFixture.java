@@ -1,5 +1,6 @@
 package com.staccato.fixture.moment;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,6 +18,8 @@ public class MomentDetailResponseFixture {
                 "happy",
                 "placeName",
                 "address",
+                new BigDecimal("37.77490000000000"),
+                new BigDecimal("-122.41940000000000"),
                 List.of());
     }
 }
