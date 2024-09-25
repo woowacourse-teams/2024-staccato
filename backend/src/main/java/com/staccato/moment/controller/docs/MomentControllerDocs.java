@@ -106,9 +106,9 @@ public interface MomentControllerDocs {
             @ApiResponse(description = "스타카토 수정 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                    
+                                        
                     (1) 수정하려는 스타카토가 존재하지 않을 때
-                    
+                                        
                     (2) Path Variable 형식이 잘못되었을 때
                                         
                     (3) 필수 값(사진을 제외한 모든 값)이 누락되었을 때
