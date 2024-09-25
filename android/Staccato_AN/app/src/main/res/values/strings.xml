@@ -91,6 +91,7 @@
     // activity_login
     <string name="login_start">시작하기</string>
     <string name="login_nickname_hint">닉네임을 입력해주세요</string>
+    <string name="login_recovery_click_here_if_need_recovery"><u>이전 기록을 불러오려면 여기를 눌러주세요</u></string>
 
     // activity_recovery
     <string name="recovery_title">이전 기록을 불러올게요</string>
