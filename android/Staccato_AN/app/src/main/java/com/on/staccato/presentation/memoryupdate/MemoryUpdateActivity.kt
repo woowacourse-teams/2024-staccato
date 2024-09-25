@@ -4,10 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.core.util.Pair
@@ -44,9 +41,6 @@ class MemoryUpdateActivity :
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
-    private val inputManager: InputMethodManager by lazy {
-        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-    }
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
@@ -63,7 +57,6 @@ class MemoryUpdateActivity :
 
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        showToast(getString(R.string.memory_update_posting))
         viewModel.updateMemory()
     }
 
@@ -82,17 +75,6 @@ class MemoryUpdateActivity :
         viewModel.setThumbnailUri(uris.first())
         viewModel.createThumbnailUrl(this, uris.first())
         showToast(getString(R.string.all_posting_photo))
-    }
-
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            currentFocus?.let { view ->
-                if (!isTouchInsideView(event, view)) {
-                    clearFocusAndHideKeyboard(view)
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event)
     }
 
     private fun buildDateRangePicker() =
@@ -140,27 +122,6 @@ class MemoryUpdateActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
-    }
-
-    private fun isTouchInsideView(
-        event: MotionEvent,
-        view: View,
-    ): Boolean {
-        val rect = android.graphics.Rect()
-        view.getGlobalVisibleRect(rect)
-        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
-    }
-
-    private fun clearFocusAndHideKeyboard(view: View) {
-        view.clearFocus()
-        hideKeyboard(view)
-    }
-
-    private fun hideKeyboard(view: View) {
-        inputManager.hideSoftInputFromWindow(
-            view.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS,
-        )
     }
 
     private fun showErrorToast() {

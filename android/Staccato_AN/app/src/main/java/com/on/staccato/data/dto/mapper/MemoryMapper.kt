@@ -17,8 +17,8 @@ fun MemoryResponse.toDomain() =
         memoryId = memoryId,
         memoryThumbnailUrl = memoryThumbnailUrl,
         memoryTitle = memoryTitle,
-        startAt = LocalDate.parse(startAt),
-        endAt = LocalDate.parse(endAt),
+        startAt = startAt?.let { LocalDate.parse(startAt) },
+        endAt = endAt?.let { LocalDate.parse(endAt) },
         description = description,
         mates = mates.map { it.toDomain() },
         moments = moments.map { it.toDomain() },
@@ -37,8 +37,8 @@ fun MemoriesResponse.toDomain(): MemoryCandidates =
 fun MemoryMomentDto.toDomain() =
     MemoryMoment(
         momentId = momentId,
-        placeName = placeName,
-        momentImageUrl = momentImageUrl,
+        momentTitle = staccatoTitle,
+        momentImageUrl = staccatoImageUrl,
         visitedAt = LocalDateTime.parse(visitedAt),
     )
 
@@ -47,6 +47,6 @@ fun NewMemory.toDto() =
         memoryThumbnailUrl = memoryThumbnailUrl,
         memoryTitle = memoryTitle,
         description = description,
-        startAt = startAt.toString(),
-        endAt = endAt.toString(),
+        startAt = startAt?.toString(),
+        endAt = endAt?.toString(),
     )

@@ -47,15 +47,16 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
     }
 
     override fun onScreenClicked() {
-        hideKeyboard()
+        hideKeyboardAndClearFocus()
     }
 
-    private fun hideKeyboard() {
-        if (currentFocus != null) {
+    private fun hideKeyboardAndClearFocus() {
+        currentFocus?.let {
             inputManager.hideSoftInputFromWindow(
-                currentFocus?.windowToken,
+                it.windowToken,
                 InputMethodManager.HIDE_NOT_ALWAYS,
             )
+            it.clearFocus()
         }
     }
 

@@ -24,16 +24,11 @@ class MomentRemoteDataSource(
 
     suspend fun updateMoment(
         momentId: Long,
-        placeName: String,
-        momentImageUrls: List<String>,
+        momentUpdateRequest: MomentUpdateRequest,
     ) {
         return momentApiService.putMoment(
             momentId = momentId,
-            momentUpdateRequest =
-                MomentUpdateRequest(
-                    placeName = placeName,
-                    momentImageUrls = momentImageUrls,
-                ),
+            momentUpdateRequest,
         )
     }
 
