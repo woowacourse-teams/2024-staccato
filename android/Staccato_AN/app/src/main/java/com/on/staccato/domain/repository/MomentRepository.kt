@@ -13,6 +13,7 @@ interface MomentRepository {
 
     suspend fun createMoment(
         memoryId: Long,
+        staccatoTitle: String,
         placeName: String,
         latitude: Double,
         longitude: Double,
@@ -23,7 +24,13 @@ interface MomentRepository {
 
     suspend fun updateMoment(
         momentId: Long,
+        staccatoTitle: String,
         placeName: String,
+        address: String,
+        latitude: Double,
+        longitude: Double,
+        visitedAt: LocalDateTime,
+        memoryId: Long,
         momentImageUrls: List<String>,
     ): Result<Unit>
 

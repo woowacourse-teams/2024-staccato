@@ -56,7 +56,6 @@ class MemoryCreationActivity :
 
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        showToast(getString(R.string.memory_creation_posting))
         viewModel.createMemory()
     }
 

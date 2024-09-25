@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.maps
+package com.on.staccato.presentation.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

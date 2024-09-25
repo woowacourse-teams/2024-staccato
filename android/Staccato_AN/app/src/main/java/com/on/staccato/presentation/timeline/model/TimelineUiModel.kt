@@ -6,6 +6,6 @@ data class TimelineUiModel(
     val memoryId: Long,
     val memoryTitle: String,
     val memoryThumbnailUrl: String? = null,
-    val startAt: LocalDate,
-    val endAt: LocalDate,
+    val startAt: LocalDate? = null,
+    val endAt: LocalDate? = null,
 )

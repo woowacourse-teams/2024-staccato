@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
             android:layout_marginBottom="2dp"
-            android:text="@{visit.placeName}"
+            android:text="@{visit.staccatoTitle}"
             android:textAppearance="@style/Typography.Title3"
             android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@id/tv_visits_visited_at"

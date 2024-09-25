@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,11 +30,11 @@ class MemoryCreationViewModel(
     val title = ObservableField<String>()
     val description = ObservableField<String>()
 
-    private val _startDate = MutableLiveData<LocalDate>(null)
-    val startDate: LiveData<LocalDate> get() = _startDate
+    private val _startDate = MediatorLiveData<LocalDate?>(null)
+    val startDate: LiveData<LocalDate?> get() = _startDate
 
-    private val _endDate = MutableLiveData<LocalDate>(null)
-    val endDate: LiveData<LocalDate> get() = _endDate
+    private val _endDate = MediatorLiveData<LocalDate?>(null)
+    val endDate: LiveData<LocalDate?> get() = _endDate
 
     private val _createdMemoryId = MutableLiveData<Long>()
     val createdMemoryId: LiveData<Long> get() = _createdMemoryId
@@ -52,6 +53,27 @@ class MemoryCreationViewModel(
 
     private val _isPhotoPosting = MutableLiveData<Boolean>(false)
     val isPhotoPosting: LiveData<Boolean> get() = _isPhotoPosting
+
+    val isPeriodSet = MutableLiveData<Boolean>(false)
+
+    init {
+        setPeriodMediator()
+    }
+
+    private fun setPeriodMediator() {
+        setDateMediator(_startDate)
+        setDateMediator(_endDate)
+    }
+
+    private fun setDateMediator(date: MediatorLiveData<LocalDate?>) {
+        with(date) {
+            addSource(isPeriodSet) { isSet ->
+                if (!isSet) {
+                    value = null
+                }
+            }
+        }
+    }
 
     fun createThumbnailUrl(
         context: Context,
@@ -107,8 +129,8 @@ class MemoryCreationViewModel(
         NewMemory(
             memoryThumbnailUrl = thumbnailUrl.value,
             memoryTitle = title.get() ?: throw IllegalArgumentException(),
-            startAt = startDate.value ?: throw IllegalArgumentException(),
-            endAt = endDate.value ?: throw IllegalArgumentException(),
+            startAt = startDate.value,
+            endAt = endDate.value,
             description = description.get(),
         )
 

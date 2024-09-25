@@ -5,6 +5,7 @@ import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.moment.FeelingRequest
 import com.on.staccato.data.dto.moment.MomentCreationRequest
 import com.on.staccato.data.dto.moment.MomentCreationResponse
+import com.on.staccato.data.dto.moment.MomentUpdateRequest
 import com.on.staccato.domain.model.Moment
 import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.domain.repository.MomentRepository
@@ -28,6 +29,7 @@ class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSour
 
     override suspend fun createMoment(
         memoryId: Long,
+        staccatoTitle: String,
         placeName: String,
         latitude: Double,
         longitude: Double,
@@ -39,6 +41,7 @@ class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSour
             remoteDataSource.createMoment(
                 MomentCreationRequest(
                     memoryId = memoryId,
+                    staccatoTitle = staccatoTitle,
                     placeName = placeName,
                     latitude = latitude,
                     longitude = longitude,
@@ -52,14 +55,29 @@ class MomentDefaultRepository(private val remoteDataSource: MomentRemoteDataSour
 
     override suspend fun updateMoment(
         momentId: Long,
+        staccatoTitle: String,
         placeName: String,
+        address: String,
+        latitude: Double,
+        longitude: Double,
+        visitedAt: LocalDateTime,
+        memoryId: Long,
         momentImageUrls: List<String>,
     ): Result<Unit> {
         return runCatching {
             remoteDataSource.updateMoment(
                 momentId = momentId,
-                placeName = placeName,
-                momentImageUrls = momentImageUrls,
+                momentUpdateRequest =
+                    MomentUpdateRequest(
+                        staccatoTitle = staccatoTitle,
+                        placeName = placeName,
+                        address = address,
+                        latitude = latitude,
+                        longitude = longitude,
+                        visitedAt = visitedAt.toString(),
+                        memoryId = memoryId,
+                        momentImageUrls = momentImageUrls,
+                    ),
             )
         }
     }
