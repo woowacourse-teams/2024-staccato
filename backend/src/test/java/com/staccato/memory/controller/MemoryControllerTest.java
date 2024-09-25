@@ -309,7 +309,7 @@ class MemoryControllerTest {
                     "moments": [
                             {
                                 "momentId": null,
-                                "placeName": "placeName",
+                                "staccatoTitle": "staccatoTitle",
                                 "momentImageUrl": "image.jpg",
                                 "visitedAt": "2024-07-01T10:00:00"
                             }
@@ -350,7 +350,7 @@ class MemoryControllerTest {
                     "moments": [
                             {
                                 "momentId": null,
-                                "placeName": "placeName",
+                                "staccatoTitle": "staccatoTitle",
                                 "momentImageUrl": "image.jpg",
                                 "visitedAt": "2024-07-01T10:00:00"
                             }

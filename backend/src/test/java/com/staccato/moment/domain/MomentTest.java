@@ -32,6 +32,7 @@ class MomentTest {
         // when & then
         assertThatCode(() -> Moment.builder()
                 .visitedAt(LocalDateTime.now().plusDays(1))
+                .title("staccatoTitle")
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)
@@ -52,6 +53,7 @@ class MomentTest {
         // when & then
         assertThatCode(() -> Moment.builder()
                 .visitedAt(LocalDateTime.now().plusDays(1))
+                .title("staccatoTitle")
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)
@@ -61,27 +63,28 @@ class MomentTest {
                 .build()).doesNotThrowAnyException();
     }
 
-    @DisplayName("스타카토 생성 시 placeName의 앞 뒤 공백이 제거된다.")
+    @DisplayName("스타카토 생성 시 title의 앞 뒤 공백이 제거된다.")
     @Test
     void trimPlaceName() {
         // given
         Memory memory = MemoryFixture.create(MemberFixture.create());
-        String placeName = " placeName ";
-        String expectedPlaceName = "placeName";
+        String title = " staccatoTitle ";
+        String expectedTitle = "staccatoTitle";
 
         // when
         Moment moment = Moment.builder()
                 .visitedAt(LocalDateTime.of(memory.getTerm().getStartAt(), LocalTime.MIN))
-                .placeName(placeName)
+                .title(title)
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)
+                .placeName("placeName")
                 .address("address")
                 .memory(memory)
                 .momentImages(new MomentImages(List.of()))
                 .build();
 
         // then
-        assertThat(moment.getPlaceName()).isEqualTo(expectedPlaceName);
+        assertThat(moment.getTitle()).isEqualTo(expectedTitle);
     }
 
     @DisplayName("추억 날짜 안에 스타카토 날짜가 포함되지 않으면 예외를 발생시킨다.")
@@ -98,6 +101,7 @@ class MomentTest {
         // when & then
         assertThatThrownBy(() -> Moment.builder()
                 .visitedAt(LocalDateTime.now().plusDays(plusDays))
+                .title("staccatoTitle")
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)

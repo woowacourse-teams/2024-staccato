@@ -12,7 +12,7 @@ public record MomentResponse(
         @Schema(example = "1")
         Long momentId,
         @Schema(example = "런던 아이")
-        String placeName,
+        String staccatoTitle,
         @Schema(example = "https://example.com/memorys/london_eye.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String momentImageUrl,
@@ -20,6 +20,6 @@ public record MomentResponse(
         LocalDateTime visitedAt
 ) {
     public MomentResponse(Moment moment, String momentImageUrl) {
-        this(moment.getId(), moment.getPlaceName(), momentImageUrl, moment.getVisitedAt());
+        this(moment.getId(), moment.getTitle(), momentImageUrl, moment.getVisitedAt());
     }
 }

@@ -25,6 +25,7 @@ import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
+import com.staccato.moment.service.dto.response.MomentDetailResponseOldV;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
@@ -59,6 +60,14 @@ public class MomentController implements MomentControllerDocs {
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId) {
         MomentDetailResponse momentDetailResponse = momentService.readMomentById(momentId, member);
+        return ResponseEntity.ok().body(momentDetailResponse);
+    }
+
+    @GetMapping("/old/{momentId}")
+    public ResponseEntity<MomentDetailResponseOldV> readMomentByIdOldV(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId) {
+        MomentDetailResponseOldV momentDetailResponse = momentService.readMomentByIdOldV(momentId, member);
         return ResponseEntity.ok().body(momentDetailResponse);
     }
 

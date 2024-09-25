@@ -21,6 +21,8 @@ spring:
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true
+  flyway:
+    enabled: false
   servlet:
     multipart:
       max-file-size: 20MB
