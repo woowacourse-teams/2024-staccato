@@ -62,9 +62,6 @@
             android:name=".presentation.momentcreation.MomentCreationActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.momentcreation.AutocompleteActivity"
-            android:exported="false" />
-        <activity
             android:name=".presentation.memorycreation.MemoryCreationActivity"
             android:exported="false" />
     </application>
