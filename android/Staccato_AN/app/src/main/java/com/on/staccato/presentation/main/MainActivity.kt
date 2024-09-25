@@ -21,6 +21,7 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -51,6 +52,7 @@ import com.on.staccato.presentation.maps.MapsViewModel
 import com.on.staccato.presentation.maps.MapsViewModelFactory
 import com.on.staccato.presentation.maps.model.MarkerUiModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
+import com.on.staccato.presentation.moment.MomentFragment
 import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
 import com.on.staccato.presentation.util.showToast
@@ -99,6 +101,7 @@ class MainActivity :
         setupFusedLocationProviderClient()
         observeCurrentLocation()
         observeMomentLocations()
+        observeStaccatoId()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
@@ -115,6 +118,7 @@ class MainActivity :
         googleMap = map
         moveDefaultLocation()
         enableMyLocation()
+        onMarkerClicked(map)
     }
 
     private fun moveDefaultLocation() {
@@ -274,6 +278,34 @@ class MainActivity :
             markers.add(MarkerUiModel(momentLocation.momentId, markerId))
         }
         mapsViewModel.setMarkers(markers)
+    }
+
+    private fun onMarkerClicked(googleMap: GoogleMap) {
+        googleMap.setOnMarkerClickListener { marker ->
+            mapsViewModel.findStaccatoId(marker.id)
+            false
+        }
+    }
+
+    private fun observeStaccatoId() {
+        mapsViewModel.staccatoId.observe(this) { staccatoId ->
+            navigateToStaccato(staccatoId)
+            supportFragmentManager.setFragmentResult(
+                BOTTOM_SHEET_STATE_REQUEST_KEY,
+                bundleOf(BOTTOM_SHEET_NEW_STATE to STATE_EXPANDED),
+            )
+        }
+    }
+
+    private fun navigateToStaccato(staccatoId: Long?) {
+        val navOptions =
+            NavOptions.Builder()
+                .setPopUpTo(R.id.momentFragment, true)
+                .build()
+        val bundle =
+            bundleOf(MOMENT_ID_KEY to staccatoId)
+
+        navController.navigate(R.id.momentFragment, bundle, navOptions)
     }
 
     private fun makeSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
