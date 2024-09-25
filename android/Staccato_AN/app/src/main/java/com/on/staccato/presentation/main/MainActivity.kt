@@ -147,10 +147,6 @@ class MainActivity :
         map?.getMapAsync(this)
     }
 
-    private fun setupFusedLocationProviderClient() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-    }
-
     private fun enableMyLocation() {
         when {
             checkSelfLocationPermission() -> {
@@ -172,19 +168,6 @@ class MainActivity :
                     if (!isCancel) requestPermissionLauncher.launch(locationPermissions)
                 }
             }
-        }
-    }
-
-    private fun moveCurrentLocation(currentLocation: Task<Location>) {
-        currentLocation.addOnSuccessListener { location ->
-            moveCamera(location)
-        }
-    }
-
-    private fun moveCamera(location: Location?) {
-        if (location != null) {
-            val currentLocation = LatLng(location.latitude, location.longitude)
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
         }
     }
 
@@ -241,6 +224,23 @@ class MainActivity :
         val uri = Uri.fromParts(MapsFragment.PACKAGE_SCHEME, this.packageName, null)
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri)
         startActivity(intent)
+    }
+
+    private fun setupFusedLocationProviderClient() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+    }
+
+    private fun moveCurrentLocation(currentLocation: Task<Location>) {
+        currentLocation.addOnSuccessListener { location ->
+            moveCamera(location)
+        }
+    }
+
+    private fun moveCamera(location: Location?) {
+        if (location != null) {
+            val currentLocation = LatLng(location.latitude, location.longitude)
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
+        }
     }
 
     private fun observeMomentLocations() {
