@@ -12,7 +12,8 @@
     <string name="all_photo_number">(%s/%s)</string>
     <string name="all_photo_attach">사진을 첨부해 주세요</string>
     <string name="all_visited_date">시간</string>
-    <string name="all_memory_visited_date">추억과 시간을 선택해 주세요</string>
+    <string name="all_visited_at">날짜 및 시간</string>
+    <string name="all_please_select_visited_at">날짜 및 시간을 선택해 주세요</string>
     <string name="all_date_dots_format">%s. %s. %s</string>
     <string name="all_date_kr_format">%s년 %s월 %s일</string>
     <string name="all_date_time_am_pm_kr_format">%s년 %s월 %s일  %s %s시</string>
