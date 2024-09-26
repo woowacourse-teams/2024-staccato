@@ -304,7 +304,7 @@ class MomentServiceTest extends ServiceSliceTest {
 
         // when
         momentService.deleteMomentById(moment.getId(), member);
-
+// service 먼저 삭제
         // then
         assertAll(
                 () -> assertThat(momentRepository.findById(moment.getId())).isEmpty(),
