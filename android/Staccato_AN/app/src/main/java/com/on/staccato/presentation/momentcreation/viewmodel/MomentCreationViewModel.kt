@@ -3,7 +3,6 @@ package com.on.staccato.presentation.momentcreation.viewmodel
 import android.content.Context
 import android.location.Location
 import android.net.Uri
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -27,6 +26,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 class MomentCreationViewModel(
@@ -65,32 +65,44 @@ class MomentCreationViewModel(
     val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
 
     val memoryAndVisitedAt =
-        MediatorLiveData<Triple<MemoryCandidates, MemoryCandidate, LocalDateTime?>>().apply {
+        MediatorLiveData<Triple<MemoryCandidates, MemoryCandidate, LocalDateTime>>().apply {
             var latestMemoryCandidates: MemoryCandidates? = null
             var latestSelectedMemory: MemoryCandidate? = null
-            var latestVisitedAt: LocalDateTime? = null
+            var latestSelectedVisitedAt: LocalDateTime? = null
 
             addSource(memoryCandidates) { memories ->
                 latestMemoryCandidates = memories
-                if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
+                if (latestMemoryCandidates != null && latestSelectedMemory != null && latestSelectedVisitedAt != null) {
                     value =
-                        Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
+                        Triple(
+                            latestMemoryCandidates!!,
+                            latestSelectedMemory!!,
+                            latestSelectedVisitedAt!!,
+                        )
                 }
             }
 
             addSource(selectedMemory) { selectedMemory ->
                 latestSelectedMemory = selectedMemory
-                if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
+                if (latestMemoryCandidates != null && latestSelectedMemory != null && latestSelectedVisitedAt != null) {
                     value =
-                        Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
+                        Triple(
+                            latestMemoryCandidates!!,
+                            latestSelectedMemory!!,
+                            latestSelectedVisitedAt!!,
+                        )
                 }
             }
 
             addSource(selectedVisitedAt) { visitedAt ->
-                latestVisitedAt = visitedAt
-                if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
+                latestSelectedVisitedAt = visitedAt
+                if (latestMemoryCandidates != null && latestSelectedMemory != null && latestSelectedVisitedAt != null) {
                     value =
-                        Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
+                        Triple(
+                            latestMemoryCandidates!!,
+                            latestSelectedMemory!!,
+                            latestSelectedVisitedAt!!,
+                        )
                 }
             }
         }
@@ -168,30 +180,31 @@ class MomentCreationViewModel(
                 .onSuccess { memoryCandidates ->
                     _memoryCandidates.value = memoryCandidates
                     if (memoryCandidates.memoryCandidate.isNotEmpty()) {
-                        if (memoryId == 0L) {
-                            _selectedMemory.value = memoryCandidates.memoryCandidate[0]
-                            _selectedVisitedAt.value =
-                                memoryCandidates.memoryCandidate[0].endAt?.atStartOfDay()
-                                    ?: LocalDateTime.now()
-                            Log.d(
-                                "ㅌㅅㅌ 생성 뷰모델",
-                                "메인에서 selectedMemory = ${selectedMemory.value} 설정 완",
-                            )
-                        } else {
-                            _selectedMemory.value =
-                                memoryCandidates.memoryCandidate.first { memory ->
-                                    memoryId == memory.memoryId
-                                }
-                            _selectedVisitedAt.value =
-                                selectedMemory.value?.endAt?.atStartOfDay() ?: LocalDateTime.now()
-                            Log.d(
-                                "ㅌㅅㅌ 생성 뷰모델",
-                                "추억에서 selectedMemory = ${selectedMemory.value} 설정 완",
-                            )
-                        }
+                        initSelectedMemoryAndVisitedAt(memoryId, memoryCandidates.memoryCandidate)
                     }
                 }
         }
+    }
+
+    private fun initSelectedMemoryAndVisitedAt(
+        memoryId: Long,
+        memoryCandidates: List<MemoryCandidate>,
+    ) {
+        val targetMemory =
+            if (memoryId == 0L) {
+                memoryCandidates.first()
+            } else {
+                memoryCandidates.first { memoryId == it.memoryId }
+            }
+        _selectedMemory.value = targetMemory
+        _selectedVisitedAt.value = getClosestDateTime(targetMemory.endAt)
+    }
+
+    private fun getClosestDateTime(mostRecentDate: LocalDate?): LocalDateTime {
+        val now = LocalDateTime.now()
+        return mostRecentDate?.atStartOfDay()?.let {
+            if (it.isAfter(now)) now else it
+        } ?: now
     }
 
     fun updateSelectedImageUris(newUris: Array<Uri>) {
@@ -212,10 +225,6 @@ class MomentCreationViewModel(
             }
             photoJobs[photo.uri.toString()] = job
         }
-    }
-
-    fun updateSelectedVisitedAt(newSelectedVisitedAt: LocalDateTime) {
-        _selectedVisitedAt.value = newSelectedVisitedAt
     }
 
     fun createMoment() =
