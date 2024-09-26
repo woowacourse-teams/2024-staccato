@@ -10,8 +10,6 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.image.domain.ImageExtension;
 import com.staccato.image.infrastructure.S3ObjectClient;
 import com.staccato.image.service.dto.ImageUrlResponse;
-import com.staccato.member.domain.Member;
-import com.staccato.member.service.dto.response.MemberProfileResponse;
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -49,9 +47,5 @@ public class ImageService {
         } catch (IOException e) {
             throw new StaccatoException("전송된 파일이 손상되었거나 지원되지 않는 형식입니다.");
         }
-    }
-
-    public MemberProfileResponse readMember(Member any) {
-        return null;
     }
 }
