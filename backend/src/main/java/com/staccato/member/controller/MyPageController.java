@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Validated
 @RestController
 @RequiredArgsConstructor
-public class MemberController implements MemberControllerDocs {
+public class MyPageController implements MemberControllerDocs {
     private final MemberService memberService;
     private final ImageService imageService;
 
