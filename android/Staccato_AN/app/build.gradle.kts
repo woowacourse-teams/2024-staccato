@@ -14,13 +14,12 @@ val keystoreProperties =
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.kotlinKapt)
+    id("kotlin-kapt")
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.googleServices)
     alias(libs.plugins.firebaseCrashlytics)
     alias(libs.plugins.mapsplatformSecretsGradlePlugin)
-//    alias(libs.plugins.hiltAndroid)
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.hiltAndroid)
 }
 
 android {
