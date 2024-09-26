@@ -39,7 +39,7 @@ public interface MyPageControllerDocs {
     @Operation(summary = "사용자 프로필 조회", description = "프로필 상 사용자의 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "사용자 정보 조회 성공", responseCode = "200"),
-            @ApiResponse(description = "(3) 요청 형식이 잘못 되었을 때", responseCode = "400")
+            @ApiResponse(description = "요청 형식이 잘못 되었을 때", responseCode = "400")
     })
     public ResponseEntity<MemberProfileResponse> readMyPage(@Parameter(hidden = true) @LoginMember Member member);
 }
