@@ -1,6 +1,7 @@
 package com.staccato.memory.service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -44,7 +45,9 @@ public class MemoryService {
     }
 
     public MemoryResponses readAllMemories(Member member) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId());
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdOrderByMemory(member.getId());
+        sortByCreatedAtDescending(memoryMembers);
+
         return MemoryResponses.from(
                 memoryMembers.stream()
                         .map(MemoryMember::getMemory)
@@ -53,12 +56,18 @@ public class MemoryService {
     }
 
     public MemoryNameResponses readAllMemoriesIncludingDate(Member member, LocalDate currentDate) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndIncludingDateOrderByCreatedAtDesc(member.getId(), currentDate);
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndIncludingDate(member.getId(), currentDate);
+        sortByCreatedAtDescending(memoryMembers);
+
         return MemoryNameResponses.from(
                 memoryMembers.stream()
                         .map(MemoryMember::getMemory)
                         .toList()
         );
+    }
+
+    private void sortByCreatedAtDescending(List<MemoryMember> memoryMembers) {
+        memoryMembers.sort(Comparator.comparing(MemoryMember::getCreatedAt).reversed());
     }
 
     public MemoryDetailResponse readMemoryById(long memoryId, Member member) {

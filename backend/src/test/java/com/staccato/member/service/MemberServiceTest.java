@@ -8,7 +8,7 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.member.service.dto.response.MemberProfileResponse;
+import com.staccato.member.service.dto.response.MemberProfileImageResponse;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -29,12 +29,12 @@ class MemberServiceTest extends ServiceSliceTest {
         String imageUrl = "image.jpg";
 
         // when
-        MemberProfileResponse memberProfileResponse = memberService.changeProfileImage(member, imageUrl);
+        MemberProfileImageResponse memberProfileImageResponse = memberService.changeProfileImage(member, imageUrl);
 
         // then
         Member result = memberRepository.findById(member.getId()).get();
         assertAll(
-                () -> assertThat(memberProfileResponse.profileImageUrl()).isEqualTo(imageUrl),
+                () -> assertThat(memberProfileImageResponse.profileImageUrl()).isEqualTo(imageUrl),
                 () -> assertThat(result.getImageUrl()).isEqualTo(imageUrl)
         );
     }

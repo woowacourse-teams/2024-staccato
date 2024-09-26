@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.member.service.dto.response.MemberProfileResponse;
+import com.staccato.member.service.dto.response.MemberProfileImageResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -15,10 +15,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public MemberProfileResponse changeProfileImage(Member member, String imageUrl) {
+    public MemberProfileImageResponse changeProfileImage(Member member, String imageUrl) {
         Member target = getMemberById(member.getId());
         target.updateImage(imageUrl);
-        return new MemberProfileResponse(target.getImageUrl());
+        return new MemberProfileImageResponse(target.getImageUrl());
     }
 
     private Member getMemberById(long memberId) {
