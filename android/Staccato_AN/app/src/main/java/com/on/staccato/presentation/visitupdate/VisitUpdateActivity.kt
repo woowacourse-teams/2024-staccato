@@ -36,6 +36,7 @@ import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_
 import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.on.staccato.presentation.momentcreation.PlaceSearchHandler
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
+import com.on.staccato.presentation.momentcreation.dialog.MemoryVisitedAtSelectionFragment
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
@@ -52,6 +53,9 @@ class VisitUpdateActivity :
     BindingActivity<ActivityVisitUpdateBinding>() {
     override val layoutResourceId = R.layout.activity_visit_update
     private val viewModel: VisitUpdateViewModel by viewModels()
+    private val memoryVisitedAtSelectionFragment by lazy {
+        MemoryVisitedAtSelectionFragment()
+    }
     private val photoAttachFragment by lazy {
         PhotoAttachFragment().apply { setMultipleAbleOption(true) }
     }
@@ -96,6 +100,15 @@ class VisitUpdateActivity :
         viewModel.updateSelectedImageUris(arrayOf(*uris))
     }
 
+    override fun onMemorySelectionClicked() {
+        if (!memoryVisitedAtSelectionFragment.isAdded) {
+            memoryVisitedAtSelectionFragment.show(
+                fragmentManager,
+                MemoryVisitedAtSelectionFragment.TAG,
+            )
+        }
+    }
+
     override fun onUpdateDoneClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         viewModel.updateVisit(staccatoId)
@@ -105,6 +118,7 @@ class VisitUpdateActivity :
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         initBinding()
         initToolbar()
+        initMemorySelectionFragment()
         initAdapter()
         initItemTouchHelper()
         observeViewModelData()
@@ -175,6 +189,12 @@ class VisitUpdateActivity :
         }
     }
 
+    private fun initMemorySelectionFragment() {
+        memoryVisitedAtSelectionFragment.setOnSelected { selectedMemory, selectedVisitedAt ->
+            viewModel.selectMemoryVisitedAt(selectedMemory, selectedVisitedAt)
+        }
+    }
+
     private fun observeViewModelData() {
         viewModel.placeName.observe(this) {
             autocompleteFragment.setText(it)
@@ -193,6 +213,13 @@ class VisitUpdateActivity :
         viewModel.currentPhotos.observe(this) { photos ->
             photoAttachAdapter.submitList(
                 listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
+            )
+        }
+        viewModel.memoryAndVisitedAt.observe(this) { memoryAndVisitedAt ->
+            memoryVisitedAtSelectionFragment.initMemoryCandidates(
+                memoryAndVisitedAt.first.memoryCandidate.toList(),
+                memoryAndVisitedAt.second,
+                memoryAndVisitedAt.third,
             )
         }
         viewModel.errorMessage.observe(this) { message ->

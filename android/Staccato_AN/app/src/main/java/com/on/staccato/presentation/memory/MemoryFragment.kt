@@ -81,18 +81,14 @@ class MemoryFragment :
     }
 
     override fun onVisitCreationClicked() {
-        if (viewModel.isInPeriod()) {
-            viewModel.memory.value?.let {
-                val visitCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
-                MomentCreationActivity.startWithResultLauncher(
-                    memoryId,
-                    it.title,
-                    requireContext(),
-                    visitCreationLauncher,
-                )
-            }
-        } else {
-            showToast(getString(R.string.memory_unable_to_create_moment))
+        viewModel.memory.value?.let {
+            val visitCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
+            MomentCreationActivity.startWithResultLauncher(
+                memoryId,
+                it.title,
+                requireContext(),
+                visitCreationLauncher,
+            )
         }
     }
 

@@ -5,14 +5,17 @@ import android.location.Location
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.ApiResponseHandler.onException
 import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.domain.model.MemoryCandidate
+import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.MomentRepository
+import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
@@ -33,6 +36,7 @@ import javax.inject.Inject
 class VisitUpdateViewModel
     @Inject
     constructor(
+        private val timelineRepository: TimelineRepository,
         private val momentRepository: MomentRepository,
         private val imageRepository: ImageRepository,
     ) : AttachedPhotoHandler, ViewModel() {
@@ -57,11 +61,45 @@ class VisitUpdateViewModel
         private val _longitude = MutableLiveData<Double?>()
         private val longitude: LiveData<Double?> get() = _longitude
 
-        private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>(LocalDateTime.now())
+        private val _selectedMemory = MutableLiveData<MemoryCandidate>()
+        val selectedMemory: LiveData<MemoryCandidate> get() = this._selectedMemory
+
+        private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
+        val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
+
+        private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
 
-        private val _memory = MutableLiveData<MemoryCandidate>()
-        val memory: LiveData<MemoryCandidate> get() = _memory
+        val memoryAndVisitedAt =
+            MediatorLiveData<Triple<MemoryCandidates, MemoryCandidate, LocalDateTime?>>().apply {
+                var latestMemoryCandidates: MemoryCandidates? = null
+                var latestSelectedMemory: MemoryCandidate? = null
+                var latestVisitedAt: LocalDateTime? = null
+
+                addSource(memoryCandidates) { memories ->
+                    latestMemoryCandidates = memories
+                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
+                        value =
+                            Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
+                    }
+                }
+
+                addSource(selectedMemory) { selectedMemory ->
+                    latestSelectedMemory = selectedMemory
+                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
+                        value =
+                            Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
+                    }
+                }
+
+                addSource(selectedVisitedAt) { visitedAt ->
+                    latestVisitedAt = visitedAt
+                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
+                        value =
+                            Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
+                    }
+                }
+            }
 
         private val _isUpdateCompleted = MutableLiveData(false)
         val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
@@ -92,13 +130,21 @@ class VisitUpdateViewModel
             }
         }
 
+        fun selectMemoryVisitedAt(
+            memory: MemoryCandidate,
+            visitedAt: LocalDateTime,
+        ) {
+            _selectedMemory.value = memory
+            _selectedVisitedAt.value = visitedAt
+        }
+
         fun initViewModelData(
             staccatoId: Long,
             memoryId: Long,
             memoryTitle: String,
         ) {
+            fetchMemoryCandidates(memoryId)
             fetchStaccato(staccatoId)
-            initMemoryData(memoryId, memoryTitle)
         }
 
         fun selectNewPlace(
@@ -160,7 +206,9 @@ class VisitUpdateViewModel
                 val latitudeValue = latitude.value ?: 0.0
                 val longitudeValue = longitude.value ?: 0.0
                 val visitedAtValue = selectedVisitedAt.value ?: return@launch handleFailure()
-                val memoryIdValue = memory.value?.memoryId ?: return@launch handleFailure()
+                val memoryIdValue =
+                    this@VisitUpdateViewModel.selectedMemory.value?.memoryId
+                        ?: return@launch handleFailure()
                 val momentImageUrlsValue =
                     currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                         ?: return@launch handleFailure()
@@ -183,6 +231,7 @@ class VisitUpdateViewModel
             }
         }
 
+        // 코루틴
         private fun fetchStaccato(staccatoId: Long) {
             viewModelScope.launch {
                 momentRepository.getMoment(momentId = staccatoId)
@@ -190,11 +239,11 @@ class VisitUpdateViewModel
                         staccatoTitle.set(staccato.staccatoTitle)
                         _address.value = staccato.address
                         _selectedVisitedAt.value = staccato.visitedAt
-                        _memory.value =
-                            memory.value?.copy(
-                                memoryId = staccato.memoryId,
-                                memoryTitle = staccato.memoryTitle,
-                            )
+                        memoryCandidates.value?.memoryCandidate?.firstOrNull {
+                            it.memoryId == staccato.memoryId
+                        }?.let {
+                            _selectedMemory.value = it
+                        }
                         _placeName.value = staccato.placeName
                         _currentPhotos.value = createPhotosByUrls(staccato.momentImageUrls)
                     }.onFailure { e ->
@@ -203,15 +252,20 @@ class VisitUpdateViewModel
             }
         }
 
-        private fun initMemoryData(
-            memoryId: Long,
-            memoryTitle: String,
-        ) {
-            _memory.value =
-                MemoryCandidate(
-                    memoryId = memoryId,
-                    memoryTitle = memoryTitle,
-                )
+        // 코루틴
+        private fun fetchMemoryCandidates(memoryId: Long) {
+            viewModelScope.launch {
+                timelineRepository.getMemoryCandidates()
+                    .onSuccess { memoryCandidates ->
+                        if (memoryCandidates.memoryCandidate.isNotEmpty()) {
+                            _selectedMemory.value =
+                                memoryCandidates.memoryCandidate.first { memory ->
+                                    memoryId == memory.memoryId
+                                }
+                        }
+                        _memoryCandidates.value = memoryCandidates
+                    }
+            }
         }
 
         private fun createPhotoUploadJob(

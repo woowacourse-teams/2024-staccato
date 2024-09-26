@@ -36,7 +36,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:subtitle="@string/visit_creation_toolbar_subtitle"
-            app:title="@string/visit_creation_toolbar_title" />
+            app:title="@string/visit_update_toolbar_title" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -233,9 +233,10 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
+                    android:onClick="@{()->visitUpdateHandler.onMemorySelectionClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
-                    android:text="@{viewModel.memory.memoryTitle}"
+                    android:text="@{viewModel.selectedMemory.memoryTitle}"
                     android:textAppearance="@style/Typography.Body1"
                     android:textColor="@color/staccato_black"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -243,11 +244,11 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title" />
 
                 <TextView
-                    android:id="@+id/tv_visited_at_title"
+                    android:id="@+id/tv_select_memory_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="@string/all_visited_date"
+                    android:text="@string/all_visited_at"
                     android:textAppearance="@style/Typography.Title2"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_selection_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection" />
@@ -255,9 +256,9 @@
                 <TextView
                     android:id="@+id/tv_visit_update_required_mark_fourth"
                     style="@style/RequiredMarkStyle"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_visited_at_title"
-                    app:layout_constraintStart_toEndOf="@id/tv_visited_at_title"
-                    app:layout_constraintTop_toTopOf="@id/tv_visited_at_title" />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_memory_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_select_memory_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_select_memory_title" />
 
                 <TextView
                     android:id="@+id/tv_visited_at"
@@ -266,13 +267,15 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
+                    android:onClick="@{()->visitUpdateHandler.onMemorySelectionClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
-                    bind:setDateTimeWithAmPm="@{viewModel.selectedVisitedAt}" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_select_memory_title"
+                    bind:setDateTimeWithAmPm="@{viewModel.selectedVisitedAt}"
+                    bind:setMemoryCandidates="@{viewModel.memoryCandidates}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_visit_update_done"
@@ -289,7 +292,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
                     bind:address="@{viewModel.address}"
                     bind:photos="@{viewModel.currentPhotos}"
-                    bind:selectedMemory="@{viewModel.memory}"
+                    bind:selectedMemory="@{viewModel.selectedMemory}"
                     bind:staccatoTitle="@{viewModel.staccatoTitle}"
                     bind:visitedAt="@{viewModel.selectedVisitedAt}" />
 

@@ -17,7 +17,6 @@ import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.memory.model.MemoryUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,17 +42,6 @@ class MemoryViewModel
                     .onServerError(::handleServerError)
                     .onException(::handelException)
             }
-        }
-
-        fun isInPeriod(): Boolean {
-            return memory.value?.let { memory ->
-                val nowDate = LocalDate.now()
-                when {
-                    memory.startAt != null && memory.endAt != null -> memory.startAt <= nowDate && nowDate <= memory.endAt
-                    memory.startAt == null && memory.endAt == null -> true
-                    else -> false
-                }
-            } ?: false
         }
 
         fun deleteMemory(memoryId: Long) {
