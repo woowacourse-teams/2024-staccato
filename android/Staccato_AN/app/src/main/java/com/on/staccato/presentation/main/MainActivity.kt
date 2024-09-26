@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
@@ -88,9 +87,6 @@ class MainActivity :
     }
     private val locationDialog = LocationDialogFragment()
 
-    private val inputManager: InputMethodManager by lazy {
-        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-    }
     private val requestPermissionLauncher = initRequestPermissionsLauncher()
 
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
@@ -156,7 +152,8 @@ class MainActivity :
         }
 
     private fun setupGoogleMap() {
-        val map: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.fragment_container_view_map) as? SupportMapFragment
+        val map: SupportMapFragment? =
+            supportFragmentManager.findFragmentById(R.id.fragment_container_view_map) as? SupportMapFragment
         map?.getMapAsync(this)
     }
 
@@ -169,7 +166,8 @@ class MainActivity :
                 .addLocationRequest(locationRequest)
 
         val settingsClient: SettingsClient = LocationServices.getSettingsClient(this)
-        val locationSettingsResponse: Task<LocationSettingsResponse> = settingsClient.checkLocationSettings(builder.build())
+        val locationSettingsResponse: Task<LocationSettingsResponse> =
+            settingsClient.checkLocationSettings(builder.build())
 
         succeedLocationSettings(locationSettingsResponse)
         failLocationSettings(locationSettingsResponse)
@@ -209,9 +207,11 @@ class MainActivity :
                     )
                 mapsViewModel.setCurrentLocation(currentLocation)
             }
+
             shouldShowRequestLocationPermissionsRationale() -> {
                 observeIsLocationDenial { showLocationRequestRationaleDialog() }
             }
+
             else -> {
                 observeIsLocationDenial { requestPermissionLauncher.launch(locationPermissions) }
             }
@@ -298,7 +298,12 @@ class MainActivity :
         currentLocation: LatLng,
         mapPaddingBottom: Int = DEFAULT_MAP_PADDING,
     ) {
-        googleMap.setPadding(DEFAULT_MAP_PADDING, DEFAULT_MAP_PADDING, DEFAULT_MAP_PADDING, mapPaddingBottom)
+        googleMap.setPadding(
+            DEFAULT_MAP_PADDING,
+            DEFAULT_MAP_PADDING,
+            DEFAULT_MAP_PADDING,
+            mapPaddingBottom,
+        )
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
     }
 
@@ -452,6 +457,7 @@ class MainActivity :
 
                             STATE_HALF_EXPANDED -> {
                                 mapsViewModel.setIsHalf(isHalf = true)
+                                currentFocus?.let { clearFocusAndHideKeyboard(it) }
                             }
 
                             else -> {
@@ -460,6 +466,7 @@ class MainActivity :
                                     R.drawable.shape_bottom_sheet_20dp,
                                 )
                                 mapsViewModel.setIsHalf(isHalf = false)
+                                currentFocus?.let { clearFocusAndHideKeyboard(it) }
                             }
                         }
                     }
@@ -485,33 +492,13 @@ class MainActivity :
         }
     }
 
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            currentFocus?.let { view ->
-                if (!isTouchInsideView(event, view)) {
-                    clearFocusAndHideKeyboard(view)
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event)
-    }
-
-    private fun isTouchInsideView(
-        event: MotionEvent,
-        view: View,
-    ): Boolean {
-        val rect = android.graphics.Rect()
-        view.getGlobalVisibleRect(rect)
-        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
-    }
-
     private fun clearFocusAndHideKeyboard(view: View) {
         view.clearFocus()
         hideKeyboard(view)
     }
 
     private fun hideKeyboard(view: View) {
-        inputManager.hideSoftInputFromWindow(
+        inputMethodManager.hideSoftInputFromWindow(
             view.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS,
         )
