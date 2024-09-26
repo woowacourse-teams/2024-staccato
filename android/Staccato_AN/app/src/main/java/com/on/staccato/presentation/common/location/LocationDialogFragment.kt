@@ -13,7 +13,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.on.staccato.databinding.FragmentLocationDialogBinding
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LocationDialogFragment : DialogFragment(), LocationDialogHandler {
     private var _binding: FragmentLocationDialogBinding? = null
     private val binding get() = _binding!!

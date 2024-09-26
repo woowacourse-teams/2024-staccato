@@ -15,17 +15,17 @@ import com.on.staccato.R
 import com.on.staccato.StaccatoApplication.Companion.userInfoPrefsManager
 import com.on.staccato.databinding.ActivityLoginBinding
 import com.on.staccato.presentation.login.viewmodel.LoginViewModel
-import com.on.staccato.presentation.login.viewmodel.LoginViewModelFactory
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.util.showToast
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity(), LoginHandler {
     private lateinit var binding: ActivityLoginBinding
-    private val loginViewModel: LoginViewModel by viewModels {
-        LoginViewModelFactory()
-    }
+    private val loginViewModel: LoginViewModel by viewModels()
+
     private var isLoggedIn = false
     private val inputManager: InputMethodManager by lazy {
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager

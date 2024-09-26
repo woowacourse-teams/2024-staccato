@@ -35,17 +35,18 @@ import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memory.model.MemoryUiModel.Companion.buildDatesInRange
-import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
+import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.momentcreation.dialog.MemorySelectionFragment
 import com.on.staccato.presentation.momentcreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel
-import com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModelFactory
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MomentCreationActivity :
     GooglePlaceFragmentEventHandler,
     PlaceSearchHandler,
@@ -53,7 +54,8 @@ class MomentCreationActivity :
     MomentCreationHandler,
     BindingActivity<ActivityVisitCreationBinding>() {
     override val layoutResourceId = R.layout.activity_visit_creation
-    private val viewModel: MomentCreationViewModel by viewModels { MomentCreationViewModelFactory() }
+    private val viewModel: MomentCreationViewModel by viewModels()
+
     private val visitedAtSelectionFragment by lazy {
         VisitedAtSelectionFragment().apply {
             setOnVisitedAtSelected { selectedVisitedAt ->
@@ -269,7 +271,7 @@ class MomentCreationActivity :
         viewModel.createdStaccatoId.observe(this) { createdMomentId ->
             val resultIntent =
                 Intent()
-                    .putExtra(MOMENT_ID_KEY, createdMomentId)
+                    .putExtra(STACCATO_ID_KEY, createdMomentId)
                     .putExtra(MEMORY_ID_KEY, memoryId)
                     .putExtra(MEMORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, resultIntent)
