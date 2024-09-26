@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.on.staccato.databinding.FragmentDeleteDialogBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DeleteDialogFragment(private val dialogHandler: DialogHandler) : DialogFragment() {
     private var _binding: FragmentDeleteDialogBinding? = null
     private val binding get() = _binding!!

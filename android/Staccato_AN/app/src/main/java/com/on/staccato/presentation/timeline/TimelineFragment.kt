@@ -17,11 +17,13 @@ import com.on.staccato.presentation.timeline.adapter.TimelineAdapter
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
 import com.on.staccato.presentation.util.showToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TimelineFragment :
     BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
     TimelineHandler {
-    private val timelineViewModel: TimelineViewModel by viewModels { TimelineViewModel.factory() }
+    private val timelineViewModel: TimelineViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private lateinit var adapter: TimelineAdapter
 

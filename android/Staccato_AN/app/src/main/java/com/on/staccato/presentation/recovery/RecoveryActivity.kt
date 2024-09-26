@@ -9,15 +9,14 @@ import com.on.staccato.databinding.ActivityRecoveryBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.recovery.viewmodel.RecoveryViewModel
-import com.on.staccato.presentation.recovery.viewmodel.RecoveryViewModelFactory
 import com.on.staccato.presentation.util.showToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
     override val layoutResourceId: Int = R.layout.activity_recovery
 
-    private val recoveryViewModel: RecoveryViewModel by viewModels {
-        RecoveryViewModelFactory()
-    }
+    private val recoveryViewModel: RecoveryViewModel by viewModels()
 
     override fun initStartView(savedInstanceState: Bundle?) {
         setBinding()

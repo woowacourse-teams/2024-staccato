@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.on.staccato.databinding.FragmentMemorySelectionBinding
 import com.on.staccato.domain.model.MemoryCandidate
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MemorySelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentMemorySelectionBinding? = null
     private val binding get() = _binding!!

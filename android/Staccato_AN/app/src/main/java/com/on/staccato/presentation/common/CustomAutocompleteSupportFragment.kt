@@ -10,7 +10,9 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.on.staccato.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CustomAutocompleteSupportFragment :
     AutocompleteSupportFragment() {
     private var handler: GooglePlaceFragmentEventHandler? = null
