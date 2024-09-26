@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
 import com.staccato.member.service.dto.response.MemberProfileImageResponse;
+import com.staccato.member.service.dto.response.MemberProfileResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,10 +14,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Member", description = "Member API")
-public interface MemberControllerDocs {
-    @Operation(summary = "사용자 프로필 사진 변경", description = "이미지를 업로드하고 S3 url을 가져옵니다.")
+public interface MyPageControllerDocs {
+    @Operation(summary = "사용자 프로필 사진 변경", description = "사용자의 프로필 사진을 변경합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "이미지 업로드 성공", responseCode = "201"),
+            @ApiResponse(description = "프로필 변경 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                                         
@@ -34,4 +35,11 @@ public interface MemberControllerDocs {
             @RequestPart(value = "imageFile") MultipartFile image,
             @Parameter(hidden = true) @LoginMember Member member
     );
+
+    @Operation(summary = "사용자 프로필 조회", description = "프로필 상 사용자의 정보를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "사용자 정보 조회 성공", responseCode = "200"),
+            @ApiResponse(description = "(3) 요청 형식이 잘못 되었을 때", responseCode = "400")
+    })
+    public ResponseEntity<MemberProfileResponse> readMyPage(@Parameter(hidden = true) @LoginMember Member member);
 }

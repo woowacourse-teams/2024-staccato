@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.image.service.ImageService;
 import com.staccato.image.service.dto.ImageUrlResponse;
-import com.staccato.member.controller.docs.MemberControllerDocs;
+import com.staccato.member.controller.docs.MyPageControllerDocs;
 import com.staccato.member.domain.Member;
 import com.staccato.member.service.MemberService;
 import com.staccato.member.service.dto.response.MemberProfileImageResponse;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Validated
 @RestController
 @RequiredArgsConstructor
-public class MyPageController implements MemberControllerDocs {
+public class MyPageController implements MyPageControllerDocs {
     private final MemberService memberService;
     private final ImageService imageService;
 
