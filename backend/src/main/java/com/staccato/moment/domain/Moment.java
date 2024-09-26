@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -19,12 +18,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-
 import com.staccato.comment.domain.Comment;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import com.staccato.memory.domain.Memory;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,7 +50,7 @@ public class Moment extends BaseEntity {
     private Memory memory;
     @Embedded
     private MomentImages momentImages = new MomentImages();
-    @OneToMany(mappedBy = "moment", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "moment", cascade = CascadeType.PERSIST)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder

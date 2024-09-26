@@ -3,6 +3,8 @@ package com.staccato.fixture.moment;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import com.staccato.fixture.comment.CommentFixture;
+import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;
@@ -48,5 +50,11 @@ public class MomentFixture {
                 .memory(memory)
                 .momentImages(momentImages)
                 .build();
+    }
+
+    public static Moment createWithComments(Member member, Memory memory, List<String> contents) {
+        Moment moment = create(memory);
+        contents.forEach(content -> moment.addComment(CommentFixture.create(moment, member, content)));
+        return moment;
     }
 }
