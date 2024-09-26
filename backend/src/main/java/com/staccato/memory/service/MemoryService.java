@@ -55,12 +55,10 @@ public class MemoryService {
         );
     }
 
-    private void sortByCreatedAtDescending(List<MemoryMember> memoryMembers) {
-        memoryMembers.sort((mm1, mm2) -> mm2.getCreatedAt().compareTo(mm1.getCreatedAt()));
-    }
-
     public MemoryNameResponses readAllMemoriesIncludingDate(Member member, LocalDate currentDate) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndIncludingDateOrderByCreatedAtDesc(member.getId(), currentDate);
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndIncludingDate(member.getId(), currentDate);
+        sortByCreatedAtDescending(memoryMembers);
+
         return MemoryNameResponses.from(
                 memoryMembers.stream()
                         .map(MemoryMember::getMemory)

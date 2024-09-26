@@ -163,6 +163,25 @@ class MemoryServiceTest extends ServiceSliceTest {
         assertThat(memoryNameResponses.memories()).hasSize(expectedSize);
     }
 
+    @DisplayName("현재 날짜를 포함하는 모든 추억 목록을 생성 시간 기준 내림차순으로 조회한다.")
+    @Test
+    void readAllMemoriesOrderByCreatedAtDesc() {
+        // given
+        LocalDate currentDate = LocalDate.of(2024, 7, 1);
+        Member member = memberRepository.save(MemberFixture.create());
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 1), "title1"), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2), "title2"), member);
+
+        // when
+        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
+
+        // then
+        assertAll(
+                () -> assertThat(memoryNameResponses.memories().get(0).memoryTitle()).isEqualTo("title2"),
+                () -> assertThat(memoryNameResponses.memories().get(1).memoryTitle()).isEqualTo("title1")
+        );
+    }
+
     @DisplayName("특정 추억을 조회한다.")
     @Test
     void readMemoryById() {
