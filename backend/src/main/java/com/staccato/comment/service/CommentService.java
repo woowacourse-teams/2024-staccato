@@ -1,5 +1,6 @@
 package com.staccato.comment.service;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -40,7 +41,8 @@ public class CommentService {
     public CommentResponses readAllCommentsByMomentId(Member member, Long momentId) {
         Moment moment = getMoment(momentId);
         validateOwner(moment.getMemory(), member);
-        List<Comment> comments = commentRepository.findAllByMomentIdOrderByCreatedAtAsc(momentId);
+        List<Comment> comments = commentRepository.findAllByMomentId(momentId);
+        sortByCreatedAtAscending(comments);
 
         return CommentResponses.from(comments);
     }
@@ -66,6 +68,10 @@ public class CommentService {
         if (memory.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
+    }
+
+    private void sortByCreatedAtAscending(List<Comment> comments) {
+        comments.sort(Comparator.comparing(Comment::getCreatedAt));
     }
 
     private void validateCommentOwner(Comment comment, Member member) {
