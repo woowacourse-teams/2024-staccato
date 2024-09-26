@@ -3,8 +3,10 @@ package com.on.staccato.presentation.momentcreation.viewmodel
 import android.content.Context
 import android.location.Location
 import android.net.Uri
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -59,8 +61,39 @@ class MomentCreationViewModel(
     private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
     val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
 
-    private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>(LocalDateTime.now())
+    private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
     val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
+
+    val memoryAndVisitedAt =
+        MediatorLiveData<Triple<MemoryCandidates, MemoryCandidate, LocalDateTime?>>().apply {
+            var latestMemoryCandidates: MemoryCandidates? = null
+            var latestSelectedMemory: MemoryCandidate? = null
+            var latestVisitedAt: LocalDateTime? = null
+
+            addSource(memoryCandidates) { memories ->
+                latestMemoryCandidates = memories
+                if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
+                    value =
+                        Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
+                }
+            }
+
+            addSource(selectedMemory) { selectedMemory ->
+                latestSelectedMemory = selectedMemory
+                if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
+                    value =
+                        Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
+                }
+            }
+
+            addSource(selectedVisitedAt) { visitedAt ->
+                latestVisitedAt = visitedAt
+                if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
+                    value =
+                        Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
+                }
+            }
+        }
 
     private val _createdStaccatoId = MutableSingleLiveData<Long>()
     val createdStaccatoId: SingleLiveData<Long> get() = _createdStaccatoId
@@ -91,15 +124,12 @@ class MomentCreationViewModel(
         }
     }
 
-    fun selectMemory(
-        memoryId: Long,
-        memoryTitle: String,
+    fun selectMemoryVisitedAt(
+        memory: MemoryCandidate,
+        visitedAt: LocalDateTime,
     ) {
-        _selectedMemory.value =
-            MemoryCandidate(
-                memoryId = memoryId,
-                memoryTitle = memoryTitle,
-            )
+        _selectedMemory.value = memory
+        _selectedVisitedAt.value = visitedAt
     }
 
     fun selectNewPlace(
@@ -132,11 +162,34 @@ class MomentCreationViewModel(
         _longitude.postValue(location.longitude)
     }
 
-    fun fetchMemoriesWithDate() {
+    fun fetchMemoryCandidates(memoryId: Long) {
         viewModelScope.launch {
             timelineRepository.getMemoryCandidates()
                 .onSuccess { memoryCandidates ->
                     _memoryCandidates.value = memoryCandidates
+                    if (memoryCandidates.memoryCandidate.isNotEmpty()) {
+                        if (memoryId == 0L) {
+                            _selectedMemory.value = memoryCandidates.memoryCandidate[0]
+                            _selectedVisitedAt.value =
+                                memoryCandidates.memoryCandidate[0].endAt?.atStartOfDay()
+                                    ?: LocalDateTime.now()
+                            Log.d(
+                                "ㅌㅅㅌ 생성 뷰모델",
+                                "메인에서 selectedMemory = ${selectedMemory.value} 설정 완",
+                            )
+                        } else {
+                            _selectedMemory.value =
+                                memoryCandidates.memoryCandidate.first { memory ->
+                                    memoryId == memory.memoryId
+                                }
+                            _selectedVisitedAt.value =
+                                selectedMemory.value?.endAt?.atStartOfDay() ?: LocalDateTime.now()
+                            Log.d(
+                                "ㅌㅅㅌ 생성 뷰모델",
+                                "추억에서 selectedMemory = ${selectedMemory.value} 설정 완",
+                            )
+                        }
+                    }
                 }
         }
     }
@@ -161,7 +214,7 @@ class MomentCreationViewModel(
         }
     }
 
-    fun updateSelectedVisitedAt(newSelectedVisitedAt: LocalDateTime?) {
+    fun updateSelectedVisitedAt(newSelectedVisitedAt: LocalDateTime) {
         _selectedVisitedAt.value = newSelectedVisitedAt
     }
 

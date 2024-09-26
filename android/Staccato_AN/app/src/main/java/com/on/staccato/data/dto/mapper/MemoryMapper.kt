@@ -30,6 +30,8 @@ fun MemoriesResponse.toDomain(): MemoryCandidates =
             MemoryCandidate(
                 memoryId = it.memoryId,
                 memoryTitle = it.memoryTitle,
+                startAt = LocalDate.parse(it.startAt),
+                endAt = LocalDate.parse(it.endAt),
             )
         },
     )

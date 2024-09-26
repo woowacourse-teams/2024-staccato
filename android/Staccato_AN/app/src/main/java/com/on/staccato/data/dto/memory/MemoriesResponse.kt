@@ -12,4 +12,6 @@ data class MemoriesResponse(
 data class MemoryCandidateResponse(
     @SerialName("memoryId") val memoryId: Long,
     @SerialName("memoryTitle") val memoryTitle: String,
+    @SerialName("startAt") val startAt: String,
+    @SerialName("endAt") val endAt: String,
 )
