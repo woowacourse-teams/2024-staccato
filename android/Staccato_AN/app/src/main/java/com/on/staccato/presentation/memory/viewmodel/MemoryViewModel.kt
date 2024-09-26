@@ -16,7 +16,6 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.memory.model.MemoryUiModel
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 class MemoryViewModel(private val memoryRepository: MemoryRepository) : ViewModel() {
     private val _memory = MutableLiveData<MemoryUiModel>()
@@ -36,17 +35,6 @@ class MemoryViewModel(private val memoryRepository: MemoryRepository) : ViewMode
                 .onServerError(::handleServerError)
                 .onException(::handelException)
         }
-    }
-
-    fun isInPeriod(): Boolean {
-        return memory.value?.let { memory ->
-            val nowDate = LocalDate.now()
-            when {
-                memory.startAt != null && memory.endAt != null -> memory.startAt <= nowDate && nowDate <= memory.endAt
-                memory.startAt == null && memory.endAt == null -> true
-                else -> false
-            }
-        } ?: false
     }
 
     fun deleteMemory(memoryId: Long) {

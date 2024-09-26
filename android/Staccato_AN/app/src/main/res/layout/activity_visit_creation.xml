@@ -246,19 +246,19 @@
                     bind:setSelectedMemory="@{viewModel.selectedMemory}" />
 
                 <TextView
-                    android:id="@+id/tv_visited_at_title"
+                    android:id="@+id/tv_select_memory_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="24dp"
-                    android:text="@string/all_visited_date"
+                    android:text="@string/all_visited_at"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_selection_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection" />
 
                 <TextView
                     android:id="@+id/tv_visit_creation_required_mark_fourth"
                     style="@style/RequiredMarkStyle"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_visited_at_title"
-                    app:layout_constraintStart_toEndOf="@id/tv_visited_at_title"
-                    app:layout_constraintTop_toTopOf="@id/tv_visited_at_title" />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_memory_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_select_memory_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_select_memory_title" />
 
                 <TextView
                     android:id="@+id/tv_visited_at"
@@ -267,14 +267,15 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{()->visitCreationHandler.onVisitedAtSelectionClicked()}"
+                    android:onClick="@{()->visitCreationHandler.onMemorySelectionClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
-                    bind:setDateTimeWithAmPm="@{viewModel.selectedVisitedAt}" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_select_memory_title"
+                    bind:setDateTimeWithAmPm="@{viewModel.selectedVisitedAt}"
+                    bind:setMemoryCandidates="@{viewModel.memoryCandidates}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_visit_create_done"

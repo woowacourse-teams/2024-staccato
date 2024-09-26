@@ -268,6 +268,29 @@ fun TextView.setSelectedMemory(
     }
 }
 
+@BindingAdapter(value = ["setDateTimeWithAmPm", "setMemoryCandidates"])
+fun TextView.setDateTimeWithAmPm(
+    setNowDateTime: LocalDateTime?,
+    memoryCandidates: MemoryCandidates?,
+) {
+    if (memoryCandidates?.memoryCandidate?.isEmpty() == true) {
+        text = resources.getString(R.string.visit_creation_memory_selection_hint)
+        setTextColor(resources.getColor(R.color.gray3, null))
+        isClickable = false
+        isFocusable = false
+    } else {
+        text = setNowDateTime?.let(::getFormattedLocalDateTime) ?: ""
+        setTextColor(resources.getColor(R.color.staccato_black, null))
+        isClickable = true
+        isFocusable = true
+    }
+}
+
+@BindingAdapter("setDateTimeWithAmPm")
+fun TextView.setDateTimeWithAmPm(setNowDateTime: LocalDateTime?) {
+    text = setNowDateTime?.let(::getFormattedLocalDateTime) ?: ""
+}
+
 @BindingAdapter(
     value = ["startDate", "endDate"],
 )
@@ -308,11 +331,6 @@ fun Button.setMemoryVisitedAtConfirmButtonActive(items: List<LocalDate>?) {
             setTextColor(resources.getColor(R.color.white, null))
             true
         }
-}
-
-@BindingAdapter("setDateTimeWithAmPm")
-fun TextView.setDateTimeWithAmPm(setNowDateTime: LocalDateTime?) {
-    text = setNowDateTime?.let(::getFormattedLocalDateTime) ?: ""
 }
 
 @BindingAdapter("visitedAtNumberPickerItems")
