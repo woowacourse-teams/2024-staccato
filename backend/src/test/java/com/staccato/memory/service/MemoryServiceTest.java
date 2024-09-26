@@ -71,7 +71,7 @@ class MemoryServiceTest extends ServiceSliceTest {
 
         // when
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, member);
-        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemory(member.getId())
+        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberId(member.getId())
                 .get(0);
 
         // then
@@ -90,7 +90,7 @@ class MemoryServiceTest extends ServiceSliceTest {
 
         // when
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, member);
-        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemory(member.getId())
+        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberId(member.getId())
                 .get(0);
 
         // then
