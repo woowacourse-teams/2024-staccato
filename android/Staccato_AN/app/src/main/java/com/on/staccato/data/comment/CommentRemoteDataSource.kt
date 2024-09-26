@@ -14,7 +14,7 @@ class CommentRemoteDataSource(
         handleApiResponse { commentApiService.getComments(momentId) }
 
     override suspend fun createComment(commentRequest: CommentRequest): ResponseResult<Unit> =
-        handleApiResponse { commentApiService.postComments(commentRequest) }
+        handleApiResponse { commentApiService.postComment(commentRequest) }
 
     override suspend fun updateComment(
         commentId: Long,

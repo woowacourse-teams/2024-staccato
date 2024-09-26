@@ -166,7 +166,7 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="24dp"
-                    android:text="@string/memory_creation_period"
+                    android:text="@string/memory_creation_period_setting"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_memory_update_description" />
 

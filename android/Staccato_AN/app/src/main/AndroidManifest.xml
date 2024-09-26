@@ -49,6 +49,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".presentation.recovery.RecoveryActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait" />

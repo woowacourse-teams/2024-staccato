@@ -6,6 +6,7 @@ import com.on.staccato.data.comment.CommentApiService
 import com.on.staccato.data.dto.ErrorResponse
 import com.on.staccato.data.image.ImageApiService
 import com.on.staccato.data.login.LoginApiService
+import com.on.staccato.data.member.MemberApiService
 import com.on.staccato.data.memory.MemoryApiService
 import com.on.staccato.data.moment.MomentApiService
 import com.on.staccato.data.timeline.TimeLineApiService
@@ -42,6 +43,10 @@ object StaccatoClient {
 
     val imageApiService: ImageApiService by lazy {
         create(ImageApiService::class.java)
+    }
+
+    val memberApiService: MemberApiService by lazy {
+        create(MemberApiService::class.java)
     }
 
     private val provideLoggingInterceptor =

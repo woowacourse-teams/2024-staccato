@@ -18,7 +18,7 @@ interface CommentApiService {
     ): Response<CommentsResponse>
 
     @POST(COMMENTS_PATH)
-    suspend fun postComments(
+    suspend fun postComment(
         @Body commentRequest: CommentRequest,
     ): Response<Unit>
 
