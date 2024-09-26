@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
-import com.staccato.member.service.dto.response.MemberProfileResponse;
+import com.staccato.member.service.dto.response.MemberProfileImageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,7 +30,7 @@ public interface MemberControllerDocs {
                     """,
                     responseCode = "400")
     })
-    ResponseEntity<MemberProfileResponse> changeProfileImage(
+    ResponseEntity<MemberProfileImageResponse> changeProfileImage(
             @RequestPart(value = "imageFile") MultipartFile image,
             @Parameter(hidden = true) @LoginMember Member member
     );
