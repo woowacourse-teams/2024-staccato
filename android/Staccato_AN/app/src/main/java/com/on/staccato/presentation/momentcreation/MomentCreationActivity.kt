@@ -143,19 +143,6 @@ class MomentCreationActivity :
         initMemorySelectionFragment()
         observeViewModelData()
         initGooglePlaceSearch()
-//        if (memoryId == 0L) {
-//            viewModel.fetchMemoryCandidates(memoryId)
-//        } else {
-//            viewModel.selectMemoryVisitedAt(
-//                MemoryCandidate(
-//                    memoryId,
-//                    memoryTitle,
-//                    LocalDate.now(),
-//                    LocalDate.now(),
-//                ),
-//                LocalDateTime.now(),
-//            )
-//        }
     }
 
     private fun Snackbar.setAction() {
