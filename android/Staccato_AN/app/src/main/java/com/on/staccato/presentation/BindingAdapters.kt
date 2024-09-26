@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.MutableLiveData
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.bumptech.glide.Glide
@@ -174,18 +173,6 @@ fun ImageView.setRoundedCornerImageByUriWithGlide(
         .into(this)
 }
 
-@BindingAdapter("setLoginButtonActive")
-fun Button.setLoginButtonActive(nickName: String?) {
-    isEnabled =
-        if (nickName.isNullOrBlank()) {
-            setTextColor(resources.getColor(R.color.gray4, null))
-            false
-        } else {
-            setTextColor(resources.getColor(R.color.white, null))
-            true
-        }
-}
-
 @BindingAdapter(
     value = ["memoryTitle", "startDate", "endDate", "isPhotoPosting"],
 )
@@ -303,7 +290,7 @@ fun TextView.setMemoryPeriod(
         setTextColor(resources.getColor(R.color.gray3, null))
     } else {
         text =
-            resources.getString(R.string.memory_creation_period_selected)
+            resources.getString(R.string.memory_creation_selected_period)
                 .format(startDate, endDate)
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
@@ -424,6 +411,32 @@ fun TextView.convertLocalDateToDatePeriodString(
         }
 }
 
+@BindingAdapter(
+    value = ["memoryStartAt", "memoryEndAt"],
+)
+fun TextView.convertLocalDateToDatePeriodStringInMemory(
+    startAt: LocalDate?,
+    endAt: LocalDate?,
+) {
+    val periodFormatString = resources.getString(R.string.memory_period_dot)
+    text =
+        if (startAt != null && endAt != null) {
+            visibility = View.VISIBLE
+            format(
+                periodFormatString,
+                startAt.year,
+                startAt.monthValue,
+                startAt.dayOfMonth,
+                endAt.year,
+                endAt.monthValue,
+                endAt.dayOfMonth,
+            )
+        } else {
+            visibility = View.GONE
+            null
+        }
+}
+
 @BindingAdapter("setAttachedPhotoVisibility")
 fun ImageView.setAttachedPhotoVisibility(items: Array<Uri>?) {
     if (items.isNullOrEmpty()) {
@@ -447,9 +460,16 @@ fun Button.setEnabled(isUpdateCompleted: Boolean?) {
     isEnabled = !(isUpdateCompleted ?: true)
 }
 
-@BindingAdapter("setLoginEnabled")
+@BindingAdapter("loginEnabled")
 fun Button.setLoginEnabled(nickName: String?) {
-    isEnabled = !nickName.isNullOrEmpty()
+    isEnabled =
+        if (nickName.isNullOrBlank()) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
 }
 
 @BindingAdapter(value = ["currentPhotoNumbers", "maxPhotoNumbers"])
@@ -495,15 +515,9 @@ fun TextView.setAddress(address: String?) {
     text = address ?: context.getString(R.string.visit_creation_empty_address)
 }
 
-@BindingAdapter("app:enableSendButton")
-fun ImageView.enableSendButton(commentInput: MutableLiveData<String>) {
-    commentInput.observeForever { inputText ->
-        isEnabled = !inputText.isBlankOrEmpty()
-    }
-}
-
-fun String?.isBlankOrEmpty(): Boolean {
-    return this == null || this.trim().isEmpty()
+@BindingAdapter("sendEnabled")
+fun ImageView.setSendEnabled(comment: String?) {
+    isEnabled = !comment.isNullOrBlank()
 }
 
 @BindingAdapter(value = ["thumbnailUri", "thumbnailUrl"])
@@ -535,4 +549,16 @@ fun View.setThumbnail(
 @BindingAdapter("periodSelectionVisibility")
 fun TextView.setPeriodSelectionVisibility(isChecked: Boolean) {
     isGone = !isChecked
+}
+
+@BindingAdapter("recoveryEnabled")
+fun Button.setRecoveryEnabled(recoveryCode: String?) {
+    isEnabled =
+        if (recoveryCode.isNullOrBlank() || recoveryCode.length < 36) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
 }

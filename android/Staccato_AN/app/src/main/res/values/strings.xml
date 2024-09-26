@@ -51,9 +51,9 @@
     <string name="memory_creation_title_hint">추억 제목을 입력해 주세요</string>
     <string name="memory_creation_description">추억 소개</string>
     <string name="memory_creation_description_hint">추억 소개를 입력해 주세요</string>
-    <string name="memory_creation_period">기간 설정</string>
+    <string name="memory_creation_period_setting">기간 설정</string>
     <string name="memory_creation_period_hint">추억 기간을 선택해 주세요</string>
-    <string name="memory_creation_period_selected">%s ~ %s</string>
+    <string name="memory_creation_selected_period">%s ~ %s</string>
     <string name="memory_creation_period_descripton">‘여행’ 과 같은 추억이라면 기간을 설정할 수 있어요</string>
     <string name="memory_creation_toolbar_title">추억 만들기</string>
     <string name="memory_creation_toolbar_subtitle">스타카토를 담을 추억을 만들어보세요!</string>
@@ -97,6 +97,13 @@
     // activity_login
     <string name="login_start">시작하기</string>
     <string name="login_nickname_hint">닉네임을 입력해 주세요</string>
+    <string name="login_recovery_click_here_if_need_recovery"><u>이전 기록을 불러오려면 여기를 눌러주세요</u></string>
+
+    // activity_recovery
+    <string name="recovery_title">이전 기록을 불러올게요</string>
+    <string name="recovery_subtitle">고유 코드를 입력해주세요</string>
+    <string name="recovery_code_hint">ex) bt2hnhd4-07kght-0pp2ln</string>
+    <string name="recovery_load">불러오기</string>
 
     // fragment_photo_attach
     <string name="photo_attach_title">사진을 등록해 주세요</string>
