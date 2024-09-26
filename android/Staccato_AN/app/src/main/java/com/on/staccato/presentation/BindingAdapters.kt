@@ -386,12 +386,15 @@ fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDateTime>?) {
 fun TextView.combineVisitedAt(visitedAt: LocalDateTime?) {
     text =
         if (visitedAt != null) {
+            val hour = if (visitedAt.hour % 12 == 0) 12 else visitedAt.hour % 12
+            val noonText = if (visitedAt.hour < 12) "오전" else "오후"
             format(
                 resources.getString(R.string.visit_history),
                 visitedAt.year,
                 visitedAt.monthValue,
                 visitedAt.dayOfMonth,
-                visitedAt.hour,
+                noonText,
+                hour,
             )
         } else {
             ""
