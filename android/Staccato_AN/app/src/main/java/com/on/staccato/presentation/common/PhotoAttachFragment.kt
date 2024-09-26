@@ -23,7 +23,9 @@ import com.on.staccato.R
 import com.on.staccato.databinding.FragmentPhotoAttachBinding
 import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.showToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private var _binding: FragmentPhotoAttachBinding? = null
     private val binding get() = _binding!!

@@ -15,9 +15,16 @@ import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.memory.model.MemoryUiModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MemoryViewModel(private val memoryRepository: MemoryRepository) : ViewModel() {
+@HiltViewModel
+class MemoryViewModel
+@Inject
+constructor(
+    private val memoryRepository: MemoryRepository,
+) : ViewModel() {
     private val _memory = MutableLiveData<MemoryUiModel>()
     val memory: LiveData<MemoryUiModel> get() = _memory
 

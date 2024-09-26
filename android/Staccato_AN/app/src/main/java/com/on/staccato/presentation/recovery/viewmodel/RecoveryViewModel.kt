@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.login.viewmodel
+package com.on.staccato.presentation.recovery.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -9,33 +9,38 @@ import com.on.staccato.data.ApiResponseHandler.onException
 import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.dto.Status
-import com.on.staccato.domain.repository.LoginRepository
+import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.recovery.RecoveryHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel
+class RecoveryViewModel
     @Inject
     constructor(
-        private val repository: LoginRepository,
-    ) : ViewModel() {
-        val nickname = MutableLiveData("")
+        private val repository: MemberRepository,
+    ) : ViewModel(), RecoveryHandler {
+        val recoveryCode = MutableLiveData("")
 
-        private val _isLoginSuccess = MutableSingleLiveData(false)
-        val isLoginSuccess: SingleLiveData<Boolean>
-            get() = _isLoginSuccess
+        private val _isRecoverySuccess = MutableSingleLiveData(false)
+        val isRecoverySuccess: SingleLiveData<Boolean>
+            get() = _isRecoverySuccess
 
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
 
-        fun requestLogin() {
-            val nickname = nickname.value ?: ""
+        override fun onRecoveryClicked() {
+            requestRecovery()
+        }
+
+        private fun requestRecovery() {
+            val code = recoveryCode.value ?: ""
             viewModelScope.launch {
-                repository.loginWithNickname(nickname)
+                repository.fetchTokenWithRecoveryCode(code)
                     .onSuccess(::saveUserToken)
                     .onServerError(::handleError)
                     .onException(::handleException)
@@ -45,7 +50,7 @@ class LoginViewModel
         private fun saveUserToken(newToken: String) {
             viewModelScope.launch {
                 StaccatoApplication.userInfoPrefsManager.setToken(newToken)
-                _isLoginSuccess.postValue(true)
+                _isRecoverySuccess.postValue(true)
             }
         }
 

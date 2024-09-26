@@ -34,16 +34,16 @@ import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.momentcreation.dialog.MemoryVisitedAtSelectionFragment
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel
-import com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModelFactory
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MomentCreationActivity :
     GooglePlaceFragmentEventHandler,
     PlaceSearchHandler,
@@ -51,7 +51,7 @@ class MomentCreationActivity :
     MomentCreationHandler,
     BindingActivity<ActivityVisitCreationBinding>() {
     override val layoutResourceId = R.layout.activity_visit_creation
-    private val viewModel: MomentCreationViewModel by viewModels { MomentCreationViewModelFactory() }
+    private val viewModel: MomentCreationViewModel by viewModels()
     private val memoryVisitedAtSelectionFragment by lazy {
         MemoryVisitedAtSelectionFragment()
     }
@@ -249,7 +249,7 @@ class MomentCreationActivity :
         viewModel.createdStaccatoId.observe(this) { createdMomentId ->
             val resultIntent =
                 Intent()
-                    .putExtra(MOMENT_ID_KEY, createdMomentId)
+                    .putExtra(STACCATO_ID_KEY, createdMomentId)
                     .putExtra(MEMORY_ID_KEY, memoryId)
                     .putExtra(MEMORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, resultIntent)
@@ -310,7 +310,8 @@ class MomentCreationActivity :
         }
     }
 
-    private fun makeSnackBar(message: String): Snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+    private fun makeSnackBar(message: String): Snackbar =
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
 
     companion object {
         const val MEMORY_TITLE_KEY = "memoryTitle"

@@ -22,14 +22,18 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.util.convertExcretaFile
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class MomentCreationViewModel(
+@HiltViewModel
+class MomentCreationViewModel
+@Inject
+constructor(
     private val timelineRepository: TimelineRepository,
     private val momentRepository: MomentRepository,
     private val imageRepository: ImageDefaultRepository,

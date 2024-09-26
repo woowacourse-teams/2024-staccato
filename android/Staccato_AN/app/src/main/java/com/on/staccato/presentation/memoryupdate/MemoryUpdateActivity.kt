@@ -11,33 +11,24 @@ import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.on.staccato.R
-import com.on.staccato.data.StaccatoClient.imageApiService
-import com.on.staccato.data.StaccatoClient.memoryApiService
-import com.on.staccato.data.image.ImageDefaultRepository
-import com.on.staccato.data.memory.MemoryDefaultRepository
-import com.on.staccato.data.memory.MemoryRemoteDataSource
 import com.on.staccato.databinding.ActivityMemoryUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel
-import com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModelFactory
 import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.showToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MemoryUpdateActivity :
     BindingActivity<ActivityMemoryUpdateBinding>(),
     MemoryUpdateHandler,
     OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_update
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_MEMORY_ID) }
-    private val viewModel: MemoryUpdateViewModel by viewModels {
-        MemoryUpdateViewModelFactory(
-            memoryId,
-            MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)),
-            ImageDefaultRepository(imageApiService),
-        )
-    }
+    private val viewModel: MemoryUpdateViewModel by viewModels()
+
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
@@ -98,7 +89,7 @@ class MemoryUpdateActivity :
     }
 
     private fun fetchMemory() {
-        viewModel.fetchMemory()
+        viewModel.fetchMemory(memoryId)
     }
 
     private fun updateMemoryPeriod() {

@@ -11,31 +11,23 @@ import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.on.staccato.R
-import com.on.staccato.data.StaccatoClient.imageApiService
-import com.on.staccato.data.StaccatoClient.memoryApiService
-import com.on.staccato.data.image.ImageDefaultRepository
-import com.on.staccato.data.memory.MemoryDefaultRepository
-import com.on.staccato.data.memory.MemoryRemoteDataSource
 import com.on.staccato.databinding.ActivityMemoryCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModel
-import com.on.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModelFactory
 import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.showToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MemoryCreationActivity :
     BindingActivity<ActivityMemoryCreationBinding>(),
     MemoryCreationHandler,
     OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_creation
-    private val viewModel: MemoryCreationViewModel by viewModels {
-        MemoryCreationViewModelFactory(
-            MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)),
-            ImageDefaultRepository(imageApiService),
-        )
-    }
+    private val viewModel: MemoryCreationViewModel by viewModels()
+
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()

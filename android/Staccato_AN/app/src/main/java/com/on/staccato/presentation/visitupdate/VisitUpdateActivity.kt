@@ -10,10 +10,7 @@ import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -35,7 +32,6 @@ import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
-import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
 import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.on.staccato.presentation.momentcreation.PlaceSearchHandler
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
@@ -45,8 +41,9 @@ import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
 import com.on.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
-import com.on.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class VisitUpdateActivity :
     GooglePlaceFragmentEventHandler,
     PlaceSearchHandler,
@@ -54,7 +51,7 @@ class VisitUpdateActivity :
     VisitUpdateHandler,
     BindingActivity<ActivityVisitUpdateBinding>() {
     override val layoutResourceId = R.layout.activity_visit_update
-    private val viewModel: VisitUpdateViewModel by viewModels { VisitUpdateViewModelFactory() }
+    private val viewModel: VisitUpdateViewModel by viewModels()
     private val memoryVisitedAtSelectionFragment by lazy {
         MemoryVisitedAtSelectionFragment()
     }
@@ -64,29 +61,14 @@ class VisitUpdateActivity :
     private val fragmentManager: FragmentManager = supportFragmentManager
     private lateinit var photoAttachAdapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
-    private val staccatoId by lazy { intent.getLongExtra(MOMENT_ID_KEY, 0L) }
+    private val staccatoId by lazy { intent.getLongExtra(STACCATO_ID_KEY, 0L) }
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var address: String
 
-    private val inputManager: InputMethodManager by lazy {
-        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-    }
-
     private val autocompleteFragment by lazy {
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
-    }
-
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            currentFocus?.let { view ->
-                if (!isTouchInsideView(event, view)) {
-                    clearFocusAndHideKeyboard(view)
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event)
     }
 
     override fun onNewPlaceSelected(
@@ -141,27 +123,6 @@ class VisitUpdateActivity :
         observeViewModelData()
         initGooglePlaceSearch()
         viewModel.fetchTargetData(staccatoId, memoryId, memoryTitle)
-    }
-
-    private fun isTouchInsideView(
-        event: MotionEvent,
-        view: View,
-    ): Boolean {
-        val rect = android.graphics.Rect()
-        view.getGlobalVisibleRect(rect)
-        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
-    }
-
-    private fun clearFocusAndHideKeyboard(view: View) {
-        view.clearFocus()
-        hideKeyboard(view)
-    }
-
-    private fun hideKeyboard(view: View) {
-        inputManager.hideSoftInputFromWindow(
-            view.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS,
-        )
     }
 
     private fun fetchCurrentLocationAddress() {
@@ -269,7 +230,7 @@ class VisitUpdateActivity :
         if (isUpdateCompleted) {
             val intent =
                 Intent()
-                    .putExtra(MOMENT_ID_KEY, staccatoId)
+                    .putExtra(STACCATO_ID_KEY, staccatoId)
                     .putExtra(MEMORY_ID_KEY, memoryId)
                     .putExtra(MEMORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, intent)
@@ -342,7 +303,7 @@ class VisitUpdateActivity :
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, VisitUpdateActivity::class.java).apply {
-                putExtra(MOMENT_ID_KEY, visitId)
+                putExtra(STACCATO_ID_KEY, visitId)
                 putExtra(MEMORY_ID_KEY, memoryId)
                 putExtra(MEMORY_TITLE_KEY, memoryTitle)
                 activityLauncher.launch(this)

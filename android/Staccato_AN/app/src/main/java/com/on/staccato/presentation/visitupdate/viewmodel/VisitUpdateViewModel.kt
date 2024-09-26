@@ -24,13 +24,18 @@ import com.on.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotosUiModel.Companion.createPhotosByUrls
 import com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel
 import com.on.staccato.presentation.util.convertExcretaFile
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class VisitUpdateViewModel(
+@HiltViewModel
+class VisitUpdateViewModel
+@Inject
+constructor(
     private val timelineRepository: TimelineRepository,
     private val momentRepository: MomentRepository,
     private val imageRepository: ImageRepository,
@@ -192,12 +197,10 @@ class VisitUpdateViewModel(
             val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleFailure()
             val placeNameValue = placeName.value ?: return@launch handleFailure()
             val addressValue = address.value ?: return@launch handleFailure()
-            val latitudeValue = latitude.value ?: 0.0
-            val longitudeValue = longitude.value ?: 0.0
+            val latitudeValue = latitude.value ?: return@launch handleFailure()
+            val longitudeValue = longitude.value ?: return@launch handleFailure()
             val visitedAtValue = selectedVisitedAt.value ?: return@launch handleFailure()
-            val memoryIdValue =
-                this@VisitUpdateViewModel.selectedMemory.value?.memoryId
-                    ?: return@launch handleFailure()
+            val memoryIdValue = selectedMemory.value.memoryId
             val momentImageUrlsValue =
                 currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                     ?: return@launch handleFailure()

@@ -4,4 +4,6 @@ interface LoginHandler {
     fun onStartClicked()
 
     fun onScreenClicked()
+
+    fun onRecoveryClicked()
 }
