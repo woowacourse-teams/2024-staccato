@@ -11,7 +11,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.MemoryMember;
 
 public interface MemoryMemberRepository extends JpaRepository<MemoryMember, Long> {
-    List<MemoryMember> findAllByMemberIdOrderByMemoryCreatedAtDesc(long memberId);
+    List<MemoryMember> findAllByMemberIdOrderByMemory(long memberId);
 
     @Query("""
             SELECT mm FROM MemoryMember mm WHERE mm.member.id = :memberId
