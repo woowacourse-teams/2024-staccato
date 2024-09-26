@@ -6,26 +6,25 @@ import androidx.fragment.app.viewModels
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentMomentFeelingSelectionBinding
 import com.on.staccato.presentation.base.BindingFragment
+import com.on.staccato.presentation.moment.MomentFragment.Companion.DEFAULT_STACCATO_ID
+import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.moment.viewmodel.MomentViewModel
-import com.on.staccato.presentation.moment.viewmodel.MomentViewModelFactory
-import kotlin.properties.Delegates
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MomentFeelingSelectionFragment :
     BindingFragment<FragmentMomentFeelingSelectionBinding>(R.layout.fragment_moment_feeling_selection) {
     private lateinit var feelingSelectionAdapter: FeelingSelectionAdapter
-    private val momentViewModel: MomentViewModel by viewModels({ requireParentFragment() }) {
-        MomentViewModelFactory()
-    }
-    private val momentFeelingSelectionViewModel: MomentFeelingSelectionViewModel by viewModels {
-        MomentFeelingSelectionViewModelFactory(momentId)
-    }
-    private var momentId by Delegates.notNull<Long>()
+    private val momentViewModel: MomentViewModel by viewModels({ requireParentFragment() })
+    private val momentFeelingSelectionViewModel: MomentFeelingSelectionViewModel by viewModels()
+
+    private val momentId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        momentId = arguments?.getLong(MOMENT_ID_KEY) ?: return
+        momentFeelingSelectionViewModel.setMomentId(momentId)
         initAdapter()
         observeInitialFeeling()
         observeFeelings()
@@ -46,9 +45,5 @@ class MomentFeelingSelectionFragment :
         momentFeelingSelectionViewModel.feelings.observe(viewLifecycleOwner) { feelings ->
             feelingSelectionAdapter.updateFeelings(feelings)
         }
-    }
-
-    companion object {
-        const val MOMENT_ID_KEY = "momentId"
     }
 }

@@ -14,11 +14,12 @@ val keystoreProperties =
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.kotlinKapt)
+    id("kotlin-kapt")
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.googleServices)
     alias(libs.plugins.firebaseCrashlytics)
     alias(libs.plugins.mapsplatformSecretsGradlePlugin)
+    alias(libs.plugins.hiltAndroid)
 }
 
 android {
@@ -82,6 +83,10 @@ android {
 
     dataBinding {
         enable = true
+    }
+
+    kapt {
+        correctErrorTypes = true
     }
 }
 
@@ -153,6 +158,10 @@ dependencies {
     // View Pager2
     implementation(libs.androidx.viewpager2)
     implementation(libs.dotsindicator)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 }
 
 secrets {

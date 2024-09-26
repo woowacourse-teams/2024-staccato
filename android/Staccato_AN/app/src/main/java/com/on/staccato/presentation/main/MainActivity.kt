@@ -43,22 +43,20 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDE
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
-import com.on.staccato.data.StaccatoClient
-import com.on.staccato.data.moment.MomentDefaultRepository
-import com.on.staccato.data.moment.MomentRemoteDataSource
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.location.LocationDialogFragment
 import com.on.staccato.presentation.main.model.MarkerUiModel
 import com.on.staccato.presentation.main.viewmodel.MapsViewModel
-import com.on.staccato.presentation.main.viewmodel.MapsViewModelFactory
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
+import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
 import com.on.staccato.presentation.util.showToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity :
     BindingActivity<ActivityMainBinding>(),
     OnMapReadyCallback,
@@ -78,13 +76,7 @@ class MainActivity :
             ACCESS_COARSE_LOCATION,
         )
     private val sharedViewModel: SharedViewModel by viewModels()
-    private val mapsViewModel: MapsViewModel by viewModels {
-        MapsViewModelFactory(
-            MomentDefaultRepository(
-                MomentRemoteDataSource(StaccatoClient.momentApiService),
-            ),
-        )
-    }
+    private val mapsViewModel: MapsViewModel by viewModels()
     private val locationDialog = LocationDialogFragment()
 
     private val requestPermissionLauncher = initRequestPermissionsLauncher()
@@ -349,7 +341,7 @@ class MainActivity :
                 .setPopUpTo(R.id.momentFragment, true)
                 .build()
         val bundle =
-            bundleOf(MOMENT_ID_KEY to staccatoId)
+            bundleOf(STACCATO_ID_KEY to staccatoId)
 
         navController.navigate(R.id.momentFragment, bundle, navOptions)
     }
@@ -405,7 +397,7 @@ class MainActivity :
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    val bundle: Bundle = makeBundle(it, MOMENT_ID_KEY)
+                    val bundle: Bundle = makeBundle(it, STACCATO_ID_KEY)
                     navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
                 }
             }

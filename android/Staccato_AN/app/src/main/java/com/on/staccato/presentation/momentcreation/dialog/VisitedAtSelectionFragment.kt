@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.on.staccato.databinding.FragmentVisitedAtSelectionBinding
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 
+@AndroidEntryPoint
 class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentVisitedAtSelectionBinding? = null
     private val binding get() = _binding!!
