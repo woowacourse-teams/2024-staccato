@@ -411,6 +411,32 @@ fun TextView.convertLocalDateToDatePeriodString(
         }
 }
 
+@BindingAdapter(
+    value = ["memoryStartAt", "memoryEndAt"],
+)
+fun TextView.convertLocalDateToDatePeriodStringInMemory(
+    startAt: LocalDate?,
+    endAt: LocalDate?,
+) {
+    val periodFormatString = resources.getString(R.string.memory_period_dot)
+    text =
+        if (startAt != null && endAt != null) {
+            visibility = View.VISIBLE
+            format(
+                periodFormatString,
+                startAt.year,
+                startAt.monthValue,
+                startAt.dayOfMonth,
+                endAt.year,
+                endAt.monthValue,
+                endAt.dayOfMonth,
+            )
+        } else {
+            visibility = View.GONE
+            null
+        }
+}
+
 @BindingAdapter("setAttachedPhotoVisibility")
 fun ImageView.setAttachedPhotoVisibility(items: Array<Uri>?) {
     if (items.isNullOrEmpty()) {
