@@ -200,7 +200,7 @@ constructor(
             val latitudeValue = latitude.value ?: return@launch handleFailure()
             val longitudeValue = longitude.value ?: return@launch handleFailure()
             val visitedAtValue = selectedVisitedAt.value ?: return@launch handleFailure()
-            val memoryIdValue = selectedMemory.value.memoryId
+            val memoryIdValue = selectedMemory.value?.memoryId ?: return@launch handleFailure()
             val momentImageUrlsValue =
                 currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                     ?: return@launch handleFailure()
