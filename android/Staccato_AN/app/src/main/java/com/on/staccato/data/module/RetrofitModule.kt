@@ -4,6 +4,7 @@ import com.on.staccato.data.StaccatoClient
 import com.on.staccato.data.comment.CommentApiService
 import com.on.staccato.data.image.ImageApiService
 import com.on.staccato.data.login.LoginApiService
+import com.on.staccato.data.member.MemberApiService
 import com.on.staccato.data.memory.MemoryApiService
 import com.on.staccato.data.moment.MomentApiService
 import com.on.staccato.data.timeline.TimeLineApiService
@@ -39,4 +40,8 @@ object RetrofitModule {
     @Singleton
     @Provides
     fun provideImageApiService(): ImageApiService = StaccatoClient.create(ImageApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun memberApiService(): MemberApiService = StaccatoClient.create(MemberApiService::class.java)
 }

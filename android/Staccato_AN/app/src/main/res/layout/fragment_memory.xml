@@ -81,27 +81,26 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="16dp"
                     android:text="@{viewModel.memory.title}"
                     android:textAppearance="@style/Typography.Title1"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toTopOf="@id/tv_memory_period"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_goneMarginBottom="8dp"
                     tools:text="아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 긴 추억 제목" />
 
                 <TextView
                     android:id="@+id/tv_memory_period"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="8dp"
                     android:textAppearance="@style/Typography.Body4"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_title"
-                    bind:startAt="@{viewModel.memory.startAt}"
-                    bind:endAt="@{viewModel.memory.endAt}"
+                    bind:memoryEndAt="@{viewModel.memory.endAt}"
+                    bind:memoryStartAt="@{viewModel.memory.startAt}"
                     tools:text="2023년 7월 1일 ~ 7월 5일" />
 
                 <TextView

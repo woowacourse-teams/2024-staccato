@@ -16,6 +16,7 @@ import com.on.staccato.StaccatoApplication.Companion.userInfoPrefsManager
 import com.on.staccato.databinding.ActivityLoginBinding
 import com.on.staccato.presentation.login.viewmodel.LoginViewModel
 import com.on.staccato.presentation.main.MainActivity
+import com.on.staccato.presentation.recovery.RecoveryActivity
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -57,6 +58,15 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
             )
             it.clearFocus()
         }
+    }
+
+    override fun onRecoveryClicked() {
+        navigateToRecoveryActivity()
+    }
+
+    private fun navigateToRecoveryActivity() {
+        val intent = Intent(this, RecoveryActivity::class.java)
+        startActivity(intent)
     }
 
     private fun checkIfLoggedIn(splashScreen: SplashScreen) {
