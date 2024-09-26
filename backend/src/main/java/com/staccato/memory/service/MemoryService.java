@@ -89,7 +89,7 @@ public class MemoryService {
         if (originMemory.isNotSameTitle(memoryRequest.memoryTitle())) {
             validateMemoryTitle(updatedMemory, member);
         }
-        List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAt(memoryId);
+        List<Moment> moments = momentRepository.findAllByMemoryId(memoryId);
         originMemory.update(updatedMemory, moments);
     }
 
