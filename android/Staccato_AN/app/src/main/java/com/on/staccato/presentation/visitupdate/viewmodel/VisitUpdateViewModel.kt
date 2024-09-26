@@ -234,10 +234,11 @@ class VisitUpdateViewModel(
                     staccatoTitle.set(staccato.staccatoTitle)
                     _address.value = staccato.address
                     _selectedVisitedAt.value = staccato.visitedAt
-                    _selectedMemory.value =
-                        memoryCandidates.value?.memoryCandidate?.firstOrNull {
-                            it.memoryId == staccato.memoryId
-                        }
+                    memoryCandidates.value?.memoryCandidate?.firstOrNull {
+                        it.memoryId == staccato.memoryId
+                    }?.let {
+                        _selectedMemory.value = it
+                    }
                     _placeName.value = staccato.placeName
                     _currentPhotos.value = createPhotosByUrls(staccato.momentImageUrls)
                 }.onFailure { e ->
