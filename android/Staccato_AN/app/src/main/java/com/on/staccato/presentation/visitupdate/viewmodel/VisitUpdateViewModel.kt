@@ -206,6 +206,8 @@ class VisitUpdateViewModel(
             MemoryCandidate(
                 memoryId = memoryId,
                 memoryTitle = memoryTitle,
+                startAt = null,
+                endAt = null,
             )
     }
 

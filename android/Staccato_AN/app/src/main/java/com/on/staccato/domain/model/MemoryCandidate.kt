@@ -7,6 +7,6 @@ data class MemoryCandidates(val memoryCandidate: List<MemoryCandidate>)
 data class MemoryCandidate(
     val memoryId: Long,
     val memoryTitle: String,
-    val startAt: LocalDate? = LocalDate.now(),
-    val endAt: LocalDate? = LocalDate.now(),
+    val startAt: LocalDate?,
+    val endAt: LocalDate?,
 )

@@ -29,8 +29,8 @@ fun TimelineMemoryDto.toDomain(): Memory {
         memoryId = memoryId,
         memoryThumbnailUrl = memoryThumbnailUrl,
         memoryTitle = memoryTitle,
-        startAt = startAt?.let { LocalDate.parse(startAt) },
-        endAt = endAt?.let { LocalDate.parse(endAt) },
+        startAt = startAt?.let { LocalDate.parse(it) },
+        endAt = endAt?.let { LocalDate.parse(it) },
         description = description,
         mates = emptyList(),
         moments = emptyList(),
@@ -41,7 +41,7 @@ fun TimelineMemoryDto.toMemoryCandidate(): MemoryCandidate {
     return MemoryCandidate(
         memoryId = memoryId,
         memoryTitle = memoryTitle,
-        startAt = LocalDate.parse(startAt),
-        endAt = LocalDate.parse(endAt),
+        startAt = startAt?.let { LocalDate.parse(it) },
+        endAt = endAt?.let { LocalDate.parse(it) },
     )
 }
