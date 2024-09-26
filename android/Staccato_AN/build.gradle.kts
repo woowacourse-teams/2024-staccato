@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.googleServices) apply false
     alias(libs.plugins.firebaseCrashlytics) apply false
     alias(libs.plugins.mapsplatformSecretsGradlePlugin) apply false
+    id("com.google.dagger.hilt.android") version "2.44" apply false
 }
 
 buildscript {
