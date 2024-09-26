@@ -61,44 +61,37 @@ class VisitUpdateViewModel
         private val _longitude = MutableLiveData<Double?>()
         private val longitude: LiveData<Double?> get() = _longitude
 
-        private val _selectedMemory = MutableLiveData<MemoryCandidate>()
-        val selectedMemory: LiveData<MemoryCandidate> get() = this._selectedMemory
-
         private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
         val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
 
         private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
 
-        val memoryAndVisitedAt =
-            MediatorLiveData<Triple<MemoryCandidates, MemoryCandidate, LocalDateTime?>>().apply {
+        private var targetMemoryId: Long = 0
+
+        val selectedMemory =
+            MediatorLiveData<MemoryCandidate>().apply {
                 var latestMemoryCandidates: MemoryCandidates? = null
-                var latestSelectedMemory: MemoryCandidate? = null
                 var latestVisitedAt: LocalDateTime? = null
 
                 addSource(memoryCandidates) { memories ->
                     latestMemoryCandidates = memories
-                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
-                        value =
-                            Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
-                    }
-                }
-
-                addSource(selectedMemory) { selectedMemory ->
-                    latestSelectedMemory = selectedMemory
-                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
-                        value =
-                            Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
+                    if (latestMemoryCandidates != null && latestVisitedAt != null) {
+                        value = findMemory(latestMemoryCandidates!!)
                     }
                 }
 
                 addSource(selectedVisitedAt) { visitedAt ->
                     latestVisitedAt = visitedAt
-                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestVisitedAt != null) {
-                        value =
-                            Triple(latestMemoryCandidates!!, latestSelectedMemory!!, latestVisitedAt!!)
+                    if (latestMemoryCandidates != null && latestVisitedAt != null) {
+                        value = findMemory(latestMemoryCandidates!!)
                     }
                 }
+            }
+
+        private fun findMemory(memories: MemoryCandidates) =
+            memories.memoryCandidate.first { memory ->
+                targetMemoryId == memory.memoryId
             }
 
         private val _isUpdateCompleted = MutableLiveData(false)
@@ -134,17 +127,18 @@ class VisitUpdateViewModel
             memory: MemoryCandidate,
             visitedAt: LocalDateTime,
         ) {
-            _selectedMemory.value = memory
+            selectedMemory.value = memory
             _selectedVisitedAt.value = visitedAt
         }
 
-        fun initViewModelData(
+        fun fetchTargetData(
             staccatoId: Long,
             memoryId: Long,
             memoryTitle: String,
         ) {
-            fetchMemoryCandidates(memoryId)
-            fetchStaccato(staccatoId)
+            targetMemoryId = memoryId
+            fetchMemoryCandidates()
+            fetchStaccatoBy(staccatoId)
         }
 
         fun selectNewPlace(
@@ -203,12 +197,10 @@ class VisitUpdateViewModel
                 val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleFailure()
                 val placeNameValue = placeName.value ?: return@launch handleFailure()
                 val addressValue = address.value ?: return@launch handleFailure()
-                val latitudeValue = latitude.value ?: 0.0
-                val longitudeValue = longitude.value ?: 0.0
+                val latitudeValue = latitude.value ?: return@launch handleFailure()
+                val longitudeValue = longitude.value ?: return@launch handleFailure()
                 val visitedAtValue = selectedVisitedAt.value ?: return@launch handleFailure()
-                val memoryIdValue =
-                    this@VisitUpdateViewModel.selectedMemory.value?.memoryId
-                        ?: return@launch handleFailure()
+                val memoryIdValue = selectedMemory.value?.memoryId ?: return@launch handleFailure()
                 val momentImageUrlsValue =
                     currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                         ?: return@launch handleFailure()
@@ -231,38 +223,25 @@ class VisitUpdateViewModel
             }
         }
 
-        // 코루틴
-        private fun fetchStaccato(staccatoId: Long) {
+        private fun fetchStaccatoBy(staccatoId: Long) {
             viewModelScope.launch {
                 momentRepository.getMoment(momentId = staccatoId)
                     .onSuccess { staccato ->
                         staccatoTitle.set(staccato.staccatoTitle)
                         _address.value = staccato.address
                         _selectedVisitedAt.value = staccato.visitedAt
-                        memoryCandidates.value?.memoryCandidate?.firstOrNull {
-                            it.memoryId == staccato.memoryId
-                        }?.let {
-                            _selectedMemory.value = it
-                        }
                         _placeName.value = staccato.placeName
                         _currentPhotos.value = createPhotosByUrls(staccato.momentImageUrls)
                     }.onFailure { e ->
-                        _errorMessage.postValue(e.message ?: "예외!!!!!")
+                        _errorMessage.postValue(e.message ?: "알 수 없는 오류가 발생했습니다.")
                     }
             }
         }
 
-        // 코루틴
-        private fun fetchMemoryCandidates(memoryId: Long) {
+        private fun fetchMemoryCandidates() {
             viewModelScope.launch {
                 timelineRepository.getMemoryCandidates()
                     .onSuccess { memoryCandidates ->
-                        if (memoryCandidates.memoryCandidate.isNotEmpty()) {
-                            _selectedMemory.value =
-                                memoryCandidates.memoryCandidate.first { memory ->
-                                    memoryId == memory.memoryId
-                                }
-                        }
                         _memoryCandidates.value = memoryCandidates
                     }
             }
@@ -307,6 +286,6 @@ class VisitUpdateViewModel
 
         private fun handleError(errorMessage: String?) {
             _isPosting.value = false
-            _errorMessage.postValue(errorMessage ?: "야호 예외다잉")
+            _errorMessage.postValue(errorMessage ?: "알 수 없는 오류가 발생했습니다.")
         }
     }

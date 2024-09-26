@@ -123,7 +123,7 @@ class VisitUpdateActivity :
         initItemTouchHelper()
         observeViewModelData()
         initGooglePlaceSearch()
-        viewModel.initViewModelData(staccatoId, memoryId, memoryTitle)
+        viewModel.fetchTargetData(staccatoId, memoryId, memoryTitle)
     }
 
     private fun fetchCurrentLocationAddress() {
@@ -215,11 +215,11 @@ class VisitUpdateActivity :
                 listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
             )
         }
-        viewModel.memoryAndVisitedAt.observe(this) { memoryAndVisitedAt ->
+        viewModel.selectedMemory.observe(this) { selectedMemory ->
             memoryVisitedAtSelectionFragment.initMemoryCandidates(
-                memoryAndVisitedAt.first.memoryCandidate.toList(),
-                memoryAndVisitedAt.second,
-                memoryAndVisitedAt.third,
+                viewModel.memoryCandidates.value?.memoryCandidate ?: emptyList(),
+                selectedMemory,
+                viewModel.selectedVisitedAt.value!!,
             )
         }
         viewModel.errorMessage.observe(this) { message ->

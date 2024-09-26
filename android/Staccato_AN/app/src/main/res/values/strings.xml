@@ -10,7 +10,7 @@
     <string name="all_confirm">확인</string>
     <string name="all_photo">사진</string>
     <string name="all_photo_number">(%s/%s)</string>
-    <string name="all_photo_attach">사진을 첨부해 주세요</string>
+    <string name="all_photo_attach">사진을 첨부해 보세요</string>
     <string name="all_visited_date">시간</string>
     <string name="all_visited_at">날짜 및 시간</string>
     <string name="all_please_select_visited_at">날짜 및 시간을 선택해 주세요</string>
@@ -56,14 +56,14 @@
     <string name="memory_creation_selected_period">%s ~ %s</string>
     <string name="memory_creation_period_descripton">‘여행’ 과 같은 추억이라면 기간을 설정할 수 있어요</string>
     <string name="memory_creation_toolbar_title">추억 만들기</string>
-    <string name="memory_creation_toolbar_subtitle">스타카토를 담을 추억을 만들어보세요!</string>
+    <string name="memory_creation_toolbar_subtitle">스타카토를 담을 추억을 만들어 보세요!</string>
 
     // activity_memory_update
     <string name="memory_update_toolbar_title">추억 수정하기</string>
     <string name="memory_update_toolbar_subtitle">스타카토를 담을 추억을 수정해 보세요!</string>
 
     // fragment_visit
-    <string name="visit_history">%s년 %s월 %s일 %s시에 방문했어요</string>
+    <string name="visit_history">%s년 %s월 %s일 %s %s시에 방문 했어요</string>
     <string name="visit_logs">코멘트</string>
     <string name="visit_add">기록하기</string>
     <string name="visit_enter_log">코멘트 입력하기</string>
@@ -86,7 +86,7 @@
     <string name="visit_creation_no_memory_hint">스타카토를 남길 수 있는 추억이 없어요</string>
     <string name="visit_creation_unselected_memory">추억을 먼저 선택해 주세요</string>
     <string name="moment_creation_memory_selection">추억 선택</string>
-    <string name="visit_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨보세요!</string>
+    <string name="visit_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨 보세요!</string>
     <string name="visit_creation_toolbar_title">스타카토 기록하기</string>
     <string name="moment_creation_not_found_address">주소를 찾지 못했습니다</string>
 
@@ -136,7 +136,7 @@
     <string name="menu_comment_delete">삭제하기</string>
 
     <string name="maps_location_permission_granted_message">위치 서비스 사용을 위한 위치 권한이 설정 되었습니다.</string>
-    <string name="maps_location_permission_required_message">위치 서비스 사용을 위해 위치 권한을 허용해주세요.</string>
+    <string name="maps_location_permission_required_message">위치 서비스 사용을 위해 위치 권한을 허용해 주세요.</string>
 
     // fragment_location_dialog
     <string name="location_dialog_title">위치 권한 설정</string>

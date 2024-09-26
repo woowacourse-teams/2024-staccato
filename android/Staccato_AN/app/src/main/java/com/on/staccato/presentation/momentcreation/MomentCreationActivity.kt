@@ -53,7 +53,6 @@ class MomentCreationActivity :
     BindingActivity<ActivityVisitCreationBinding>() {
     override val layoutResourceId = R.layout.activity_visit_creation
     private val viewModel: MomentCreationViewModel by viewModels()
-
     private val memoryVisitedAtSelectionFragment by lazy {
         MemoryVisitedAtSelectionFragment()
     }
