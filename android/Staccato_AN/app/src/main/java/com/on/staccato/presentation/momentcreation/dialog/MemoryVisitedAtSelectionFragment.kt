@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.NumberPicker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.on.staccato.databinding.FragmentMemoryVisitedAtSelectionBinding
 import com.on.staccato.domain.model.MemoryCandidate
@@ -16,12 +17,11 @@ class MemoryVisitedAtSelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentMemoryVisitedAtSelectionBinding? = null
     private val binding get() = _binding!!
 
-    private val hours = List(24) { it }
+    private val hours = (0 until 24).toList()
 
     private lateinit var memoryCandidates: Map<MemoryCandidate, Map<Int, Map<Int, List<Int>>>>
     private lateinit var yearCandidates: Map<Int, Map<Int, List<Int>>>
     private lateinit var monthCandidates: Map<Int, List<Int>>
-    private lateinit var dayCandidates: List<Int>
 
     private lateinit var memories: List<MemoryCandidate>
     private var years = listOf<Int>()
@@ -53,23 +53,23 @@ class MemoryVisitedAtSelectionFragment : BottomSheetDialogFragment() {
         setupPickers()
         setupPickerListeners()
         initConfirmButton()
-        initPickerPositionWithKey()
+        initPickerPosition()
     }
 
     // 1. numberPicker position 설정 (key 값의 index or 0)
-    private fun initPickerPositionWithKey() {
-        binding.pickerMemory.value = findKeyIndex(memoryCandidates.keys.toList(), keyMemory)
-        binding.pickerYear.value = findKeyIndex(yearCandidates.keys.toList(), keyYear)
-        binding.pickerMonth.value = findKeyIndex(monthCandidates.keys.toList(), keyMonth)
-        binding.pickerDay.value = findKeyIndex(dayCandidates, keyDay)
-        binding.pickerHours.value = findKeyIndex(hours, keyHour)
+    private fun initPickerPosition() {
+        binding.pickerMemory.setPickerValue(memoryCandidates.keys.toList(), keyMemory)
+        binding.pickerYear.setPickerValue(yearCandidates.keys.toList(), keyYear)
+        binding.pickerMonth.setPickerValue(monthCandidates.keys.toList(), keyMonth)
+        binding.pickerDay.setPickerValue(days, keyDay)
+        binding.pickerHours.setPickerValue(hours, keyHour)
     }
 
-    private fun <T : Any> findKeyIndex(
+    private fun <T : Any> NumberPicker.setPickerValue(
         targetList: List<T>,
         targetKey: T,
-    ): Int {
-        return targetList.indexOf(targetKey).takeIf { it >= 0 } ?: 0
+    ) {
+        this.value = targetList.indexOf(targetKey).takeIf { it >= 0 } ?: 0
     }
 
     override fun onDestroyView() {
@@ -83,63 +83,73 @@ class MemoryVisitedAtSelectionFragment : BottomSheetDialogFragment() {
 
     fun initMemoryCandidates(
         newMemories: List<MemoryCandidate>,
-        selectedMemory: MemoryCandidate?,
-        selectedVisitedAt: LocalDateTime?,
+        selectedMemory: MemoryCandidate,
+        selectedVisitedAt: LocalDateTime,
     ) {
-        if (newMemories.isNotEmpty()) {
-            keyHour = hours[0]
-            memoryCandidates =
-                newMemories.associateWith {
-                    buildNumberPickerDates(it.startAt, it.endAt)
-                }
-            memories = newMemories
-            keyMemory = newMemories[0]
-            resetYearsBy(keyMemory)
-        }
+        memoryCandidates =
+            newMemories.associateWith {
+                buildNumberPickerDates(it.startAt, it.endAt)
+            }
+        memories = newMemories
         initKeyWithSelectedValues(selectedVisitedAt, selectedMemory)
+        setYearsBy(keyMemory)
     }
 
     // 2. key 설정 (선택된 추억 / 날짜가 있으면 해당 정보, 없으면 첫번째 값)
     private fun initKeyWithSelectedValues(
-        selectedVisitedAt: LocalDateTime?,
-        selectedMemory: MemoryCandidate?,
+        selectedVisitedAt: LocalDateTime,
+        selectedMemory: MemoryCandidate,
     ) {
-        if (selectedVisitedAt != null && selectedMemory != null) {
-            keyMemory = selectedMemory
-            keyYear = selectedVisitedAt.year
-            keyMonth = selectedVisitedAt.monthValue
-            keyDay = selectedVisitedAt.dayOfMonth
-            keyHour = selectedVisitedAt.hour
-        }
+        keyMemory = selectedMemory
+        keyYear = selectedVisitedAt.year
+        keyMonth = selectedVisitedAt.monthValue
+        keyDay = selectedVisitedAt.dayOfMonth
+        keyHour = selectedVisitedAt.hour
     }
 
     // 선택된 추억에 대한 값들 초기화
-    private fun resetYearsBy(keyMemory: MemoryCandidate) {
-        yearCandidates = memoryCandidates[keyMemory] ?: throw IllegalArgumentException()
-        years = yearCandidates.map { it.key }
-        keyYear = years[0] // 추가
+    private fun setYearsBy(memory: MemoryCandidate) {
+        yearCandidates = memoryCandidates[memory] ?: throw IllegalArgumentException()
+        years = yearCandidates.keys.toList()
+        setMonthsBy(keyYear)
+    }
+
+    private fun setMonthsBy(year: Int) {
+        monthCandidates = yearCandidates[year] ?: throw IllegalArgumentException()
+        months = monthCandidates.keys.toList()
+        setDaysBy(keyMonth)
+    }
+
+    private fun setDaysBy(month: Int) {
+        days = monthCandidates[month] ?: throw IllegalArgumentException()
+    }
+
+    // 0번째로 리셋
+    private fun resetYearsBy(memory: MemoryCandidate) {
+        yearCandidates = memoryCandidates[memory] ?: throw IllegalArgumentException()
+        years = yearCandidates.keys.toList()
+        keyYear = years.first()
         resetMonthsBy(keyYear)
     }
 
-    private fun resetMonthsBy(keyYear: Int) {
-        monthCandidates = yearCandidates[keyYear] ?: throw IllegalArgumentException()
-        months = monthCandidates.map { it.key }
-        keyMonth = months[0] // 추가
+    private fun resetMonthsBy(year: Int) {
+        monthCandidates = yearCandidates[year] ?: throw IllegalArgumentException()
+        months = monthCandidates.keys.toList()
+        keyMonth = months.first()
         resetDaysBy(keyMonth)
     }
 
-    private fun resetDaysBy(keyMonth: Int) {
-        dayCandidates = monthCandidates[keyMonth] ?: throw IllegalArgumentException()
-        days = dayCandidates
-        keyDay = days[0]
+    private fun resetDaysBy(month: Int) {
+        days = monthCandidates[month] ?: throw IllegalArgumentException()
+        keyDay = days.first()
     }
 
     private fun setupPickers() {
-        updateMemoryPickerValues()
-        updateYearPickerValues()
-        updateMonthPickerValues()
-        updateDayPickerValues()
-        updateHourPickerValues()
+        binding.pickerMemory.updatePickerValues(memories.map { it.memoryTitle }, keyMemory)
+        binding.pickerYear.updatePickerValues(years, keyYear)
+        binding.pickerMonth.updatePickerValues(months, keyMonth)
+        binding.pickerDay.updatePickerValues(days, keyDay)
+        binding.pickerHours.updatePickerValues(hours, keyHour)
     }
 
     private fun setupPickerListeners() {
@@ -154,100 +164,38 @@ class MemoryVisitedAtSelectionFragment : BottomSheetDialogFragment() {
         binding.pickerMemory.setOnValueChangedListener { _, _, newItemPosition ->
             keyMemory = memories[newItemPosition]
             resetYearsBy(keyMemory)
-            updateYearPickerValues()
-            updateMonthPickerValues()
-            updateDayPickerValues()
+            binding.pickerYear.updatePickerValues(years, keyYear)
+            binding.pickerMonth.updatePickerValues(months, keyMonth)
+            binding.pickerDay.updatePickerValues(days, keyDay)
         }
     }
 
     private fun setYearPickerListener() {
-        binding.pickerYear.apply {
-            setOnValueChangedListener { _, _, newItemPosition ->
-                keyYear = years[newItemPosition]
-                resetMonthsBy(keyYear)
-                updateMonthPickerValues()
-                updateDayPickerValues()
-            }
+        binding.pickerYear.setOnValueChangedListener { _, _, newItemPosition ->
+            keyYear = years[newItemPosition]
+            resetMonthsBy(keyYear)
+            binding.pickerMonth.updatePickerValues(months, keyMonth)
+            binding.pickerDay.updatePickerValues(days, keyDay)
         }
     }
 
     private fun setMonthPickerListener() {
-        binding.pickerMonth.apply {
-            setOnValueChangedListener { _, _, newItemPosition ->
-                keyMonth = months[newItemPosition]
-                resetDaysBy(keyMonth)
-                updateDayPickerValues()
-            }
+        binding.pickerMonth.setOnValueChangedListener { _, _, newItemPosition ->
+            keyMonth = months[newItemPosition]
+            resetDaysBy(keyMonth)
+            binding.pickerDay.updatePickerValues(days, keyDay)
         }
     }
 
     private fun setDayPickerListener() {
-        binding.pickerDay.apply {
-            setOnValueChangedListener { _, _, newItemPosition ->
-                keyDay = days[newItemPosition]
-            }
+        binding.pickerDay.setOnValueChangedListener { _, _, newItemPosition ->
+            keyDay = days[newItemPosition]
         }
     }
 
     private fun setHourPickerListener() {
-        binding.pickerHours.apply {
-            setOnValueChangedListener { _, _, newItemPosition ->
-                keyHour = hours[newItemPosition]
-            }
-        }
-    }
-
-    private fun updateMemoryPickerValues() {
-        binding.pickerMemory.apply {
-            displayedValues = null
-            minValue = 0
-            maxValue = (memories.size - 1).coerceAtLeast(0)
-            wrapSelectorWheel = true
-            displayedValues = memories.map { it.memoryTitle }.toTypedArray()
-        }
-    }
-
-    private fun updateYearPickerValues() {
-        binding.pickerYear.apply {
-            displayedValues = null
-            value = findKeyIndex(years, keyYear)
-            minValue = 0
-            maxValue = (years.size - 1).coerceAtLeast(0)
-            wrapSelectorWheel = false
-            displayedValues = years.map { it.toString() }.toTypedArray()
-        }
-    }
-
-    private fun updateMonthPickerValues() {
-        binding.pickerMonth.apply {
-            value = findKeyIndex(months, keyMonth)
-            displayedValues = null
-            minValue = 0
-            maxValue = (months.size - 1).coerceAtLeast(0)
-            wrapSelectorWheel = false
-            displayedValues = months.map { it.toString() }.toTypedArray()
-        }
-    }
-
-    private fun updateDayPickerValues() {
-        binding.pickerDay.apply {
-            value = findKeyIndex(days, keyDay)
-            displayedValues = null
-            minValue = 0
-            maxValue = (days.size - 1).coerceAtLeast(0)
-            wrapSelectorWheel = false
-            displayedValues = days.map { it.toString() }.toTypedArray()
-        }
-    }
-
-    private fun updateHourPickerValues() {
-        binding.pickerHours.apply {
-            value = findKeyIndex(hours, keyHour)
-            displayedValues = null
-            minValue = 0
-            maxValue = (hours.size - 1).coerceAtLeast(0)
-            wrapSelectorWheel = false
-            displayedValues = hours.map { it.toString() }.toTypedArray()
+        binding.pickerHours.setOnValueChangedListener { _, _, newItemPosition ->
+            keyHour = hours[newItemPosition]
         }
     }
 
@@ -258,6 +206,20 @@ class MemoryVisitedAtSelectionFragment : BottomSheetDialogFragment() {
                 visitedAt = LocalDateTime.of(keyYear, keyMonth, keyDay, keyHour, 0, 0),
             )
             dismiss()
+        }
+    }
+
+    private fun <T : Any> NumberPicker.updatePickerValues(
+        list: List<T>,
+        key: T,
+    ) {
+        apply {
+            displayedValues = null
+            setPickerValue(list, key)
+            minValue = 0
+            maxValue = (list.size - 1).coerceAtLeast(0)
+            wrapSelectorWheel = false
+            displayedValues = list.map { it.toString() }.toTypedArray()
         }
     }
 
