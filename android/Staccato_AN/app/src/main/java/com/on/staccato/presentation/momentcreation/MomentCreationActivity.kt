@@ -79,7 +79,6 @@ class MomentCreationActivity :
         viewModel.fetchMemoryCandidates(memoryId)
         setupPermissionRequestLauncher()
         setupFusedLocationProviderClient()
-        fetchCurrentLocationAddress()
         initBinding()
         initAdapter()
         initItemTouchHelper()
