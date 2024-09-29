@@ -71,6 +71,25 @@ class MomentCreationActivity :
 
     private val sharedViewModel: SharedViewModel by viewModels()
 
+    override fun initStartView(savedInstanceState: Bundle?) {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        viewModel.fetchMemoryCandidates(memoryId)
+        setupPermissionRequestLauncher()
+        fetchCurrentLocationAddress()
+        initBinding()
+        initAdapter()
+        initItemTouchHelper()
+        initToolbar()
+        initMemorySelectionFragment()
+        observeViewModelData()
+        initGooglePlaceSearch()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkLocationSetting()
+    }
+
     override fun onNewPlaceSelected(
         placeId: String,
         name: String,
@@ -111,25 +130,6 @@ class MomentCreationActivity :
     override fun onCreateDoneClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         viewModel.createMoment()
-    }
-
-    override fun initStartView(savedInstanceState: Bundle?) {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        viewModel.fetchMemoryCandidates(memoryId)
-        setupPermissionRequestLauncher()
-        fetchCurrentLocationAddress()
-        initBinding()
-        initAdapter()
-        initItemTouchHelper()
-        initToolbar()
-        initMemorySelectionFragment()
-        observeViewModelData()
-        initGooglePlaceSearch()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        checkLocationSetting()
     }
 
     private fun setupPermissionRequestLauncher() {
