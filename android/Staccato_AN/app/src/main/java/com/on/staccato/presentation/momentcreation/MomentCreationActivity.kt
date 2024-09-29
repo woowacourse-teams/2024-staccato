@@ -72,9 +72,9 @@ class MomentCreationActivity :
     private val sharedViewModel: SharedViewModel by viewModels()
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         viewModel.fetchMemoryCandidates(memoryId)
         setupPermissionRequestLauncher()
+        setupFusedLocationProviderClient()
         fetchCurrentLocationAddress()
         initBinding()
         initAdapter()
@@ -149,6 +149,10 @@ class MomentCreationActivity :
                 )
             },
         )
+    }
+
+    private fun setupFusedLocationProviderClient() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
     private fun fetchCurrentLocationAddress(isCurrentLocationCallClicked: Boolean = false) {
