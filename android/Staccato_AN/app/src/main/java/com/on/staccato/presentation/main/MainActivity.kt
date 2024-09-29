@@ -1,12 +1,8 @@
 package com.on.staccato.presentation.main
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
@@ -14,21 +10,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.Granularity
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
-import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -41,12 +29,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
-import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.presentation.base.BindingActivity
-import com.on.staccato.presentation.common.location.LocationDialogFragment
+import com.on.staccato.presentation.common.LocationPermissionManager
 import com.on.staccato.presentation.main.model.MarkerUiModel
 import com.on.staccato.presentation.main.viewmodel.MapsViewModel
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
@@ -68,18 +55,13 @@ class MainActivity :
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+    private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
-    private val locationPermissions: Array<String> =
-        arrayOf(
-            ACCESS_FINE_LOCATION,
-            ACCESS_COARSE_LOCATION,
-        )
     private val sharedViewModel: SharedViewModel by viewModels()
     private val mapsViewModel: MapsViewModel by viewModels()
-    private val locationDialog = LocationDialogFragment()
-
-    private val requestPermissionLauncher = initRequestPermissionsLauncher()
+    private val locationPermissionManager = LocationPermissionManager(context = this, activity = this)
+    private val locationPermissions = locationPermissionManager.locationPermissions
 
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
@@ -88,6 +70,7 @@ class MainActivity :
 
     override fun initStartView(savedInstanceState: Bundle?) {
         binding.handler = this
+        setupPermissionRequestLauncher()
         setupGoogleMap()
         setupFusedLocationProviderClient()
         observeCurrentLocation()
@@ -112,12 +95,6 @@ class MainActivity :
         onMarkerClicked(map)
     }
 
-    private fun moveDefaultLocation() {
-        val defaultLocation =
-            LatLng(SEOUL_STATION_LATITUDE, SEOUL_STATION_LONGITUDE)
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM))
-    }
-
     override fun onStaccatoCreationClicked() {
         MomentCreationActivity.startWithResultLauncher(
             0L,
@@ -127,21 +104,14 @@ class MainActivity :
         )
     }
 
-    private fun initRequestPermissionsLauncher() =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            permissions.forEach { (_, isGranted) ->
-                if (isGranted) {
-                    makeSnackBar(
-                        getString(R.string.maps_location_permission_granted_message),
-                    ).show()
-                    checkLocationSetting()
-                } else {
-                    makeSnackBar(
-                        getString(R.string.all_location_permission_denial),
-                    ).show()
-                }
-            }
-        }
+    private fun setupPermissionRequestLauncher() {
+        permissionRequestLauncher =
+            locationPermissionManager.requestPermissionLauncher(
+                activityResultCaller = this,
+                view = binding.root,
+                actionWhenHavePermission = ::enableMyLocation,
+            )
+    }
 
     private fun setupGoogleMap() {
         val map: SupportMapFragment? =
@@ -150,47 +120,21 @@ class MainActivity :
     }
 
     private fun checkLocationSetting() {
-        val locationRequest: LocationRequest = buildLocationRequest()
-
-        val builder =
-            LocationSettingsRequest
-                .Builder()
-                .addLocationRequest(locationRequest)
-
-        val settingsClient: SettingsClient = LocationServices.getSettingsClient(this)
-        val locationSettingsResponse: Task<LocationSettingsResponse> =
-            settingsClient.checkLocationSettings(builder.build())
-
-        succeedLocationSettings(locationSettingsResponse)
-        failLocationSettings(locationSettingsResponse)
+        locationPermissionManager.checkLocationSetting(actionWhenHavePermission = ::enableMyLocation)
     }
 
-    private fun succeedLocationSettings(locationSettingsResponse: Task<LocationSettingsResponse>) {
-        locationSettingsResponse.addOnSuccessListener {
-            enableMyLocation()
-        }
+    private fun moveDefaultLocation() {
+        val defaultLocation =
+            LatLng(SEOUL_STATION_LATITUDE, SEOUL_STATION_LONGITUDE)
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM))
     }
-
-    private fun failLocationSettings(locationSettingsResponse: Task<LocationSettingsResponse>) {
-        locationSettingsResponse.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException) {
-                exception.startResolutionForResult(
-                    this,
-                    REQUEST_CODE_LOCATION,
-                )
-            }
-        }
-    }
-
-    private fun buildLocationRequest(): LocationRequest =
-        LocationRequest.Builder(PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS).apply {
-            setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
-            setWaitForAccurateLocation(true)
-        }.build()
 
     private fun enableMyLocation() {
+        val checkSelfLocationPermission = locationPermissionManager.checkSelfLocationPermission()
+        val shouldShowRequestLocationPermissionsRationale = locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
+
         when {
-            checkSelfLocationPermission() -> {
+            checkSelfLocationPermission -> {
                 googleMap.isMyLocationEnabled = true
                 val currentLocation: Task<Location> =
                     fusedLocationProviderClient.getCurrentLocation(
@@ -200,57 +144,21 @@ class MainActivity :
                 mapsViewModel.setCurrentLocation(currentLocation)
             }
 
-            shouldShowRequestLocationPermissionsRationale() -> {
-                observeIsLocationDenial { showLocationRequestRationaleDialog() }
+            shouldShowRequestLocationPermissionsRationale -> {
+                observeIsPermissionCancelClicked {
+                    locationPermissionManager.showLocationRequestRationaleDialog(supportFragmentManager)
+                }
             }
 
             else -> {
-                observeIsLocationDenial { requestPermissionLauncher.launch(locationPermissions) }
+                observeIsPermissionCancelClicked { permissionRequestLauncher.launch(locationPermissions) }
             }
         }
     }
 
-    private fun observeIsLocationDenial(action: () -> Unit) {
-        sharedViewModel.isLocationDenial.observe(this) { isCancel ->
-            if (!isCancel) action()
-        }
-    }
-
-    private fun checkSelfLocationPermission(): Boolean {
-        val isGrantedCoarseLocation =
-            ContextCompat.checkSelfPermission(
-                this,
-                ACCESS_COARSE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED
-
-        val isGrantedFineLocation =
-            ContextCompat.checkSelfPermission(
-                this,
-                ACCESS_FINE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED
-
-        return isGrantedCoarseLocation && isGrantedFineLocation
-    }
-
-    private fun shouldShowRequestLocationPermissionsRationale(): Boolean {
-        val shouldRequestCoarseLocation =
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                ACCESS_COARSE_LOCATION,
-            )
-
-        val shouldRequestFineLocation =
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                ACCESS_FINE_LOCATION,
-            )
-
-        return shouldRequestCoarseLocation && shouldRequestFineLocation
-    }
-
-    private fun showLocationRequestRationaleDialog() {
-        if (!locationDialog.isAdded) {
-            locationDialog.show(supportFragmentManager, LocationDialogFragment.TAG)
+    private fun observeIsPermissionCancelClicked(requestLocationPermissions: () -> Unit) {
+        sharedViewModel.isPermissionCancelClicked.observe(this) { isCancel ->
+            if (!isCancel) requestLocationPermissions()
         }
     }
 
@@ -345,8 +253,6 @@ class MainActivity :
 
         navController.navigate(R.id.momentFragment, bundle, navOptions)
     }
-
-    private fun makeSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
 
     private fun setupBackPressedHandler() {
         var backPressedTime = 0L
@@ -480,7 +386,6 @@ class MainActivity :
         ) { _, bundle ->
             val newState = bundle.getInt(BOTTOM_SHEET_NEW_STATE)
             behavior.state = newState
-            Log.d("hye", "$newState")
         }
     }
 
@@ -497,8 +402,6 @@ class MainActivity :
     }
 
     companion object {
-        private const val INTERVAL_MILLIS = 10000L
-        private const val REQUEST_CODE_LOCATION = 100
         private const val DEFAULT_MAP_PADDING = 0
         private const val DEFAULT_ZOOM = 15f
         private const val SEOUL_STATION_LATITUDE = 37.554677038139815
