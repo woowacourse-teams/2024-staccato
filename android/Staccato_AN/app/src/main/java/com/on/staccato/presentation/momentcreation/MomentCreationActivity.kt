@@ -48,28 +48,32 @@ class MomentCreationActivity :
     MomentCreationHandler,
     BindingActivity<ActivityVisitCreationBinding>() {
     override val layoutResourceId = R.layout.activity_visit_creation
+
     private val viewModel: MomentCreationViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by viewModels()
+
     private val memoryVisitedAtSelectionFragment by lazy {
         MemoryVisitedAtSelectionFragment()
     }
     private val photoAttachFragment by lazy {
         PhotoAttachFragment().apply { setMultipleAbleOption(true) }
     }
-    private val fragmentManager: FragmentManager = supportFragmentManager
-    private lateinit var photoAttachAdapter: PhotoAttachAdapter
-    private lateinit var itemTouchHelper: ItemTouchHelper
-    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
-    private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var address: String
     private val autocompleteFragment by lazy {
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
     }
+
+    private val fragmentManager: FragmentManager = supportFragmentManager
+    private lateinit var photoAttachAdapter: PhotoAttachAdapter
+    private lateinit var itemTouchHelper: ItemTouchHelper
+
+    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
+    private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
+
     private val locationPermissionManager = LocationPermissionManager(context = this, activity = this)
     private val locationPermissions = locationPermissionManager.locationPermissions
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
-
-    private val sharedViewModel: SharedViewModel by viewModels()
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var address: String
 
     override fun initStartView(savedInstanceState: Bundle?) {
         viewModel.fetchMemoryCandidates(memoryId)
