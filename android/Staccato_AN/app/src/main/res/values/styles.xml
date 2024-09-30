@@ -136,6 +136,15 @@
         <item name="android:enabled">true</item>
     </style>
 
+    <style name="ButtonStyle.MyPage" parent="ButtonStyle">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:drawableEnd">@drawable/icon_arrow_right</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:textAlignment">textStart</item>
+    </style>
+
     <style name="ToolbarMenuStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

@@ -105,6 +105,11 @@
     <string name="recovery_code_hint">ex) bt2hnhd4-07kght-0pp2ln</string>
     <string name="recovery_load">불러오기</string>
 
+    // activity_mypage
+    <string name="mypage_title">마이페이지</string>
+    <string name="mypage_privacy_policy">개인정보처리방침</string>
+    <string name="mypage_app_version">앱 버전 1.0.2</string>
+
     // fragment_photo_attach
     <string name="photo_attach_title">사진을 등록해 주세요</string>
     <string name="photo_attach_camera">카메라 열기</string>
