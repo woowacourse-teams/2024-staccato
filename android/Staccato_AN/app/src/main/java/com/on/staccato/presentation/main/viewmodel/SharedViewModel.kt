@@ -17,6 +17,9 @@ class SharedViewModel : ViewModel() {
     private val _isPermissionCancelClicked = MutableLiveData(false)
     val isPermissionCancelClicked: LiveData<Boolean> get() = _isPermissionCancelClicked
 
+    private val _isSettingClicked = MutableLiveData(false)
+    val isSettingClicked: LiveData<Boolean> get() = _isSettingClicked
+
     fun setTimelineHasUpdated() {
         _isTimelineUpdated.setValue(true)
     }
@@ -27,5 +30,9 @@ class SharedViewModel : ViewModel() {
 
     fun updateIsPermissionCancelClicked() {
         _isPermissionCancelClicked.value = true
+    }
+
+    fun updateIsSettingClicked(isSettingClicked: Boolean) {
+        _isSettingClicked.value = isSettingClicked
     }
 }

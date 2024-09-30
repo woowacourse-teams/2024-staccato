@@ -1,9 +1,7 @@
 package com.on.staccato.presentation.visitupdate
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
@@ -14,22 +12,23 @@ import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.model.Place
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityVisitUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
+import com.on.staccato.presentation.common.LocationPermissionManager
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
@@ -53,6 +52,7 @@ class VisitUpdateActivity :
     BindingActivity<ActivityVisitUpdateBinding>() {
     override val layoutResourceId = R.layout.activity_visit_update
     private val viewModel: VisitUpdateViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by viewModels()
     private val memoryVisitedAtSelectionFragment by lazy {
         MemoryVisitedAtSelectionFragment()
     }
@@ -65,12 +65,16 @@ class VisitUpdateActivity :
     private val staccatoId by lazy { intent.getLongExtra(STACCATO_ID_KEY, 0L) }
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var address: String
 
     private val autocompleteFragment by lazy {
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
     }
+
+    private val locationPermissionManager = LocationPermissionManager(context = this, activity = this)
+    private val locationPermissions = locationPermissionManager.locationPermissions
+    private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var address: String
 
     override fun onNewPlaceSelected(
         placeId: String,
@@ -93,7 +97,7 @@ class VisitUpdateActivity :
     }
 
     override fun onSearchClicked() {
-        fetchCurrentLocationAddress()
+        checkLocationSetting()
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
@@ -115,7 +119,8 @@ class VisitUpdateActivity :
     }
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        setupPermissionRequestLauncher()
+        setupFusedLocationProviderClient()
         initBinding()
         initToolbar()
         initMemorySelectionFragment()
@@ -126,31 +131,74 @@ class VisitUpdateActivity :
         viewModel.fetchTargetData(staccatoId, memoryId, memoryTitle)
     }
 
+    override fun onResume() {
+        super.onResume()
+        observeIsSettingClicked()
+    }
+
+    private fun setupPermissionRequestLauncher() {
+        permissionRequestLauncher =
+            locationPermissionManager.requestPermissionLauncher(
+                activityResultCaller = this,
+                view = binding.root,
+                actionWhenHavePermission = ::fetchCurrentLocationAddress,
+            )
+    }
+
+    private fun checkLocationSetting() {
+        locationPermissionManager.checkLocationSetting(
+            actionWhenHavePermission = { fetchCurrentLocationAddress() },
+        )
+    }
+
+    private fun setupFusedLocationProviderClient() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+    }
+
     private fun fetchCurrentLocationAddress() {
-        val isAccessFineLocationGranted =
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED
+        val checkSelfLocationPermission = locationPermissionManager.checkSelfLocationPermission()
+        val shouldShowRequestLocationPermissionsRationale =
+            locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
 
-        val isAccessCoarseLocationGranted =
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED
-
-        if (isAccessFineLocationGranted || isAccessCoarseLocationGranted) {
-            val currentLocation =
-                fusedLocationProviderClient.getCurrentLocation(
-                    LocationRequest.PRIORITY_HIGH_ACCURACY,
-                    null,
-                )
-            currentLocation.addOnSuccessListener { location ->
-                fetchAddress(location)
+        when {
+            checkSelfLocationPermission -> {
+                val currentLocation: Task<Location> =
+                    fusedLocationProviderClient.getCurrentLocation(
+                        Priority.PRIORITY_HIGH_ACCURACY,
+                        null,
+                    )
+                currentLocation.addOnSuccessListener { location ->
+                    fetchAddress(location)
+                }
             }
-            return
-        } else {
-            requestLocationPermissions()
+
+            shouldShowRequestLocationPermissionsRationale -> {
+                locationPermissionManager.showLocationRequestRationaleDialog(
+                    supportFragmentManager,
+                )
+            }
+
+            else -> {
+                permissionRequestLauncher.launch(locationPermissions)
+            }
+        }
+    }
+
+    private fun observeIsSettingClicked() {
+        sharedViewModel.isSettingClicked.observe(this) { isSettingClicked ->
+            val checkSelfLocationPermission =
+                locationPermissionManager.checkSelfLocationPermission()
+
+            if (isSettingClicked && checkSelfLocationPermission) {
+                val currentLocation: Task<Location> =
+                    fusedLocationProviderClient.getCurrentLocation(
+                        Priority.PRIORITY_HIGH_ACCURACY,
+                        null,
+                    )
+                currentLocation.addOnSuccessListener { location ->
+                    fetchAddress(location)
+                }
+            }
         }
     }
 
@@ -272,17 +320,6 @@ class VisitUpdateActivity :
             }
         }
 
-    private fun requestLocationPermissions() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-            ),
-            LOCATION_PERMISSION_REQUEST_CODE,
-        )
-    }
-
     private fun initGooglePlaceSearch() {
         val placeFields: List<Place.Field> =
             listOf(Place.Field.NAME, Place.Field.ID, Place.Field.ADDRESS, Place.Field.LAT_LNG)
@@ -294,8 +331,6 @@ class VisitUpdateActivity :
     }
 
     companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
-
         fun startWithResultLauncher(
             visitId: Long,
             memoryId: Long,

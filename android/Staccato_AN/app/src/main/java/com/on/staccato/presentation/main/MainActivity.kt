@@ -95,6 +95,11 @@ class MainActivity :
         onMarkerClicked(map)
     }
 
+    override fun onStop() {
+        super.onStop()
+        sharedViewModel.updateIsSettingClicked(false)
+    }
+
     override fun onStaccatoCreationClicked() {
         MomentCreationActivity.startWithResultLauncher(
             0L,

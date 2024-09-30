@@ -53,6 +53,7 @@ class LocationDialogFragment : DialogFragment(), LocationDialogHandler {
     }
 
     override fun onSettingClicked() {
+        sharedViewModel.updateIsSettingClicked(isSettingClicked = true)
         navigateToSetting()
         dismiss()
     }
