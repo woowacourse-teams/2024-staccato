@@ -47,7 +47,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MomentCreationActivity :
     GooglePlaceFragmentEventHandler,
-    PlaceSearchHandler,
+    CurrentLocationHandler,
     OnUrisSelectedListener,
     MomentCreationHandler,
     BindingActivity<ActivityVisitCreationBinding>() {
@@ -136,8 +136,8 @@ class MomentCreationActivity :
     override fun initStartView(savedInstanceState: Bundle?) {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         viewModel.fetchMemoryCandidates(memoryId)
-        fetchCurrentLocationAddress()
         initBinding()
+        fetchCurrentLocationAddress()
         initAdapter()
         initItemTouchHelper()
         initToolbar()
@@ -168,6 +168,7 @@ class MomentCreationActivity :
             ) == PackageManager.PERMISSION_GRANTED
 
         if (isAccessFineLocationGranted || isAccessCoarseLocationGranted) {
+            viewModel.setCurrentLocationLoading(true)
             val currentLocation =
                 fusedLocationProviderClient.getCurrentLocation(
                     LocationRequest.PRIORITY_HIGH_ACCURACY,
