@@ -33,8 +33,8 @@ import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
+import com.on.staccato.presentation.momentcreation.CurrentLocationHandler
 import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
-import com.on.staccato.presentation.momentcreation.PlaceSearchHandler
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.momentcreation.dialog.MemoryVisitedAtSelectionFragment
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
@@ -47,7 +47,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class VisitUpdateActivity :
     GooglePlaceFragmentEventHandler,
-    PlaceSearchHandler,
+    CurrentLocationHandler,
     OnUrisSelectedListener,
     VisitUpdateHandler,
     BindingActivity<ActivityVisitUpdateBinding>() {
@@ -140,6 +140,7 @@ class VisitUpdateActivity :
             ) == PackageManager.PERMISSION_GRANTED
 
         if (isAccessFineLocationGranted || isAccessCoarseLocationGranted) {
+            viewModel.setCurrentLocationLoading(true)
             val currentLocation =
                 fusedLocationProviderClient.getCurrentLocation(
                     LocationRequest.PRIORITY_HIGH_ACCURACY,
