@@ -187,7 +187,7 @@ class MomentCreationActivity :
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.visitCreationHandler = this
-        binding.placeSearchHandler = this
+        binding.currentLocationHandler = this
     }
 
     private fun initAdapter() {
