@@ -2,7 +2,7 @@ package com.staccato.moment.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
@@ -20,7 +20,6 @@ import com.staccato.moment.service.dto.response.MomentDetailResponseOldV;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
-
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -30,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class MomentService {
     private final MomentRepository momentRepository;
     private final MemoryRepository memoryRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public MomentIdResponse createMoment(MomentRequest momentRequest, Member member) {
@@ -101,6 +101,7 @@ public class MomentService {
     public void deleteMomentById(long momentId, Member member) {
         momentRepository.findById(momentId).ifPresent(moment -> {
             validateMemoryOwner(moment.getMemory(), member);
+            commentRepository.deleteAllByMomentId(momentId);
             momentRepository.deleteById(momentId);
         });
     }
