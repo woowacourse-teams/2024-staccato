@@ -32,8 +32,7 @@ public record MomentDetailResponseOldV(
         @Schema(example = "51.51978412729915")
         BigDecimal latitude,
         @Schema(example = "-0.12712788587027796")
-        BigDecimal longitude,
-        List<CommentResponse> comments
+        BigDecimal longitude
 ) {
     public MomentDetailResponseOldV(Moment moment) {
         this(
@@ -46,8 +45,7 @@ public record MomentDetailResponseOldV(
                 moment.getFeeling().getValue(),
                 moment.getSpot().getAddress(),
                 moment.getSpot().getLatitude(),
-                moment.getSpot().getLongitude(),
-                moment.getComments().stream().map(CommentResponse::new).toList()
+                moment.getSpot().getLongitude()
         );
     }
 }

@@ -60,7 +60,7 @@ class MomentControllerTest {
     static Stream<Arguments> invalidMomentRequestProvider() {
         return Stream.of(
                 Arguments.of(
-                        new MomentRequest("staccatoTitle", "placeName","address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 0L, List.of("https://example.com/images/namsan_tower.jpg")),
+                        new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 0L, List.of("https://example.com/images/namsan_tower.jpg")),
                         "추억 식별자는 양수로 이루어져야 합니다."
                 ),
                 Arguments.of(
@@ -184,12 +184,33 @@ class MomentControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         MomentLocationResponses responses = MomentLocationResponsesFixture.create();
         when(momentService.readAllMoment(any(Member.class))).thenReturn(responses);
+        String expectedResponse = """
+                {
+                    "momentLocationResponses": [
+                         {
+                             "momentId": 1,
+                             "latitude": 1,
+                             "longitude": 0
+                         },
+                         {
+                             "momentId": 2,
+                             "latitude": 1,
+                             "longitude": 0
+                         },
+                         {
+                             "momentId": 3,
+                             "latitude": 1,
+                             "longitude": 0
+                         }
+                    ]
+                }
+                """;
 
         // when & then
         mockMvc.perform(get("/moments")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(responses)));
+                .andExpect(content().json(expectedResponse));
     }
 
     @DisplayName("적합한 경로변수를 통해 스타카토 조회에 성공한다.")
@@ -198,14 +219,29 @@ class MomentControllerTest {
         // given
         long momentId = 1L;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        MomentDetailResponse response = MomentDetailResponseFixture.create(momentId, LocalDateTime.now());
+        MomentDetailResponse response = MomentDetailResponseFixture.create(momentId, LocalDateTime.parse("2021-11-08T11:58:20"));
         when(momentService.readMomentById(anyLong(), any(Member.class))).thenReturn(response);
+        String expectedResponse = """
+                    {
+                         "momentId": 1,
+                         "memoryId": 1,
+                         "memoryTitle": "memoryTitle",
+                         "staccatoTitle": "staccatoTitle",
+                         "momentImageUrls": ["https://example1.com.jpg"],
+                         "visitedAt": "2021-11-08T11:58:20",
+                         "feeling": "happy",
+                         "placeName": "placeName",
+                         "address": "address",
+                         "latitude": 37.7749,
+                         "longitude": -122.4194
+                     }
+                """;
 
         // when & then
         mockMvc.perform(get("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(response)));
+                .andExpect(content().json(expectedResponse));
     }
 
     @DisplayName("적합하지 않은 경로변수의 경우 스타카토 조회에 실패한다.")
