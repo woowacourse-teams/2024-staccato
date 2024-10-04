@@ -6,6 +6,17 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel" />
+
+        <variable
+            name="myPageHandler"
+            type="com.on.staccato.presentation.mypage.MyPageHandler" />
+
+        <variable
+            name="menuHandler"
+            type="com.on.staccato.presentation.mypage.MyPageMenuHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,12 +24,14 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <include
-            android:id="@+id/include_mypage_toolbar"
-            layout="@layout/toolbar_mypage"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_mypage"
+            style="@style/DefaultToolbarStyle"
+            app:title="@string/mypage_title"
+            app:titleCentered="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_mypage_profile"
@@ -27,7 +40,7 @@
             android:layout_marginVertical="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/include_mypage_toolbar">
+            app:layout_constraintTop_toBottomOf="@id/toolbar_mypage">
 
             <FrameLayout
                 android:id="@+id/frame_mypage_profile_image"
@@ -47,16 +60,19 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@drawable/shape_place_holder_oval" />
+                    bind:coilCircleImageUrl="@{viewModel.myProfile.profileImageUrl}"
+                    bind:coilPlaceHolder="@{@drawable/icon_member}"
+                    tools:src="@drawable/icon_member" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom||end"
+                    android:layout_gravity="bottom|end"
                     android:layout_marginEnd="12dp"
                     android:layout_marginBottom="12dp"
                     android:contentDescription="@string/all_image_content_description"
-                    android:src="@drawable/icon_edit_circle" />
+                    android:src="@drawable/icon_edit_circle"
+                    android:visibility="invisible" />
 
             </FrameLayout>
 
@@ -66,35 +82,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:text="@{viewModel.myProfile.nickname}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/frame_mypage_profile_image"
                 tools:text="사용자 닉네임" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_mypage_profile_nickname"
-                app:layout_constraintWidth_percent="0.75">
+                app:layout_constraintTop_toBottomOf="@id/tv_mypage_profile_nickname">
 
                 <TextView
                     android:id="@+id/tv_mypage_profile_uuid"
-                    style="@style/Typography.Body2"
-                    android:layout_width="0dp"
+                    style="@style/Typography.Body3"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="@color/gray4"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_mypage_profile_image"
-                    tools:text="UUID : d23h-82hm83-dflsahpoe-3829jgco32-glznsdb" />
+                    android:text="@string/mypage_uuid"
+                    android:textColor="@color/gray4" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_mypage_profile_uuid_copy"
@@ -102,7 +112,8 @@
                     android:layout_height="36dp"
                     android:layout_marginStart="8dp"
                     android:drawableEnd="@drawable/icon_copy"
-                    android:drawableTint="@color/gray4" />
+                    android:drawableTint="@color/gray4"
+                    android:onClick="@{() -> myPageHandler.onCodeCopyClicked()}" />
 
             </LinearLayout>
 
@@ -120,6 +131,7 @@
             android:id="@+id/btn_mypage_menu_privacy_policy"
             style="@style/ButtonStyle.MyPage"
             android:layout_marginTop="10dp"
+            android:onClick="@{() -> menuHandler.onPrivacyPolicyClicked()}"
             android:text="@string/mypage_privacy_policy"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
