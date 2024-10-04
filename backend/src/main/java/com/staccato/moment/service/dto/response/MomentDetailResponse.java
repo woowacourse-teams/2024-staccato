@@ -1,8 +1,10 @@
 package com.staccato.moment.service.dto.response;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImage;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -16,6 +18,12 @@ public record MomentDetailResponse(
         long memoryId,
         @Schema(example = "2024 서울 투어")
         String memoryTitle,
+        @Schema(example = "2024-06-30")
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        LocalDate startAt,
+        @Schema(example = "2024-07-04")
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        LocalDate endAt,
         @Schema(example = "즐거웠던 남산에서의 기억")
         String staccatoTitle,
         @ArraySchema(arraySchema = @Schema(example = "[\"https://example.com/images/namsan_tower.jpg\", \"https://example.com/images/namsan_tower2.jpg\"]"))
@@ -38,6 +46,8 @@ public record MomentDetailResponse(
                 moment.getId(),
                 moment.getMemory().getId(),
                 moment.getMemory().getTitle(),
+                moment.getMemory().getTerm().getStartAt(),
+                moment.getMemory().getTerm().getEndAt(),
                 moment.getTitle(),
                 moment.getMomentImages().getImages().stream().map(MomentImage::getImageUrl).toList(),
                 moment.getVisitedAt(),

@@ -235,6 +235,8 @@ class MomentControllerTest {
                          "momentId": 1,
                          "memoryId": 1,
                          "memoryTitle": "memoryTitle",
+                         "startAt": "2024-06-30",
+                         "endAt": "2024-07-04",
                          "staccatoTitle": "staccatoTitle",
                          "momentImageUrls": ["https://example1.com.jpg"],
                          "visitedAt": "2021-11-08T11:58:20",
