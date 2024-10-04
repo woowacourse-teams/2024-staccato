@@ -5,8 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.view.View
-import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
@@ -22,19 +22,17 @@ import com.google.android.gms.tasks.Task
 import com.on.staccato.R
 import com.on.staccato.presentation.common.location.LocationDialogFragment
 import com.on.staccato.presentation.util.showSnackBar
-import java.lang.Exception
 
 class LocationPermissionManager(
     private val context: Context,
-    private val activity: Activity,
+    private val activity: AppCompatActivity,
 ) {
     private val locationDialog = LocationDialogFragment()
 
     fun requestPermissionLauncher(
-        activityResultCaller: ActivityResultCaller,
         view: View,
         actionWhenHavePermission: () -> Unit,
-    ) = activityResultCaller.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+    ) = activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         permissions.forEach { (_, isGranted) ->
             if (isGranted) {
                 view.showSnackBar(context.resources.getString(R.string.maps_location_permission_granted_message))

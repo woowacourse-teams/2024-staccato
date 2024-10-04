@@ -139,7 +139,6 @@ class VisitUpdateActivity :
     private fun setupPermissionRequestLauncher() {
         permissionRequestLauncher =
             locationPermissionManager.requestPermissionLauncher(
-                activityResultCaller = this,
                 view = binding.root,
                 actionWhenHavePermission = ::fetchCurrentLocationAddress,
             )
