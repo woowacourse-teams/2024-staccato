@@ -3,7 +3,6 @@ package com.on.staccato.data.mypage
 import com.on.staccato.data.ApiResponseHandler.handleApiResponse
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDomain
-import com.on.staccato.data.dto.mypage.MyProfileResponse
 import com.on.staccato.data.dto.mypage.ProfileImageResponse
 import com.on.staccato.domain.model.MyProfile
 import com.on.staccato.domain.repository.MyPageRepository
