@@ -159,12 +159,12 @@ class MomentCreationActivity :
     }
 
     private fun fetchCurrentLocationAddress(isCurrentLocationCallClicked: Boolean = false) {
-        val checkSelfLocationPermission = locationPermissionManager.checkSelfLocationPermission()
+        val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
         val shouldShowRequestLocationPermissionsRationale =
             locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
 
         when {
-            checkSelfLocationPermission -> {
+            isLocationPermissionGranted -> {
                 val currentLocation: Task<Location> =
                     fusedLocationProviderClient.getCurrentLocation(
                         Priority.PRIORITY_HIGH_ACCURACY,

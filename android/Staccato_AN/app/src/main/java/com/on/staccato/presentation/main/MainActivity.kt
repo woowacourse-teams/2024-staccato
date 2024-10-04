@@ -135,11 +135,11 @@ class MainActivity :
     }
 
     private fun enableMyLocation() {
-        val checkSelfLocationPermission = locationPermissionManager.checkSelfLocationPermission()
+        val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
         val shouldShowRequestLocationPermissionsRationale = locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
 
         when {
-            checkSelfLocationPermission -> {
+            isLocationPermissionGranted -> {
                 googleMap.isMyLocationEnabled = true
                 val currentLocation: Task<Location> =
                     fusedLocationProviderClient.getCurrentLocation(

@@ -156,12 +156,12 @@ class VisitUpdateActivity :
     }
 
     private fun fetchCurrentLocationAddress() {
-        val checkSelfLocationPermission = locationPermissionManager.checkSelfLocationPermission()
+        val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
         val shouldShowRequestLocationPermissionsRationale =
             locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
 
         when {
-            checkSelfLocationPermission -> {
+            isLocationPermissionGranted -> {
                 val currentLocation: Task<Location> =
                     fusedLocationProviderClient.getCurrentLocation(
                         Priority.PRIORITY_HIGH_ACCURACY,
