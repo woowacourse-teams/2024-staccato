@@ -107,7 +107,9 @@
 
     // activity_mypage
     <string name="mypage_title">마이페이지</string>
+    <string name="mypage_uuid">복구 코드 복사하기</string>
     <string name="mypage_privacy_policy">개인정보처리방침</string>
+    <string name="mypage_privacy_policy_url">https://app.websitepolicies.com/policies/view/7jel2uwv</string>
     <string name="mypage_app_version">앱 버전 1.0.2</string>
 
     // fragment_photo_attach
