@@ -8,6 +8,8 @@ data class MomentResponse(
     @SerialName("momentId") val momentId: Long,
     @SerialName("memoryId") val memoryId: Long,
     @SerialName("memoryTitle") val memoryTitle: String,
+    @SerialName("startAt") val startAt: String? = null,
+    @SerialName("endAt") val endAt: String? = null,
     @SerialName("staccatoTitle") val staccatoTitle: String,
     @SerialName("placeName") val placeName: String,
     @SerialName("latitude") val latitude: Double,
