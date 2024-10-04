@@ -343,6 +343,7 @@ class MainActivity :
 
     private fun setUpBottomSheetBehaviorAction() {
         behavior.apply {
+            changeSkipCollapsed()
             addBottomSheetCallback(
                 object : BottomSheetBehavior.BottomSheetCallback() {
                     override fun onStateChanged(
@@ -356,11 +357,17 @@ class MainActivity :
                                 binding.constraintMainBottomSheet.setBackgroundResource(
                                     R.drawable.shape_bottom_sheet_square,
                                 )
+                                changeSkipCollapsed(skipCollapsed = false)
                             }
 
                             STATE_HALF_EXPANDED -> {
                                 mapsViewModel.setIsHalf(isHalf = true)
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
+                                changeSkipCollapsed()
+                            }
+
+                            STATE_COLLAPSED -> {
+                                mapsViewModel.setIsHalf(isHalf = false)
                             }
 
                             else -> {
@@ -368,20 +375,31 @@ class MainActivity :
                                 binding.constraintMainBottomSheet.setBackgroundResource(
                                     R.drawable.shape_bottom_sheet_20dp,
                                 )
-                                mapsViewModel.setIsHalf(isHalf = false)
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
                             }
                         }
                     }
 
                     override fun onSlide(
-                        p0: View,
-                        p1: Float,
+                        view: View,
+                        slideOffset: Float,
                     ) {
+                        if (slideOffset < 0.05) {
+                            changeSkipCollapsed(isHideable = false)
+                            state = STATE_COLLAPSED
+                        }
                     }
                 },
             )
         }
+    }
+
+    private fun BottomSheetBehavior<ConstraintLayout>.changeSkipCollapsed(
+        isHideable: Boolean = true,
+        skipCollapsed: Boolean = true,
+    ) {
+        this.isHideable = isHideable
+        this.skipCollapsed = skipCollapsed
     }
 
     private fun setUpBottomSheetStateListener() {
