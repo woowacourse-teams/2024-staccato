@@ -1,25 +1,21 @@
 package com.staccato.memory.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.staccato.ServiceSliceTest;
+import com.staccato.comment.domain.Comment;
+import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.memory.MemoryRequestFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
@@ -32,9 +28,15 @@ import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
 import com.staccato.memory.service.dto.response.MemoryNameResponses;
+import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class MemoryServiceTest extends ServiceSliceTest {
     @Autowired
@@ -47,11 +49,13 @@ class MemoryServiceTest extends ServiceSliceTest {
     private MemoryRepository memoryRepository;
     @Autowired
     private MomentRepository momentRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
     static Stream<Arguments> dateProvider() {
         return Stream.of(
-                Arguments.of(LocalDate.of(2024, 7, 1), 2),
-                Arguments.of(LocalDate.of(2024, 7, 2), 1)
+                Arguments.of(LocalDate.of(2024, 7, 1), 3),
+                Arguments.of(LocalDate.of(2024, 7, 2), 2)
         );
     }
 
@@ -72,7 +76,7 @@ class MemoryServiceTest extends ServiceSliceTest {
 
         // when
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, member);
-        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId())
+        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemory(member.getId())
                 .get(0);
 
         // then
@@ -82,7 +86,26 @@ class MemoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("이미 존재하는 추억 이름으로 추억을 생성할 수 없다.")
+    @DisplayName("추억의 기간이 null이더라도 추억을 생성할 수 있다.")
+    @Test
+    void createMemoryWithoutTerm() {
+        // given
+        MemoryRequest memoryRequest = MemoryRequestFixture.create(null, null);
+        Member member = memberRepository.save(MemberFixture.create());
+
+        // when
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(memoryRequest, member);
+        MemoryMember memoryMember = memoryMemberRepository.findAllByMemberIdOrderByMemory(member.getId())
+                .get(0);
+
+        // then
+        assertAll(
+                () -> assertThat(memoryMember.getMember().getId()).isEqualTo(member.getId()),
+                () -> assertThat(memoryMember.getMemory().getId()).isEqualTo(memoryIdResponse.memoryId())
+        );
+    }
+
+    @DisplayName("사용자의 추억 중 이미 존재하는 추억 이름으로 추억을 생성할 수 없다.")
     @Test
     void cannotCreateMemoryByDuplicatedTitle() {
         // given
@@ -96,6 +119,38 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
     }
 
+    @DisplayName("다른 사용자의 이미 존재하는 추억 이름으로 추억을 생성할 수 있다.")
+    @Test
+    void canCreateMemoryByDuplicatedTitleOfOther() {
+        // given
+        MemoryRequest memoryRequest = MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10));
+        Member member = memberRepository.save(MemberFixture.create());
+        Member otherMember = memberRepository.save(MemberFixture.create("other"));
+        memoryService.createMemory(memoryRequest, otherMember);
+
+        // when & then
+        assertThatNoException().isThrownBy(() -> memoryService.createMemory(memoryRequest, member));
+    }
+
+    @DisplayName("사용자의 모든 추억을 조회하면 생성 시간 기준 내림차순으로 조회된다.")
+    @Test
+    void readAllMemories() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10), "first"), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10), "second"), member);
+
+        // when
+        MemoryResponses memoryResponses = memoryService.readAllMemories(member);
+
+        // then
+        assertAll(
+                () -> assertThat(memoryResponses.memories().get(0).memoryTitle()).isEqualTo("second"),
+                () -> assertThat(memoryResponses.memories().get(1).memoryTitle()).isEqualTo("first")
+        );
+    }
+
     @DisplayName("현재 날짜를 포함하는 모든 추억 목록을 조회한다.")
     @MethodSource("dateProvider")
     @ParameterizedTest
@@ -104,12 +159,32 @@ class MemoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create());
         memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 1), "title1"), member);
         memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2), "title2"), member);
+        memoryService.createMemory(MemoryRequestFixture.create(null, null, "title3"), member);
 
         // when
         MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
 
         // then
         assertThat(memoryNameResponses.memories()).hasSize(expectedSize);
+    }
+
+    @DisplayName("현재 날짜를 포함하는 모든 추억 목록을 생성 시간 기준 내림차순으로 조회한다.")
+    @Test
+    void readAllMemoriesOrderByCreatedAtDesc() {
+        // given
+        LocalDate currentDate = LocalDate.of(2024, 7, 1);
+        Member member = memberRepository.save(MemberFixture.create());
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 1), "title1"), member);
+        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2), "title2"), member);
+
+        // when
+        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
+
+        // then
+        assertAll(
+                () -> assertThat(memoryNameResponses.memories().get(0).memoryTitle()).isEqualTo("title2"),
+                () -> assertThat(memoryNameResponses.memories().get(1).memoryTitle()).isEqualTo("title1")
+        );
     }
 
     @DisplayName("특정 추억을 조회한다.")
@@ -127,6 +202,26 @@ class MemoryServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(memoryDetailResponse.memoryId()).isEqualTo(memoryIdResponse.memoryId()),
                 () -> assertThat(memoryDetailResponse.mates()).hasSize(1)
+        );
+    }
+
+    @DisplayName("기간이 없는 특정 추억을 조회한다.")
+    @Test
+    void readMemoryByIdWithoutTerm() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+
+        MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(null, null), member);
+
+        // when
+        MemoryDetailResponse memoryDetailResponse = memoryService.readMemoryById(memoryIdResponse.memoryId(), member);
+
+        // then
+        assertAll(
+                () -> assertThat(memoryDetailResponse.memoryId()).isEqualTo(memoryIdResponse.memoryId()),
+                () -> assertThat(memoryDetailResponse.mates()).hasSize(1),
+                () -> assertThat(memoryDetailResponse.startAt()).isNull(),
+                () -> assertThat(memoryDetailResponse.endAt()).isNull()
         );
     }
 
@@ -201,6 +296,25 @@ class MemoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(foundedMemory.getTerm().getStartAt()).isEqualTo(updatedMemory.startAt()),
                 () -> assertThat(foundedMemory.getTerm().getEndAt()).isEqualTo(updatedMemory.endAt()),
                 () -> assertThat(foundedMemory.getThumbnailUrl()).isEqualTo(expected)
+        );
+    }
+
+    @DisplayName("기간이 존재하는 추억에 대해 기간이 존재하지 않도록 변경할 수 있다.")
+    @Test
+    void updateMemoryWithNullableTerm() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        MemoryIdResponse memoryResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
+
+        // when
+        MemoryRequest memoryUpdateRequest = MemoryRequestFixture.create(null, null);
+        memoryService.updateMemory(memoryUpdateRequest, memoryResponse.memoryId(), member);
+        Memory foundedMemory = memoryRepository.findById(memoryResponse.memoryId()).get();
+
+        // then
+        assertAll(
+                () -> assertThat(foundedMemory.getTerm().getStartAt()).isNull(),
+                () -> assertThat(foundedMemory.getTerm().getEndAt()).isNull()
         );
     }
 
@@ -284,7 +398,8 @@ class MemoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
-        saveMoment(LocalDateTime.of(2023, 7, 2, 10, 10), memoryIdResponse.memoryId());
+        Moment moment = saveMoment(LocalDateTime.of(2023, 7, 2, 10, 10), memoryIdResponse.memoryId());
+        Comment comment = commentRepository.save(CommentFixture.create(moment, member));
 
         // when
         memoryService.deleteMemory(memoryIdResponse.memoryId(), member);
@@ -292,8 +407,9 @@ class MemoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(memoryRepository.findById(memoryIdResponse.memoryId())).isEmpty(),
-                () -> assertThat(memoryMemberRepository.findAll()).hasSize(0),
-                () -> assertThat(momentRepository.findAll()).isEmpty()
+                () -> assertThat(memoryMemberRepository.findAll()).isEmpty(),
+                () -> assertThat(momentRepository.findAll()).isEmpty(),
+                () -> assertThat(commentRepository.findAll()).isEmpty()
         );
     }
 

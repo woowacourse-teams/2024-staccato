@@ -11,6 +11,7 @@ import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.config.auth.AdminProperties;
 import com.staccato.config.auth.TokenProvider;
 import com.staccato.config.log.LogForm;
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.StaccatoException;
 import com.staccato.exception.UnauthorizedException;
 import com.staccato.member.domain.Member;
@@ -20,6 +21,7 @@ import com.staccato.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Trace
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -62,5 +64,16 @@ public class AuthService {
                 .orElseThrow(UnauthorizedException::new);
         log.info(LogForm.LOGIN_MEMBER_FORM, member.getId(), member.getNickname().getNickname());
         return member;
+    }
+
+    public LoginResponse loginByCode(String code) {
+        Member member = getMemberByCode(code);
+        String token = tokenProvider.create(member);
+        return new LoginResponse(token);
+    }
+
+    private Member getMemberByCode(String code) {
+        return memberRepository.findByCode(code)
+                .orElseThrow(() -> new StaccatoException("유효하지 않은 코드입니다. 올바른 코드인지 확인해주세요."));
     }
 }

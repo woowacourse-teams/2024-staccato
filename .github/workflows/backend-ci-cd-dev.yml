@@ -1,8 +1,9 @@
 name: Backend CI/CD dev
 
 on:
-  pull_request:
-    branches: [ "develop-be" ]
+  push:
+    paths: 'backend/**'
+    branches: [ "develop-be", "develop" ]
 
 jobs:
   ci:
