@@ -41,6 +41,7 @@ import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
+import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -61,7 +62,8 @@ class MainActivity :
 
     private val sharedViewModel: SharedViewModel by viewModels()
     private val mapsViewModel: MapsViewModel by viewModels()
-    private val locationPermissionManager = LocationPermissionManager(context = this, activity = this)
+    private val locationPermissionManager =
+        LocationPermissionManager(context = this, activity = this)
 
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
@@ -117,6 +119,11 @@ class MainActivity :
             )
     }
 
+    override fun onMyPageClicked() {
+        val intent = Intent(this, MyPageActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun setupGoogleMap() {
         val map: SupportMapFragment? =
             supportFragmentManager.findFragmentById(R.id.fragment_container_view_map) as? SupportMapFragment
@@ -135,7 +142,8 @@ class MainActivity :
 
     private fun enableMyLocation() {
         val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
-        val shouldShowRequestLocationPermissionsRationale = locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
+        val shouldShowRequestLocationPermissionsRationale =
+            locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
 
         when {
             isLocationPermissionGranted -> {
@@ -150,12 +158,18 @@ class MainActivity :
 
             shouldShowRequestLocationPermissionsRationale -> {
                 observeIsPermissionCancelClicked {
-                    locationPermissionManager.showLocationRequestRationaleDialog(supportFragmentManager)
+                    locationPermissionManager.showLocationRequestRationaleDialog(
+                        supportFragmentManager
+                    )
                 }
             }
 
             else -> {
-                observeIsPermissionCancelClicked { permissionRequestLauncher.launch(locationPermissions) }
+                observeIsPermissionCancelClicked {
+                    permissionRequestLauncher.launch(
+                        locationPermissions
+                    )
+                }
             }
         }
     }
