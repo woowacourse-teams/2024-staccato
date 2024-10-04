@@ -3,10 +3,9 @@ package com.staccato.memory.service;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
@@ -23,7 +22,6 @@ import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -34,6 +32,7 @@ public class MemoryService {
     private final MemoryRepository memoryRepository;
     private final MemoryMemberRepository memoryMemberRepository;
     private final MomentRepository momentRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public MemoryIdResponse createMemory(MemoryRequest memoryRequest, Member member) {
@@ -117,6 +116,8 @@ public class MemoryService {
     public void deleteMemory(long memoryId, Member member) {
         memoryRepository.findById(memoryId).ifPresent(memory -> {
             validateOwner(memory, member);
+            momentRepository.findAllByMemoryId(memoryId)
+                    .forEach(moment -> commentRepository.deleteAllByMomentId(moment.getId()));
             momentRepository.deleteAllByMemoryId(memoryId);
             memoryRepository.deleteById(memoryId);
         });
