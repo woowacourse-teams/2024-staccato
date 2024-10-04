@@ -14,9 +14,7 @@ import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
-import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
-import com.staccato.moment.service.dto.response.MomentDetailResponseOldV;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
@@ -61,17 +59,6 @@ public class MomentService {
 
     @Transactional
     public void updateMomentById(
-            long momentId,
-            MomentUpdateRequest momentUpdateRequest,
-            Member member
-    ) {
-        Moment moment = getMomentById(momentId);
-        validateMemoryOwner(moment.getMemory(), member);
-        moment.update(momentUpdateRequest.staccatoTitle(), momentUpdateRequest.toMomentImages());
-    }
-
-    @Transactional
-    public void updateMomentByIdV2(
             long momentId,
             MomentRequest momentRequest,
             Member member

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,12 +22,10 @@ import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.moment.MomentDetailResponseFixture;
 import com.staccato.fixture.moment.MomentLocationResponsesFixture;
-import com.staccato.fixture.moment.MomentUpdateRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.MomentService;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
-import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
@@ -261,16 +258,52 @@ class MomentControllerTest {
     void updateMomentById() throws Exception {
         // given
         long momentId = 1L;
-        MomentUpdateRequest updateRequest = MomentUpdateRequestFixture.create();
-        String updateRequestJson = objectMapper.writeValueAsString(updateRequest);
+        String momentRequest = """
+                {
+                    "staccatoTitle": "staccatoTitle",
+                    "placeName": "placeName",
+                    "address": "address",
+                    "latitude": 1.0,
+                    "longitude": 1.0,
+                    "visitedAt": "2023-07-01T10:00:00",
+                    "memoryId": 1,
+                    "momentImageUrls": [
+                        "https://example.com/images/namsan_tower.jpg"
+                    ]
+                }
+                """;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(put("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateRequestJson))
+                        .content(momentRequest))
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName("추가하려는 사진이 5장이 넘는다면 스타카토 수정에 실패한다.")
+    @Test
+    void failUpdateMomentByImagesSize() throws Exception {
+        // given
+        long momentId = 1L;
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
+        MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L,
+                List.of("https://example.com/images/namsan_tower1.jpg",
+                        "https://example.com/images/namsan_tower2.jpg",
+                        "https://example.com/images/namsan_tower3.jpg",
+                        "https://example.com/images/namsan_tower4.jpg",
+                        "https://example.com/images/namsan_tower5.jpg",
+                        "https://example.com/images/namsan_tower6.jpg"));
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+
+        // when & then
+        mockMvc.perform(put("/moments/{momentId}", momentId)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(momentRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("적합하지 않은 경로변수의 경우 스타카토 수정에 실패한다.")
@@ -278,33 +311,15 @@ class MomentControllerTest {
     void failUpdateMomentById() throws Exception {
         // given
         long momentId = 0L;
+        MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
-        MomentUpdateRequest updateRequest = MomentUpdateRequestFixture.create();
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
         mockMvc.perform(put("/moments/{momentId}", momentId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
-    }
-
-    @DisplayName("스타카토 수정 시 장소 이름을 입력하지 않은 경우 수정에 실패한다.")
-    @Test
-    void failUpdateMomentByPlaceName() throws Exception {
-        // given
-        long momentId = 1L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 제목을 입력해주세요.");
-        MomentUpdateRequest updateRequest = MomentUpdateRequestFixture.create(null);
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-
-        // when & then
-        mockMvc.perform(put("/moments/{momentId}", momentId)
-                        .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateRequest)))
+                        .content(objectMapper.writeValueAsString(momentRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -350,80 +365,5 @@ class MomentControllerTest {
                         .content(objectMapper.writeValueAsString(feelingRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
-    }
-
-    @Nested
-    @DisplayName("updateMomentByIdV2 테스트")
-    class updateMomentByIdV2Test {
-        @DisplayName("적합한 경로변수를 통해 스타카토 수정에 성공한다.")
-        @Test
-        void updateMomentById() throws Exception {
-            // given
-            long momentId = 1L;
-            String momentRequest = """
-                    {
-                        "staccatoTitle": "staccatoTitle",
-                        "placeName": "placeName",
-                        "address": "address",
-                        "latitude": 1.0,
-                        "longitude": 1.0,
-                        "visitedAt": "2023-07-01T10:00:00",
-                        "memoryId": 1,
-                        "momentImageUrls": [
-                            "https://example.com/images/namsan_tower.jpg"
-                        ]
-                    }
-                    """;
-            when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-
-            // when & then
-            mockMvc.perform(put("/moments/v2/{momentId}", momentId)
-                            .header(HttpHeaders.AUTHORIZATION, "token")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(momentRequest))
-                    .andExpect(status().isOk());
-        }
-
-        @DisplayName("추가하려는 사진이 5장이 넘는다면 스타카토 수정에 실패한다.")
-        @Test
-        void failUpdateMomentByImagesSize() throws Exception {
-            // given
-            long momentId = 1L;
-            ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
-            MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L,
-                    List.of("https://example.com/images/namsan_tower1.jpg",
-                            "https://example.com/images/namsan_tower2.jpg",
-                            "https://example.com/images/namsan_tower3.jpg",
-                            "https://example.com/images/namsan_tower4.jpg",
-                            "https://example.com/images/namsan_tower5.jpg",
-                            "https://example.com/images/namsan_tower6.jpg"));
-            when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-
-            // when & then
-            mockMvc.perform(put("/moments/v2/{momentId}", momentId)
-                            .header(HttpHeaders.AUTHORIZATION, "token")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(momentRequest)))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
-        }
-
-        @DisplayName("적합하지 않은 경로변수의 경우 스타카토 수정에 실패한다.")
-        @Test
-        void failUpdateMomentById() throws Exception {
-            // given
-            long momentId = 0L;
-            MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
-            ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
-            when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-
-            // when & then
-            mockMvc.perform(put("/moments/v2/{momentId}", momentId)
-                            .header(HttpHeaders.AUTHORIZATION, "token")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(momentRequest)))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
-        }
     }
 }

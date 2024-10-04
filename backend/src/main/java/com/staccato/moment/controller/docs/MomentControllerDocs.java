@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
-import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
@@ -72,25 +71,6 @@ public interface MomentControllerDocs {
                                         
                     (2) Path Variable 형식이 잘못되었을 때
                                         
-                    (3) 사진의 총 갯수가 5장을 초과하였을 때
-                    """,
-                    responseCode = "400")
-    })
-    ResponseEntity<Void> updateMomentById(
-            @Parameter(hidden = true) Member member,
-            @Parameter(description = "스타카토 ID", example = "1") @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
-            @Parameter(required = true) @Valid MomentUpdateRequest request);
-
-    @Operation(summary = "스타카토 수정", description = "스타카토를 수정합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(description = "스타카토 수정 성공", responseCode = "200"),
-            @ApiResponse(description = """
-                    <발생 가능한 케이스>
-                                        
-                    (1) 수정하려는 스타카토가 존재하지 않을 때
-                                        
-                    (2) Path Variable 형식이 잘못되었을 때
-                                        
                     (3) 필수 값(사진을 제외한 모든 값)이 누락되었을 때
                                         
                     (4) 존재하지 않는 memoryId일 때
@@ -103,7 +83,7 @@ public interface MomentControllerDocs {
                     """,
                     responseCode = "400")
     })
-    ResponseEntity<Void> updateMomentByIdV2(
+    ResponseEntity<Void> updateMomentById(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "스타카토 ID", example = "1") @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
             @Parameter(required = true) @Valid MomentRequest request);
