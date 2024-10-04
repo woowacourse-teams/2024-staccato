@@ -18,7 +18,7 @@ public class MomentDetailResponseFixture {
                 "placeName",
                 "address",
                 new BigDecimal("37.77490000000000"),
-                new BigDecimal("-122.41940000000000"),
-                List.of());
+                new BigDecimal("-122.41940000000000")
+        );
     }
 }

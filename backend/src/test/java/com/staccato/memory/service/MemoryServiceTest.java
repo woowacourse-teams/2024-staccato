@@ -10,9 +10,12 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
+import com.staccato.comment.domain.Comment;
+import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.memory.MemoryRequestFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
@@ -46,6 +49,8 @@ class MemoryServiceTest extends ServiceSliceTest {
     private MemoryRepository memoryRepository;
     @Autowired
     private MomentRepository momentRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
     static Stream<Arguments> dateProvider() {
         return Stream.of(
@@ -393,7 +398,8 @@ class MemoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
-        saveMoment(LocalDateTime.of(2023, 7, 2, 10, 10), memoryIdResponse.memoryId());
+        Moment moment = saveMoment(LocalDateTime.of(2023, 7, 2, 10, 10), memoryIdResponse.memoryId());
+        Comment comment = commentRepository.save(CommentFixture.create(moment, member));
 
         // when
         memoryService.deleteMemory(memoryIdResponse.memoryId(), member);
@@ -401,8 +407,9 @@ class MemoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(memoryRepository.findById(memoryIdResponse.memoryId())).isEmpty(),
-                () -> assertThat(memoryMemberRepository.findAll()).hasSize(0),
-                () -> assertThat(momentRepository.findAll()).isEmpty()
+                () -> assertThat(memoryMemberRepository.findAll()).isEmpty(),
+                () -> assertThat(momentRepository.findAll()).isEmpty(),
+                () -> assertThat(commentRepository.findAll()).isEmpty()
         );
     }
 
