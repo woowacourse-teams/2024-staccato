@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: stage
+      on-profile: dev
   application:
     name: staccato
   sql:
