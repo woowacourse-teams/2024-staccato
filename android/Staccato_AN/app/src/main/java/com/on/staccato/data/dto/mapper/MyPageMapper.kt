@@ -7,5 +7,5 @@ fun MyProfileResponse.toDomain() =
     MyProfile(
         profileImageUrl = profileImageUrl,
         nickname = nickname,
-        uuidCode = code
+        uuidCode = code,
     )
