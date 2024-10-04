@@ -1,6 +1,5 @@
 package com.on.staccato.data.dto.moment
 
-import com.on.staccato.data.dto.comment.CommentDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

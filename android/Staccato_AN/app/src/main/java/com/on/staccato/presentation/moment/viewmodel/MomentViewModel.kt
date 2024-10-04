@@ -8,7 +8,6 @@ import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.repository.MomentRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.mapper.toCommentUiModel
 import com.on.staccato.presentation.mapper.toMomentDetailUiModel
 import com.on.staccato.presentation.moment.comments.CommentUiModel
 import com.on.staccato.presentation.moment.detail.MomentDetailUiModel

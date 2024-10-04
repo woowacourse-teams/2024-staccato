@@ -3,7 +3,6 @@ package com.on.staccato.presentation.visitupdate.viewmodel
 import android.content.Context
 import android.location.Location
 import android.net.Uri
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
