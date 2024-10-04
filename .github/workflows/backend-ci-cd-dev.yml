@@ -1,12 +1,13 @@
-name: Backend CI/CD stage
+name: Backend CI/CD dev
 
 on:
   push:
+    paths: ['backend/**', '.github/**']
     branches: [ "develop-be", "develop" ]
 
 jobs:
   ci:
-    runs-on: [self-hosted, stage]
+    runs-on: [self-hosted, dev]
 
     defaults:
       run:
@@ -41,21 +42,21 @@ jobs:
 
       - name: Docker Image Build
         run: |
-          sudo docker build --platform linux/arm64 -t staccato/staccato:stage -f Dockerfile.stage .
+          sudo docker build --platform linux/arm64 -t staccato/staccato:dev -f Dockerfile.dev .
 
       - name: Docker Hub Push
         run: |
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
-          sudo docker push staccato/staccato:stage
+          sudo docker push staccato/staccato:dev
 
   cd:
     needs: ci
-    runs-on: [self-hosted, stage]
+    runs-on: [self-hosted, dev]
     steps:
       - name: Pull Docker image
         run: |
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
-          sudo docker pull staccato/staccato:stage
+          sudo docker pull staccato/staccato:dev
 
       - name: Stop and remove existing container
         run: |
@@ -67,6 +68,6 @@ jobs:
           sudo docker run --env-file /home/ubuntu/staccato/.env \
           -v /home/ubuntu/staccato/logs:/logs \
           -p 8080:8080 \
-          -d --name staccato-backend-app staccato/staccato:stage
+          -d --name staccato-backend-app staccato/staccato:dev
           sudo docker image prune -af
 
