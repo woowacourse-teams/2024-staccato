@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task
 import com.on.staccato.R
 import com.on.staccato.presentation.common.location.LocationDialogFragment
 import com.on.staccato.presentation.util.showSnackBar
+import java.lang.Exception
 
 class LocationPermissionManager(
     private val context: Context,
@@ -61,8 +62,7 @@ class LocationPermissionManager(
         val locationSettingsResponse: Task<LocationSettingsResponse> =
             settingsClient.checkLocationSettings(builder.build())
 
-        succeedLocationSettings(locationSettingsResponse, actionWhenHavePermission)
-        failLocationSettings(locationSettingsResponse, activity)
+        locationSettingsResponse.handleLocationSettings(actionWhenHavePermission, activity)
     }
 
     fun checkSelfLocationPermission(): Boolean {
@@ -109,24 +109,22 @@ class LocationPermissionManager(
             setWaitForAccurateLocation(true)
         }.build()
 
-    private fun succeedLocationSettings(
-        locationSettingsResponse: Task<LocationSettingsResponse>,
+    private fun Task<LocationSettingsResponse>.handleLocationSettings(
         actionWhenHavePermission: () -> Unit,
-    ) {
-        locationSettingsResponse.addOnSuccessListener { actionWhenHavePermission() }
-    }
-
-    private fun failLocationSettings(
-        locationSettingsResponse: Task<LocationSettingsResponse>,
         activity: Activity,
     ) {
-        locationSettingsResponse.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException) {
-                exception.startResolutionForResult(
-                    activity,
-                    REQUEST_CODE_LOCATION,
-                )
-            }
+        addOnSuccessListener { actionWhenHavePermission() }
+        addOnFailureListener { exception ->
+            exception.actionWhenHaveNoPermission(activity)
+        }
+    }
+
+    private fun Exception.actionWhenHaveNoPermission(activity: Activity) {
+        if (this is ResolvableApiException) {
+            startResolutionForResult(
+                activity,
+                REQUEST_CODE_LOCATION,
+            )
         }
     }
 
