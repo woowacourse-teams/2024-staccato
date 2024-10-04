@@ -34,6 +34,7 @@ import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.LocationPermissionManager
+import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.main.model.MarkerUiModel
 import com.on.staccato.presentation.main.viewmodel.MapsViewModel
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
@@ -61,7 +62,6 @@ class MainActivity :
     private val sharedViewModel: SharedViewModel by viewModels()
     private val mapsViewModel: MapsViewModel by viewModels()
     private val locationPermissionManager = LocationPermissionManager(context = this, activity = this)
-    private val locationPermissions = locationPermissionManager.locationPermissions
 
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()

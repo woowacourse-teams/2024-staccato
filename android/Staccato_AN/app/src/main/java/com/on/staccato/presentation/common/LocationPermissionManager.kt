@@ -28,11 +28,6 @@ class LocationPermissionManager(
     private val context: Context,
     private val activity: Activity,
 ) {
-    val locationPermissions: Array<String> =
-        arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-        )
     private val locationDialog = LocationDialogFragment()
 
     fun requestPermissionLauncher(
@@ -129,6 +124,11 @@ class LocationPermissionManager(
     }
 
     companion object {
+        val locationPermissions: Array<String> =
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+            )
         private const val INTERVAL_MILLIS = 10000L
         private const val REQUEST_CODE_LOCATION = 100
     }
