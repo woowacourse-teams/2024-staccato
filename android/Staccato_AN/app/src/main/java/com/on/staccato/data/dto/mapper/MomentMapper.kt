@@ -20,7 +20,6 @@ fun MomentResponse.toDomain() =
         address = address,
         visitedAt = LocalDateTime.parse(visitedAt),
         feeling = Feeling.fromValue(feeling),
-        comments = visitLogs.map { it.toDomain() },
     )
 
 fun MomentLocationDto.toDomain() =

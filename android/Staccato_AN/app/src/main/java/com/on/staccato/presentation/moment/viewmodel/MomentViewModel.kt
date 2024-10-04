@@ -53,7 +53,6 @@ class MomentViewModel
                 momentRepository.getMoment(momentId).onSuccess { moment ->
                     _momentDetail.value = moment.toMomentDetailUiModel()
                     _feeling.value = moment.feeling
-                    _comments.value = moment.comments.map { it.toCommentUiModel() }
                 }.onFailure {
                     _isError.postValue(true)
                 }

@@ -21,10 +21,6 @@ class MomentCommentsFragment :
     private val momentId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
     private val commentsViewModel: MomentCommentsViewModel by viewModels()
 
-    private val momentViewModel: MomentViewModel by viewModels(
-        ownerProducer = { requireParentFragment() },
-    )
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -32,8 +28,8 @@ class MomentCommentsFragment :
         commentsViewModel.setMemoryId(momentId)
         setUpRecyclerView()
         setUpBinding()
-        observeMomentViewModel()
         observeCommentsViewModel()
+        loadComments()
     }
 
     private fun setUpRecyclerView() {
@@ -47,10 +43,8 @@ class MomentCommentsFragment :
         binding.commentHandler = commentsViewModel
     }
 
-    private fun observeMomentViewModel() {
-        momentViewModel.comments.observe(viewLifecycleOwner) { comments ->
-            commentsViewModel.setComments(comments)
-        }
+    private fun loadComments() {
+        commentsViewModel.fetchComments()
     }
 
     private fun observeCommentsViewModel() {
