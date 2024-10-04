@@ -3,6 +3,7 @@ package com.on.staccato.presentation.visitupdate.viewmodel
 import android.content.Context
 import android.location.Location
 import android.net.Uri
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -193,18 +194,17 @@ class VisitUpdateViewModel
 
         fun updateVisit(staccatoId: Long) {
             viewModelScope.launch {
-                _isPosting.value = true
-                val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleFailure()
-                val placeNameValue = placeName.value ?: return@launch handleFailure()
-                val addressValue = address.value ?: return@launch handleFailure()
-                val latitudeValue = latitude.value ?: return@launch handleFailure()
-                val longitudeValue = longitude.value ?: return@launch handleFailure()
-                val visitedAtValue = selectedVisitedAt.value ?: return@launch handleFailure()
-                val memoryIdValue = selectedMemory.value?.memoryId ?: return@launch handleFailure()
+                val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleError()
+                val placeNameValue = placeName.value ?: return@launch handleError()
+                val addressValue = address.value ?: return@launch handleError()
+                val latitudeValue = latitude.value ?: return@launch handleError()
+                val longitudeValue = longitude.value ?: return@launch handleError()
+                val visitedAtValue = selectedVisitedAt.value ?: return@launch handleError()
+                val memoryIdValue = selectedMemory.value?.memoryId ?: return@launch handleError()
                 val momentImageUrlsValue =
                     currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
-                        ?: return@launch handleFailure()
-
+                        ?: emptyList()
+                _isPosting.value = true
                 momentRepository.updateMoment(
                     momentId = staccatoId,
                     staccatoTitle = staccatoTitleValue,
@@ -229,6 +229,8 @@ class VisitUpdateViewModel
                     .onSuccess { staccato ->
                         staccatoTitle.set(staccato.staccatoTitle)
                         _address.value = staccato.address
+                        _latitude.value = staccato.latitude
+                        _longitude.value = staccato.longitude
                         _selectedVisitedAt.value = staccato.visitedAt
                         _placeName.value = staccato.placeName
                         _currentPhotos.value = createPhotosByUrls(staccato.momentImageUrls)
@@ -280,8 +282,9 @@ class VisitUpdateViewModel
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
         }
 
-        private fun handleFailure() {
+        private fun handleError() {
             _isPosting.value = false
+            _errorMessage.postValue("알 수 없는 오류가 발생했습니다.")
         }
 
         private fun handleError(errorMessage: String?) {
