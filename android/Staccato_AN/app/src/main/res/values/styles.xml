@@ -15,6 +15,15 @@
         <item name="titleTextColor">@color/gray5</item>
     </style>
 
+    <style name="CloseToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="titleCentered">true</item>
+        <item name="titleTextAppearance">@style/Typography.Title2</item>
+        <item name="titleTextColor">@color/gray5</item>
+    </style>
+
     <style name="SubTitleStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

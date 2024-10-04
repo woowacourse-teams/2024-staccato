@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="toolbarTitle"
+            type="java.lang.String" />
+
+        <variable
+            name="toolbarHandler"
+            type="com.on.staccato.presentation.common.CloseToolbarHandler" />
+    </data>
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_webview"
+        style="@style/CloseToolbarStyle"
+        app:title="@{toolbarTitle}"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:title="Toolbar의 제목입니다">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_mypage_close"
+            style="@style/ToolbarMenuStyle"
+            android:drawableEnd="@drawable/icon_close"
+            android:onClick="@{() -> toolbarHandler.onCloseClicked()}" />
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+</layout>
