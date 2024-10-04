@@ -6,6 +6,7 @@ import com.on.staccato.data.login.LoginDefaultRepository
 import com.on.staccato.data.member.MemberDefaultRepository
 import com.on.staccato.data.memory.MemoryDefaultRepository
 import com.on.staccato.data.moment.MomentDefaultRepository
+import com.on.staccato.data.mypage.MyPageDefaultRepository
 import com.on.staccato.data.timeline.TimelineDefaultRepository
 import com.on.staccato.domain.repository.CommentRepository
 import com.on.staccato.domain.repository.ImageRepository
@@ -13,6 +14,7 @@ import com.on.staccato.domain.repository.LoginRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.domain.repository.MemoryRepository
 import com.on.staccato.domain.repository.MomentRepository
+import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import dagger.Binds
 import dagger.Module
@@ -42,4 +44,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindMemberRepository(memberRepository: MemberDefaultRepository): MemberRepository
+
+    @Binds
+    abstract fun bindMyPageRepository(myPageRepository: MyPageDefaultRepository): MyPageRepository
 }
