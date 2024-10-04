@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImage;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,8 +19,10 @@ public record MomentDetailResponse(
         @Schema(example = "2024 서울 투어")
         String memoryTitle,
         @Schema(example = "2024-06-30")
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate startAt,
         @Schema(example = "2024-07-04")
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate endAt,
         @Schema(example = "즐거웠던 남산에서의 기억")
         String staccatoTitle,
