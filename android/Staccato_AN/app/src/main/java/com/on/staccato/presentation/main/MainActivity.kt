@@ -16,6 +16,7 @@ import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -53,6 +54,7 @@ import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
+import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -125,6 +127,11 @@ class MainActivity :
             this,
             staccatoCreationLauncher,
         )
+    }
+
+    override fun onMyPageClicked() {
+        val intent = Intent(this, MyPageActivity::class.java)
+        startActivity(intent)
     }
 
     private fun initRequestPermissionsLauncher() =
