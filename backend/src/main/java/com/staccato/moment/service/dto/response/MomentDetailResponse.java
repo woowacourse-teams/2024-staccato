@@ -3,11 +3,8 @@ package com.staccato.moment.service.dto.response;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImage;
-
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -34,8 +31,7 @@ public record MomentDetailResponse(
         @Schema(example = "51.51978412729915")
         BigDecimal latitude,
         @Schema(example = "-0.12712788587027796")
-        BigDecimal longitude,
-        List<CommentResponse> comments
+        BigDecimal longitude
 ) {
     public MomentDetailResponse(Moment moment) {
         this(
@@ -49,8 +45,7 @@ public record MomentDetailResponse(
                 moment.getSpot().getPlaceName(),
                 moment.getSpot().getAddress(),
                 moment.getSpot().getLatitude(),
-                moment.getSpot().getLongitude(),
-                moment.getComments().stream().map(CommentResponse::new).toList()
+                moment.getSpot().getLongitude()
         );
     }
 }

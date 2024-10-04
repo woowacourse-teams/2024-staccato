@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
@@ -29,7 +28,6 @@ import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
-import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
@@ -183,114 +181,63 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Memory memory = saveMemory(member);
+        Memory memory2 = saveMemory(member);
         Moment moment = saveMomentWithImages(memory);
 
         // when
-        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("newPlaceName", List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
-        momentService.updateMomentById(moment.getId(), momentUpdateRequest, member);
+        MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory2.getId(), List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
+        momentService.updateMomentById(moment.getId(), momentRequest, member);
 
         // then
         Moment foundedMoment = momentRepository.findById(moment.getId()).get();
-        assertThat(foundedMoment.getTitle()).isEqualTo("newPlaceName");
+        assertThat(foundedMoment.getTitle()).isEqualTo("newStaccatoTitle");
     }
 
     @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")
     @Test
-    void cannotUpdateMomentByIdIfNotOwner() {
+    void failToUpdateMomentOfOther() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
         Memory memory = saveMemory(member);
         Moment moment = saveMomentWithImages(memory);
-        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("staccatoTitle", List.of("https://example1.com.jpg"));
+        MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory.getId(), List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
 
         // when & then
-        assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentUpdateRequest, otherMember))
+        assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentRequest, otherMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("본인 것이 아닌 추억에 속하도록 스타카토를 수정하려고 하면 예외가 발생한다.")
+    @Test
+    void failToUpdateMomentToOtherMemory() {
+        // given
+        Member member = saveMember();
+        Member otherMember = saveMember();
+        Memory memory = saveMemory(member);
+        Memory otherMemory = saveMemory(otherMember);
+        Moment moment = saveMomentWithImages(memory);
+        MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), otherMemory.getId(), List.of());
+
+        // when & then
+        assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentRequest, member))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
     @DisplayName("존재하지 않는 스타카토를 수정하면 예외가 발생한다.")
     @Test
-    void failUpdateMomentById() {
+    void failToUpdateNotExistMoment() {
         // given
         Member member = saveMember();
-        MomentUpdateRequest momentUpdateRequest = new MomentUpdateRequest("staccatoTitle", List.of("https://example1.com.jpg"));
+        Memory memory = saveMemory(member);
+        MomentRequest momentUpdateRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory.getId(), List.of());
 
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 스타카토를 찾을 수 없어요.");
-    }
-
-    @Nested
-    @DisplayName("updateMomentByIdV2 테스트")
-    class updateMomentByIdV2Test {
-
-        @DisplayName("스타카토 수정에 성공한다.")
-        @Test
-        void updateMomentById() {
-            // given
-            Member member = saveMember();
-            Memory memory = saveMemory(member);
-            Memory memory2 = saveMemory(member);
-            Moment moment = saveMomentWithImages(memory);
-
-            // when
-            MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory2.getId(), List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
-            momentService.updateMomentByIdV2(moment.getId(), momentRequest, member);
-
-            // then
-            Moment foundedMoment = momentRepository.findById(moment.getId()).get();
-            assertThat(foundedMoment.getTitle()).isEqualTo("newStaccatoTitle");
-        }
-
-        @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")
-        @Test
-        void failToUpdateMomentOfOther() {
-            // given
-            Member member = saveMember();
-            Member otherMember = saveMember();
-            Memory memory = saveMemory(member);
-            Moment moment = saveMomentWithImages(memory);
-            MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory.getId(), List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
-
-            // when & then
-            assertThatThrownBy(() -> momentService.updateMomentByIdV2(moment.getId(), momentRequest, otherMember))
-                    .isInstanceOf(ForbiddenException.class)
-                    .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
-        }
-
-        @DisplayName("본인 것이 아닌 추억에 속하도록 스타카토를 수정하려고 하면 예외가 발생한다.")
-        @Test
-        void failToUpdateMomentToOtherMemory() {
-            // given
-            Member member = saveMember();
-            Member otherMember = saveMember();
-            Memory memory = saveMemory(member);
-            Memory otherMemory = saveMemory(otherMember);
-            Moment moment = saveMomentWithImages(memory);
-            MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), otherMemory.getId(), List.of());
-
-            // when & then
-            assertThatThrownBy(() -> momentService.updateMomentByIdV2(moment.getId(), momentRequest, member))
-                    .isInstanceOf(ForbiddenException.class)
-                    .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
-        }
-
-        @DisplayName("존재하지 않는 스타카토를 수정하면 예외가 발생한다.")
-        @Test
-        void failToUpdateNotExistMoment() {
-            // given
-            Member member = saveMember();
-            Memory memory = saveMemory(member);
-            MomentRequest momentUpdateRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory.getId(), List.of());
-
-            // when & then
-            assertThatThrownBy(() -> momentService.updateMomentByIdV2(1L, momentUpdateRequest, member))
-                    .isInstanceOf(StaccatoException.class)
-                    .hasMessageContaining("요청하신 스타카토를 찾을 수 없어요.");
-        }
     }
 
     @DisplayName("Moment을 삭제하면 이에 포함된 MomentImage와 MomentLog도 모두 삭제된다.")
