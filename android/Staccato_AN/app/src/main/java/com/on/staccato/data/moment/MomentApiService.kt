@@ -49,7 +49,7 @@ interface MomentApiService {
         private const val MOMENTS_PATH = "/moments"
         private const val MOMENT_ID = "/{momentId}"
         private const val MOMENT_PATH_WITH_ID = "$MOMENTS_PATH$MOMENT_ID"
-        private const val MOMENT_PUT_PATH_WITH_ID = "$MOMENTS_PATH/v2$MOMENT_ID"
+        private const val MOMENT_PUT_PATH_WITH_ID = "$MOMENTS_PATH$MOMENT_ID"
         private const val FEELING_PATH = "$MOMENT_PATH_WITH_ID/feeling"
     }
 }

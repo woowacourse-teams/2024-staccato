@@ -17,5 +17,4 @@ data class MomentResponse(
     @SerialName("address") val address: String,
     @SerialName("visitedAt") val visitedAt: String,
     @SerialName("feeling") val feeling: String,
-    @SerialName("comments") val visitLogs: List<CommentDto>,
 )
