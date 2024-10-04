@@ -4,4 +4,6 @@ interface VisitUpdateHandler {
     fun onUpdateDoneClicked()
 
     fun onMemorySelectionClicked()
+
+    fun onVisitedAtSelectionClicked()
 }

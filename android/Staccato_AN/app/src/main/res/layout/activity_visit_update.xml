@@ -83,6 +83,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
                     app:spanCount="2"
+                    tools:itemCount="1"
                     tools:listitem="@layout/item_attached_photo" />
 
                 <TextView
@@ -267,7 +268,7 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{()->visitUpdateHandler.onMemorySelectionClicked()}"
+                    android:onClick="@{()->visitUpdateHandler.onVisitedAtSelectionClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"

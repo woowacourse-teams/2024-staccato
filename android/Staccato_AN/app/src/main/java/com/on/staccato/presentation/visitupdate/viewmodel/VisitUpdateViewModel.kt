@@ -123,12 +123,8 @@ class VisitUpdateViewModel
             }
         }
 
-        fun selectMemoryVisitedAt(
-            memory: MemoryCandidate,
-            visitedAt: LocalDateTime,
-        ) {
+        fun selectMemory(memory: MemoryCandidate) {
             selectedMemory.value = memory
-            _selectedVisitedAt.value = visitedAt
         }
 
         fun fetchTargetData(

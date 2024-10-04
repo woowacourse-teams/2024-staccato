@@ -18,16 +18,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.model.Place
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityVisitUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
-import com.on.staccato.presentation.common.LocationPermissionManager
-import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
@@ -36,7 +32,7 @@ import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_
 import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.on.staccato.presentation.momentcreation.PlaceSearchHandler
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.momentcreation.dialog.MemoryVisitedAtSelectionFragment
+import com.on.staccato.presentation.momentcreation.dialog.MemorySelectionFragment
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
@@ -54,8 +50,8 @@ class VisitUpdateActivity :
     override val layoutResourceId = R.layout.activity_visit_update
     private val viewModel: VisitUpdateViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
-    private val memoryVisitedAtSelectionFragment by lazy {
-        MemoryVisitedAtSelectionFragment()
+    private val memorySelectionFragment by lazy {
+        MemorySelectionFragment()
     }
     private val photoAttachFragment by lazy {
         PhotoAttachFragment().apply { setMultipleAbleOption(true) }
@@ -71,7 +67,8 @@ class VisitUpdateActivity :
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
     }
 
-    private val locationPermissionManager = LocationPermissionManager(context = this, activity = this)
+    private val locationPermissionManager =
+        LocationPermissionManager(context = this, activity = this)
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var address: String
@@ -105,12 +102,16 @@ class VisitUpdateActivity :
     }
 
     override fun onMemorySelectionClicked() {
-        if (!memoryVisitedAtSelectionFragment.isAdded) {
-            memoryVisitedAtSelectionFragment.show(
+        if (!memorySelectionFragment.isAdded) {
+            memorySelectionFragment.show(
                 fragmentManager,
-                MemoryVisitedAtSelectionFragment.TAG,
+                MemorySelectionFragment.TAG,
             )
         }
+    }
+
+    override fun onVisitedAtSelectionClicked() {
+        TODO("Not yet implemented")
     }
 
     override fun onUpdateDoneClicked() {
@@ -237,8 +238,8 @@ class VisitUpdateActivity :
     }
 
     private fun initMemorySelectionFragment() {
-        memoryVisitedAtSelectionFragment.setOnSelected { selectedMemory, selectedVisitedAt ->
-            viewModel.selectMemoryVisitedAt(selectedMemory, selectedVisitedAt)
+        memorySelectionFragment.setOnMemorySelected { selectedMemory ->
+            viewModel.selectMemory(selectedMemory)
         }
     }
 
@@ -262,12 +263,8 @@ class VisitUpdateActivity :
                 listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
             )
         }
-        viewModel.selectedMemory.observe(this) { selectedMemory ->
-            memoryVisitedAtSelectionFragment.initMemoryCandidates(
-                viewModel.memoryCandidates.value?.memoryCandidate ?: emptyList(),
-                selectedMemory,
-                viewModel.selectedVisitedAt.value!!,
-            )
+        viewModel.memoryCandidates.observe(this) {
+            memorySelectionFragment.setItems(it.memoryCandidate)
         }
         viewModel.errorMessage.observe(this) { message ->
             handleError(message)
