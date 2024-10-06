@@ -115,10 +115,18 @@ class MemoryCreationViewModel
             NewMemory(
                 memoryThumbnailUrl = thumbnailUrl.value,
                 memoryTitle = title.get() ?: throw IllegalArgumentException(),
-                startAt = if (isPeriodSettingOn.value == true) { startDate.value } else { null },
-                endAt = if (isPeriodSettingOn.value == true) { endDate.value } else { null },
+                startAt = getDateByPeriodSetting(startDate),
+                endAt = getDateByPeriodSetting(endDate),
                 description = description.get(),
             )
+
+        private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {
+            return if (isPeriodSettingOn.value == true) {
+                date.value
+            } else {
+                null
+            }
+        }
 
         private fun handleServerError(
             status: Status,
