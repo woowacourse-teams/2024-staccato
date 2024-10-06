@@ -159,7 +159,7 @@ class MainActivity :
             shouldShowRequestLocationPermissionsRationale -> {
                 observeIsPermissionCancelClicked {
                     locationPermissionManager.showLocationRequestRationaleDialog(
-                        supportFragmentManager
+                        supportFragmentManager,
                     )
                 }
             }
@@ -167,7 +167,7 @@ class MainActivity :
             else -> {
                 observeIsPermissionCancelClicked {
                     permissionRequestLauncher.launch(
-                        locationPermissions
+                        locationPermissions,
                     )
                 }
             }
