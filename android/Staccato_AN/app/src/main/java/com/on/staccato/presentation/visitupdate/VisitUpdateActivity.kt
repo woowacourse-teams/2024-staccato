@@ -33,12 +33,15 @@ import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.on.staccato.presentation.momentcreation.PlaceSearchHandler
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.momentcreation.dialog.MemorySelectionFragment
+import com.on.staccato.presentation.momentcreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
 import com.on.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class VisitUpdateActivity :
@@ -52,6 +55,9 @@ class VisitUpdateActivity :
     private val sharedViewModel: SharedViewModel by viewModels()
     private val memorySelectionFragment by lazy {
         MemorySelectionFragment()
+    }
+    private val visitedAtSelectionFragment by lazy {
+        VisitedAtSelectionFragment()
     }
     private val photoAttachFragment by lazy {
         PhotoAttachFragment().apply { setMultipleAbleOption(true) }
@@ -111,7 +117,12 @@ class VisitUpdateActivity :
     }
 
     override fun onVisitedAtSelectionClicked() {
-        TODO("Not yet implemented")
+        if (!visitedAtSelectionFragment.isAdded) {
+            visitedAtSelectionFragment.show(
+                fragmentManager,
+                VisitedAtSelectionFragment.TAG,
+            )
+        }
     }
 
     override fun onUpdateDoneClicked() {
@@ -125,6 +136,7 @@ class VisitUpdateActivity :
         initBinding()
         initToolbar()
         initMemorySelectionFragment()
+        initVisitedAtSelectionFragment()
         initAdapter()
         initItemTouchHelper()
         observeViewModelData()
@@ -239,7 +251,17 @@ class VisitUpdateActivity :
 
     private fun initMemorySelectionFragment() {
         memorySelectionFragment.setOnMemorySelected { selectedMemory ->
+            val startAt = selectedMemory.startAt ?: LocalDate.now()
+            val initializedDateTime =
+                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
+            viewModel.selectedVisitedAt(initializedDateTime)
             viewModel.selectMemory(selectedMemory)
+        }
+    }
+
+    private fun initVisitedAtSelectionFragment() {
+        visitedAtSelectionFragment.setOnVisitedAtSelected { selectedVisitedAt ->
+            viewModel.selectedVisitedAt(selectedVisitedAt)
         }
     }
 
@@ -265,6 +287,18 @@ class VisitUpdateActivity :
         }
         viewModel.memoryCandidates.observe(this) {
             memorySelectionFragment.setItems(it.memoryCandidate)
+        }
+        viewModel.selectedMemory.observe(this) { selectedMemory ->
+            val startAt = selectedMemory.startAt ?: LocalDate.now()
+            val initializedDateTime =
+                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
+            memorySelectionFragment.updateKeyMemory(selectedMemory)
+            visitedAtSelectionFragment.initDateCandidates(selectedMemory, initializedDateTime)
+        }
+        viewModel.selectedVisitedAt.observe(this) { selectedVisitedAt ->
+            if (selectedVisitedAt != null) {
+                visitedAtSelectionFragment.initKeyWithSelectedValues(selectedVisitedAt)
+            }
         }
         viewModel.errorMessage.observe(this) { message ->
             handleError(message)

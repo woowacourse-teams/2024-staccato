@@ -5,7 +5,6 @@ import android.location.Location
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -69,30 +68,8 @@ class VisitUpdateViewModel
 
         private var targetMemoryId: Long = 0
 
-        val selectedMemory =
-            MediatorLiveData<MemoryCandidate>().apply {
-                var latestMemoryCandidates: MemoryCandidates? = null
-                var latestVisitedAt: LocalDateTime? = null
-
-                addSource(memoryCandidates) { memories ->
-                    latestMemoryCandidates = memories
-                    if (latestMemoryCandidates != null && latestVisitedAt != null) {
-                        value = findMemory(latestMemoryCandidates!!)
-                    }
-                }
-
-                addSource(selectedVisitedAt) { visitedAt ->
-                    latestVisitedAt = visitedAt
-                    if (latestMemoryCandidates != null && latestVisitedAt != null) {
-                        value = findMemory(latestMemoryCandidates!!)
-                    }
-                }
-            }
-
-        private fun findMemory(memories: MemoryCandidates) =
-            memories.memoryCandidate.first { memory ->
-                targetMemoryId == memory.memoryId
-            }
+        private val _selectedMemory = MutableLiveData<MemoryCandidate>()
+        val selectedMemory: LiveData<MemoryCandidate> get() = _selectedMemory
 
         private val _isUpdateCompleted = MutableLiveData(false)
         val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
@@ -124,7 +101,11 @@ class VisitUpdateViewModel
         }
 
         fun selectMemory(memory: MemoryCandidate) {
-            selectedMemory.value = memory
+            _selectedMemory.value = memory
+        }
+
+        fun selectedVisitedAt(visitedAt: LocalDateTime) {
+            _selectedVisitedAt.value = visitedAt
         }
 
         fun fetchTargetData(
@@ -229,6 +210,13 @@ class VisitUpdateViewModel
                         _selectedVisitedAt.value = staccato.visitedAt
                         _placeName.value = staccato.placeName
                         _currentPhotos.value = createPhotosByUrls(staccato.momentImageUrls)
+                        _selectedMemory.value =
+                            MemoryCandidate(
+                                staccato.memoryId,
+                                staccato.memoryTitle,
+                                staccato.startAt,
+                                staccato.endAt,
+                            )
                     }.onFailure { e ->
                         _errorMessage.postValue(e.message ?: "알 수 없는 오류가 발생했습니다.")
                     }

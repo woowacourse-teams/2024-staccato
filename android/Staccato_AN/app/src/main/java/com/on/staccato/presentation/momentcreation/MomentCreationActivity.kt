@@ -18,28 +18,26 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.model.Place
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityVisitCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
-import com.on.staccato.presentation.common.LocationPermissionManager
-import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.momentcreation.dialog.MemoryVisitedAtSelectionFragment
+import com.on.staccato.presentation.momentcreation.dialog.MemorySelectionFragment
+import com.on.staccato.presentation.momentcreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class MomentCreationActivity :
@@ -49,13 +47,15 @@ class MomentCreationActivity :
     MomentCreationHandler,
     BindingActivity<ActivityVisitCreationBinding>() {
     override val layoutResourceId = R.layout.activity_visit_creation
-
     private val viewModel: MomentCreationViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
-
-    private val memoryVisitedAtSelectionFragment by lazy {
-        MemoryVisitedAtSelectionFragment()
+    private val memorySelectionFragment by lazy {
+        MemorySelectionFragment()
     }
+    private val visitedAtSelectionFragment by lazy {
+        VisitedAtSelectionFragment()
+    }
+
     private val photoAttachFragment by lazy {
         PhotoAttachFragment().apply { setMultipleAbleOption(true) }
     }
@@ -70,7 +70,8 @@ class MomentCreationActivity :
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
-    private val locationPermissionManager = LocationPermissionManager(context = this, activity = this)
+    private val locationPermissionManager =
+        LocationPermissionManager(context = this, activity = this)
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var address: String
@@ -122,10 +123,19 @@ class MomentCreationActivity :
     }
 
     override fun onMemorySelectionClicked() {
-        if (!memoryVisitedAtSelectionFragment.isAdded) {
-            memoryVisitedAtSelectionFragment.show(
+        if (!memorySelectionFragment.isAdded) {
+            memorySelectionFragment.show(
                 fragmentManager,
-                MemoryVisitedAtSelectionFragment.TAG,
+                MemorySelectionFragment.TAG,
+            )
+        }
+    }
+
+    override fun onVisitedAtSelectionClicked() {
+        if (!visitedAtSelectionFragment.isAdded) {
+            visitedAtSelectionFragment.show(
+                fragmentManager,
+                VisitedAtSelectionFragment.TAG,
             )
         }
     }
@@ -187,7 +197,11 @@ class MomentCreationActivity :
             }
 
             else -> {
-                observeIsPermissionCancelClicked { permissionRequestLauncher.launch(locationPermissions) }
+                observeIsPermissionCancelClicked {
+                    permissionRequestLauncher.launch(
+                        locationPermissions
+                    )
+                }
             }
         }
     }
@@ -234,8 +248,18 @@ class MomentCreationActivity :
     }
 
     private fun initMemorySelectionFragment() {
-        memoryVisitedAtSelectionFragment.setOnSelected { selectedMemory, selectedVisitedAt ->
-            viewModel.selectMemoryVisitedAt(selectedMemory, selectedVisitedAt)
+        memorySelectionFragment.setOnMemorySelected { selectedMemory ->
+            val startAt = selectedMemory.startAt ?: LocalDate.now()
+            val initializedDateTime =
+                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
+            viewModel.selectedVisitedAt(initializedDateTime)
+            viewModel.selectMemory(selectedMemory)
+        }
+    }
+
+    private fun initVisitedAtSelectionFragment() {
+        visitedAtSelectionFragment.setOnVisitedAtSelected { selectedVisitedAt ->
+            viewModel.selectedVisitedAt(selectedVisitedAt)
         }
     }
 
@@ -256,12 +280,20 @@ class MomentCreationActivity :
                 listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
             )
         }
-        viewModel.memoryAndVisitedAt.observe(this) { memoryAndVisitedAt ->
-            memoryVisitedAtSelectionFragment.initMemoryCandidates(
-                memoryAndVisitedAt.first.memoryCandidate.toList(),
-                memoryAndVisitedAt.second,
-                memoryAndVisitedAt.third,
-            )
+        viewModel.memoryCandidates.observe(this) {
+            memorySelectionFragment.setItems(it.memoryCandidate)
+        }
+        viewModel.selectedMemory.observe(this) { selectedMemory ->
+            val startAt = selectedMemory.startAt ?: LocalDate.now()
+            val initializedDateTime =
+                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
+            memorySelectionFragment.updateKeyMemory(selectedMemory)
+            visitedAtSelectionFragment.initDateCandidates(selectedMemory, initializedDateTime)
+        }
+        viewModel.selectedVisitedAt.observe(this) { selectedVisitedAt ->
+            if (selectedVisitedAt != null) {
+                visitedAtSelectionFragment.initKeyWithSelectedValues(selectedVisitedAt)
+            }
         }
         viewModel.createdStaccatoId.observe(this) { createdMomentId ->
             val resultIntent =

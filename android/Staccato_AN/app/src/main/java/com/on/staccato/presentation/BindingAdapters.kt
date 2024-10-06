@@ -297,7 +297,7 @@ fun TextView.setMemoryPeriod(
 }
 
 @BindingAdapter("visitedAtConfirmButtonActive")
-fun Button.setVisitedAtConfirmButtonActive(items: List<LocalDateTime>?) {
+fun Button.setVisitedAtConfirmButtonActive(items: List<Int>?) {
     isEnabled =
         if (items.isNullOrEmpty()) {
             setTextColor(resources.getColor(R.color.gray4, null))
@@ -365,7 +365,7 @@ fun TextView.setMemoryIsEmptyVisibility(memoryCandidates: MemoryCandidates?) {
 }
 
 @BindingAdapter("visitedAtIsEmptyVisibility")
-fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDateTime>?) {
+fun TextView.setVisitedAtIsEmptyVisibility(items: List<Int>?) {
     isGone = !items.isNullOrEmpty()
 }
 

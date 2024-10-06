@@ -267,7 +267,7 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{()->visitCreationHandler.onMemorySelectionClicked()}"
+                    android:onClick="@{()->visitCreationHandler.onVisitedAtSelectionClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
