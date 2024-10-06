@@ -48,11 +48,12 @@ class LocationDialogFragment : DialogFragment(), LocationDialogHandler {
     }
 
     override fun onCancelClicked() {
-        sharedViewModel.updateIsLocationDenial()
+        sharedViewModel.updateIsPermissionCancelClicked()
         dismiss()
     }
 
     override fun onSettingClicked() {
+        sharedViewModel.updateIsSettingClicked(isSettingClicked = true)
         navigateToSetting()
         dismiss()
     }
