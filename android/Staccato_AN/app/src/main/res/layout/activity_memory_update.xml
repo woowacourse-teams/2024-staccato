@@ -232,6 +232,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_period_selection"
                     bind:endDate="@{viewModel.endDate}"
                     bind:memoryTitle="@{viewModel.title}"
+                    bind:isPeriodSettingOn="@{viewModel.isPeriodSettingOn}"
                     bind:photoUri="@{viewModel.thumbnailUri}"
                     bind:photoUrl="@{viewModel.thumbnailUrl}"
                     bind:startDate="@{viewModel.startDate}" />

@@ -229,6 +229,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_selection"
                     bind:endDate="@{viewModel.endDate}"
+                    bind:isPeriodSettingOn="@{viewModel.isPeriodSettingOn}"
                     bind:isPhotoPosting="@{viewModel.isPhotoPosting}"
                     bind:memoryTitle="@{viewModel.title}"
                     bind:startDate="@{viewModel.startDate}" />

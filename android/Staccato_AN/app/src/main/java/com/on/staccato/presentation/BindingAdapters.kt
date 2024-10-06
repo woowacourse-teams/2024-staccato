@@ -2,6 +2,7 @@ package com.on.staccato.presentation
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
@@ -174,17 +175,19 @@ fun ImageView.setRoundedCornerImageByUriWithGlide(
 }
 
 @BindingAdapter(
-    value = ["memoryTitle", "startDate", "endDate", "isPhotoPosting"],
+    value = ["memoryTitle", "startDate", "endDate", "isPeriodSettingOn", "isPhotoPosting"],
 )
 fun Button.setMemorySaveButtonActive(
     title: String?,
     startDate: LocalDate?,
     endDate: LocalDate?,
+    isPeriodSettingOn: Boolean,
     isPhotoPosting: Boolean?,
 ) {
-    val areBothNullOrNotNull = (startDate == null) == (endDate == null)
+    val doesPeriodNotExist = (startDate == null) || (endDate == null)
+    val needPeriodButNotExist = isPeriodSettingOn && doesPeriodNotExist
     isEnabled =
-        if (title.isNullOrBlank() || isPhotoPosting == true || !areBothNullOrNotNull) {
+        if (title.isNullOrBlank() || isPhotoPosting == true || needPeriodButNotExist) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -194,18 +197,20 @@ fun Button.setMemorySaveButtonActive(
 }
 
 @BindingAdapter(
-    value = ["memoryTitle", "startDate", "endDate", "photoUri", "photoUrl"],
+    value = ["memoryTitle", "startDate", "endDate", "isPeriodSettingOn", "photoUri", "photoUrl"],
 )
 fun Button.setMemorySaveButtonActive(
     title: String?,
     startDate: LocalDate?,
     endDate: LocalDate?,
+    isPeriodSettingOn: Boolean,
     photoUri: Uri?,
     photoUrl: String?,
 ) {
-    val areBothNullOrNotNull = (startDate == null) == (endDate == null)
+    val doesPeriodNotExist = (startDate == null) || (endDate == null)
+    val needPeriodButNotExist = isPeriodSettingOn && doesPeriodNotExist
     isEnabled =
-        if (title.isNullOrBlank() || (photoUri != null && photoUrl == null) || !areBothNullOrNotNull) {
+        if (title.isNullOrBlank() || (photoUri != null && photoUrl == null) || needPeriodButNotExist) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
