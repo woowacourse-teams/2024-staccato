@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.ProgressBar
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
@@ -569,4 +570,11 @@ fun Button.setRecoveryEnabled(recoveryCode: String?) {
             setTextColor(resources.getColor(R.color.white, null))
             true
         }
+}
+
+@BindingAdapter("scrollToBottom")
+fun ScrollView.scrollToBottom(isPeriodSettingOn: Boolean) {
+    if (isPeriodSettingOn) {
+        post { fullScroll(ScrollView.FOCUS_DOWN) }
+    }
 }
