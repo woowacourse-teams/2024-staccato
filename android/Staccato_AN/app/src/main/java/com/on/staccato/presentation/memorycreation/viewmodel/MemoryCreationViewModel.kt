@@ -35,10 +35,10 @@ class MemoryCreationViewModel
         val title = ObservableField<String>()
         val description = ObservableField<String>()
 
-        private val _startDate = MediatorLiveData<LocalDate?>(null)
+        private val _startDate = MutableLiveData<LocalDate?>(null)
         val startDate: LiveData<LocalDate?> get() = _startDate
 
-        private val _endDate = MediatorLiveData<LocalDate?>(null)
+        private val _endDate = MutableLiveData<LocalDate?>(null)
         val endDate: LiveData<LocalDate?> get() = _endDate
 
         private val _createdMemoryId = MutableLiveData<Long>()
@@ -59,26 +59,7 @@ class MemoryCreationViewModel
         private val _isPhotoPosting = MutableLiveData<Boolean>(false)
         val isPhotoPosting: LiveData<Boolean> get() = _isPhotoPosting
 
-        val isPeriodSet = MutableLiveData<Boolean>(false)
-
-        init {
-            setPeriodMediator()
-        }
-
-        private fun setPeriodMediator() {
-            setDateMediator(_startDate)
-            setDateMediator(_endDate)
-        }
-
-        private fun setDateMediator(date: MediatorLiveData<LocalDate?>) {
-            with(date) {
-                addSource(isPeriodSet) { isSet ->
-                    if (!isSet) {
-                        value = null
-                    }
-                }
-            }
-        }
+        val isPeriodSettingOn = MutableLiveData<Boolean>(false)
 
         fun createThumbnailUrl(
             context: Context,
@@ -130,12 +111,12 @@ class MemoryCreationViewModel
             _createdMemoryId.value = memoryCreationResponse.memoryId
         }
 
-        private fun makeNewMemory(): NewMemory =
+        private fun makeNewMemory() =
             NewMemory(
                 memoryThumbnailUrl = thumbnailUrl.value,
                 memoryTitle = title.get() ?: throw IllegalArgumentException(),
-                startAt = startDate.value,
-                endAt = endDate.value,
+                startAt = if (isPeriodSettingOn.value == true) { startDate.value } else { null },
+                endAt = if (isPeriodSettingOn.value == true) { endDate.value } else { null },
                 description = description.get(),
             )
 
