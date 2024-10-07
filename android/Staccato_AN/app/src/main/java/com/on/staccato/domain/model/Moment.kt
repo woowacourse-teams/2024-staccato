@@ -1,5 +1,6 @@
 package com.on.staccato.domain.model
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class Moment(
@@ -13,5 +14,7 @@ data class Moment(
     val memoryId: Long,
     val memoryTitle: String,
     val visitedAt: LocalDateTime,
+    val startAt: LocalDate?,
+    val endAt: LocalDate?,
     val feeling: Feeling,
 )
