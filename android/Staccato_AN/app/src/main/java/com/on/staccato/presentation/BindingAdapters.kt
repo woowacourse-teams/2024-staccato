@@ -175,17 +175,17 @@ fun ImageView.setRoundedCornerImageByUriWithGlide(
 }
 
 @BindingAdapter(
-    value = ["memoryTitle", "startDate", "endDate", "isPeriodSettingOn", "isPhotoPosting"],
+    value = ["memoryTitle", "startDate", "endDate", "isPeriodActive", "isPhotoPosting"],
 )
 fun Button.setMemorySaveButtonActive(
     title: String?,
     startDate: LocalDate?,
     endDate: LocalDate?,
-    isPeriodSettingOn: Boolean,
+    isPeriodActive: Boolean,
     isPhotoPosting: Boolean?,
 ) {
     val doesPeriodNotExist = (startDate == null) || (endDate == null)
-    val needPeriodButNotExist = isPeriodSettingOn && doesPeriodNotExist
+    val needPeriodButNotExist = isPeriodActive && doesPeriodNotExist
     isEnabled =
         if (title.isNullOrBlank() || isPhotoPosting == true || needPeriodButNotExist) {
             setTextColor(resources.getColor(R.color.gray4, null))
@@ -197,18 +197,18 @@ fun Button.setMemorySaveButtonActive(
 }
 
 @BindingAdapter(
-    value = ["memoryTitle", "startDate", "endDate", "isPeriodSettingOn", "photoUri", "photoUrl"],
+    value = ["memoryTitle", "startDate", "endDate", "isPeriodActive", "photoUri", "photoUrl"],
 )
 fun Button.setMemorySaveButtonActive(
     title: String?,
     startDate: LocalDate?,
     endDate: LocalDate?,
-    isPeriodSettingOn: Boolean,
+    isPeriodActive: Boolean,
     photoUri: Uri?,
     photoUrl: String?,
 ) {
     val doesPeriodNotExist = (startDate == null) || (endDate == null)
-    val needPeriodButNotExist = isPeriodSettingOn && doesPeriodNotExist
+    val needPeriodButNotExist = isPeriodActive && doesPeriodNotExist
     isEnabled =
         if (title.isNullOrBlank() || (photoUri != null && photoUrl == null) || needPeriodButNotExist) {
             setTextColor(resources.getColor(R.color.gray4, null))
@@ -572,8 +572,8 @@ fun Button.setRecoveryEnabled(recoveryCode: String?) {
 }
 
 @BindingAdapter("scrollToBottom")
-fun ScrollView.scrollToBottom(isPeriodSettingOn: Boolean) {
-    if (isPeriodSettingOn) {
+fun ScrollView.scrollToBottom(isPeriodActive: Boolean) {
+    if (isPeriodActive) {
         post { fullScroll(ScrollView.FOCUS_DOWN) }
     }
 }

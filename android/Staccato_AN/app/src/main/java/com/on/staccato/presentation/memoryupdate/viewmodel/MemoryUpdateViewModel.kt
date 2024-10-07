@@ -63,7 +63,7 @@ class MemoryUpdateViewModel
         private val _isPhotoPosting = MutableLiveData<Boolean>(false)
         val isPhotoPosting: LiveData<Boolean> get() = _isPosting
 
-        val isPeriodSettingOn = MutableLiveData<Boolean>()
+        val isPeriodActive = MutableLiveData<Boolean>()
 
         private var memoryId: Long = 0L
 
@@ -137,7 +137,7 @@ class MemoryUpdateViewModel
         }
 
         private fun checkMemoryHasPeriod(memory: Memory) {
-            isPeriodSettingOn.value = memory.startAt != null && memory.endAt != null
+            isPeriodActive.value = memory.startAt != null && memory.endAt != null
         }
 
         private fun makeNewMemory() =
@@ -150,7 +150,7 @@ class MemoryUpdateViewModel
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {
-            return if (isPeriodSettingOn.value == true) {
+            return if (isPeriodActive.value == true) {
                 date.value
             } else {
                 null

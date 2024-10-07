@@ -58,7 +58,7 @@ class MemoryCreationViewModel
         private val _isPhotoPosting = MutableLiveData<Boolean>(false)
         val isPhotoPosting: LiveData<Boolean> get() = _isPhotoPosting
 
-        val isPeriodSettingOn = MutableLiveData<Boolean>(false)
+        val isPeriodActive = MutableLiveData<Boolean>(false)
 
         fun createThumbnailUrl(
             context: Context,
@@ -120,7 +120,7 @@ class MemoryCreationViewModel
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {
-            return if (isPeriodSettingOn.value == true) {
+            return if (isPeriodActive.value == true) {
                 date.value
             } else {
                 null
