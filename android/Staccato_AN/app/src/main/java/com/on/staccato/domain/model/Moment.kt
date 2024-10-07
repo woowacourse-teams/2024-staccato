@@ -14,5 +14,4 @@ data class Moment(
     val memoryTitle: String,
     val visitedAt: LocalDateTime,
     val feeling: Feeling,
-    val comments: List<Comment>,
 )
