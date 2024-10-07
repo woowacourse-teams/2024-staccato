@@ -124,11 +124,6 @@ class MainActivity :
             )
     }
 
-    override fun onMyPageClicked() {
-        val intent = Intent(this, MyPageActivity::class.java)
-        startActivity(intent)
-    }
-
     private fun setupGoogleMap() {
         val map: SupportMapFragment? =
             supportFragmentManager.findFragmentById(R.id.fragment_container_view_map) as? SupportMapFragment

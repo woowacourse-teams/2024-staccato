@@ -9,7 +9,6 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMypageBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
-import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.webview.WebViewActivity
 import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_TOOLBAR_TITLE
 import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_URL
@@ -52,7 +51,6 @@ class MyPageActivity :
     private fun observeCopyingUuidCode() {
         myPageViewModel.uuidCode.observe(this) { code ->
             copyUuidCodeOnClipBoard(code)
-            showToast(getString(R.string.all_clipboard_copy))
         }
     }
 
