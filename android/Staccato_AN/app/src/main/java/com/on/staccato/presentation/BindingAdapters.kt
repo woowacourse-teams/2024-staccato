@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.databinding.BindingAdapter
@@ -20,7 +19,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.button.MaterialButton.ICON_GRAVITY_TEXT_START
 import com.on.staccato.R
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
@@ -544,13 +542,6 @@ fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
         setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
     } else {
         setText(R.string.visit_creation_load_current_location)
-        icon =
-            getDrawable(context, R.drawable.icon_crosshair)?.apply {
-                setBounds(0, 0, 70, 70)
-                setTint(context.getColor(R.color.gray3))
-            }
-        compoundDrawablePadding = 20
-        iconGravity = ICON_GRAVITY_TEXT_START
     }
 }
 

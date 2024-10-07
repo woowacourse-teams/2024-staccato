@@ -40,6 +40,8 @@ import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MomentCreationActivity :
