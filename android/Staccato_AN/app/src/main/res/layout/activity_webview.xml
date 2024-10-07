@@ -22,17 +22,19 @@
         <include
             android:id="@+id/toolbar_webview"
             layout="@layout/toolbar_close"
-            bind:toolbarHandler="@{toolbarHandler}"
-            bind:toolbarTitle="@{toolbarTitle}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            bind:toolbarHandler="@{toolbarHandler}"
+            bind:toolbarTitle="@{toolbarTitle}" />
 
         <WebView
             android:id="@+id/webview"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_webview" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
