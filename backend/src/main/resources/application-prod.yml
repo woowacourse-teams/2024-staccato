@@ -65,3 +65,19 @@ cloud:
 image:
   folder:
     name: image-prod/
+
+management:
+  server:
+    port: 9292
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics, env, beans, threaddump, loggers, prometheus
+  endpoint:
+    health:
+      show-components: when_authorized
+
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
