@@ -23,12 +23,10 @@
 
         <TextView
             android:id="@+id/tv_moment_comments_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/SubTitleStyle"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/visit_logs"
-            android:textAppearance="@style/Typography.Title2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

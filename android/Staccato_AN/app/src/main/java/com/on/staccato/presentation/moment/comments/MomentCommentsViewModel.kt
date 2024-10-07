@@ -65,6 +65,17 @@ class MomentCommentsViewModel
             }
         }
 
+        fun fetchComments() {
+            viewModelScope.launch {
+                commentRepository.fetchComments(momentId)
+                    .onSuccess { comments ->
+                        setComments(comments.map { it.toCommentUiModel() })
+                    }
+                    .onServerError(::handleServerError)
+                    .onException(::handleException)
+            }
+        }
+
         fun setMemoryId(id: Long) {
             momentId = id
         }
@@ -87,17 +98,6 @@ class MomentCommentsViewModel
                         .onServerError(::handleServerError)
                         .onException(::handleException)
                 }
-            }
-        }
-
-        private fun fetchComments() {
-            viewModelScope.launch {
-                commentRepository.fetchComments(momentId)
-                    .onSuccess { comments ->
-                        setComments(comments.map { it.toCommentUiModel() })
-                    }
-                    .onServerError(::handleServerError)
-                    .onException(::handleException)
             }
         }
 

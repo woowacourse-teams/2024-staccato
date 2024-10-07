@@ -41,6 +41,7 @@ import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
+import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -107,6 +108,11 @@ class MainActivity :
             this,
             staccatoCreationLauncher,
         )
+    }
+
+    override fun onMyPageClicked() {
+        val intent = Intent(this, MyPageActivity::class.java)
+        startActivity(intent)
     }
 
     private fun setupPermissionRequestLauncher() {

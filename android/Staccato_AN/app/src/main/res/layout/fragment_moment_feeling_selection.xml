@@ -14,12 +14,10 @@
 
         <TextView
             android:id="@+id/tv_moment_feeling_selection_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/SubTitleStyle"
             android:layout_marginStart="18dp"
             android:layout_marginTop="20dp"
             android:text="@string/moment_how_was_your_feeling"
-            android:textAppearance="@style/Typography.Title1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
