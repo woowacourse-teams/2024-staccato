@@ -41,13 +41,15 @@ import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class MomentCreationActivity :
     GooglePlaceFragmentEventHandler,
-    PlaceSearchHandler,
+    CurrentLocationHandler,
     OnUrisSelectedListener,
     MomentCreationHandler,
     BindingActivity<ActivityVisitCreationBinding>() {
@@ -90,6 +92,7 @@ class MomentCreationActivity :
         initItemTouchHelper()
         initToolbar()
         initMemorySelectionFragment()
+        initVisitedAtSelectionFragment()
         observeViewModelData()
         initGooglePlaceSearch()
     }
@@ -179,6 +182,7 @@ class MomentCreationActivity :
 
         when {
             isLocationPermissionGranted -> {
+                viewModel.setCurrentLocationLoading(true)
                 val currentLocation: Task<Location> =
                     fusedLocationProviderClient.getCurrentLocation(
                         Priority.PRIORITY_HIGH_ACCURACY,
@@ -203,9 +207,7 @@ class MomentCreationActivity :
 
             else -> {
                 observeIsPermissionCancelClicked {
-                    permissionRequestLauncher.launch(
-                        locationPermissions,
-                    )
+                    permissionRequestLauncher.launch(locationPermissions)
                 }
             }
         }
@@ -221,7 +223,7 @@ class MomentCreationActivity :
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.visitCreationHandler = this
-        binding.placeSearchHandler = this
+        binding.currentLocationHandler = this
     }
 
     private fun initAdapter() {
@@ -317,25 +319,44 @@ class MomentCreationActivity :
     }
 
     private fun fetchAddress(location: Location) {
-        val geocoder = Geocoder(this)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val geocodeListener = initGeocodeListener(location)
-            geocoder.getFromLocation(location.latitude, location.longitude, 1, geocodeListener)
-        } else {
-            address =
-                geocoder.getFromLocation(location.latitude, location.longitude, 1)?.get(0)
-                    ?.getAddressLine(0).toString()
+        lifecycleScope.launch {
+            val defaultDelayJob =
+                launch {
+                    delay(500L)
+                }
+            val getCurrentLocationJob =
+                launch {
+                    updateAddressByCurrentAddress(location)
+                }
+            getCurrentLocationJob.join()
+            defaultDelayJob.join()
             viewModel.setPlaceByCurrentAddress(address, location)
         }
     }
 
-    private fun initGeocodeListener(location: Location) =
+    private fun updateAddressByCurrentAddress(location: Location) {
+        val geocoder = Geocoder(this@MomentCreationActivity)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val geocodeListener = initGeocodeListener()
+            geocoder.getFromLocation(
+                location.latitude,
+                location.longitude,
+                1,
+                geocodeListener,
+            )
+        } else {
+            address =
+                geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                    ?.get(0)
+                    ?.getAddressLine(0).toString()
+        }
+    }
+
+    private fun initGeocodeListener() =
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         object : Geocoder.GeocodeListener {
             override fun onGeocode(addresses: MutableList<Address>) {
                 address = addresses[0].getAddressLine(0)
-                viewModel.setPlaceByCurrentAddress(address, location)
             }
 
             override fun onError(errorMessage: String?) {

@@ -66,6 +66,9 @@ class VisitUpdateViewModel
         private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
 
+        private val _isCurrentLocationLoading = MutableLiveData(false)
+        val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
+
         private var targetMemoryId: Long = 0
 
         private val _selectedMemory = MutableLiveData<MemoryCandidate>()
@@ -142,10 +145,15 @@ class VisitUpdateViewModel
             address: String?,
             location: Location,
         ) {
+            setCurrentLocationLoading(false)
             _placeName.postValue(address)
             _address.postValue(address)
             _latitude.postValue(location.latitude)
             _longitude.postValue(location.longitude)
+        }
+
+        fun setCurrentLocationLoading(newValue: Boolean) {
+            _isCurrentLocationLoading.postValue(newValue)
         }
 
         fun updateSelectedImageUris(newUris: Array<Uri>) {

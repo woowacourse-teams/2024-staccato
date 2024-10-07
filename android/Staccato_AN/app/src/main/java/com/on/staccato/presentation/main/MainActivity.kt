@@ -111,6 +111,11 @@ class MainActivity :
         )
     }
 
+    override fun onMyPageClicked() {
+        val intent = Intent(this, MyPageActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun setupPermissionRequestLauncher() {
         permissionRequestLauncher =
             locationPermissionManager.requestPermissionLauncher(

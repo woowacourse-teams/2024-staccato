@@ -9,13 +9,13 @@ import com.on.staccato.data.ApiResponseHandler.onException
 import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.dto.Status
-import com.on.staccato.domain.model.MyProfile
+import com.on.staccato.domain.model.AccountInformation
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.mypage.MyPageHandler
-import com.on.staccato.presentation.mypage.model.MyProfileUiModel
+import com.on.staccato.presentation.mypage.model.AccountInformationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,9 +26,9 @@ class MyPageViewModel
     constructor(private val repository: MyPageRepository) :
     ViewModel(),
         MyPageHandler {
-        private val _myProfile = MutableLiveData<MyProfileUiModel>()
-        val myProfile: LiveData<MyProfileUiModel>
-            get() = _myProfile
+        private val _accountInformation = MutableLiveData<AccountInformationUiModel>()
+        val accountInformation: LiveData<AccountInformationUiModel>
+            get() = _accountInformation
 
         private val _uuidCode = MutableSingleLiveData<String>()
         val uuidCode: SingleLiveData<String>
@@ -40,19 +40,19 @@ class MyPageViewModel
 
         fun fetchMyProfile() {
             viewModelScope.launch {
-                val result = repository.getMyProfile()
+                val result = repository.getAccountInformation()
                 result.onException(::handleException)
                     .onServerError(::handleError)
                     .onSuccess(::setMyProfile)
             }
         }
 
-        private fun setMyProfile(myProfile: MyProfile) {
-            _myProfile.value = myProfile.toUiModel()
+        private fun setMyProfile(accountInformation: AccountInformation) {
+            _accountInformation.value = accountInformation.toUiModel()
         }
 
         override fun onCodeCopyClicked() {
-            myProfile.value?.let { _uuidCode.setValue(it.uuidCode) }
+            accountInformation.value?.let { _uuidCode.setValue(it.uuidCode) }
         }
 
         private fun handleError(

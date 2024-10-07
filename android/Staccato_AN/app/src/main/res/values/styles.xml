@@ -229,4 +229,21 @@
         <item name="android:focusable">true</item>
     </style>
 
+    <style name="CurrentLocationStyle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:clickable">true</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/visit_creation_load_current_location</item>
+        <item name="android:textAppearance">@style/Typography.Body4</item>
+        <item name="android:textColor">@color/gray4</item>
+
+        <item name="icon">@drawable/icon_crosshair</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">10dp</item>
+        <item name="iconTint">@color/gray3</item>
+
+        <item name="rippleColor">@android:color/transparent</item>
+        <item name="strokeColor">@color/gray3</item>
+    </style>
+
 </resources>
