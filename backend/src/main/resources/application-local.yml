@@ -54,7 +54,7 @@ image:
 
 management:
   server:
-    port: 9292
+    port: 8080
   endpoints:
     web:
       exposure:
