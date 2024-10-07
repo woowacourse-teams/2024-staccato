@@ -162,6 +162,9 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    // Lottie
+    implementation(libs.lottie)
 }
 
 secrets {

@@ -33,8 +33,8 @@ import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
+import com.on.staccato.presentation.momentcreation.CurrentLocationHandler
 import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
-import com.on.staccato.presentation.momentcreation.PlaceSearchHandler
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.momentcreation.dialog.MemoryVisitedAtSelectionFragment
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
@@ -43,11 +43,13 @@ import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouch
 import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
 import com.on.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class VisitUpdateActivity :
     GooglePlaceFragmentEventHandler,
-    PlaceSearchHandler,
+    CurrentLocationHandler,
     OnUrisSelectedListener,
     VisitUpdateHandler,
     BindingActivity<ActivityVisitUpdateBinding>() {
@@ -71,7 +73,8 @@ class VisitUpdateActivity :
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
     }
 
-    private val locationPermissionManager = LocationPermissionManager(context = this, activity = this)
+    private val locationPermissionManager =
+        LocationPermissionManager(context = this, activity = this)
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var address: String
@@ -161,6 +164,7 @@ class VisitUpdateActivity :
 
         when {
             isLocationPermissionGranted -> {
+                viewModel.setCurrentLocationLoading(true)
                 val currentLocation: Task<Location> =
                     fusedLocationProviderClient.getCurrentLocation(
                         Priority.PRIORITY_HIGH_ACCURACY,
@@ -293,25 +297,44 @@ class VisitUpdateActivity :
     }
 
     private fun fetchAddress(location: Location) {
-        val geocoder = Geocoder(this)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val geocodeListener = initGeocodeListener(location)
-            geocoder.getFromLocation(location.latitude, location.longitude, 1, geocodeListener)
-        } else {
-            address =
-                geocoder.getFromLocation(location.latitude, location.longitude, 1)?.get(0)
-                    ?.getAddressLine(0).toString()
+        lifecycleScope.launch {
+            val defaultDelayJob =
+                launch {
+                    delay(500L)
+                }
+            val getCurrentLocationJob =
+                launch {
+                    updateAddressByCurrentAddress(location)
+                }
+            getCurrentLocationJob.join()
+            defaultDelayJob.join()
             viewModel.setPlaceByCurrentAddress(address, location)
         }
     }
 
-    private fun initGeocodeListener(location: Location) =
+    private fun updateAddressByCurrentAddress(location: Location) {
+        val geocoder = Geocoder(this@VisitUpdateActivity)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val geocodeListener = initGeocodeListener()
+            geocoder.getFromLocation(
+                location.latitude,
+                location.longitude,
+                1,
+                geocodeListener,
+            )
+        } else {
+            address =
+                geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                    ?.get(0)
+                    ?.getAddressLine(0).toString()
+        }
+    }
+
+    private fun initGeocodeListener() =
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         object : Geocoder.GeocodeListener {
             override fun onGeocode(addresses: MutableList<Address>) {
                 address = addresses[0].getAddressLine(0)
-                viewModel.setPlaceByCurrentAddress(address, location)
             }
 
             override fun onError(errorMessage: String?) {

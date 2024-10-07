@@ -1,5 +1,5 @@
 package com.on.staccato.presentation.momentcreation
 
-interface PlaceSearchHandler {
+interface CurrentLocationHandler {
     fun onSearchClicked()
 }
