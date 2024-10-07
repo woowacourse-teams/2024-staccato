@@ -22,10 +22,12 @@ import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.config.auth.LoginMember;
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 
 import lombok.RequiredArgsConstructor;
 
+@Trace
 @RestController
 @RequestMapping("/comments")
 @RequiredArgsConstructor
