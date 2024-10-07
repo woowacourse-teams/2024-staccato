@@ -18,7 +18,7 @@
 
         <variable
             name="currentLocationHandler"
-            type="com.on.staccato.presentation.momentcreation.PlaceSearchHandler" />
+            type="com.on.staccato.presentation.momentcreation.CurrentLocationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,6 +83,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
                     app:spanCount="2"
+                    tools:itemCount="2"
                     tools:listitem="@layout/item_attached_photo" />
 
                 <TextView
@@ -189,27 +190,40 @@
                     bind:setAddress="@{viewModel.address}"
                     tools:text="상세 주소 (고정)" />
 
-                <Button
-                    android:id="@+id/btn_current_location"
-                    style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_current_location"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:onClick="@{()->currentLocationHandler.onSearchClicked()}"
-                    android:paddingStart="90dp"
-                    android:text="@string/visit_creation_load_current_location"
-                    android:textAppearance="@style/Typography.Body4"
-                    android:textColor="@color/gray4"
-                    app:icon="@drawable/icon_crosshair"
-                    app:iconPadding="-60dp"
-                    app:iconTint="@color/gray3"
                     app:layout_constraintEnd_toEndOf="@id/tv_place_address"
                     app:layout_constraintStart_toStartOf="@id/tv_place_address"
-                    app:layout_constraintTop_toBottomOf="@id/tv_place_address"
-                    app:rippleColor="@android:color/transparent"
-                    app:strokeColor="@color/gray3" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_place_address">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_current_location"
+                        style="@style/CurrentLocationStyle"
+                        android:layout_marginTop="10dp"
+                        android:onClick="@{()->currentLocationHandler.onSearchClicked()}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        bind:setCurrentLocationButtonLoading="@{viewModel.isCurrentLocationLoading}" />
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/lotti_dot_loading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/btn_current_location"
+                        app:layout_constraintEnd_toEndOf="@id/btn_current_location"
+                        app:layout_constraintStart_toStartOf="@id/btn_current_location"
+                        app:layout_constraintTop_toTopOf="@+id/btn_current_location"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_rawRes="@raw/dot_loading"
+                        bind:setLoadingLottieVisibility="@{viewModel.isCurrentLocationLoading}" />
+                    />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/tv_memory_selection_title"
@@ -217,7 +231,7 @@
                     android:layout_marginTop="35dp"
                     android:text="추억 선택"
                     app:layout_constraintStart_toStartOf="@id/tv_photo_title"
-                    app:layout_constraintTop_toBottomOf="@id/btn_current_location" />
+                    app:layout_constraintTop_toBottomOf="@id/constraint_current_location" />
 
                 <TextView
                     android:id="@+id/tv_visit_update_required_mark_third"
