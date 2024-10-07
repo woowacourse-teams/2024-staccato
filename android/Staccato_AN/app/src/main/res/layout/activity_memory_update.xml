@@ -39,7 +39,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_memory_update">
+            app:layout_constraintTop_toBottomOf="@id/toolbar_memory_update"
+            bind:scrollToBottom="@{viewModel.isPeriodActive}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -176,7 +177,7 @@
                     android:layout_height="20dp"
                     android:layout_marginEnd="24dp"
                     android:background="@android:color/transparent"
-                    android:checked="@={viewModel.isPeriodSet}"
+                    android:checked="@={viewModel.isPeriodActive}"
                     android:thumb="@drawable/shape_switch_thumb_oval"
                     app:layout_constraintBottom_toBottomOf="@id/tv_memory_update_period_title"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -217,7 +218,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_period_description"
                     bind:endDate="@{viewModel.endDate}"
-                    bind:periodSelectionVisibility="@{viewModel.isPeriodSet}"
+                    bind:periodSelectionVisibility="@{viewModel.isPeriodActive}"
                     bind:startDate="@{viewModel.startDate}" />
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -231,9 +232,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_period_selection"
                     bind:endDate="@{viewModel.endDate}"
+                    bind:isPeriodActive="@{viewModel.isPeriodActive}"
+                    bind:isPhotoPosting="@{viewModel.isPhotoPosting}"
                     bind:memoryTitle="@{viewModel.title}"
-                    bind:photoUri="@{viewModel.thumbnailUri}"
-                    bind:photoUrl="@{viewModel.thumbnailUrl}"
                     bind:startDate="@{viewModel.startDate}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
