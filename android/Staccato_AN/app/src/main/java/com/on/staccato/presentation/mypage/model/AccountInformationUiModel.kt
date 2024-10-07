@@ -1,6 +1,6 @@
-package com.on.staccato.domain.model
+package com.on.staccato.presentation.mypage.model
 
-data class MyProfile(
+data class AccountInformationUiModel(
     val profileImageUrl: String? = null,
     val nickname: String,
     val uuidCode: String,

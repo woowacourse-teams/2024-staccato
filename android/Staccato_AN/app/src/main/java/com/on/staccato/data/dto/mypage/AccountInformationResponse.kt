@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MyProfileResponse(
+data class AccountInformationResponse(
     @SerialName("nickname") val nickname: String,
     @SerialName("profileImageUrl") val profileImageUrl: String? = null,
     @SerialName("code") val code: String,

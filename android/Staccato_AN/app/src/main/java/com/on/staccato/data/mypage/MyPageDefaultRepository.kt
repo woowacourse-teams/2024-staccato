@@ -4,7 +4,7 @@ import com.on.staccato.data.ApiResponseHandler.handleApiResponse
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.mypage.ProfileImageResponse
-import com.on.staccato.domain.model.MyProfile
+import com.on.staccato.domain.model.AccountInformation
 import com.on.staccato.domain.repository.MyPageRepository
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -14,8 +14,8 @@ class MyPageDefaultRepository
     constructor(
         private val myPageApiService: MyPageApiService,
     ) : MyPageRepository {
-        override suspend fun getMyProfile(): ResponseResult<MyProfile> {
-            val responseResult = handleApiResponse { myPageApiService.getProfile() }
+        override suspend fun getAccountInformation(): ResponseResult<AccountInformation> {
+            val responseResult = handleApiResponse { myPageApiService.getAccountInformation() }
             return when (responseResult) {
                 is ResponseResult.Exception ->
                     ResponseResult.Exception(
