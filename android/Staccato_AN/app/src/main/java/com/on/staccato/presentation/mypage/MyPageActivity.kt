@@ -71,10 +71,9 @@ class MyPageActivity :
             startActivity(intent)
         } else {
             val webViewIntent =
-                Intent(this, WebViewActivity::class.java).apply {
-                    putExtra(EXTRA_URL, url)
-                    putExtra(EXTRA_TOOLBAR_TITLE, getString(R.string.mypage_privacy_policy))
-                }
+                Intent(this, WebViewActivity::class.java)
+                    .putExtra(EXTRA_URL, url)
+                    .putExtra(EXTRA_TOOLBAR_TITLE, getString(R.string.mypage_privacy_policy))
             startActivity(webViewIntent)
         }
     }
