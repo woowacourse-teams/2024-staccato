@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.NumberPicker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.on.staccato.databinding.FragmentMemorySelectionBinding
 import com.on.staccato.domain.model.MemoryCandidate
@@ -13,8 +14,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class MemorySelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentMemorySelectionBinding? = null
     private val binding get() = _binding!!
-    private val items = mutableListOf<MemoryCandidate>()
     private lateinit var handler: MemorySelectionHandler
+
+    private val items = mutableListOf<MemoryCandidate>()
+    private lateinit var keyMemory: MemoryCandidate
 
     fun setOnMemorySelected(newHandler: MemorySelectionHandler) {
         handler = newHandler
@@ -23,6 +26,10 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
     fun setItems(newItems: List<MemoryCandidate>) {
         items.clear()
         items.addAll(newItems)
+    }
+
+    fun updateKeyMemory(selectedMemory: MemoryCandidate) {
+        keyMemory = selectedMemory
     }
 
     override fun onCreateView(
@@ -44,11 +51,20 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
 
     private fun initNumberPicker() {
         binding.pickerMemorySelection.apply {
+            displayedValues = null
             minValue = 0
             maxValue = (items.size - 1).coerceAtLeast(0)
             displayedValues = items.map { it.memoryTitle }.toTypedArray()
             wrapSelectorWheel = false
+            setPickerValue(items, keyMemory)
         }
+    }
+
+    private fun NumberPicker.setPickerValue(
+        targetList: List<MemoryCandidate>,
+        targetKey: MemoryCandidate,
+    ) {
+        this.value = targetList.indexOf(targetKey).takeIf { it >= 0 } ?: 0
     }
 
     private fun initConfirmButton() {

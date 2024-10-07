@@ -9,7 +9,6 @@ import com.on.staccato.databinding.FragmentMomentCommentsBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.moment.MomentFragment.Companion.DEFAULT_STACCATO_ID
 import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
-import com.on.staccato.presentation.moment.viewmodel.MomentViewModel
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,10 +20,6 @@ class MomentCommentsFragment :
     private val momentId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
     private val commentsViewModel: MomentCommentsViewModel by viewModels()
 
-    private val momentViewModel: MomentViewModel by viewModels(
-        ownerProducer = { requireParentFragment() },
-    )
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -32,8 +27,8 @@ class MomentCommentsFragment :
         commentsViewModel.setMemoryId(momentId)
         setUpRecyclerView()
         setUpBinding()
-        observeMomentViewModel()
         observeCommentsViewModel()
+        loadComments()
     }
 
     private fun setUpRecyclerView() {
@@ -47,10 +42,8 @@ class MomentCommentsFragment :
         binding.commentHandler = commentsViewModel
     }
 
-    private fun observeMomentViewModel() {
-        momentViewModel.comments.observe(viewLifecycleOwner) { comments ->
-            commentsViewModel.setComments(comments)
-        }
+    private fun loadComments() {
+        commentsViewModel.fetchComments()
     }
 
     private fun observeCommentsViewModel() {

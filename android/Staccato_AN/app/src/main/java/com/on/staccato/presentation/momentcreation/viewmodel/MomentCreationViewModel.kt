@@ -5,7 +5,6 @@ import android.location.Location
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,7 +24,6 @@ import com.on.staccato.presentation.util.convertExcretaFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -69,48 +67,8 @@ class MomentCreationViewModel
         private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
 
-        val memoryAndVisitedAt =
-            MediatorLiveData<Triple<MemoryCandidates, MemoryCandidate, LocalDateTime>>().apply {
-                var latestMemoryCandidates: MemoryCandidates? = null
-                var latestSelectedMemory: MemoryCandidate? = null
-                var latestSelectedVisitedAt: LocalDateTime? = null
-
-                addSource(memoryCandidates) { memories ->
-                    latestMemoryCandidates = memories
-                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestSelectedVisitedAt != null) {
-                        value =
-                            Triple(
-                                latestMemoryCandidates!!,
-                                latestSelectedMemory!!,
-                                latestSelectedVisitedAt!!,
-                            )
-                    }
-                }
-
-                addSource(selectedMemory) { selectedMemory ->
-                    latestSelectedMemory = selectedMemory
-                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestSelectedVisitedAt != null) {
-                        value =
-                            Triple(
-                                latestMemoryCandidates!!,
-                                latestSelectedMemory!!,
-                                latestSelectedVisitedAt!!,
-                            )
-                    }
-                }
-
-                addSource(selectedVisitedAt) { visitedAt ->
-                    latestSelectedVisitedAt = visitedAt
-                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestSelectedVisitedAt != null) {
-                        value =
-                            Triple(
-                                latestMemoryCandidates!!,
-                                latestSelectedMemory!!,
-                                latestSelectedVisitedAt!!,
-                            )
-                    }
-                }
-            }
+        private val _isCurrentLocationLoading = MutableLiveData<Boolean>()
+        val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
 
         private val _createdStaccatoId = MutableSingleLiveData<Long>()
         val createdStaccatoId: SingleLiveData<Long> get() = _createdStaccatoId
@@ -141,12 +99,12 @@ class MomentCreationViewModel
             }
         }
 
-        fun selectMemoryVisitedAt(
-            memory: MemoryCandidate,
-            visitedAt: LocalDateTime,
-        ) {
-            _selectedMemory.value = memory
+        fun selectedVisitedAt(visitedAt: LocalDateTime) {
             _selectedVisitedAt.value = visitedAt
+        }
+
+        fun selectMemory(memory: MemoryCandidate) {
+            _selectedMemory.value = memory
         }
 
         fun selectNewPlace(
@@ -173,10 +131,15 @@ class MomentCreationViewModel
             address: String?,
             location: Location,
         ) {
+            setCurrentLocationLoading(false)
             _placeName.postValue(address)
             _address.postValue(address)
             _latitude.postValue(location.latitude)
             _longitude.postValue(location.longitude)
+        }
+
+        fun setCurrentLocationLoading(newValue: Boolean) {
+            _isCurrentLocationLoading.postValue(newValue)
         }
 
         fun fetchMemoryCandidates(memoryId: Long) {
@@ -202,14 +165,25 @@ class MomentCreationViewModel
                     memoryCandidates.first { memoryId == it.memoryId }
                 }
             _selectedMemory.value = targetMemory
-            _selectedVisitedAt.value = getClosestDateTime(targetMemory.endAt)
+            _selectedVisitedAt.value = getClosestDateTime(targetMemory.startAt, targetMemory.endAt)
         }
 
-        private fun getClosestDateTime(mostRecentDate: LocalDate?): LocalDateTime {
+        private fun getClosestDateTime(
+            startAt: LocalDate?,
+            endAt: LocalDate?,
+        ): LocalDateTime {
             val now = LocalDateTime.now()
-            return mostRecentDate?.atStartOfDay()?.let {
-                if (it.isAfter(now)) now else it
-            } ?: now
+
+            if (startAt == null || endAt == null) return now
+
+            val startDateTime = startAt.atStartOfDay()
+            val endDateTime = endAt.atStartOfDay()
+
+            return when {
+                now.isBefore(startDateTime) -> startDateTime // 현재 시간이 startAt 이전일 때 startAt 반환
+                now.isAfter(endDateTime) -> endDateTime // 현재 시간이 endAt 이후일 때 endAt 반환
+                else -> now // 현재 시간이 범위 내에 있을 때 now 반환
+            }
         }
 
         fun updateSelectedImageUris(newUris: Array<Uri>) {
@@ -255,7 +229,7 @@ class MomentCreationViewModel
         private fun createPhotoUploadJob(
             context: Context,
             photo: AttachedPhotoUiModel,
-        ) = viewModelScope.async(buildCoroutineExceptionHandler()) {
+        ) = viewModelScope.launch(buildCoroutineExceptionHandler()) {
             val multiPartBody = convertExcretaFile(context, photo.uri, FORM_DATA_NAME)
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {

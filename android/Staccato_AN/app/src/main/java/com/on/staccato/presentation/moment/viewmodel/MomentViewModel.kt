@@ -8,7 +8,6 @@ import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.repository.MomentRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.mapper.toCommentUiModel
 import com.on.staccato.presentation.mapper.toMomentDetailUiModel
 import com.on.staccato.presentation.moment.comments.CommentUiModel
 import com.on.staccato.presentation.moment.detail.MomentDetailUiModel
@@ -53,7 +52,6 @@ class MomentViewModel
                 momentRepository.getMoment(momentId).onSuccess { moment ->
                     _momentDetail.value = moment.toMomentDetailUiModel()
                     _feeling.value = moment.feeling
-                    _comments.value = moment.comments.map { it.toCommentUiModel() }
                 }.onFailure {
                     _isError.postValue(true)
                 }

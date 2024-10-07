@@ -68,6 +68,12 @@
         <activity
             android:name=".presentation.memorycreation.MemoryCreationActivity"
             android:exported="false" />
+        <activity
+            android:name=".presentation.mypage.MyPageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.webview.WebViewActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -3,6 +3,7 @@
     <string name="app_name_dev">Staccato-DEV</string>
 
     // all
+    <string name="all_empty"> </string>
     <string name="all_update">수정</string>
     <string name="all_delete">삭제</string>
     <string name="all_save">저장</string>
@@ -23,6 +24,7 @@
     <string name="all_posting_photo">사진을 게시하는 중이에요</string>
     <string name="all_setting">설정</string>
     <string name="all_location_permission_denial">위치 권한을 거부 하셨습니다.</string>
+    <string name="all_webview_failure">웹 브라우저를 띄울 수 없습니다.</string>
 
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
@@ -104,6 +106,13 @@
     <string name="recovery_subtitle">고유 코드를 입력해주세요</string>
     <string name="recovery_code_hint">ex) bt2hnhd4-07kght-0pp2ln</string>
     <string name="recovery_load">불러오기</string>
+
+    // activity_mypage
+    <string name="mypage_title">마이페이지</string>
+    <string name="mypage_uuid">복구 코드 복사하기</string>
+    <string name="mypage_privacy_policy">개인정보처리방침</string>
+    <string name="mypage_privacy_policy_url">https://app.websitepolicies.com/policies/view/7jel2uwv</string>
+    <string name="mypage_app_version">앱 버전 1.0.2</string>
 
     // fragment_photo_attach
     <string name="photo_attach_title">사진을 등록해 주세요</string>
