@@ -184,10 +184,10 @@ fun Button.setMemorySaveButtonActive(
     isPeriodActive: Boolean,
     isPhotoPosting: Boolean?,
 ) {
-    val doesPeriodNotExist = (startDate == null) || (endDate == null)
-    val needPeriodButNotExist = isPeriodActive && doesPeriodNotExist
+    val isPeriodNotExistent = (startDate == null) || (endDate == null)
+    val isPeriodRequirementsInvalid = isPeriodActive && isPeriodNotExistent
     isEnabled =
-        if (title.isNullOrBlank() || isPhotoPosting == true || needPeriodButNotExist) {
+        if (title.isNullOrBlank() || isPhotoPosting == true || isPeriodRequirementsInvalid) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
