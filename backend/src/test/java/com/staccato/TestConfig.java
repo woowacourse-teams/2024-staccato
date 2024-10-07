@@ -2,7 +2,6 @@ package com.staccato;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-
 import com.staccato.image.infrastructure.FakeS3ObjectClient;
 import com.staccato.image.infrastructure.S3ObjectClient;
 

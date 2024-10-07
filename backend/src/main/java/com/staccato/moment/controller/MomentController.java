@@ -1,10 +1,8 @@
 package com.staccato.moment.controller;
 
 import java.net.URI;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,20 +13,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.staccato.config.auth.LoginMember;
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.controller.docs.MomentControllerDocs;
 import com.staccato.moment.service.MomentService;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
-import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
-
 import lombok.RequiredArgsConstructor;
 
+@Trace
 @RestController
 @RequestMapping("/moments")
 @RequiredArgsConstructor
@@ -64,7 +61,7 @@ public class MomentController implements MomentControllerDocs {
     public ResponseEntity<Void> updateMomentById(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId,
-            @Valid @RequestBody MomentUpdateRequest request
+            @Valid @RequestBody MomentRequest request
     ) {
         momentService.updateMomentById(momentId, request, member);
         return ResponseEntity.ok().build();

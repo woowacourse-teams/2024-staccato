@@ -1,11 +1,12 @@
 package com.staccato.memory.service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.staccato.comment.repository.CommentRepository;
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
@@ -21,9 +22,9 @@ import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
-
 import lombok.RequiredArgsConstructor;
 
+@Trace
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -31,6 +32,7 @@ public class MemoryService {
     private final MemoryRepository memoryRepository;
     private final MemoryMemberRepository memoryMemberRepository;
     private final MomentRepository momentRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public MemoryIdResponse createMemory(MemoryRequest memoryRequest, Member member) {
@@ -42,7 +44,9 @@ public class MemoryService {
     }
 
     public MemoryResponses readAllMemories(Member member) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdOrderByMemoryCreatedAtDesc(member.getId());
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdOrderByMemory(member.getId());
+        sortByCreatedAtDescending(memoryMembers);
+
         return MemoryResponses.from(
                 memoryMembers.stream()
                         .map(MemoryMember::getMemory)
@@ -51,12 +55,18 @@ public class MemoryService {
     }
 
     public MemoryNameResponses readAllMemoriesIncludingDate(Member member, LocalDate currentDate) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndIncludingDateOrderByCreatedAtDesc(member.getId(), currentDate);
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndIncludingDate(member.getId(), currentDate);
+        sortByCreatedAtDescending(memoryMembers);
+
         return MemoryNameResponses.from(
                 memoryMembers.stream()
                         .map(MemoryMember::getMemory)
                         .toList()
         );
+    }
+
+    private void sortByCreatedAtDescending(List<MemoryMember> memoryMembers) {
+        memoryMembers.sort(Comparator.comparing(MemoryMember::getCreatedAt).reversed());
     }
 
     public MemoryDetailResponse readMemoryById(long memoryId, Member member) {
@@ -106,6 +116,8 @@ public class MemoryService {
     public void deleteMemory(long memoryId, Member member) {
         memoryRepository.findById(memoryId).ifPresent(memory -> {
             validateOwner(memory, member);
+            momentRepository.findAllByMemoryId(memoryId)
+                    .forEach(moment -> commentRepository.deleteAllByMomentId(moment.getId()));
             momentRepository.deleteAllByMemoryId(memoryId);
             memoryRepository.deleteById(memoryId);
         });

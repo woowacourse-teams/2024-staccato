@@ -2,7 +2,6 @@ package com.staccato.fixture.moment;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import com.staccato.moment.service.dto.response.MomentLocationResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
