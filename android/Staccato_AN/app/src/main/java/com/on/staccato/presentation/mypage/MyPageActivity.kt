@@ -65,17 +65,11 @@ class MyPageActivity :
 
     override fun onPrivacyPolicyClicked() {
         val url = getString(R.string.mypage_privacy_policy_url)
-        val intent = Intent(ACTION_VIEW).apply { data = Uri.parse(url) }
-
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivity(intent)
-        } else {
-            val webViewIntent =
-                Intent(this, WebViewActivity::class.java)
-                    .putExtra(EXTRA_URL, url)
-                    .putExtra(EXTRA_TOOLBAR_TITLE, getString(R.string.mypage_privacy_policy))
-            startActivity(webViewIntent)
-        }
+        val intent =
+            Intent(this, WebViewActivity::class.java)
+                .putExtra(EXTRA_URL, url)
+                .putExtra(EXTRA_TOOLBAR_TITLE, getString(R.string.mypage_privacy_policy))
+        startActivity(intent)
     }
 
     companion object {
