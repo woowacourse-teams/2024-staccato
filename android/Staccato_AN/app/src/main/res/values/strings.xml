@@ -74,7 +74,7 @@
     <string name="moment_comment_has_been_deleted">코멘트를 삭제했어요!</string>
 
     // activity_visit_creation / activity_visit_update
-    <string name="visit_creation_photo_drag_hint">*드래그로 순서를 바꿔보세요</string>
+    <string name="visit_creation_photo_drag_hint">*꾹 눌러 사진 순서를 바꿔 보세요</string>
     <string name="visit_creation_staccato_title">스타카토 제목</string>
     <string name="visit_creation_staccato_name_hint">어떤 순간이었나요? 제목을 입력해 주세요</string>
     <string name="visit_creation_place">장소</string>

@@ -8,7 +8,7 @@ class AttachedPhotoItemTouchHelperCallback(
     private val moveListener: ItemMoveListener,
 ) : ItemTouchHelper.Callback() {
     override fun isLongPressDragEnabled(): Boolean {
-        return false
+        return true
     }
 
     override fun getMovementFlags(
