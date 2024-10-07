@@ -99,7 +99,10 @@ class MomentCreationActivity :
 
     override fun onResume() {
         super.onResume()
-        checkLocationSetting()
+        if (viewModel.isPlaceSearchClicked.getValue() == true) {
+            viewModel.setIsPlaceSearchClicked(false)
+            checkLocationSetting()
+        }
     }
 
     override fun onNewPlaceSelected(
@@ -123,6 +126,7 @@ class MomentCreationActivity :
     }
 
     override fun onSearchClicked() {
+        viewModel.setIsPlaceSearchClicked(true)
         checkLocationSetting(isCurrentLocationCallClicked = true)
     }
 
@@ -312,10 +316,14 @@ class MomentCreationActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
-        viewModel.errorMessage.observe(this) {
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
-            showToast(it)
+        viewModel.errorMessage.observe(this) { message ->
+            handleError(message)
         }
+    }
+
+    private fun handleError(errorMessage: String) {
+        window.clearFlags(FLAG_NOT_TOUCHABLE)
+        showToast(errorMessage)
     }
 
     private fun fetchAddress(location: Location) {
