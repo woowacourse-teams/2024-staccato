@@ -197,29 +197,6 @@ fun Button.setMemorySaveButtonActive(
 }
 
 @BindingAdapter(
-    value = ["memoryTitle", "startDate", "endDate", "isPeriodActive", "photoUri", "photoUrl"],
-)
-fun Button.setMemorySaveButtonActive(
-    title: String?,
-    startDate: LocalDate?,
-    endDate: LocalDate?,
-    isPeriodActive: Boolean,
-    photoUri: Uri?,
-    photoUrl: String?,
-) {
-    val doesPeriodNotExist = (startDate == null) || (endDate == null)
-    val needPeriodButNotExist = isPeriodActive && doesPeriodNotExist
-    isEnabled =
-        if (title.isNullOrBlank() || (photoUri != null && photoUrl == null) || needPeriodButNotExist) {
-            setTextColor(resources.getColor(R.color.gray4, null))
-            false
-        } else {
-            setTextColor(resources.getColor(R.color.white, null))
-            true
-        }
-}
-
-@BindingAdapter(
     value = ["staccatoTitle", "address", "visitedAt", "photos", "selectedMemory"],
 )
 fun Button.setStaccatoCreationButtonActive(
