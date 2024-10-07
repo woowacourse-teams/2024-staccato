@@ -73,7 +73,7 @@ class MemoryCreationActivity :
             .setTheme(R.style.DatePickerStyle)
             .setSelection(
                 Pair(
-                    MaterialDatePicker.thisMonthInUtcMilliseconds(),
+                    MaterialDatePicker.todayInUtcMilliseconds(),
                     MaterialDatePicker.todayInUtcMilliseconds(),
                 ),
             ).build()
