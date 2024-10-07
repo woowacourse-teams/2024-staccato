@@ -61,8 +61,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     bind:coilCircleImageUrl="@{viewModel.accountInformation.profileImageUrl}"
-                    bind:coilPlaceHolder="@{@drawable/icon_member}"
-                    tools:src="@drawable/icon_member" />
+                bind:coilPlaceHolder="@{@drawable/icon_member}"
+                tools:src="@drawable/icon_member" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -83,10 +83,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@{viewModel.accountInformation.nickname}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/frame_mypage_profile_image"
-                tools:text="사용자 닉네임" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frame_mypage_profile_image"
+            tools:text="사용자 닉네임" />
 
             <TextView
                 android:id="@+id/tv_mypage_profile_uuid"

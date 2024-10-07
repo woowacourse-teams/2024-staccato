@@ -62,7 +62,8 @@ class MainActivity :
 
     private val sharedViewModel: SharedViewModel by viewModels()
     private val mapsViewModel: MapsViewModel by viewModels()
-    private val locationPermissionManager = LocationPermissionManager(context = this, activity = this)
+    private val locationPermissionManager =
+        LocationPermissionManager(context = this, activity = this)
 
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
@@ -141,7 +142,8 @@ class MainActivity :
 
     private fun enableMyLocation() {
         val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
-        val shouldShowRequestLocationPermissionsRationale = locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
+        val shouldShowRequestLocationPermissionsRationale =
+            locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
 
         when {
             isLocationPermissionGranted -> {
@@ -156,12 +158,18 @@ class MainActivity :
 
             shouldShowRequestLocationPermissionsRationale -> {
                 observeIsPermissionCancelClicked {
-                    locationPermissionManager.showLocationRequestRationaleDialog(supportFragmentManager)
+                    locationPermissionManager.showLocationRequestRationaleDialog(
+                        supportFragmentManager,
+                    )
                 }
             }
 
             else -> {
-                observeIsPermissionCancelClicked { permissionRequestLauncher.launch(locationPermissions) }
+                observeIsPermissionCancelClicked {
+                    permissionRequestLauncher.launch(
+                        locationPermissions,
+                    )
+                }
             }
         }
     }
