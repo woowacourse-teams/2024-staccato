@@ -38,7 +38,7 @@ class WebViewActivity :
 
     private fun setupWebView() {
         webView.webViewClient = WebViewClient()
-        webView.settings.textZoom = 100
+        webView.settings.textZoom = DEFAULT_WEBVIEW_TEXT_SIZE
     }
 
     private fun loadWebView() {
@@ -52,5 +52,6 @@ class WebViewActivity :
     companion object {
         const val EXTRA_TOOLBAR_TITLE = "toolbar_title"
         const val EXTRA_URL = "url"
+        private const val DEFAULT_WEBVIEW_TEXT_SIZE = 100
     }
 }
