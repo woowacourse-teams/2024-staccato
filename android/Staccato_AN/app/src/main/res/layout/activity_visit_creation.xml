@@ -200,26 +200,13 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_current_location"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        style="@style/CurrentLocationStyle"
                         android:layout_marginTop="10dp"
-                        android:clickable="false"
-                        android:focusable="false"
                         android:onClick="@{()->currentLocationHandler.onSearchClicked()}"
-                        android:text="@string/visit_creation_load_current_location"
-                        android:textAppearance="@style/Typography.Body4"
-                        android:textColor="@color/gray4"
-                        app:icon="@drawable/icon_crosshair"
-                        app:iconGravity="textStart"
-                        app:iconPadding="10dp"
-                        app:iconTint="@color/gray3"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:rippleColor="@android:color/transparent"
-                        app:strokeColor="@color/gray3"
                         bind:setCurrentLocationButtonLoading="@{viewModel.isCurrentLocationLoading}" />
 
                     <com.airbnb.lottie.LottieAnimationView
