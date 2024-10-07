@@ -25,7 +25,6 @@ import com.on.staccato.presentation.util.convertExcretaFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -68,6 +67,9 @@ class MomentCreationViewModel
 
         private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
+
+        private val _isCurrentLocationLoading = MutableLiveData<Boolean>()
+        val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
 
         val memoryAndVisitedAt =
             MediatorLiveData<Triple<MemoryCandidates, MemoryCandidate, LocalDateTime>>().apply {
@@ -173,10 +175,15 @@ class MomentCreationViewModel
             address: String?,
             location: Location,
         ) {
+            setCurrentLocationLoading(false)
             _placeName.postValue(address)
             _address.postValue(address)
             _latitude.postValue(location.latitude)
             _longitude.postValue(location.longitude)
+        }
+
+        fun setCurrentLocationLoading(newValue: Boolean) {
+            _isCurrentLocationLoading.postValue(newValue)
         }
 
         fun fetchMemoryCandidates(memoryId: Long) {
@@ -255,7 +262,7 @@ class MomentCreationViewModel
         private fun createPhotoUploadJob(
             context: Context,
             photo: AttachedPhotoUiModel,
-        ) = viewModelScope.async(buildCoroutineExceptionHandler()) {
+        ) = viewModelScope.launch(buildCoroutineExceptionHandler()) {
             val multiPartBody = convertExcretaFile(context, photo.uri, FORM_DATA_NAME)
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {

@@ -14,9 +14,11 @@ import androidx.core.view.isInvisible
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
+import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.button.MaterialButton
 import com.on.staccato.R
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
@@ -521,6 +523,26 @@ fun TextView.setAddress(address: String?) {
 @BindingAdapter("sendEnabled")
 fun ImageView.setSendEnabled(comment: String?) {
     isEnabled = !comment.isNullOrBlank()
+}
+
+@BindingAdapter("setLoadingLottieVisibility")
+fun LottieAnimationView.setLoadingLottieVisibility(isLoading: Boolean?) {
+    if (isLoading == true) {
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.GONE
+    }
+}
+
+@BindingAdapter("setCurrentLocationButtonLoading")
+fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
+    isClickable = isLoading == false
+    if (isLoading == true) {
+        setText(R.string.all_empty)
+        setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+    } else {
+        setText(R.string.visit_creation_load_current_location)
+    }
 }
 
 @BindingAdapter(value = ["thumbnailUri", "thumbnailUrl"])
