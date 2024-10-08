@@ -51,3 +51,19 @@ cloud:
 image:
   folder:
     name: image/
+
+management:
+  server:
+    port: 8080
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-components: when_authorized
+
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
