@@ -3,12 +3,14 @@ package com.on.staccato.presentation.mypage
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMypageBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
+import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.webview.WebViewActivity
 import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_TOOLBAR_TITLE
 import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_URL
@@ -57,6 +59,13 @@ class MyPageActivity :
     private fun copyUuidCodeOnClipBoard(code: String) {
         val clipData: ClipData = ClipData.newPlainText(UUID_CODE_LABEL, code)
         clipboardManager.setPrimaryClip(clipData)
+        showCopySuccessMessageBySdkVersion()
+    }
+
+    private fun showCopySuccessMessageBySdkVersion() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            showToast(getString(R.string.all_clipboard_copy))
+        }
     }
 
     override fun onPrivacyPolicyClicked() {
