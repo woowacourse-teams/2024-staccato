@@ -44,8 +44,8 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_timeline_my_timeline"
             app:layout_constraintEnd_toStartOf="@id/frame_timeline_sort_memory"
             app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline"
-            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
-            bind:timeline="@{viewModel.timeline}">
+            bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
+            bind:visibilityByTimeline="@{viewModel.timeline}">
 
             <Button
                 android:id="@+id/btn_timeline_add_visits"
@@ -141,8 +141,8 @@
             app:layout_constraintHeight_percent="0.25"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline"
-            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
-            bind:timeline="@{viewModel.timeline}"
+            bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
+            bind:visibilityByTimeline="@{viewModel.timeline}"
             tools:visibility="visible" />
 
         <TextView
@@ -156,8 +156,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_timeline_empty"
-            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
-            bind:timeline="@{viewModel.timeline}"
+            bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
+            bind:visibilityByTimeline="@{viewModel.timeline}"
             tools:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -170,8 +170,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_timeline_empty"
-            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
-            bind:timeline="@{viewModel.timeline}"
+            bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
+            bind:visibilityByTimeline="@{viewModel.timeline}"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -580,7 +580,7 @@ fun ScrollView.scrollToBottom(isPeriodActive: Boolean) {
 }
 
 @BindingAdapter(
-    value = ["timeline", "isTimelineLoading"],
+    value = ["visibilityByTimeline", "visibilityByLoading"],
 )
 fun View.setTimelineEmptyViewVisible(
     timeLine: List<TimelineUiModel>? = null,
@@ -595,7 +595,7 @@ fun View.setTimelineEmptyViewVisible(
 }
 
 @BindingAdapter(
-    value = ["timeline", "isTimelineLoading"],
+    value = ["visibilityByTimeline", "visibilityByLoading"],
 )
 fun ViewGroup.setMemoryAddButtonVisible(
     timeLine: List<TimelineUiModel>? = null,
