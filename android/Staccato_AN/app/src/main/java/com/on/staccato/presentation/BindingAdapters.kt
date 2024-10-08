@@ -3,6 +3,7 @@ package com.on.staccato.presentation
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -24,6 +25,7 @@ import com.on.staccato.R
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
+import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -575,4 +577,34 @@ fun ScrollView.scrollToBottom(isPeriodActive: Boolean) {
     if (isPeriodActive) {
         post { fullScroll(ScrollView.FOCUS_DOWN) }
     }
+}
+
+@BindingAdapter(
+    value = ["visibilityByTimeline", "visibilityByLoading"],
+)
+fun View.setTimelineEmptyViewVisible(
+    timeLine: List<TimelineUiModel>? = null,
+    isTimelineLoading: Boolean,
+) {
+    visibility =
+        if (timeLine.isNullOrEmpty() && isTimelineLoading.not()) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+}
+
+@BindingAdapter(
+    value = ["visibilityByTimeline", "visibilityByLoading"],
+)
+fun ViewGroup.setMemoryAddButtonVisible(
+    timeLine: List<TimelineUiModel>? = null,
+    isTimelineLoading: Boolean,
+) {
+    visibility =
+        if (timeLine.isNullOrEmpty() && isTimelineLoading.not()) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
 }
