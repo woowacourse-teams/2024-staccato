@@ -2,15 +2,12 @@ name: Backend CI/CD dev
 
 on:
   push:
-    paths: ['backend/**', '.github/**']
-    branches: [ "develop-be", "develop" ]
-  pull_request:
     paths: [ 'backend/**', '.github/**' ]
-    branches: [ "develop-be" ]
+    branches: [ "develop-be", "develop" ]
 
 jobs:
   ci:
-    runs-on: [self-hosted, dev]
+    runs-on: [ self-hosted, dev ]
 
     defaults:
       run:
@@ -54,7 +51,7 @@ jobs:
 
   cd:
     needs: ci
-    runs-on: [self-hosted, dev]
+    runs-on: [ self-hosted, dev ]
     steps:
       - name: Pull Docker image
         run: |
