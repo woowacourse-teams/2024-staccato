@@ -41,6 +41,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_visit_update">
 
@@ -170,7 +171,6 @@
                     app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/autocomplete_fragment" />
 
-
                 <TextView
                     android:id="@+id/tv_place_address"
                     android:layout_width="0dp"
@@ -202,7 +202,7 @@
                         android:id="@+id/btn_current_location"
                         style="@style/CurrentLocationStyle"
                         android:layout_marginTop="10dp"
-                        android:onClick="@{()->currentLocationHandler.onSearchClicked()}"
+                        android:onClick="@{()->currentLocationHandler.onCurrentLocationClicked()}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

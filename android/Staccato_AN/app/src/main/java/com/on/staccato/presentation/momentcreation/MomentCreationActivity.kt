@@ -99,10 +99,15 @@ class MomentCreationActivity :
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.isPlaceSearchClicked.getValue() == true) {
-            viewModel.setIsPlaceSearchClicked(false)
+        if (viewModel.isPlaceSearchClicked.value != true) {
             checkLocationSetting()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val hasPlaceSearchClicked = autocompleteFragment.isVisible
+        viewModel.setIsPlaceSearchClicked(hasPlaceSearchClicked)
     }
 
     override fun onNewPlaceSelected(
@@ -125,8 +130,7 @@ class MomentCreationActivity :
         viewModel.clearPlace()
     }
 
-    override fun onSearchClicked() {
-        viewModel.setIsPlaceSearchClicked(true)
+    override fun onCurrentLocationClicked() {
         checkLocationSetting(isCurrentLocationCallClicked = true)
     }
 
