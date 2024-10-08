@@ -39,9 +39,10 @@
             app:title="@string/visit_creation_toolbar_title" />
 
         <androidx.core.widget.NestedScrollView
+            android:overScrollMode="never"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBotto정mOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_visit_creation">
 
             <androidx.constraintlayout.widget.ConstraintLayout
