@@ -61,7 +61,7 @@ class MemoryUpdateViewModel
         val isPosting: LiveData<Boolean> get() = _isPosting
 
         private val _isPhotoPosting = MutableLiveData<Boolean>(false)
-        val isPhotoPosting: LiveData<Boolean> get() = _isPosting
+        val isPhotoPosting: LiveData<Boolean> get() = _isPhotoPosting
 
         val isPeriodActive = MutableLiveData<Boolean>()
 
@@ -106,6 +106,7 @@ class MemoryUpdateViewModel
 
         fun setThumbnailUrl(imageResponse: ImageResponse?) {
             _thumbnailUrl.value = imageResponse?.imageUrl
+            _isPhotoPosting.value = false
         }
 
         fun updateMemory() {
