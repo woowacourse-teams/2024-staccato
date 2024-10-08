@@ -44,7 +44,6 @@ class PhotoAttachAdapter(
                 PhotoAttachViewHolder.AttachedPhotoViewHolder(
                     binding,
                     attachedPhotoHandler,
-                    dragListener,
                 )
             }
 
