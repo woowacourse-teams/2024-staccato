@@ -43,8 +43,23 @@ class AttachedPhotoItemTouchHelperCallback(
     ) {
         super.onSelectedChanged(viewHolder, actionState)
         when (actionState) {
-            ItemTouchHelper.ACTION_STATE_IDLE -> moveListener.onStopDrag()
+            ItemTouchHelper.ACTION_STATE_DRAG -> {
+                if (viewHolder != null) {
+                    (viewHolder as PhotoAttachViewHolder.AttachedPhotoViewHolder).startMoving()
+                }
+            }
+
+            ItemTouchHelper.ACTION_STATE_IDLE -> {
+                moveListener.onStopDrag()
+            }
         }
+    }
+
+    override fun clearView(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+    ) {
+        (viewHolder as PhotoAttachViewHolder.AttachedPhotoViewHolder).stopMoving()
     }
 
     override fun onSwiped(

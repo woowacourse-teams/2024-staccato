@@ -105,7 +105,7 @@ class VisitUpdateActivity :
         viewModel.clearPlace()
     }
 
-    override fun onSearchClicked() {
+    override fun onCurrentLocationClicked() {
         checkLocationSetting()
     }
 

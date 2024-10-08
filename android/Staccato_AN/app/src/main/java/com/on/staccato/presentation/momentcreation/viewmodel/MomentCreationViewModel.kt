@@ -82,10 +82,10 @@ class MomentCreationViewModel
         private val _isAddPhotoClicked = MutableSingleLiveData(false)
         val isAddPhotoClicked: SingleLiveData<Boolean> get() = _isAddPhotoClicked
 
-        private val _isPlaceSearchClicked = MutableLiveData(true)
-        val isPlaceSearchClicked: LiveData<Boolean> get() = _isPlaceSearchClicked
-
         private val photoJobs = mutableMapOf<String, Job>()
+
+        private val _isPlaceSearchClicked = MutableLiveData(false)
+        val isPlaceSearchClicked: LiveData<Boolean> get() = _isPlaceSearchClicked
 
         override fun onAddClicked() {
             if ((currentPhotos.value?.size ?: 0) == MAX_PHOTO_NUMBER) {
@@ -158,7 +158,7 @@ class MomentCreationViewModel
         }
 
         fun setIsPlaceSearchClicked(value: Boolean) {
-            _isPlaceSearchClicked.postValue(value)
+            _isPlaceSearchClicked.value = value
         }
 
         private fun initSelectedMemoryAndVisitedAt(
