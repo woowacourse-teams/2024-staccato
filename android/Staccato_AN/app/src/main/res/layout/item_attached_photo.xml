@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="selectedPhotoHandler"
+            type="com.on.staccato.presentation.common.AttachedPhotoHandler" />
+
+        <variable
+            name="attachedPhoto"
+            type="com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/iv_attached_photo"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:contentDescription="@string/all_image_content_description"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            bind:coilImageUri="@{attachedPhoto.uri}"
+            bind:coilImageUrl="@{attachedPhoto.imageUrl}"
+            bind:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            bind:coilRoundingRadius="@{12f}"
+            tools:src="@drawable/shape_all_gray2_4dp" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_attached_photo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white_80"
+            android:padding="50dp"
+            android:progress="30"
+            android:visibility="@{attachedPhoto.imageUrl == null ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBaseline_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/iv_delete_photo"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="130dp"
+            android:layout_marginBottom="130dp"
+            android:onClick="@{()->selectedPhotoHandler.onDeleteClicked(attachedPhoto)}"
+            android:src="@drawable/icon_delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

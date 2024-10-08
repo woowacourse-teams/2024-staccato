@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="com.on.staccato.presentation.common.PhotoAttachHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bottom_sheet_20dp"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tv_photo_attach_title"
+            style="@style/SubTitleStyle"
+            android:text="@string/all_photo_attach"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_photo_attach_camera"
+            style="@style/PhotoAttachMenuStyle"
+            android:layout_marginTop="24dp"
+            android:onClick="@{()->handler.onCameraClicked()}"
+            android:text="@string/photo_attach_camera"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_photo_attach_title" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_photo_attach"
+            style="@style/DividerStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_photo_attach_camera" />
+
+        <TextView
+            android:id="@+id/tv_photo_attach_album"
+            style="@style/PhotoAttachMenuStyle"
+            android:onClick="@{()->handler.onGalleryClicked()}"
+            android:text="@string/photo_attach_album"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_photo_attach" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

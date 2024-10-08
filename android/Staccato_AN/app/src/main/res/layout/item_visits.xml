@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="com.on.staccato.presentation.memory.MemoryHandler" />
+
+        <variable
+            name="visit"
+            type="com.on.staccato.presentation.memory.model.MemoryVisitUiModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:onClick="@{() -> handler.onVisitClicked(visit.id)}"
+        android:padding="4dp">
+
+        <ImageView
+            android:id="@+id/iv_visits"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/all_image_content_description"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="4:5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            bind:coilPlaceHolder="@{@drawable/staccato_gradient}"
+            bind:coilRoundedCornerImageUrl="@{visit.visitImageUrl}"
+            bind:coilRoundingRadius="@{16}"
+            tools:src="@drawable/shape_all_gray2_4dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/staccato_gradient"
+            app:layout_constraintBottom_toBottomOf="@id/iv_visits"
+            app:layout_constraintEnd_toEndOf="@id/iv_visits"
+            app:layout_constraintStart_toStartOf="@id/iv_visits"
+            app:layout_constraintTop_toTopOf="@id/iv_visits" />
+
+        <TextView
+            android:id="@+id/tv_visits_place_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="2dp"
+            android:text="@{visit.staccatoTitle}"
+            android:textAppearance="@style/Typography.Title3"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/tv_visits_visited_at"
+            app:layout_constraintEnd_toEndOf="@id/iv_visits"
+            app:layout_constraintStart_toStartOf="@id/iv_visits"
+            tools:text="아주 아주 아주 아주 아주 아주 아주 아주 긴 장소 이름" />
+
+        <ImageView
+            android:id="@+id/iv_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="12dp"
+            android:contentDescription="@string/all_image_content_description"
+            android:src="@drawable/calendar_today"
+            app:layout_constraintBottom_toBottomOf="@id/iv_visits"
+            app:layout_constraintEnd_toStartOf="@id/tv_visits_visited_at"
+            app:layout_constraintStart_toStartOf="@id/iv_visits"
+            app:layout_constraintTop_toTopOf="@id/tv_visits_visited_at" />
+
+        <TextView
+            android:id="@+id/tv_visits_visited_at"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:text="@{@string/all_date_dots_format(visit.visitedAt.year, visit.visitedAt.monthValue, visit.visitedAt.dayOfMonth)}"
+            android:textAppearance="@style/Typography.Body4"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/iv_visits"
+            app:layout_constraintEnd_toEndOf="@id/iv_visits"
+            app:layout_constraintStart_toEndOf="@id/iv_calendar"
+            tools:text="2024. 03. 21" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

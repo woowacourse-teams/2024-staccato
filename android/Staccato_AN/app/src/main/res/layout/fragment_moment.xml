@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="toolbarHandler"
+            type="com.on.staccato.presentation.moment.MomentToolbarHandler" />
+
+        <variable
+            name="viewModel"
+            type="com.on.staccato.presentation.moment.viewmodel.MomentViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_moment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".presentation.ui.staccato.StaccatoActivity">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_moment"
+            style="@style/DefaultToolbarStyle"
+            android:paddingEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_detail_delete"
+                style="@style/ToolbarMenuStyle"
+                android:onClick="@{() -> toolbarHandler.onDeleteClicked()}"
+                android:text="@string/all_delete" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_detail_update"
+                style="@style/ToolbarMenuStyle"
+                android:onClick="@{() -> toolbarHandler.onUpdateClicked(viewModel.momentDetail.memoryId, viewModel.momentDetail.memoryTitle)}"
+                android:text="@string/all_update" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_moment">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/vp_photo_horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:visibility="@{viewModel.momentDetail.momentImageUrls.isEmpty() ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/item_viewpage_photo" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_photo_horizontal"
+                    android:layout_width="50dp"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#00000000"
+                    android:visibility="@{viewModel.momentDetail.momentImageUrls.size > 1 ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vp_photo_horizontal"
+                    app:tabBackground="@drawable/selector_viewpager_indicator"
+                    app:tabGravity="center"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabIndicatorHeight="0dp" />
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@{viewModel.momentDetail.staccatoTitle}"
+                    android:textAppearance="@style/Typography.Title1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tab_photo_horizontal"
+                    tools:text="스타카토 제목" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider1"
+                    style="@style/DividerStyle"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+                <TextView
+                    android:id="@+id/tv_place_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@{viewModel.momentDetail.placeName}"
+                    android:textAppearance="@style/Typography.Body1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider1"
+                    tools:text="장소 제목" />
+
+                <TextView
+                    android:id="@+id/tv_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@{viewModel.momentDetail.address}"
+                    android:textAppearance="@style/Typography.Body4"
+                    app:layout_constraintStart_toStartOf="@id/tv_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_place_name"
+                    tools:text="상세 주소" />
+
+                <TextView
+                    android:id="@+id/tv_visited_at"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:textAppearance="@style/Typography.Body2"
+                    app:layout_constraintStart_toStartOf="@id/tv_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail"
+                    bind:visitedAt="@{viewModel.momentDetail.visitedAt}"
+                    tools:text="2024년 7월 15일 2시에 방문했어요!" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider2"
+                    style="@style/DividerStyle"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at" />
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/container_moment_feeling_selection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider2"
+                    tools:layout="@layout/fragment_moment_feeling_selection" />
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/container_moment_comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/container_moment_feeling_selection"
+                    tools:layout="@layout/fragment_moment_comments" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
