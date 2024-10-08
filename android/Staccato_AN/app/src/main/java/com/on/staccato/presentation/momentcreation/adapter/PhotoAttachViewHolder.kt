@@ -27,5 +27,13 @@ sealed class PhotoAttachViewHolder(binding: ViewDataBinding) :
             binding.attachedPhoto = item
             binding.selectedPhotoHandler = attachedPhotoHandler
         }
+
+        fun startMoving() {
+            binding.ivAttachedPhoto.alpha = 0.6F
+        }
+
+        fun stopMoving() {
+            binding.ivAttachedPhoto.alpha = 1F
+        }
     }
 }
