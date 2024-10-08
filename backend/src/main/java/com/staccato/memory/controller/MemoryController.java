@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.staccato.config.auth.LoginMember;
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.controller.docs.MemoryControllerDocs;
 import com.staccato.memory.service.MemoryService;
@@ -30,6 +31,7 @@ import com.staccato.memory.service.dto.response.MemoryResponses;
 
 import lombok.RequiredArgsConstructor;
 
+@Trace
 @Validated
 @RestController
 @RequestMapping("/memories")

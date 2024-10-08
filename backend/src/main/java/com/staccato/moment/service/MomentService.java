@@ -2,7 +2,8 @@ package com.staccato.moment.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.staccato.comment.repository.CommentRepository;
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
@@ -13,25 +14,25 @@ import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
-import com.staccato.moment.service.dto.request.MomentUpdateRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
-
 import lombok.RequiredArgsConstructor;
 
+@Trace
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MomentService {
     private final MomentRepository momentRepository;
     private final MemoryRepository memoryRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public MomentIdResponse createMoment(MomentRequest momentRequest, Member member) {
         Memory memory = getMemoryById(momentRequest.memoryId());
-        validateOwner(memory, member);
+        validateMemoryOwner(memory, member);
         Moment moment = momentRequest.toMoment(memory);
 
         momentRepository.save(moment);
@@ -52,19 +53,24 @@ public class MomentService {
 
     public MomentDetailResponse readMomentById(long momentId, Member member) {
         Moment moment = getMomentById(momentId);
-        validateOwner(moment.getMemory(), member);
+        validateMemoryOwner(moment.getMemory(), member);
         return new MomentDetailResponse(moment);
     }
 
     @Transactional
     public void updateMomentById(
             long momentId,
-            MomentUpdateRequest momentUpdateRequest,
+            MomentRequest momentRequest,
             Member member
     ) {
         Moment moment = getMomentById(momentId);
-        validateOwner(moment.getMemory(), member);
-        moment.update(momentUpdateRequest.placeName(), momentUpdateRequest.toMomentImages());
+        validateMemoryOwner(moment.getMemory(), member);
+
+        Memory targetMemory = getMemoryById(momentRequest.memoryId());
+        validateMemoryOwner(targetMemory, member);
+
+        Moment updatedMoment = momentRequest.toMoment(targetMemory);
+        moment.update(updatedMoment);
     }
 
     private Moment getMomentById(long momentId) {
@@ -75,22 +81,23 @@ public class MomentService {
     @Transactional
     public void deleteMomentById(long momentId, Member member) {
         momentRepository.findById(momentId).ifPresent(moment -> {
-            validateOwner(moment.getMemory(), member);
+            validateMemoryOwner(moment.getMemory(), member);
+            commentRepository.deleteAllByMomentId(momentId);
             momentRepository.deleteById(momentId);
         });
-    }
-
-    private void validateOwner(Memory memory, Member member) {
-        if (memory.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
     }
 
     @Transactional
     public void updateMomentFeelingById(long momentId, Member member, FeelingRequest feelingRequest) {
         Moment moment = getMomentById(momentId);
-        validateOwner(moment.getMemory(), member);
+        validateMemoryOwner(moment.getMemory(), member);
         Feeling feeling = feelingRequest.toFeeling();
         moment.changeFeeling(feeling);
+    }
+
+    private void validateMemoryOwner(Memory memory, Member member) {
+        if (memory.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.staccato.fixture.memory;
 
 import java.time.LocalDate;
-
 import com.staccato.memory.service.dto.request.MemoryRequest;
 
 public class MemoryRequestFixture {

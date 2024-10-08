@@ -1,22 +1,8 @@
 package com.staccato.memory.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,7 +16,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
@@ -39,13 +24,29 @@ import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.fixture.memory.MemoryNameResponsesFixture;
 import com.staccato.fixture.memory.MemoryRequestFixture;
 import com.staccato.fixture.memory.MemoryResponsesFixture;
+import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
+import com.staccato.memory.domain.Memory;
 import com.staccato.memory.service.MemoryService;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
 import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MemoryResponses;
+import com.staccato.memory.service.dto.response.MomentResponse;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemoryController.class)
 class MemoryControllerTest {
@@ -60,9 +61,9 @@ class MemoryControllerTest {
 
     static Stream<MemoryRequest> memoryRequestProvider() {
         return Stream.of(
-                new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
                 new MemoryRequest(null, "2023 여름 휴가", "친구들과 함께한 여름 휴가 추억", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", null, LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10))
+                new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", null, LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
+                new MemoryRequest("https://example.com/memorys/geumohrm.jpg", "2023 여름 휴가", null, null, null)
         );
     }
 
@@ -87,10 +88,70 @@ class MemoryControllerTest {
         );
     }
 
-    @DisplayName("사용자가 추억 정보를 입력하면, 새로운 추억을 생성한다.")
+    @DisplayName("추억을 생성하는 요청/응답의 역직렬화/직렬화에 성공한다.")
+    @Test
+    void createMemory() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        String memoryRequest = """
+                {
+                    "memoryThumbnailUrl": "https://example.com/memorys/geumohrm.jpg",
+                    "memoryTitle": "2023 여름 휴가",
+                    "description": "친구들과 함께한 여름 휴가 여행",
+                    "startAt": "2023-07-01",
+                    "endAt": "2023-07-10"
+                }
+                """;
+        when(memoryService.createMemory(any(), any())).thenReturn(new MemoryIdResponse(1));
+        String expectedResponse = """
+                {
+                    "memoryId" : 1
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(post("/memories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(memoryRequest)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isCreated())
+                .andExpect(header().string(HttpHeaders.LOCATION, "/memories/1"))
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("기간이 없는 추억을 생성하는 요청/응답의 역직렬화/직렬화에 성공한다.")
+    @Test
+    void createMemoryWithoutTerm() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        String memoryRequest = """
+                {
+                    "memoryThumbnailUrl": "https://example.com/memorys/geumohrm.jpg",
+                    "memoryTitle": "2023 여름 휴가",
+                    "description": "친구들과 함께한 여름 휴가 여행"
+                }
+                """;
+        when(memoryService.createMemory(any(), any())).thenReturn(new MemoryIdResponse(1));
+        String expectedResponse = """
+                {
+                    "memoryId" : 1
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(post("/memories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(memoryRequest)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isCreated())
+                .andExpect(header().string(HttpHeaders.LOCATION, "/memories/1"))
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("사용자가 선택적으로 추억 정보를 입력하면, 새로운 추억을 생성한다.")
     @ParameterizedTest
     @MethodSource("memoryRequestProvider")
-    void createMemory(MemoryRequest memoryRequest) throws Exception {
+    void createMemoryWithoutOption(MemoryRequest memoryRequest) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         when(memoryService.createMemory(any(), any())).thenReturn(new MemoryIdResponse(1));
@@ -111,7 +172,6 @@ class MemoryControllerTest {
     void failCreateMemory(MemoryRequest memoryRequest, String expectedMessage) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        when(memoryService.createMemory(any(MemoryRequest.class), any(Member.class))).thenReturn(new MemoryIdResponse(1));
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
@@ -123,36 +183,87 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("사용자가 모든 추억 목록을 조회한다.")
+    @DisplayName("사용자가 모든 추억 목록을 조회하는 응답 직렬화에 성공한다.")
     @Test
     void readAllMemory() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        MemoryResponses memoryResponses = MemoryResponsesFixture.create(MemoryFixture.create());
+        Memory memory = MemoryFixture.create(MemberFixture.create());
+        MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
         when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
+        String expectedResponse = """
+                {
+                    "memories": [
+                        {
+                            "memoryId": null,
+                            "memoryTitle": "2024 여름 휴가",
+                            "memoryThumbnailUrl": "https://example.com/memorys/geumohrm.jpg",
+                            "startAt": "2024-07-01",
+                            "endAt": "2024-07-10"
+                        }
+                    ]
+                }
+                """;
 
         // when & then
         mockMvc.perform(get("/memories")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(memoryResponses)));
+                .andExpect(content().json(expectedResponse));
     }
 
-    @DisplayName("특정 날짜를 포함하고 있는 모든 추억 목록을 조회한다.")
+    @DisplayName("사용자가 기간이 없는 추억을 포함한 목록을 조회하는 응답 직렬화에 성공한다.")
+    @Test
+    void readAllMemoryWithoutTerm() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        Memory memory = MemoryFixture.create(MemberFixture.create());
+        MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
+        when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
+        String expectedResponse = """
+                {
+                    "memories": [
+                        {
+                            "memoryId": null,
+                            "memoryTitle": "2024 여름 휴가",
+                            "memoryThumbnailUrl": "https://example.com/memorys/geumohrm.jpg"
+                        }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/memories")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("특정 날짜를 포함하고 있는 모든 추억 목록을 조회하는 응답 직렬화에 성공한다.")
     @Test
     void readAllMemoryIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        MemoryNameResponses memoryNameResponses = MemoryNameResponsesFixture.create(MemoryFixture.create());
+        Memory memory = MemoryFixture.create(MemberFixture.create());
+        MemoryNameResponses memoryNameResponses = MemoryNameResponsesFixture.create(memory);
         when(memoryService.readAllMemoriesIncludingDate(any(Member.class), any())).thenReturn(memoryNameResponses);
-        String currentDate = "2024-07-01";
+        String expectedResponse = """
+                {
+                    "memories": [
+                        {
+                            "memoryId": null,
+                            "memoryTitle": "2024 여름 휴가"
+                        }
+                    ]
+                }
+                """;
 
         // when & then
         mockMvc.perform(get("/memories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
-                        .param("currentDate", currentDate))
+                        .param("currentDate", LocalDate.now().toString()))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(memoryNameResponses)));
+                .andExpect(content().json(expectedResponse));
     }
 
     @DisplayName("잘못된 날짜 형식으로 추억 목록 조회를 시도하면 예외가 발생한다.")
@@ -171,20 +282,87 @@ class MemoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("사용자가 특정 추억을 조회한다.")
+    @DisplayName("사용자가 특정 추억을 조회하는 응답 직렬화에 한다.")
     @Test
     void readMemory() throws Exception {
         // given
         long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(MemoryFixture.create(), List.of());
+        Memory memory = MemoryFixture.create(MemberFixture.create());
+        MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
+        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
+        String expectedResponse = """
+                {
+                    "memoryId": null,
+                    "memoryThumbnailUrl": "https://example.com/memorys/geumohrm.jpg",
+                    "memoryTitle": "2024 여름 휴가",
+                    "startAt": "2024-07-01",
+                    "endAt": "2024-07-10",
+                    "description": "친구들과 함께한 여름 휴가 추억",
+                    "mates": [
+                        {
+                            "memberId": null,
+                            "nickname": "staccato"
+                        }
+                    ],
+                    "moments": [
+                            {
+                                "momentId": null,
+                                "staccatoTitle": "staccatoTitle",
+                                "momentImageUrl": "image.jpg",
+                                "visitedAt": "2024-07-01T10:00:00"
+                            }
+                    ]
+                }
+                """;
 
         // when & then
         mockMvc.perform(get("/memories/{memoryId}", memoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(memoryDetailResponse)));
+                .andExpect(content().json(expectedResponse));
+    }
+
+
+    @DisplayName("사용자가 기간이 없는 특정 추억을 조회하는 응답 직렬화에 한다.")
+    @Test
+    void readMemoryWithoutTerm() throws Exception {
+        // given
+        long memoryId = 1;
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        Memory memory = MemoryFixture.create(null, null, MemberFixture.create());
+        MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
+        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
+        when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
+        String expectedResponse = """
+                {
+                    "memoryId": null,
+                    "memoryThumbnailUrl": "https://example.com/memorys/geumohrm.jpg",
+                    "memoryTitle": "2024 여름 휴가",
+                    "description": "친구들과 함께한 여름 휴가 추억",
+                    "mates": [
+                        {
+                            "memberId": null,
+                            "nickname": "staccato"
+                        }
+                    ],
+                    "moments": [
+                            {
+                                "momentId": null,
+                                "staccatoTitle": "staccatoTitle",
+                                "momentImageUrl": "image.jpg",
+                                "visitedAt": "2024-07-01T10:00:00"
+                            }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/memories/{memoryId}", memoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
     }
 
     @DisplayName("적합한 경로변수와 데이터를 통해 스타카토 수정에 성공한다.")
@@ -199,7 +377,7 @@ class MemoryControllerTest {
         mockMvc.perform(put("/memories/{memoryId}", memoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(memoryRequest).getBytes()))
+                        .content(objectMapper.writeValueAsString(memoryRequest)))
                 .andExpect(status().isOk());
     }
 
@@ -216,7 +394,7 @@ class MemoryControllerTest {
         mockMvc.perform(put("/memories/{memoryId}", memoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(memoryRequest).getBytes()))
+                        .content(objectMapper.writeValueAsString(memoryRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -234,7 +412,7 @@ class MemoryControllerTest {
         mockMvc.perform(put("/memories/{memoryId}", memoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(memoryRequest).getBytes()))
+                        .content(objectMapper.writeValueAsString(memoryRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
