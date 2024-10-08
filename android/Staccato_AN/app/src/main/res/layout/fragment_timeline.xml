@@ -118,7 +118,7 @@
             tools:listitem="@layout/item_timeline" />
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lotti_dot_loading"
+            android:id="@+id/lottie_timeline_loading"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:visibility="@{viewModel.isTimelineLoading ? View.VISIBLE : View.GONE}"
