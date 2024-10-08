@@ -25,6 +25,7 @@
     <string name="all_setting">설정</string>
     <string name="all_location_permission_denial">위치 권한을 거부 하셨습니다.</string>
     <string name="all_webview_failure">웹 브라우저를 띄울 수 없습니다.</string>
+    <string name="all_clipboard_copy">클립보드에 복사했어요!</string>
 
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>

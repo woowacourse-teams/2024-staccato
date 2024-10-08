@@ -159,6 +159,7 @@ class MemoryUpdateViewModel
         }
 
         private fun updateSuccessStatus() {
+            _isPosting.value = true
             _isUpdateSuccess.setValue(true)
         }
 
