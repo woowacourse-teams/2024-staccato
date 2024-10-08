@@ -36,7 +36,8 @@ import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_
 import com.on.staccato.presentation.momentcreation.CurrentLocationHandler
 import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.momentcreation.dialog.MemoryVisitedAtSelectionFragment
+import com.on.staccato.presentation.momentcreation.dialog.MemorySelectionFragment
+import com.on.staccato.presentation.momentcreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
@@ -45,6 +46,8 @@ import com.on.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class VisitUpdateActivity :
@@ -56,8 +59,11 @@ class VisitUpdateActivity :
     override val layoutResourceId = R.layout.activity_visit_update
     private val viewModel: VisitUpdateViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
-    private val memoryVisitedAtSelectionFragment by lazy {
-        MemoryVisitedAtSelectionFragment()
+    private val memorySelectionFragment by lazy {
+        MemorySelectionFragment()
+    }
+    private val visitedAtSelectionFragment by lazy {
+        VisitedAtSelectionFragment()
     }
     private val photoAttachFragment by lazy {
         PhotoAttachFragment().apply { setMultipleAbleOption(true) }
@@ -108,10 +114,19 @@ class VisitUpdateActivity :
     }
 
     override fun onMemorySelectionClicked() {
-        if (!memoryVisitedAtSelectionFragment.isAdded) {
-            memoryVisitedAtSelectionFragment.show(
+        if (!memorySelectionFragment.isAdded) {
+            memorySelectionFragment.show(
                 fragmentManager,
-                MemoryVisitedAtSelectionFragment.TAG,
+                MemorySelectionFragment.TAG,
+            )
+        }
+    }
+
+    override fun onVisitedAtSelectionClicked() {
+        if (!visitedAtSelectionFragment.isAdded) {
+            visitedAtSelectionFragment.show(
+                fragmentManager,
+                VisitedAtSelectionFragment.TAG,
             )
         }
     }
@@ -127,6 +142,7 @@ class VisitUpdateActivity :
         initBinding()
         initToolbar()
         initMemorySelectionFragment()
+        initVisitedAtSelectionFragment()
         initAdapter()
         initItemTouchHelper()
         observeViewModelData()
@@ -241,8 +257,18 @@ class VisitUpdateActivity :
     }
 
     private fun initMemorySelectionFragment() {
-        memoryVisitedAtSelectionFragment.setOnSelected { selectedMemory, selectedVisitedAt ->
-            viewModel.selectMemoryVisitedAt(selectedMemory, selectedVisitedAt)
+        memorySelectionFragment.setOnMemorySelected { selectedMemory ->
+            val startAt = selectedMemory.startAt ?: LocalDate.now()
+            val initializedDateTime =
+                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
+            viewModel.selectedVisitedAt(initializedDateTime)
+            viewModel.selectMemory(selectedMemory)
+        }
+    }
+
+    private fun initVisitedAtSelectionFragment() {
+        visitedAtSelectionFragment.setOnVisitedAtSelected { selectedVisitedAt ->
+            viewModel.selectedVisitedAt(selectedVisitedAt)
         }
     }
 
@@ -266,12 +292,20 @@ class VisitUpdateActivity :
                 listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
             )
         }
+        viewModel.memoryCandidates.observe(this) {
+            memorySelectionFragment.setItems(it.memoryCandidate)
+        }
         viewModel.selectedMemory.observe(this) { selectedMemory ->
-            memoryVisitedAtSelectionFragment.initMemoryCandidates(
-                viewModel.memoryCandidates.value?.memoryCandidate ?: emptyList(),
-                selectedMemory,
-                viewModel.selectedVisitedAt.value!!,
-            )
+            val startAt = selectedMemory.startAt ?: LocalDate.now()
+            val initializedDateTime =
+                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
+            memorySelectionFragment.updateKeyMemory(selectedMemory)
+            visitedAtSelectionFragment.initDateCandidates(selectedMemory, initializedDateTime)
+        }
+        viewModel.selectedVisitedAt.observe(this) { selectedVisitedAt ->
+            if (selectedVisitedAt != null) {
+                visitedAtSelectionFragment.initKeyWithSelectedValues(selectedVisitedAt)
+            }
         }
         viewModel.errorMessage.observe(this) { message ->
             handleError(message)

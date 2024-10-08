@@ -5,7 +5,6 @@ import android.location.Location
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -71,49 +70,6 @@ class MomentCreationViewModel
         private val _isCurrentLocationLoading = MutableLiveData<Boolean>()
         val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
 
-        val memoryAndVisitedAt =
-            MediatorLiveData<Triple<MemoryCandidates, MemoryCandidate, LocalDateTime>>().apply {
-                var latestMemoryCandidates: MemoryCandidates? = null
-                var latestSelectedMemory: MemoryCandidate? = null
-                var latestSelectedVisitedAt: LocalDateTime? = null
-
-                addSource(memoryCandidates) { memories ->
-                    latestMemoryCandidates = memories
-                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestSelectedVisitedAt != null) {
-                        value =
-                            Triple(
-                                latestMemoryCandidates!!,
-                                latestSelectedMemory!!,
-                                latestSelectedVisitedAt!!,
-                            )
-                    }
-                }
-
-                addSource(selectedMemory) { selectedMemory ->
-                    latestSelectedMemory = selectedMemory
-                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestSelectedVisitedAt != null) {
-                        value =
-                            Triple(
-                                latestMemoryCandidates!!,
-                                latestSelectedMemory!!,
-                                latestSelectedVisitedAt!!,
-                            )
-                    }
-                }
-
-                addSource(selectedVisitedAt) { visitedAt ->
-                    latestSelectedVisitedAt = visitedAt
-                    if (latestMemoryCandidates != null && latestSelectedMemory != null && latestSelectedVisitedAt != null) {
-                        value =
-                            Triple(
-                                latestMemoryCandidates!!,
-                                latestSelectedMemory!!,
-                                latestSelectedVisitedAt!!,
-                            )
-                    }
-                }
-            }
-
         private val _createdStaccatoId = MutableSingleLiveData<Long>()
         val createdStaccatoId: SingleLiveData<Long> get() = _createdStaccatoId
 
@@ -125,6 +81,9 @@ class MomentCreationViewModel
 
         private val _isAddPhotoClicked = MutableSingleLiveData(false)
         val isAddPhotoClicked: SingleLiveData<Boolean> get() = _isAddPhotoClicked
+
+        private val _isPlaceSearchClicked = MutableLiveData(true)
+        val isPlaceSearchClicked: LiveData<Boolean> get() = _isPlaceSearchClicked
 
         private val photoJobs = mutableMapOf<String, Job>()
 
@@ -143,12 +102,12 @@ class MomentCreationViewModel
             }
         }
 
-        fun selectMemoryVisitedAt(
-            memory: MemoryCandidate,
-            visitedAt: LocalDateTime,
-        ) {
-            _selectedMemory.value = memory
+        fun selectedVisitedAt(visitedAt: LocalDateTime) {
             _selectedVisitedAt.value = visitedAt
+        }
+
+        fun selectMemory(memory: MemoryCandidate) {
+            _selectedMemory.value = memory
         }
 
         fun selectNewPlace(
@@ -198,6 +157,10 @@ class MomentCreationViewModel
             }
         }
 
+        fun setIsPlaceSearchClicked(value: Boolean) {
+            _isPlaceSearchClicked.postValue(value)
+        }
+
         private fun initSelectedMemoryAndVisitedAt(
             memoryId: Long,
             memoryCandidates: List<MemoryCandidate>,
@@ -209,14 +172,25 @@ class MomentCreationViewModel
                     memoryCandidates.first { memoryId == it.memoryId }
                 }
             _selectedMemory.value = targetMemory
-            _selectedVisitedAt.value = getClosestDateTime(targetMemory.endAt)
+            _selectedVisitedAt.value = getClosestDateTime(targetMemory.startAt, targetMemory.endAt)
         }
 
-        private fun getClosestDateTime(mostRecentDate: LocalDate?): LocalDateTime {
+        private fun getClosestDateTime(
+            startAt: LocalDate?,
+            endAt: LocalDate?,
+        ): LocalDateTime {
             val now = LocalDateTime.now()
-            return mostRecentDate?.atStartOfDay()?.let {
-                if (it.isAfter(now)) now else it
-            } ?: now
+
+            if (startAt == null || endAt == null) return now
+
+            val startDateTime = startAt.atStartOfDay()
+            val endDateTime = endAt.atStartOfDay()
+
+            return when {
+                now.isBefore(startDateTime) -> startDateTime // 현재 시간이 startAt 이전일 때 startAt 반환
+                now.isAfter(endDateTime) -> endDateTime // 현재 시간이 endAt 이후일 때 endAt 반환
+                else -> now // 현재 시간이 범위 내에 있을 때 now 반환
+            }
         }
 
         fun updateSelectedImageUris(newUris: Array<Uri>) {

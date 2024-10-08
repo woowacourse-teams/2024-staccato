@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.ProgressBar
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
@@ -178,38 +179,19 @@ fun ImageView.setRoundedCornerImageByUriWithGlide(
 }
 
 @BindingAdapter(
-    value = ["memoryTitle", "startDate", "endDate", "isPhotoPosting"],
+    value = ["memoryTitle", "startDate", "endDate", "isPeriodActive", "isPhotoPosting"],
 )
 fun Button.setMemorySaveButtonActive(
     title: String?,
     startDate: LocalDate?,
     endDate: LocalDate?,
+    isPeriodActive: Boolean,
     isPhotoPosting: Boolean?,
 ) {
-    val areBothNullOrNotNull = (startDate == null) == (endDate == null)
+    val isPeriodNotExistent = (startDate == null) || (endDate == null)
+    val isPeriodRequirementsInvalid = isPeriodActive && isPeriodNotExistent
     isEnabled =
-        if (title.isNullOrBlank() || isPhotoPosting == true || !areBothNullOrNotNull) {
-            setTextColor(resources.getColor(R.color.gray4, null))
-            false
-        } else {
-            setTextColor(resources.getColor(R.color.white, null))
-            true
-        }
-}
-
-@BindingAdapter(
-    value = ["memoryTitle", "startDate", "endDate", "photoUri", "photoUrl"],
-)
-fun Button.setMemorySaveButtonActive(
-    title: String?,
-    startDate: LocalDate?,
-    endDate: LocalDate?,
-    photoUri: Uri?,
-    photoUrl: String?,
-) {
-    val areBothNullOrNotNull = (startDate == null) == (endDate == null)
-    isEnabled =
-        if (title.isNullOrBlank() || (photoUri != null && photoUrl == null) || !areBothNullOrNotNull) {
+        if (title.isNullOrBlank() || isPhotoPosting == true || isPeriodRequirementsInvalid) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -301,7 +283,7 @@ fun TextView.setMemoryPeriod(
 }
 
 @BindingAdapter("visitedAtConfirmButtonActive")
-fun Button.setVisitedAtConfirmButtonActive(items: List<LocalDateTime>?) {
+fun Button.setVisitedAtConfirmButtonActive(items: List<Int>?) {
     isEnabled =
         if (items.isNullOrEmpty()) {
             setTextColor(resources.getColor(R.color.gray4, null))
@@ -369,7 +351,7 @@ fun TextView.setMemoryIsEmptyVisibility(memoryCandidates: MemoryCandidates?) {
 }
 
 @BindingAdapter("visitedAtIsEmptyVisibility")
-fun TextView.setVisitedAtIsEmptyVisibility(items: List<LocalDateTime>?) {
+fun TextView.setVisitedAtIsEmptyVisibility(items: List<Int>?) {
     isGone = !items.isNullOrEmpty()
 }
 
@@ -588,6 +570,13 @@ fun Button.setRecoveryEnabled(recoveryCode: String?) {
             setTextColor(resources.getColor(R.color.white, null))
             true
         }
+}
+
+@BindingAdapter("scrollToBottom")
+fun ScrollView.scrollToBottom(isPeriodActive: Boolean) {
+    if (isPeriodActive) {
+        post { fullScroll(ScrollView.FOCUS_DOWN) }
+    }
 }
 
 @BindingAdapter(

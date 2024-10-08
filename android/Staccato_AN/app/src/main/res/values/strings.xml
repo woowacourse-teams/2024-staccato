@@ -24,6 +24,7 @@
     <string name="all_posting_photo">사진을 게시하는 중이에요</string>
     <string name="all_setting">설정</string>
     <string name="all_location_permission_denial">위치 권한을 거부 하셨습니다.</string>
+    <string name="all_webview_failure">웹 브라우저를 띄울 수 없습니다.</string>
 
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
@@ -73,7 +74,7 @@
     <string name="moment_comment_has_been_deleted">코멘트를 삭제했어요!</string>
 
     // activity_visit_creation / activity_visit_update
-    <string name="visit_creation_photo_drag_hint">*드래그로 순서를 바꿔보세요</string>
+    <string name="visit_creation_photo_drag_hint">*꾹 눌러 사진 순서를 바꿔 보세요</string>
     <string name="visit_creation_staccato_title">스타카토 제목</string>
     <string name="visit_creation_staccato_name_hint">어떤 순간이었나요? 제목을 입력해 주세요</string>
     <string name="visit_creation_place">장소</string>
@@ -105,6 +106,13 @@
     <string name="recovery_subtitle">고유 코드를 입력해주세요</string>
     <string name="recovery_code_hint">ex) bt2hnhd4-07kght-0pp2ln</string>
     <string name="recovery_load">불러오기</string>
+
+    // activity_mypage
+    <string name="mypage_title">마이페이지</string>
+    <string name="mypage_uuid">복구 코드 복사하기</string>
+    <string name="mypage_privacy_policy">개인정보처리방침</string>
+    <string name="mypage_privacy_policy_url">https://app.websitepolicies.com/policies/view/7jel2uwv</string>
+    <string name="mypage_app_version">앱 버전 1.0.2</string>
 
     // fragment_photo_attach
     <string name="photo_attach_title">사진을 등록해 주세요</string>
