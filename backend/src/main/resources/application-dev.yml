@@ -63,7 +63,6 @@ management:
     web:
       exposure:
         include: info, health, metrics, env, beans, threaddump, loggers, prometheus
-      base-path: "/manage"
   endpoint:
     health:
       show-components: when_authorized
