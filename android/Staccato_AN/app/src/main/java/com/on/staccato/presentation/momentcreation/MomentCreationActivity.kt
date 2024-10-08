@@ -99,7 +99,18 @@ class MomentCreationActivity :
 
     override fun onResume() {
         super.onResume()
-        checkLocationSetting()
+        if (viewModel.isPlaceSearchClicked.value != true) {
+            checkLocationSetting()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (autocompleteFragment.isVisible) {
+            viewModel.setIsPlaceSearchClicked(true)
+        } else {
+            viewModel.setIsPlaceSearchClicked(false)
+        }
     }
 
     override fun onNewPlaceSelected(
@@ -122,7 +133,7 @@ class MomentCreationActivity :
         viewModel.clearPlace()
     }
 
-    override fun onSearchClicked() {
+    override fun onCurrentLocationClicked() {
         checkLocationSetting(isCurrentLocationCallClicked = true)
     }
 
