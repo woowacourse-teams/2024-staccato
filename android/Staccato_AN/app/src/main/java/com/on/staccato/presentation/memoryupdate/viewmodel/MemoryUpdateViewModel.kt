@@ -106,6 +106,7 @@ class MemoryUpdateViewModel
 
         fun setThumbnailUrl(imageResponse: ImageResponse?) {
             _thumbnailUrl.value = imageResponse?.imageUrl
+            _isPhotoPosting.value = false
         }
 
         fun updateMemory() {
