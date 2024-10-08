@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  database:
+    container_name: staccato-database
+    image: mysql:8.0.30
+    environment:
+      - MYSQL_DATABASE=staccato
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: always
+    networks:
+      - springboot-mysql-network
+  application:
+    container_name: staccato-backend-app
+    image: ${STACCATO_IMAGE}
+    depends_on:
+      - database
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - springboot-mysql-network
+
+networks:
+  springboot-mysql-network:
+    driver: bridge
