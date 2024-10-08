@@ -44,8 +44,8 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_timeline_my_timeline"
             app:layout_constraintEnd_toStartOf="@id/frame_timeline_sort_memory"
             app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline"
-            bind:timeline="@{viewModel.timeline}"
-            bind:isTimelineLoading="@{viewModel.isTimelineLoading}">
+            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
+            bind:timeline="@{viewModel.timeline}">
 
             <Button
                 android:id="@+id/btn_timeline_add_visits"
@@ -120,12 +120,12 @@
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lotti_dot_loading"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="150dp"
+            android:layout_height="0dp"
             android:visibility="@{viewModel.isTimelineLoading ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline"
+            app:layout_constraintTop_toBottomOf="@id/frame_timeline_add_memory"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/dot_loading" />
