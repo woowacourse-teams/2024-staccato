@@ -106,11 +106,8 @@ class MomentCreationActivity :
 
     override fun onPause() {
         super.onPause()
-        if (autocompleteFragment.isVisible) {
-            viewModel.setIsPlaceSearchClicked(true)
-        } else {
-            viewModel.setIsPlaceSearchClicked(false)
-        }
+        val hasPlaceSearchClicked = autocompleteFragment.isVisible
+        viewModel.setIsPlaceSearchClicked(hasPlaceSearchClicked)
     }
 
     override fun onNewPlaceSelected(
