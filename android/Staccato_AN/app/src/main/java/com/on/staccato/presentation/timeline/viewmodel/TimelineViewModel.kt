@@ -26,13 +26,17 @@ class TimelineViewModel
     constructor(
         private val timelineRepository: TimelineRepository,
     ) : ViewModel() {
-        private val _timeline = MutableLiveData<List<TimelineUiModel>>()
+        private val _timeline = MutableLiveData<List<TimelineUiModel>>(emptyList())
         val timeline: LiveData<List<TimelineUiModel>>
             get() = _timeline
 
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
+
+        private val _isTimelineLoading = MutableLiveData(false)
+        val isTimelineLoading: LiveData<Boolean>
+            get() = _isTimelineLoading
 
         private val coroutineExceptionHandler =
             CoroutineExceptionHandler { context, throwable ->
@@ -47,6 +51,7 @@ class TimelineViewModel
         }
 
         fun loadTimeline() {
+            _isTimelineLoading.value = true
             viewModelScope.launch(coroutineExceptionHandler) {
                 timelineRepository.getTimeline()
                     .onSuccess(::setTimelineUiModels)
@@ -57,6 +62,7 @@ class TimelineViewModel
 
         private fun setTimelineUiModels(timeline: Timeline) {
             _timeline.value = timeline.toTimelineUiModel()
+            _isTimelineLoading.value = false
         }
 
         private fun handleServerError(
