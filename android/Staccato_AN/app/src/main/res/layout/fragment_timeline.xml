@@ -133,15 +133,16 @@
         <ImageView
             android:id="@+id/iv_timeline_empty"
             android:layout_width="0dp"
-            android:layout_height="200dp"
+            android:layout_height="0dp"
             android:layout_marginTop="50dp"
             android:contentDescription="@string/all_image_content_description"
             android:src="@drawable/staccato_character"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.25"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline"
-            bind:timeline="@{viewModel.timeline}"
             bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
+            bind:timeline="@{viewModel.timeline}"
             tools:visibility="visible" />
 
         <TextView
