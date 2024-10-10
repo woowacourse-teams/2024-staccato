@@ -11,6 +11,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByMomentId(long momentId);
 
     @Modifying
-    @Query("DELETE FROM Comment c WHERE c.moment.id = :momentId")
-    void deleteAllByMomentIdInBatch(@Param("momentId") Long momentId);
+    @Query("DELETE FROM Comment c WHERE c.moment.id IN :momentIds")
+    void deleteAllByMomentIdInBatch(@Param("momentIds") List<Long> momentIds);
 }

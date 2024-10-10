@@ -30,23 +30,27 @@ class MomentImageRepositoryTest {
     @PersistenceContext
     private EntityManager em;
 
-    @DisplayName("특정 스타카토의 id를 가지고 있는 모든 스타카토 이미지들을 삭제한다.")
+    @DisplayName("특정 스타카토의 id 여러개를 가지고 있는 모든 스타카토 이미지들을 삭제한다.")
     @Test
     void deleteAllByMomentIdInBatch() {
         // given
         Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Moment moment = momentRepository.save(MomentFixture
+        Moment moment1 = momentRepository.save(MomentFixture
+                .createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), new MomentImages(List.of("url1", "url2"))));
+        Moment moment2 = momentRepository.save(MomentFixture
                 .createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), new MomentImages(List.of("url1", "url2"))));
 
         // when
-        momentImageRepository.deleteAllByMomentIdInBatch(moment.getId());
+        momentImageRepository.deleteAllByMomentIdInBatch(List.of(moment1.getId(), moment2.getId()));
         em.flush();
         em.clear();
 
         // then
         assertAll(
                 () -> assertThat(momentImageRepository.findAll()).isEqualTo(List.of()),
-                () -> assertThat(momentRepository.findById(moment.getId()).get().getMomentImages()
+                () -> assertThat(momentRepository.findById(moment1.getId()).get().getMomentImages()
+                        .isNotEmpty()).isFalse(),
+                () -> assertThat(momentRepository.findById(moment2.getId()).get().getMomentImages()
                         .isNotEmpty()).isFalse()
         );
     }

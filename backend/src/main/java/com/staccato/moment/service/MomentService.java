@@ -1,5 +1,6 @@
 package com.staccato.moment.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.comment.repository.CommentRepository;
@@ -103,8 +104,8 @@ public class MomentService {
     public void deleteMomentById(long momentId, Member member) {
         momentRepository.findById(momentId).ifPresent(moment -> {
             validateMemoryOwner(moment.getMemory(), member);
-            commentRepository.deleteAllByMomentIdInBatch(momentId);
-            momentImageRepository.deleteAllByMomentIdInBatch(momentId);
+            commentRepository.deleteAllByMomentIdInBatch(List.of(momentId));
+            momentImageRepository.deleteAllByMomentIdInBatch(List.of(momentId));
             momentRepository.deleteById(momentId);
         });
     }

@@ -33,24 +33,27 @@ class CommentRepositoryTest {
     @PersistenceContext
     private EntityManager em;
 
-    @DisplayName("특정 스타카토의 id를 가지고 있는 모든 댓글들을 삭제한다.")
+    @DisplayName("특정 스타카토의 id를 여러개를 가지고 있는 모든 댓글들을 삭제한다.")
     @Test
     void deleteAllByMomentIdInBatch() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         Memory memory = memoryRepository.save(MemoryFixture.create(null, null));
-        Moment moment = MomentFixture.createWithComments(member, memory, List.of("content1", "content2", "content3"));
-        momentRepository.save(moment);
+        Moment moment1 = MomentFixture.createWithComments(member, memory, List.of("content1", "content2", "content3"));
+        Moment moment2 = MomentFixture.createWithComments(member, memory, List.of("content1", "content2", "content3"));
+        momentRepository.save(moment1);
+        momentRepository.save(moment2);
 
         // when
-        commentRepository.deleteAllByMomentIdInBatch(moment.getId());
+        commentRepository.deleteAllByMomentIdInBatch(List.of(moment1.getId(), moment2.getId()));
         em.flush();
         em.clear();
 
         // then
         assertAll(
                 () -> assertThat(commentRepository.findAll()).isEqualTo(List.of()),
-                () -> assertThat(momentRepository.findById(moment.getId()).get().getComments().size()).isEqualTo(0)
+                () -> assertThat(momentRepository.findById(moment1.getId()).get().getComments().size()).isEqualTo(0),
+                () -> assertThat(momentRepository.findById(moment2.getId()).get().getComments().size()).isEqualTo(0)
         );
     }
 }

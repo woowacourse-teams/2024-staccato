@@ -124,12 +124,12 @@ public class MemoryService {
     }
 
     private void deleteAllRelatedMemory(long memoryId) {
-        momentRepository.findAllByMemoryId(memoryId).forEach(
-                moment -> {
-                    momentImageRepository.deleteAllByMomentIdInBatch(moment.getId());
-                    commentRepository.deleteAllByMomentIdInBatch(moment.getId());
-                }
-        );
+        List<Long> momentIds = momentRepository.findAllByMemoryId(memoryId)
+                .stream()
+                .map(Moment::getId)
+                .toList();
+        momentImageRepository.deleteAllByMomentIdInBatch(momentIds);
+        commentRepository.deleteAllByMomentIdInBatch(momentIds);
         momentRepository.deleteAllByMemoryIdInBatch(memoryId);
         memoryMemberRepository.deleteAllByMemoryIdInBatch(memoryId);
     }
