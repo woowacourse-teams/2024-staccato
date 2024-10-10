@@ -1,6 +1,7 @@
 package com.on.staccato.presentation.bindingadapter
 
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.databinding.BindingAdapter
 import com.google.android.material.button.MaterialButton
 import com.on.staccato.R
@@ -9,8 +10,8 @@ import com.on.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@BindingAdapter("loginEnabled")
-fun Button.setLoginEnabled(nickName: String?) {
+@BindingAdapter("loginButtonEnabled")
+fun Button.setLoginButtonEnabled(nickName: String?) {
     isEnabled =
         if (nickName.isNullOrBlank()) {
             setTextColor(resources.getColor(R.color.gray4, null))
@@ -22,41 +23,22 @@ fun Button.setLoginEnabled(nickName: String?) {
 }
 
 @BindingAdapter(
-    value = ["staccatoTitle", "address", "visitedAt", "photos", "selectedMemory"],
+    value = ["staccatoTitle", "staccatoAddress", "staccatoVisitedAt", "staccatoPhotos", "staccatoMemory"],
 )
-fun Button.setStaccatoCreationButtonActive(
-    title: String?,
-    address: String?,
-    visitedAt: LocalDateTime?,
-    photos: AttachedPhotosUiModel?,
-    selectedMemory: MemoryCandidate?,
+fun Button.setStaccatoSaveButtonEnabled(
+    staccatoTitle: String?,
+    staccatoAddress: String?,
+    staccatoVisitedAt: LocalDateTime?,
+    staccatoPhotos: AttachedPhotosUiModel?,
+    staccatoMemory: MemoryCandidate?,
 ) {
     isEnabled =
-        if (title.isNullOrBlank() || address == null || selectedMemory == null || visitedAt == null || photos?.isLoading() == true) {
-            setTextColor(resources.getColor(R.color.gray4, null))
-            false
-        } else {
-            setTextColor(resources.getColor(R.color.white, null))
-            true
-        }
-}
-
-@BindingAdapter("visitedAtConfirmButtonActive")
-fun Button.setVisitedAtConfirmButtonActive(items: List<Int>?) {
-    isEnabled =
-        if (items.isNullOrEmpty()) {
-            setTextColor(resources.getColor(R.color.gray4, null))
-            false
-        } else {
-            setTextColor(resources.getColor(R.color.white, null))
-            true
-        }
-}
-
-@BindingAdapter("memoryVisitedAtConfirmButtonActive")
-fun Button.setMemoryVisitedAtConfirmButtonActive(items: List<LocalDate>?) {
-    isEnabled =
-        if (items.isNullOrEmpty()) {
+        if (staccatoTitle.isNullOrBlank() ||
+            staccatoAddress == null ||
+            staccatoMemory == null ||
+            staccatoVisitedAt == null ||
+            staccatoPhotos?.isLoading() == true
+        ) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -66,19 +48,19 @@ fun Button.setMemoryVisitedAtConfirmButtonActive(items: List<LocalDate>?) {
 }
 
 @BindingAdapter(
-    value = ["memoryTitle", "startDate", "endDate", "isPeriodActive", "isPhotoPosting"],
+    value = ["memoryTitle", "memoryStartDate", "memoryEndDate", "isPeriodActive", "isPhotoUploading"],
 )
-fun Button.setMemorySaveButtonActive(
-    title: String?,
-    startDate: LocalDate?,
-    endDate: LocalDate?,
+fun Button.setMemorySaveButtonEnabled(
+    memoryTitle: String?,
+    memoryStartDate: LocalDate?,
+    memoryEndDate: LocalDate?,
     isPeriodActive: Boolean,
-    isPhotoPosting: Boolean?,
+    isPhotoUploading: Boolean?,
 ) {
-    val isPeriodNotExistent = (startDate == null) || (endDate == null)
+    val isPeriodNotExistent = (memoryStartDate == null) || (memoryEndDate == null)
     val isPeriodRequirementsInvalid = isPeriodActive && isPeriodNotExistent
     isEnabled =
-        if (title.isNullOrBlank() || isPhotoPosting == true || isPeriodRequirementsInvalid) {
+        if (memoryTitle.isNullOrBlank() || isPhotoUploading == true || isPeriodRequirementsInvalid) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -87,7 +69,31 @@ fun Button.setMemorySaveButtonActive(
         }
 }
 
-@BindingAdapter("setCurrentLocationButtonLoading")
+@BindingAdapter("visitedAtSelectButtonEnabled")
+fun Button.setVisitedAtSelectButtonEnabled(years: List<Int>?) {
+    isEnabled =
+        if (years.isNullOrEmpty()) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
+@BindingAdapter("recoveryButtonEnabled")
+fun Button.setRecoveryButtonEnabled(recoveryCode: String?) {
+    isEnabled =
+        if (recoveryCode.isNullOrBlank() || recoveryCode.length < 36) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
+@BindingAdapter("currentLocationButtonLoading")
 fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
     isClickable = isLoading == false
     if (isLoading == true) {
@@ -98,14 +104,7 @@ fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
     }
 }
 
-@BindingAdapter("recoveryEnabled")
-fun Button.setRecoveryEnabled(recoveryCode: String?) {
-    isEnabled =
-        if (recoveryCode.isNullOrBlank() || recoveryCode.length < 36) {
-            setTextColor(resources.getColor(R.color.gray4, null))
-            false
-        } else {
-            setTextColor(resources.getColor(R.color.white, null))
-            true
-        }
+@BindingAdapter("sendButtonEnabled")
+fun ImageButton.setSendButtonEnabled(value: String?) {
+    isEnabled = !value.isNullOrBlank()
 }

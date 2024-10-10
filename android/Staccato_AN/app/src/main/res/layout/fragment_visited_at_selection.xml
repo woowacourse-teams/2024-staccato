@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="items"
+            name="years"
             type="java.util.List&lt;Integer&gt;" />
     </data>
 
@@ -35,7 +35,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
-            bind:visitedAtIsEmptyVisibility="@{items}" />
+            bind:visitedAtIsEmptyVisibility="@{years}" />
 
         <NumberPicker
             android:id="@+id/picker_year"
@@ -141,7 +141,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            bind:visitedAtConfirmButtonActive="@{items}" />
+            bind:visitedAtSelectButtonEnabled="@{years}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

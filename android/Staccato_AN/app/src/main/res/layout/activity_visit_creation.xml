@@ -39,9 +39,9 @@
             app:title="@string/visit_creation_toolbar_title" />
 
         <androidx.core.widget.NestedScrollView
-            android:overScrollMode="never"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_visit_creation">
 
@@ -207,7 +207,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        bind:setCurrentLocationButtonLoading="@{viewModel.isCurrentLocationLoading}" />
+                        bind:currentLocationButtonLoading="@{viewModel.isCurrentLocationLoading}" />
 
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/lotti_dot_loading"
@@ -303,11 +303,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
-                    bind:address="@{viewModel.placeName}"
-                    bind:photos="@{viewModel.currentPhotos}"
-                    bind:selectedMemory="@{viewModel.selectedMemory}"
+                    bind:staccatoAddress="@{viewModel.placeName}"
+                    bind:staccatoMemory="@{viewModel.selectedMemory}"
+                    bind:staccatoPhotos="@{viewModel.currentPhotos}"
                     bind:staccatoTitle="@{viewModel.staccatoTitle}"
-                    bind:visitedAt="@{viewModel.selectedVisitedAt}" />
+                    bind:staccatoVisitedAt="@{viewModel.selectedVisitedAt}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
