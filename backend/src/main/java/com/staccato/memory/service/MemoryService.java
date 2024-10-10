@@ -44,7 +44,7 @@ public class MemoryService {
     }
 
     public MemoryResponses readAllMemories(Member member) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdOrderByMemory(member.getId());
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberId(member.getId());
         sortByCreatedAtDescending(memoryMembers);
 
         return MemoryResponses.from(
