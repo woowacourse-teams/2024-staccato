@@ -220,7 +220,7 @@
                         app:lottie_autoPlay="true"
                         app:lottie_loop="true"
                         app:lottie_rawRes="@raw/dot_loading"
-                        bind:setLoadingLottieVisibility="@{viewModel.isCurrentLocationLoading}" />
+                        bind:visibleOrGone="@{viewModel.isCurrentLocationLoading}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
