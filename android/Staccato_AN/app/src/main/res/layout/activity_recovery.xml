@@ -79,7 +79,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                bind:recoveryEnabled="@{viewModel.recoveryCode}" />
+                bind:recoveryButtonEnabled="@{viewModel.recoveryCode}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

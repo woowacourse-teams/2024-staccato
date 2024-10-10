@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -100,20 +101,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/iv_moment_comments_send"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:clickable="true"
-                android:contentDescription="@string/all_image_content_description"
-                android:focusable="true"
+                android:background="@drawable/selector_comment_sendable"
+                android:backgroundTint="@null"
                 android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
                 android:padding="8dp"
-                android:src="@drawable/selector_comment_sendable"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:sendEnabled="@{viewModel.commentInput}" />
+                bind:sendButtonEnabled="@{viewModel.commentInput}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
