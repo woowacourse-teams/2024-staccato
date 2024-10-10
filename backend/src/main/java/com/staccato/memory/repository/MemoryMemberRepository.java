@@ -14,7 +14,7 @@ public interface MemoryMemberRepository extends JpaRepository<MemoryMember, Long
     List<MemoryMember> findAllByMemberId(long memberId);
 
     @Query("""
-            SELECT mm FROM MemoryMember mm WHERE mm.member.id = :memberId
+            SELECT mm FROM MemoryMember mm JOIN FETCH mm.memory WHERE mm.member.id = :memberId
             AND ((mm.memory.term.startAt is null AND mm.memory.term.endAt is null)
             or (:date BETWEEN mm.memory.term.startAt AND mm.memory.term.endAt))
             """)
