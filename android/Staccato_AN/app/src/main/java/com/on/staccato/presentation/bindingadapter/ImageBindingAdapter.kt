@@ -2,19 +2,20 @@ package com.on.staccato.presentation.bindingadapter
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
+
+@BindingAdapter("selected")
+fun ImageView.setSelected(selected: Boolean) {
+    isSelected = selected
+}
 
 @BindingAdapter(
     value = ["coilImageUrl", "coilPlaceHolder"],
 )
-fun ImageView.loadImageWithCoil(
+fun ImageView.loadCoilImage(
     url: String?,
     placeHolder: Drawable? = null,
 ) {
@@ -27,7 +28,7 @@ fun ImageView.loadImageWithCoil(
 @BindingAdapter(
     value = ["coilImageUri", "coilPlaceHolder"],
 )
-fun ImageView.loadImageByUriWithCoil(
+fun ImageView.loadCoilImageByUri(
     uri: Uri?,
     placeHolder: Drawable? = null,
 ) {
@@ -40,7 +41,7 @@ fun ImageView.loadImageByUriWithCoil(
 @BindingAdapter(
     value = ["coilCircleImageUrl", "coilPlaceHolder"],
 )
-fun ImageView.setCircleImageWithCoil(
+fun ImageView.loadCoilCircleImage(
     url: String?,
     placeHolder: Drawable? = null,
 ) {
@@ -52,9 +53,9 @@ fun ImageView.setCircleImageWithCoil(
 }
 
 @BindingAdapter(
-    value = ["coilRoundedCornerImageUrl", "coilPlaceHolder", "coilRoundingRadius"],
+    value = ["coilRoundedCornerImageUrl", "coilRoundedCornerPlaceHolder", "coilRoundingRadius"],
 )
-fun ImageView.setRoundedCornerImageWithCoil(
+fun ImageView.setCoilRoundedCornerImage(
     url: String?,
     placeHolder: Drawable? = null,
     roundingRadius: Float,
@@ -67,24 +68,9 @@ fun ImageView.setRoundedCornerImageWithCoil(
 }
 
 @BindingAdapter(
-    value = ["coilUriRoundedCorner", "coilUriPlaceHolder", "coilUriRoundingRadius"],
+    value = ["coilRoundedCornerImageUrl", "coilRoundedCornerImageUri", "coilRoundedCornerPlaceHolder", "coilRoundingRadius"],
 )
-fun ImageView.setRoundedCornerUriWithCoil(
-    uri: Uri?,
-    placeHolder: Drawable? = null,
-    roundingRadius: Float,
-) {
-    load(uri) {
-        placeholder(placeHolder)
-        transformations(RoundedCornersTransformation(roundingRadius))
-        error(placeHolder)
-    }
-}
-
-@BindingAdapter(
-    value = ["coilImageUrl", "coilImageUri", "coilPlaceHolder", "coilRoundingRadius"],
-)
-fun ImageView.setRoundedCornerUpdateImageWithCoil(
+fun ImageView.setCoilRoundedCornerImageWithUri(
     url: String?,
     uri: Uri?,
     placeHolder: Drawable? = null,
@@ -96,85 +82,6 @@ fun ImageView.setRoundedCornerUpdateImageWithCoil(
         transformations(RoundedCornersTransformation(roundingRadius))
         error(placeHolder)
     }
-}
-
-@BindingAdapter(
-    value = ["glideImageUrl", "glidePlaceHolder"],
-)
-fun ImageView.loadImageWithGlide(
-    url: String?,
-    placeHolder: Drawable? = null,
-) {
-    Glide.with(context)
-        .load(url)
-        .placeholder(placeHolder)
-        .centerCrop()
-        .error(placeHolder)
-        .into(this)
-}
-
-@BindingAdapter(
-    value = ["glideCircleImageUrl", "glidePlaceHolder"],
-)
-fun ImageView.setCircleImageWithGlide(
-    url: String?,
-    placeHolder: Drawable? = null,
-) {
-    Glide.with(context)
-        .load(url)
-        .placeholder(placeHolder)
-        .circleCrop()
-        .error(placeHolder)
-        .into(this)
-}
-
-@BindingAdapter(
-    value = ["glideRoundedCornerImageUrl", "glidePlaceHolder", "glideRoundingRadius"],
-)
-fun ImageView.setRoundedCornerImageWithGlide(
-    url: String?,
-    placeHolder: Drawable? = null,
-    roundingRadius: Int,
-) {
-    Glide.with(context)
-        .load(url)
-        .placeholder(placeHolder)
-        .centerCrop()
-        .apply(RequestOptions.bitmapTransform(RoundedCorners(roundingRadius)))
-        .error(placeHolder)
-        .into(this)
-}
-
-@BindingAdapter(value = ["glideUriRoundedCornerImageUri", "glideUriPlaceHolder", "glideUriRoundingRadius"])
-fun ImageView.setRoundedCornerImageByUriWithGlide(
-    uri: Uri?,
-    placeHolder: Drawable? = null,
-    roundingRadius: Int,
-) {
-    Glide.with(context)
-        .load(uri)
-        .centerCrop()
-        .apply(RequestOptions.bitmapTransform(RoundedCorners(roundingRadius)))
-        .error(placeHolder)
-        .into(this)
-}
-
-@BindingAdapter("setAttachedPhotoVisibility")
-fun ImageView.setAttachedPhotoVisibility(items: Array<Uri>?) {
-    if (items.isNullOrEmpty()) {
-        visibility = View.GONE
-    } else {
-        visibility = View.VISIBLE
-        Glide.with(context)
-            .load(items[0])
-            .centerCrop()
-            .into(this)
-    }
-}
-
-@BindingAdapter("setSelected")
-fun ImageView.setSelectedState(selected: Boolean) {
-    isSelected = selected
 }
 
 @BindingAdapter(
@@ -194,9 +101,4 @@ fun ImageView.setImageResourceWithId(
             grayResId
         },
     )
-}
-
-@BindingAdapter("sendEnabled")
-fun ImageView.setSendEnabled(comment: String?) {
-    isEnabled = !comment.isNullOrBlank()
 }

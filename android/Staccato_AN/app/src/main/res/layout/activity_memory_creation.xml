@@ -57,9 +57,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:coilImageUri="@{viewModel.thumbnailUri}"
-                    bind:coilImageUrl="@{viewModel.thumbnailUrl}"
-                    bind:coilPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
+                    bind:coilRoundedCornerImageUri="@{viewModel.thumbnailUri}"
+                    bind:coilRoundedCornerImageUrl="@{viewModel.thumbnailUrl}"
+                    bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
                     bind:coilRoundingRadius="@{12f}" />
 
                 <ImageButton
