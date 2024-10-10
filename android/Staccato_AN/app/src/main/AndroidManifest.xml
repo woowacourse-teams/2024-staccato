@@ -49,6 +49,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".presentation.recovery.RecoveryActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
@@ -63,6 +67,12 @@
             android:exported="false" />
         <activity
             android:name=".presentation.memorycreation.MemoryCreationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.mypage.MyPageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.webview.WebViewActivity"
             android:exported="false" />
     </application>
 

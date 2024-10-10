@@ -5,6 +5,7 @@ import com.on.staccato.data.dto.moment.MomentResponse
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Moment
 import com.on.staccato.domain.model.MomentLocation
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 fun MomentResponse.toDomain() =
@@ -12,12 +13,16 @@ fun MomentResponse.toDomain() =
         momentId = momentId,
         memoryId = memoryId,
         memoryTitle = memoryTitle,
+        staccatoTitle = staccatoTitle,
         placeName = placeName,
+        latitude = latitude,
+        longitude = longitude,
         momentImageUrls = momentImageUrls,
         address = address,
         visitedAt = LocalDateTime.parse(visitedAt),
+        startAt = startAt?.let { LocalDate.parse(startAt) },
+        endAt = endAt?.let { LocalDate.parse(endAt) },
         feeling = Feeling.fromValue(feeling),
-        comments = visitLogs.map { it.toDomain() },
     )
 
 fun MomentLocationDto.toDomain() =

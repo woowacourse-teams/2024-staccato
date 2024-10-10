@@ -1,8 +1,9 @@
 package com.staccato.fixture.moment;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 
 public class MomentDetailResponseFixture {
@@ -11,11 +12,16 @@ public class MomentDetailResponseFixture {
                 momentId,
                 1,
                 "memoryTitle",
-                "placeName",
+                LocalDate.parse("2024-06-30"),
+                LocalDate.parse("2024-07-04"),
+                "staccatoTitle",
                 List.of("https://example1.com.jpg"),
                 visitedAt,
                 "happy",
+                "placeName",
                 "address",
-                List.of());
+                new BigDecimal("37.77490000000000"),
+                new BigDecimal("-122.41940000000000")
+        );
     }
 }

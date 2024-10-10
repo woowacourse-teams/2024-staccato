@@ -1,166 +1,229 @@
 package com.on.staccato.presentation.momentcreation
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-import android.view.MotionEvent
-import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.Task
+import com.google.android.libraries.places.api.model.Place
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityVisitCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
+import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
+import com.on.staccato.presentation.common.LocationPermissionManager
+import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
+import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.momentcreation.dialog.MemorySelectionFragment
+import com.on.staccato.presentation.momentcreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel
-import com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModelFactory
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 
+@AndroidEntryPoint
 class MomentCreationActivity :
-    BindingActivity<ActivityVisitCreationBinding>(),
+    GooglePlaceFragmentEventHandler,
+    CurrentLocationHandler,
     OnUrisSelectedListener,
-    MomentCreationHandler {
+    MomentCreationHandler,
+    BindingActivity<ActivityVisitCreationBinding>() {
     override val layoutResourceId = R.layout.activity_visit_creation
-    private val viewModel: MomentCreationViewModel by viewModels { MomentCreationViewModelFactory() }
-
+    private val viewModel: MomentCreationViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by viewModels()
     private val memorySelectionFragment by lazy {
         MemorySelectionFragment()
     }
+    private val visitedAtSelectionFragment by lazy {
+        VisitedAtSelectionFragment()
+    }
+
     private val photoAttachFragment by lazy {
         PhotoAttachFragment().apply { setMultipleAbleOption(true) }
     }
+    private val autocompleteFragment by lazy {
+        supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
+    }
+
     private val fragmentManager: FragmentManager = supportFragmentManager
-    private lateinit var adapter: PhotoAttachAdapter
+    private lateinit var photoAttachAdapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
+
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
+
+    private val locationPermissionManager =
+        LocationPermissionManager(context = this, activity = this)
+    private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var address: String
 
-    private val inputManager: InputMethodManager by lazy {
-        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+    override fun initStartView(savedInstanceState: Bundle?) {
+        viewModel.fetchMemoryCandidates(memoryId)
+        setupPermissionRequestLauncher()
+        setupFusedLocationProviderClient()
+        initBinding()
+        initAdapter()
+        initItemTouchHelper()
+        initToolbar()
+        initMemorySelectionFragment()
+        initVisitedAtSelectionFragment()
+        observeViewModelData()
+        initGooglePlaceSearch()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.isPlaceSearchClicked.value != true) {
+            checkLocationSetting()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val hasPlaceSearchClicked = autocompleteFragment.isVisible
+        viewModel.setIsPlaceSearchClicked(hasPlaceSearchClicked)
+    }
+
+    override fun onNewPlaceSelected(
+        placeId: String,
+        name: String,
+        address: String,
+        longitude: Double,
+        latitude: Double,
+    ) {
+        viewModel.selectNewPlace(
+            placeId,
+            name,
+            address,
+            longitude,
+            latitude,
+        )
+    }
+
+    override fun onSelectedPlaceCleared() {
+        viewModel.clearPlace()
+    }
+
+    override fun onCurrentLocationClicked() {
+        checkLocationSetting(isCurrentLocationCallClicked = true)
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
         viewModel.updateSelectedImageUris(arrayOf(*uris))
     }
 
+    override fun onMemorySelectionClicked() {
+        if (!memorySelectionFragment.isAdded) {
+            memorySelectionFragment.show(
+                fragmentManager,
+                MemorySelectionFragment.TAG,
+            )
+        }
+    }
+
+    override fun onVisitedAtSelectionClicked() {
+        if (!visitedAtSelectionFragment.isAdded) {
+            visitedAtSelectionFragment.show(
+                fragmentManager,
+                VisitedAtSelectionFragment.TAG,
+            )
+        }
+    }
+
     override fun onCreateDoneClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        showToast(getString(R.string.visit_creation_posting))
         viewModel.createMoment()
     }
 
-    override fun onMemorySelectionClicked() {
-        if (!memorySelectionFragment.isAdded && memoryId == 0L) {
-            memorySelectionFragment.show(fragmentManager, MemorySelectionFragment.TAG)
-        }
+    private fun setupPermissionRequestLauncher() {
+        permissionRequestLauncher =
+            locationPermissionManager.requestPermissionLauncher(
+                view = binding.root,
+                actionWhenHavePermission = ::fetchCurrentLocationAddress,
+            )
     }
 
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            currentFocus?.let { view ->
-                if (!isTouchInsideView(event, view)) {
-                    clearFocusAndHideKeyboard(view)
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event)
-    }
-
-    override fun initStartView(savedInstanceState: Bundle?) {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        initAddress()
-        initBinding()
-        initAdapter()
-        initItemTouchHelper()
-        initToolbar()
-        initMemorySelectionFragment()
-        observeViewModelData()
-        if (memoryId == 0L) {
-            viewModel.fetchMemoriesWithDate(LocalDateTime.now())
-        } else {
-            viewModel.selectMemory(memoryId, memoryTitle)
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray,
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            LOCATION_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                    showToast(getString(R.string.maps_location_permission_granted_message))
-                } else {
-                    val snackBar =
-                        makeSnackBar(getString(R.string.maps_location_permission_required_message))
-                    snackBar.setAction()
-                    snackBar.show()
-                }
-                return
-            }
-        }
-    }
-
-    private fun isTouchInsideView(
-        event: MotionEvent,
-        view: View,
-    ): Boolean {
-        val rect = android.graphics.Rect()
-        view.getGlobalVisibleRect(rect)
-        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
-    }
-
-    private fun clearFocusAndHideKeyboard(view: View) {
-        view.clearFocus()
-        hideKeyboard(view)
-    }
-
-    private fun hideKeyboard(view: View) {
-        inputManager.hideSoftInputFromWindow(
-            view.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS,
+    private fun checkLocationSetting(isCurrentLocationCallClicked: Boolean = false) {
+        locationPermissionManager.checkLocationSetting(
+            actionWhenHavePermission = {
+                fetchCurrentLocationAddress(
+                    isCurrentLocationCallClicked,
+                )
+            },
         )
     }
 
-    private fun makeSnackBar(message: String): Snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+    private fun setupFusedLocationProviderClient() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+    }
 
-    private fun Snackbar.setAction() {
-        setAction(R.string.snack_bar_move_to_setting) {
-            val uri = Uri.fromParts(PhotoAttachFragment.PACKAGE_SCHEME, context.packageName, null)
-            val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri)
-            startActivity(intent)
+    private fun fetchCurrentLocationAddress(isCurrentLocationCallClicked: Boolean = false) {
+        val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
+        val shouldShowRequestLocationPermissionsRationale =
+            locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
+
+        when {
+            isLocationPermissionGranted -> {
+                viewModel.setCurrentLocationLoading(true)
+                val currentLocation: Task<Location> =
+                    fusedLocationProviderClient.getCurrentLocation(
+                        Priority.PRIORITY_HIGH_ACCURACY,
+                        null,
+                    )
+                currentLocation.addOnSuccessListener { location ->
+                    fetchAddress(location)
+                }
+            }
+
+            isCurrentLocationCallClicked -> {
+                locationPermissionManager.showLocationRequestRationaleDialog(supportFragmentManager)
+            }
+
+            shouldShowRequestLocationPermissionsRationale -> {
+                observeIsPermissionCancelClicked {
+                    locationPermissionManager.showLocationRequestRationaleDialog(
+                        supportFragmentManager,
+                    )
+                }
+            }
+
+            else -> {
+                observeIsPermissionCancelClicked {
+                    permissionRequestLauncher.launch(locationPermissions)
+                }
+            }
+        }
+    }
+
+    private fun observeIsPermissionCancelClicked(requestLocationPermissions: () -> Unit) {
+        sharedViewModel.isPermissionCancelClicked.observe(this) { isCancel ->
+            if (!isCancel) requestLocationPermissions()
         }
     }
 
@@ -168,10 +231,11 @@ class MomentCreationActivity :
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.visitCreationHandler = this
+        binding.currentLocationHandler = this
     }
 
     private fun initAdapter() {
-        adapter =
+        photoAttachAdapter =
             PhotoAttachAdapter(
                 object : ItemDragListener {
                     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
@@ -184,11 +248,11 @@ class MomentCreationActivity :
                 },
                 viewModel,
             )
-        binding.rvPhotoAttach.adapter = adapter
+        binding.rvPhotoAttach.adapter = photoAttachAdapter
     }
 
     private fun initItemTouchHelper() {
-        itemTouchHelper = ItemTouchHelper(AttachedPhotoItemTouchHelperCallback(adapter))
+        itemTouchHelper = ItemTouchHelper(AttachedPhotoItemTouchHelperCallback(photoAttachAdapter))
         itemTouchHelper.attachToRecyclerView(binding.rvPhotoAttach)
     }
 
@@ -200,11 +264,24 @@ class MomentCreationActivity :
 
     private fun initMemorySelectionFragment() {
         memorySelectionFragment.setOnMemorySelected { selectedMemory ->
-            viewModel.selectMemory(selectedMemory.memoryId, selectedMemory.memoryTitle)
+            val startAt = selectedMemory.startAt ?: LocalDate.now()
+            val initializedDateTime =
+                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
+            viewModel.selectedVisitedAt(initializedDateTime)
+            viewModel.selectMemory(selectedMemory)
+        }
+    }
+
+    private fun initVisitedAtSelectionFragment() {
+        visitedAtSelectionFragment.setOnVisitedAtSelected { selectedVisitedAt ->
+            viewModel.selectedVisitedAt(selectedVisitedAt)
         }
     }
 
     private fun observeViewModelData() {
+        viewModel.placeName.observe(this) {
+            autocompleteFragment.setText(it)
+        }
         viewModel.isAddPhotoClicked.observe(this) {
             if (!photoAttachFragment.isAdded && it) {
                 photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
@@ -214,88 +291,84 @@ class MomentCreationActivity :
             viewModel.fetchPhotosUrlsByUris(this)
         }
         viewModel.currentPhotos.observe(this) { photos ->
-            adapter.submitList(
+            photoAttachAdapter.submitList(
                 listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
             )
         }
-        viewModel.memoryCandidates.observe(this) { memories ->
-            memorySelectionFragment.setItems(memories.memoryCandidate)
+        viewModel.memoryCandidates.observe(this) {
+            memorySelectionFragment.setItems(it.memoryCandidate)
         }
-        viewModel.createdMomentId.observe(this) { createdMomentId ->
+        viewModel.selectedMemory.observe(this) { selectedMemory ->
+            val startAt = selectedMemory.startAt ?: LocalDate.now()
+            val initializedDateTime =
+                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
+            memorySelectionFragment.updateKeyMemory(selectedMemory)
+            visitedAtSelectionFragment.initDateCandidates(selectedMemory, initializedDateTime)
+        }
+        viewModel.selectedVisitedAt.observe(this) { selectedVisitedAt ->
+            if (selectedVisitedAt != null) {
+                visitedAtSelectionFragment.initKeyWithSelectedValues(selectedVisitedAt)
+            }
+        }
+        viewModel.createdStaccatoId.observe(this) { createdMomentId ->
             val resultIntent =
                 Intent()
-                    .putExtra(MOMENT_ID_KEY, createdMomentId)
+                    .putExtra(STACCATO_ID_KEY, createdMomentId)
                     .putExtra(MEMORY_ID_KEY, memoryId)
                     .putExtra(MEMORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
-        viewModel.errorMessage.observe(this) {
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
-            showToast(it)
+        viewModel.errorMessage.observe(this) { message ->
+            handleError(message)
         }
     }
 
-    private fun initAddress() {
-        val isAccessFineLocationGranted =
-            ContextCompat.checkSelfPermission(
-                this,
-                ACCESS_FINE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED
-
-        val isAccessCoarseLocationGranted =
-            ContextCompat.checkSelfPermission(
-                this,
-                ACCESS_COARSE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED
-
-        if (isAccessFineLocationGranted || isAccessCoarseLocationGranted) {
-            val currentLocation =
-                fusedLocationProviderClient.getCurrentLocation(
-                    LocationRequest.PRIORITY_HIGH_ACCURACY,
-                    null,
-                )
-            currentLocation.addOnSuccessListener { location ->
-                fetchAddress(location)
-            }
-            return
-        } else {
-            requestLocationPermissions()
-        }
-    }
-
-    private fun requestLocationPermissions() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(
-                ACCESS_FINE_LOCATION,
-                ACCESS_COARSE_LOCATION,
-            ),
-            LOCATION_PERMISSION_REQUEST_CODE,
-        )
+    private fun handleError(errorMessage: String) {
+        window.clearFlags(FLAG_NOT_TOUCHABLE)
+        showToast(errorMessage)
     }
 
     private fun fetchAddress(location: Location) {
-        val geocoder = Geocoder(this)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val geocodeListener = initGeocodeListener(location)
-            geocoder.getFromLocation(location.latitude, location.longitude, 1, geocodeListener)
-        } else {
-            address =
-                geocoder.getFromLocation(location.latitude, location.longitude, 1)?.get(0)
-                    ?.getAddressLine(0).toString()
-            viewModel.setLocationInformation(address, location)
+        lifecycleScope.launch {
+            val defaultDelayJob =
+                launch {
+                    delay(500L)
+                }
+            val getCurrentLocationJob =
+                launch {
+                    updateAddressByCurrentAddress(location)
+                }
+            getCurrentLocationJob.join()
+            defaultDelayJob.join()
+            viewModel.setPlaceByCurrentAddress(address, location)
         }
     }
 
-    private fun initGeocodeListener(location: Location) =
+    private fun updateAddressByCurrentAddress(location: Location) {
+        val geocoder = Geocoder(this@MomentCreationActivity)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val geocodeListener = initGeocodeListener()
+            geocoder.getFromLocation(
+                location.latitude,
+                location.longitude,
+                1,
+                geocodeListener,
+            )
+        } else {
+            address =
+                geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                    ?.get(0)
+                    ?.getAddressLine(0).toString()
+        }
+    }
+
+    private fun initGeocodeListener() =
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         object : Geocoder.GeocodeListener {
             override fun onGeocode(addresses: MutableList<Address>) {
                 address = addresses[0].getAddressLine(0)
-                viewModel.setLocationInformation(address, location)
             }
 
             override fun onError(errorMessage: String?) {
@@ -303,9 +376,18 @@ class MomentCreationActivity :
             }
         }
 
+    private fun initGooglePlaceSearch() {
+        val placeFields: List<Place.Field> =
+            listOf(Place.Field.NAME, Place.Field.ID, Place.Field.ADDRESS, Place.Field.LAT_LNG)
+        autocompleteFragment.setPlaceFields(placeFields)
+
+        lifecycleScope.launchWhenCreated {
+            autocompleteFragment.setHint(getString(R.string.visit_creation_place_search))
+        }
+    }
+
     companion object {
         const val MEMORY_TITLE_KEY = "memoryTitle"
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
 
         fun startWithResultLauncher(
             memoryId: Long,

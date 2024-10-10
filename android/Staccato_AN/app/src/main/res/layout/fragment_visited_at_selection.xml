@@ -7,7 +7,7 @@
 
         <variable
             name="items"
-            type="java.util.List&lt;java.time.LocalDate&gt;" />
+            type="java.util.List&lt;Integer&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +19,7 @@
         <TextView
             android:id="@+id/tv_visited_at_title"
             style="@style/SubTitleStyle"
-            android:text="@string/all_visited_date"
+            android:text="@string/all_please_select_visited_at"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,7 +38,79 @@
             bind:visitedAtIsEmptyVisibility="@{items}" />
 
         <NumberPicker
-            android:id="@+id/picker_visited_at"
+            android:id="@+id/picker_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="36dp"
+            android:layout_marginEnd="30dp"
+            android:descendantFocusability="blocksDescendants"
+            android:selectionDividerHeight="0.5dp"
+            android:theme="@style/ThemeOverlay.NumberPicker"
+            app:layout_constraintBottom_toTopOf="@id/btn_visited_at_confirm"
+            app:layout_constraintEnd_toStartOf="@id/picker_month"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title" />
+
+        <TextView
+            android:id="@+id/tv_year"
+            style="@style/Typography.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="년"
+            app:layout_constraintBottom_toBottomOf="@id/picker_year"
+            app:layout_constraintStart_toEndOf="@id/picker_year"
+            app:layout_constraintTop_toTopOf="@id/picker_year" />
+
+        <NumberPicker
+            android:id="@+id/picker_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="36dp"
+            android:layout_marginEnd="30dp"
+            android:descendantFocusability="blocksDescendants"
+            android:selectionDividerHeight="0.5dp"
+            android:theme="@style/ThemeOverlay.NumberPicker"
+            app:layout_constraintBottom_toTopOf="@id/btn_visited_at_confirm"
+            app:layout_constraintEnd_toStartOf="@id/picker_day"
+            app:layout_constraintStart_toEndOf="@id/picker_year"
+            app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title" />
+
+        <TextView
+            android:id="@+id/tv_month"
+            style="@style/Typography.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="월"
+            app:layout_constraintBottom_toBottomOf="@id/picker_month"
+            app:layout_constraintStart_toEndOf="@id/picker_month"
+            app:layout_constraintTop_toTopOf="@id/picker_month" />
+
+        <NumberPicker
+            android:id="@+id/picker_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="36dp"
+            android:layout_marginEnd="30dp"
+            android:descendantFocusability="blocksDescendants"
+            android:selectionDividerHeight="0.5dp"
+            android:theme="@style/ThemeOverlay.NumberPicker"
+            app:layout_constraintBottom_toTopOf="@id/btn_visited_at_confirm"
+            app:layout_constraintEnd_toStartOf="@id/picker_hours"
+            app:layout_constraintStart_toEndOf="@id/picker_month"
+            app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title" />
+
+        <TextView
+            android:id="@+id/tv_day"
+            style="@style/Typography.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="일"
+            app:layout_constraintBottom_toBottomOf="@id/picker_day"
+            app:layout_constraintStart_toEndOf="@id/picker_day"
+            app:layout_constraintTop_toTopOf="@id/picker_day" />
+
+        <NumberPicker
+            android:id="@+id/picker_hours"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="36dp"
@@ -46,10 +118,20 @@
             android:selectionDividerHeight="0.5dp"
             android:theme="@style/ThemeOverlay.NumberPicker"
             app:layout_constraintBottom_toTopOf="@id/btn_visited_at_confirm"
+            app:layout_constraintEnd_toEndOf="@id/tv_hour"
+            app:layout_constraintStart_toEndOf="@id/picker_day"
+            app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title" />
+
+        <TextView
+            android:id="@+id/tv_hour"
+            style="@style/Typography.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시"
+            app:layout_constraintBottom_toBottomOf="@id/picker_hours"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
-            bind:visitedAtNumberPickerItems="@{items}" />
+            app:layout_constraintStart_toEndOf="@id/picker_hours"
+            app:layout_constraintTop_toTopOf="@id/picker_hours" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_visited_at_confirm"

@@ -30,7 +30,7 @@ public class Term {
 
     private void validateTermDates(LocalDate startAt, LocalDate endAt) {
         if (isOnlyOneDatePresent(startAt, endAt)) {
-            throw new StaccatoException("추억 시작 날짜와 끝 날짜를 모두 입력해주세요.");
+            throw new StaccatoException("추억의 시작 날짜와 끝 날짜는 함께 입력되거나, 함께 비워져 있어야 합니다.");
         }
         if (isInvalidTerm(startAt, endAt)) {
             throw new StaccatoException("끝 날짜가 시작 날짜보다 앞설 수 없어요.");

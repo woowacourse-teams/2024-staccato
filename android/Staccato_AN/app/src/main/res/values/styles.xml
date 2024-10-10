@@ -15,6 +15,15 @@
         <item name="titleTextColor">@color/gray5</item>
     </style>
 
+    <style name="CloseToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="titleCentered">true</item>
+        <item name="titleTextAppearance">@style/Typography.Title2</item>
+        <item name="titleTextColor">@color/gray5</item>
+    </style>
+
     <style name="SubTitleStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -124,6 +133,27 @@
         <item name="android:enabled">true</item>
     </style>
 
+    <style name="ButtonStyle.Recovery" parent="ButtonStyle">
+        <item name="android:background">@drawable/selector_button_5dp</item>
+        <item name="android:text">@string/recovery_load</item>
+        <item name="android:textColor">@color/gray4</item>
+        <item name="android:enabled">false</item>
+    </style>
+
+    <style name="ButtonStyle.Recovery.Active" parent="ButtonStyle.Recovery">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:enabled">true</item>
+    </style>
+
+    <style name="ButtonStyle.MyPage" parent="ButtonStyle">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:drawableEnd">@drawable/icon_arrow_right</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:textAlignment">textStart</item>
+    </style>
+
     <style name="ToolbarMenuStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -197,6 +227,23 @@
         <item name="android:gravity">center</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
+    </style>
+
+    <style name="CurrentLocationStyle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:clickable">true</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/visit_creation_load_current_location</item>
+        <item name="android:textAppearance">@style/Typography.Body4</item>
+        <item name="android:textColor">@color/gray4</item>
+
+        <item name="icon">@drawable/icon_crosshair</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">10dp</item>
+        <item name="iconTint">@color/gray3</item>
+
+        <item name="rippleColor">@android:color/transparent</item>
+        <item name="strokeColor">@color/gray3</item>
     </style>
 
 </resources>

@@ -52,7 +52,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_memory_title"
             bind:endAt="@{memory.endAt}"
             bind:startAt="@{memory.startAt}"
-            tools:text="2024.07.23" />
+            tools:text="2024.7.23 ~ 2024.9.30" />
 
         <TextView
             android:id="@+id/tv_memory_title"

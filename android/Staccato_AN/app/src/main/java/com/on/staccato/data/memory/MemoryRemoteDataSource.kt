@@ -7,28 +7,36 @@ import com.on.staccato.data.dto.memory.MemoriesResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.domain.model.NewMemory
+import javax.inject.Inject
 
-class MemoryRemoteDataSource(
-    private val memoryApiService: MemoryApiService,
-) : MemoryDataSource {
-    override suspend fun getMemory(memoryId: Long): ResponseResult<MemoryResponse> =
-        handleApiResponse { memoryApiService.getMemory(memoryId) }
+class MemoryRemoteDataSource
+    @Inject
+    constructor(
+        private val memoryApiService: MemoryApiService,
+    ) : MemoryDataSource {
+        override suspend fun getMemory(memoryId: Long): ResponseResult<MemoryResponse> =
+            handleApiResponse { memoryApiService.getMemory(memoryId) }
 
-    override suspend fun getMemories(currentDate: String?): ResponseResult<MemoriesResponse> =
-        handleApiResponse { memoryApiService.getMemories(currentDate) }
+        override suspend fun getMemories(currentDate: String?): ResponseResult<MemoriesResponse> =
+            handleApiResponse { memoryApiService.getMemories(currentDate) }
 
-    override suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse> =
-        handleApiResponse {
-            memoryApiService.postMemory(newMemory.toDto())
-        }
+        override suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse> =
+            handleApiResponse {
+                memoryApiService.postMemory(newMemory.toDto())
+            }
 
-    override suspend fun updateMemory(
-        memoryId: Long,
-        newMemory: NewMemory,
-    ): ResponseResult<Unit> =
-        handleApiResponse {
-            memoryApiService.putMemory(memoryId, newMemory.toDto())
-        }
+        override suspend fun updateMemory(
+            memoryId: Long,
+            newMemory: NewMemory,
+        ): ResponseResult<Unit> =
+            handleApiResponse {
+                memoryApiService.putMemory(memoryId, newMemory.toDto())
+            }
 
-    override suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit> = handleApiResponse { memoryApiService.deleteMemory(memoryId) }
-}
+        override suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit> =
+            handleApiResponse {
+                memoryApiService.deleteMemory(
+                    memoryId,
+                )
+            }
+    }

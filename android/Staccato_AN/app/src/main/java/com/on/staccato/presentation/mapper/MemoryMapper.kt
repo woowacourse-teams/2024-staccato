@@ -29,7 +29,7 @@ fun Member.toUiModel() =
 fun MemoryMoment.toUiModel() =
     MemoryVisitUiModel(
         id = momentId,
-        placeName = placeName,
+        staccatoTitle = momentTitle,
         visitImageUrl = momentImageUrl,
         visitedAt = visitedAt,
     )

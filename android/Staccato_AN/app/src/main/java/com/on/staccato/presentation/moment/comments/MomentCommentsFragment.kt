@@ -7,33 +7,28 @@ import androidx.fragment.app.viewModels
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentMomentCommentsBinding
 import com.on.staccato.presentation.base.BindingFragment
-import com.on.staccato.presentation.moment.viewmodel.MomentViewModel
-import com.on.staccato.presentation.moment.viewmodel.MomentViewModelFactory
+import com.on.staccato.presentation.moment.MomentFragment.Companion.DEFAULT_STACCATO_ID
+import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.util.showToast
-import kotlin.properties.Delegates
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MomentCommentsFragment :
     BindingFragment<FragmentMomentCommentsBinding>(R.layout.fragment_moment_comments) {
     private lateinit var commentsAdapter: CommentsAdapter
-    private var momentId by Delegates.notNull<Long>()
-    private val commentsViewModel: MomentCommentsViewModel by viewModels {
-        MomentCommentsViewModelFactory(momentId)
-    }
-    private val momentViewModel: MomentViewModel by viewModels(
-        ownerProducer = { requireParentFragment() },
-    ) {
-        MomentViewModelFactory()
-    }
+
+    private val momentId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
+    private val commentsViewModel: MomentCommentsViewModel by viewModels()
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        momentId = arguments?.getLong(MOMENT_ID_KEY) ?: return
+        commentsViewModel.setMemoryId(momentId)
         setUpRecyclerView()
         setUpBinding()
-        observeMomentViewModel()
         observeCommentsViewModel()
+        loadComments()
     }
 
     private fun setUpRecyclerView() {
@@ -47,10 +42,8 @@ class MomentCommentsFragment :
         binding.commentHandler = commentsViewModel
     }
 
-    private fun observeMomentViewModel() {
-        momentViewModel.comments.observe(viewLifecycleOwner) { comments ->
-            commentsViewModel.setComments(comments)
-        }
+    private fun loadComments() {
+        commentsViewModel.fetchComments()
     }
 
     private fun observeCommentsViewModel() {
@@ -71,9 +64,5 @@ class MomentCommentsFragment :
                 requireActivity().window.clearFlags(FLAG_NOT_TOUCHABLE)
             }
         }
-    }
-
-    companion object {
-        const val MOMENT_ID_KEY = "momentId"
     }
 }

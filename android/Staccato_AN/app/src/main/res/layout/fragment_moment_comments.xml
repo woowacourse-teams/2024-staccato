@@ -23,12 +23,10 @@
 
         <TextView
             android:id="@+id/tv_moment_comments_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/SubTitleStyle"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/visit_logs"
-            android:textAppearance="@style/Typography.Title2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -92,7 +90,8 @@
                 android:layout_width="0dp"
                 android:layout_marginStart="10dp"
                 android:hint="@string/visit_enter_log"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionNone"
+                android:inputType="textMultiLine"
                 android:maxLength="500"
                 android:maxLines="10"
                 android:text="@={viewModel.commentInput}"
@@ -106,14 +105,15 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:clickable="true"
+                android:contentDescription="@string/all_image_content_description"
                 android:focusable="true"
                 android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
                 android:padding="8dp"
                 android:src="@drawable/selector_comment_sendable"
-                app:enableSendButton="@{viewModel.commentInput}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:sendEnabled="@{viewModel.commentInput}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

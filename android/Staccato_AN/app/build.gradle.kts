@@ -14,11 +14,12 @@ val keystoreProperties =
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.kotlinKapt)
+    id("kotlin-kapt")
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.googleServices)
     alias(libs.plugins.firebaseCrashlytics)
     alias(libs.plugins.mapsplatformSecretsGradlePlugin)
+    alias(libs.plugins.hiltAndroid)
 }
 
 android {
@@ -29,8 +30,8 @@ android {
         applicationId = "com.on.staccato"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0.0"
+        versionCode = 4
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -82,6 +83,10 @@ android {
 
     dataBinding {
         enable = true
+    }
+
+    kapt {
+        correctErrorTypes = true
     }
 }
 
@@ -146,9 +151,20 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
 
+    // Google Place
+    implementation(libs.places)
+    implementation(platform(libs.kotlin.bom))
+
     // View Pager2
     implementation(libs.androidx.viewpager2)
     implementation(libs.dotsindicator)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+
+    // Lottie
+    implementation(libs.lottie)
 }
 
 secrets {

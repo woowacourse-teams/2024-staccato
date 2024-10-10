@@ -7,25 +7,23 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.on.staccato.R
-import com.on.staccato.data.StaccatoClient.memoryApiService
-import com.on.staccato.data.memory.MemoryDefaultRepository
-import com.on.staccato.data.memory.MemoryRemoteDataSource
 import com.on.staccato.databinding.FragmentMemoryBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.DialogHandler
 import com.on.staccato.presentation.common.ToolbarHandler
 import com.on.staccato.presentation.main.MainActivity
-import com.on.staccato.presentation.main.SharedViewModel
+import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.adapter.MatesAdapter
 import com.on.staccato.presentation.memory.adapter.VisitsAdapter
 import com.on.staccato.presentation.memory.viewmodel.MemoryViewModel
-import com.on.staccato.presentation.memory.viewmodel.MemoryViewModelFactory
 import com.on.staccato.presentation.memoryupdate.MemoryUpdateActivity
-import com.on.staccato.presentation.moment.MomentFragment.Companion.MOMENT_ID_KEY
+import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.momentcreation.MomentCreationActivity
 import com.on.staccato.presentation.util.showToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MemoryFragment :
     BindingFragment<FragmentMemoryBinding>(R.layout.fragment_memory),
     ToolbarHandler,
@@ -34,9 +32,7 @@ class MemoryFragment :
     private val memoryId by lazy {
         arguments?.getLong(MEMORY_ID_KEY) ?: throw IllegalArgumentException()
     }
-    private val viewModel: MemoryViewModel by viewModels {
-        MemoryViewModelFactory(MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)))
-    }
+    private val viewModel: MemoryViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
 
@@ -74,7 +70,7 @@ class MemoryFragment :
         viewModel.memory.value?.let {
             val bundle =
                 bundleOf(
-                    MOMENT_ID_KEY to visitId,
+                    STACCATO_ID_KEY to visitId,
                 )
             findNavController().navigate(R.id.action_memoryFragment_to_momentFragment, bundle)
         }
@@ -85,18 +81,14 @@ class MemoryFragment :
     }
 
     override fun onVisitCreationClicked() {
-        if (viewModel.isInPeriod()) {
-            viewModel.memory.value?.let {
-                val visitCreationLauncher = (activity as MainActivity).visitCreationLauncher
-                MomentCreationActivity.startWithResultLauncher(
-                    memoryId,
-                    it.title,
-                    requireContext(),
-                    visitCreationLauncher,
-                )
-            }
-        } else {
-            showToast(getString(R.string.memory_unable_to_create_moment))
+        viewModel.memory.value?.let {
+            val visitCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
+            MomentCreationActivity.startWithResultLauncher(
+                memoryId,
+                it.title,
+                requireContext(),
+                visitCreationLauncher,
+            )
         }
     }
 

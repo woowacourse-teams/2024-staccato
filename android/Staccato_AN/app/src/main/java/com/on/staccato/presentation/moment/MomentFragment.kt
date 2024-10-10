@@ -12,19 +12,20 @@ import com.on.staccato.databinding.FragmentMomentBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.main.MainActivity
-import com.on.staccato.presentation.main.SharedViewModel
+import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.moment.comments.MomentCommentsFragment
 import com.on.staccato.presentation.moment.detail.ViewpagePhotoAdapter
 import com.on.staccato.presentation.moment.feeling.MomentFeelingSelectionFragment
 import com.on.staccato.presentation.moment.viewmodel.MomentViewModel
-import com.on.staccato.presentation.moment.viewmodel.MomentViewModelFactory
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitupdate.VisitUpdateActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.properties.Delegates
 
+@AndroidEntryPoint
 class MomentFragment :
     BindingFragment<FragmentMomentBinding>(R.layout.fragment_moment), MomentToolbarHandler {
-    private val momentViewModel: MomentViewModel by viewModels { MomentViewModelFactory() }
+    private val momentViewModel: MomentViewModel by viewModels()
     private var momentId by Delegates.notNull<Long>()
     private lateinit var pagePhotoAdapter: ViewpagePhotoAdapter
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
@@ -37,7 +38,7 @@ class MomentFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        momentId = arguments?.getLong(MOMENT_ID_KEY) ?: return
+        momentId = arguments?.getLong(STACCATO_ID_KEY) ?: return
         binding.viewModel = momentViewModel
         initToolbarHandler()
         initViewPagerAdapter()
@@ -69,7 +70,7 @@ class MomentFragment :
     private fun createChildFragments(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
             val bundle =
-                bundleOf(MOMENT_ID_KEY to momentId)
+                bundleOf(STACCATO_ID_KEY to momentId)
             val momentFeelingSelectionFragment =
                 MomentFeelingSelectionFragment().apply {
                     arguments = bundle
@@ -112,7 +113,7 @@ class MomentFragment :
         memoryId: Long,
         memoryTitle: String,
     ) {
-        val momentUpdateLauncher = (activity as MainActivity).visitUpdateLauncher
+        val momentUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
         VisitUpdateActivity.startWithResultLauncher(
             visitId = momentId,
             memoryId = memoryId,
@@ -123,6 +124,7 @@ class MomentFragment :
     }
 
     companion object {
-        const val MOMENT_ID_KEY = "momentId"
+        const val STACCATO_ID_KEY = "momentId"
+        const val DEFAULT_STACCATO_ID = -1L
     }
 }

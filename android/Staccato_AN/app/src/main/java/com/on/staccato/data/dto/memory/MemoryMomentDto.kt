@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MemoryMomentDto(
     @SerialName("momentId") val momentId: Long,
-    @SerialName("placeName") val placeName: String,
-    @SerialName("momentImageUrl") val momentImageUrl: String? = null,
+    @SerialName("staccatoTitle") val staccatoTitle: String,
+    @SerialName("momentImageUrl") val staccatoImageUrl: String? = null,
     @SerialName("visitedAt") val visitedAt: String,
 )

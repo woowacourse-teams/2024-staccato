@@ -4,49 +4,34 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.on.staccato.R
-import com.on.staccato.data.StaccatoClient.imageApiService
-import com.on.staccato.data.StaccatoClient.memoryApiService
-import com.on.staccato.data.image.ImageDefaultRepository
-import com.on.staccato.data.memory.MemoryDefaultRepository
-import com.on.staccato.data.memory.MemoryRemoteDataSource
 import com.on.staccato.databinding.ActivityMemoryUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel
-import com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModelFactory
 import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.showToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MemoryUpdateActivity :
     BindingActivity<ActivityMemoryUpdateBinding>(),
     MemoryUpdateHandler,
     OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_update
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_MEMORY_ID) }
-    private val viewModel: MemoryUpdateViewModel by viewModels {
-        MemoryUpdateViewModelFactory(
-            memoryId,
-            MemoryDefaultRepository(MemoryRemoteDataSource(memoryApiService)),
-            ImageDefaultRepository(imageApiService),
-        )
-    }
+    private val viewModel: MemoryUpdateViewModel by viewModels()
+
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
-    private val inputManager: InputMethodManager by lazy {
-        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-    }
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
@@ -63,7 +48,6 @@ class MemoryUpdateActivity :
 
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        showToast(getString(R.string.memory_update_posting))
         viewModel.updateMemory()
     }
 
@@ -82,17 +66,6 @@ class MemoryUpdateActivity :
         viewModel.setThumbnailUri(uris.first())
         viewModel.createThumbnailUrl(this, uris.first())
         showToast(getString(R.string.all_posting_photo))
-    }
-
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            currentFocus?.let { view ->
-                if (!isTouchInsideView(event, view)) {
-                    clearFocusAndHideKeyboard(view)
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event)
     }
 
     private fun buildDateRangePicker() =
@@ -116,7 +89,7 @@ class MemoryUpdateActivity :
     }
 
     private fun fetchMemory() {
-        viewModel.fetchMemory()
+        viewModel.fetchMemory(memoryId)
     }
 
     private fun updateMemoryPeriod() {
@@ -140,27 +113,6 @@ class MemoryUpdateActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
-    }
-
-    private fun isTouchInsideView(
-        event: MotionEvent,
-        view: View,
-    ): Boolean {
-        val rect = android.graphics.Rect()
-        view.getGlobalVisibleRect(rect)
-        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
-    }
-
-    private fun clearFocusAndHideKeyboard(view: View) {
-        view.clearFocus()
-        hideKeyboard(view)
-    }
-
-    private fun hideKeyboard(view: View) {
-        inputManager.hideSoftInputFromWindow(
-            view.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS,
-        )
     }
 
     private fun showErrorToast() {
