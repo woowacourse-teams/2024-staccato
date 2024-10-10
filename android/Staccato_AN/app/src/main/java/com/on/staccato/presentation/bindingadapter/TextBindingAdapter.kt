@@ -12,7 +12,7 @@ import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@BindingAdapter(value = ["setSelectedMemory", "setMemoryCandidates"])
+@BindingAdapter(value = ["selectedMemory", "memoryCandidates"])
 fun TextView.setSelectedMemory(
     selectedMemory: MemoryCandidate?,
     memoryCandidates: MemoryCandidates?,
@@ -33,9 +33,9 @@ fun TextView.setSelectedMemory(
     }
 }
 
-@BindingAdapter(value = ["setDateTimeWithAmPm", "setMemoryCandidates"])
+@BindingAdapter(value = ["dateTimeWithAmPm", "memoryCandidates"])
 fun TextView.setDateTimeWithAmPm(
-    setNowDateTime: LocalDateTime?,
+    dateTime: LocalDateTime?,
     memoryCandidates: MemoryCandidates?,
 ) {
     if (memoryCandidates?.memoryCandidate?.isEmpty() == true) {
@@ -44,7 +44,7 @@ fun TextView.setDateTimeWithAmPm(
         isClickable = false
         isFocusable = false
     } else {
-        text = setNowDateTime?.let(::getFormattedLocalDateTime) ?: ""
+        text = dateTime?.let(::getFormattedLocalDateTime) ?: ""
         setTextColor(resources.getColor(R.color.staccato_black, null))
         isClickable = true
         isFocusable = true
@@ -69,39 +69,27 @@ fun TextView.setMemoryPeriod(
     }
 }
 
-@BindingAdapter("memoryIsEmptyVisibility")
-fun TextView.setMemoryIsEmptyVisibility(memoryCandidates: MemoryCandidates?) {
+@BindingAdapter("isMemoryCandidatesEmpty")
+fun TextView.setIsMemoryCandidatesEmptyVisibility(memoryCandidates: MemoryCandidates?) {
     isGone = !memoryCandidates?.memoryCandidate.isNullOrEmpty()
 }
 
-@BindingAdapter("visitedAtIsEmptyVisibility")
-fun TextView.setVisitedAtIsEmptyVisibility(items: List<Int>?) {
+@BindingAdapter("isMemoryEmpty")
+fun TextView.setIsMemoryEmptyVisibility(items: List<Int>?) {
     isGone = !items.isNullOrEmpty()
 }
 
-@BindingAdapter("visitedAt")
-fun TextView.combineVisitedAt(visitedAt: LocalDateTime?) {
-    text =
-        if (visitedAt != null) {
-            val hour = if (visitedAt.hour % 12 == 0) 12 else visitedAt.hour % 12
-            val noonText = if (visitedAt.hour < 12) "오전" else "오후"
-            format(
-                resources.getString(R.string.visit_history),
-                visitedAt.year,
-                visitedAt.monthValue,
-                visitedAt.dayOfMonth,
-                noonText,
-                hour,
-            )
-        } else {
-            ""
-        }
+@BindingAdapter("visitedAtHistory")
+fun TextView.formatVisitedAtHistory(visitedAt: LocalDateTime?) {
+    text = visitedAt?.let {
+        getFormattedLocalDateTime(it) + resources.getString(R.string.visit_at_history)
+    } ?: ""
 }
 
 @BindingAdapter(
     value = ["startAt", "endAt"],
 )
-fun TextView.convertLocalDateToDatePeriodString(
+fun TextView.formatLocalDateToDatePeriod(
     startAt: LocalDate?,
     endAt: LocalDate?,
 ) {
@@ -127,7 +115,7 @@ fun TextView.convertLocalDateToDatePeriodString(
 @BindingAdapter(
     value = ["memoryStartAt", "memoryEndAt"],
 )
-fun TextView.convertLocalDateToDatePeriodStringInMemory(
+fun TextView.formatLocalDateToDatePeriodInMemory(
     startAt: LocalDate?,
     endAt: LocalDate?,
 ) {
@@ -150,13 +138,13 @@ fun TextView.convertLocalDateToDatePeriodStringInMemory(
         }
 }
 
-@BindingAdapter(value = ["currentPhotoNumbers", "maxPhotoNumbers"])
+@BindingAdapter(value = ["attachedPhotoNumbers", "maxPhotoNumbers"])
 fun TextView.setPhotoNumbers(
-    currentPhotoNumbers: Int,
+    attachedPhotoNumbers: Int,
     maxPhotoNumbers: Int,
 ) {
     text =
-        resources.getString(R.string.all_photo_number).format(currentPhotoNumbers, maxPhotoNumbers)
+        resources.getString(R.string.all_photo_number).format(attachedPhotoNumbers, maxPhotoNumbers)
 }
 
 @BindingAdapter("photoDragHintVisibility")
@@ -164,12 +152,7 @@ fun TextView.setPhotoDragHintVisibility(currentPhotoNumbers: Int) {
     isGone = currentPhotoNumbers < 2
 }
 
-@BindingAdapter("setAddress")
-fun TextView.setAddress(address: String?) {
+@BindingAdapter("selectedAddress")
+fun TextView.setSelectedAddress(address: String?) {
     text = address ?: context.getString(R.string.visit_creation_empty_address)
-}
-
-@BindingAdapter("periodSelectionVisibility")
-fun TextView.setPeriodSelectionVisibility(isChecked: Boolean) {
-    isGone = !isChecked
 }

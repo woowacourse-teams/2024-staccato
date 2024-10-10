@@ -66,7 +66,7 @@
     <string name="memory_update_toolbar_subtitle">스타카토를 담을 추억을 수정해 보세요!</string>
 
     // fragment_visit
-    <string name="visit_history">%s년 %s월 %s일 %s %s시에 방문 했어요</string>
+    <string name="visit_at_history">에 방문했어요</string>
     <string name="visit_logs">코멘트</string>
     <string name="visit_add">기록하기</string>
     <string name="visit_enter_log">코멘트 입력하기</string>
