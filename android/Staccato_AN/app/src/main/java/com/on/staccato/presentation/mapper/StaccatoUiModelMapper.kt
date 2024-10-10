@@ -3,21 +3,21 @@ package com.on.staccato.presentation.mapper
 import com.on.staccato.R
 import com.on.staccato.domain.model.Comment
 import com.on.staccato.domain.model.Feeling
-import com.on.staccato.domain.model.Staccato
-import com.on.staccato.presentation.staccato.comments.CommentUiModel
-import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
-import com.on.staccato.presentation.staccato.feeling.FeelingUiModel
+import com.on.staccato.domain.model.Moment
+import com.on.staccato.presentation.moment.comments.CommentUiModel
+import com.on.staccato.presentation.moment.detail.MomentDetailUiModel
+import com.on.staccato.presentation.moment.feeling.FeelingUiModel
 
-fun Staccato.toStaccatoDetailUiModel(): StaccatoDetailUiModel {
-    return StaccatoDetailUiModel(
-        id = staccatoId,
+fun Moment.toMomentDetailUiModel(): MomentDetailUiModel {
+    return MomentDetailUiModel(
+        id = momentId,
         memoryId = memoryId,
         memoryTitle = memoryTitle,
         staccatoTitle = staccatoTitle,
         placeName = placeName,
         latitude = latitude,
         longitude = longitude,
-        staccatoImageUrls = staccatoImageUrls,
+        momentImageUrls = momentImageUrls,
         address = address,
         visitedAt = visitedAt,
     )

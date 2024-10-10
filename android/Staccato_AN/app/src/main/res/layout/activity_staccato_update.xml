@@ -10,15 +10,15 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.staccatoupdate.viewmodel.StaccatoUpdateViewModel" />
+            type="com.on.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel" />
 
         <variable
-            name="staccatoUpdateHandler"
-            type="com.on.staccato.presentation.staccatoupdate.StaccatoUpdateHandler" />
+            name="visitUpdateHandler"
+            type="com.on.staccato.presentation.visitupdate.VisitUpdateHandler" />
 
         <variable
             name="currentLocationHandler"
-            type="com.on.staccato.presentation.staccatocreation.CurrentLocationHandler" />
+            type="com.on.staccato.presentation.momentcreation.CurrentLocationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,27 +27,28 @@
         android:background="@color/white">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar_staccato_update"
-            style="@style/NavigationToolbarStyle"
+            android:id="@+id/toolbar_visit_update"
+            style="@style/TitleToolbarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:subtitle="@string/staccato_update_toolbar_subtitle"
-            app:title="@string/staccato_update_toolbar_title" />
+            app:subtitle="@string/visit_creation_toolbar_subtitle"
+            app:title="@string/visit_update_toolbar_title" />
 
         <androidx.core.widget.NestedScrollView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_staccato_update">
+            app:layout_constraintTop_toBottomOf="@id/toolbar_visit_update">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".presentation.staccatocreation.StaccatoCreationActivity">
+                tools:context=".presentation.momentcreation.MomentCreationActivity">
 
                 <TextView
                     android:id="@+id/tv_photo_title"
@@ -67,7 +68,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/tv_photo_title"
                     app:layout_constraintStart_toEndOf="@id/tv_photo_title"
                     app:layout_constraintTop_toTopOf="@id/tv_photo_title"
-                    bind:attachedPhotoNumbers="@{viewModel.currentPhotos.size}"
+                    bind:currentPhotoNumbers="@{viewModel.currentPhotos.size}"
                     bind:maxPhotoNumbers="@{5}"
                     tools:text="5/5" />
 
@@ -92,41 +93,40 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="24dp"
-                    android:text="@string/staccato_creation_photo_drag_hint"
+                    android:text="@string/visit_creation_photo_drag_hint"
                     android:textAppearance="@style/Typography.Body4"
                     android:textColor="@color/gray3"
-                    android:visibility="@{viewModel.currentPhotos.size &lt; 2 ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_photo_attach"
                     bind:photoDragHintVisibility="@{viewModel.currentPhotos.size}" />
 
                 <TextView
-                    android:id="@+id/tv_staccato_update_place_name_title"
+                    android:id="@+id/tv_visit_update_place_name_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="40dp"
-                    android:text="@string/staccato_creation_staccato_title"
+                    android:text="@string/visit_creation_staccato_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
 
                 <TextView
-                    android:id="@+id/tv_staccato_update_required_mark_first"
+                    android:id="@+id/tv_visit_update_required_mark_first"
                     style="@style/RequiredMarkStyle"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_staccato_update_place_name_title"
-                    app:layout_constraintStart_toEndOf="@id/tv_staccato_update_place_name_title"
-                    app:layout_constraintTop_toTopOf="@id/tv_staccato_update_place_name_title" />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_visit_update_place_name_title" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/text_input_staccato_update_title"
+                    android:id="@+id/text_input_visit_update_title"
                     style="@style/TextInputLayoutStyle"
                     app:counterMaxLength="30"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_update_place_name_title">
+                    app:layout_constraintTop_toBottomOf="@id/tv_visit_update_place_name_title">
 
                     <com.google.android.material.textfield.TextInputEditText
                         style="@style/TextInputEditTextStyle.Title"
-                        android:hint="@string/staccato_creation_staccato_name_hint"
+                        android:hint="@string/visit_creation_staccato_name_hint"
                         android:imeOptions="actionDone"
                         android:maxLength="30"
                         android:text="@={viewModel.staccatoTitle}" />
@@ -137,13 +137,13 @@
                     android:id="@+id/tv_place_name_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="20dp"
-                    android:text="@string/staccato_creation_place"
+                    android:text="@string/visit_creation_place"
                     android:textAppearance="@style/Typography.Title2"
-                    app:layout_constraintStart_toStartOf="@id/tv_staccato_update_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_staccato_update_title" />
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_visit_update_title" />
 
                 <TextView
-                    android:id="@+id/tv_staccato_creation_required_mark_second"
+                    android:id="@+id/tv_visit_creation_required_mark_second"
                     style="@style/RequiredMarkStyle"
                     app:layout_constraintBottom_toBottomOf="@id/tv_place_name_title"
                     app:layout_constraintStart_toEndOf="@id/tv_place_name_title"
@@ -166,9 +166,9 @@
                     android:id="@+id/tv_place_address_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="10dp"
-                    android:text="@string/staccato_creation_address"
+                    android:text="@string/visit_creation_address"
                     android:textAppearance="@style/Typography.Title3"
-                    app:layout_constraintStart_toStartOf="@id/tv_staccato_update_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/autocomplete_fragment" />
 
                 <TextView
@@ -187,7 +187,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address_title"
-                    bind:selectedAddress="@{viewModel.address}"
+                    bind:setAddress="@{viewModel.address}"
                     tools:text="상세 주소 (고정)" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -207,16 +207,21 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        bind:currentLocationButtonLoading="@{viewModel.isCurrentLocationLoading}" />
+                        bind:setCurrentLocationButtonLoading="@{viewModel.isCurrentLocationLoading}" />
 
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/lotti_dot_loading"
-                        style="@style/LottieStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         app:layout_constraintBottom_toBottomOf="@+id/btn_current_location"
                         app:layout_constraintEnd_toEndOf="@id/btn_current_location"
                         app:layout_constraintStart_toStartOf="@id/btn_current_location"
                         app:layout_constraintTop_toTopOf="@+id/btn_current_location"
-                        bind:visibleOrGone="@{viewModel.isCurrentLocationLoading}" />
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_rawRes="@raw/dot_loading"
+                        bind:setLoadingLottieVisibility="@{viewModel.isCurrentLocationLoading}" />
+                    />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -224,12 +229,12 @@
                     android:id="@+id/tv_memory_selection_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="35dp"
-                    android:text="@string/staccato_creation_memory_selection"
+                    android:text="추억 선택"
                     app:layout_constraintStart_toStartOf="@id/tv_photo_title"
                     app:layout_constraintTop_toBottomOf="@id/constraint_current_location" />
 
                 <TextView
-                    android:id="@+id/tv_staccato_update_required_mark_third"
+                    android:id="@+id/tv_visit_update_required_mark_third"
                     style="@style/RequiredMarkStyle"
                     app:layout_constraintBottom_toBottomOf="@id/tv_memory_selection_title"
                     app:layout_constraintStart_toEndOf="@id/tv_memory_selection_title"
@@ -242,7 +247,7 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{() -> staccatoUpdateHandler.onMemorySelectionClicked()}"
+                    android:onClick="@{()->visitUpdateHandler.onMemorySelectionClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:text="@{viewModel.selectedMemory.memoryTitle}"
@@ -263,7 +268,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection" />
 
                 <TextView
-                    android:id="@+id/tv_staccato_update_required_mark_fourth"
+                    android:id="@+id/tv_visit_update_required_mark_fourth"
                     style="@style/RequiredMarkStyle"
                     app:layout_constraintBottom_toBottomOf="@id/tv_select_memory_title"
                     app:layout_constraintStart_toEndOf="@id/tv_select_memory_title"
@@ -276,42 +281,50 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{() -> staccatoUpdateHandler.onVisitedAtSelectionClicked()}"
+                    android:onClick="@{()->visitUpdateHandler.onVisitedAtSelectionClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_select_memory_title"
-                    bind:dateTimeWithAmPm="@{viewModel.selectedVisitedAt}"
-                    bind:memoryCandidates="@{viewModel.memoryCandidates}" />
+                    bind:setDateTimeWithAmPm="@{viewModel.selectedVisitedAt}"
+                    bind:setMemoryCandidates="@{viewModel.memoryCandidates}" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_staccato_update_done"
+                    android:id="@+id/btn_visit_update_done"
                     style="@style/ButtonStyle.Save.Active"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="36dp"
                     android:layout_marginBottom="24dp"
-                    android:onClick="@{() -> staccatoUpdateHandler.onUpdateDoneClicked()}"
+                    android:onClick="@{() -> visitUpdateHandler.onUpdateDoneClicked()}"
                     android:text="@string/all_save"
                     android:textAppearance="@style/Typography.Title3"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
-                    bind:staccatoAddress="@{viewModel.address}"
-                    bind:staccatoMemory="@{viewModel.selectedMemory}"
-                    bind:staccatoPhotos="@{viewModel.currentPhotos}"
+                    bind:address="@{viewModel.address}"
+                    bind:photos="@{viewModel.currentPhotos}"
+                    bind:selectedMemory="@{viewModel.selectedMemory}"
                     bind:staccatoTitle="@{viewModel.staccatoTitle}"
-                    bind:staccatoVisitedAt="@{viewModel.selectedVisitedAt}" />
+                    bind:visitedAt="@{viewModel.selectedVisitedAt}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
 
-        <include
-            isPosting="@{viewModel.isPosting}"
-            layout="@layout/layout_loading" />
+        <ProgressBar
+            android:id="@+id/progress_bar_visit_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progress="30"
+            android:visibility="@{viewModel.isPosting ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

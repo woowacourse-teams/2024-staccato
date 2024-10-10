@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="years"
+            name="items"
             type="java.util.List&lt;Integer&gt;" />
     </data>
 
@@ -24,18 +24,18 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_memory_is_empty"
+            android:id="@+id/tv_visited_at_is_empty"
             style="@style/Typography.Body2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="50dp"
             android:gravity="center"
-            android:text="@string/staccato_creation_unselected_memory"
+            android:text="@string/visit_creation_unselected_memory"
             app:layout_constraintBottom_toTopOf="@id/btn_visited_at_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
-            bind:isMemoryEmpty="@{years}" />
+            bind:visitedAtIsEmptyVisibility="@{items}" />
 
         <NumberPicker
             android:id="@+id/picker_year"
@@ -141,7 +141,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            bind:visitedAtSelectButtonEnabled="@{years}" />
+            bind:visitedAtConfirmButtonActive="@{items}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

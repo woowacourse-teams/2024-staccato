@@ -16,7 +16,7 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModel
-import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
+import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -65,6 +65,7 @@ class MemoryCreationActivity :
     override fun onUrisSelected(vararg uris: Uri) {
         viewModel.createThumbnailUrl(this, uris.first())
         viewModel.setThumbnailUri(uris.first())
+        showToast(getString(R.string.all_posting_photo))
     }
 
     private fun buildDateRangePicker() =

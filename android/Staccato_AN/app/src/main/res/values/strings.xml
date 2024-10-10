@@ -12,6 +12,7 @@
     <string name="all_photo">사진</string>
     <string name="all_photo_number">(%s/%s)</string>
     <string name="all_photo_attach">사진을 첨부해 보세요</string>
+    <string name="all_visited_date">시간</string>
     <string name="all_visited_at">날짜 및 시간</string>
     <string name="all_please_select_visited_at">날짜 및 시간을 선택해 주세요</string>
     <string name="all_date_dots_format">%s. %s. %s</string>
@@ -20,9 +21,8 @@
     <string name="all_image_content_description">사진</string>
     <string name="all_default_not_supported">아직 지원하지 않는 기능이에요.</string>
     <string name="all_required_mark">*</string>
+    <string name="all_posting_photo">사진을 게시하는 중이에요</string>
     <string name="all_setting">설정</string>
-    <string name="all_am">오전</string>
-    <string name="all_pm">오후</string>
     <string name="all_location_permission_denial">위치 권한을 거부 하셨습니다.</string>
     <string name="all_webview_failure">웹 브라우저를 띄울 수 없습니다.</string>
     <string name="all_clipboard_copy">클립보드에 복사했어요!</string>
@@ -33,6 +33,7 @@
     // fragment_timeline
     <string name="timeline_my_timeline">나의 추억들</string>
     <string name="timeline_order">최근 생성 순</string>
+    <string name="timeline_year">%s년</string>
     <string name="timeline_empty">아직 추억이 없네요!\n스타카토를 담을 추억을 만들어보세요.</string>
     <string name="timeline_add_memory">추가</string>
     <string name="timeline_sort">정렬</string>
@@ -42,9 +43,11 @@
     <string name="memory_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
     <string name="memory_period_dot">%s. %s. %s ~ %s. %s. %s</string>
     <string name="memory_mates">함께 한 사람들</string>
-    <string name="memory_staccatos">스타카토</string>
+    <string name="memory_visits">스타카토</string>
+    <string name="memory_daily_visits">%s월 %s일의 스타카토</string>
     <string name="memory_delete_complete">추억이 삭제되었습니다.</string>
-    <string name="memory_staccato_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
+    <string name="memory_visit_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
+    <string name="memory_unable_to_create_moment">스타카토가 추억 기간에 포함되지 않아요!</string>
 
     // activity_memory_creation / activity_memory_update
     <string name="memory_creation_title">추억 제목</string>
@@ -62,35 +65,37 @@
     <string name="memory_update_toolbar_title">추억 수정하기</string>
     <string name="memory_update_toolbar_subtitle">스타카토를 담을 추억을 수정해 보세요!</string>
 
-    // fragment_staccato
-    <string name="staccato_at_history">%s에 방문했어요</string>
-    <string name="staccato_logs">코멘트</string>
-    <string name="staccato_add">기록하기</string>
-    <string name="staccato_enter_log">코멘트 입력하기</string>
-    <string name="staccato_empty_comments">코멘트가 없어요! 코멘트를 달아보세요.</string>
-    <string name="staccato_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
-    <string name="staccato_comment_has_been_deleted">코멘트를 삭제했어요!</string>
+    // fragment_visit
+    <string name="visit_history">%s년 %s월 %s일 %s %s시에 방문 했어요</string>
+    <string name="visit_logs">코멘트</string>
+    <string name="visit_add">기록하기</string>
+    <string name="visit_enter_log">코멘트 입력하기</string>
+    <string name="moment_empty_comments">코멘트가 없어요! 코멘트를 달아보세요.</string>
+    <string name="moment_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
+    <string name="moment_comment_has_been_deleted">코멘트를 삭제했어요!</string>
 
-    // activity_staccato_creation / activity_staccato_update
-    <string name="staccato_creation_photo_drag_hint">*꾹 눌러 사진 순서를 바꿔 보세요</string>
-    <string name="staccato_creation_staccato_title">스타카토 제목</string>
-    <string name="staccato_creation_staccato_name_hint">어떤 순간이었나요? 제목을 입력해 주세요</string>
-    <string name="staccato_creation_place">장소</string>
-    <string name="staccato_creation_place_search">"장소명, 주소, 위치로 검색해 보세요"</string>
-    <string name="staccato_creation_load_current_location">현재 위치의 주소 불러오기</string>
-    <string name="staccato_creation_empty_address">"장소를 선택하면 상세 주소가 나타나요"</string>
-    <string name="staccato_creation_address">상세 주소</string>
-    <string name="staccato_creation_memory_selection">추억 선택</string>
-    <string name="staccato_creation_memory_selection_hint">추억을 선택해 주세요</string>
-    <string name="staccato_creation_no_memory_hint">스타카토를 남길 수 있는 추억이 없어요</string>
-    <string name="staccato_creation_unselected_memory">추억을 먼저 선택해 주세요</string>
-    <string name="staccato_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨 보세요!</string>
-    <string name="staccato_creation_toolbar_title">스타카토 기록하기</string>
-    <string name="staccato_creation_not_found_address">주소를 찾지 못했습니다</string>
+    // activity_visit_creation / activity_visit_update
+    <string name="visit_creation_photo_drag_hint">*꾹 눌러 사진 순서를 바꿔 보세요</string>
+    <string name="visit_creation_staccato_title">스타카토 제목</string>
+    <string name="visit_creation_staccato_name_hint">어떤 순간이었나요? 제목을 입력해 주세요</string>
+    <string name="visit_creation_place">장소</string>
+    <string name="visit_creation_place_search">"장소명, 주소, 위치로 검색해 보세요"</string>
+    <string name="visit_creation_load_current_location">현재 위치의 주소 불러오기</string>
+    <string name="visit_creation_empty_address">"장소를 선택하면 상세 주소가 나타나요"</string>
+    <string name="visit_creation_address">상세 주소</string>
+    <string name="visit_creation_visited_at_hint">날짜를 선택해 주세요</string>
+    <string name="visit_creation_memory_selection">추억 선택</string>
+    <string name="visit_creation_memory_selection_hint">추억을 선택해 주세요</string>
+    <string name="visit_creation_no_memory_hint">스타카토를 남길 수 있는 추억이 없어요</string>
+    <string name="visit_creation_unselected_memory">추억을 먼저 선택해 주세요</string>
+    <string name="moment_creation_memory_selection">추억 선택</string>
+    <string name="visit_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨 보세요!</string>
+    <string name="visit_creation_toolbar_title">스타카토 기록하기</string>
+    <string name="moment_creation_not_found_address">주소를 찾지 못했습니다</string>
 
-    // activity_staccato_update
-    <string name="staccato_update_toolbar_subtitle">기억하고 싶은 순간을 수정해 보세요!</string>
-    <string name="staccato_update_toolbar_title">스타카토 수정하기</string>
+    // activity_visit_update
+    <string name="visit_update_toolbar_subtitle">기억하고 싶은 순간을 수정해 보세요!</string>
+    <string name="visit_update_toolbar_title">스타카토 수정하기</string>
 
     // activity_login
     <string name="login_start">시작하기</string>
@@ -109,8 +114,6 @@
     <string name="mypage_privacy_policy">개인정보처리방침</string>
     <string name="mypage_privacy_policy_url">https://app.websitepolicies.com/policies/view/7jel2uwv</string>
     <string name="mypage_app_version">앱 버전 1.1.0</string>
-    <string name="mypage_error_fetching_member_profile">프로필 정보를 가져올 수 없습니다.</string>
-    <string name="mypage_error_changing_profile_image">프로필 이미지 변경에 실패했습니다.</string>
 
     // fragment_photo_attach
     <string name="photo_attach_title">사진을 등록해 주세요</string>
@@ -118,6 +121,12 @@
     <string name="photo_attach_album">앨범에서 가져오기</string>
     <string name="snack_bar_require_photo_album_permission">사진 및 동영상 액세스 권한을 허용해 주세요.</string>
     <string name="snack_bar_move_to_setting">설정으로 이동하기</string>
+
+    // fragment_memory_selection
+    <string name="memory_selection_period">%s.%s.%s - %s.%s.%s</string>
+
+    // fragment_visited_date_selection
+    <string name="visited_date_selection_day">Day %d</string>
 
     // dialog_delete_impossibility
     <string name="memory_delete_title">추억을 삭제할 수 없어요.</string>
@@ -128,10 +137,16 @@
     <string name="delete_description">삭제를 누르면 복구할 수 없어요!</string>
     <string name="all_delete_image">이미지 삭제 버튼</string>
 
+    // menu_creation
+    <string name="menu_creation_memory">추억 생성</string>
+    <string name="menu_creation_staccato">스타카토 생성</string>
+
     // menu_comment
+    <string name="menu_comment_update">수정하기</string>
     <string name="menu_comment_delete">삭제하기</string>
 
     <string name="maps_location_permission_granted_message">위치 서비스 사용을 위한 위치 권한이 설정 되었습니다.</string>
+    <string name="maps_location_permission_required_message">위치 서비스 사용을 위해 위치 권한을 허용해 주세요.</string>
 
     // fragment_location_dialog
     <string name="location_dialog_title">위치 권한 설정</string>

@@ -1,0 +1,69 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  application:
+    name: staccato
+  sql:
+    init:
+      mode: always
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:staccato
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        create_empty_composites.enabled: true
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+  flyway:
+    enabled: false
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+security:
+  jwt:
+    token:
+      secret-key: ${SECRET_KEY}
+  admin:
+    key: ${ADMIN_KEY}
+    token: ${ADMIN_TOKEN}
+cloud:
+  aws:
+    s3:
+      bucket: techcourse-project-2024
+      endpoint: https://techcourse-project-2024.s3.ap-northeast-2.amazonaws.com
+    cloudfront:
+      endpoint: https://d25aribbn0gp8k.cloudfront.net
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+image:
+  folder:
+    name: image/
+
+management:
+  server:
+    port: 8080
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-components: when_authorized
+
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true

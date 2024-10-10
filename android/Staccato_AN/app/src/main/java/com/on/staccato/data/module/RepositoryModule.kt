@@ -5,16 +5,16 @@ import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.data.login.LoginDefaultRepository
 import com.on.staccato.data.member.MemberDefaultRepository
 import com.on.staccato.data.memory.MemoryDefaultRepository
+import com.on.staccato.data.moment.MomentDefaultRepository
 import com.on.staccato.data.mypage.MyPageDefaultRepository
-import com.on.staccato.data.staccato.StaccatoDefaultRepository
 import com.on.staccato.data.timeline.TimelineDefaultRepository
 import com.on.staccato.domain.repository.CommentRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.LoginRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.domain.repository.MemoryRepository
+import com.on.staccato.domain.repository.MomentRepository
 import com.on.staccato.domain.repository.MyPageRepository
-import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import dagger.Binds
 import dagger.Module
@@ -37,7 +37,7 @@ abstract class RepositoryModule {
     abstract fun bindMemoryRepository(memoryDefaultRepository: MemoryDefaultRepository): MemoryRepository
 
     @Binds
-    abstract fun bindStaccatoRepository(staccatoDefaultRepository: StaccatoDefaultRepository): StaccatoRepository
+    abstract fun bindMomentRepository(momentDefaultRepository: MomentDefaultRepository): MomentRepository
 
     @Binds
     abstract fun bindTimelineRepository(timelineDefaultRepository: TimelineDefaultRepository): TimelineRepository

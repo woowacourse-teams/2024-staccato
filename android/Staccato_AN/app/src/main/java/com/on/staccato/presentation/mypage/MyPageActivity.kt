@@ -29,17 +29,8 @@ class MyPageActivity :
     override fun initStartView(savedInstanceState: Bundle?) {
         initToolbar()
         initBindings()
-        loadMemberProfile()
+        loadMyProfile()
         observeCopyingUuidCode()
-        observeErrorMessage()
-    }
-
-    override fun onPrivacyPolicyClicked() {
-        val intent =
-            Intent(this, WebViewActivity::class.java)
-                .putExtra(EXTRA_URL, PRIVACY_POLICY_URL)
-                .putExtra(EXTRA_TOOLBAR_TITLE, getString(R.string.mypage_privacy_policy))
-        startActivity(intent)
     }
 
     private fun initToolbar() {
@@ -52,11 +43,11 @@ class MyPageActivity :
         binding.lifecycleOwner = this
         binding.menuHandler = this
         binding.viewModel = myPageViewModel
-        binding.memberProfileHandler = myPageViewModel
+        binding.myPageHandler = myPageViewModel
     }
 
-    private fun loadMemberProfile() {
-        myPageViewModel.fetchMemberProfile()
+    private fun loadMyProfile() {
+        myPageViewModel.fetchMyProfile()
     }
 
     private fun observeCopyingUuidCode() {
@@ -77,15 +68,16 @@ class MyPageActivity :
         }
     }
 
-    private fun observeErrorMessage() {
-        myPageViewModel.errorMessage.observe(this) { errorMessage ->
-            showToast(errorMessage)
-        }
+    override fun onPrivacyPolicyClicked() {
+        val url = getString(R.string.mypage_privacy_policy_url)
+        val intent =
+            Intent(this, WebViewActivity::class.java)
+                .putExtra(EXTRA_URL, url)
+                .putExtra(EXTRA_TOOLBAR_TITLE, getString(R.string.mypage_privacy_policy))
+        startActivity(intent)
     }
 
     companion object {
         private const val UUID_CODE_LABEL = "uuidCode"
-        private const val PRIVACY_POLICY_URL =
-            "https://app.websitepolicies.com/policies/view/7jel2uwv"
     }
 }

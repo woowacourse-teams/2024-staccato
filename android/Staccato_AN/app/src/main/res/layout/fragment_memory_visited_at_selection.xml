@@ -23,23 +23,23 @@
         <TextView
             android:id="@+id/tv_select_memory_title"
             style="@style/SubTitleStyle"
-            android:text="@string/staccato_creation_memory_selection_hint"
+            android:text="@string/visit_creation_memory_selection_hint"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_memory_candidates_is_empty"
+            android:id="@+id/tv_visited_at_is_empty"
             style="@style/Typography.Body2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="50dp"
             android:gravity="center"
-            android:text="@string/staccato_creation_no_memory_hint"
+            android:text="@string/visit_creation_no_memory_hint"
             app:layout_constraintBottom_toTopOf="@id/btn_memory_visited_at_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_select_memory_title"
-            bind:isMemoryCandidatesEmpty="@{memoryCandidates}" />
+            bind:memoryIsEmptyVisibility="@{memoryCandidates}" />
 
         <NumberPicker
             android:id="@+id/picker_memory"

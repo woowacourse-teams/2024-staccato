@@ -11,7 +11,8 @@ class SharedViewModel : ViewModel() {
     val isTimelineUpdated: SingleLiveData<Boolean>
         get() = _isTimelineUpdated
 
-    private val isStaccatosUpdated = MutableSingleLiveData(false)
+    private val _isStaccatosUpdated = MutableSingleLiveData(false)
+    val isStaccatosUpdated: SingleLiveData<Boolean> get() = _isStaccatosUpdated
 
     private val _isPermissionCancelClicked = MutableLiveData(false)
     val isPermissionCancelClicked: LiveData<Boolean> get() = _isPermissionCancelClicked
@@ -24,7 +25,7 @@ class SharedViewModel : ViewModel() {
     }
 
     fun setStaccatosHasUpdated() {
-        isStaccatosUpdated.setValue(true)
+        _isStaccatosUpdated.setValue(true)
     }
 
     fun updateIsPermissionCancelClicked() {

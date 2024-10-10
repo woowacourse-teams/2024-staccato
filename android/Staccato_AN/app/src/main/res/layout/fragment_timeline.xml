@@ -42,13 +42,13 @@
             android:onClick="@{() -> handler.onMemoryCreationClicked()}"
             android:paddingVertical="10dp"
             app:layout_constraintBottom_toBottomOf="@id/tv_timeline_my_timeline"
-            app:layout_constraintEnd_toStartOf="@id/frame_timeline_sort_memories"
+            app:layout_constraintEnd_toStartOf="@id/frame_timeline_sort_memory"
             app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline"
             bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
             bind:visibilityByTimeline="@{viewModel.timeline}">
 
             <Button
-                android:id="@+id/btn_timeline_add_memory"
+                android:id="@+id/btn_timeline_add_visits"
                 style="@style/Widget.Material3.Button.OutlinedButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/frame_timeline_sort_memories"
+            android:id="@+id/frame_timeline_sort_memory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -81,7 +81,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline">
 
             <Button
-                android:id="@+id/btn_timeline_sort_memories"
+                android:id="@+id/btn_timeline_sort_visits"
                 style="@style/Widget.Material3.Button.OutlinedButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -119,14 +119,16 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_timeline_loading"
-            style="@style/LottieStyle"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:visibility="@{viewModel.isTimelineLoading ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/frame_timeline_add_memory"
-            tools:visibility="visible" />
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/dot_loading" />
 
         <ImageView
             android:id="@+id/iv_timeline_empty"

@@ -28,7 +28,7 @@ spring:
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    defer-datasource-initialization: false
+    defer-datasource-initialization: true
     open-in-view: false
   flyway:
     enabled: true

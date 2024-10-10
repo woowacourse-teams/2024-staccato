@@ -14,8 +14,8 @@ class CommentDefaultRepository
     constructor(
         private val commentDataSource: CommentDataSource,
     ) : CommentRepository {
-        override suspend fun fetchComments(staccatoId: Long): ResponseResult<List<Comment>> =
-            when (val responseResult = commentDataSource.getComments(staccatoId)) {
+        override suspend fun fetchComments(momentId: Long): ResponseResult<List<Comment>> =
+            when (val responseResult = commentDataSource.getComments(momentId)) {
                 is ResponseResult.ServerError -> {
                     ResponseResult.ServerError(responseResult.status, responseResult.message)
                 }

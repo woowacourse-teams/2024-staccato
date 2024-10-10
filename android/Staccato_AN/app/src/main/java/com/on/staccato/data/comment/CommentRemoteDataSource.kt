@@ -12,8 +12,8 @@ class CommentRemoteDataSource
     constructor(
         private val commentApiService: CommentApiService,
     ) : CommentDataSource {
-        override suspend fun getComments(staccatoId: Long): ResponseResult<CommentsResponse> =
-            handleApiResponse { commentApiService.getComments(staccatoId) }
+        override suspend fun getComments(momentId: Long): ResponseResult<CommentsResponse> =
+            handleApiResponse { commentApiService.getComments(momentId) }
 
         override suspend fun createComment(commentRequest: CommentRequest): ResponseResult<Unit> =
             handleApiResponse { commentApiService.postComment(commentRequest) }
