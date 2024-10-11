@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.NumberPicker
-import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.view.isGone
@@ -529,8 +528,8 @@ fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
     }
 }
 
-@BindingAdapter(value = ["thumbnailUri", "thumbnailUrl"])
-fun ProgressBar.setThumbnailLoadingProgressBar(
+@BindingAdapter(value = ["visibilityLoadingByThumbnailUri", "visibilityLoadingByThumbnailUrl"])
+fun View.setThumbnailLoadingProgressBar(
     thumbnailUri: Uri?,
     thumbnailUrl: String?,
 ) {
@@ -542,7 +541,7 @@ fun ProgressBar.setThumbnailLoadingProgressBar(
         }
 }
 
-@BindingAdapter(value = ["thumbnailUri", "thumbnailUrl"])
+@BindingAdapter(value = ["visibilityAttachByThumbnailUri", "visibilityAttachByThumbnailUrl"])
 fun View.setThumbnail(
     thumbnailUri: Uri?,
     thumbnailUrl: String?,

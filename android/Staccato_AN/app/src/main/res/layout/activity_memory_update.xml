@@ -84,24 +84,31 @@
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
-                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}"
+                    bind:visibilityAttachByThumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:visibilityAttachByThumbnailUrl="@{viewModel.thumbnailUrl}"
                     tools:visibility="visible" />
 
-                <ProgressBar
-                    android:id="@+id/progress_bar_memory_creation_attached_photo"
+                <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@color/white_80"
-                    android:padding="100dp"
-                    android:progress="30"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
-                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}"
-                    tools:visibility="visible" />
+                    bind:visibilityLoadingByThumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:visibilityLoadingByThumbnailUrl="@{viewModel.thumbnailUrl}"
+                    tools:visibility="visible"/>
+
+                <com.airbnb.lottie.LottieAnimationView
+                    style="@style/LottieStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_memory_update_photo_attach"
+                    app:layout_constraintEnd_toEndOf="@id/iv_memory_update_photo_attach"
+                    app:layout_constraintStart_toStartOf="@id/iv_memory_update_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
+                    bind:visibilityLoadingByThumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:visibilityLoadingByThumbnailUrl="@{viewModel.thumbnailUrl}"
+                    tools:visibility="visible"/>
 
                 <TextView
                     android:id="@+id/tv_memory_update_title"
