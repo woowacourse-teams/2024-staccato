@@ -98,7 +98,7 @@
                     app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
                     bind:visibilityLoadingByThumbnailUri="@{viewModel.thumbnailUri}"
                     bind:visibilityLoadingByThumbnailUrl="@{viewModel.thumbnailUrl}"
-                    tools:visibility="visible"/>
+                    tools:visibility="visible" />
 
                 <com.airbnb.lottie.LottieAnimationView
                     style="@style/LottieStyle"
@@ -108,7 +108,7 @@
                     app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
                     bind:visibilityLoadingByThumbnailUri="@{viewModel.thumbnailUri}"
                     bind:visibilityLoadingByThumbnailUrl="@{viewModel.thumbnailUrl}"
-                    tools:visibility="visible"/>
+                    tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/tv_memory_update_title"
