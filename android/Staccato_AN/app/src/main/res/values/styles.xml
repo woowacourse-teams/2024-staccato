@@ -246,4 +246,12 @@
         <item name="strokeColor">@color/gray3</item>
     </style>
 
+    <style name="LottieStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="lottie_autoPlay">true</item>
+        <item name="lottie_loop">true</item>
+        <item name="lottie_rawRes">@raw/dot_loading</item>
+    </style>
+
 </resources>
