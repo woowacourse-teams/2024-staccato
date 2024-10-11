@@ -310,17 +310,9 @@
 
         </androidx.core.widget.NestedScrollView>
 
-        <ProgressBar
-            android:id="@+id/progress_bar_visit_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:progress="30"
-            android:visibility="@{viewModel.isPosting ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
+        <include
+            isPosting="@{viewModel.isPosting}"
+            layout="@layout/layout_loading" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
