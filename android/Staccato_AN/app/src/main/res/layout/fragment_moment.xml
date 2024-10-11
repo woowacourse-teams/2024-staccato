@@ -127,6 +127,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@{viewModel.momentDetail.address}"
                     android:textAppearance="@style/Typography.Body4"
+                    app:layout_constraintEnd_toEndOf="@id/tv_place_name"
                     app:layout_constraintStart_toStartOf="@id/tv_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_name"
                     tools:text="상세 주소" />
