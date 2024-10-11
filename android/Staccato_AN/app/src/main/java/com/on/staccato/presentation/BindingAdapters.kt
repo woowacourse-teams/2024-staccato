@@ -529,7 +529,7 @@ fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
 }
 
 @BindingAdapter(value = ["visibilityLoadingByThumbnailUri", "visibilityLoadingByThumbnailUrl"])
-fun View.setThumbnailLoadingProgressBar(
+fun View.setThumbnailLoading(
     thumbnailUri: Uri?,
     thumbnailUrl: String?,
 ) {
