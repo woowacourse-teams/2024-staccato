@@ -32,7 +32,7 @@ class StaccatoFeelingSelectionFragment :
 
     private fun initAdapter() {
         feelingSelectionAdapter = FeelingSelectionAdapter(staccatoFeelingSelectionViewModel)
-        binding.rvMomentFeelingSelection.adapter = feelingSelectionAdapter
+        binding.rvStaccatoFeelingSelection.adapter = feelingSelectionAdapter
     }
 
     private fun observeInitialFeeling() {
