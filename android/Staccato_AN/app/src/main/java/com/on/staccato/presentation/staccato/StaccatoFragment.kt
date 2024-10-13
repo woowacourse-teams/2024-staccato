@@ -24,7 +24,7 @@ import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class StaccatoFragment :
-    BindingFragment<FragmentMomentBinding>(R.layout.fragment_moment), StaccatoToolbarHandler {
+    BindingFragment<FragmentMomentBinding>(R.layout.fragment_staccato), StaccatoToolbarHandler {
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private var staccatoId by Delegates.notNull<Long>()
     private lateinit var pagePhotoAdapter: ViewpagePhotoAdapter
