@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.on.staccato.databinding.ItemVisitsBinding
+import com.on.staccato.databinding.ItemStaccatosBinding
 import com.on.staccato.presentation.memory.MemoryHandler
 import com.on.staccato.presentation.memory.model.MemoryStaccatoUiModel
 
@@ -14,7 +14,7 @@ class StaccatosAdapter(private val handler: MemoryHandler) : ListAdapter<MemoryS
         viewType: Int,
     ): StaccatoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemVisitsBinding.inflate(inflater, parent, false)
+        val binding = ItemStaccatosBinding.inflate(inflater, parent, false)
         return StaccatoViewHolder(binding, handler)
     }
 

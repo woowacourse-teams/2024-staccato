@@ -215,7 +215,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/frame_memory_add_staccatos"
                     app:spanCount="2"
-                    tools:listitem="@layout/item_visits" />
+                    tools:listitem="@layout/item_staccatos" />
 
                 <ImageView
                     android:id="@+id/iv_memory_empty"
