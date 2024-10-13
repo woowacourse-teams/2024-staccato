@@ -2,9 +2,9 @@ package com.on.staccato.data.moment
 
 import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.MomentLocationResponse
-import com.on.staccato.data.dto.staccato.MomentResponse
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
+import com.on.staccato.data.dto.staccato.StaccatoResponse
 import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
 import retrofit2.Response
 import retrofit2.http.Body
@@ -21,7 +21,7 @@ interface MomentApiService {
     @GET(MOMENT_PATH_WITH_ID)
     suspend fun getMoment(
         @Path(value = "momentId") momentId: Long,
-    ): MomentResponse
+    ): StaccatoResponse
 
     @POST(MOMENTS_PATH)
     suspend fun postMoment(
