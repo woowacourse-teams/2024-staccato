@@ -16,7 +16,7 @@ class MomentFeelingSelectionFragment :
     BindingFragment<FragmentMomentFeelingSelectionBinding>(R.layout.fragment_moment_feeling_selection) {
     private lateinit var feelingSelectionAdapter: FeelingSelectionAdapter
     private val staccatoViewModel: StaccatoViewModel by viewModels({ requireParentFragment() })
-    private val momentFeelingSelectionViewModel: MomentFeelingSelectionViewModel by viewModels()
+    private val staccatoFeelingSelectionViewModel: StaccatoFeelingSelectionViewModel by viewModels()
 
     private val momentId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
 
@@ -24,25 +24,25 @@ class MomentFeelingSelectionFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        momentFeelingSelectionViewModel.setMomentId(momentId)
+        staccatoFeelingSelectionViewModel.setMomentId(momentId)
         initAdapter()
         observeInitialFeeling()
         observeFeelings()
     }
 
     private fun initAdapter() {
-        feelingSelectionAdapter = FeelingSelectionAdapter(momentFeelingSelectionViewModel)
+        feelingSelectionAdapter = FeelingSelectionAdapter(staccatoFeelingSelectionViewModel)
         binding.rvMomentFeelingSelection.adapter = feelingSelectionAdapter
     }
 
     private fun observeInitialFeeling() {
         staccatoViewModel.feeling.observe(viewLifecycleOwner) { feeling ->
-            momentFeelingSelectionViewModel.setFeelings(feeling)
+            staccatoFeelingSelectionViewModel.setFeelings(feeling)
         }
     }
 
     private fun observeFeelings() {
-        momentFeelingSelectionViewModel.feelings.observe(viewLifecycleOwner) { feelings ->
+        staccatoFeelingSelectionViewModel.feelings.observe(viewLifecycleOwner) { feelings ->
             feelingSelectionAdapter.updateFeelings(feelings)
         }
     }
