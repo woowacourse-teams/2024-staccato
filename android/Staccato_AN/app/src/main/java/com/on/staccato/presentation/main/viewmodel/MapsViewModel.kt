@@ -11,7 +11,7 @@ import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.dto.Status
 import com.on.staccato.domain.model.MomentLocation
-import com.on.staccato.domain.repository.MomentRepository
+import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.main.model.MarkerUiModel
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class MapsViewModel
     @Inject
     constructor(
-        private val momentRepository: MomentRepository,
+        private val staccatoRepository: StaccatoRepository,
     ) : ViewModel() {
         private val _momentLocations = MutableLiveData<List<MomentLocation>>()
         val momentLocations: LiveData<List<MomentLocation>> get() = _momentLocations
@@ -62,7 +62,7 @@ class MapsViewModel
 
         fun loadStaccatos() {
             viewModelScope.launch {
-                val result = momentRepository.getMoments()
+                val result = staccatoRepository.getStaccatos()
                 result.onSuccess(::setMomentLocations)
                     .onServerError(::handleServerError)
                     .onException(::handelException)

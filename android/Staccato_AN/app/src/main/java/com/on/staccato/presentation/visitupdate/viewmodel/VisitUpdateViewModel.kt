@@ -13,7 +13,7 @@ import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.repository.ImageRepository
-import com.on.staccato.domain.repository.MomentRepository
+import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -36,7 +36,7 @@ class VisitUpdateViewModel
     @Inject
     constructor(
         private val timelineRepository: TimelineRepository,
-        private val momentRepository: MomentRepository,
+        private val staccatoRepository: StaccatoRepository,
         private val imageRepository: ImageRepository,
     ) : AttachedPhotoHandler, ViewModel() {
         val staccatoTitle = ObservableField<String>()
@@ -189,8 +189,8 @@ class VisitUpdateViewModel
                     currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                         ?: emptyList()
                 _isPosting.value = true
-                momentRepository.updateMoment(
-                    momentId = staccatoId,
+                staccatoRepository.updateStaccato(
+                    staccatoId = staccatoId,
                     staccatoTitle = staccatoTitleValue,
                     placeName = placeNameValue,
                     address = addressValue,
@@ -198,7 +198,7 @@ class VisitUpdateViewModel
                     longitude = longitudeValue,
                     visitedAt = visitedAtValue,
                     memoryId = memoryIdValue,
-                    momentImageUrls = momentImageUrlsValue,
+                    staccatoImageUrls = momentImageUrlsValue,
                 ).onSuccess {
                     _isUpdateCompleted.postValue(true)
                 }.onFailure { e ->
@@ -209,7 +209,7 @@ class VisitUpdateViewModel
 
         private fun fetchStaccatoBy(staccatoId: Long) {
             viewModelScope.launch {
-                momentRepository.getMoment(momentId = staccatoId)
+                staccatoRepository.getStaccato(staccatoId = staccatoId)
                     .onSuccess { staccato ->
                         staccatoTitle.set(staccato.staccatoTitle)
                         _address.value = staccato.address

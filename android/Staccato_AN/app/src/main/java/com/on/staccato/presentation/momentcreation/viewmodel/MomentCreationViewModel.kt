@@ -13,7 +13,7 @@ import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
-import com.on.staccato.domain.repository.MomentRepository
+import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -34,7 +34,7 @@ class MomentCreationViewModel
     @Inject
     constructor(
         private val timelineRepository: TimelineRepository,
-        private val momentRepository: MomentRepository,
+        private val staccatoRepository: StaccatoRepository,
         private val imageRepository: ImageDefaultRepository,
     ) : AttachedPhotoHandler, ViewModel() {
         val staccatoTitle = ObservableField<String>()
@@ -216,7 +216,7 @@ class MomentCreationViewModel
         fun createMoment() =
             viewModelScope.launch {
                 _isPosting.value = true
-                momentRepository.createMoment(
+                staccatoRepository.createStaccato(
                     memoryId = selectedMemory.value!!.memoryId,
                     staccatoTitle = staccatoTitle.get() ?: return@launch,
                     placeName = placeName.value ?: return@launch,
@@ -224,7 +224,7 @@ class MomentCreationViewModel
                     longitude = longitude.value ?: return@launch,
                     address = address.value ?: return@launch,
                     visitedAt = selectedVisitedAt.value ?: return@launch,
-                    momentImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
+                    staccatoImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
                 ).onSuccess { response ->
                     _createdStaccatoId.postValue(response.momentId)
                 }.onFailure {

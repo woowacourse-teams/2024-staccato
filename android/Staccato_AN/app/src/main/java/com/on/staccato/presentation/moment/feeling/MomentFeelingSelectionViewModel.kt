@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.domain.model.Feeling
-import com.on.staccato.domain.repository.MomentRepository
+import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.mapper.toFeelingUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class MomentFeelingSelectionViewModel
     @Inject
     constructor(
-        private val momentRepository: MomentRepository,
+        private val staccatoRepository: StaccatoRepository,
     ) : ViewModel(), FeelingHandler {
         private val initialFeelings: List<Feeling> =
             Feeling.entries.filterNot { it.value == Feeling.NOTHING.value }
@@ -61,7 +61,7 @@ class MomentFeelingSelectionViewModel
 
         private fun requestChangingFeeling(newFeeling: Feeling) {
             viewModelScope.launch {
-                momentRepository.updateFeeling(momentId, newFeeling.value)
+                staccatoRepository.updateFeeling(momentId, newFeeling.value)
             }
         }
     }

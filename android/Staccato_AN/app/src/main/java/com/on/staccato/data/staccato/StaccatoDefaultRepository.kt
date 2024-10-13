@@ -8,17 +8,17 @@ import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
 import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
 import com.on.staccato.domain.model.Moment
 import com.on.staccato.domain.model.MomentLocation
-import com.on.staccato.domain.repository.MomentRepository
+import com.on.staccato.domain.repository.StaccatoRepository
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-class MomentDefaultRepository
+class StaccatoDefaultRepository
     @Inject
     constructor(
         private val remoteDataSource: StaccatoRemoteDataSource,
     ) :
-    MomentRepository {
-        override suspend fun getMoments(): ResponseResult<List<MomentLocation>> {
+    StaccatoRepository {
+        override suspend fun getStaccatos(): ResponseResult<List<MomentLocation>> {
             return when (val responseResult = remoteDataSource.fetchStaccatos()) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
                 is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
@@ -26,13 +26,13 @@ class MomentDefaultRepository
             }
         }
 
-        override suspend fun getMoment(momentId: Long): Result<Moment> {
+        override suspend fun getStaccato(staccatoId: Long): Result<Moment> {
             return runCatching {
-                remoteDataSource.fetchStaccato(momentId).toDomain()
+                remoteDataSource.fetchStaccato(staccatoId).toDomain()
             }
         }
 
-        override suspend fun createMoment(
+        override suspend fun createStaccato(
             memoryId: Long,
             staccatoTitle: String,
             placeName: String,
@@ -40,7 +40,7 @@ class MomentDefaultRepository
             longitude: Double,
             address: String,
             visitedAt: LocalDateTime,
-            momentImageUrls: List<String>,
+            staccatoImageUrls: List<String>,
         ): Result<StaccatoCreationResponse> {
             return runCatching {
                 remoteDataSource.createStaccato(
@@ -52,14 +52,14 @@ class MomentDefaultRepository
                         longitude = longitude,
                         address = address,
                         visitedAt = visitedAt.toString(),
-                        momentImageUrls = momentImageUrls,
+                        momentImageUrls = staccatoImageUrls,
                     ),
                 )
             }
         }
 
-        override suspend fun updateMoment(
-            momentId: Long,
+        override suspend fun updateStaccato(
+            staccatoId: Long,
             staccatoTitle: String,
             placeName: String,
             address: String,
@@ -67,11 +67,11 @@ class MomentDefaultRepository
             longitude: Double,
             visitedAt: LocalDateTime,
             memoryId: Long,
-            momentImageUrls: List<String>,
+            staccatoImageUrls: List<String>,
         ): Result<Unit> {
             return runCatching {
                 remoteDataSource.updateStaccato(
-                    staccatoId = momentId,
+                    staccatoId = staccatoId,
                     staccatoUpdateRequest =
                         StaccatoUpdateRequest(
                             staccatoTitle = staccatoTitle,
@@ -81,25 +81,25 @@ class MomentDefaultRepository
                             longitude = longitude,
                             visitedAt = visitedAt.toString(),
                             memoryId = memoryId,
-                            momentImageUrls = momentImageUrls,
+                            momentImageUrls = staccatoImageUrls,
                         ),
                 )
             }
         }
 
-        override suspend fun deleteMoment(momentId: Long): Result<Unit> {
+        override suspend fun deleteStaccato(staccatoId: Long): Result<Unit> {
             return runCatching {
-                remoteDataSource.deleteStaccato(momentId)
+                remoteDataSource.deleteStaccato(staccatoId)
             }
         }
 
         override suspend fun updateFeeling(
-            momentId: Long,
+            staccatoId: Long,
             feeling: String,
         ): Result<Unit> {
             return runCatching {
                 remoteDataSource.updateFeeling(
-                    staccatoId = momentId,
+                    staccatoId = staccatoId,
                     feelingRequest = FeelingRequest(feeling),
                 )
             }

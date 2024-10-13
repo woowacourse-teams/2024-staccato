@@ -6,12 +6,12 @@ import com.on.staccato.domain.model.Moment
 import com.on.staccato.domain.model.MomentLocation
 import java.time.LocalDateTime
 
-interface MomentRepository {
-    suspend fun getMoments(): ResponseResult<List<MomentLocation>>
+interface StaccatoRepository {
+    suspend fun getStaccatos(): ResponseResult<List<MomentLocation>>
 
-    suspend fun getMoment(momentId: Long): Result<Moment>
+    suspend fun getStaccato(staccatoId: Long): Result<Moment>
 
-    suspend fun createMoment(
+    suspend fun createStaccato(
         memoryId: Long,
         staccatoTitle: String,
         placeName: String,
@@ -19,11 +19,11 @@ interface MomentRepository {
         longitude: Double,
         address: String,
         visitedAt: LocalDateTime,
-        momentImageUrls: List<String>,
+        staccatoImageUrls: List<String>,
     ): Result<StaccatoCreationResponse>
 
-    suspend fun updateMoment(
-        momentId: Long,
+    suspend fun updateStaccato(
+        staccatoId: Long,
         staccatoTitle: String,
         placeName: String,
         address: String,
@@ -31,13 +31,13 @@ interface MomentRepository {
         longitude: Double,
         visitedAt: LocalDateTime,
         memoryId: Long,
-        momentImageUrls: List<String>,
+        staccatoImageUrls: List<String>,
     ): Result<Unit>
 
-    suspend fun deleteMoment(momentId: Long): Result<Unit>
+    suspend fun deleteStaccato(staccatoId: Long): Result<Unit>
 
     suspend fun updateFeeling(
-        momentId: Long,
+        staccatoId: Long,
         feeling: String,
     ): Result<Unit>
 }

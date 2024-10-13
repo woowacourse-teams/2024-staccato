@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.domain.model.Feeling
-import com.on.staccato.domain.repository.MomentRepository
+import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toMomentDetailUiModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class MomentViewModel
     @Inject
     constructor(
-        private val momentRepository: MomentRepository,
+        private val staccatoRepository: StaccatoRepository,
     ) : ViewModel() {
         private val _momentDetail = MutableLiveData<MomentDetailUiModel>()
         val momentDetail: LiveData<MomentDetailUiModel> get() = _momentDetail
@@ -42,14 +42,14 @@ class MomentViewModel
 
         fun deleteMoment(momentId: Long) =
             viewModelScope.launch {
-                momentRepository.deleteMoment(momentId).onSuccess {
+                staccatoRepository.deleteStaccato(momentId).onSuccess {
                     _isDeleted.postValue(true)
                 }
             }
 
         private fun fetchMomentData(momentId: Long) {
             viewModelScope.launch {
-                momentRepository.getMoment(momentId).onSuccess { moment ->
+                staccatoRepository.getStaccato(momentId).onSuccess { moment ->
                     _momentDetail.value = moment.toMomentDetailUiModel()
                     _feeling.value = moment.feeling
                 }.onFailure {
