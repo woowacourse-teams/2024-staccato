@@ -15,7 +15,7 @@ import com.on.staccato.presentation.common.ToolbarHandler
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.adapter.MatesAdapter
-import com.on.staccato.presentation.memory.adapter.VisitsAdapter
+import com.on.staccato.presentation.memory.adapter.StaccatosAdapter
 import com.on.staccato.presentation.memory.viewmodel.MemoryViewModel
 import com.on.staccato.presentation.memoryupdate.MemoryUpdateActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
@@ -37,7 +37,7 @@ class MemoryFragment :
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
 
     private lateinit var matesAdapter: MatesAdapter
-    private lateinit var staccatosAdapter: VisitsAdapter
+    private lateinit var staccatosAdapter: StaccatosAdapter
 
     override fun onViewCreated(
         view: View,
@@ -128,7 +128,7 @@ class MemoryFragment :
     }
 
     private fun initStaccatosAdapter() {
-        staccatosAdapter = VisitsAdapter(handler = this)
+        staccatosAdapter = StaccatosAdapter(handler = this)
         binding.rvMemoryVisits.adapter = staccatosAdapter
     }
 

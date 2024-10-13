@@ -8,7 +8,7 @@ import com.on.staccato.databinding.ItemVisitsBinding
 import com.on.staccato.presentation.memory.MemoryHandler
 import com.on.staccato.presentation.memory.model.MemoryStaccatoUiModel
 
-class VisitsAdapter(private val handler: MemoryHandler) : ListAdapter<MemoryStaccatoUiModel, StaccatoViewHolder>(diffUtil) {
+class StaccatosAdapter(private val handler: MemoryHandler) : ListAdapter<MemoryStaccatoUiModel, StaccatoViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
