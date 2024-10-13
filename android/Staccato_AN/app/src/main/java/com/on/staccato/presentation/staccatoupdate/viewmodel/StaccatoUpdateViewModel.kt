@@ -176,7 +176,7 @@ class StaccatoUpdateViewModel
             }
         }
 
-        fun updateVisit(staccatoId: Long) {
+        fun updateStaccato(staccatoId: Long) {
             viewModelScope.launch {
                 val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleError()
                 val placeNameValue = placeName.value ?: return@launch handleError()
@@ -185,7 +185,7 @@ class StaccatoUpdateViewModel
                 val longitudeValue = longitude.value ?: return@launch handleError()
                 val visitedAtValue = selectedVisitedAt.value ?: return@launch handleError()
                 val memoryIdValue = selectedMemory.value?.memoryId ?: return@launch handleError()
-                val momentImageUrlsValue =
+                val staccatoImageUrlsValue =
                     currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                         ?: emptyList()
                 _isPosting.value = true
@@ -198,7 +198,7 @@ class StaccatoUpdateViewModel
                     longitude = longitudeValue,
                     visitedAt = visitedAtValue,
                     memoryId = memoryIdValue,
-                    staccatoImageUrls = momentImageUrlsValue,
+                    staccatoImageUrls = staccatoImageUrlsValue,
                 ).onSuccess {
                     _isUpdateCompleted.postValue(true)
                 }.onFailure { e ->

@@ -133,7 +133,7 @@ class VisitUpdateActivity :
 
     override fun onUpdateDoneClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        viewModel.updateVisit(staccatoId)
+        viewModel.updateStaccato(staccatoId)
     }
 
     override fun initStartView(savedInstanceState: Bundle?) {
