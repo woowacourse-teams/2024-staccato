@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.momentcreation
+package com.on.staccato.presentation.staccatocreation
 
 interface CurrentLocationHandler {
     fun onCurrentLocationClicked()

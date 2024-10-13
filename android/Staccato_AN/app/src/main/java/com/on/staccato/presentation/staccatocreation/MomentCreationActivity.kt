@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.momentcreation
+package com.on.staccato.presentation.staccatocreation
 
 import android.content.Context
 import android.content.Intent
@@ -31,12 +31,12 @@ import com.on.staccato.presentation.common.LocationPermissionManager.Companion.l
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.momentcreation.dialog.MemorySelectionFragment
-import com.on.staccato.presentation.momentcreation.dialog.VisitedAtSelectionFragment
-import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
-import com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel
 import com.on.staccato.presentation.staccato.MomentFragment.Companion.STACCATO_ID_KEY
+import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
+import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragment
+import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
+import com.on.staccato.presentation.staccatocreation.viewmodel.MomentCreationViewModel
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener

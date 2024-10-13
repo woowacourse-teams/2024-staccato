@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.momentcreation.model
+package com.on.staccato.presentation.staccatocreation.model
 
 import android.net.Uri
 

@@ -24,7 +24,7 @@ import com.google.android.material.button.MaterialButton
 import com.on.staccato.R
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
-import com.on.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import okhttp3.internal.format
 import java.time.LocalDate

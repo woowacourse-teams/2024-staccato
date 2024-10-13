@@ -1,8 +1,8 @@
-package com.on.staccato.presentation.momentcreation.model
+package com.on.staccato.presentation.staccatocreation.model
 
 import android.net.Uri
-import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter.Companion.ADD_PHOTO_BUTTON_URI
-import com.on.staccato.presentation.momentcreation.adapter.PhotoAttachAdapter.Companion.ADD_PHOTO_BUTTON_URL
+import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter.Companion.ADD_PHOTO_BUTTON_URI
+import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter.Companion.ADD_PHOTO_BUTTON_URL
 
 data class AttachedPhotoUiModel(
     val uri: Uri? = null,

@@ -14,7 +14,7 @@
 
         <variable
             name="attachedPhoto"
-            type="com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel" />
+            type="com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

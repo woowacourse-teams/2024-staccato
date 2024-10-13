@@ -1,7 +1,7 @@
 package com.on.staccato.presentation.visitcreation.adapter
 
 import androidx.recyclerview.widget.RecyclerView
-import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 
 interface ItemDragListener {
     fun onStartDrag(viewHolder: RecyclerView.ViewHolder)

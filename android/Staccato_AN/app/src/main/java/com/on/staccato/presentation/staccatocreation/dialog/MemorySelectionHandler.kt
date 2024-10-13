@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.momentcreation.dialog
+package com.on.staccato.presentation.staccatocreation.dialog
 
 import com.on.staccato.domain.model.MemoryCandidate
 

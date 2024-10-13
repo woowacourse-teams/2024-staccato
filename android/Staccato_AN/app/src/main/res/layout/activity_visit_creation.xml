@@ -10,15 +10,15 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel" />
+            type="com.on.staccato.presentation.staccatocreation.viewmodel.MomentCreationViewModel" />
 
         <variable
             name="visitCreationHandler"
-            type="com.on.staccato.presentation.momentcreation.MomentCreationHandler" />
+            type="com.on.staccato.presentation.staccatocreation.MomentCreationHandler" />
 
         <variable
             name="currentLocationHandler"
-            type="com.on.staccato.presentation.momentcreation.CurrentLocationHandler" />
+            type="com.on.staccato.presentation.staccatocreation.CurrentLocationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,7 +48,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".presentation.momentcreation.MomentCreationActivity">
+                tools:context=".presentation.staccatocreation.MomentCreationActivity">
 
                 <TextView
                     android:id="@+id/tv_photo_title"

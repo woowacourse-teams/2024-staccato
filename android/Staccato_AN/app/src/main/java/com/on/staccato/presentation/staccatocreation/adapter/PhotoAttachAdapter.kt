@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.momentcreation.adapter
+package com.on.staccato.presentation.staccatocreation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.on.staccato.databinding.ItemAddPhotoBinding
 import com.on.staccato.databinding.ItemAttachedPhotoBinding
 import com.on.staccato.presentation.common.AttachedPhotoHandler
-import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
 import com.on.staccato.presentation.visitcreation.adapter.ItemMoveListener
 

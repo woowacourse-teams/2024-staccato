@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.momentcreation.dialog
+package com.on.staccato.presentation.staccatocreation.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater

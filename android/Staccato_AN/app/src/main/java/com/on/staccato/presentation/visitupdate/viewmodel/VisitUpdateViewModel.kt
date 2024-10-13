@@ -18,10 +18,10 @@ import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.momentcreation.model.AttachedPhotoUiModel
-import com.on.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
-import com.on.staccato.presentation.momentcreation.model.AttachedPhotosUiModel.Companion.createPhotosByUrls
-import com.on.staccato.presentation.momentcreation.viewmodel.MomentCreationViewModel
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.createPhotosByUrls
+import com.on.staccato.presentation.staccatocreation.viewmodel.MomentCreationViewModel
 import com.on.staccato.presentation.util.convertExcretaFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
