@@ -1,9 +1,9 @@
 package com.on.staccato.data.dto.mapper
 
 import com.on.staccato.data.dto.memory.MemoriesResponse
-import com.on.staccato.data.dto.memory.MemoryMomentDto
 import com.on.staccato.data.dto.memory.MemoryRequest
 import com.on.staccato.data.dto.memory.MemoryResponse
+import com.on.staccato.data.dto.memory.MemoryStaccatoDto
 import com.on.staccato.domain.model.Memory
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
@@ -36,7 +36,7 @@ fun MemoriesResponse.toDomain(): MemoryCandidates =
         },
     )
 
-fun MemoryMomentDto.toDomain() =
+fun MemoryStaccatoDto.toDomain() =
     MemoryStaccato(
         staccatoId = momentId,
         staccatoTitle = staccatoTitle,
