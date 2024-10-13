@@ -8,7 +8,7 @@ import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.mapper.toMomentDetailUiModel
+import com.on.staccato.presentation.mapper.toStaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.comments.CommentUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,7 +50,7 @@ class MomentViewModel
         private fun fetchMomentData(momentId: Long) {
             viewModelScope.launch {
                 staccatoRepository.getStaccato(momentId).onSuccess { moment ->
-                    _momentDetail.value = moment.toMomentDetailUiModel()
+                    _momentDetail.value = moment.toStaccatoDetailUiModel()
                     _feeling.value = moment.feeling
                 }.onFailure {
                     _isError.postValue(true)

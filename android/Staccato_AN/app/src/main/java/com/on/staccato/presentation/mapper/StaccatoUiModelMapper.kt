@@ -8,7 +8,7 @@ import com.on.staccato.presentation.staccato.comments.CommentUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.feeling.FeelingUiModel
 
-fun Staccato.toMomentDetailUiModel(): StaccatoDetailUiModel {
+fun Staccato.toStaccatoDetailUiModel(): StaccatoDetailUiModel {
     return StaccatoDetailUiModel(
         id = staccatoId,
         memoryId = memoryId,
