@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.on.staccato.databinding.ItemMomentFeelingSelectionBinding
+import com.on.staccato.databinding.ItemStaccatoFeelingSelectionBinding
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.presentation.mapper.toFeelingUiModel
 
@@ -24,7 +24,7 @@ class FeelingSelectionAdapter(private val feelingHandler: FeelingHandler) :
         submitList(feelings)
     }
 
-    class FeelingSelectionViewHolder(private val binding: ItemMomentFeelingSelectionBinding) :
+    class FeelingSelectionViewHolder(private val binding: ItemStaccatoFeelingSelectionBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
             feelingUiModel: FeelingUiModel,
@@ -40,7 +40,7 @@ class FeelingSelectionAdapter(private val feelingHandler: FeelingHandler) :
         viewType: Int,
     ): FeelingSelectionViewHolder {
         val binding =
-            ItemMomentFeelingSelectionBinding.inflate(
+            ItemStaccatoFeelingSelectionBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
