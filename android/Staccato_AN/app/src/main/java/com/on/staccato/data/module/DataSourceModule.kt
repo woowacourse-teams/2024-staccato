@@ -6,8 +6,8 @@ import com.on.staccato.data.login.LoginDataSource
 import com.on.staccato.data.login.LoginRemoteDataSource
 import com.on.staccato.data.memory.MemoryDataSource
 import com.on.staccato.data.memory.MemoryRemoteDataSource
-import com.on.staccato.data.staccato.MomentDataSource
-import com.on.staccato.data.staccato.MomentRemoteDataSource
+import com.on.staccato.data.staccato.StaccatoDataSource
+import com.on.staccato.data.staccato.StaccatoRemoteDataSource
 import com.on.staccato.data.timeline.TimelineDataSource
 import com.on.staccato.data.timeline.TimelineRemoteDataSource
 import dagger.Binds
@@ -28,7 +28,7 @@ abstract class DataSourceModule {
     abstract fun bindMemoryDataSource(memoryRemoteDataSource: MemoryRemoteDataSource): MemoryDataSource
 
     @Binds
-    abstract fun bindMomentDataSource(momentRemoteDataSource: MomentRemoteDataSource): MomentDataSource
+    abstract fun bindMomentDataSource(momentRemoteDataSource: StaccatoRemoteDataSource): StaccatoDataSource
 
     @Binds
     abstract fun bindTimelineDataSource(timelineRemoteDataSource: TimelineRemoteDataSource): TimelineDataSource

@@ -10,42 +10,42 @@ import com.on.staccato.data.dto.staccato.StaccatoResponse
 import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
 import javax.inject.Inject
 
-class MomentRemoteDataSource
+class StaccatoRemoteDataSource
     @Inject
     constructor(
         private val staccatoApiService: StaccatoApiService,
-    ) : MomentDataSource {
-        override suspend fun fetchMoments(): ResponseResult<StaccatoLocationResponse> =
+    ) : StaccatoDataSource {
+        override suspend fun fetchStaccatos(): ResponseResult<StaccatoLocationResponse> =
             handleApiResponse { staccatoApiService.getStaccatos() }
 
-        override suspend fun fetchMoment(momentId: Long): StaccatoResponse {
-            return staccatoApiService.getStaccato(momentId = momentId)
+        override suspend fun fetchStaccato(staccatoId: Long): StaccatoResponse {
+            return staccatoApiService.getStaccato(momentId = staccatoId)
         }
 
-        override suspend fun createMoment(staccatoCreationRequest: StaccatoCreationRequest): StaccatoCreationResponse {
+        override suspend fun createStaccato(staccatoCreationRequest: StaccatoCreationRequest): StaccatoCreationResponse {
             return staccatoApiService.postStaccato(staccatoCreationRequest)
         }
 
-        override suspend fun updateMoment(
-            momentId: Long,
+        override suspend fun updateStaccato(
+            staccatoId: Long,
             staccatoUpdateRequest: StaccatoUpdateRequest,
         ) {
             return staccatoApiService.putStaccato(
-                momentId = momentId,
+                momentId = staccatoId,
                 staccatoUpdateRequest,
             )
         }
 
-        override suspend fun deleteMoment(momentId: Long) {
-            staccatoApiService.deleteStaccato(momentId)
+        override suspend fun deleteStaccato(staccatoId: Long) {
+            staccatoApiService.deleteStaccato(staccatoId)
         }
 
         override suspend fun updateFeeling(
-            momentId: Long,
+            staccatoId: Long,
             feelingRequest: FeelingRequest,
         ) {
             staccatoApiService.postFeeling(
-                momentId = momentId,
+                momentId = staccatoId,
                 feelingRequest = feelingRequest,
             )
         }

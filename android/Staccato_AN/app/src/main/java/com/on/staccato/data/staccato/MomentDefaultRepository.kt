@@ -15,11 +15,11 @@ import javax.inject.Inject
 class MomentDefaultRepository
     @Inject
     constructor(
-        private val remoteDataSource: MomentRemoteDataSource,
+        private val remoteDataSource: StaccatoRemoteDataSource,
     ) :
     MomentRepository {
         override suspend fun getMoments(): ResponseResult<List<MomentLocation>> {
-            return when (val responseResult = remoteDataSource.fetchMoments()) {
+            return when (val responseResult = remoteDataSource.fetchStaccatos()) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
                 is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
                 is ResponseResult.Success -> ResponseResult.Success(responseResult.data.momentLocationResponses.map { it.toDomain() })
@@ -28,7 +28,7 @@ class MomentDefaultRepository
 
         override suspend fun getMoment(momentId: Long): Result<Moment> {
             return runCatching {
-                remoteDataSource.fetchMoment(momentId).toDomain()
+                remoteDataSource.fetchStaccato(momentId).toDomain()
             }
         }
 
@@ -43,7 +43,7 @@ class MomentDefaultRepository
             momentImageUrls: List<String>,
         ): Result<StaccatoCreationResponse> {
             return runCatching {
-                remoteDataSource.createMoment(
+                remoteDataSource.createStaccato(
                     StaccatoCreationRequest(
                         memoryId = memoryId,
                         staccatoTitle = staccatoTitle,
@@ -70,8 +70,8 @@ class MomentDefaultRepository
             momentImageUrls: List<String>,
         ): Result<Unit> {
             return runCatching {
-                remoteDataSource.updateMoment(
-                    momentId = momentId,
+                remoteDataSource.updateStaccato(
+                    staccatoId = momentId,
                     staccatoUpdateRequest =
                         StaccatoUpdateRequest(
                             staccatoTitle = staccatoTitle,
@@ -89,7 +89,7 @@ class MomentDefaultRepository
 
         override suspend fun deleteMoment(momentId: Long): Result<Unit> {
             return runCatching {
-                remoteDataSource.deleteMoment(momentId)
+                remoteDataSource.deleteStaccato(momentId)
             }
         }
 
@@ -99,7 +99,7 @@ class MomentDefaultRepository
         ): Result<Unit> {
             return runCatching {
                 remoteDataSource.updateFeeling(
-                    momentId = momentId,
+                    staccatoId = momentId,
                     feelingRequest = FeelingRequest(feeling),
                 )
             }

@@ -8,22 +8,22 @@ import com.on.staccato.data.dto.staccato.StaccatoLocationResponse
 import com.on.staccato.data.dto.staccato.StaccatoResponse
 import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
 
-interface MomentDataSource {
-    suspend fun fetchMoments(): ResponseResult<StaccatoLocationResponse>
+interface StaccatoDataSource {
+    suspend fun fetchStaccatos(): ResponseResult<StaccatoLocationResponse>
 
-    suspend fun fetchMoment(momentId: Long): StaccatoResponse
+    suspend fun fetchStaccato(staccatoId: Long): StaccatoResponse
 
-    suspend fun createMoment(staccatoCreationRequest: StaccatoCreationRequest): StaccatoCreationResponse
+    suspend fun createStaccato(staccatoCreationRequest: StaccatoCreationRequest): StaccatoCreationResponse
 
-    suspend fun updateMoment(
-        momentId: Long,
+    suspend fun updateStaccato(
+        staccatoId: Long,
         staccatoUpdateRequest: StaccatoUpdateRequest,
     )
 
-    suspend fun deleteMoment(momentId: Long)
+    suspend fun deleteStaccato(staccatoId: Long)
 
     suspend fun updateFeeling(
-        momentId: Long,
+        staccatoId: Long,
         feelingRequest: FeelingRequest,
     )
 }
