@@ -310,10 +310,10 @@ class StaccatoCreationActivity :
                 visitedAtSelectionFragment.initKeyWithSelectedValues(selectedVisitedAt)
             }
         }
-        viewModel.createdStaccatoId.observe(this) { createdMomentId ->
+        viewModel.createdStaccatoId.observe(this) { createdStaccatoId ->
             val resultIntent =
                 Intent()
-                    .putExtra(STACCATO_ID_KEY, createdMomentId)
+                    .putExtra(STACCATO_ID_KEY, createdStaccatoId)
                     .putExtra(MEMORY_ID_KEY, memoryId)
                     .putExtra(MEMORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, resultIntent)
