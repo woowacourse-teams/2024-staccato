@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.visitcreation.adapter
+package com.on.staccato.presentation.staccatocreation.adapter
 
 interface ItemMoveListener {
     fun onItemMove(

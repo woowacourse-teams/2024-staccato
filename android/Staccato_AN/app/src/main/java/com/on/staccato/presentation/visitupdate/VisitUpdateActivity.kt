@@ -35,13 +35,13 @@ import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE
 import com.on.staccato.presentation.staccato.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.CurrentLocationHandler
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
+import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
+import com.on.staccato.presentation.staccatocreation.adapter.ItemDragListener
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragment
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.util.showToast
-import com.on.staccato.presentation.visitcreation.adapter.AttachedPhotoItemTouchHelperCallback
-import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
 import com.on.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay

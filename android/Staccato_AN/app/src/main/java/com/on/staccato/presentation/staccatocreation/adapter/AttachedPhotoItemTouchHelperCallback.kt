@@ -1,8 +1,7 @@
-package com.on.staccato.presentation.visitcreation.adapter
+package com.on.staccato.presentation.staccatocreation.adapter
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachViewHolder
 
 class AttachedPhotoItemTouchHelperCallback(
     private val moveListener: ItemMoveListener,

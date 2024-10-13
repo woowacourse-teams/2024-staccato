@@ -8,8 +8,6 @@ import com.on.staccato.databinding.ItemAddPhotoBinding
 import com.on.staccato.databinding.ItemAttachedPhotoBinding
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
-import com.on.staccato.presentation.visitcreation.adapter.ItemDragListener
-import com.on.staccato.presentation.visitcreation.adapter.ItemMoveListener
 
 class PhotoAttachAdapter(
     private val dragListener: ItemDragListener,
