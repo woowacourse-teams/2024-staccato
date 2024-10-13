@@ -167,7 +167,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/container_staccato_feeling_selection"
-                    tools:layout="@layout/fragment_moment_comments" />
+                    tools:layout="@layout/fragment_staccato_comments" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

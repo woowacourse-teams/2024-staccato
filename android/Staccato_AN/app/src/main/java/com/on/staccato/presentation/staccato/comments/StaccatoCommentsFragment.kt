@@ -5,7 +5,7 @@ import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.fragment.app.viewModels
 import com.on.staccato.R
-import com.on.staccato.databinding.FragmentMomentCommentsBinding
+import com.on.staccato.databinding.FragmentStaccatoCommentsBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.DEFAULT_STACCATO_ID
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class StaccatoCommentsFragment :
-    BindingFragment<FragmentMomentCommentsBinding>(R.layout.fragment_moment_comments) {
+    BindingFragment<FragmentStaccatoCommentsBinding>(R.layout.fragment_staccato_comments) {
     private lateinit var commentsAdapter: CommentsAdapter
 
     private val staccatoId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
