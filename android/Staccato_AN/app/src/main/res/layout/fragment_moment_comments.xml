@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.staccato.comments.MomentCommentsViewModel" />
+            type="com.on.staccato.presentation.staccato.comments.StaccatoCommentsViewModel" />
 
         <variable
             name="commentHandler"
