@@ -37,7 +37,7 @@ class MemoryFragment :
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
 
     private lateinit var matesAdapter: MatesAdapter
-    private lateinit var visitsAdapter: VisitsAdapter
+    private lateinit var staccatosAdapter: VisitsAdapter
 
     override fun onViewCreated(
         view: View,
@@ -46,7 +46,7 @@ class MemoryFragment :
         initBinding()
         initToolbar()
         initMatesAdapter()
-        initVisitsAdapter()
+        initStaccatosAdapter()
         observeMemory()
         observeIsDeleteSuccess()
         showErrorToast()
@@ -82,12 +82,12 @@ class MemoryFragment :
 
     override fun onStaccatoCreationClicked() {
         viewModel.memory.value?.let {
-            val visitCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
+            val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
             StaccatoCreationActivity.startWithResultLauncher(
                 memoryId,
                 it.title,
                 requireContext(),
-                visitCreationLauncher,
+                staccatoCreationLauncher,
             )
         }
     }
@@ -108,7 +108,7 @@ class MemoryFragment :
     private fun observeMemory() {
         viewModel.memory.observe(viewLifecycleOwner) { memory ->
             matesAdapter.updateMates(memory.mates)
-            visitsAdapter.updateVisits(memory.staccatos)
+            staccatosAdapter.updateVisits(memory.staccatos)
         }
     }
 
@@ -127,9 +127,9 @@ class MemoryFragment :
         binding.rvMemoryMates.adapter = matesAdapter
     }
 
-    private fun initVisitsAdapter() {
-        visitsAdapter = VisitsAdapter(handler = this)
-        binding.rvMemoryVisits.adapter = visitsAdapter
+    private fun initStaccatosAdapter() {
+        staccatosAdapter = VisitsAdapter(handler = this)
+        binding.rvMemoryVisits.adapter = staccatosAdapter
     }
 
     private fun showErrorToast() {
