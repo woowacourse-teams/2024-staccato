@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/momentFragment"
-        android:name="com.on.staccato.presentation.staccato.MomentFragment"
+        android:name="com.on.staccato.presentation.staccato.StaccatoFragment"
         android:label="fragment_moment"
         tools:layout="@layout/fragment_moment" />
 

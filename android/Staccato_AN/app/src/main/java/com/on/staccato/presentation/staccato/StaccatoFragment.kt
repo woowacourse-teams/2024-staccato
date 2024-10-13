@@ -23,8 +23,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint
-class MomentFragment :
-    BindingFragment<FragmentMomentBinding>(R.layout.fragment_moment), MomentToolbarHandler {
+class StaccatoFragment :
+    BindingFragment<FragmentMomentBinding>(R.layout.fragment_moment), StaccatoToolbarHandler {
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private var momentId by Delegates.notNull<Long>()
     private lateinit var pagePhotoAdapter: ViewpagePhotoAdapter

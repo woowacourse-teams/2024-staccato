@@ -31,7 +31,7 @@ import com.on.staccato.presentation.common.LocationPermissionManager.Companion.l
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.on.staccato.presentation.staccato.MomentFragment.Companion.STACCATO_ID_KEY
+import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.ItemDragListener
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter

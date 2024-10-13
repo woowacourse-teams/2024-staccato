@@ -1,6 +1,6 @@
 package com.on.staccato.presentation.staccato
 
-interface MomentToolbarHandler {
+interface StaccatoToolbarHandler {
     fun onUpdateClicked(
         memoryId: Long,
         memoryTitle: String,

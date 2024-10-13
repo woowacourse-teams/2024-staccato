@@ -18,7 +18,7 @@ import com.on.staccato.presentation.memory.adapter.MatesAdapter
 import com.on.staccato.presentation.memory.adapter.VisitsAdapter
 import com.on.staccato.presentation.memory.viewmodel.MemoryViewModel
 import com.on.staccato.presentation.memoryupdate.MemoryUpdateActivity
-import com.on.staccato.presentation.staccato.MomentFragment.Companion.STACCATO_ID_KEY
+import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.MomentCreationActivity
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
