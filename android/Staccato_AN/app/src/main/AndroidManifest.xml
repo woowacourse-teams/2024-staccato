@@ -63,7 +63,7 @@
             android:name=".presentation.memoryupdate.MemoryUpdateActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.staccatocreation.MomentCreationActivity"
+            android:name=".presentation.staccatocreation.StaccatoCreationActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.memorycreation.MemoryCreationActivity"

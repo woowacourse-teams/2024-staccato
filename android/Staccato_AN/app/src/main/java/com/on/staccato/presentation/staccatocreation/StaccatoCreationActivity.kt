@@ -47,11 +47,11 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
-class MomentCreationActivity :
+class StaccatoCreationActivity :
     GooglePlaceFragmentEventHandler,
     CurrentLocationHandler,
     OnUrisSelectedListener,
-    MomentCreationHandler,
+    StaccatoCreationHandler,
     BindingActivity<ActivityVisitCreationBinding>() {
     override val layoutResourceId = R.layout.activity_visit_creation
     private val viewModel: StaccatoCreationViewModel by viewModels()
@@ -347,7 +347,7 @@ class MomentCreationActivity :
     }
 
     private fun updateAddressByCurrentAddress(location: Location) {
-        val geocoder = Geocoder(this@MomentCreationActivity)
+        val geocoder = Geocoder(this@StaccatoCreationActivity)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val geocodeListener = initGeocodeListener()
             geocoder.getFromLocation(
@@ -395,7 +395,7 @@ class MomentCreationActivity :
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
-            Intent(context, MomentCreationActivity::class.java).apply {
+            Intent(context, StaccatoCreationActivity::class.java).apply {
                 putExtra(MEMORY_ID_KEY, memoryId)
                 putExtra(MEMORY_TITLE_KEY, memoryTitle)
                 activityLauncher.launch(this)
