@@ -388,14 +388,14 @@ class StaccatoUpdateActivity :
 
     companion object {
         fun startWithResultLauncher(
-            visitId: Long,
+            staccatoId: Long,
             memoryId: Long,
             memoryTitle: String,
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, StaccatoUpdateActivity::class.java).apply {
-                putExtra(STACCATO_ID_KEY, visitId)
+                putExtra(STACCATO_ID_KEY, staccatoId)
                 putExtra(MEMORY_ID_KEY, memoryId)
                 putExtra(MEMORY_TITLE_KEY, memoryTitle)
                 activityLauncher.launch(this)

@@ -26,23 +26,23 @@ import kotlin.properties.Delegates
 class StaccatoFragment :
     BindingFragment<FragmentMomentBinding>(R.layout.fragment_moment), StaccatoToolbarHandler {
     private val staccatoViewModel: StaccatoViewModel by viewModels()
-    private var momentId by Delegates.notNull<Long>()
+    private var staccatoId by Delegates.notNull<Long>()
     private lateinit var pagePhotoAdapter: ViewpagePhotoAdapter
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog =
         DeleteDialogFragment {
-            staccatoViewModel.deleteStaccato(momentId)
+            staccatoViewModel.deleteStaccato(staccatoId)
         }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        momentId = arguments?.getLong(STACCATO_ID_KEY) ?: return
+        staccatoId = arguments?.getLong(STACCATO_ID_KEY) ?: return
         binding.viewModel = staccatoViewModel
         initToolbarHandler()
         initViewPagerAdapter()
-        loadMomentData()
+        loadStaccatoData()
         observeData()
         createChildFragments(savedInstanceState)
         observeViewModel()
@@ -58,27 +58,27 @@ class StaccatoFragment :
     }
 
     private fun observeViewModel() {
-        staccatoViewModel.staccatoDetail.observe(viewLifecycleOwner) { momentDetail ->
-            pagePhotoAdapter.submitList(momentDetail.staccatoImageUrls)
+        staccatoViewModel.staccatoDetail.observe(viewLifecycleOwner) { staccatoDetail ->
+            pagePhotoAdapter.submitList(staccatoDetail.staccatoImageUrls)
         }
     }
 
-    private fun loadMomentData() {
-        staccatoViewModel.loadStaccato(momentId)
+    private fun loadStaccatoData() {
+        staccatoViewModel.loadStaccato(staccatoId)
     }
 
     private fun createChildFragments(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
             val bundle =
-                bundleOf(STACCATO_ID_KEY to momentId)
-            val momentFeelingSelectionFragment =
+                bundleOf(STACCATO_ID_KEY to staccatoId)
+            val staccatoFeelingSelectionFragment =
                 MomentFeelingSelectionFragment().apply {
                     arguments = bundle
                 }
-            val momentCommentsFragment = MomentCommentsFragment().apply { arguments = bundle }
+            val staccatoCommentsFragment = MomentCommentsFragment().apply { arguments = bundle }
             childFragmentManager.beginTransaction()
-                .replace(R.id.container_moment_feeling_selection, momentFeelingSelectionFragment)
-                .replace(R.id.container_moment_comments, momentCommentsFragment)
+                .replace(R.id.container_moment_feeling_selection, staccatoFeelingSelectionFragment)
+                .replace(R.id.container_moment_comments, staccatoCommentsFragment)
                 .commit()
         }
     }
@@ -113,18 +113,18 @@ class StaccatoFragment :
         memoryId: Long,
         memoryTitle: String,
     ) {
-        val momentUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
+        val staccatoUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
         StaccatoUpdateActivity.startWithResultLauncher(
-            visitId = momentId,
+            staccatoId = staccatoId,
             memoryId = memoryId,
             memoryTitle = memoryTitle,
             context = requireContext(),
-            activityLauncher = momentUpdateLauncher,
+            activityLauncher = staccatoUpdateLauncher,
         )
     }
 
     companion object {
-        const val STACCATO_ID_KEY = "momentId"
+        const val STACCATO_ID_KEY = "staccatoId"
         const val DEFAULT_STACCATO_ID = -1L
     }
 }
