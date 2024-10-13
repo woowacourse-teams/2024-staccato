@@ -2,7 +2,7 @@ package com.on.staccato.presentation.staccato.detail
 
 import java.time.LocalDateTime
 
-data class MomentDetailUiModel(
+data class StaccatoDetailUiModel(
     val id: Long,
     val memoryId: Long,
     val memoryTitle: String,
@@ -10,7 +10,7 @@ data class MomentDetailUiModel(
     val placeName: String,
     val latitude: Double,
     val longitude: Double,
-    val momentImageUrls: List<String>,
+    val staccatoImageUrls: List<String>,
     val address: String,
     val visitedAt: LocalDateTime,
 )

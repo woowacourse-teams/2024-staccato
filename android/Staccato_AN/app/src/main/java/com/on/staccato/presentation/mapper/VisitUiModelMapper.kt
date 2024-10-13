@@ -5,11 +5,11 @@ import com.on.staccato.domain.model.Comment
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.presentation.staccato.comments.CommentUiModel
-import com.on.staccato.presentation.staccato.detail.MomentDetailUiModel
+import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.feeling.FeelingUiModel
 
-fun Staccato.toMomentDetailUiModel(): MomentDetailUiModel {
-    return MomentDetailUiModel(
+fun Staccato.toMomentDetailUiModel(): StaccatoDetailUiModel {
+    return StaccatoDetailUiModel(
         id = staccatoId,
         memoryId = memoryId,
         memoryTitle = memoryTitle,
@@ -17,7 +17,7 @@ fun Staccato.toMomentDetailUiModel(): MomentDetailUiModel {
         placeName = placeName,
         latitude = latitude,
         longitude = longitude,
-        momentImageUrls = staccatoImageUrls,
+        staccatoImageUrls = staccatoImageUrls,
         address = address,
         visitedAt = visitedAt,
     )

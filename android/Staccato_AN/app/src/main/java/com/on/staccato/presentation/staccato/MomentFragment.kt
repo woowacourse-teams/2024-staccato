@@ -59,7 +59,7 @@ class MomentFragment :
 
     private fun observeViewModel() {
         momentViewModel.momentDetail.observe(viewLifecycleOwner) { momentDetail ->
-            pagePhotoAdapter.submitList(momentDetail.momentImageUrls)
+            pagePhotoAdapter.submitList(momentDetail.staccatoImageUrls)
         }
     }
 

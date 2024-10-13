@@ -10,7 +10,7 @@ import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toMomentDetailUiModel
 import com.on.staccato.presentation.staccato.comments.CommentUiModel
-import com.on.staccato.presentation.staccato.detail.MomentDetailUiModel
+import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,8 +21,8 @@ class MomentViewModel
     constructor(
         private val staccatoRepository: StaccatoRepository,
     ) : ViewModel() {
-        private val _momentDetail = MutableLiveData<MomentDetailUiModel>()
-        val momentDetail: LiveData<MomentDetailUiModel> get() = _momentDetail
+        private val _momentDetail = MutableLiveData<StaccatoDetailUiModel>()
+        val momentDetail: LiveData<StaccatoDetailUiModel> get() = _momentDetail
 
         private val _comments = MutableLiveData<List<CommentUiModel>>()
         val comments: LiveData<List<CommentUiModel>> get() = _comments
