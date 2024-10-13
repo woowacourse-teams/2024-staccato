@@ -3,9 +3,9 @@ package com.on.staccato.data.moment
 import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.MomentLocationResponse
 import com.on.staccato.data.dto.staccato.MomentResponse
-import com.on.staccato.data.dto.staccato.MomentUpdateRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
+import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -31,7 +31,7 @@ interface MomentApiService {
     @PUT(MOMENT_PATH_WITH_ID)
     suspend fun putMoment(
         @Path(value = "momentId") momentId: Long,
-        @Body momentUpdateRequest: MomentUpdateRequest,
+        @Body staccatoUpdateRequest: StaccatoUpdateRequest,
     )
 
     @DELETE(MOMENT_PATH_WITH_ID)

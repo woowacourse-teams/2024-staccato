@@ -4,9 +4,9 @@ import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.MomentLocationResponse
 import com.on.staccato.data.dto.staccato.MomentResponse
-import com.on.staccato.data.dto.staccato.MomentUpdateRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
+import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
 
 interface MomentDataSource {
     suspend fun fetchMoments(): ResponseResult<MomentLocationResponse>
@@ -17,7 +17,7 @@ interface MomentDataSource {
 
     suspend fun updateMoment(
         momentId: Long,
-        momentUpdateRequest: MomentUpdateRequest,
+        staccatoUpdateRequest: StaccatoUpdateRequest,
     )
 
     suspend fun deleteMoment(momentId: Long)

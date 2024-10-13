@@ -3,9 +3,9 @@ package com.on.staccato.data.moment
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.staccato.FeelingRequest
-import com.on.staccato.data.dto.staccato.MomentUpdateRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
+import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
 import com.on.staccato.domain.model.Moment
 import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.domain.repository.MomentRepository
@@ -72,8 +72,8 @@ class MomentDefaultRepository
             return runCatching {
                 remoteDataSource.updateMoment(
                     momentId = momentId,
-                    momentUpdateRequest =
-                        MomentUpdateRequest(
+                    staccatoUpdateRequest =
+                        StaccatoUpdateRequest(
                             staccatoTitle = staccatoTitle,
                             placeName = placeName,
                             address = address,

@@ -5,9 +5,9 @@ import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.MomentLocationResponse
 import com.on.staccato.data.dto.staccato.MomentResponse
-import com.on.staccato.data.dto.staccato.MomentUpdateRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
+import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
 import javax.inject.Inject
 
 class MomentRemoteDataSource
@@ -27,11 +27,11 @@ class MomentRemoteDataSource
 
         override suspend fun updateMoment(
             momentId: Long,
-            momentUpdateRequest: MomentUpdateRequest,
+            staccatoUpdateRequest: StaccatoUpdateRequest,
         ) {
             return momentApiService.putMoment(
                 momentId = momentId,
-                momentUpdateRequest,
+                staccatoUpdateRequest,
             )
         }
 

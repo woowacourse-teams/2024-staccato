@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MomentUpdateRequest(
+data class StaccatoUpdateRequest(
     @SerialName("staccatoTitle") val staccatoTitle: String,
     @SerialName("placeName") val placeName: String,
     @SerialName("address") val address: String,
