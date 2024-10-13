@@ -21,7 +21,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.createPhotosByUrls
-import com.on.staccato.presentation.staccatocreation.viewmodel.MomentCreationViewModel
+import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.util.convertExcretaFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -89,8 +89,8 @@ class VisitUpdateViewModel
         private val photoJobs = mutableMapOf<String, Job>()
 
         override fun onAddClicked() {
-            if ((currentPhotos.value?.size ?: 0) == MomentCreationViewModel.MAX_PHOTO_NUMBER) {
-                _errorMessage.postValue(MomentCreationViewModel.MAX_PHOTO_NUMBER_MESSAGE)
+            if ((currentPhotos.value?.size ?: 0) == StaccatoCreationViewModel.MAX_PHOTO_NUMBER) {
+                _errorMessage.postValue(StaccatoCreationViewModel.MAX_PHOTO_NUMBER_MESSAGE)
             } else {
                 _isAddPhotoClicked.postValue(true)
             }
@@ -248,7 +248,7 @@ class VisitUpdateViewModel
                 convertExcretaFile(
                     context,
                     photo.uri,
-                    MomentCreationViewModel.FORM_DATA_NAME,
+                    StaccatoCreationViewModel.FORM_DATA_NAME,
                 )
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {

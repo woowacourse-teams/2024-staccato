@@ -38,7 +38,7 @@ import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragment
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
-import com.on.staccato.presentation.staccatocreation.viewmodel.MomentCreationViewModel
+import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -54,7 +54,7 @@ class MomentCreationActivity :
     MomentCreationHandler,
     BindingActivity<ActivityVisitCreationBinding>() {
     override val layoutResourceId = R.layout.activity_visit_creation
-    private val viewModel: MomentCreationViewModel by viewModels()
+    private val viewModel: StaccatoCreationViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
     private val memorySelectionFragment by lazy {
         MemorySelectionFragment()

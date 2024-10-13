@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.staccatocreation.viewmodel.MomentCreationViewModel" />
+            type="com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel" />
 
         <variable
             name="visitCreationHandler"
