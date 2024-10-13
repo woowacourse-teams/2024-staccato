@@ -129,7 +129,7 @@ class MemoryFragment :
 
     private fun initStaccatosAdapter() {
         staccatosAdapter = StaccatosAdapter(handler = this)
-        binding.rvMemoryVisits.adapter = staccatosAdapter
+        binding.rvMemoryStaccatos.adapter = staccatosAdapter
     }
 
     private fun showErrorToast() {
