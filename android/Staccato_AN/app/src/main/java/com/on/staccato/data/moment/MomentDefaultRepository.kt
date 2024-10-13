@@ -2,10 +2,10 @@ package com.on.staccato.data.moment
 
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDomain
-import com.on.staccato.data.dto.moment.FeelingRequest
-import com.on.staccato.data.dto.moment.MomentCreationRequest
-import com.on.staccato.data.dto.moment.MomentCreationResponse
-import com.on.staccato.data.dto.moment.MomentUpdateRequest
+import com.on.staccato.data.dto.staccato.FeelingRequest
+import com.on.staccato.data.dto.staccato.MomentCreationRequest
+import com.on.staccato.data.dto.staccato.MomentCreationResponse
+import com.on.staccato.data.dto.staccato.MomentUpdateRequest
 import com.on.staccato.domain.model.Moment
 import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.domain.repository.MomentRepository

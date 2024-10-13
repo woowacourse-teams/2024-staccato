@@ -1,4 +1,4 @@
-package com.on.staccato.data.dto.moment
+package com.on.staccato.data.dto.staccato
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

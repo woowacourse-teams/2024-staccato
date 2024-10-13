@@ -1,7 +1,7 @@
 package com.on.staccato.data.dto.mapper
 
-import com.on.staccato.data.dto.moment.MomentLocationDto
-import com.on.staccato.data.dto.moment.MomentResponse
+import com.on.staccato.data.dto.staccato.MomentLocationDto
+import com.on.staccato.data.dto.staccato.MomentResponse
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Moment
 import com.on.staccato.domain.model.MomentLocation

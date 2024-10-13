@@ -1,7 +1,7 @@
 package com.on.staccato.domain.repository
 
 import com.on.staccato.data.ResponseResult
-import com.on.staccato.data.dto.moment.MomentCreationResponse
+import com.on.staccato.data.dto.staccato.MomentCreationResponse
 import com.on.staccato.domain.model.Moment
 import com.on.staccato.domain.model.MomentLocation
 import java.time.LocalDateTime

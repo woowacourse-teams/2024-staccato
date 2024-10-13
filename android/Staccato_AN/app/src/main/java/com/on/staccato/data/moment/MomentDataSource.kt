@@ -1,12 +1,12 @@
 package com.on.staccato.data.moment
 
 import com.on.staccato.data.ResponseResult
-import com.on.staccato.data.dto.moment.FeelingRequest
-import com.on.staccato.data.dto.moment.MomentCreationRequest
-import com.on.staccato.data.dto.moment.MomentCreationResponse
-import com.on.staccato.data.dto.moment.MomentLocationResponse
-import com.on.staccato.data.dto.moment.MomentResponse
-import com.on.staccato.data.dto.moment.MomentUpdateRequest
+import com.on.staccato.data.dto.staccato.FeelingRequest
+import com.on.staccato.data.dto.staccato.MomentCreationRequest
+import com.on.staccato.data.dto.staccato.MomentCreationResponse
+import com.on.staccato.data.dto.staccato.MomentLocationResponse
+import com.on.staccato.data.dto.staccato.MomentResponse
+import com.on.staccato.data.dto.staccato.MomentUpdateRequest
 
 interface MomentDataSource {
     suspend fun fetchMoments(): ResponseResult<MomentLocationResponse>
