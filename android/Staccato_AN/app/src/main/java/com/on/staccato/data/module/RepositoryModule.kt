@@ -37,7 +37,7 @@ abstract class RepositoryModule {
     abstract fun bindMemoryRepository(memoryDefaultRepository: MemoryDefaultRepository): MemoryRepository
 
     @Binds
-    abstract fun bindMomentRepository(momentDefaultRepository: StaccatoDefaultRepository): StaccatoRepository
+    abstract fun bindStaccatoRepository(staccatoDefaultRepository: StaccatoDefaultRepository): StaccatoRepository
 
     @Binds
     abstract fun bindTimelineRepository(timelineDefaultRepository: TimelineDefaultRepository): TimelineRepository
