@@ -28,7 +28,7 @@ abstract class DataSourceModule {
     abstract fun bindMemoryDataSource(memoryRemoteDataSource: MemoryRemoteDataSource): MemoryDataSource
 
     @Binds
-    abstract fun bindMomentDataSource(momentRemoteDataSource: StaccatoRemoteDataSource): StaccatoDataSource
+    abstract fun bindStaccatoDataSource(staccatoRemoteDataSource: StaccatoRemoteDataSource): StaccatoDataSource
 
     @Binds
     abstract fun bindTimelineDataSource(timelineRemoteDataSource: TimelineRemoteDataSource): TimelineDataSource
