@@ -14,6 +14,7 @@
     </style>
 
     <style name="NavigationToolbarStyle" parent="TitleToolbarStyle">
+        <item name="android:paddingEnd">8dp</item>
         <item name="navigationIcon">@drawable/icon_arrow_left</item>
     </style>
 
