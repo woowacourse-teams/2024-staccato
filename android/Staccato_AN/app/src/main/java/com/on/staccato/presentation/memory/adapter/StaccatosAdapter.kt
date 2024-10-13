@@ -25,8 +25,8 @@ class StaccatosAdapter(private val handler: MemoryHandler) : ListAdapter<MemoryS
         holder.bind(getItem(position))
     }
 
-    fun updateVisits(visits: List<MemoryStaccatoUiModel>) {
-        submitList(visits)
+    fun updateStaccatos(staccatos: List<MemoryStaccatoUiModel>) {
+        submitList(staccatos)
     }
 
     companion object {
