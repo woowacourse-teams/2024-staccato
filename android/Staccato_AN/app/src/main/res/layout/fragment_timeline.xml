@@ -48,7 +48,7 @@
             bind:visibilityByTimeline="@{viewModel.timeline}">
 
             <Button
-                android:id="@+id/btn_timeline_add_visits"
+                android:id="@+id/btn_timeline_add_staccatos"
                 style="@style/Widget.Material3.Button.OutlinedButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline">
 
             <Button
-                android:id="@+id/btn_timeline_sort_visits"
+                android:id="@+id/btn_timeline_sort_staccatos"
                 style="@style/Widget.Material3.Button.OutlinedButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
