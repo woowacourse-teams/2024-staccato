@@ -31,7 +31,7 @@ class MomentFragment :
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog =
         DeleteDialogFragment {
-            staccatoViewModel.deleteMoment(momentId)
+            staccatoViewModel.deleteStaccato(momentId)
         }
 
     override fun onViewCreated(
@@ -58,13 +58,13 @@ class MomentFragment :
     }
 
     private fun observeViewModel() {
-        staccatoViewModel.momentDetail.observe(viewLifecycleOwner) { momentDetail ->
+        staccatoViewModel.staccatoDetail.observe(viewLifecycleOwner) { momentDetail ->
             pagePhotoAdapter.submitList(momentDetail.staccatoImageUrls)
         }
     }
 
     private fun loadMomentData() {
-        staccatoViewModel.loadMoment(momentId)
+        staccatoViewModel.loadStaccato(momentId)
     }
 
     private fun createChildFragments(savedInstanceState: Bundle?) {

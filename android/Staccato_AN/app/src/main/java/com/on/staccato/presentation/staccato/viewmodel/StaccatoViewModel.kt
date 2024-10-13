@@ -21,8 +21,8 @@ class StaccatoViewModel
     constructor(
         private val staccatoRepository: StaccatoRepository,
     ) : ViewModel() {
-        private val _momentDetail = MutableLiveData<StaccatoDetailUiModel>()
-        val momentDetail: LiveData<StaccatoDetailUiModel> get() = _momentDetail
+        private val _staccatoDetail = MutableLiveData<StaccatoDetailUiModel>()
+        val staccatoDetail: LiveData<StaccatoDetailUiModel> get() = _staccatoDetail
 
         private val _comments = MutableLiveData<List<CommentUiModel>>()
         val comments: LiveData<List<CommentUiModel>> get() = _comments
@@ -36,22 +36,22 @@ class StaccatoViewModel
         private val _isError = MutableSingleLiveData(false)
         val isError: SingleLiveData<Boolean> get() = _isError
 
-        fun loadMoment(momentId: Long) {
-            fetchMomentData(momentId)
+        fun loadStaccato(staccatoId: Long) {
+            fetchStaccatoData(staccatoId)
         }
 
-        fun deleteMoment(momentId: Long) =
+        fun deleteStaccato(staccatoId: Long) =
             viewModelScope.launch {
-                staccatoRepository.deleteStaccato(momentId).onSuccess {
+                staccatoRepository.deleteStaccato(staccatoId).onSuccess {
                     _isDeleted.postValue(true)
                 }
             }
 
-        private fun fetchMomentData(momentId: Long) {
+        private fun fetchStaccatoData(staccatoId: Long) {
             viewModelScope.launch {
-                staccatoRepository.getStaccato(momentId).onSuccess { moment ->
-                    _momentDetail.value = moment.toStaccatoDetailUiModel()
-                    _feeling.value = moment.feeling
+                staccatoRepository.getStaccato(staccatoId).onSuccess { staccato ->
+                    _staccatoDetail.value = staccato.toStaccatoDetailUiModel()
+                    _feeling.value = staccato.feeling
                 }.onFailure {
                     _isError.postValue(true)
                 }
