@@ -10,11 +10,11 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel" />
+            type="com.on.staccato.presentation.staccatoupdate.viewmodel.VisitUpdateViewModel" />
 
         <variable
             name="visitUpdateHandler"
-            type="com.on.staccato.presentation.visitupdate.VisitUpdateHandler" />
+            type="com.on.staccato.presentation.staccatoupdate.VisitUpdateHandler" />
 
         <variable
             name="currentLocationHandler"

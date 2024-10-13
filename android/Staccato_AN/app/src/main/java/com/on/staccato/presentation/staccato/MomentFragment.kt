@@ -18,7 +18,7 @@ import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.MomentFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.MomentViewModel
 import com.on.staccato.presentation.util.showToast
-import com.on.staccato.presentation.visitupdate.VisitUpdateActivity
+import com.on.staccato.presentation.staccatoupdate.VisitUpdateActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.properties.Delegates
 

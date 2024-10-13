@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.visitupdate
+package com.on.staccato.presentation.staccatoupdate
 
 import android.content.Context
 import android.content.Intent
@@ -42,7 +42,7 @@ import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragm
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.util.showToast
-import com.on.staccato.presentation.visitupdate.viewmodel.VisitUpdateViewModel
+import com.on.staccato.presentation.staccatoupdate.viewmodel.VisitUpdateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

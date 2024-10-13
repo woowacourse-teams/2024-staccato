@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.visitupdate
+package com.on.staccato.presentation.staccatoupdate
 
 interface VisitUpdateHandler {
     fun onUpdateDoneClicked()

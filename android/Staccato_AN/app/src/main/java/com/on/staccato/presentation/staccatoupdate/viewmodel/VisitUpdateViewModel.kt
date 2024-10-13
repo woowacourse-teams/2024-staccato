@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.visitupdate.viewmodel
+package com.on.staccato.presentation.staccatoupdate.viewmodel
 
 import android.content.Context
 import android.location.Location
