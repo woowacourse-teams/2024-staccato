@@ -18,13 +18,13 @@ class StaccatoFeelingSelectionFragment :
     private val staccatoViewModel: StaccatoViewModel by viewModels({ requireParentFragment() })
     private val staccatoFeelingSelectionViewModel: StaccatoFeelingSelectionViewModel by viewModels()
 
-    private val momentId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
+    private val staccatoId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        staccatoFeelingSelectionViewModel.setStaccatoId(momentId)
+        staccatoFeelingSelectionViewModel.setStaccatoId(staccatoId)
         initAdapter()
         observeInitialFeeling()
         observeFeelings()
