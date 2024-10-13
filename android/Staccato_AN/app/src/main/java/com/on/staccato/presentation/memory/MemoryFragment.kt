@@ -108,7 +108,7 @@ class MemoryFragment :
     private fun observeMemory() {
         viewModel.memory.observe(viewLifecycleOwner) { memory ->
             matesAdapter.updateMates(memory.mates)
-            visitsAdapter.updateVisits(memory.visits)
+            visitsAdapter.updateVisits(memory.staccatos)
         }
     }
 

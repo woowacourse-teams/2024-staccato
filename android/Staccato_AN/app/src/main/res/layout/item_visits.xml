@@ -12,7 +12,7 @@
 
         <variable
             name="visit"
-            type="com.on.staccato.presentation.memory.model.MemoryVisitUiModel" />
+            type="com.on.staccato.presentation.memory.model.MemoryStaccatoUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +34,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:coilPlaceHolder="@{@drawable/staccato_gradient}"
-            bind:coilRoundedCornerImageUrl="@{visit.visitImageUrl}"
+            bind:coilRoundedCornerImageUrl="@{visit.staccatoImageUrl}"
             bind:coilRoundingRadius="@{16}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 

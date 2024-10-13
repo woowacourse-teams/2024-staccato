@@ -225,7 +225,7 @@
                     android:contentDescription="@string/all_image_content_description"
                     android:paddingBottom="10dp"
                     android:src="@drawable/staccato_character"
-                    android:visibility="@{viewModel.memory.visits.empty ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.memory.staccatos.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_visits" />
@@ -238,7 +238,7 @@
                     android:paddingBottom="100dp"
                     android:text="@string/memory_visit_empty"
                     android:textAppearance="@style/Typography.Body2"
-                    android:visibility="@{viewModel.memory.visits.empty ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.memory.staccatos.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_memory_empty"
