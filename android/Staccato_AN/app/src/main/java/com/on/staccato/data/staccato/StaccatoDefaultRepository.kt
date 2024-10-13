@@ -6,8 +6,8 @@ import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
 import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
-import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.domain.model.Staccato
+import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.domain.repository.StaccatoRepository
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class StaccatoDefaultRepository
         private val remoteDataSource: StaccatoRemoteDataSource,
     ) :
     StaccatoRepository {
-        override suspend fun getStaccatos(): ResponseResult<List<MomentLocation>> {
+        override suspend fun getStaccatos(): ResponseResult<List<StaccatoLocation>> {
             return when (val responseResult = remoteDataSource.fetchStaccatos()) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
                 is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)

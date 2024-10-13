@@ -3,8 +3,8 @@ package com.on.staccato.data.dto.mapper
 import com.on.staccato.data.dto.staccato.StaccatoLocationDto
 import com.on.staccato.data.dto.staccato.StaccatoResponse
 import com.on.staccato.domain.model.Feeling
-import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.domain.model.Staccato
+import com.on.staccato.domain.model.StaccatoLocation
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -26,8 +26,8 @@ fun StaccatoResponse.toDomain() =
     )
 
 fun StaccatoLocationDto.toDomain() =
-    MomentLocation(
-        momentId = momentId,
+    StaccatoLocation(
+        staccatoId = momentId,
         latitude = latitude,
         longitude = longitude,
     )

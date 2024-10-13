@@ -31,7 +31,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDE
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
-import com.on.staccato.domain.model.MomentLocation
+import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.LocationPermissionManager
 import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
@@ -226,20 +226,20 @@ class MainActivity :
     }
 
     private fun observeMomentLocations() {
-        mapsViewModel.momentLocations.observe(this) { momentLocations ->
+        mapsViewModel.staccatoLocations.observe(this) { momentLocations ->
             if (this::googleMap.isInitialized) googleMap.clear()
             addMarkers(momentLocations)
         }
     }
 
-    private fun addMarkers(momentLocations: List<MomentLocation>) {
+    private fun addMarkers(staccatoLocations: List<StaccatoLocation>) {
         val markers: MutableList<MarkerUiModel> = mutableListOf()
-        momentLocations.forEach { momentLocation ->
+        staccatoLocations.forEach { momentLocation ->
             val latLng = LatLng(momentLocation.latitude, momentLocation.longitude)
             val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
             val marker: Marker = googleMap.addMarker(markerOptions) ?: return
             val markerId: String = marker.id
-            markers.add(MarkerUiModel(momentLocation.momentId, markerId))
+            markers.add(MarkerUiModel(momentLocation.staccatoId, markerId))
         }
         mapsViewModel.setMarkers(markers)
     }

@@ -2,12 +2,12 @@ package com.on.staccato.domain.repository
 
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
-import com.on.staccato.domain.model.MomentLocation
 import com.on.staccato.domain.model.Staccato
+import com.on.staccato.domain.model.StaccatoLocation
 import java.time.LocalDateTime
 
 interface StaccatoRepository {
-    suspend fun getStaccatos(): ResponseResult<List<MomentLocation>>
+    suspend fun getStaccatos(): ResponseResult<List<StaccatoLocation>>
 
     suspend fun getStaccato(staccatoId: Long): Result<Staccato>
 

@@ -1,7 +1,7 @@
 package com.on.staccato.domain.model
 
-data class MomentLocation(
-    val momentId: Long,
+data class StaccatoLocation(
+    val staccatoId: Long,
     val latitude: Double,
     val longitude: Double,
 )

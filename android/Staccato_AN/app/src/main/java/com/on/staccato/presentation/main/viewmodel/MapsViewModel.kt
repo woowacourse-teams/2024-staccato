@@ -10,7 +10,7 @@ import com.on.staccato.data.ApiResponseHandler.onException
 import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.dto.Status
-import com.on.staccato.domain.model.MomentLocation
+import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
@@ -25,8 +25,8 @@ class MapsViewModel
     constructor(
         private val staccatoRepository: StaccatoRepository,
     ) : ViewModel() {
-        private val _momentLocations = MutableLiveData<List<MomentLocation>>()
-        val momentLocations: LiveData<List<MomentLocation>> get() = _momentLocations
+        private val _staccatoLocations = MutableLiveData<List<StaccatoLocation>>()
+        val staccatoLocations: LiveData<List<StaccatoLocation>> get() = _staccatoLocations
 
         private val _markers = MutableLiveData<List<MarkerUiModel>>()
         val markers: LiveData<List<MarkerUiModel>> get() = _markers
@@ -69,8 +69,8 @@ class MapsViewModel
             }
         }
 
-        private fun setMomentLocations(momentLocations: List<MomentLocation>) {
-            _momentLocations.value = momentLocations
+        private fun setMomentLocations(staccatoLocations: List<StaccatoLocation>) {
+            _staccatoLocations.value = staccatoLocations
         }
 
         private fun handleServerError(
