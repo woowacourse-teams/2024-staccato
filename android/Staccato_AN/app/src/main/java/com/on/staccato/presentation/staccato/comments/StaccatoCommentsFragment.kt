@@ -33,8 +33,8 @@ class StaccatoCommentsFragment :
 
     private fun setUpRecyclerView() {
         commentsAdapter = CommentsAdapter(commentsViewModel)
-        binding.rvMomentComments.adapter = commentsAdapter
-        binding.rvMomentComments.itemAnimator = null
+        binding.rvStaccatoComments.adapter = commentsAdapter
+        binding.rvStaccatoComments.itemAnimator = null
     }
 
     private fun setUpBinding() {
