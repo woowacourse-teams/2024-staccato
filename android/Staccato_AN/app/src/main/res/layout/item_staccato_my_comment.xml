@@ -17,7 +17,7 @@
         android:layout_marginBottom="10dp">
 
         <ImageView
-            android:id="@+id/iv_moment_my_comment_profile"
+            android:id="@+id/iv_staccato_my_comment_profile"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
@@ -30,17 +30,17 @@
             bind:coilPlaceHolder="@{@drawable/shape_place_holder_oval}" />
 
         <TextView
-            android:id="@+id/tv_moment_my_comment_name"
+            android:id="@+id/tv_staccato_my_comment_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{myComment.nickname}"
             android:textAppearance="@style/Typography.Body4"
-            app:layout_constraintEnd_toEndOf="@id/tv_moment_my_comment_chat"
-            app:layout_constraintTop_toTopOf="@id/iv_moment_my_comment_profile"
+            app:layout_constraintEnd_toEndOf="@id/tv_staccato_my_comment_chat"
+            app:layout_constraintTop_toTopOf="@id/iv_staccato_my_comment_profile"
             tools:text="username" />
 
         <TextView
-            android:id="@+id/tv_moment_my_comment_chat"
+            android:id="@+id/tv_staccato_my_comment_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
@@ -54,10 +54,10 @@
             android:textColor="@color/gray5"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/iv_moment_my_comment_profile"
+            app:layout_constraintEnd_toStartOf="@id/iv_staccato_my_comment_profile"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_moment_my_comment_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_staccato_my_comment_name"
             tools:text="어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어엄청 긴 임시 방문 로그" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
