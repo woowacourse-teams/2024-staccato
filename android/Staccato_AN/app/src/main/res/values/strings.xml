@@ -12,7 +12,6 @@
     <string name="all_photo">사진</string>
     <string name="all_photo_number">(%s/%s)</string>
     <string name="all_photo_attach">사진을 첨부해 보세요</string>
-    <string name="all_visited_date">시간</string>
     <string name="all_visited_at">날짜 및 시간</string>
     <string name="all_please_select_visited_at">날짜 및 시간을 선택해 주세요</string>
     <string name="all_date_dots_format">%s. %s. %s</string>
@@ -33,7 +32,6 @@
     // fragment_timeline
     <string name="timeline_my_timeline">나의 추억들</string>
     <string name="timeline_order">최근 생성 순</string>
-    <string name="timeline_year">%s년</string>
     <string name="timeline_empty">아직 추억이 없네요!\n스타카토를 담을 추억을 만들어보세요.</string>
     <string name="timeline_add_memory">추가</string>
     <string name="timeline_sort">정렬</string>
@@ -44,10 +42,8 @@
     <string name="memory_period_dot">%s. %s. %s ~ %s. %s. %s</string>
     <string name="memory_mates">함께 한 사람들</string>
     <string name="memory_staccatos">스타카토</string>
-    <string name="memory_daily_staccatos">%s월 %s일의 스타카토</string>
     <string name="memory_delete_complete">추억이 삭제되었습니다.</string>
     <string name="memory_staccato_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
-    <string name="memory_unable_to_create_staccato">스타카토가 추억 기간에 포함되지 않아요!</string>
 
     // activity_memory_creation / activity_memory_update
     <string name="memory_creation_title">추억 제목</string>
@@ -83,7 +79,6 @@
     <string name="staccato_creation_load_current_location">현재 위치의 주소 불러오기</string>
     <string name="staccato_creation_empty_address">"장소를 선택하면 상세 주소가 나타나요"</string>
     <string name="staccato_creation_address">상세 주소</string>
-    <string name="staccato_creation_visited_at_hint">날짜를 선택해 주세요</string>
     <string name="staccato_creation_memory_selection">추억 선택</string>
     <string name="staccato_creation_memory_selection_hint">추억을 선택해 주세요</string>
     <string name="staccato_creation_no_memory_hint">스타카토를 남길 수 있는 추억이 없어요</string>
@@ -121,12 +116,6 @@
     <string name="snack_bar_require_photo_album_permission">사진 및 동영상 액세스 권한을 허용해 주세요.</string>
     <string name="snack_bar_move_to_setting">설정으로 이동하기</string>
 
-    // fragment_memory_selection
-    <string name="memory_selection_period">%s.%s.%s - %s.%s.%s</string>
-
-    // fragment_visited_date_selection
-    <string name="visited_date_selection_day">Day %d</string>
-
     // dialog_delete_impossibility
     <string name="memory_delete_title">추억을 삭제할 수 없어요.</string>
     <string name="memory_delete_description">아직 스타카토가 남아있어요!</string>
@@ -136,16 +125,10 @@
     <string name="delete_description">삭제를 누르면 복구할 수 없어요!</string>
     <string name="all_delete_image">이미지 삭제 버튼</string>
 
-    // menu_creation
-    <string name="menu_creation_memory">추억 생성</string>
-    <string name="menu_creation_staccato">스타카토 생성</string>
-
     // menu_comment
-    <string name="menu_comment_update">수정하기</string>
     <string name="menu_comment_delete">삭제하기</string>
 
     <string name="maps_location_permission_granted_message">위치 서비스 사용을 위한 위치 권한이 설정 되었습니다.</string>
-    <string name="maps_location_permission_required_message">위치 서비스 사용을 위해 위치 권한을 허용해 주세요.</string>
 
     // fragment_location_dialog
     <string name="location_dialog_title">위치 권한 설정</string>
