@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:onClick="@{() -> handler.onVisitClicked(visit.id)}"
+        android:onClick="@{() -> handler.onStaccatoClicked(visit.id)}"
         android:padding="4dp">
 
         <ImageView

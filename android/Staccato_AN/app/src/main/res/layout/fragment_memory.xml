@@ -172,7 +172,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
-                    android:onClick="@{() -> memoryHandler.onVisitCreationClicked()}"
+                    android:onClick="@{() -> memoryHandler.onStaccatoCreationClicked()}"
                     android:paddingVertical="12dp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_memory_visits"
                     app:layout_constraintEnd_toEndOf="parent"

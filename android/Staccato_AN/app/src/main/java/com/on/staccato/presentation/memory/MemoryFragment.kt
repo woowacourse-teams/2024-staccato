@@ -66,11 +66,11 @@ class MemoryFragment :
         deleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
     }
 
-    override fun onVisitClicked(visitId: Long) {
+    override fun onStaccatoClicked(staccatoId: Long) {
         viewModel.memory.value?.let {
             val bundle =
                 bundleOf(
-                    STACCATO_ID_KEY to visitId,
+                    STACCATO_ID_KEY to staccatoId,
                 )
             findNavController().navigate(R.id.action_memoryFragment_to_momentFragment, bundle)
         }
@@ -80,7 +80,7 @@ class MemoryFragment :
         viewModel.deleteMemory(memoryId)
     }
 
-    override fun onVisitCreationClicked() {
+    override fun onStaccatoCreationClicked() {
         viewModel.memory.value?.let {
             val visitCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
             StaccatoCreationActivity.startWithResultLauncher(
