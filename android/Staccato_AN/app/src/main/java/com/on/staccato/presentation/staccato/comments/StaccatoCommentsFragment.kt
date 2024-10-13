@@ -17,14 +17,14 @@ class StaccatoCommentsFragment :
     BindingFragment<FragmentMomentCommentsBinding>(R.layout.fragment_moment_comments) {
     private lateinit var commentsAdapter: CommentsAdapter
 
-    private val momentId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
+    private val staccatoId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
     private val commentsViewModel: StaccatoCommentsViewModel by viewModels()
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        commentsViewModel.setMemoryId(momentId)
+        commentsViewModel.setMemoryId(staccatoId)
         setUpRecyclerView()
         setUpBinding()
         observeCommentsViewModel()
