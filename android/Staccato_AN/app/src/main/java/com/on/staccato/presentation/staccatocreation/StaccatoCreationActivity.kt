@@ -230,7 +230,7 @@ class StaccatoCreationActivity :
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.visitCreationHandler = this
+        binding.staccatoCreationHandler = this
         binding.currentLocationHandler = this
     }
 
@@ -257,7 +257,7 @@ class StaccatoCreationActivity :
     }
 
     private fun initToolbar() {
-        binding.toolbarVisitCreation.setNavigationOnClickListener {
+        binding.toolbarStaccatoCreation.setNavigationOnClickListener {
             finish()
         }
     }
