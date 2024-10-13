@@ -13,7 +13,7 @@
             type="com.on.staccato.presentation.staccatoupdate.viewmodel.StaccatoUpdateViewModel" />
 
         <variable
-            name="visitUpdateHandler"
+            name="staccatoUpdateHandler"
             type="com.on.staccato.presentation.staccatoupdate.StaccatoUpdateHandler" />
 
         <variable
@@ -27,7 +27,7 @@
         android:background="@color/white">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar_visit_update"
+            android:id="@+id/toolbar_staccato_update"
             style="@style/TitleToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:layout_height="0dp"
             android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_visit_update">
+            app:layout_constraintTop_toBottomOf="@id/toolbar_staccato_update">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -101,7 +101,7 @@
                     bind:photoDragHintVisibility="@{viewModel.currentPhotos.size}" />
 
                 <TextView
-                    android:id="@+id/tv_visit_update_place_name_title"
+                    android:id="@+id/tv_staccato_update_place_name_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="40dp"
@@ -110,19 +110,19 @@
                     app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
 
                 <TextView
-                    android:id="@+id/tv_visit_update_required_mark_first"
+                    android:id="@+id/tv_staccato_update_required_mark_first"
                     style="@style/RequiredMarkStyle"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_visit_update_place_name_title"
-                    app:layout_constraintStart_toEndOf="@id/tv_visit_update_place_name_title"
-                    app:layout_constraintTop_toTopOf="@id/tv_visit_update_place_name_title" />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_staccato_update_place_name_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_staccato_update_place_name_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_staccato_update_place_name_title" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/text_input_visit_update_title"
+                    android:id="@+id/text_input_staccato_update_title"
                     style="@style/TextInputLayoutStyle"
                     app:counterMaxLength="30"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visit_update_place_name_title">
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_update_place_name_title">
 
                     <com.google.android.material.textfield.TextInputEditText
                         style="@style/TextInputEditTextStyle.Title"
@@ -139,11 +139,11 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/visit_creation_place"
                     android:textAppearance="@style/Typography.Title2"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_visit_update_title" />
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_update_place_name_title"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_staccato_update_title" />
 
                 <TextView
-                    android:id="@+id/tv_visit_creation_required_mark_second"
+                    android:id="@+id/tv_staccato_creation_required_mark_second"
                     style="@style/RequiredMarkStyle"
                     app:layout_constraintBottom_toBottomOf="@id/tv_place_name_title"
                     app:layout_constraintStart_toEndOf="@id/tv_place_name_title"
@@ -168,7 +168,7 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/visit_creation_address"
                     android:textAppearance="@style/Typography.Title3"
-                    app:layout_constraintStart_toStartOf="@id/tv_visit_update_place_name_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/autocomplete_fragment" />
 
                 <TextView
@@ -234,7 +234,7 @@
                     app:layout_constraintTop_toBottomOf="@id/constraint_current_location" />
 
                 <TextView
-                    android:id="@+id/tv_visit_update_required_mark_third"
+                    android:id="@+id/tv_staccato_update_required_mark_third"
                     style="@style/RequiredMarkStyle"
                     app:layout_constraintBottom_toBottomOf="@id/tv_memory_selection_title"
                     app:layout_constraintStart_toEndOf="@id/tv_memory_selection_title"
@@ -247,7 +247,7 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{()->visitUpdateHandler.onMemorySelectionClicked()}"
+                    android:onClick="@{() -> staccatoUpdateHandler.onMemorySelectionClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:text="@{viewModel.selectedMemory.memoryTitle}"
@@ -268,7 +268,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection" />
 
                 <TextView
-                    android:id="@+id/tv_visit_update_required_mark_fourth"
+                    android:id="@+id/tv_staccato_update_required_mark_fourth"
                     style="@style/RequiredMarkStyle"
                     app:layout_constraintBottom_toBottomOf="@id/tv_select_memory_title"
                     app:layout_constraintStart_toEndOf="@id/tv_select_memory_title"
@@ -281,7 +281,7 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{()->visitUpdateHandler.onVisitedAtSelectionClicked()}"
+                    android:onClick="@{() -> staccatoUpdateHandler.onVisitedAtSelectionClicked()}"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
                     android:textAppearance="@style/Typography.Body1"
@@ -292,12 +292,12 @@
                     bind:setMemoryCandidates="@{viewModel.memoryCandidates}" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_visit_update_done"
+                    android:id="@+id/btn_staccato_update_done"
                     style="@style/ButtonStyle.Save.Active"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="36dp"
                     android:layout_marginBottom="24dp"
-                    android:onClick="@{() -> visitUpdateHandler.onUpdateDoneClicked()}"
+                    android:onClick="@{() -> staccatoUpdateHandler.onUpdateDoneClicked()}"
                     android:text="@string/all_save"
                     android:textAppearance="@style/Typography.Title3"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -315,7 +315,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <ProgressBar
-            android:id="@+id/progress_bar_visit_update"
+            android:id="@+id/progress_bar_staccato_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:progress="30"
