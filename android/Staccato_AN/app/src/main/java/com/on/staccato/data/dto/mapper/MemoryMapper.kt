@@ -7,7 +7,7 @@ import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.domain.model.Memory
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
-import com.on.staccato.domain.model.MemoryMoment
+import com.on.staccato.domain.model.MemoryStaccato
 import com.on.staccato.domain.model.NewMemory
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -37,10 +37,10 @@ fun MemoriesResponse.toDomain(): MemoryCandidates =
     )
 
 fun MemoryMomentDto.toDomain() =
-    MemoryMoment(
-        momentId = momentId,
-        momentTitle = staccatoTitle,
-        momentImageUrl = staccatoImageUrl,
+    MemoryStaccato(
+        staccatoId = momentId,
+        staccatoTitle = staccatoTitle,
+        staccatoImageUrl = staccatoImageUrl,
         visitedAt = LocalDateTime.parse(visitedAt),
     )
 

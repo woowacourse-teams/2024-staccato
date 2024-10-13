@@ -2,7 +2,7 @@ package com.on.staccato.presentation.mapper
 
 import com.on.staccato.domain.model.Member
 import com.on.staccato.domain.model.Memory
-import com.on.staccato.domain.model.MemoryMoment
+import com.on.staccato.domain.model.MemoryStaccato
 import com.on.staccato.presentation.common.MemberUiModel
 import com.on.staccato.presentation.memory.model.MemoryUiModel
 import com.on.staccato.presentation.memory.model.MemoryVisitUiModel
@@ -26,10 +26,10 @@ fun Member.toUiModel() =
         memberImage = memberImage,
     )
 
-fun MemoryMoment.toUiModel() =
+fun MemoryStaccato.toUiModel() =
     MemoryVisitUiModel(
-        id = momentId,
-        staccatoTitle = momentTitle,
-        visitImageUrl = momentImageUrl,
+        id = staccatoId,
+        staccatoTitle = staccatoTitle,
+        visitImageUrl = staccatoImageUrl,
         visitedAt = visitedAt,
     )
