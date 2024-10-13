@@ -1,6 +1,6 @@
 package com.on.staccato.data.dto.mapper
 
-import com.on.staccato.data.dto.staccato.MomentLocationDto
+import com.on.staccato.data.dto.staccato.StaccatoLocationDto
 import com.on.staccato.data.dto.staccato.StaccatoResponse
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Moment
@@ -25,7 +25,7 @@ fun StaccatoResponse.toDomain() =
         feeling = Feeling.fromValue(feeling),
     )
 
-fun MomentLocationDto.toDomain() =
+fun StaccatoLocationDto.toDomain() =
     MomentLocation(
         momentId = momentId,
         latitude = latitude,

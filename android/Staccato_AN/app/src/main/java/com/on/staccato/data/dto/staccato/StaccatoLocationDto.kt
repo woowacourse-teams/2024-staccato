@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MomentLocationDto(
+data class StaccatoLocationDto(
     @SerialName("momentId") val momentId: Long,
     @SerialName("latitude") val latitude: Double,
     @SerialName("longitude") val longitude: Double,
