@@ -5,8 +5,8 @@ import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.data.login.LoginDefaultRepository
 import com.on.staccato.data.member.MemberDefaultRepository
 import com.on.staccato.data.memory.MemoryDefaultRepository
-import com.on.staccato.data.moment.MomentDefaultRepository
 import com.on.staccato.data.mypage.MyPageDefaultRepository
+import com.on.staccato.data.staccato.MomentDefaultRepository
 import com.on.staccato.data.timeline.TimelineDefaultRepository
 import com.on.staccato.domain.repository.CommentRepository
 import com.on.staccato.domain.repository.ImageRepository

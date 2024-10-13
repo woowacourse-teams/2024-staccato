@@ -1,4 +1,4 @@
-package com.on.staccato.data.moment
+package com.on.staccato.data.staccato
 
 import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest

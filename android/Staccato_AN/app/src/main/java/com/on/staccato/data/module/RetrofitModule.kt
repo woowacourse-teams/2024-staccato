@@ -6,8 +6,8 @@ import com.on.staccato.data.image.ImageApiService
 import com.on.staccato.data.login.LoginApiService
 import com.on.staccato.data.member.MemberApiService
 import com.on.staccato.data.memory.MemoryApiService
-import com.on.staccato.data.moment.MomentApiService
 import com.on.staccato.data.mypage.MyPageApiService
+import com.on.staccato.data.staccato.MomentApiService
 import com.on.staccato.data.timeline.TimeLineApiService
 import dagger.Module
 import dagger.Provides

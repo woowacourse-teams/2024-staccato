@@ -1,4 +1,4 @@
-package com.on.staccato.data.moment
+package com.on.staccato.data.staccato
 
 import com.on.staccato.data.ApiResponseHandler.handleApiResponse
 import com.on.staccato.data.ResponseResult

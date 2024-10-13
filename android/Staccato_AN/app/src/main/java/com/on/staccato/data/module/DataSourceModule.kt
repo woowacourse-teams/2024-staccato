@@ -6,8 +6,8 @@ import com.on.staccato.data.login.LoginDataSource
 import com.on.staccato.data.login.LoginRemoteDataSource
 import com.on.staccato.data.memory.MemoryDataSource
 import com.on.staccato.data.memory.MemoryRemoteDataSource
-import com.on.staccato.data.moment.MomentDataSource
-import com.on.staccato.data.moment.MomentRemoteDataSource
+import com.on.staccato.data.staccato.MomentDataSource
+import com.on.staccato.data.staccato.MomentRemoteDataSource
 import com.on.staccato.data.timeline.TimelineDataSource
 import com.on.staccato.data.timeline.TimelineRemoteDataSource
 import dagger.Binds
