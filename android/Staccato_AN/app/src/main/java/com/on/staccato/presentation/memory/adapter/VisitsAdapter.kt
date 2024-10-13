@@ -8,18 +8,18 @@ import com.on.staccato.databinding.ItemVisitsBinding
 import com.on.staccato.presentation.memory.MemoryHandler
 import com.on.staccato.presentation.memory.model.MemoryStaccatoUiModel
 
-class VisitsAdapter(private val handler: MemoryHandler) : ListAdapter<MemoryStaccatoUiModel, VisitsViewHolder>(diffUtil) {
+class VisitsAdapter(private val handler: MemoryHandler) : ListAdapter<MemoryStaccatoUiModel, StaccatoViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): VisitsViewHolder {
+    ): StaccatoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemVisitsBinding.inflate(inflater, parent, false)
-        return VisitsViewHolder(binding, handler)
+        return StaccatoViewHolder(binding, handler)
     }
 
     override fun onBindViewHolder(
-        holder: VisitsViewHolder,
+        holder: StaccatoViewHolder,
         position: Int,
     ) {
         holder.bind(getItem(position))
