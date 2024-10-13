@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.moment.feeling
+package com.on.staccato.presentation.staccato.feeling
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

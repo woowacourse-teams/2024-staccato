@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.moment.model
+package com.on.staccato.presentation.staccato.model
 
 import java.time.LocalDateTime
 

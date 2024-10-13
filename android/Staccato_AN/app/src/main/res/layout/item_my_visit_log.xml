@@ -8,7 +8,7 @@
 
         <variable
             name="visitLog"
-            type="com.on.staccato.presentation.moment.model.MomentDetailUiModel.CommentsUiModel" />
+            type="com.on.staccato.presentation.staccato.model.MomentDetailUiModel.CommentsUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

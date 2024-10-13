@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.moment.detail
+package com.on.staccato.presentation.staccato.detail
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

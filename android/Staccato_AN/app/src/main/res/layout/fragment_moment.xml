@@ -10,11 +10,11 @@
 
         <variable
             name="toolbarHandler"
-            type="com.on.staccato.presentation.moment.MomentToolbarHandler" />
+            type="com.on.staccato.presentation.staccato.MomentToolbarHandler" />
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.moment.viewmodel.MomentViewModel" />
+            type="com.on.staccato.presentation.staccato.viewmodel.MomentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

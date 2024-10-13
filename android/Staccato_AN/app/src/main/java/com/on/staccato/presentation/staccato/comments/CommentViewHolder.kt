@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.moment.comments
+package com.on.staccato.presentation.staccato.comments
 
 import android.view.Gravity
 import android.view.View

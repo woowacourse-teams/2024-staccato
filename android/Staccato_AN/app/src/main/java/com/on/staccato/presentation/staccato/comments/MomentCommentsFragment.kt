@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.moment.comments
+package com.on.staccato.presentation.staccato.comments
 
 import android.os.Bundle
 import android.view.View
@@ -7,8 +7,8 @@ import androidx.fragment.app.viewModels
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentMomentCommentsBinding
 import com.on.staccato.presentation.base.BindingFragment
-import com.on.staccato.presentation.moment.MomentFragment.Companion.DEFAULT_STACCATO_ID
-import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
+import com.on.staccato.presentation.staccato.MomentFragment.Companion.DEFAULT_STACCATO_ID
+import com.on.staccato.presentation.staccato.MomentFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 

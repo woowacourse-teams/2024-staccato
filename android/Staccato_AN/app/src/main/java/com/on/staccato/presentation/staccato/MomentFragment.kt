@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.moment
+package com.on.staccato.presentation.staccato
 
 import android.os.Bundle
 import android.view.View
@@ -13,10 +13,10 @@ import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
-import com.on.staccato.presentation.moment.comments.MomentCommentsFragment
-import com.on.staccato.presentation.moment.detail.ViewpagePhotoAdapter
-import com.on.staccato.presentation.moment.feeling.MomentFeelingSelectionFragment
-import com.on.staccato.presentation.moment.viewmodel.MomentViewModel
+import com.on.staccato.presentation.staccato.comments.MomentCommentsFragment
+import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
+import com.on.staccato.presentation.staccato.feeling.MomentFeelingSelectionFragment
+import com.on.staccato.presentation.staccato.viewmodel.MomentViewModel
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.visitupdate.VisitUpdateActivity
 import dagger.hilt.android.AndroidEntryPoint

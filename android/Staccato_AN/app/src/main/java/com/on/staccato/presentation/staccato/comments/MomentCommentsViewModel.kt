@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.moment.comments
+package com.on.staccato.presentation.staccato.comments
 
 import android.util.Log
 import androidx.lifecycle.LiveData

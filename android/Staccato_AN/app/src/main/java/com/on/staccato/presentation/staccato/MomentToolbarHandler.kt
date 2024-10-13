@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.moment
+package com.on.staccato.presentation.staccato
 
 interface MomentToolbarHandler {
     fun onUpdateClicked(

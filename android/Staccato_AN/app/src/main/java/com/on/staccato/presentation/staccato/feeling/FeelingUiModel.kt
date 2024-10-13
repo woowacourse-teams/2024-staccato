@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.moment.feeling
+package com.on.staccato.presentation.staccato.feeling
 
 data class FeelingUiModel(
     val feeling: String,

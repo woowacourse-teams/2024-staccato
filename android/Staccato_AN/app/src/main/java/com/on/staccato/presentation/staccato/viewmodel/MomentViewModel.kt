@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.moment.viewmodel
+package com.on.staccato.presentation.staccato.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,8 +9,8 @@ import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toMomentDetailUiModel
-import com.on.staccato.presentation.moment.comments.CommentUiModel
-import com.on.staccato.presentation.moment.detail.MomentDetailUiModel
+import com.on.staccato.presentation.staccato.comments.CommentUiModel
+import com.on.staccato.presentation.staccato.detail.MomentDetailUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

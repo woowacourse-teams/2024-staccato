@@ -8,7 +8,7 @@
 
         <variable
             name="myComment"
-            type="com.on.staccato.presentation.moment.comments.CommentUiModel" />
+            type="com.on.staccato.presentation.staccato.comments.CommentUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

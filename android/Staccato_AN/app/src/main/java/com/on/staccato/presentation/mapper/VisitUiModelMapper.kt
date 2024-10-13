@@ -4,9 +4,9 @@ import com.on.staccato.R
 import com.on.staccato.domain.model.Comment
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
-import com.on.staccato.presentation.moment.comments.CommentUiModel
-import com.on.staccato.presentation.moment.detail.MomentDetailUiModel
-import com.on.staccato.presentation.moment.feeling.FeelingUiModel
+import com.on.staccato.presentation.staccato.comments.CommentUiModel
+import com.on.staccato.presentation.staccato.detail.MomentDetailUiModel
+import com.on.staccato.presentation.staccato.feeling.FeelingUiModel
 
 fun Staccato.toMomentDetailUiModel(): MomentDetailUiModel {
     return MomentDetailUiModel(
