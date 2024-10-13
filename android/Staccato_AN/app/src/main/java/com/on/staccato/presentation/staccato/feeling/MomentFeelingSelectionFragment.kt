@@ -8,14 +8,14 @@ import com.on.staccato.databinding.FragmentMomentFeelingSelectionBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.staccato.MomentFragment.Companion.DEFAULT_STACCATO_ID
 import com.on.staccato.presentation.staccato.MomentFragment.Companion.STACCATO_ID_KEY
-import com.on.staccato.presentation.staccato.viewmodel.MomentViewModel
+import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MomentFeelingSelectionFragment :
     BindingFragment<FragmentMomentFeelingSelectionBinding>(R.layout.fragment_moment_feeling_selection) {
     private lateinit var feelingSelectionAdapter: FeelingSelectionAdapter
-    private val momentViewModel: MomentViewModel by viewModels({ requireParentFragment() })
+    private val staccatoViewModel: StaccatoViewModel by viewModels({ requireParentFragment() })
     private val momentFeelingSelectionViewModel: MomentFeelingSelectionViewModel by viewModels()
 
     private val momentId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
@@ -36,7 +36,7 @@ class MomentFeelingSelectionFragment :
     }
 
     private fun observeInitialFeeling() {
-        momentViewModel.feeling.observe(viewLifecycleOwner) { feeling ->
+        staccatoViewModel.feeling.observe(viewLifecycleOwner) { feeling ->
             momentFeelingSelectionViewModel.setFeelings(feeling)
         }
     }

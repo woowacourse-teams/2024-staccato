@@ -16,22 +16,22 @@ import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.comments.MomentCommentsFragment
 import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.MomentFeelingSelectionFragment
-import com.on.staccato.presentation.staccato.viewmodel.MomentViewModel
-import com.on.staccato.presentation.util.showToast
+import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.VisitUpdateActivity
+import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class MomentFragment :
     BindingFragment<FragmentMomentBinding>(R.layout.fragment_moment), MomentToolbarHandler {
-    private val momentViewModel: MomentViewModel by viewModels()
+    private val staccatoViewModel: StaccatoViewModel by viewModels()
     private var momentId by Delegates.notNull<Long>()
     private lateinit var pagePhotoAdapter: ViewpagePhotoAdapter
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog =
         DeleteDialogFragment {
-            momentViewModel.deleteMoment(momentId)
+            staccatoViewModel.deleteMoment(momentId)
         }
 
     override fun onViewCreated(
@@ -39,7 +39,7 @@ class MomentFragment :
         savedInstanceState: Bundle?,
     ) {
         momentId = arguments?.getLong(STACCATO_ID_KEY) ?: return
-        binding.viewModel = momentViewModel
+        binding.viewModel = staccatoViewModel
         initToolbarHandler()
         initViewPagerAdapter()
         loadMomentData()
@@ -58,13 +58,13 @@ class MomentFragment :
     }
 
     private fun observeViewModel() {
-        momentViewModel.momentDetail.observe(viewLifecycleOwner) { momentDetail ->
+        staccatoViewModel.momentDetail.observe(viewLifecycleOwner) { momentDetail ->
             pagePhotoAdapter.submitList(momentDetail.staccatoImageUrls)
         }
     }
 
     private fun loadMomentData() {
-        momentViewModel.loadMoment(momentId)
+        staccatoViewModel.loadMoment(momentId)
     }
 
     private fun createChildFragments(savedInstanceState: Bundle?) {
@@ -91,13 +91,13 @@ class MomentFragment :
     }
 
     private fun observeData() {
-        momentViewModel.isError.observe(viewLifecycleOwner) { isError ->
+        staccatoViewModel.isError.observe(viewLifecycleOwner) { isError ->
             if (isError) {
                 showToast("스타카토를 불러올 수 없어요!")
                 findNavController().popBackStack()
             }
         }
-        momentViewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
+        staccatoViewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
             if (isDeleted) {
                 sharedViewModel.setStaccatosHasUpdated()
                 findNavController().popBackStack()

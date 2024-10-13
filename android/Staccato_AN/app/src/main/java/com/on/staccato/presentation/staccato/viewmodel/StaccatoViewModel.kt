@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MomentViewModel
+class StaccatoViewModel
     @Inject
     constructor(
         private val staccatoRepository: StaccatoRepository,
