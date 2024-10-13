@@ -8,7 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.on.staccato.R
-import com.on.staccato.databinding.FragmentMomentBinding
+import com.on.staccato.databinding.FragmentStaccatoBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.main.MainActivity
@@ -24,7 +24,7 @@ import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class StaccatoFragment :
-    BindingFragment<FragmentMomentBinding>(R.layout.fragment_staccato), StaccatoToolbarHandler {
+    BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato), StaccatoToolbarHandler {
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private var staccatoId by Delegates.notNull<Long>()
     private lateinit var pagePhotoAdapter: ViewpagePhotoAdapter
@@ -77,15 +77,15 @@ class StaccatoFragment :
                 }
             val staccatoCommentsFragment = StaccatoCommentsFragment().apply { arguments = bundle }
             childFragmentManager.beginTransaction()
-                .replace(R.id.container_moment_feeling_selection, staccatoFeelingSelectionFragment)
-                .replace(R.id.container_moment_comments, staccatoCommentsFragment)
+                .replace(R.id.container_staccato_feeling_selection, staccatoFeelingSelectionFragment)
+                .replace(R.id.container_staccato_comments, staccatoCommentsFragment)
                 .commit()
         }
     }
 
     private fun initToolbarHandler() {
         binding.toolbarHandler = this
-        binding.toolbarMoment.setNavigationOnClickListener {
+        binding.toolbarStaccato.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }
