@@ -28,12 +28,13 @@
             android:id="@+id/iv_timeline_folder"
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:contentDescription="@string/all_image_content_description"
             android:src="@drawable/icon_folder"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
-            android:id="@+id/view_line"
+            android:id="@+id/view_timeline_line"
             android:layout_width="1dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
@@ -43,19 +44,19 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_memory_period"
+            android:id="@+id/tv_timeline_memory_period"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textAppearance="@style/Typography.Body4"
-            app:layout_constraintStart_toStartOf="@id/view_line"
-            app:layout_constraintTop_toBottomOf="@id/tv_memory_title"
+            app:layout_constraintStart_toStartOf="@id/view_timeline_line"
+            app:layout_constraintTop_toBottomOf="@id/tv_timeline_memory_title"
             bind:endAt="@{memory.endAt}"
             bind:startAt="@{memory.startAt}"
             tools:text="2024.7.23 ~ 2024.9.30" />
 
         <TextView
-            android:id="@+id/tv_memory_title"
+            android:id="@+id/tv_timeline_memory_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
@@ -63,13 +64,13 @@
             android:maxLines="1"
             android:text="@{memory.memoryTitle}"
             android:textAppearance="@style/Typography.Title3"
-            app:layout_constraintEnd_toStartOf="@id/iv_memory_thumbnail"
-            app:layout_constraintStart_toEndOf="@id/view_line"
+            app:layout_constraintEnd_toStartOf="@id/iv_timeline_memory_thumbnail"
+            app:layout_constraintStart_toEndOf="@id/view_timeline_line"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="제주도 가족 여행" />
 
         <ImageView
-            android:id="@+id/iv_memory_thumbnail"
+            android:id="@+id/iv_timeline_memory_thumbnail"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/all_image_content_description"
