@@ -6,13 +6,13 @@ import android.widget.PopupMenu
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.on.staccato.R
-import com.on.staccato.databinding.ItemMomentMyCommentBinding
+import com.on.staccato.databinding.ItemStaccatoMyCommentBinding
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.DialogHandler
 
 // Todo: 추후 나의 댓글, 다른 사용자의 댓글 구분하기
 class CommentViewHolder(
-    private val binding: ItemMomentMyCommentBinding,
+    private val binding: ItemStaccatoMyCommentBinding,
     private val commentHandler: CommentHandler,
 ) : RecyclerView.ViewHolder(binding.root),
     DialogHandler {

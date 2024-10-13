@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.on.staccato.databinding.ItemMomentMyCommentBinding
+import com.on.staccato.databinding.ItemStaccatoMyCommentBinding
 
 class CommentsAdapter(private val commentHandler: CommentHandler) :
     ListAdapter<CommentUiModel, CommentViewHolder>(diffUtil) {
@@ -13,7 +13,7 @@ class CommentsAdapter(private val commentHandler: CommentHandler) :
         viewType: Int,
     ): CommentViewHolder {
         val binding =
-            ItemMomentMyCommentBinding.inflate(
+            ItemStaccatoMyCommentBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,

@@ -69,7 +69,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_staccato_comments_title"
             app:reverseLayout="false"
             tools:itemCount="3"
-            tools:listitem="@layout/item_moment_my_comment" />
+            tools:listitem="@layout/item_staccato_my_comment" />
 
         <Space
             android:layout_width="match_parent"
