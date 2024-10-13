@@ -13,7 +13,7 @@ import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
-import com.on.staccato.presentation.staccato.comments.MomentCommentsFragment
+import com.on.staccato.presentation.staccato.comments.StaccatoCommentsFragment
 import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.StaccatoFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
@@ -75,7 +75,7 @@ class StaccatoFragment :
                 StaccatoFeelingSelectionFragment().apply {
                     arguments = bundle
                 }
-            val staccatoCommentsFragment = MomentCommentsFragment().apply { arguments = bundle }
+            val staccatoCommentsFragment = StaccatoCommentsFragment().apply { arguments = bundle }
             childFragmentManager.beginTransaction()
                 .replace(R.id.container_moment_feeling_selection, staccatoFeelingSelectionFragment)
                 .replace(R.id.container_moment_comments, staccatoCommentsFragment)

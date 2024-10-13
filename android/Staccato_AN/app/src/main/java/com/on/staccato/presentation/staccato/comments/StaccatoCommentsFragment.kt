@@ -13,7 +13,7 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MomentCommentsFragment :
+class StaccatoCommentsFragment :
     BindingFragment<FragmentMomentCommentsBinding>(R.layout.fragment_moment_comments) {
     private lateinit var commentsAdapter: CommentsAdapter
 
