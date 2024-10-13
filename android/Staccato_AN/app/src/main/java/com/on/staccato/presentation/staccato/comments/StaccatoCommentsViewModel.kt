@@ -41,7 +41,7 @@ class StaccatoCommentsViewModel
         val isLoading: SingleLiveData<Boolean>
             get() = _isLoading
 
-        private var momentId: Long = -1L
+        private var staccatoId: Long = -1L
 
         override fun onSendButtonClicked() {
             viewModelScope.launch {
@@ -67,7 +67,7 @@ class StaccatoCommentsViewModel
 
         fun fetchComments() {
             viewModelScope.launch {
-                commentRepository.fetchComments(momentId)
+                commentRepository.fetchComments(staccatoId)
                     .onSuccess { comments ->
                         setComments(comments.map { it.toCommentUiModel() })
                     }
@@ -77,7 +77,7 @@ class StaccatoCommentsViewModel
         }
 
         fun setMemoryId(id: Long) {
-            momentId = id
+            staccatoId = id
         }
 
         fun setComments(newComments: List<CommentUiModel>) {
@@ -87,7 +87,7 @@ class StaccatoCommentsViewModel
         private fun sendComment() {
             commentInput.value?.let {
                 _isLoading.setValue(true)
-                val newComment = NewComment(momentId, it)
+                val newComment = NewComment(staccatoId, it)
                 viewModelScope.launch {
                     commentRepository.createComment(newComment)
                         .onSuccess {
