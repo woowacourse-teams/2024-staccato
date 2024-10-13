@@ -32,7 +32,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class VisitUpdateViewModel
+class StaccatoUpdateViewModel
     @Inject
     constructor(
         private val timelineRepository: TimelineRepository,

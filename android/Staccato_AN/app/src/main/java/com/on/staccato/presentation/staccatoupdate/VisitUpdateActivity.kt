@@ -41,8 +41,8 @@ import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragment
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
+import com.on.staccato.presentation.staccatoupdate.viewmodel.StaccatoUpdateViewModel
 import com.on.staccato.presentation.util.showToast
-import com.on.staccato.presentation.staccatoupdate.viewmodel.VisitUpdateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -57,7 +57,7 @@ class VisitUpdateActivity :
     VisitUpdateHandler,
     BindingActivity<ActivityVisitUpdateBinding>() {
     override val layoutResourceId = R.layout.activity_visit_update
-    private val viewModel: VisitUpdateViewModel by viewModels()
+    private val viewModel: StaccatoUpdateViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
     private val memorySelectionFragment by lazy {
         MemorySelectionFragment()

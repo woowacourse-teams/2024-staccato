@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.staccatoupdate.viewmodel.VisitUpdateViewModel" />
+            type="com.on.staccato.presentation.staccatoupdate.viewmodel.StaccatoUpdateViewModel" />
 
         <variable
             name="visitUpdateHandler"
