@@ -17,7 +17,7 @@
             style="@style/SubTitleStyle"
             android:layout_marginStart="18dp"
             android:layout_marginTop="20dp"
-            android:text="@string/moment_how_was_your_feeling"
+            android:text="@string/staccato_how_was_your_feeling"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

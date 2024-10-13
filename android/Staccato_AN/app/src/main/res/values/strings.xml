@@ -43,11 +43,11 @@
     <string name="memory_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
     <string name="memory_period_dot">%s. %s. %s ~ %s. %s. %s</string>
     <string name="memory_mates">함께 한 사람들</string>
-    <string name="memory_visits">스타카토</string>
-    <string name="memory_daily_visits">%s월 %s일의 스타카토</string>
+    <string name="memory_staccatos">스타카토</string>
+    <string name="memory_daily_staccatos">%s월 %s일의 스타카토</string>
     <string name="memory_delete_complete">추억이 삭제되었습니다.</string>
-    <string name="memory_visit_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
-    <string name="memory_unable_to_create_moment">스타카토가 추억 기간에 포함되지 않아요!</string>
+    <string name="memory_staccato_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
+    <string name="memory_unable_to_create_staccato">스타카토가 추억 기간에 포함되지 않아요!</string>
 
     // activity_memory_creation / activity_memory_update
     <string name="memory_creation_title">추억 제목</string>
@@ -65,37 +65,36 @@
     <string name="memory_update_toolbar_title">추억 수정하기</string>
     <string name="memory_update_toolbar_subtitle">스타카토를 담을 추억을 수정해 보세요!</string>
 
-    // fragment_visit
-    <string name="visit_history">%s년 %s월 %s일 %s %s시에 방문 했어요</string>
-    <string name="visit_logs">코멘트</string>
-    <string name="visit_add">기록하기</string>
-    <string name="visit_enter_log">코멘트 입력하기</string>
-    <string name="moment_empty_comments">코멘트가 없어요! 코멘트를 달아보세요.</string>
-    <string name="moment_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
-    <string name="moment_comment_has_been_deleted">코멘트를 삭제했어요!</string>
+    // fragment_staccato
+    <string name="staccato_history">%s년 %s월 %s일 %s %s시에 방문 했어요</string>
+    <string name="staccato_logs">코멘트</string>
+    <string name="staccato_add">기록하기</string>
+    <string name="staccato_enter_log">코멘트 입력하기</string>
+    <string name="staccato_empty_comments">코멘트가 없어요! 코멘트를 달아보세요.</string>
+    <string name="staccato_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
+    <string name="staccato_comment_has_been_deleted">코멘트를 삭제했어요!</string>
 
-    // activity_visit_creation / activity_visit_update
-    <string name="visit_creation_photo_drag_hint">*꾹 눌러 사진 순서를 바꿔 보세요</string>
-    <string name="visit_creation_staccato_title">스타카토 제목</string>
-    <string name="visit_creation_staccato_name_hint">어떤 순간이었나요? 제목을 입력해 주세요</string>
-    <string name="visit_creation_place">장소</string>
-    <string name="visit_creation_place_search">"장소명, 주소, 위치로 검색해 보세요"</string>
-    <string name="visit_creation_load_current_location">현재 위치의 주소 불러오기</string>
-    <string name="visit_creation_empty_address">"장소를 선택하면 상세 주소가 나타나요"</string>
-    <string name="visit_creation_address">상세 주소</string>
-    <string name="visit_creation_visited_at_hint">날짜를 선택해 주세요</string>
-    <string name="visit_creation_memory_selection">추억 선택</string>
-    <string name="visit_creation_memory_selection_hint">추억을 선택해 주세요</string>
-    <string name="visit_creation_no_memory_hint">스타카토를 남길 수 있는 추억이 없어요</string>
-    <string name="visit_creation_unselected_memory">추억을 먼저 선택해 주세요</string>
-    <string name="moment_creation_memory_selection">추억 선택</string>
-    <string name="visit_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨 보세요!</string>
-    <string name="visit_creation_toolbar_title">스타카토 기록하기</string>
-    <string name="moment_creation_not_found_address">주소를 찾지 못했습니다</string>
+    // activity_staccato_creation / activity_staccato_update
+    <string name="staccato_creation_photo_drag_hint">*꾹 눌러 사진 순서를 바꿔 보세요</string>
+    <string name="staccato_creation_staccato_title">스타카토 제목</string>
+    <string name="staccato_creation_staccato_name_hint">어떤 순간이었나요? 제목을 입력해 주세요</string>
+    <string name="staccato_creation_place">장소</string>
+    <string name="staccato_creation_place_search">"장소명, 주소, 위치로 검색해 보세요"</string>
+    <string name="staccato_creation_load_current_location">현재 위치의 주소 불러오기</string>
+    <string name="staccato_creation_empty_address">"장소를 선택하면 상세 주소가 나타나요"</string>
+    <string name="staccato_creation_address">상세 주소</string>
+    <string name="staccato_creation_visited_at_hint">날짜를 선택해 주세요</string>
+    <string name="staccato_creation_memory_selection">추억 선택</string>
+    <string name="staccato_creation_memory_selection_hint">추억을 선택해 주세요</string>
+    <string name="staccato_creation_no_memory_hint">스타카토를 남길 수 있는 추억이 없어요</string>
+    <string name="staccato_creation_unselected_memory">추억을 먼저 선택해 주세요</string>
+    <string name="staccato_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨 보세요!</string>
+    <string name="staccato_creation_toolbar_title">스타카토 기록하기</string>
+    <string name="staccato_creation_not_found_address">주소를 찾지 못했습니다</string>
 
-    // activity_visit_update
-    <string name="visit_update_toolbar_subtitle">기억하고 싶은 순간을 수정해 보세요!</string>
-    <string name="visit_update_toolbar_title">스타카토 수정하기</string>
+    // activity_staccato_update
+    <string name="staccato_update_toolbar_subtitle">기억하고 싶은 순간을 수정해 보세요!</string>
+    <string name="staccato_update_toolbar_title">스타카토 수정하기</string>
 
     // activity_login
     <string name="login_start">시작하기</string>

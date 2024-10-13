@@ -372,7 +372,7 @@ class StaccatoUpdateActivity :
             }
 
             override fun onError(errorMessage: String?) {
-                showToast(getString(R.string.moment_creation_not_found_address))
+                showToast(getString(R.string.staccato_creation_not_found_address))
             }
         }
 
@@ -382,7 +382,7 @@ class StaccatoUpdateActivity :
         autocompleteFragment.setPlaceFields(placeFields)
 
         lifecycleScope.launchWhenCreated {
-            autocompleteFragment.setHint(getString(R.string.visit_creation_place_search))
+            autocompleteFragment.setHint(getString(R.string.staccato_creation_place_search))
         }
     }
 

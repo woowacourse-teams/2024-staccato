@@ -26,7 +26,7 @@
             style="@style/SubTitleStyle"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="@string/visit_logs"
+            android:text="@string/staccato_logs"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:gravity="center_horizontal"
-            android:text="@string/moment_empty_comments"
+            android:text="@string/staccato_empty_comments"
             android:textAppearance="@style/Typography.Body2"
             android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +89,7 @@
                 style="@style/TextInputEditTextStyle.Title"
                 android:layout_width="0dp"
                 android:layout_marginStart="10dp"
-                android:hint="@string/visit_enter_log"
+                android:hint="@string/staccato_enter_log"
                 android:imeOptions="actionNone"
                 android:inputType="textMultiLine"
                 android:maxLength="500"

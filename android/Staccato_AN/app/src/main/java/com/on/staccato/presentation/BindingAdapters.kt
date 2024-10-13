@@ -226,12 +226,12 @@ fun TextView.setSelectedMemory(
     memoryCandidates: MemoryCandidates?,
 ) {
     if (memoryCandidates?.memoryCandidate?.isEmpty() == true) {
-        text = resources.getString(R.string.visit_creation_no_memory_hint)
+        text = resources.getString(R.string.staccato_creation_no_memory_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
         isClickable = false
         isFocusable = false
     } else if (selectedMemory == null) {
-        text = resources.getString(R.string.visit_creation_memory_selection_hint)
+        text = resources.getString(R.string.staccato_creation_memory_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
         isClickable = true
         isFocusable = true
@@ -247,7 +247,7 @@ fun TextView.setDateTimeWithAmPm(
     memoryCandidates: MemoryCandidates?,
 ) {
     if (memoryCandidates?.memoryCandidate?.isEmpty() == true) {
-        text = resources.getString(R.string.visit_creation_memory_selection_hint)
+        text = resources.getString(R.string.staccato_creation_memory_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
         isClickable = false
         isFocusable = false
@@ -362,7 +362,7 @@ fun TextView.combineVisitedAt(visitedAt: LocalDateTime?) {
             val hour = if (visitedAt.hour % 12 == 0) 12 else visitedAt.hour % 12
             val noonText = if (visitedAt.hour < 12) "오전" else "오후"
             format(
-                resources.getString(R.string.visit_history),
+                resources.getString(R.string.staccato_history),
                 visitedAt.year,
                 visitedAt.monthValue,
                 visitedAt.dayOfMonth,
@@ -501,7 +501,7 @@ fun ImageView.setImageResourceWithId(
 
 @BindingAdapter("setAddress")
 fun TextView.setAddress(address: String?) {
-    text = address ?: context.getString(R.string.visit_creation_empty_address)
+    text = address ?: context.getString(R.string.staccato_creation_empty_address)
 }
 
 @BindingAdapter("sendEnabled")
@@ -525,7 +525,7 @@ fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
         setText(R.string.all_empty)
         setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
     } else {
-        setText(R.string.visit_creation_load_current_location)
+        setText(R.string.staccato_creation_load_current_location)
     }
 }
 

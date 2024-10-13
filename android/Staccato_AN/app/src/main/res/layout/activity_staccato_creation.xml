@@ -35,8 +35,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:subtitle="@string/visit_creation_toolbar_subtitle"
-            app:title="@string/visit_creation_toolbar_title" />
+            app:subtitle="@string/staccato_creation_toolbar_subtitle"
+            app:title="@string/staccato_creation_toolbar_title" />
 
         <androidx.core.widget.NestedScrollView
             android:overScrollMode="never"
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="24dp"
-                    android:text="@string/visit_creation_photo_drag_hint"
+                    android:text="@string/staccato_creation_photo_drag_hint"
                     android:textAppearance="@style/Typography.Body4"
                     android:textColor="@color/gray3"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -105,7 +105,7 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="40dp"
-                    android:text="@string/visit_creation_staccato_title"
+                    android:text="@string/staccato_creation_staccato_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
 
@@ -126,7 +126,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         style="@style/TextInputEditTextStyle.Title"
-                        android:hint="@string/visit_creation_staccato_name_hint"
+                        android:hint="@string/staccato_creation_staccato_name_hint"
                         android:imeOptions="actionDone"
                         android:maxLength="30"
                         android:text="@={viewModel.staccatoTitle}" />
@@ -137,7 +137,7 @@
                     android:id="@+id/tv_place_name_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="20dp"
-                    android:text="@string/visit_creation_place"
+                    android:text="@string/staccato_creation_place"
                     android:textAppearance="@style/Typography.Title2"
                     app:layout_constraintStart_toStartOf="@id/tv_staccato_creation_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/text_input_staccato_creation_title" />
@@ -166,7 +166,7 @@
                     android:id="@+id/tv_place_address_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="10dp"
-                    android:text="@string/visit_creation_address"
+                    android:text="@string/staccato_creation_address"
                     android:textAppearance="@style/Typography.Title3"
                     app:layout_constraintStart_toStartOf="@id/tv_staccato_creation_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/autocomplete_fragment" />
@@ -202,7 +202,7 @@
                         android:id="@+id/btn_current_location"
                         style="@style/CurrentLocationStyle"
                         android:layout_marginTop="10dp"
-                        android:onClick="@{()->currentLocationHandler.onCurrentLocationClicked()}"
+                        android:onClick="@{() -> currentLocationHandler.onCurrentLocationClicked()}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -228,7 +228,7 @@
                     android:id="@+id/tv_memory_selection_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="35dp"
-                    android:text="@string/moment_creation_memory_selection"
+                    android:text="@string/staccato_creation_memory_selection"
                     app:layout_constraintStart_toStartOf="@id/constraint_current_location"
                     app:layout_constraintTop_toBottomOf="@id/constraint_current_location" />
 

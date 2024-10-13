@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="50dp"
             android:gravity="center"
-            android:text="@string/visit_creation_unselected_memory"
+            android:text="@string/staccato_creation_unselected_memory"
             app:layout_constraintBottom_toTopOf="@id/btn_visited_at_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

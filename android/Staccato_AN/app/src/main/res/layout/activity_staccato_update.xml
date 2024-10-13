@@ -35,8 +35,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:subtitle="@string/visit_creation_toolbar_subtitle"
-            app:title="@string/visit_update_toolbar_title" />
+            app:subtitle="@string/staccato_update_toolbar_subtitle"
+            app:title="@string/staccato_update_toolbar_title" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="24dp"
-                    android:text="@string/visit_creation_photo_drag_hint"
+                    android:text="@string/staccato_creation_photo_drag_hint"
                     android:textAppearance="@style/Typography.Body4"
                     android:textColor="@color/gray3"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -105,7 +105,7 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="40dp"
-                    android:text="@string/visit_creation_staccato_title"
+                    android:text="@string/staccato_creation_staccato_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
 
@@ -126,7 +126,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         style="@style/TextInputEditTextStyle.Title"
-                        android:hint="@string/visit_creation_staccato_name_hint"
+                        android:hint="@string/staccato_creation_staccato_name_hint"
                         android:imeOptions="actionDone"
                         android:maxLength="30"
                         android:text="@={viewModel.staccatoTitle}" />
@@ -137,7 +137,7 @@
                     android:id="@+id/tv_place_name_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="20dp"
-                    android:text="@string/visit_creation_place"
+                    android:text="@string/staccato_creation_place"
                     android:textAppearance="@style/Typography.Title2"
                     app:layout_constraintStart_toStartOf="@id/tv_staccato_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/text_input_staccato_update_title" />
@@ -166,7 +166,7 @@
                     android:id="@+id/tv_place_address_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="10dp"
-                    android:text="@string/visit_creation_address"
+                    android:text="@string/staccato_creation_address"
                     android:textAppearance="@style/Typography.Title3"
                     app:layout_constraintStart_toStartOf="@id/tv_staccato_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/autocomplete_fragment" />

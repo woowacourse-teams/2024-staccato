@@ -163,7 +163,7 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/memory_visits"
+                    android:text="@string/memory_staccatos"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_memory_third" />
 
@@ -190,7 +190,7 @@
                         android:paddingVertical="3dp"
                         android:paddingStart="8dp"
                         android:paddingEnd="10dp"
-                        android:text="@string/visit_add"
+                        android:text="@string/staccato_add"
                         android:textAppearance="@style/Typography.Body4"
                         android:textColor="@color/gray3"
                         app:icon="@drawable/icon_edit"
@@ -236,7 +236,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:paddingBottom="100dp"
-                    android:text="@string/memory_visit_empty"
+                    android:text="@string/memory_staccato_empty"
                     android:textAppearance="@style/Typography.Body2"
                     android:visibility="@{viewModel.memory.staccatos.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"

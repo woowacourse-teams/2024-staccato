@@ -53,7 +53,7 @@ class StaccatoCommentsFragment :
 
         commentsViewModel.isDeleteSuccess.observe(viewLifecycleOwner) { issDeleted ->
             if (issDeleted) {
-                showToast(getString(R.string.moment_comment_has_been_deleted))
+                showToast(getString(R.string.staccato_comment_has_been_deleted))
             }
         }
 
