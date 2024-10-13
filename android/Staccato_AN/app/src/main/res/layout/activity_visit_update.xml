@@ -28,10 +28,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_visit_update"
-            style="@style/TitleToolbarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingEnd="8dp"
+            style="@style/NavigationToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

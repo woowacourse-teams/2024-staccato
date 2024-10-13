@@ -18,12 +18,8 @@
 
         <ImageView
             android:id="@+id/iv_moment_my_comment_profile"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="10dp"
-            android:layout_marginEnd="19dp"
+            style="@style/CommentProfileImageStyle.MyProfile"
             android:contentDescription="@string/all_image_content_description"
-            android:elevation="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:coilCircleImageUrl="@{myComment.memberImageUrl}"
@@ -41,17 +37,8 @@
 
         <TextView
             android:id="@+id/tv_moment_my_comment_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/shape_my_visit_log_12dp"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="12dp"
+            style="@style/CommentChatBoxStyle.MyComment"
             android:text="@{myComment.content}"
-            android:textAppearance="@style/Typography.Body3"
-            android:textColor="@color/gray5"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/iv_moment_my_comment_profile"

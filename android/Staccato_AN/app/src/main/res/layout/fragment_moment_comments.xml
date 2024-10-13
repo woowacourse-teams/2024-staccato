@@ -86,7 +86,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_moment_comments_input"
-                style="@style/TextInputEditTextStyle.Title"
+                style="@style/TextInputEditTextStyle"
                 android:layout_width="0dp"
                 android:layout_marginStart="10dp"
                 android:hint="@string/visit_enter_log"

@@ -21,7 +21,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_recovery"
-            style="@style/TitleToolbarStyle"
+            style="@style/NavigationToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -58,19 +58,23 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_recovery_title" />
 
-            <EditText
-                android:id="@+id/et_recovery_code"
-                style="@style/EditTextStyle"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_recovery_code"
+                style="@style/TextInputLayoutStyle"
                 android:layout_marginTop="40dp"
-                android:hint="@string/recovery_code_hint"
-                android:imeOptions="actionDone"
-                android:inputType="text"
-                android:maxLength="36"
-                android:maxLines="1"
-                android:text="@={viewModel.recoveryCode}"
+                app:counterMaxLength="36"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_recovery_subtitle" />
+                app:layout_constraintTop_toBottomOf="@id/tv_recovery_subtitle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    style="@style/TextInputEditTextStyle.OneLine"
+                    android:hint="@string/recovery_code_hint"
+                    android:imeOptions="actionDone"
+                    android:maxLength="36"
+                    android:text="@={viewModel.recoveryCode}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_start_staccato"

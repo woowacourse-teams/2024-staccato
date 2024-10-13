@@ -10,7 +10,7 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar_detail"
-        style="@style/DefaultToolbarStyle"
+        style="@style/NavigationToolbarStyle"
         android:paddingEnd="8dp">
 
         <androidx.appcompat.widget.AppCompatButton

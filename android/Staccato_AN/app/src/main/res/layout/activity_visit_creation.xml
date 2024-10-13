@@ -28,10 +28,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_visit_creation"
-            style="@style/TitleToolbarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingEnd="8dp"
+            style="@style/NavigationToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -39,9 +36,9 @@
             app:title="@string/visit_creation_toolbar_title" />
 
         <androidx.core.widget.NestedScrollView
-            android:overScrollMode="never"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_visit_creation">
 

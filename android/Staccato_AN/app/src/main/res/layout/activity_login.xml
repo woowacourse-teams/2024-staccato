@@ -58,8 +58,7 @@
                 app:layout_constraintTop_toBottomOf="@id/space_login_separating_logo_and_nickname_et">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    style="@style/TextInputEditTextStyle.Title"
-                    android:layout_marginHorizontal="0dp"
+                    style="@style/TextInputEditTextStyle.OneLine"
                     android:hint="@string/login_nickname_hint"
                     android:imeOptions="actionDone"
                     android:maxLength="20"
