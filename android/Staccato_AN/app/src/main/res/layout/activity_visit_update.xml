@@ -14,7 +14,7 @@
 
         <variable
             name="visitUpdateHandler"
-            type="com.on.staccato.presentation.staccatoupdate.VisitUpdateHandler" />
+            type="com.on.staccato.presentation.staccatoupdate.StaccatoUpdateHandler" />
 
         <variable
             name="currentLocationHandler"

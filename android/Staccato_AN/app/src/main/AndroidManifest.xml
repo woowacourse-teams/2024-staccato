@@ -57,7 +57,7 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.staccatoupdate.VisitUpdateActivity"
+            android:name=".presentation.staccatoupdate.StaccatoUpdateActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.memoryupdate.MemoryUpdateActivity"

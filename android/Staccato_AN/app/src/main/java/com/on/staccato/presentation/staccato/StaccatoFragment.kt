@@ -17,7 +17,7 @@ import com.on.staccato.presentation.staccato.comments.MomentCommentsFragment
 import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.MomentFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
-import com.on.staccato.presentation.staccatoupdate.VisitUpdateActivity
+import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.properties.Delegates
@@ -114,7 +114,7 @@ class StaccatoFragment :
         memoryTitle: String,
     ) {
         val momentUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
-        VisitUpdateActivity.startWithResultLauncher(
+        StaccatoUpdateActivity.startWithResultLauncher(
             visitId = momentId,
             memoryId = memoryId,
             memoryTitle = memoryTitle,

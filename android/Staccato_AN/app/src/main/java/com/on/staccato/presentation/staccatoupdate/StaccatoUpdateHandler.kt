@@ -1,6 +1,6 @@
 package com.on.staccato.presentation.staccatoupdate
 
-interface VisitUpdateHandler {
+interface StaccatoUpdateHandler {
     fun onUpdateDoneClicked()
 
     fun onMemorySelectionClicked()

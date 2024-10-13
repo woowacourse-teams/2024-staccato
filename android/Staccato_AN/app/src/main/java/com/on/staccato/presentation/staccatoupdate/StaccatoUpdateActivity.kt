@@ -50,11 +50,11 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
-class VisitUpdateActivity :
+class StaccatoUpdateActivity :
     GooglePlaceFragmentEventHandler,
     CurrentLocationHandler,
     OnUrisSelectedListener,
-    VisitUpdateHandler,
+    StaccatoUpdateHandler,
     BindingActivity<ActivityVisitUpdateBinding>() {
     override val layoutResourceId = R.layout.activity_visit_update
     private val viewModel: StaccatoUpdateViewModel by viewModels()
@@ -347,7 +347,7 @@ class VisitUpdateActivity :
     }
 
     private fun updateAddressByCurrentAddress(location: Location) {
-        val geocoder = Geocoder(this@VisitUpdateActivity)
+        val geocoder = Geocoder(this@StaccatoUpdateActivity)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val geocodeListener = initGeocodeListener()
             geocoder.getFromLocation(
@@ -394,7 +394,7 @@ class VisitUpdateActivity :
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
-            Intent(context, VisitUpdateActivity::class.java).apply {
+            Intent(context, StaccatoUpdateActivity::class.java).apply {
                 putExtra(STACCATO_ID_KEY, visitId)
                 putExtra(MEMORY_ID_KEY, memoryId)
                 putExtra(MEMORY_TITLE_KEY, memoryTitle)
