@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.on.staccato.R
-import com.on.staccato.databinding.FragmentMomentFeelingSelectionBinding
+import com.on.staccato.databinding.FragmentStaccatoFeelingSelectionBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.DEFAULT_STACCATO_ID
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class StaccatoFeelingSelectionFragment :
-    BindingFragment<FragmentMomentFeelingSelectionBinding>(R.layout.fragment_moment_feeling_selection) {
+    BindingFragment<FragmentStaccatoFeelingSelectionBinding>(R.layout.fragment_staccato_feeling_selection) {
     private lateinit var feelingSelectionAdapter: FeelingSelectionAdapter
     private val staccatoViewModel: StaccatoViewModel by viewModels({ requireParentFragment() })
     private val staccatoFeelingSelectionViewModel: StaccatoFeelingSelectionViewModel by viewModels()

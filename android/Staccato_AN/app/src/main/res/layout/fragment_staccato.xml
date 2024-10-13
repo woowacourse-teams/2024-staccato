@@ -157,7 +157,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider2"
-                    tools:layout="@layout/fragment_moment_feeling_selection" />
+                    tools:layout="@layout/fragment_staccato_feeling_selection" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_staccato_comments"
