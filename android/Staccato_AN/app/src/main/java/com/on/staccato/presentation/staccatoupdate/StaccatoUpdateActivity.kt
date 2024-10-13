@@ -22,7 +22,7 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.model.Place
 import com.on.staccato.R
-import com.on.staccato.databinding.ActivityVisitUpdateBinding
+import com.on.staccato.databinding.ActivityStaccatoUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
@@ -55,8 +55,8 @@ class StaccatoUpdateActivity :
     CurrentLocationHandler,
     OnUrisSelectedListener,
     StaccatoUpdateHandler,
-    BindingActivity<ActivityVisitUpdateBinding>() {
-    override val layoutResourceId = R.layout.activity_visit_update
+    BindingActivity<ActivityStaccatoUpdateBinding>() {
+    override val layoutResourceId = R.layout.activity_staccato_update
     private val viewModel: StaccatoUpdateViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
     private val memorySelectionFragment by lazy {
