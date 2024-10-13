@@ -76,7 +76,7 @@ class MainActivity :
         setupGoogleMap()
         setupFusedLocationProviderClient()
         observeCurrentLocation()
-        observeMomentLocations()
+        observeStaccatoLocations()
         observeStaccatoId()
         setupBottomSheetController()
         setupBackPressedHandler()
@@ -225,21 +225,21 @@ class MainActivity :
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
     }
 
-    private fun observeMomentLocations() {
-        mapsViewModel.staccatoLocations.observe(this) { momentLocations ->
+    private fun observeStaccatoLocations() {
+        mapsViewModel.staccatoLocations.observe(this) { staccatoLocations ->
             if (this::googleMap.isInitialized) googleMap.clear()
-            addMarkers(momentLocations)
+            addMarkers(staccatoLocations)
         }
     }
 
     private fun addMarkers(staccatoLocations: List<StaccatoLocation>) {
         val markers: MutableList<MarkerUiModel> = mutableListOf()
-        staccatoLocations.forEach { momentLocation ->
-            val latLng = LatLng(momentLocation.latitude, momentLocation.longitude)
+        staccatoLocations.forEach { staccatoLocation ->
+            val latLng = LatLng(staccatoLocation.latitude, staccatoLocation.longitude)
             val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
             val marker: Marker = googleMap.addMarker(markerOptions) ?: return
             val markerId: String = marker.id
-            markers.add(MarkerUiModel(momentLocation.staccatoId, markerId))
+            markers.add(MarkerUiModel(staccatoLocation.staccatoId, markerId))
         }
         mapsViewModel.setMarkers(markers)
     }
