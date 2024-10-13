@@ -1,11 +1,11 @@
 package com.on.staccato.data.moment
 
 import com.on.staccato.data.dto.staccato.FeelingRequest
-import com.on.staccato.data.dto.staccato.MomentCreationRequest
-import com.on.staccato.data.dto.staccato.MomentCreationResponse
 import com.on.staccato.data.dto.staccato.MomentLocationResponse
 import com.on.staccato.data.dto.staccato.MomentResponse
 import com.on.staccato.data.dto.staccato.MomentUpdateRequest
+import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
+import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -25,8 +25,8 @@ interface MomentApiService {
 
     @POST(MOMENTS_PATH)
     suspend fun postMoment(
-        @Body momentCreationRequest: MomentCreationRequest,
-    ): MomentCreationResponse
+        @Body staccatoCreationRequest: StaccatoCreationRequest,
+    ): StaccatoCreationResponse
 
     @PUT(MOMENT_PATH_WITH_ID)
     suspend fun putMoment(

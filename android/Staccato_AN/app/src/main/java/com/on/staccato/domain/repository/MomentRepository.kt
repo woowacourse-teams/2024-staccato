@@ -1,7 +1,7 @@
 package com.on.staccato.domain.repository
 
 import com.on.staccato.data.ResponseResult
-import com.on.staccato.data.dto.staccato.MomentCreationResponse
+import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
 import com.on.staccato.domain.model.Moment
 import com.on.staccato.domain.model.MomentLocation
 import java.time.LocalDateTime
@@ -20,7 +20,7 @@ interface MomentRepository {
         address: String,
         visitedAt: LocalDateTime,
         momentImageUrls: List<String>,
-    ): Result<MomentCreationResponse>
+    ): Result<StaccatoCreationResponse>
 
     suspend fun updateMoment(
         momentId: Long,
