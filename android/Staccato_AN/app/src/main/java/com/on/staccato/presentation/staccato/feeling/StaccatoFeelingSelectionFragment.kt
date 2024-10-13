@@ -12,7 +12,7 @@ import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MomentFeelingSelectionFragment :
+class StaccatoFeelingSelectionFragment :
     BindingFragment<FragmentMomentFeelingSelectionBinding>(R.layout.fragment_moment_feeling_selection) {
     private lateinit var feelingSelectionAdapter: FeelingSelectionAdapter
     private val staccatoViewModel: StaccatoViewModel by viewModels({ requireParentFragment() })

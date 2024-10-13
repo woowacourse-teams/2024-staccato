@@ -15,7 +15,7 @@ import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.comments.MomentCommentsFragment
 import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
-import com.on.staccato.presentation.staccato.feeling.MomentFeelingSelectionFragment
+import com.on.staccato.presentation.staccato.feeling.StaccatoFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
 import com.on.staccato.presentation.util.showToast
@@ -72,7 +72,7 @@ class StaccatoFragment :
             val bundle =
                 bundleOf(STACCATO_ID_KEY to staccatoId)
             val staccatoFeelingSelectionFragment =
-                MomentFeelingSelectionFragment().apply {
+                StaccatoFeelingSelectionFragment().apply {
                     arguments = bundle
                 }
             val staccatoCommentsFragment = MomentCommentsFragment().apply { arguments = bundle }
