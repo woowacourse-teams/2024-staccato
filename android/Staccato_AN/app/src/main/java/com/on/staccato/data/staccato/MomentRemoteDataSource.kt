@@ -13,37 +13,38 @@ import javax.inject.Inject
 class MomentRemoteDataSource
     @Inject
     constructor(
-        private val momentApiService: MomentApiService,
+        private val staccatoApiService: StaccatoApiService,
     ) : MomentDataSource {
-        override suspend fun fetchMoments(): ResponseResult<StaccatoLocationResponse> = handleApiResponse { momentApiService.getMoments() }
+        override suspend fun fetchMoments(): ResponseResult<StaccatoLocationResponse> =
+            handleApiResponse { staccatoApiService.getStaccatos() }
 
         override suspend fun fetchMoment(momentId: Long): StaccatoResponse {
-            return momentApiService.getMoment(momentId = momentId)
+            return staccatoApiService.getStaccato(momentId = momentId)
         }
 
         override suspend fun createMoment(staccatoCreationRequest: StaccatoCreationRequest): StaccatoCreationResponse {
-            return momentApiService.postMoment(staccatoCreationRequest)
+            return staccatoApiService.postStaccato(staccatoCreationRequest)
         }
 
         override suspend fun updateMoment(
             momentId: Long,
             staccatoUpdateRequest: StaccatoUpdateRequest,
         ) {
-            return momentApiService.putMoment(
+            return staccatoApiService.putStaccato(
                 momentId = momentId,
                 staccatoUpdateRequest,
             )
         }
 
         override suspend fun deleteMoment(momentId: Long) {
-            momentApiService.deleteMoment(momentId)
+            staccatoApiService.deleteStaccato(momentId)
         }
 
         override suspend fun updateFeeling(
             momentId: Long,
             feelingRequest: FeelingRequest,
         ) {
-            momentApiService.postFeeling(
+            staccatoApiService.postFeeling(
                 momentId = momentId,
                 feelingRequest = feelingRequest,
             )

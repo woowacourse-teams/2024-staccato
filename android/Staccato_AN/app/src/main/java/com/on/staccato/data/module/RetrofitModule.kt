@@ -7,7 +7,7 @@ import com.on.staccato.data.login.LoginApiService
 import com.on.staccato.data.member.MemberApiService
 import com.on.staccato.data.memory.MemoryApiService
 import com.on.staccato.data.mypage.MyPageApiService
-import com.on.staccato.data.staccato.MomentApiService
+import com.on.staccato.data.staccato.StaccatoApiService
 import com.on.staccato.data.timeline.TimeLineApiService
 import dagger.Module
 import dagger.Provides
@@ -32,7 +32,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideStaccatoApiService(): MomentApiService = StaccatoClient.create(MomentApiService::class.java)
+    fun provideStaccatoApiService(): StaccatoApiService = StaccatoClient.create(StaccatoApiService::class.java)
 
     @Singleton
     @Provides

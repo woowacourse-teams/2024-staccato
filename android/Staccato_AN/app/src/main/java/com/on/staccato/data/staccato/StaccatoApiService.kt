@@ -14,28 +14,28 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
-interface MomentApiService {
-    @GET(MOMENTS_PATH)
-    suspend fun getMoments(): Response<StaccatoLocationResponse>
+interface StaccatoApiService {
+    @GET(STACCATOS_PATH)
+    suspend fun getStaccatos(): Response<StaccatoLocationResponse>
 
-    @GET(MOMENT_PATH_WITH_ID)
-    suspend fun getMoment(
+    @GET(STACCATO_PATH_WITH_ID)
+    suspend fun getStaccato(
         @Path(value = "momentId") momentId: Long,
     ): StaccatoResponse
 
-    @POST(MOMENTS_PATH)
-    suspend fun postMoment(
+    @POST(STACCATOS_PATH)
+    suspend fun postStaccato(
         @Body staccatoCreationRequest: StaccatoCreationRequest,
     ): StaccatoCreationResponse
 
-    @PUT(MOMENT_PATH_WITH_ID)
-    suspend fun putMoment(
+    @PUT(STACCATO_PATH_WITH_ID)
+    suspend fun putStaccato(
         @Path(value = "momentId") momentId: Long,
         @Body staccatoUpdateRequest: StaccatoUpdateRequest,
     )
 
-    @DELETE(MOMENT_PATH_WITH_ID)
-    suspend fun deleteMoment(
+    @DELETE(STACCATO_PATH_WITH_ID)
+    suspend fun deleteStaccato(
         @Path(value = "momentId") momentId: Long,
     )
 
@@ -46,9 +46,9 @@ interface MomentApiService {
     )
 
     companion object {
-        private const val MOMENTS_PATH = "/moments"
-        private const val MOMENT_ID = "/{momentId}"
-        private const val MOMENT_PATH_WITH_ID = "$MOMENTS_PATH$MOMENT_ID"
-        private const val FEELING_PATH = "$MOMENT_PATH_WITH_ID/feeling"
+        private const val STACCATOS_PATH = "/moments"
+        private const val STACCATO_ID = "/{momentId}"
+        private const val STACCATO_PATH_WITH_ID = "$STACCATOS_PATH$STACCATO_ID"
+        private const val FEELING_PATH = "$STACCATO_PATH_WITH_ID/feeling"
     }
 }
