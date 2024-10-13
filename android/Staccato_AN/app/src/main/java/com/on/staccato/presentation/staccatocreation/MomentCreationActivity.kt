@@ -158,7 +158,7 @@ class MomentCreationActivity :
 
     override fun onCreateDoneClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        viewModel.createMoment()
+        viewModel.createStaccato()
     }
 
     private fun setupPermissionRequestLauncher() {

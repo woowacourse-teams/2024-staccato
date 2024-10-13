@@ -213,7 +213,7 @@ class StaccatoCreationViewModel
             }
         }
 
-        fun createMoment() =
+        fun createStaccato() =
             viewModelScope.launch {
                 _isPosting.value = true
                 staccatoRepository.createStaccato(
