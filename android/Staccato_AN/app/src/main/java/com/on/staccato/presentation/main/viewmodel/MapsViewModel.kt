@@ -63,13 +63,13 @@ class MapsViewModel
         fun loadStaccatos() {
             viewModelScope.launch {
                 val result = staccatoRepository.getStaccatos()
-                result.onSuccess(::setMomentLocations)
+                result.onSuccess(::setStaccatoLocations)
                     .onServerError(::handleServerError)
                     .onException(::handelException)
             }
         }
 
-        private fun setMomentLocations(staccatoLocations: List<StaccatoLocation>) {
+        private fun setStaccatoLocations(staccatoLocations: List<StaccatoLocation>) {
             _staccatoLocations.value = staccatoLocations
         }
 
