@@ -26,14 +26,14 @@ class StaccatoFeelingSelectionViewModel
         private val _feelings = MutableLiveData<List<FeelingUiModel>>()
         val feelings: LiveData<List<FeelingUiModel>> get() = _feelings
 
-        private var momentId: Long = -1L
+        private var staccatoId: Long = -1L
 
         override fun onFeelingClicked(selectedFeeling: FeelingUiModel) {
             checkFeelingBeforeChange(selectedFeeling)
         }
 
-        fun setMomentId(id: Long) {
-            momentId = id
+        fun setStaccatoId(id: Long) {
+            staccatoId = id
         }
 
         fun setFeelings(selectedFeeling: Feeling) {
@@ -61,7 +61,7 @@ class StaccatoFeelingSelectionViewModel
 
         private fun requestChangingFeeling(newFeeling: Feeling) {
             viewModelScope.launch {
-                staccatoRepository.updateFeeling(momentId, newFeeling.value)
+                staccatoRepository.updateFeeling(staccatoId, newFeeling.value)
             }
         }
     }

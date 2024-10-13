@@ -24,7 +24,7 @@ class MomentFeelingSelectionFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        staccatoFeelingSelectionViewModel.setMomentId(momentId)
+        staccatoFeelingSelectionViewModel.setStaccatoId(momentId)
         initAdapter()
         observeInitialFeeling()
         observeFeelings()
