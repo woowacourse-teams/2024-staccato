@@ -6,8 +6,8 @@ import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
 import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
-import com.on.staccato.domain.model.Moment
 import com.on.staccato.domain.model.MomentLocation
+import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.repository.StaccatoRepository
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class StaccatoDefaultRepository
             }
         }
 
-        override suspend fun getStaccato(staccatoId: Long): Result<Moment> {
+        override suspend fun getStaccato(staccatoId: Long): Result<Staccato> {
             return runCatching {
                 remoteDataSource.fetchStaccato(staccatoId).toDomain()
             }

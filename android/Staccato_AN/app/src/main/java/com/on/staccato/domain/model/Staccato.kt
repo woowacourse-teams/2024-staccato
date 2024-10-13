@@ -3,14 +3,14 @@ package com.on.staccato.domain.model
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-data class Moment(
-    val momentId: Long,
+data class Staccato(
+    val staccatoId: Long,
     val staccatoTitle: String,
     val placeName: String,
     val address: String,
     val latitude: Double,
     val longitude: Double,
-    val momentImageUrls: List<String>,
+    val staccatoImageUrls: List<String>,
     val memoryId: Long,
     val memoryTitle: String,
     val visitedAt: LocalDateTime,

@@ -217,7 +217,7 @@ class VisitUpdateViewModel
                         _longitude.value = staccato.longitude
                         _selectedVisitedAt.value = staccato.visitedAt
                         _placeName.value = staccato.placeName
-                        _currentPhotos.value = createPhotosByUrls(staccato.momentImageUrls)
+                        _currentPhotos.value = createPhotosByUrls(staccato.staccatoImageUrls)
                         _selectedMemory.value =
                             MemoryCandidate(
                                 staccato.memoryId,
