@@ -19,6 +19,6 @@ fun CommentDto.toDomain(): Comment =
 
 fun NewComment.toDto(): CommentRequest =
     CommentRequest(
-        momentId = momentId,
+        momentId = staccatoId,
         content = content,
     )

@@ -1,6 +1,6 @@
 package com.on.staccato.domain.model
 
 data class NewComment(
-    val momentId: Long,
+    val staccatoId: Long,
     val content: String,
 )
