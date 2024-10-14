@@ -33,7 +33,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:id="@+id/view_timeline_line"
             android:layout_width="1dp"
             android:layout_height="0dp"
