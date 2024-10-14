@@ -57,9 +57,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:coilImageUri="@{viewModel.thumbnailUri}"
-                    bind:coilImageUrl="@{viewModel.thumbnailUrl}"
-                    bind:coilPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
+                    bind:coilRoundedCornerImageUri="@{viewModel.thumbnailUri}"
+                    bind:coilRoundedCornerImageUrl="@{viewModel.thumbnailUrl}"
+                    bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
                     bind:coilRoundingRadius="@{12f}" />
 
                 <ImageButton
@@ -84,8 +84,8 @@
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
-                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}" />
+                    bind:visibilityByThumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:visibilityByThumbnailUrl="@{viewModel.thumbnailUrl}" />
 
                 <ProgressBar
                     android:id="@+id/progress_bar_memory_creation_attached_photo"
@@ -98,8 +98,8 @@
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
-                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}"
+                    bind:visibilityByThumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:visibilityByThumbnailUrl="@{viewModel.thumbnailUrl}"
                     tools:visibility="visible" />
 
                 <TextView
@@ -216,8 +216,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_description"
                     bind:endDate="@{viewModel.endDate}"
-                    bind:periodSelectionVisibility="@{viewModel.isPeriodActive}"
-                    bind:startDate="@{viewModel.startDate}" />
+                    bind:startDate="@{viewModel.startDate}"
+                    bind:visibleOrGone="@{viewModel.isPeriodActive}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_memory_creation_save"
@@ -229,11 +229,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_period_selection"
-                    bind:endDate="@{viewModel.endDate}"
                     bind:isPeriodActive="@{viewModel.isPeriodActive}"
-                    bind:isPhotoPosting="@{viewModel.isPhotoPosting}"
-                    bind:memoryTitle="@{viewModel.title}"
-                    bind:startDate="@{viewModel.startDate}" />
+                    bind:isPhotoUploading="@{viewModel.isPhotoPosting}"
+                    bind:memoryEndDate="@{viewModel.endDate}"
+                    bind:memoryStartDate="@{viewModel.startDate}"
+                    bind:memoryTitle="@{viewModel.title}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
