@@ -72,7 +72,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_recovery_subtitle">
 
             <com.google.android.material.textfield.TextInputEditText
-                style="@style/TextInputEditTextStyle.OneLine"
+                style="@style/TextInputEditTextStyle.SingleLine"
                 android:hint="@string/recovery_code_hint"
                 android:imeOptions="actionDone"
                 android:maxLength="36"

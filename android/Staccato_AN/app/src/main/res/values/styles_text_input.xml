@@ -25,7 +25,7 @@
         <item name="android:textColorHint">@color/gray3</item>
     </style>
 
-    <style name="TextInputEditTextStyle.OneLine" parent="TextInputEditTextStyle">
+    <style name="TextInputEditTextStyle.SingleLine" parent="TextInputEditTextStyle">
         <item name="android:inputType">text</item>
         <item name="maxLines">1</item>
     </style>
@@ -34,7 +34,7 @@
         <item name="android:gravity">top</item>
     </style>
 
-    <style name="TextInputEditTextStyle.Title" parent="TextInputEditTextStyle.OneLine">
+    <style name="TextInputEditTextStyle.Title" parent="TextInputEditTextStyle.SingleLine">
         <item name="android:layout_marginHorizontal">24dp</item>
     </style>
 
