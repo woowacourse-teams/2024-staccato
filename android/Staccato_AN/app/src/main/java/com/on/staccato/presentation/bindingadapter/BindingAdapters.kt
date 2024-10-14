@@ -18,8 +18,8 @@ fun View.setVisibility(isVisible: Boolean?) {
         }
 }
 
-@BindingAdapter("scrollableToBottom")
-fun ScrollView.isScrollableToBottom(isScrollable: Boolean) {
+@BindingAdapter("scrollToBottom")
+fun ScrollView.setScrollToBottom(isScrollable: Boolean) {
     if (isScrollable) {
         post { fullScroll(ScrollView.FOCUS_DOWN) }
     }

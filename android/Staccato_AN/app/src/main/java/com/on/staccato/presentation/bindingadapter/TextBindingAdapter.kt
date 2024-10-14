@@ -8,7 +8,6 @@ import com.on.staccato.R
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
-import okhttp3.internal.format
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -97,8 +96,7 @@ fun TextView.formatLocalDateToDatePeriod(
     text =
         if (startAt != null && endAt != null) {
             visibility = View.VISIBLE
-            format(
-                periodFormatString,
+            periodFormatString.format(
                 startAt.year,
                 startAt.monthValue,
                 startAt.dayOfMonth,
@@ -123,8 +121,7 @@ fun TextView.formatLocalDateToDatePeriodInMemory(
     text =
         if (startAt != null && endAt != null) {
             visibility = View.VISIBLE
-            format(
-                periodFormatString,
+            periodFormatString.format(
                 startAt.year,
                 startAt.monthValue,
                 startAt.dayOfMonth,
