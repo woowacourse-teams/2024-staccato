@@ -72,7 +72,7 @@ class MemoryFragment :
                 bundleOf(
                     STACCATO_ID_KEY to staccatoId,
                 )
-            findNavController().navigate(R.id.action_memoryFragment_to_momentFragment, bundle)
+            findNavController().navigate(R.id.action_memoryFragment_to_staccatoFragment, bundle)
         }
     }
 

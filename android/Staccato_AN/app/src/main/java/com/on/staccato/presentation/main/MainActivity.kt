@@ -264,12 +264,12 @@ class MainActivity :
     private fun navigateToStaccato(staccatoId: Long?) {
         val navOptions =
             NavOptions.Builder()
-                .setPopUpTo(R.id.momentFragment, true)
+                .setPopUpTo(R.id.staccatoFragment, true)
                 .build()
         val bundle =
             bundleOf(STACCATO_ID_KEY to staccatoId)
 
-        navController.navigate(R.id.momentFragment, bundle, navOptions)
+        navController.navigate(R.id.staccatoFragment, bundle, navOptions)
     }
 
     private fun setupBackPressedHandler() {
@@ -322,7 +322,7 @@ class MainActivity :
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     val bundle: Bundle = makeBundle(it, STACCATO_ID_KEY)
-                    navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
+                    navigateTo(R.id.staccatoFragment, R.id.staccatoFragment, bundle, true)
                 }
             }
         }
