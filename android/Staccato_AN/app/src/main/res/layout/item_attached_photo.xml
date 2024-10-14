@@ -41,21 +41,21 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/white_80"
-            android:visibility="@{attachedPhoto.imageUrl == null ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_attached_photo"
             app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
             app:layout_constraintStart_toStartOf="@id/iv_attached_photo"
             app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
+            bind:visibleOrGone="@{attachedPhoto.imageUrl == null}"
             tools:visibility="visible" />
 
         <com.airbnb.lottie.LottieAnimationView
             style="@style/LottieStyle"
-            android:visibility="@{attachedPhoto.imageUrl == null ? View.VISIBLE : View.GONE}"
             app:layout_constraintBaseline_toBottomOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
+            bind:visibleOrGone="@{attachedPhoto.imageUrl == null}"
             tools:visibility="visible" />
 
         <ImageView
