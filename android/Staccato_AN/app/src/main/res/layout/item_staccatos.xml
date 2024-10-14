@@ -11,7 +11,7 @@
             type="com.on.staccato.presentation.memory.MemoryHandler" />
 
         <variable
-            name="visit"
+            name="staccato"
             type="com.on.staccato.presentation.memory.model.MemoryStaccatoUiModel" />
     </data>
 
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:onClick="@{() -> handler.onStaccatoClicked(visit.id)}"
+        android:onClick="@{() -> handler.onStaccatoClicked(staccato.id)}"
         android:padding="4dp">
 
         <ImageView
@@ -34,7 +34,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:coilRoundedCornerPlaceHolder="@{@drawable/staccato_gradient}"
-            bind:coilRoundedCornerImageUrl="@{visit.staccatoImageUrl}"
+            bind:coilRoundedCornerImageUrl="@{staccato.staccatoImageUrl}"
             bind:coilRoundingRadius="@{16f}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
             android:layout_marginBottom="2dp"
-            android:text="@{visit.staccatoTitle}"
+            android:text="@{staccato.staccatoTitle}"
             android:textAppearance="@style/Typography.Title3"
             android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@id/tv_visits_visited_at"
@@ -81,7 +81,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="12dp"
-            android:text="@{@string/all_date_dots_format(visit.visitedAt.year, visit.visitedAt.monthValue, visit.visitedAt.dayOfMonth)}"
+            android:text="@{@string/all_date_dots_format(staccato.visitedAt.year, staccato.visitedAt.monthValue, staccato.visitedAt.dayOfMonth)}"
             android:textAppearance="@style/Typography.Body4"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/iv_visits"
