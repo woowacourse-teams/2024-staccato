@@ -36,6 +36,10 @@ class MyPageViewModel
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
 
+        override fun onCodeCopyClicked() {
+            memberProfile.value?.let { _uuidCode.setValue(it.uuidCode) }
+        }
+
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = repository.getMemberProfile()
@@ -47,10 +51,6 @@ class MyPageViewModel
 
         private fun setMemberProfile(memberProfile: MemberProfile) {
             _memberProfile.value = memberProfile
-        }
-
-        override fun onCodeCopyClicked() {
-            memberProfile.value?.let { _uuidCode.setValue(it.uuidCode) }
         }
 
         private fun handleError(
