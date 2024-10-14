@@ -3,7 +3,6 @@ package com.on.staccato.presentation.bindingadapter
 import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.ScrollView
 import androidx.databinding.BindingAdapter
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
@@ -25,8 +24,8 @@ fun ScrollView.setScrollToBottom(isScrollable: Boolean) {
     }
 }
 
-@BindingAdapter(value = ["visibilityByThumbnailUri", "visibilityByThumbnailUrl"])
-fun View.setThumbnail(
+@BindingAdapter(value = ["visibilityByEmptyThumbnailUri", "visibilityByEmptyThumbnailUrl"])
+fun View.setThumbnailVisibility(
     thumbnailUri: Uri?,
     thumbnailUrl: String?,
 ) {
@@ -38,8 +37,8 @@ fun View.setThumbnail(
         }
 }
 
-@BindingAdapter(value = ["visibilityByThumbnailUri", "visibilityByThumbnailUrl"])
-fun ProgressBar.setThumbnailLoadingProgressBar(
+@BindingAdapter(value = ["loadingVisibilityByThumbnailUri", "visibilityByEmptyThumbnailUrl"])
+fun View.setThumbnailLoadingVisibility(
     thumbnailUri: Uri?,
     thumbnailUrl: String?,
 ) {

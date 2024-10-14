@@ -84,22 +84,29 @@
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
-                    bind:visibilityByThumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:visibilityByThumbnailUrl="@{viewModel.thumbnailUrl}" />
+                    bind:visibilityByEmptyThumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnailUrl}" />
 
-                <ProgressBar
-                    android:id="@+id/progress_bar_memory_creation_attached_photo"
+                <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@color/white_80"
-                    android:padding="100dp"
-                    android:progress="30"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
-                    bind:visibilityByThumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:visibilityByThumbnailUrl="@{viewModel.thumbnailUrl}"
+                    bind:loadingVisibilityByThumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnailUrl}"
+                    tools:visibility="visible" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    style="@style/LottieStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_memory_creation_photo_attach"
+                    app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
+                    app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
+                    bind:loadingVisibilityByThumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnailUrl}"
                     tools:visibility="visible" />
 
                 <TextView
@@ -239,17 +246,9 @@
 
         </ScrollView>
 
-        <ProgressBar
-            android:id="@+id/progress_bar_memory_creation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:progress="30"
-            android:visibility="@{viewModel.isPosting == true ? View.VISIBLE : View.GONE }"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
+        <include
+            isPosting="@{viewModel.isPosting}"
+            layout="@layout/layout_loading" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
