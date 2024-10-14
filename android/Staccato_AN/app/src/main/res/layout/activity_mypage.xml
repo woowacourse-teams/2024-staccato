@@ -33,96 +33,79 @@
             app:title="@string/mypage_title"
             app:titleCentered="true" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_mypage_profile"
+        <ImageView
+            android:id="@+id/iv_mypage_profile_image"
             android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/all_image_content_description"
+            android:padding="10dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_mypage"
+            app:layout_constraintWidth_percent="0.25"
+            bind:coilCircleImageUrl="@{viewModel.accountInformation.profileImageUrl}"
+            bind:coilPlaceHolder="@{@drawable/icon_member}"
+            tools:src="@drawable/icon_member" />
+
+        <ImageView
+            android:id="@+id/iv_mypage_profile_image_icon"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="16dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:contentDescription="@string/all_image_content_description"
+            android:src="@drawable/icon_edit_circle"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/iv_mypage_profile_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_mypage_profile_image"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_mypage_profile_nickname"
+            style="@style/Typography.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@{viewModel.accountInformation.nickname}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_mypage">
-
-            <FrameLayout
-                android:id="@+id/frame_mypage_profile_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/iv_mypage_profile_image"
-                    android:layout_width="84dp"
-                    android:layout_height="84dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="10dp"
-                    android:contentDescription="@string/all_image_content_description"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    bind:coilCircleImageUrl="@{viewModel.accountInformation.profileImageUrl}"
-                bind:coilPlaceHolder="@{@drawable/icon_member}"
-                tools:src="@drawable/icon_member" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:contentDescription="@string/all_image_content_description"
-                    android:src="@drawable/icon_edit_circle"
-                    android:visibility="invisible" />
-
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/tv_mypage_profile_nickname"
-                style="@style/Typography.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@{viewModel.accountInformation.nickname}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frame_mypage_profile_image"
+            app:layout_constraintTop_toBottomOf="@+id/iv_mypage_profile_image"
             tools:text="사용자 닉네임" />
 
-            <TextView
-                android:id="@+id/tv_mypage_profile_uuid"
-                style="@style/Typography.Body3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/mypage_uuid"
-                android:textColor="@color/gray4"
-                app:layout_constraintEnd_toStartOf="@id/btn_mypage_profile_uuid_copy"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_mypage_profile_nickname" />
+        <TextView
+            android:id="@+id/tv_mypage_profile_uuid"
+            style="@style/Typography.Body3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/mypage_uuid"
+            android:textColor="@color/gray4"
+            app:layout_constraintEnd_toStartOf="@id/btn_mypage_profile_uuid_copy"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_mypage_profile_nickname" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_mypage_profile_uuid_copy"
-                style="@style/ToolbarMenuStyle"
-                android:layout_height="36dp"
-                android:layout_marginStart="8dp"
-                android:drawableEnd="@drawable/icon_copy"
-                android:drawableTint="@color/gray4"
-                android:onClick="@{() -> myPageHandler.onCodeCopyClicked()}"
-                app:layout_constraintBottom_toBottomOf="@id/tv_mypage_profile_uuid"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_mypage_profile_uuid"
-                app:layout_constraintTop_toTopOf="@id/tv_mypage_profile_uuid" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_mypage_profile_uuid_copy"
+            style="@style/ToolbarMenuStyle"
+            android:layout_height="36dp"
+            android:drawableEnd="@drawable/icon_copy"
+            android:drawableTint="@color/gray4"
+            android:onClick="@{() -> myPageHandler.onCodeCopyClicked()}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_mypage_profile_uuid"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_mypage_profile_uuid"
+            app:layout_constraintTop_toTopOf="@id/tv_mypage_profile_uuid" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider_mypage_profile"
             style="@style/DividerStyle"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="46dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/constraint_mypage_profile" />
+            app:layout_constraintTop_toBottomOf="@id/tv_mypage_profile_uuid" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_mypage_menu_privacy_policy"
