@@ -34,11 +34,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/view_timeline_line"
+            android:id="@+id/divider_timeline"
             android:layout_width="1dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
-            android:foreground="@color/gray2"
+            app:dividerColor="@color/gray2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_timeline_folder"
             app:layout_constraintTop_toTopOf="parent" />
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textAppearance="@style/Typography.Body4"
-            app:layout_constraintStart_toStartOf="@id/view_timeline_line"
+            app:layout_constraintStart_toStartOf="@id/divider_timeline"
             app:layout_constraintTop_toBottomOf="@id/tv_timeline_memory_title"
             bind:endAt="@{memory.endAt}"
             bind:startAt="@{memory.startAt}"
@@ -65,7 +65,7 @@
             android:text="@{memory.memoryTitle}"
             android:textAppearance="@style/Typography.Title3"
             app:layout_constraintEnd_toStartOf="@id/iv_timeline_memory_thumbnail"
-            app:layout_constraintStart_toEndOf="@id/view_timeline_line"
+            app:layout_constraintStart_toEndOf="@id/divider_timeline"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="제주도 가족 여행" />
 
