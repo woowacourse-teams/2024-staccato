@@ -39,9 +39,9 @@
             app:title="@string/visit_creation_toolbar_title" />
 
         <androidx.core.widget.NestedScrollView
-            android:overScrollMode="never"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_visit_creation">
 
@@ -68,7 +68,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/tv_photo_title"
                     app:layout_constraintStart_toEndOf="@id/tv_photo_title"
                     app:layout_constraintTop_toTopOf="@id/tv_photo_title"
-                    bind:currentPhotoNumbers="@{viewModel.currentPhotos.size}"
+                    bind:attachedPhotoNumbers="@{viewModel.currentPhotos.size}"
                     bind:maxPhotoNumbers="@{5}"
                     tools:text="5/5" />
 
@@ -187,7 +187,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address_title"
-                    bind:setAddress="@{viewModel.address}"
+                    bind:selectedAddress="@{viewModel.address}"
                     tools:text="상세 주소 (고정)" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -207,7 +207,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        bind:setCurrentLocationButtonLoading="@{viewModel.isCurrentLocationLoading}" />
+                        bind:currentLocationButtonLoading="@{viewModel.isCurrentLocationLoading}" />
 
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/lotti_dot_loading"
@@ -216,7 +216,7 @@
                         app:layout_constraintEnd_toEndOf="@id/btn_current_location"
                         app:layout_constraintStart_toStartOf="@id/btn_current_location"
                         app:layout_constraintTop_toTopOf="@+id/btn_current_location"
-                        bind:setLoadingLottieVisibility="@{viewModel.isCurrentLocationLoading}" />
+                        bind:visibleOrGone="@{viewModel.isCurrentLocationLoading}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -251,8 +251,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title"
-                    bind:setMemoryCandidates="@{viewModel.memoryCandidates}"
-                    bind:setSelectedMemory="@{viewModel.selectedMemory}" />
+                    bind:memoryCandidates="@{viewModel.memoryCandidates}"
+                    bind:selectedMemory="@{viewModel.selectedMemory}" />
 
                 <TextView
                     android:id="@+id/tv_select_memory_title"
@@ -283,8 +283,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_select_memory_title"
-                    bind:setDateTimeWithAmPm="@{viewModel.selectedVisitedAt}"
-                    bind:setMemoryCandidates="@{viewModel.memoryCandidates}" />
+                    bind:dateTimeWithAmPm="@{viewModel.selectedVisitedAt}"
+                    bind:memoryCandidates="@{viewModel.memoryCandidates}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_visit_create_done"
@@ -299,11 +299,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
-                    bind:address="@{viewModel.placeName}"
-                    bind:photos="@{viewModel.currentPhotos}"
-                    bind:selectedMemory="@{viewModel.selectedMemory}"
+                    bind:staccatoAddress="@{viewModel.placeName}"
+                    bind:staccatoMemory="@{viewModel.selectedMemory}"
+                    bind:staccatoPhotos="@{viewModel.currentPhotos}"
                     bind:staccatoTitle="@{viewModel.staccatoTitle}"
-                    bind:visitedAt="@{viewModel.selectedVisitedAt}" />
+                    bind:staccatoVisitedAt="@{viewModel.selectedVisitedAt}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

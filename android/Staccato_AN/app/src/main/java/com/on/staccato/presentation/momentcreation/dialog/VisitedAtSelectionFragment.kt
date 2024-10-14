@@ -66,7 +66,7 @@ class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        binding.items = years
+        binding.years = years
         setupPickers()
         setupPickerListeners()
         initConfirmButton()
