@@ -40,7 +40,7 @@
 
     <style name="TextInputEditTextStyle.Description" parent="TextInputEditTextStyle.MultiLine">
         <item name="android:layout_marginHorizontal">24dp</item>
-        <item name="android:minHeight">255dp</item>
+        <item name="android:minHeight">100dp</item>
     </style>
 
 </resources>
