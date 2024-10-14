@@ -33,9 +33,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:coilPlaceHolder="@{@drawable/staccato_gradient}"
+            bind:coilRoundedCornerPlaceHolder="@{@drawable/staccato_gradient}"
             bind:coilRoundedCornerImageUrl="@{visit.visitImageUrl}"
-            bind:coilRoundingRadius="@{16}"
+            bind:coilRoundingRadius="@{16f}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
         <View
