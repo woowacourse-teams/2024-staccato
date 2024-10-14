@@ -211,15 +211,11 @@
 
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/lotti_dot_loading"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/LottieStyle"
                         app:layout_constraintBottom_toBottomOf="@+id/btn_current_location"
                         app:layout_constraintEnd_toEndOf="@id/btn_current_location"
                         app:layout_constraintStart_toStartOf="@id/btn_current_location"
                         app:layout_constraintTop_toTopOf="@+id/btn_current_location"
-                        app:lottie_autoPlay="true"
-                        app:lottie_loop="true"
-                        app:lottie_rawRes="@raw/dot_loading"
                         bind:visibleOrGone="@{viewModel.isCurrentLocationLoading}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -313,17 +309,9 @@
 
         </androidx.core.widget.NestedScrollView>
 
-        <ProgressBar
-            android:id="@+id/progress_bar_visit_creation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:progress="30"
-            android:visibility="@{viewModel.isPosting ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
+        <include
+            isPosting="@{viewModel.isPosting}"
+            layout="@layout/layout_loading" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
