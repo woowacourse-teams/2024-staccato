@@ -74,7 +74,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_input_login_user_nickname"
-                bind:loginEnabled="@{viewModel.nickname}" />
+                bind:loginButtonEnabled="@{viewModel.nickname}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

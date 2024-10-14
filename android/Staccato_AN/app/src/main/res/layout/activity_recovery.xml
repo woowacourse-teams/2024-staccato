@@ -88,7 +88,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline_recovery_end_margin"
             app:layout_constraintStart_toStartOf="@id/guideline_recovery_start_margin"
-            bind:recoveryEnabled="@{viewModel.recoveryCode}" />
+            bind:recoveryButtonEnabled="@{viewModel.recoveryCode}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -81,8 +81,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.35"
-            bind:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
             bind:coilRoundedCornerImageUrl="@{memory.memoryThumbnailUrl}"
+            bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
             bind:coilRoundingRadius="@{12f}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 

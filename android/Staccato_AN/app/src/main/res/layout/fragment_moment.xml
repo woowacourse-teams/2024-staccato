@@ -126,6 +126,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@{viewModel.momentDetail.address}"
                     android:textAppearance="@style/Typography.Body4"
+                    app:layout_constraintEnd_toEndOf="@id/tv_place_name"
                     app:layout_constraintStart_toStartOf="@id/tv_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_name"
                     tools:text="상세 주소" />
@@ -138,8 +139,8 @@
                     android:textAppearance="@style/Typography.Body2"
                     app:layout_constraintStart_toStartOf="@id/tv_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_detail"
-                    bind:visitedAt="@{viewModel.momentDetail.visitedAt}"
-                    tools:text="2024년 7월 15일 2시에 방문했어요!" />
+                    bind:visitedAtHistory="@{viewModel.momentDetail.visitedAt}"
+                    tools:text="2024년 7월 15일 2시에 방문했어요" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider2"
