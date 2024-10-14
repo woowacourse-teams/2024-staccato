@@ -1,6 +1,6 @@
 package com.on.staccato.data.mypage
 
-import com.on.staccato.data.dto.mypage.AccountInformationResponse
+import com.on.staccato.data.dto.mypage.MemberProfileResponse
 import com.on.staccato.data.dto.mypage.ProfileImageResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -11,7 +11,7 @@ import retrofit2.http.Part
 
 interface MyPageApiService {
     @GET(MYPAGE_PATH)
-    suspend fun getAccountInformation(): Response<AccountInformationResponse>
+    suspend fun getMemberProfile(): Response<MemberProfileResponse>
 
     @Multipart
     @POST(PROFILE_IMAGE_CHANGE_PATH)

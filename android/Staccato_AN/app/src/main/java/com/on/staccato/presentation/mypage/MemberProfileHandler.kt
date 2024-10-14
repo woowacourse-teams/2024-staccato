@@ -1,5 +1,5 @@
 package com.on.staccato.presentation.mypage
 
-interface MyPageHandler {
+interface MemberProfileHandler {
     fun onCodeCopyClicked()
 }

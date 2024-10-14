@@ -9,13 +9,11 @@ import com.on.staccato.data.ApiResponseHandler.onException
 import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.dto.Status
-import com.on.staccato.domain.model.AccountInformation
+import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.mapper.toUiModel
-import com.on.staccato.presentation.mypage.MyPageHandler
-import com.on.staccato.presentation.mypage.model.AccountInformationUiModel
+import com.on.staccato.presentation.mypage.MemberProfileHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,10 +23,10 @@ class MyPageViewModel
     @Inject
     constructor(private val repository: MyPageRepository) :
     ViewModel(),
-        MyPageHandler {
-        private val _accountInformation = MutableLiveData<AccountInformationUiModel>()
-        val accountInformation: LiveData<AccountInformationUiModel>
-            get() = _accountInformation
+        MemberProfileHandler {
+        private val _memberProfile = MutableLiveData<MemberProfile>()
+        val memberProfile: LiveData<MemberProfile>
+            get() = _memberProfile
 
         private val _uuidCode = MutableSingleLiveData<String>()
         val uuidCode: SingleLiveData<String>
@@ -38,21 +36,21 @@ class MyPageViewModel
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
 
-        fun fetchMyProfile() {
+        fun fetchMemberProfile() {
             viewModelScope.launch {
-                val result = repository.getAccountInformation()
+                val result = repository.getMemberProfile()
                 result.onException(::handleException)
                     .onServerError(::handleError)
-                    .onSuccess(::setMyProfile)
+                    .onSuccess(::setMemberProfile)
             }
         }
 
-        private fun setMyProfile(accountInformation: AccountInformation) {
-            _accountInformation.value = accountInformation.toUiModel()
+        private fun setMemberProfile(memberProfile: MemberProfile) {
+            _memberProfile.value = memberProfile
         }
 
         override fun onCodeCopyClicked() {
-            accountInformation.value?.let { _uuidCode.setValue(it.uuidCode) }
+            memberProfile.value?.let { _uuidCode.setValue(it.uuidCode) }
         }
 
         private fun handleError(
