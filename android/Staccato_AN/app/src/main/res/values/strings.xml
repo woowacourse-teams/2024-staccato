@@ -20,8 +20,9 @@
     <string name="all_image_content_description">사진</string>
     <string name="all_default_not_supported">아직 지원하지 않는 기능이에요.</string>
     <string name="all_required_mark">*</string>
-    <string name="all_posting_photo">사진을 게시하는 중이에요</string>
     <string name="all_setting">설정</string>
+    <string name="all_am">오전</string>
+    <string name="all_pm">오후</string>
     <string name="all_location_permission_denial">위치 권한을 거부 하셨습니다.</string>
     <string name="all_webview_failure">웹 브라우저를 띄울 수 없습니다.</string>
     <string name="all_clipboard_copy">클립보드에 복사했어요!</string>
@@ -62,7 +63,7 @@
     <string name="memory_update_toolbar_subtitle">스타카토를 담을 추억을 수정해 보세요!</string>
 
     // fragment_staccato
-    <string name="staccato_history">%s년 %s월 %s일 %s %s시에 방문 했어요</string>
+    <string name="staccato_at_history">%s에 방문했어요</string>
     <string name="staccato_logs">코멘트</string>
     <string name="staccato_add">기록하기</string>
     <string name="staccato_enter_log">코멘트 입력하기</string>

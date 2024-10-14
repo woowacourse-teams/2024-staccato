@@ -58,8 +58,7 @@
                 app:layout_constraintTop_toBottomOf="@id/space_login_separating_logo_and_nickname_et">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    style="@style/TextInputEditTextStyle.Title"
-                    android:layout_marginHorizontal="0dp"
+                    style="@style/TextInputEditTextStyle.SingleLine"
                     android:hint="@string/login_nickname_hint"
                     android:imeOptions="actionDone"
                     android:maxLength="20"
@@ -75,7 +74,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_input_login_user_nickname"
-                bind:loginEnabled="@{viewModel.nickname}" />
+                bind:loginButtonEnabled="@{viewModel.nickname}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

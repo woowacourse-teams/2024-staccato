@@ -6,9 +6,7 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        style="@style/DialogBackgroundStyle"
-        android:layout_width="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout style="@style/DialogBackgroundStyle">
 
         <TextView
             android:id="@+id/tv_delete_impossibility_dialog_title"

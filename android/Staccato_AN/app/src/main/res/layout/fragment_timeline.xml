@@ -119,16 +119,14 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_timeline_loading"
-            android:layout_width="wrap_content"
+            style="@style/LottieStyle"
             android:layout_height="0dp"
             android:visibility="@{viewModel.isTimelineLoading ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/frame_timeline_add_memory"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/dot_loading" />
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/iv_timeline_empty"

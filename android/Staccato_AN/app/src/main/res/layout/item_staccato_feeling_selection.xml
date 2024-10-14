@@ -20,7 +20,7 @@
         android:onClick="@{() -> feelingHandler.onFeelingClicked(feeling)}"
         bind:colorImageResource="@{feeling.colorSrc}"
         bind:grayImageResource="@{feeling.graySrc}"
-        bind:setSelected="@{feeling.isSelected}"
+        bind:selected="@{feeling.isSelected}"
         tools:src="@drawable/feeling_excited" />
 
 </layout>

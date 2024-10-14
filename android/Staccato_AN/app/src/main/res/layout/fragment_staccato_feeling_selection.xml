@@ -30,7 +30,7 @@
             android:nestedScrollingEnabled="false"
             android:orientation="horizontal"
             android:overScrollMode="never"
-            android:paddingStart="13dp"
+            android:paddingHorizontal="13dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

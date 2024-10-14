@@ -31,25 +31,31 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
-            bind:coilImageUri="@{attachedPhoto.uri}"
-            bind:coilImageUrl="@{attachedPhoto.imageUrl}"
-            bind:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            bind:coilRoundedCornerImageUri="@{attachedPhoto.uri}"
+            bind:coilRoundedCornerImageUrl="@{attachedPhoto.imageUrl}"
+            bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
             bind:coilRoundingRadius="@{12f}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
-        <ProgressBar
-            android:id="@+id/progress_bar_attached_photo"
+        <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/white_80"
-            android:padding="50dp"
-            android:progress="30"
-            android:visibility="@{attachedPhoto.imageUrl == null ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_attached_photo"
+            app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
+            app:layout_constraintStart_toStartOf="@id/iv_attached_photo"
+            app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
+            bind:visibleOrGone="@{attachedPhoto.imageUrl == null}"
+            tools:visibility="visible" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            style="@style/LottieStyle"
             app:layout_constraintBaseline_toBottomOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
+            bind:visibleOrGone="@{attachedPhoto.imageUrl == null}"
             tools:visibility="visible" />
 
         <ImageView
@@ -58,9 +64,11 @@
             android:layout_height="25dp"
             android:layout_marginStart="130dp"
             android:layout_marginBottom="130dp"
-            android:onClick="@{()->selectedPhotoHandler.onDeleteClicked(attachedPhoto)}"
+            android:onClick="@{() -> selectedPhotoHandler.onDeleteClicked(attachedPhoto)}"
             android:src="@drawable/icon_delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

@@ -26,8 +26,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_staccato"
-            style="@style/DefaultToolbarStyle"
-            android:paddingEnd="8dp"
+            style="@style/NavigationToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -127,6 +126,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@{viewModel.staccatoDetail.address}"
                     android:textAppearance="@style/Typography.Body4"
+                    app:layout_constraintEnd_toEndOf="@id/tv_place_name"
                     app:layout_constraintStart_toStartOf="@id/tv_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_name"
                     tools:text="상세 주소" />
@@ -139,8 +139,8 @@
                     android:textAppearance="@style/Typography.Body2"
                     app:layout_constraintStart_toStartOf="@id/tv_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_detail"
-                    bind:visitedAt="@{viewModel.staccatoDetail.visitedAt}"
-                    tools:text="2024년 7월 15일 2시에 방문했어요!" />
+                    bind:visitedAtHistory="@{viewModel.staccatoDetail.visitedAt}"
+                    tools:text="2024년 7월 15일 2시에 방문했어요" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider2"
@@ -152,7 +152,7 @@
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_staccato_feeling_selection"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -161,7 +161,7 @@
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_staccato_comments"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
