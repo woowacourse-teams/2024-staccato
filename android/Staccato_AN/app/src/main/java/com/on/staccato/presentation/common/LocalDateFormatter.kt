@@ -19,9 +19,9 @@ fun View.getFormattedLocalDateTime(setNowDateTime: LocalDateTime): String =
         val year = setNowDateTime.year
         val month = setNowDateTime.monthValue
         val day = setNowDateTime.dayOfMonth
-        val hour = if (setNowDateTime.hour % 12 == 0) 12 else setNowDateTime.hour % 12
+        val hour = if (setNowDateTime.hour % HALF_DAY_HOUR == 0) HALF_DAY_HOUR else setNowDateTime.hour % HALF_DAY_HOUR
         val noonText =
-            if (setNowDateTime.hour < 12) {
+            if (setNowDateTime.hour < HALF_DAY_HOUR) {
                 resources.getString(R.string.all_am)
             } else {
                 resources.getString(
@@ -31,3 +31,5 @@ fun View.getFormattedLocalDateTime(setNowDateTime: LocalDateTime): String =
         resources.getString(R.string.all_date_time_am_pm_kr_format)
             .format(year, month, day, noonText, hour)
     }
+
+private const val HALF_DAY_HOUR = 12

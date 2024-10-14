@@ -84,7 +84,7 @@ fun Button.setVisitedAtSelectButtonEnabled(years: List<Int>?) {
 @BindingAdapter("recoveryButtonEnabled")
 fun Button.setRecoveryButtonEnabled(recoveryCode: String?) {
     isEnabled =
-        if (recoveryCode.isNullOrBlank() || recoveryCode.length < 36) {
+        if (recoveryCode.isNullOrBlank() || recoveryCode.length < MAX_RECOVERY_CODE) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {
@@ -108,3 +108,5 @@ fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
 fun ImageButton.setSendButtonEnabled(value: String?) {
     isEnabled = !value.isNullOrBlank()
 }
+
+private const val MAX_RECOVERY_CODE = 36
