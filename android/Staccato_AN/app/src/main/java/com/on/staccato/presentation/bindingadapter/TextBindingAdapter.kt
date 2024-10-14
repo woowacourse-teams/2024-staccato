@@ -44,7 +44,7 @@ fun TextView.setDateTimeWithAmPm(
         isClickable = false
         isFocusable = false
     } else {
-        text = dateTime?.let(::getFormattedLocalDateTime) ?: ""
+        text = dateTime?.let(::getFormattedLocalDateTime) ?: EMPTY_TEXT
         setTextColor(resources.getColor(R.color.staccato_black, null))
         isClickable = true
         isFocusable = true
@@ -82,8 +82,8 @@ fun TextView.setIsMemoryEmptyVisibility(items: List<Int>?) {
 @BindingAdapter("visitedAtHistory")
 fun TextView.formatVisitedAtHistory(visitedAt: LocalDateTime?) {
     text = visitedAt?.let {
-        getFormattedLocalDateTime(it) + resources.getString(R.string.visit_at_history)
-    } ?: ""
+        resources.getString(R.string.visit_at_history).format(getFormattedLocalDateTime(it))
+    } ?: EMPTY_TEXT
 }
 
 @BindingAdapter(
@@ -149,10 +149,13 @@ fun TextView.setPhotoNumbers(
 
 @BindingAdapter("photoDragHintVisibility")
 fun TextView.setPhotoDragHintVisibility(currentPhotoNumbers: Int) {
-    isGone = currentPhotoNumbers < 2
+    isGone = currentPhotoNumbers < DRAGGABLE_PHOTO_NUMBER
 }
 
 @BindingAdapter("selectedAddress")
 fun TextView.setSelectedAddress(address: String?) {
     text = address ?: context.getString(R.string.visit_creation_empty_address)
 }
+
+private const val DRAGGABLE_PHOTO_NUMBER = 2
+private const val EMPTY_TEXT = ""
