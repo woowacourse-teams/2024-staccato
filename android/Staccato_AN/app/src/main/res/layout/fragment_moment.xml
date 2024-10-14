@@ -26,8 +26,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_moment"
-            style="@style/DefaultToolbarStyle"
-            android:paddingEnd="8dp"
+            style="@style/NavigationToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -153,7 +152,7 @@
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_moment_feeling_selection"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -162,7 +161,7 @@
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_moment_comments"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"

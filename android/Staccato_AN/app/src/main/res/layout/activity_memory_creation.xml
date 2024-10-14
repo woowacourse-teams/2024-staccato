@@ -25,7 +25,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_memory_creation"
-            style="@style/TitleToolbarStyle"
+            style="@style/NavigationToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -159,11 +159,9 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_creation_description">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        style="@style/TextInputEditTextStyle"
-                        android:gravity="top"
+                        style="@style/TextInputEditTextStyle.Description"
                         android:hint="@string/memory_creation_description_hint"
                         android:maxLength="500"
-                        android:minHeight="255dp"
                         android:text="@={viewModel.description}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -172,7 +170,7 @@
                     android:id="@+id/tv_memory_creation_period_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="40dp"
                     android:text="@string/memory_creation_period_setting"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_memory_creation_description" />
