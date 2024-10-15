@@ -33,7 +33,7 @@ fun TimelineMemoryDto.toDomain(): Memory {
         endAt = endAt?.let { LocalDate.parse(it) },
         description = description,
         mates = emptyList(),
-        moments = emptyList(),
+        staccatos = emptyList(),
     )
 }
 

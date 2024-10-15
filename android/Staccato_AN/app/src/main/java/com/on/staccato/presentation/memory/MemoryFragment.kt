@@ -15,11 +15,11 @@ import com.on.staccato.presentation.common.ToolbarHandler
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.adapter.MatesAdapter
-import com.on.staccato.presentation.memory.adapter.VisitsAdapter
+import com.on.staccato.presentation.memory.adapter.StaccatosAdapter
 import com.on.staccato.presentation.memory.viewmodel.MemoryViewModel
 import com.on.staccato.presentation.memoryupdate.MemoryUpdateActivity
-import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
-import com.on.staccato.presentation.momentcreation.MomentCreationActivity
+import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
+import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,7 +37,7 @@ class MemoryFragment :
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
 
     private lateinit var matesAdapter: MatesAdapter
-    private lateinit var visitsAdapter: VisitsAdapter
+    private lateinit var staccatosAdapter: StaccatosAdapter
 
     override fun onViewCreated(
         view: View,
@@ -46,7 +46,7 @@ class MemoryFragment :
         initBinding()
         initToolbar()
         initMatesAdapter()
-        initVisitsAdapter()
+        initStaccatosAdapter()
         observeMemory()
         observeIsDeleteSuccess()
         showErrorToast()
@@ -66,13 +66,13 @@ class MemoryFragment :
         deleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
     }
 
-    override fun onVisitClicked(visitId: Long) {
+    override fun onStaccatoClicked(staccatoId: Long) {
         viewModel.memory.value?.let {
             val bundle =
                 bundleOf(
-                    STACCATO_ID_KEY to visitId,
+                    STACCATO_ID_KEY to staccatoId,
                 )
-            findNavController().navigate(R.id.action_memoryFragment_to_momentFragment, bundle)
+            findNavController().navigate(R.id.action_memoryFragment_to_staccatoFragment, bundle)
         }
     }
 
@@ -80,14 +80,14 @@ class MemoryFragment :
         viewModel.deleteMemory(memoryId)
     }
 
-    override fun onVisitCreationClicked() {
+    override fun onStaccatoCreationClicked() {
         viewModel.memory.value?.let {
-            val visitCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
-            MomentCreationActivity.startWithResultLauncher(
+            val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
+            StaccatoCreationActivity.startWithResultLauncher(
                 memoryId,
                 it.title,
                 requireContext(),
-                visitCreationLauncher,
+                staccatoCreationLauncher,
             )
         }
     }
@@ -108,7 +108,7 @@ class MemoryFragment :
     private fun observeMemory() {
         viewModel.memory.observe(viewLifecycleOwner) { memory ->
             matesAdapter.updateMates(memory.mates)
-            visitsAdapter.updateVisits(memory.visits)
+            staccatosAdapter.updateStaccatos(memory.staccatos)
         }
     }
 
@@ -127,9 +127,9 @@ class MemoryFragment :
         binding.rvMemoryMates.adapter = matesAdapter
     }
 
-    private fun initVisitsAdapter() {
-        visitsAdapter = VisitsAdapter(handler = this)
-        binding.rvMemoryVisits.adapter = visitsAdapter
+    private fun initStaccatosAdapter() {
+        staccatosAdapter = StaccatosAdapter(handler = this)
+        binding.rvMemoryStaccatos.adapter = staccatosAdapter
     }
 
     private fun showErrorToast() {

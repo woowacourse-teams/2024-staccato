@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel" />
+
+        <variable
+            name="staccatoCreationHandler"
+            type="com.on.staccato.presentation.staccatocreation.StaccatoCreationHandler" />
+
+        <variable
+            name="currentLocationHandler"
+            type="com.on.staccato.presentation.staccatocreation.CurrentLocationHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_staccato_creation"
+            style="@style/NavigationToolbarStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:subtitle="@string/staccato_creation_toolbar_subtitle"
+            app:title="@string/staccato_creation_toolbar_title" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_staccato_creation">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".presentation.staccatocreation.StaccatoCreationActivity">
+
+                <TextView
+                    android:id="@+id/tv_photo_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/all_photo"
+                    app:layout_constraintStart_toStartOf="@id/tv_place_name_title"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_photo_title_size"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:textAppearance="@style/Typography.Body4"
+                    android:textColor="@color/gray3"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_photo_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_photo_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_photo_title"
+                    bind:attachedPhotoNumbers="@{viewModel.currentPhotos.size}"
+                    bind:maxPhotoNumbers="@{5}"
+                    tools:text="5/5" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_photo_attach"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:foregroundGravity="center"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
+                    app:spanCount="2"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_attached_photo" />
+
+                <TextView
+                    android:id="@+id/tv_photo_drag_hint"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="24dp"
+                    android:text="@string/staccato_creation_photo_drag_hint"
+                    android:textAppearance="@style/Typography.Body4"
+                    android:textColor="@color/gray3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_photo_attach"
+                    bind:photoDragHintVisibility="@{viewModel.currentPhotos.size}" />
+
+                <TextView
+                    android:id="@+id/tv_staccato_creation_place_name_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="40dp"
+                    android:text="@string/staccato_creation_staccato_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
+
+                <TextView
+                    android:id="@+id/tv_staccato_creation_required_mark_first"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_staccato_creation_place_name_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_staccato_creation_place_name_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_staccato_creation_place_name_title" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_staccato_creation_title"
+                    style="@style/TextInputLayoutStyle"
+                    app:counterMaxLength="30"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_creation_place_name_title">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/TextInputEditTextStyle.Title"
+                        android:hint="@string/staccato_creation_staccato_name_hint"
+                        android:imeOptions="actionDone"
+                        android:maxLength="30"
+                        android:text="@={viewModel.staccatoTitle}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/tv_place_name_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/staccato_creation_place"
+                    android:textAppearance="@style/Typography.Title2"
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_creation_place_name_title"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_staccato_creation_title" />
+
+                <TextView
+                    android:id="@+id/tv_staccato_creation_required_mark_second"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_place_name_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_place_name_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_place_name_title" />
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/autocomplete_fragment"
+                    android:name="com.on.staccato.presentation.common.CustomAutocompleteSupportFragment"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/shape_all_gray1_8dp"
+                    android:textAppearance="@style/Typography.Body1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_place_name_title" />
+
+                <TextView
+                    android:id="@+id/tv_place_address_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/staccato_creation_address"
+                    android:textAppearance="@style/Typography.Title3"
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_creation_place_name_title"
+                    app:layout_constraintTop_toBottomOf="@id/autocomplete_fragment" />
+
+                <TextView
+                    android:id="@+id/tv_place_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/shape_all_gray1_4dp"
+                    android:paddingVertical="12dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="50dp"
+                    android:textAppearance="@style/Typography.Body1"
+                    android:textColor="@color/gray3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_place_address_title"
+                    bind:selectedAddress="@{viewModel.address}"
+                    tools:text="상세 주소 (고정)" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_current_location"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@id/tv_place_address"
+                    app:layout_constraintStart_toStartOf="@id/tv_place_address"
+                    app:layout_constraintTop_toBottomOf="@id/tv_place_address">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_current_location"
+                        style="@style/CurrentLocationStyle"
+                        android:layout_marginTop="10dp"
+                        android:onClick="@{() -> currentLocationHandler.onCurrentLocationClicked()}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        bind:currentLocationButtonLoading="@{viewModel.isCurrentLocationLoading}" />
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/lotti_dot_loading"
+                        style="@style/LottieStyle"
+                        app:layout_constraintBottom_toBottomOf="@+id/btn_current_location"
+                        app:layout_constraintEnd_toEndOf="@id/btn_current_location"
+                        app:layout_constraintStart_toStartOf="@id/btn_current_location"
+                        app:layout_constraintTop_toTopOf="@+id/btn_current_location"
+                        bind:visibleOrGone="@{viewModel.isCurrentLocationLoading}" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/tv_memory_selection_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginTop="35dp"
+                    android:text="@string/staccato_creation_memory_selection"
+                    app:layout_constraintStart_toStartOf="@id/constraint_current_location"
+                    app:layout_constraintTop_toBottomOf="@id/constraint_current_location" />
+
+                <TextView
+                    android:id="@+id/tv_staccato_creation_required_mark_third"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_memory_selection_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_memory_selection_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_memory_selection_title" />
+
+                <TextView
+                    android:id="@+id/tv_memory_selection"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/shape_button_gray1_5dp"
+                    android:onClick="@{() -> staccatoCreationHandler.onMemorySelectionClicked()}"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:text="@{viewModel.selectedMemory.memoryTitle}"
+                    android:textAppearance="@style/Typography.Body1"
+                    android:textColor="@color/staccato_black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title"
+                    bind:memoryCandidates="@{viewModel.memoryCandidates}"
+                    bind:selectedMemory="@{viewModel.selectedMemory}" />
+
+                <TextView
+                    android:id="@+id/tv_select_memory_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/all_visited_at"
+                    app:layout_constraintStart_toStartOf="@id/tv_memory_selection_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_selection" />
+
+                <TextView
+                    android:id="@+id/tv_staccato_creation_required_mark_fourth"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_memory_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_select_memory_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_select_memory_title" />
+
+                <TextView
+                    android:id="@+id/tv_visited_at"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/shape_button_gray1_5dp"
+                    android:onClick="@{() -> staccatoCreationHandler.onVisitedAtSelectionClicked()}"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:textAppearance="@style/Typography.Body1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_select_memory_title"
+                    bind:dateTimeWithAmPm="@{viewModel.selectedVisitedAt}"
+                    bind:memoryCandidates="@{viewModel.memoryCandidates}" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_staccato_create_done"
+                    style="@style/ButtonStyle.Save.Active"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginBottom="24dp"
+                    android:onClick="@{() -> staccatoCreationHandler.onCreateDoneClicked()}"
+                    android:text="@string/all_save"
+                    android:textAppearance="@style/Typography.Title3"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
+                    bind:staccatoAddress="@{viewModel.placeName}"
+                    bind:staccatoMemory="@{viewModel.selectedMemory}"
+                    bind:staccatoPhotos="@{viewModel.currentPhotos}"
+                    bind:staccatoTitle="@{viewModel.staccatoTitle}"
+                    bind:staccatoVisitedAt="@{viewModel.selectedVisitedAt}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <include
+            isPosting="@{viewModel.isPosting}"
+            layout="@layout/layout_loading" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

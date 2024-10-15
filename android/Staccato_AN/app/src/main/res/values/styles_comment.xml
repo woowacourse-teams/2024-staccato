@@ -29,13 +29,13 @@
     <style name="CommentChatBoxStyle.MyComment" parent="CommentChatBoxStyle">
         <item name="android:layout_marginStart">25dp</item>
         <item name="android:layout_marginEnd">10dp</item>
-        <item name="android:background">@drawable/shape_my_visit_log_12dp</item>
+        <item name="android:background">@drawable/shape_my_staccato_log_12dp</item>
     </style>
 
     <style name="CommentChatBoxStyle.OtherComment" parent="CommentChatBoxStyle">
         <item name="android:layout_marginStart">10dp</item>
         <item name="android:layout_marginEnd">25dp</item>
-        <item name="android:background">@drawable/shape_others_visit_log_12dp</item>
+        <item name="android:background">@drawable/shape_others_staccato_log_12dp</item>
     </style>
 
 </resources>

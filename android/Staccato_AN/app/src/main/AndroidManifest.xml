@@ -60,7 +60,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".presentation.visitupdate.VisitUpdateActivity"
+            android:name=".presentation.staccatoupdate.StaccatoUpdateActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
@@ -70,7 +70,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".presentation.momentcreation.MomentCreationActivity"
+            android:name=".presentation.staccatocreation.StaccatoCreationActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 

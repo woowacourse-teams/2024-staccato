@@ -6,7 +6,7 @@ import androidx.databinding.BindingAdapter
 import com.google.android.material.button.MaterialButton
 import com.on.staccato.R
 import com.on.staccato.domain.model.MemoryCandidate
-import com.on.staccato.presentation.momentcreation.model.AttachedPhotosUiModel
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -100,7 +100,7 @@ fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
         setText(R.string.all_empty)
         setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
     } else {
-        setText(R.string.visit_creation_load_current_location)
+        setText(R.string.staccato_creation_load_current_location)
     }
 }
 

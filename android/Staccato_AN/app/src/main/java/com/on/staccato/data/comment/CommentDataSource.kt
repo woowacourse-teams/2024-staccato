@@ -6,7 +6,7 @@ import com.on.staccato.data.dto.comment.CommentUpdateRequest
 import com.on.staccato.data.dto.comment.CommentsResponse
 
 interface CommentDataSource {
-    suspend fun getComments(momentId: Long): ResponseResult<CommentsResponse>
+    suspend fun getComments(staccatoId: Long): ResponseResult<CommentsResponse>
 
     suspend fun createComment(commentRequest: CommentRequest): ResponseResult<Unit>
 

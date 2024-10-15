@@ -28,8 +28,8 @@
         tools:layout="@layout/fragment_memory">
 
         <action
-            android:id="@+id/action_memoryFragment_to_momentFragment"
-            app:destination="@id/momentFragment"
+            android:id="@+id/action_memoryFragment_to_staccatoFragment"
+            app:destination="@id/staccatoFragment"
             app:enterAnim="@anim/anim_slide_in_from_left_fade_in"
             app:exitAnim="@anim/anim_fade_out"
             app:popEnterAnim="@anim/anim_fade_in"
@@ -38,9 +38,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/momentFragment"
-        android:name="com.on.staccato.presentation.moment.MomentFragment"
-        android:label="fragment_moment"
-        tools:layout="@layout/fragment_moment" />
+        android:id="@+id/staccatoFragment"
+        android:name="com.on.staccato.presentation.staccato.StaccatoFragment"
+        android:label="fragment_staccato"
+        tools:layout="@layout/fragment_staccato" />
 
 </navigation>
