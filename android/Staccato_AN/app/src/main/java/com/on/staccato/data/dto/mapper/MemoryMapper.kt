@@ -38,7 +38,7 @@ fun MemoriesResponse.toDomain(): MemoryCandidates =
 
 fun MemoryStaccatoDto.toDomain() =
     MemoryStaccato(
-        staccatoId = momentId,
+        staccatoId = staccatoId,
         staccatoTitle = staccatoTitle,
         staccatoImageUrl = staccatoImageUrl,
         visitedAt = LocalDateTime.parse(visitedAt),
