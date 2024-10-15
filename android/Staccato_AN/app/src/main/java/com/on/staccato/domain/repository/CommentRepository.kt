@@ -5,7 +5,7 @@ import com.on.staccato.domain.model.Comment
 import com.on.staccato.domain.model.NewComment
 
 interface CommentRepository {
-    suspend fun fetchComments(momentId: Long): ResponseResult<List<Comment>>
+    suspend fun fetchComments(staccatoId: Long): ResponseResult<List<Comment>>
 
     suspend fun createComment(newComment: NewComment): ResponseResult<Unit>
 

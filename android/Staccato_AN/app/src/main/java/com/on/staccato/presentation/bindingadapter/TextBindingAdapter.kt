@@ -17,12 +17,12 @@ fun TextView.setSelectedMemory(
     memoryCandidates: MemoryCandidates?,
 ) {
     if (memoryCandidates?.memoryCandidate?.isEmpty() == true) {
-        text = resources.getString(R.string.visit_creation_no_memory_hint)
+        text = resources.getString(R.string.staccato_creation_no_memory_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
         isClickable = false
         isFocusable = false
     } else if (selectedMemory == null) {
-        text = resources.getString(R.string.visit_creation_memory_selection_hint)
+        text = resources.getString(R.string.staccato_creation_memory_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
         isClickable = true
         isFocusable = true
@@ -38,7 +38,7 @@ fun TextView.setDateTimeWithAmPm(
     memoryCandidates: MemoryCandidates?,
 ) {
     if (memoryCandidates?.memoryCandidate?.isEmpty() == true) {
-        text = resources.getString(R.string.visit_creation_memory_selection_hint)
+        text = resources.getString(R.string.staccato_creation_memory_selection_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
         isClickable = false
         isFocusable = false
@@ -81,7 +81,7 @@ fun TextView.setIsMemoryEmptyVisibility(items: List<Int>?) {
 @BindingAdapter("visitedAtHistory")
 fun TextView.formatVisitedAtHistory(visitedAt: LocalDateTime?) {
     text = visitedAt?.let {
-        resources.getString(R.string.visit_at_history).format(getFormattedLocalDateTime(it))
+        resources.getString(R.string.staccato_at_history).format(getFormattedLocalDateTime(it))
     } ?: EMPTY_TEXT
 }
 
@@ -151,7 +151,7 @@ fun TextView.setPhotoDragHintVisibility(currentPhotoNumbers: Int) {
 
 @BindingAdapter("selectedAddress")
 fun TextView.setSelectedAddress(address: String?) {
-    text = address ?: context.getString(R.string.visit_creation_empty_address)
+    text = address ?: context.getString(R.string.staccato_creation_empty_address)
 }
 
 private const val DRAGGABLE_PHOTO_NUMBER = 2

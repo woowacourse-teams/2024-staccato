@@ -11,7 +11,7 @@ data class MemoryUiModel(
     val endAt: LocalDate? = null,
     val description: String? = null,
     val mates: List<MemberUiModel>,
-    val visits: List<MemoryVisitUiModel>,
+    val staccatos: List<MemoryStaccatoUiModel>,
 ) {
     companion object {
         fun buildDatesInRange(

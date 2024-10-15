@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.on.staccato.presentation.staccato.comments.StaccatoCommentsViewModel" />
+
+        <variable
+            name="commentHandler"
+            type="com.on.staccato.presentation.staccato.comments.CommentHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/tv_staccato_comments_title"
+            style="@style/SubTitleStyle"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/staccato_logs"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_staccato_comments_default_empty"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="60dp"
+            android:contentDescription="@string/all_image_content_description"
+            android:paddingBottom="10dp"
+            android:src="@drawable/staccato_character"
+            android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_staccato_comments_title"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_staccato_comments_empty"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:gravity="center_horizontal"
+            android:text="@string/staccato_empty_comments"
+            android:textAppearance="@style/Typography.Body2"
+            android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_staccato_comments_default_empty"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_staccato_comments"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="360dp"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/et_staccato_comments_input"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_staccato_comments_title"
+            app:reverseLayout="false"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_staccato_my_comment" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_staccato_comments_input"
+            style="@style/TextInputEditTextStyle"
+            android:layout_width="0dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="12dp"
+            android:hint="@string/staccato_enter_log"
+            android:imeOptions="actionNone"
+            android:inputType="textMultiLine"
+            android:maxLength="500"
+            android:maxLines="10"
+            android:text="@={viewModel.commentInput}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_staccato_comments_send"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageButton
+            android:id="@+id/iv_staccato_comments_send"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/selector_comment_sendable"
+            android:backgroundTint="@null"
+            android:contentDescription="@string/all_image_content_description"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/et_staccato_comments_input"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_staccato_comments_input"
+            bind:sendButtonEnabled="@{viewModel.commentInput}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

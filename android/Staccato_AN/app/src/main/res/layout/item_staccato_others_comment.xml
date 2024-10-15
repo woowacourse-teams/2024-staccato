@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="othersComment"
+            type="com.on.staccato.presentation.staccato.comments.CommentUiModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/iv_staccato_others_comment_profile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:layout_marginStart="19dp"
+            android:contentDescription="@string/all_image_content_description"
+            android:elevation="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            bind:coilCircleImageUrl="@{othersComment.memberImageUrl}"
+            bind:coilPlaceHolder="@{@drawable/shape_place_holder_oval}" />
+
+        <TextView
+            android:id="@+id/tv_staccato_others_comment_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{othersComment.nickname}"
+            android:textAppearance="@style/Typography.Body4"
+            app:layout_constraintStart_toStartOf="@id/tv_staccato_others_comment_chat"
+            app:layout_constraintTop_toTopOf="@id/iv_staccato_others_comment_profile"
+            tools:text="username" />
+
+        <TextView
+            android:id="@+id/tv_staccato_others_comment_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="25dp"
+            android:background="@drawable/shape_others_staccato_log_12dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
+            android:text="@{othersComment.content}"
+            android:textAppearance="@style/Typography.Body3"
+            android:textColor="@color/gray5"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/iv_staccato_others_comment_profile"
+            app:layout_constraintTop_toBottomOf="@id/tv_staccato_others_comment_name"
+            tools:text="어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어어엄청 긴 임시 방문 로그" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
