@@ -38,6 +38,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintWidth_max="300dp"
                 app:layout_constraintWidth_percent="0.6" />
 
             <Space
@@ -57,7 +58,8 @@
                 app:layout_constraintBottom_toTopOf="@id/btn_start_staccato"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/space_login_logo_nickname">
+                app:layout_constraintTop_toBottomOf="@id/space_login_logo_nickname"
+                app:layout_constraintWidth_max="500dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     style="@style/TextInputEditTextStyle.SingleLine"
@@ -77,6 +79,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_input_login_user_nickname"
+                app:layout_constraintWidth_max="500dp"
                 bind:loginButtonEnabled="@{viewModel.nickname}" />
 
             <TextView
