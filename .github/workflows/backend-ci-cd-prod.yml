@@ -54,12 +54,12 @@ jobs:
 
   cd:
     needs: ci
-    runs-on: [ self-hosted, prod-a ]
+    runs-on: [ self-hosted ]
 
     strategy:
       matrix:
-        runner: [ prod-a ]
+        runner: [ prod-a, prod-b ]
 
     steps:
       - name: execute deploy.sh
-        run: sh /home/ubuntu/staccato/deploy.sh
+        run: bash /home/ubuntu/staccato/deploy.sh
