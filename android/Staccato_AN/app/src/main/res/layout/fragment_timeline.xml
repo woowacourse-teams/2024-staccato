@@ -168,6 +168,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_timeline_empty"
+            app:layout_constraintWidth_max="500dp"
             bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
             bind:visibilityByTimeline="@{viewModel.timeline}"
             tools:visibility="visible" />
