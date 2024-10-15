@@ -10,14 +10,14 @@ import java.time.LocalDateTime
 
 fun StaccatoResponse.toDomain() =
     Staccato(
-        staccatoId = momentId,
+        staccatoId = staccatoId,
         memoryId = memoryId,
         memoryTitle = memoryTitle,
         staccatoTitle = staccatoTitle,
         placeName = placeName,
         latitude = latitude,
         longitude = longitude,
-        staccatoImageUrls = momentImageUrls,
+        staccatoImageUrls = staccatoImageUrls,
         address = address,
         visitedAt = LocalDateTime.parse(visitedAt),
         startAt = startAt?.let { LocalDate.parse(startAt) },

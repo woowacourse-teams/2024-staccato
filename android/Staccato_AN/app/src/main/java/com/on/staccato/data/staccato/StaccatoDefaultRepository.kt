@@ -22,7 +22,7 @@ class StaccatoDefaultRepository
             return when (val responseResult = remoteDataSource.fetchStaccatos()) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
                 is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
-                is ResponseResult.Success -> ResponseResult.Success(responseResult.data.momentLocationResponses.map { it.toDomain() })
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data.staccatoLocationResponses.map { it.toDomain() })
             }
         }
 
