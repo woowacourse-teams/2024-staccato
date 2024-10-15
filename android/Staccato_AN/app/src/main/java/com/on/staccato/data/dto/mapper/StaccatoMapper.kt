@@ -27,7 +27,7 @@ fun StaccatoResponse.toDomain() =
 
 fun StaccatoLocationDto.toDomain() =
     StaccatoLocation(
-        staccatoId = momentId,
+        staccatoId = staccatoId,
         latitude = latitude,
         longitude = longitude,
     )
