@@ -21,6 +21,7 @@ import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +33,7 @@ public class MemoryService {
     private final MemoryRepository memoryRepository;
     private final MemoryMemberRepository memoryMemberRepository;
     private final MomentRepository momentRepository;
+    private final MomentImageRepository momentImageRepository;
     private final CommentRepository commentRepository;
 
     @Transactional
@@ -116,11 +118,20 @@ public class MemoryService {
     public void deleteMemory(long memoryId, Member member) {
         memoryRepository.findById(memoryId).ifPresent(memory -> {
             validateOwner(memory, member);
-            momentRepository.findAllByMemoryId(memoryId)
-                    .forEach(moment -> commentRepository.deleteAllByMomentId(moment.getId()));
-            momentRepository.deleteAllByMemoryId(memoryId);
+            deleteAllRelatedMemory(memoryId);
             memoryRepository.deleteById(memoryId);
         });
+    }
+
+    private void deleteAllRelatedMemory(long memoryId) {
+        List<Long> momentIds = momentRepository.findAllByMemoryId(memoryId)
+                .stream()
+                .map(Moment::getId)
+                .toList();
+        momentImageRepository.deleteAllByMomentIdInBatch(momentIds);
+        commentRepository.deleteAllByMomentIdInBatch(momentIds);
+        momentRepository.deleteAllByMemoryIdInBatch(memoryId);
+        memoryMemberRepository.deleteAllByMemoryIdInBatch(memoryId);
     }
 
     private void validateOwner(Memory memory, Member member) {
