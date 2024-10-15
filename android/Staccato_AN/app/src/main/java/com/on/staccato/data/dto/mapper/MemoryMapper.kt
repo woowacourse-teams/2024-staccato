@@ -21,7 +21,7 @@ fun MemoryResponse.toDomain() =
         endAt = endAt?.let { LocalDate.parse(endAt) },
         description = description,
         mates = mates.map { it.toDomain() },
-        staccatos = moments.map { it.toDomain() },
+        staccatos = staccatos.map { it.toDomain() },
     )
 
 fun MemoriesResponse.toDomain(): MemoryCandidates =

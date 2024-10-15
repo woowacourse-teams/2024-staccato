@@ -13,5 +13,5 @@ data class MemoryResponse(
     @SerialName("endAt") val endAt: String? = null,
     @SerialName("description") val description: String? = null,
     @SerialName("mates") val mates: List<MemberDto>,
-    @SerialName("moments") val moments: List<MemoryStaccatoDto>,
+    @SerialName("moments") val staccatos: List<MemoryStaccatoDto>,
 )
