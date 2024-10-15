@@ -59,7 +59,7 @@
                 android:layout_height="match_parent">
 
                 <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/vp_photo_horizontal"
+                    android:id="@+id/vp_staccato_photo_horizontal"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:orientation="horizontal"
@@ -71,7 +71,7 @@
                     tools:listitem="@layout/item_viewpage_photo" />
 
                 <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_photo_horizontal"
+                    android:id="@+id/tab_staccato_photo_horizontal"
                     android:layout_width="50dp"
                     android:layout_height="10dp"
                     android:layout_marginTop="10dp"
@@ -79,14 +79,14 @@
                     android:visibility="@{viewModel.staccatoDetail.staccatoImageUrls.size > 1 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/vp_photo_horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/vp_staccato_photo_horizontal"
                     app:tabBackground="@drawable/selector_viewpager_indicator"
                     app:tabGravity="center"
                     app:tabIndicatorFullWidth="false"
                     app:tabIndicatorHeight="0dp" />
 
                 <TextView
-                    android:id="@+id/tv_title"
+                    android:id="@+id/tv_staccato_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -95,19 +95,19 @@
                     android:textAppearance="@style/Typography.Title1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tab_photo_horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/tab_staccato_photo_horizontal"
                     tools:text="스타카토 제목" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider1"
+                    android:id="@+id/divider_staccato_first"
                     style="@style/DividerStyle"
                     android:layout_marginTop="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_title" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_title" />
 
                 <TextView
-                    android:id="@+id/tv_place_name"
+                    android:id="@+id/tv_staccato_place_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -116,39 +116,39 @@
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider1"
+                    app:layout_constraintTop_toBottomOf="@id/divider_staccato_first"
                     tools:text="장소 제목" />
 
                 <TextView
-                    android:id="@+id/tv_detail"
+                    android:id="@+id/tv_staccato_detail"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@{viewModel.staccatoDetail.address}"
                     android:textAppearance="@style/Typography.Body4"
-                    app:layout_constraintEnd_toEndOf="@id/tv_place_name"
-                    app:layout_constraintStart_toStartOf="@id/tv_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_place_name"
+                    app:layout_constraintEnd_toEndOf="@id/tv_staccato_place_name"
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_place_name"
                     tools:text="상세 주소" />
 
                 <TextView
-                    android:id="@+id/tv_visited_at"
+                    android:id="@+id/tv_staccato_visited_at"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:textAppearance="@style/Typography.Body2"
-                    app:layout_constraintStart_toStartOf="@id/tv_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_detail"
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_detail"
                     bind:visitedAtHistory="@{viewModel.staccatoDetail.visitedAt}"
                     tools:text="2024년 7월 15일 2시에 방문했어요" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider2"
+                    android:id="@+id/divider_staccato_second"
                     style="@style/DividerStyle"
                     android:layout_marginTop="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_visited_at" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_staccato_feeling_selection"
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider2"
+                    app:layout_constraintTop_toBottomOf="@id/divider_staccato_second"
                     tools:layout="@layout/fragment_staccato_feeling_selection" />
 
                 <androidx.fragment.app.FragmentContainerView

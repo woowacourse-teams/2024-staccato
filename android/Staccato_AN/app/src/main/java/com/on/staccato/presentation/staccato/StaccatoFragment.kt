@@ -50,10 +50,10 @@ class StaccatoFragment :
 
     private fun initViewPagerAdapter() {
         pagePhotoAdapter = ViewpagePhotoAdapter()
-        binding.vpPhotoHorizontal.adapter = pagePhotoAdapter
+        binding.vpStaccatoPhotoHorizontal.adapter = pagePhotoAdapter
         TabLayoutMediator(
-            binding.tabPhotoHorizontal,
-            binding.vpPhotoHorizontal,
+            binding.tabStaccatoPhotoHorizontal,
+            binding.vpStaccatoPhotoHorizontal,
         ) { _, _ -> }.attach()
     }
 
