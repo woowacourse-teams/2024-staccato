@@ -24,6 +24,23 @@ class MemoryMemberRepositoryTest {
     @Autowired
     private MemoryRepository memoryRepository;
 
+    @DisplayName("사용자의 모든 추억 목록을 조회한다.")
+    @Test
+    void findAllByMemberId() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 30), LocalDate.of(2023, 12, 30)));
+        Memory memory2 = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2023, 12, 31)));
+        memoryMemberRepository.save(new MemoryMember(member, memory));
+        memoryMemberRepository.save(new MemoryMember(member, memory2));
+
+        // when
+        List<MemoryMember> result = memoryMemberRepository.findAllByMemberId(member.getId());
+
+        // then
+        assertThat(result).hasSize(2);
+    }
+
     @DisplayName("사용자 식별자와 날짜로 추억 목록을 조회한다.")
     @Test
     void findAllByMemberIdAndDate() {

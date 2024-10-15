@@ -17,6 +17,7 @@ import com.staccato.memory.domain.MemoryMember;
 import com.staccato.memory.repository.MemoryMemberRepository;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.MomentImages;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -60,6 +61,28 @@ class MomentRepositoryTest {
                 () -> assertThat(memberResult).containsExactlyInAnyOrder(moment, moment1, moment2),
                 () -> assertThat(anotherMemberResult.size()).isEqualTo(1),
                 () -> assertThat(anotherMemberResult).containsExactlyInAnyOrder(anotherMoment)
+        );
+    }
+
+    @DisplayName("사용자의 특정 추억에 해당하는 모든 스타카토를 조회한다.")
+    @Test
+    void findAllByMemoryIdOrderByVisitedAt() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        memoryMemberRepository.save(new MemoryMember(member, memory));
+
+        Moment moment1 = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), new MomentImages(List.of("image1", "image2"))));
+        Moment moment2 = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2024, 1, 1, 22, 20), new MomentImages(List.of("image1", "image2"))));
+        Moment moment3 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 10, 23, 21)));
+
+        // when
+        List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAt(memory.getId());
+
+        // then
+        assertAll(
+                () -> assertThat(moments.size()).isEqualTo(3),
+                () -> assertThat(moments).containsExactlyInAnyOrder(moment1, moment2, moment3)
         );
     }
 }
