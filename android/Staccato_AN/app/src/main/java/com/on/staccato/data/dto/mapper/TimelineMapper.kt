@@ -45,12 +45,3 @@ fun TimelineMemoryDto.toMemoryCandidate(): MemoryCandidate {
         endAt = endAt?.let { LocalDate.parse(it) },
     )
 }
-
-fun TimelineMemoryDto.toMemoryCandidate(): MemoryCandidate {
-    return MemoryCandidate(
-        memoryId = memoryId,
-        memoryTitle = memoryTitle,
-        startAt = startAt?.let { LocalDate.parse(it) },
-        endAt = endAt?.let { LocalDate.parse(it) },
-    )
-}
