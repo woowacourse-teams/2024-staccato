@@ -115,6 +115,8 @@
     <string name="mypage_privacy_policy">개인정보처리방침</string>
     <string name="mypage_privacy_policy_url">https://app.websitepolicies.com/policies/view/7jel2uwv</string>
     <string name="mypage_app_version">앱 버전 1.1.0</string>
+    <string name="mypage_error_fetching_member_profile">프로필 정보를 가져올 수 없습니다.</string>
+    <string name="mypage_error_changing_profile_image">프로필 이미지 변경에 실패했습니다.</string>
 
     // fragment_photo_attach
     <string name="photo_attach_title">사진을 등록해 주세요</string>
