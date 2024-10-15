@@ -4,9 +4,6 @@ on:
   push:
     paths: [ 'backend/**', '.github/**' ]
     branches: [ "release-be" ]
-  pull_request:
-    paths: [ 'backend/**', '.github/**' ]
-    branches: [ "develop" ]
 
 jobs:
   ci:
