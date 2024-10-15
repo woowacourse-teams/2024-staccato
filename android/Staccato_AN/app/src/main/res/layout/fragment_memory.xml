@@ -214,7 +214,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/frame_memory_add_staccatos"
-                    app:spanCount="2"
+                    app:spanCount="@integer/staccato_span_count"
                     tools:listitem="@layout/item_staccatos" />
 
                 <ImageView
