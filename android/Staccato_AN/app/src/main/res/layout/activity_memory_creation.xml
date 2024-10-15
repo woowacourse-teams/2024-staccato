@@ -57,6 +57,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_max="500dp"
                     bind:coilRoundedCornerImageUri="@{viewModel.thumbnailUri}"
                     bind:coilRoundedCornerImageUrl="@{viewModel.thumbnailUrl}"
                     bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
