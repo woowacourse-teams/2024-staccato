@@ -43,7 +43,7 @@ class MemoryUpdateActivity :
     }
 
     override fun onPeriodSelectionClicked() {
-        if (dateRangePicker.isAdded) {
+        if (!dateRangePicker.isAdded) {
             dateRangePicker.show(supportFragmentManager, dateRangePicker.toString())
         }
     }
