@@ -37,7 +37,20 @@ class MyPageViewModel
             get() = _errorMessage
 
         override fun onCodeCopyClicked() {
-            memberProfile.value?.let { _uuidCode.setValue(it.uuidCode) }
+            checkMemberProfileNotNull { memberProfile ->
+                _uuidCode.setValue(memberProfile.uuidCode)
+            }
+        }
+
+        private fun checkMemberProfileNotNull(
+            actionOnNotNull: (memberProfile: MemberProfile) -> Unit,
+        ) {
+            val memberProfile = memberProfile.value
+            if (memberProfile != null) {
+                actionOnNotNull(memberProfile)
+            } else {
+                _errorMessage.setValue(ERROR_NO_MEMBER_PROFILE)
+            }
         }
 
         fun fetchMemberProfile() {
@@ -82,5 +95,9 @@ class MyPageViewModel
                 this::class.java.simpleName,
                 "Exception Caught | throwable: $e, message: $errorMessage",
             )
+        }
+
+        companion object {
+            private const val ERROR_NO_MEMBER_PROFILE = "프로필 정보를 조회할 수 없습니다.\n잠시 후에 다시 시도해주세요."
         }
     }
