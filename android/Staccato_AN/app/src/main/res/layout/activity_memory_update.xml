@@ -25,7 +25,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_memory_update"
-            style="@style/TitleToolbarStyle"
+            style="@style/NavigationToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -57,10 +57,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:coilImageUri="@{viewModel.thumbnailUri}"
-                    bind:coilImageUrl="@{viewModel.thumbnailUrl}"
-                    bind:coilPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
-                    bind:coilRoundingRadius="@{12}" />
+                    bind:coilRoundedCornerImageUri="@{viewModel.thumbnailUri}"
+                    bind:coilRoundedCornerImageUrl="@{viewModel.thumbnailUrl}"
+                    bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
+                    bind:coilRoundingRadius="@{12f}" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -84,23 +84,30 @@
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
-                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}"
+                    bind:visibilityByEmptyThumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnailUrl}"
                     tools:visibility="visible" />
 
-                <ProgressBar
-                    android:id="@+id/progress_bar_memory_creation_attached_photo"
+                <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@color/white_80"
-                    android:padding="100dp"
-                    android:progress="30"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_update_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
-                    bind:thumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:thumbnailUrl="@{viewModel.thumbnailUrl}"
+                    bind:loadingVisibilityByThumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnailUrl}"
+                    tools:visibility="visible" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    style="@style/LottieStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_memory_update_photo_attach"
+                    app:layout_constraintEnd_toEndOf="@id/iv_memory_update_photo_attach"
+                    app:layout_constraintStart_toStartOf="@id/iv_memory_update_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_memory_update_photo_attach"
+                    bind:loadingVisibilityByThumbnailUri="@{viewModel.thumbnailUri}"
+                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnailUrl}"
                     tools:visibility="visible" />
 
                 <TextView
@@ -153,11 +160,9 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_description">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        style="@style/TextInputEditTextStyle"
-                        android:gravity="top"
+                        style="@style/TextInputEditTextStyle.Description"
                         android:hint="@string/memory_creation_description_hint"
                         android:maxLength="500"
-                        android:minHeight="255dp"
                         android:text="@={viewModel.description}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -166,7 +171,7 @@
                     android:id="@+id/tv_memory_update_period_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="40dp"
                     android:text="@string/memory_creation_period_setting"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_memory_update_description" />
@@ -218,8 +223,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_period_description"
                     bind:endDate="@{viewModel.endDate}"
-                    bind:periodSelectionVisibility="@{viewModel.isPeriodActive}"
-                    bind:startDate="@{viewModel.startDate}" />
+                    bind:startDate="@{viewModel.startDate}"
+                    bind:visibleOrGone="@{viewModel.isPeriodActive}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_memory_update_save"
@@ -231,27 +236,19 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_period_selection"
-                    bind:endDate="@{viewModel.endDate}"
                     bind:isPeriodActive="@{viewModel.isPeriodActive}"
-                    bind:isPhotoPosting="@{viewModel.isPhotoPosting}"
-                    bind:memoryTitle="@{viewModel.title}"
-                    bind:startDate="@{viewModel.startDate}" />
+                    bind:isPhotoUploading="@{viewModel.isPhotoPosting}"
+                    bind:memoryEndDate="@{viewModel.endDate}"
+                    bind:memoryStartDate="@{viewModel.startDate}"
+                    bind:memoryTitle="@{viewModel.title}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 
-        <ProgressBar
-            android:id="@+id/progress_bar_memory_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:progress="30"
-            android:visibility="@{viewModel.isPosting == true ? View.VISIBLE : View.GONE }"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
+        <include
+            isPosting="@{viewModel.isPosting}"
+            layout="@layout/layout_loading" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

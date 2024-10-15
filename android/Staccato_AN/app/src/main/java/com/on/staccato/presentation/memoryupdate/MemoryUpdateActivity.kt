@@ -43,7 +43,9 @@ class MemoryUpdateActivity :
     }
 
     override fun onPeriodSelectionClicked() {
-        dateRangePicker.show(supportFragmentManager, dateRangePicker.toString())
+        if (dateRangePicker.isAdded) {
+            dateRangePicker.show(supportFragmentManager, dateRangePicker.toString())
+        }
     }
 
     override fun onSaveClicked() {
@@ -65,7 +67,6 @@ class MemoryUpdateActivity :
     override fun onUrisSelected(vararg uris: Uri) {
         viewModel.setThumbnailUri(uris.first())
         viewModel.createThumbnailUrl(this, uris.first())
-        showToast(getString(R.string.all_posting_photo))
     }
 
     private fun buildDateRangePicker() =

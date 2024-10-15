@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DefaultToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="TitleToolbarStyle" parent="DefaultToolbarStyle">
+        <item name="titleTextAppearance">@style/Typography.Title2</item>
+        <item name="titleTextColor">@color/gray5</item>
+        <item name="subtitleTextAppearance">@style/Typography.Body4</item>
+        <item name="subtitleTextColor">@color/gray5</item>
+    </style>
+
+    <style name="NavigationToolbarStyle" parent="TitleToolbarStyle">
+        <item name="android:paddingEnd">8dp</item>
+        <item name="navigationIcon">@drawable/icon_arrow_left</item>
+    </style>
+
+    <style name="CloseToolbarStyle" parent="TitleToolbarStyle">
+        <item name="android:paddingEnd">8dp</item>
+        <item name="titleCentered">true</item>
+    </style>
+
+    <style name="ToolbarMenuStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingHorizontal">8dp</item>
+        <item name="android:paddingVertical">14dp</item>
+        <item name="android:textAppearance">@style/Typography.Body2</item>
+    </style>
+
+</resources>
