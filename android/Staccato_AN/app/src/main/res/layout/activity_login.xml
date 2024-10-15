@@ -14,38 +14,39 @@
             type="com.on.staccato.presentation.login.LoginHandler" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:onClick="@{() -> handler.onScreenClicked()}"
-        android:paddingHorizontal="36dp">
+        android:background="@color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_login_center_layout"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:onClick="@{() -> handler.onScreenClicked()}"
+            android:paddingHorizontal="36dp">
 
             <ImageView
                 android:id="@+id/iv_login_staccato_logo"
-                android:layout_width="220dp"
-                android:layout_height="260dp"
-                android:backgroundTint="@color/staccato_blue_30"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="72dp"
                 android:contentDescription="@string/all_image_content_description"
                 android:src="@drawable/staccato_logo"
+                app:layout_constraintBottom_toTopOf="@id/space_login_logo_nickname"
+                app:layout_constraintDimensionRatio="11:13"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintWidth_percent="0.6" />
 
             <Space
-                android:id="@+id/space_login_separating_logo_and_nickname_et"
+                android:id="@+id/space_login_logo_nickname"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@id/text_input_login_user_nickname"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.18"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_login_staccato_logo" />
 
@@ -53,9 +54,10 @@
                 android:id="@+id/text_input_login_user_nickname"
                 style="@style/TextInputLayoutStyle"
                 app:counterMaxLength="20"
+                app:layout_constraintBottom_toTopOf="@id/btn_start_staccato"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/space_login_separating_logo_and_nickname_et">
+                app:layout_constraintTop_toBottomOf="@id/space_login_logo_nickname">
 
                 <com.google.android.material.textfield.TextInputEditText
                     style="@style/TextInputEditTextStyle.SingleLine"
@@ -71,27 +73,30 @@
                 style="@style/ButtonStyle.Login"
                 android:layout_marginTop="32dp"
                 android:onClick="@{() -> handler.onStartClicked()}"
+                app:layout_constraintBottom_toTopOf="@id/tv_login_recovery"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_input_login_user_nickname"
                 bind:loginButtonEnabled="@{viewModel.nickname}" />
 
+            <TextView
+                android:id="@+id/tv_login_recovery"
+                style="@style/Typography.Body4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="@{() -> handler.onRecoveryClicked()}"
+                android:paddingVertical="10dp"
+                android:text="@string/login_recovery_click_here_if_need_recovery"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/btn_start_staccato"
+                app:layout_constraintStart_toStartOf="@id/btn_start_staccato"
+                app:layout_constraintTop_toBottomOf="@id/btn_start_staccato" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            style="@style/Typography.Body4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="@{() -> handler.onRecoveryClicked()}"
-            android:paddingVertical="10dp"
-            android:text="@string/login_recovery_click_here_if_need_recovery"
-            app:layout_constraintEnd_toEndOf="@id/constraint_login_center_layout"
-            app:layout_constraintStart_toStartOf="@id/constraint_login_center_layout"
-            app:layout_constraintTop_toBottomOf="@id/constraint_login_center_layout" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </layout>
