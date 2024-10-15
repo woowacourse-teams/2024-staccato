@@ -52,7 +52,7 @@ class StaccatoDefaultRepository
                         longitude = longitude,
                         address = address,
                         visitedAt = visitedAt.toString(),
-                        momentImageUrls = staccatoImageUrls,
+                        staccatoImageUrls = staccatoImageUrls,
                     ),
                 )
             }
