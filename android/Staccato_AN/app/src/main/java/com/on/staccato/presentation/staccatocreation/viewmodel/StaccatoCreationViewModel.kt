@@ -226,7 +226,7 @@ class StaccatoCreationViewModel
                     visitedAt = selectedVisitedAt.value ?: return@launch,
                     staccatoImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
                 ).onSuccess { response ->
-                    _createdStaccatoId.postValue(response.momentId)
+                    _createdStaccatoId.postValue(response.staccatoId)
                 }.onFailure {
                     _isPosting.value = false
                     _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")
