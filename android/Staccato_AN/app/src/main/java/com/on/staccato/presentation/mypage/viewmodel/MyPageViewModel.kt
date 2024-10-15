@@ -42,9 +42,7 @@ class MyPageViewModel
             }
         }
 
-        private fun checkMemberProfileNotNull(
-            actionOnNotNull: (memberProfile: MemberProfile) -> Unit,
-        ) {
+        private fun checkMemberProfileNotNull(actionOnNotNull: (memberProfile: MemberProfile) -> Unit) {
             val memberProfile = memberProfile.value
             if (memberProfile != null) {
                 actionOnNotNull(memberProfile)
