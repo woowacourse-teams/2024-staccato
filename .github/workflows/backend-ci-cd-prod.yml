@@ -54,7 +54,7 @@ jobs:
 
   cd:
     needs: ci
-    runs-on: [ self-hosted, prod ]
+    runs-on: [ self-hosted, prod-a ]
 
     strategy:
       matrix:
