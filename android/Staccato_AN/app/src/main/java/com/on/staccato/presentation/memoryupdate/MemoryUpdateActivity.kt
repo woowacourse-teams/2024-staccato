@@ -16,7 +16,7 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel
-import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
+import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,7 +43,9 @@ class MemoryUpdateActivity :
     }
 
     override fun onPeriodSelectionClicked() {
-        dateRangePicker.show(supportFragmentManager, dateRangePicker.toString())
+        if (!dateRangePicker.isAdded) {
+            dateRangePicker.show(supportFragmentManager, dateRangePicker.toString())
+        }
     }
 
     override fun onSaveClicked() {
@@ -65,7 +67,6 @@ class MemoryUpdateActivity :
     override fun onUrisSelected(vararg uris: Uri) {
         viewModel.setThumbnailUri(uris.first())
         viewModel.createThumbnailUrl(this, uris.first())
-        showToast(getString(R.string.all_posting_photo))
     }
 
     private fun buildDateRangePicker() =
