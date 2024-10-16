@@ -2,13 +2,10 @@ package com.staccato.moment.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
-
 import com.staccato.exception.StaccatoException;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MomentImages {
     private static final int MAX_COUNT = 5;
-    @OneToMany(mappedBy = "moment", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "moment", cascade = CascadeType.PERSIST)
     private List<MomentImage> images = new ArrayList<>();
 
     public MomentImages(List<String> addedImages) {

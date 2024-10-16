@@ -12,4 +12,12 @@ public class CommentFixture {
                 .member(member)
                 .build();
     }
+
+    public static Comment create(Moment moment, Member member, String content) {
+        return Comment.builder()
+                .content(content)
+                .moment(moment)
+                .member(member)
+                .build();
+    }
 }

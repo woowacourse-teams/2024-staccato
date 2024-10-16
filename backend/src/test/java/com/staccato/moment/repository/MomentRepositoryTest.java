@@ -3,6 +3,8 @@ package com.staccato.moment.repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,8 @@ class MomentRepositoryTest {
     private MemoryRepository memoryRepository;
     @Autowired
     private MemoryMemberRepository memoryMemberRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @DisplayName("사용자의 모든 스타카토를 조회한다.")
     @Test
@@ -60,6 +64,33 @@ class MomentRepositoryTest {
                 () -> assertThat(memberResult).containsExactlyInAnyOrder(moment, moment1, moment2),
                 () -> assertThat(anotherMemberResult.size()).isEqualTo(1),
                 () -> assertThat(anotherMemberResult).containsExactlyInAnyOrder(anotherMoment)
+        );
+    }
+
+
+    @DisplayName("특정 추억의 id를 가진 모든 스타카토를 삭제한다.")
+    @Test
+    void deleteAllByMemoryIdInBatch() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        memoryMemberRepository.save(new MemoryMember(member, memory));
+
+        Moment moment = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2023, 12, 31, 22, 20)));
+        Moment moment1 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 1, 22, 20)));
+        Moment moment2 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 1, 22, 21)));
+
+        // when
+        momentRepository.deleteAllByMemoryIdInBatch(memory.getId());
+        entityManager.flush();
+        entityManager.clear();
+
+        // then
+        assertAll(
+                () -> assertThat(momentRepository.findById(moment.getId()).isEmpty()).isTrue(),
+                () -> assertThat(momentRepository.findById(moment1.getId()).isEmpty()).isTrue(),
+                () -> assertThat(momentRepository.findById(moment2.getId()).isEmpty()).isTrue(),
+                () -> assertThat(momentRepository.findAllByMemoryId(memory.getId())).isEqualTo(List.of())
         );
     }
 }
