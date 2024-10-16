@@ -235,8 +235,10 @@ class MainActivity :
 
     private fun observeStaccatoLocations() {
         mapsViewModel.staccatoLocations.observe(this) { staccatoLocations ->
-            if (this::googleMap.isInitialized) googleMap.clear()
-            addMarkers(staccatoLocations)
+            if (this::googleMap.isInitialized) {
+                googleMap.clear()
+                addMarkers(staccatoLocations)
+            }
         }
     }
 
