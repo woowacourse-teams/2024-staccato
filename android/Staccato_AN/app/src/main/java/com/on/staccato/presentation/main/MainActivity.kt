@@ -22,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
@@ -92,6 +93,7 @@ class MainActivity :
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        setMapStyle(map)
         moveDefaultLocation()
         checkLocationSetting()
         onMarkerClicked(map)
@@ -132,6 +134,12 @@ class MainActivity :
 
     private fun checkLocationSetting() {
         locationPermissionManager.checkLocationSetting(actionWhenHavePermission = ::enableMyLocation)
+    }
+
+    private fun setMapStyle(map: GoogleMap) {
+        map.setMapStyle(
+            MapStyleOptions.loadRawResourceStyle(this, R.raw.google_map_style),
+        )
     }
 
     private fun moveDefaultLocation() {
