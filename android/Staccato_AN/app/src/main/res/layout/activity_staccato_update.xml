@@ -59,11 +59,8 @@
 
                 <TextView
                     android:id="@+id/tv_photo_title_size"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    style="@style/HintTextStyle"
                     android:layout_marginStart="5dp"
-                    android:textAppearance="@style/Typography.Body4"
-                    android:textColor="@color/gray3"
                     app:layout_constraintBottom_toBottomOf="@id/tv_photo_title"
                     app:layout_constraintStart_toEndOf="@id/tv_photo_title"
                     app:layout_constraintTop_toTopOf="@id/tv_photo_title"
@@ -83,17 +80,15 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
                     app:spanCount="@integer/staccato_span_count"
+                    tools:itemCount="2"
                     tools:listitem="@layout/item_attached_photo" />
 
                 <TextView
                     android:id="@+id/tv_photo_drag_hint"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    style="@style/HintTextStyle"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="24dp"
                     android:text="@string/staccato_creation_photo_drag_hint"
-                    android:textAppearance="@style/Typography.Body4"
-                    android:textColor="@color/gray3"
                     android:visibility="@{viewModel.currentPhotos.size &lt; 2 ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_photo_attach"
@@ -103,7 +98,7 @@
                     android:id="@+id/tv_staccato_update_place_name_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="45dp"
                     android:text="@string/staccato_creation_staccato_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
@@ -172,18 +167,11 @@
 
                 <TextView
                     android:id="@+id/tv_place_address"
+                    style="@style/BoundedTextStyle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_all_gray1_4dp"
-                    android:paddingVertical="12dp"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="50dp"
-                    android:textAppearance="@style/Typography.Body1"
-                    android:textColor="@color/gray3"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address_title"
                     bind:selectedAddress="@{viewModel.address}"
@@ -222,7 +210,7 @@
                 <TextView
                     android:id="@+id/tv_memory_selection_title"
                     style="@style/SubTitleStyle"
-                    android:layout_marginTop="35dp"
+                    android:layout_marginTop="40dp"
                     android:text="@string/staccato_creation_memory_selection"
                     app:layout_constraintStart_toStartOf="@id/tv_photo_title"
                     app:layout_constraintTop_toBottomOf="@id/constraint_current_location" />
@@ -236,28 +224,19 @@
 
                 <TextView
                     android:id="@+id/tv_memory_selection"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
+                    style="@style/BackgroundedTextStyle"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/shape_button_gray1_5dp"
                     android:onClick="@{() -> staccatoUpdateHandler.onMemorySelectionClicked()}"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12.5dp"
                     android:text="@{viewModel.selectedMemory.memoryTitle}"
-                    android:textAppearance="@style/Typography.Body1"
-                    android:textColor="@color/staccato_black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title" />
 
                 <TextView
                     android:id="@+id/tv_select_memory_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginTop="40dp"
                     android:text="@string/all_visited_at"
-                    android:textAppearance="@style/Typography.Title2"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_selection_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection" />
 
@@ -270,15 +249,10 @@
 
                 <TextView
                     android:id="@+id/tv_visited_at"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
+                    style="@style/BackgroundedTextStyle"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_button_gray1_5dp"
                     android:onClick="@{() -> staccatoUpdateHandler.onVisitedAtSelectionClicked()}"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12.5dp"
-                    android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_select_memory_title"
@@ -289,11 +263,10 @@
                     android:id="@+id/btn_staccato_update_done"
                     style="@style/ButtonStyle.Save.Active"
                     android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="36dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginBottom="24dp"
                     android:onClick="@{() -> staccatoUpdateHandler.onUpdateDoneClicked()}"
                     android:text="@string/all_save"
-                    android:textAppearance="@style/Typography.Title3"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
