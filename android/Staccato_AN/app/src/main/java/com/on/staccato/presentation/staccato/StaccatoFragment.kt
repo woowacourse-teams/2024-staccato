@@ -81,7 +81,6 @@ class StaccatoFragment :
     private fun setUpComments() {
         binding.rvStaccatoComments.adapter = commentsAdapter
         binding.rvStaccatoComments.itemAnimator = null
-
     }
 
     private fun initToolbarHandler() {
@@ -150,7 +149,7 @@ class StaccatoFragment :
     private fun scrollToBottom() {
         with(binding.nsvStaccato) {
             viewTreeObserver.addOnGlobalLayoutListener(
-                scrollableToBottomListener()
+                scrollableToBottomListener(),
             )
         }
     }
