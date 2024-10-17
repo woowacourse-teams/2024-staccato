@@ -49,23 +49,9 @@
 
             <Button
                 android:id="@+id/btn_timeline_add_memory"
-                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusable="false"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingVertical="3dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="10dp"
+                style="@style/BoundedIconButtonStyle"
                 android:text="@string/timeline_add_memory"
-                android:textAppearance="@style/Typography.Body4"
-                android:textColor="@color/gray3"
-                app:icon="@drawable/icon_folder"
-                app:iconTint="@color/gray3"
-                app:rippleColor="@android:color/transparent"
-                app:strokeColor="@color/gray3" />
+                app:icon="@drawable/icon_folder" />
 
         </FrameLayout>
 
@@ -82,23 +68,9 @@
 
             <Button
                 android:id="@+id/btn_timeline_sort_memories"
-                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusable="false"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingVertical="3dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="10dp"
+                style="@style/BoundedIconButtonStyle"
                 android:text="@string/timeline_sort"
-                android:textAppearance="@style/Typography.Body4"
-                android:textColor="@color/gray3"
-                app:icon="@drawable/icon_filter"
-                app:iconTint="@color/gray3"
-                app:rippleColor="@android:color/transparent"
-                app:strokeColor="@color/gray3" />
+                app:icon="@drawable/icon_filter" />
 
         </FrameLayout>
 

@@ -180,23 +180,9 @@
 
                     <Button
                         android:id="@+id/btn_memory_add_staccatos"
-                        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp"
-                        android:paddingVertical="3dp"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="10dp"
+                        style="@style/BoundedIconButtonStyle"
                         android:text="@string/staccato_add"
-                        android:textAppearance="@style/Typography.Body4"
-                        android:textColor="@color/gray3"
-                        app:icon="@drawable/icon_edit"
-                        app:iconTint="@color/gray3"
-                        app:rippleColor="@android:color/transparent"
-                        app:strokeColor="@color/gray3" />
+                        app:icon="@drawable/icon_edit" />
 
                 </FrameLayout>
 
