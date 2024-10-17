@@ -216,7 +216,7 @@
                     android:focusable="true"
                     android:onClick="@{() -> handler.onPeriodSelectionClicked()}"
                     android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
+                    android:paddingVertical="12.5dp"
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

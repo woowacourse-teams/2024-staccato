@@ -217,7 +217,7 @@
                     android:focusable="true"
                     android:onClick="@{() -> handler.onPeriodSelectionClicked()}"
                     android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
+                    android:paddingVertical="12.5dp"
                     android:textAppearance="@style/Typography.Body1"
                     android:textColor="@color/gray3"
                     app:layout_constraintEnd_toEndOf="parent"
