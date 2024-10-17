@@ -50,6 +50,7 @@
             <Button
                 android:id="@+id/btn_timeline_add_memory"
                 style="@style/BoundedIconButtonStyle"
+                android:contentDescription="@string/timeline_memory_creation_btn_description"
                 android:text="@string/timeline_add_memory"
                 app:icon="@drawable/icon_folder" />
 
@@ -69,6 +70,7 @@
             <Button
                 android:id="@+id/btn_timeline_sort_memories"
                 style="@style/BoundedIconButtonStyle"
+                android:contentDescription="@string/timeline_sort_memories_btn_description"
                 android:text="@string/timeline_sort"
                 app:icon="@drawable/icon_filter" />
 
@@ -105,7 +107,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="50dp"
-            android:contentDescription="@string/all_image_content_description"
+            android:contentDescription="@string/timeline_staccato_main_character"
             android:src="@drawable/staccato_character"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.25"
@@ -135,6 +137,7 @@
             style="@style/ButtonStyle.Save.Active"
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="20dp"
+            android:contentDescription="@string/timeline_memory_creation_btn_description"
             android:onClick="@{() -> handler.onMemoryCreationClicked()}"
             android:text="@string/timeline_create_memory"
             app:layout_constraintEnd_toEndOf="parent"

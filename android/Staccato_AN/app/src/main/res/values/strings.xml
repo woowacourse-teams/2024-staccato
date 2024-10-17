@@ -41,6 +41,9 @@
     <string name="timeline_add_memory">추가</string>
     <string name="timeline_sort">정렬</string>
     <string name="timeline_create_memory">추억 생성하기</string>
+    <string name="timeline_memory_creation_btn_description">추억 만들기로 이동</string>
+    <string name="timeline_sort_memories_btn_description">나의 추억들 정렬</string>
+    <string name="timeline_staccato_main_character">스타카토 메인 캐릭터</string>
 
     // fragment_memory
     <string name="memory_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
