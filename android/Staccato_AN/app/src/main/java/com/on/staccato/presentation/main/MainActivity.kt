@@ -21,6 +21,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
@@ -247,7 +248,9 @@ class MainActivity :
         staccatoLocations.forEach { staccatoLocation ->
             val latLng = LatLng(staccatoLocation.latitude, staccatoLocation.longitude)
             val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
-            val marker: Marker = googleMap.addMarker(markerOptions) ?: return
+            val marker: Marker =
+                googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_pin_3x)))
+                    ?: return
             val markerId: String = marker.id
             markers.add(MarkerUiModel(staccatoLocation.staccatoId, markerId))
         }
