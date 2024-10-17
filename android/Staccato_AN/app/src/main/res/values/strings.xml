@@ -103,6 +103,9 @@
     <string name="staccato_creation_toolbar_title">스타카토 기록하기</string>
     <string name="staccato_creation_not_found_address">주소를 찾지 못했습니다</string>
 
+    // item_attached_photo
+    <string name="attached_photo_staccato_photo_description">스타카토 사진</string>
+
     // activity_staccato_update
     <string name="staccato_update_toolbar_subtitle">기억하고 싶은 순간을 수정해 보세요!</string>
     <string name="staccato_update_toolbar_title">스타카토 수정하기</string>
