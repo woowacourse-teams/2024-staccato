@@ -152,7 +152,7 @@
                     android:id="@+id/autocomplete_fragment"
                     android:name="com.on.staccato.presentation.common.CustomAutocompleteSupportFragment"
                     android:layout_width="0dp"
-                    android:layout_height="46dp"
+                    android:layout_height="48dp"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_all_gray1_8dp"
