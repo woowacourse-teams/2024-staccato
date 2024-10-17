@@ -56,7 +56,7 @@
                     android:id="@+id/iv_memory_thumbnail"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:contentDescription="@string/all_image_content_description"
+                    android:contentDescription="@string/memory_thumbnail_photo_description"
                     android:scaleType="centerCrop"
                     app:layout_constraintDimensionRatio="3:2"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -181,6 +181,7 @@
                     <Button
                         android:id="@+id/btn_memory_add_staccatos"
                         style="@style/BoundedIconButtonStyle"
+                        android:contentDescription="@string/memory_staccato_creation_btn_description"
                         android:text="@string/staccato_add"
                         app:icon="@drawable/icon_edit" />
 
@@ -208,7 +209,7 @@
                     android:layout_width="0dp"
                     android:layout_height="200dp"
                     android:layout_marginTop="90dp"
-                    android:contentDescription="@string/all_image_content_description"
+                    android:contentDescription="@string/all_staccato_main_character"
                     android:paddingBottom="10dp"
                     android:src="@drawable/staccato_character"
                     android:visibility="@{viewModel.memory.staccatos.empty ? View.VISIBLE : View.GONE}"
