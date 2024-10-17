@@ -44,18 +44,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_timeline_memory_period"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textAppearance="@style/Typography.Body4"
-            app:layout_constraintStart_toStartOf="@id/divider_timeline"
-            app:layout_constraintTop_toBottomOf="@id/tv_timeline_memory_title"
-            bind:endAt="@{memory.endAt}"
-            bind:startAt="@{memory.startAt}"
-            tools:text="2024.7.23 ~ 2024.9.30" />
-
-        <TextView
             android:id="@+id/tv_timeline_memory_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -68,6 +56,19 @@
             app:layout_constraintStart_toEndOf="@id/divider_timeline"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="제주도 가족 여행" />
+
+        <TextView
+            android:id="@+id/tv_timeline_memory_period"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="9dp"
+            android:textAppearance="@style/Typography.Body4"
+            app:layout_constraintEnd_toStartOf="@id/iv_timeline_memory_thumbnail"
+            app:layout_constraintStart_toStartOf="@id/divider_timeline"
+            app:layout_constraintTop_toBottomOf="@id/tv_timeline_memory_title"
+            bind:endAt="@{memory.endAt}"
+            bind:startAt="@{memory.startAt}"
+            tools:text="2024.7.23 ~ 2024.9.30" />
 
         <ImageView
             android:id="@+id/iv_timeline_memory_thumbnail"
