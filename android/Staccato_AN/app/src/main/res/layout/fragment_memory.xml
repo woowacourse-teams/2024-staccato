@@ -223,7 +223,7 @@
                     android:gravity="center"
                     android:paddingBottom="100dp"
                     android:text="@string/memory_staccato_empty"
-                    android:textAppearance="@style/Typography.Body2"
+                    android:textAppearance="@style/Typography.Body2.Not.Resizable"
                     android:visibility="@{viewModel.memory.staccatos.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

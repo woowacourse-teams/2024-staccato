@@ -51,7 +51,7 @@
             android:layout_height="100dp"
             android:gravity="center_horizontal"
             android:text="@string/staccato_empty_comments"
-            android:textAppearance="@style/Typography.Body2"
+            android:textAppearance="@style/Typography.Body2.Not.Resizable"
             android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
