@@ -4,4 +4,6 @@ interface MyPageMenuHandler {
     fun onPrivacyPolicyClicked()
 
     fun onFeedbackClicked()
+
+    fun onInstagramClicked()
 }

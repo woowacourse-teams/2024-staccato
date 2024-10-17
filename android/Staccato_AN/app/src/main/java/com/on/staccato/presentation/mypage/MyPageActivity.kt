@@ -53,6 +53,15 @@ class MyPageActivity :
         }
     }
 
+    override fun onInstagramClicked() {
+        val intent = Intent(ACTION_VIEW).apply { data = Uri.parse(STACCATO_INSTAGRAM_URL) }
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        } else {
+            showToast(getString(R.string.mypage_error_can_not_open_instagram_page))
+        }
+    }
+
     private fun initToolbar() {
         binding.toolbarMypage.setNavigationOnClickListener {
             finish()
@@ -100,5 +109,7 @@ class MyPageActivity :
             "https://app.websitepolicies.com/policies/view/7jel2uwv"
         private const val FEEDBACK_GOOGLE_FORM_URL =
             "https://forms.gle/fuxgta7HxDNY5KvSA"
+        private const val STACCATO_INSTAGRAM_URL =
+            "https://www.instagram.com/staccato_team/profilecard/?igsh=Y241bHoybnZmZjA5"
     }
 }
