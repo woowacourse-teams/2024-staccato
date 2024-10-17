@@ -42,7 +42,7 @@
 
         <TextView
             android:id="@+id/tv_recovery_title"
-            style="@style/Typography.Title1"
+            style="@style/Typography.Title1.Not.Resizable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -53,7 +53,7 @@
 
         <TextView
             android:id="@+id/tv_recovery_subtitle"
-            style="@style/Typography.Title1"
+            style="@style/Typography.Title1.Not.Resizable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
