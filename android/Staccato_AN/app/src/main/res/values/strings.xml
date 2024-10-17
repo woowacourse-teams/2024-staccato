@@ -30,6 +30,10 @@
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
 
+    // activity_main
+    <string name="main_mypage_btn_description">마이 페이지로 이동</string>
+    <string name="main_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
+
     // fragment_timeline
     <string name="timeline_my_timeline">나의 추억들</string>
     <string name="timeline_order">최근 생성 순</string>
