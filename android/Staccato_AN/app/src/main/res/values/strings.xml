@@ -27,6 +27,8 @@
     <string name="all_webview_failure">웹 브라우저를 띄울 수 없습니다.</string>
     <string name="all_clipboard_copy">클립보드에 복사했어요!</string>
     <string name="all_staccato_main_character">스타카토 메인 캐릭터</string>
+    <string name="all_delete_image">사진 삭제 버튼</string>
+    <string name="all_photo_attach_icon_description">사진 첨부란</string>
 
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
@@ -142,7 +144,6 @@
     // dialog_delete
     <string name="delete_title">정말 삭제할까요?</string>
     <string name="delete_description">삭제를 누르면 복구할 수 없어요!</string>
-    <string name="all_delete_image">이미지 삭제 버튼</string>
 
     // menu_comment
     <string name="menu_comment_delete">삭제하기</string>
