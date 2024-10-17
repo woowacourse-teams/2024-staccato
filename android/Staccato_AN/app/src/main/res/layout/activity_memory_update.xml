@@ -147,7 +147,7 @@
                     android:id="@+id/tv_memory_update_description"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="25dp"
                     android:text="@string/memory_creation_description"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_memory_update_title" />
@@ -172,7 +172,7 @@
                     android:id="@+id/tv_memory_update_period_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="25dp"
                     android:text="@string/memory_creation_period_setting"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_memory_update_description" />
@@ -196,30 +196,20 @@
 
                 <TextView
                     android:id="@+id/tv_memory_update_period_description"
-                    style="@style/Typography.Body4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/HintTextStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="5dp"
                     android:text="@string/memory_creation_period_descripton"
-                    android:textColor="@color/gray3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_period_title" />
 
                 <TextView
                     android:id="@+id/tv_memory_update_period_selection"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
+                    style="@style/BackgroundedTextStyle"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/shape_all_gray1_8dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:onClick="@{() -> handler.onPeriodSelectionClicked()}"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12.5dp"
-                    android:textAppearance="@style/Typography.Body1"
-                    android:textColor="@color/gray3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_update_period_description"
