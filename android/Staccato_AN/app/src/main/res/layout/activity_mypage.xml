@@ -156,17 +156,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_mypage_menu" />
 
-        <ImageButton
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:onClick="@{() -> menuHandler.onInstagramClicked()}"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_mypage_app_version"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_mypage_menu"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:contentDescription="@string/all_image_content_description"
-            android:layout_marginEnd="24dp"
-            android:onClick="@{() -> menuHandler.onInstagramClicked()}"
-            app:layout_constraintTop_toTopOf="@id/tv_mypage_app_version"
-            app:layout_constraintBottom_toBottomOf="@id/tv_mypage_app_version"
-            android:background="@drawable/icon_instagram" />
+            app:layout_constraintTop_toTopOf="@id/tv_mypage_app_version">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/icon_instagram"
+                android:contentDescription="@string/all_image_content_description" />
+
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
