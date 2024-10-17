@@ -28,12 +28,23 @@
         <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">17sp</item>
         <item name="lineHeight">20dp</item>
-        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
+    <style name="Typography.Body1.Not.Resizable" parent="Typography">
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">17dp</item>
+        <item name="lineHeight">20dp</item>
     </style>
 
     <style name="Typography.Body2" parent="Typography">
         <item name="fontFamily">@font/pretendard_medium</item>
         <item name="android:textSize">15sp</item>
+        <item name="lineHeight">20dp</item>
+    </style>
+
+    <style name="Typography.Body2.Not.Resizable" parent="Typography">
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">15dp</item>
         <item name="lineHeight">20dp</item>
     </style>
 
@@ -43,9 +54,20 @@
         <item name="lineHeight">18dp</item>
     </style>
 
+    <style name="Typography.Body3.Not.Resizable" parent="Typography">
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">14dp</item>
+        <item name="lineHeight">18dp</item>
+    </style>
+
     <style name="Typography.Body4" parent="Typography">
         <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="Typography.Body4.Not.Resizable" parent="Typography">
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">13dp</item>
     </style>
 
     <style name="Typography.Body5" parent="Typography">
@@ -53,12 +75,15 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <style name="Typography.Body5.Not.Resizable" parent="Typography">
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">10dp</item>
+    </style>
+
     <style name="CustomAutocompleteTextAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/staccato_black</item>
         <item name="android:textColorHint">@color/gray3</item>
-        <item name="fontFamily">@font/pretendard_regular</item>
-        <item name="android:textSize">17sp</item>
-        <item name="lineHeight">20dp</item>
-        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textAppearance">@style/Typography.Body1.Not.Resizable</item>
+        <item name="android:textSize">17dp</item>
     </style>
 </resources>
