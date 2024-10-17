@@ -119,12 +119,30 @@
             app:layout_constraintTop_toBottomOf="@id/divider_mypage_profile" />
 
         <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider_mypage_menu"
+            android:id="@+id/divider_mypage_feedback"
             style="@style/DividerStyle"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_mypage_menu_privacy_policy" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_mypage_menu_feedback"
+            style="@style/ButtonStyle.MyPage"
+            android:layout_marginTop="10dp"
+            android:onClick="@{() -> menuHandler.onFeedbackClicked()}"
+            android:text="@string/mypage_feedback"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_mypage_feedback" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_mypage_menu"
+            style="@style/DividerStyle"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_mypage_menu_feedback" />
 
         <TextView
             style="@style/Typography.Body4"
