@@ -85,6 +85,11 @@
     <string name="staccato_empty_comments">코멘트가 없어요! 코멘트를 달아보세요.</string>
     <string name="staccato_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
     <string name="staccato_comment_has_been_deleted">코멘트를 삭제했어요!</string>
+    <string name="staccato_feeling_selection_description">스타카토 기분</string>
+    <string name="staccato_feeling_selection_comment_send_btn_description">코멘트 전송</string>
+
+    // item_viewpager_photo
+    <string name="viewpager_photo_description">스타카토 사진</string>
 
     // activity_staccato_creation / activity_staccato_update
     <string name="staccato_creation_photo_drag_hint">*꾹 눌러 사진 순서를 바꿔 보세요</string>

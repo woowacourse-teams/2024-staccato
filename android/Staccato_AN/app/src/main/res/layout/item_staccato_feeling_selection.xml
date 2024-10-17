@@ -16,7 +16,7 @@
 
     <ImageView
         style="@style/FeelingStyle"
-        android:contentDescription="@string/all_image_content_description"
+        android:contentDescription="@string/staccato_feeling_selection_description"
         android:onClick="@{() -> feelingHandler.onFeelingClicked(feeling)}"
         bind:colorImageResource="@{feeling.colorSrc}"
         bind:grayImageResource="@{feeling.graySrc}"
