@@ -1,5 +1,6 @@
 package com.staccato.moment.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.comment.repository.CommentRepository;
@@ -11,6 +12,7 @@ import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
@@ -28,6 +30,7 @@ public class MomentService {
     private final MomentRepository momentRepository;
     private final MemoryRepository memoryRepository;
     private final CommentRepository commentRepository;
+    private final MomentImageRepository momentImageRepository;
 
     @Transactional
     public MomentIdResponse createMoment(MomentRequest momentRequest, Member member) {
@@ -82,7 +85,8 @@ public class MomentService {
     public void deleteMomentById(long momentId, Member member) {
         momentRepository.findById(momentId).ifPresent(moment -> {
             validateMemoryOwner(moment.getMemory(), member);
-            commentRepository.deleteAllByMomentId(momentId);
+            commentRepository.deleteAllByMomentIdInBatch(List.of(momentId));
+            momentImageRepository.deleteAllByMomentIdInBatch(List.of(momentId));
             momentRepository.deleteById(momentId);
         });
     }

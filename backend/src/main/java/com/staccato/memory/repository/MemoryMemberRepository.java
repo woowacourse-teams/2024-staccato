@@ -2,11 +2,10 @@ package com.staccato.memory.repository;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.MemoryMember;
 
@@ -21,4 +20,8 @@ public interface MemoryMemberRepository extends JpaRepository<MemoryMember, Long
     List<MemoryMember> findAllByMemberIdAndIncludingDate(@Param("memberId") long memberId, @Param("date") LocalDate date);
 
     boolean existsByMemberAndMemoryTitle(Member member, String title);
+
+    @Modifying
+    @Query("DELETE FROM MemoryMember mm WHERE mm.memory.id = :memoryId")
+    void deleteAllByMemoryIdInBatch(@Param("memoryId") Long memoryId);
 }
