@@ -74,11 +74,11 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:orientation="horizontal"
-                    android:visibility="@{staccatoViewModel.staccatoDetail.staccatoImageUrls.isEmpty() ? View.GONE : View.VISIBLE}"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    bind:visibleOrGone="@{!staccatoViewModel.staccatoDetail.staccatoImageUrls.isEmpty()}"
                     tools:listitem="@layout/item_viewpage_photo"
                     tools:visibility="gone" />
 
@@ -88,7 +88,6 @@
                     android:layout_height="10dp"
                     android:layout_marginTop="10dp"
                     android:background="#00000000"
-                    android:visibility="@{staccatoViewModel.staccatoDetail.staccatoImageUrls.size > 1 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/vp_staccato_photo_horizontal"
@@ -96,6 +95,7 @@
                     app:tabGravity="center"
                     app:tabIndicatorFullWidth="false"
                     app:tabIndicatorHeight="0dp"
+                    bind:visibleOrGone="@{staccatoViewModel.staccatoDetail.staccatoImageUrls.size > 1}"
                     tools:visibility="gone" />
 
                 <TextView
@@ -190,12 +190,12 @@
                     android:contentDescription="@string/all_image_content_description"
                     android:paddingBottom="10dp"
                     android:src="@drawable/staccato_character"
-                    android:visibility="@{commentsViewModel.isEmpty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toTopOf="@id/tv_staccato_comments_empty"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_staccato_comments_title"
                     app:layout_constraintVertical_chainStyle="packed"
+                    bind:visibleOrGone="@{commentsViewModel.isEmpty}"
                     tools:visibility="visible" />
 
                 <TextView
@@ -205,11 +205,11 @@
                     android:gravity="center_horizontal"
                     android:text="@string/staccato_empty_comments"
                     android:textAppearance="@style/Typography.Body2"
-                    android:visibility="@{commentsViewModel.isEmpty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_staccato_comments_default_empty"
+                    bind:visibleOrGone="@{commentsViewModel.isEmpty}"
                     tools:visibility="visible" />
 
                 <androidx.recyclerview.widget.RecyclerView
