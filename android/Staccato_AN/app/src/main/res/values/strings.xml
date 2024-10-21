@@ -91,6 +91,12 @@
     <string name="staccato_feeling_selection_description">스타카토 기분</string>
     <string name="staccato_feeling_selection_comment_send_btn_description">코멘트 전송</string>
 
+    // item_staccato_my_comment
+    <string name="staccato_my_comment_profile_image_description">나의 프로필 이미지</string>
+
+    // item_staccato_others_comment
+    <string name="staccato_others_comment_profile_image_description">친구 프로필 이미지</string>
+
     // item_viewpager_photo
     <string name="viewpager_photo_description">스타카토 사진</string>
 
