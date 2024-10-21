@@ -21,14 +21,26 @@ class StaccatoDefaultRepository
         override suspend fun getStaccatos(): ResponseResult<List<StaccatoLocation>> {
             return when (val responseResult = remoteDataSource.fetchStaccatos()) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
-                is ResponseResult.ServerError -> ResponseResult.ServerError(responseResult.status, responseResult.message)
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
                 is ResponseResult.Success -> ResponseResult.Success(responseResult.data.staccatoLocationResponses.map { it.toDomain() })
             }
         }
 
-        override suspend fun getStaccato(staccatoId: Long): Result<Staccato> {
-            return runCatching {
-                remoteDataSource.fetchStaccato(staccatoId).toDomain()
+        override suspend fun getStaccato(staccatoId: Long): ResponseResult<Staccato> {
+            return when (val responseResult = remoteDataSource.fetchStaccato(staccatoId)) {
+                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
             }
         }
 
@@ -41,20 +53,30 @@ class StaccatoDefaultRepository
             address: String,
             visitedAt: LocalDateTime,
             staccatoImageUrls: List<String>,
-        ): Result<StaccatoCreationResponse> {
-            return runCatching {
-                remoteDataSource.createStaccato(
-                    StaccatoCreationRequest(
-                        memoryId = memoryId,
-                        staccatoTitle = staccatoTitle,
-                        placeName = placeName,
-                        latitude = latitude,
-                        longitude = longitude,
-                        address = address,
-                        visitedAt = visitedAt.toString(),
-                        staccatoImageUrls = staccatoImageUrls,
-                    ),
-                )
+        ): ResponseResult<StaccatoCreationResponse> {
+            return when (
+                val responseResult =
+                    remoteDataSource.createStaccato(
+                        StaccatoCreationRequest(
+                            memoryId = memoryId,
+                            staccatoTitle = staccatoTitle,
+                            placeName = placeName,
+                            latitude = latitude,
+                            longitude = longitude,
+                            address = address,
+                            visitedAt = visitedAt.toString(),
+                            staccatoImageUrls = staccatoImageUrls,
+                        ),
+                    )
+            ) {
+                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
             }
         }
 
@@ -68,40 +90,67 @@ class StaccatoDefaultRepository
             visitedAt: LocalDateTime,
             memoryId: Long,
             staccatoImageUrls: List<String>,
-        ): Result<Unit> {
-            return runCatching {
-                remoteDataSource.updateStaccato(
-                    staccatoId = staccatoId,
-                    staccatoUpdateRequest =
-                        StaccatoUpdateRequest(
-                            staccatoTitle = staccatoTitle,
-                            placeName = placeName,
-                            address = address,
-                            latitude = latitude,
-                            longitude = longitude,
-                            visitedAt = visitedAt.toString(),
-                            memoryId = memoryId,
-                            momentImageUrls = staccatoImageUrls,
-                        ),
-                )
+        ): ResponseResult<Unit> {
+            return when (
+                val responseResult =
+                    remoteDataSource.updateStaccato(
+                        staccatoId = staccatoId,
+                        staccatoUpdateRequest =
+                            StaccatoUpdateRequest(
+                                staccatoTitle = staccatoTitle,
+                                placeName = placeName,
+                                address = address,
+                                latitude = latitude,
+                                longitude = longitude,
+                                visitedAt = visitedAt.toString(),
+                                memoryId = memoryId,
+                                momentImageUrls = staccatoImageUrls,
+                            ),
+                    )
+            ) {
+                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
             }
         }
 
-        override suspend fun deleteStaccato(staccatoId: Long): Result<Unit> {
-            return runCatching {
-                remoteDataSource.deleteStaccato(staccatoId)
+        override suspend fun deleteStaccato(staccatoId: Long): ResponseResult<Unit> {
+            return when (val responseResult = remoteDataSource.deleteStaccato(staccatoId)) {
+                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
             }
         }
 
         override suspend fun updateFeeling(
             staccatoId: Long,
             feeling: String,
-        ): Result<Unit> {
-            return runCatching {
-                remoteDataSource.updateFeeling(
-                    staccatoId = staccatoId,
-                    feelingRequest = FeelingRequest(feeling),
-                )
+        ): ResponseResult<Unit> {
+            return when (
+                val responseResult =
+                    remoteDataSource.updateFeeling(
+                        staccatoId = staccatoId,
+                        feelingRequest = FeelingRequest(feeling),
+                    )
+            ) {
+                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
             }
         }
 
