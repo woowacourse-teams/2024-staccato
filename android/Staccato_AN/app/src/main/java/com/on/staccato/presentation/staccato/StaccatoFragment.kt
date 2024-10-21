@@ -51,7 +51,7 @@ class StaccatoFragment :
         loadComments()
         observeStaccatoViewModel()
         observeCommentsViewModel()
-        setStaccatoIdToFeelingFragment(savedInstanceState)
+        setStaccatoFeelingFragment(savedInstanceState)
     }
 
     override fun onDeleteClicked() {
@@ -183,21 +183,30 @@ class StaccatoFragment :
             }
         }
 
-    private fun setStaccatoIdToFeelingFragment(savedInstanceState: Bundle?) {
+    private fun setStaccatoFeelingFragment(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
-            val bundle =
-                bundleOf(STACCATO_ID_KEY to staccatoId)
-            val staccatoFeelingSelectionFragment =
-                StaccatoFeelingSelectionFragment().apply {
-                    arguments = bundle
-                }
-            childFragmentManager.beginTransaction()
-                .replace(
-                    R.id.container_staccato_feeling_selection,
-                    staccatoFeelingSelectionFragment,
-                )
-                .commit()
+            val staccatoFeelingSelectionFragment = createFeelingSelectionFragment()
+            addFeelingSelectionFragment(staccatoFeelingSelectionFragment)
         }
+    }
+
+    private fun createFeelingSelectionFragment(): StaccatoFeelingSelectionFragment {
+        val bundle =
+            bundleOf(STACCATO_ID_KEY to staccatoId)
+        val staccatoFeelingSelectionFragment =
+            StaccatoFeelingSelectionFragment().apply {
+                arguments = bundle
+            }
+        return staccatoFeelingSelectionFragment
+    }
+
+    private fun addFeelingSelectionFragment(staccatoFeelingSelectionFragment: StaccatoFeelingSelectionFragment) {
+        childFragmentManager.beginTransaction()
+            .replace(
+                R.id.container_staccato_feeling_selection,
+                staccatoFeelingSelectionFragment,
+            )
+            .commit()
     }
 
     companion object {
