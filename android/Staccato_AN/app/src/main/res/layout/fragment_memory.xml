@@ -56,7 +56,7 @@
                     android:id="@+id/iv_memory_thumbnail"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:contentDescription="@string/memory_thumbnail_photo_description"
+                    android:contentDescription="@string/all_memory_thumbnail_photo_description"
                     android:scaleType="centerCrop"
                     app:layout_constraintDimensionRatio="3:2"
                     app:layout_constraintEnd_toEndOf="parent"
