@@ -40,17 +40,17 @@ security:
 cloud:
   aws:
     s3:
-      bucket: techcourse-project-2024
-      endpoint: https://techcourse-project-2024.s3.ap-northeast-2.amazonaws.com
+      bucket: example
+      endpoint: example
     cloudfront:
-      endpoint: https://d25aribbn0gp8k.cloudfront.net
+      endpoint: example
     region:
-      static: ap-northeast-2
+      static: example
     stack:
       auto: false
 image:
   folder:
-    name: image/
+    name: example
 
 management:
   server:
