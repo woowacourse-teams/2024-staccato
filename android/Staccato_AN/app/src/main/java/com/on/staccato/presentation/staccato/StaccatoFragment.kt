@@ -108,17 +108,27 @@ class StaccatoFragment :
     }
 
     private fun observeStaccatoViewModel() {
+        observeStaccatoDetail()
+        observeStaccatoLoadingError()
+        observeStaccatoDelete()
+    }
+
+    private fun observeStaccatoDetail() {
         staccatoViewModel.staccatoDetail.observe(viewLifecycleOwner) { staccatoDetail ->
             pagePhotoAdapter.submitList(staccatoDetail.staccatoImageUrls)
         }
+    }
 
+    private fun observeStaccatoLoadingError() {
         staccatoViewModel.isError.observe(viewLifecycleOwner) { isError ->
             if (isError) {
                 showToast(getString(R.string.staccato_loading_failure))
                 findNavController().popBackStack()
             }
         }
+    }
 
+    private fun observeStaccatoDelete() {
         staccatoViewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
             if (isDeleted) {
                 sharedViewModel.setStaccatosHasUpdated()
@@ -128,16 +138,26 @@ class StaccatoFragment :
     }
 
     private fun observeCommentsViewModel() {
+        observeComments()
+        observeDeletingComment()
+        observeSendingComment()
+    }
+
+    private fun observeComments() {
         commentsViewModel.comments.observe(viewLifecycleOwner) { comments ->
             commentsAdapter.updateComments(comments)
         }
+    }
 
+    private fun observeDeletingComment() {
         commentsViewModel.isDeleteSuccess.observe(viewLifecycleOwner) { isDeleted ->
             if (isDeleted) {
                 showToast(getString(R.string.staccato_comment_has_been_deleted))
             }
         }
+    }
 
+    private fun observeSendingComment() {
         commentsViewModel.isSendingSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 scrollToBottom()
