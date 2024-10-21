@@ -49,22 +49,6 @@ class StaccatoCommentsViewModel
             }
         }
 
-        private fun sendComment() {
-            commentInput.value?.let {
-                val newComment = NewComment(staccatoId, it)
-                commentInput.value = ""
-                viewModelScope.launch {
-                    commentRepository.createComment(newComment)
-                        .onSuccess {
-                            fetchComments()
-                            _isSendingSuccess.postValue(true)
-                        }
-                        .onServerError(::handleServerError)
-                        .onException(::handleException)
-                }
-            }
-        }
-
         override fun onUpdateButtonClicked(commentId: Long) {
             Log.d("hodu", "not implemented yet")
         }
@@ -93,6 +77,22 @@ class StaccatoCommentsViewModel
                     }
                     .onServerError(::handleServerError)
                     .onException(::handleException)
+            }
+        }
+
+        private fun sendComment() {
+            commentInput.value?.let {
+                val newComment = NewComment(staccatoId, it)
+                commentInput.value = ""
+                viewModelScope.launch {
+                    commentRepository.createComment(newComment)
+                        .onSuccess {
+                            fetchComments()
+                            _isSendingSuccess.postValue(true)
+                        }
+                        .onServerError(::handleServerError)
+                        .onException(::handleException)
+                }
             }
         }
 
