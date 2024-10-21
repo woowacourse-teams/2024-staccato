@@ -137,6 +137,9 @@
     <string name="mypage_error_changing_profile_image">프로필 이미지 변경에 실패했습니다.</string>
     <string name="mypage_error_not_found_browser">"피드백 페이지를 열 수 있는 브라우저가 없어요"</string>
     <string name="mypage_error_can_not_open_instagram_page">"인스타그램을 열 수 없어요"</string>
+    <string name="mypage_user_profile_image_description">사용자 프로필 이미지</string>
+    <string name="mypage_update_profile_image_description">프로필 이미지 수정</string>
+    <string name="mypage_navigate_to_instagram_btn_description">인스타그램으로 이동</string>
 
     // fragment_photo_attach
     <string name="photo_attach_title">사진을 등록해 주세요</string>
