@@ -178,8 +178,8 @@ class StaccatoFragment :
             override fun onGlobalLayout() {
                 post {
                     fullScroll(ScrollView.FOCUS_DOWN)
+                    viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
-                viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         }
 
