@@ -3,6 +3,7 @@ package com.on.staccato.presentation.util
 import android.content.Context
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 
@@ -16,4 +17,19 @@ fun Fragment.showToast(message: String) {
 
 fun View.showSnackBar(message: String) {
     Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
+}
+
+fun View.showSnackBarWithAction(
+    message: String,
+    @StringRes actionLabel: Int,
+    onAction: () -> Unit,
+    length: Int,
+) {
+    val snackBar =
+        Snackbar.make(this, message, length).apply {
+            setAction(actionLabel) {
+                onAction()
+            }
+        }
+    snackBar.show()
 }
