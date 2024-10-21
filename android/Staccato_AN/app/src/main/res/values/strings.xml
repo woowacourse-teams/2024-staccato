@@ -17,7 +17,6 @@
     <string name="all_date_dots_format">%s. %s. %s</string>
     <string name="all_date_kr_format">%s년 %s월 %s일</string>
     <string name="all_date_time_am_pm_kr_format">%s년 %s월 %s일  %s %s시</string>
-    <string name="all_image_content_description">사진</string>
     <string name="all_default_not_supported">아직 지원하지 않는 기능이에요.</string>
     <string name="all_required_mark">*</string>
     <string name="all_setting">설정</string>
@@ -59,6 +58,9 @@
     <string name="memory_delete_complete">추억이 삭제되었습니다.</string>
     <string name="memory_staccato_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
     <string name="memory_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
+
+    // item_mates
+    <string name="mates_profile_image_description">함께 한 사람 프로필 이미지</string>
 
     // item_staccatos
     <string name="staccatos_calendar_icon_description">달력 아이콘</string>
