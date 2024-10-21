@@ -104,8 +104,7 @@ class StaccatoFragment :
     }
 
     private fun loadComments() {
-        commentsViewModel.setMemoryId(staccatoId)
-        commentsViewModel.fetchComments()
+        commentsViewModel.fetchComments(staccatoId)
     }
 
     private fun observeStaccatoViewModel() {

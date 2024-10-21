@@ -31,7 +31,7 @@ class StaccatoCommentsViewModel
 
         val isEmpty: LiveData<Boolean> = _comments.map { it.isEmpty() }
 
-        val commentInput = MutableLiveData<String>("")
+        val commentInput = MutableLiveData("")
 
         private val _isSendingSuccess = MutableSingleLiveData(false)
         val isSendingSuccess: SingleLiveData<Boolean>
@@ -57,7 +57,7 @@ class StaccatoCommentsViewModel
             viewModelScope.launch {
                 commentRepository.deleteComment(commentId)
                     .onSuccess {
-                        fetchComments()
+                        fetchComments(staccatoId)
                         _isDeleteSuccess.postValue(true)
                     }
                     .onServerError(::handleServerError)
@@ -65,19 +65,20 @@ class StaccatoCommentsViewModel
             }
         }
 
-        fun setMemoryId(id: Long) {
-            staccatoId = id
-        }
-
-        fun fetchComments() {
+        fun fetchComments(id: Long) {
+            setStaccatoId(id)
             viewModelScope.launch {
-                commentRepository.fetchComments(staccatoId)
+                commentRepository.fetchComments(id)
                     .onSuccess { comments ->
                         setComments(comments.map { it.toCommentUiModel() })
                     }
                     .onServerError(::handleServerError)
                     .onException(::handleException)
             }
+        }
+
+        private fun setStaccatoId(id: Long) {
+            if (staccatoId == STACCATO_DEFAULT_ID) { staccatoId = id }
         }
 
         private fun sendComment() {
@@ -87,7 +88,7 @@ class StaccatoCommentsViewModel
                 viewModelScope.launch {
                     commentRepository.createComment(newComment)
                         .onSuccess {
-                            fetchComments()
+                            fetchComments(staccatoId)
                             _isSendingSuccess.postValue(true)
                         }
                         .onServerError(::handleServerError)
