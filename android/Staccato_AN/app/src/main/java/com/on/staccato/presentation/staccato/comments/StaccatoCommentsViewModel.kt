@@ -78,7 +78,9 @@ class StaccatoCommentsViewModel
         }
 
         private fun setStaccatoId(id: Long) {
-            if (staccatoId == STACCATO_DEFAULT_ID) { staccatoId = id }
+            if (staccatoId == STACCATO_DEFAULT_ID) {
+                staccatoId = id
+            }
         }
 
         private fun sendComment() {
