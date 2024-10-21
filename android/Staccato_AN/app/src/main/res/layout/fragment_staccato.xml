@@ -245,22 +245,26 @@
             android:inputType="textMultiLine"
             android:maxLength="500"
             android:maxLines="10"
+            android:paddingEnd="55dp"
             android:text="@={commentsViewModel.commentInput}"
+            android:textAppearance="@style/Typography.Body3"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/iv_staccato_comments_send"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
             android:id="@+id/iv_staccato_comments_send"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/selector_comment_sendable"
             android:backgroundTint="@null"
             android:contentDescription="@string/all_image_content_description"
             android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
+            android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="@id/et_staccato_comments_input"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/et_staccato_comments_input"
+            app:layout_constraintTop_toTopOf="@id/et_staccato_comments_input"
             bind:sendButtonEnabled="@{commentsViewModel.commentInput}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
