@@ -3,13 +3,16 @@ package com.on.staccato.presentation.staccatocreation.viewmodel
 import android.content.Context
 import android.location.Location
 import android.net.Uri
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.ApiResponseHandler.onException
+import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
+import com.on.staccato.data.dto.Status
 import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
@@ -153,7 +156,8 @@ class StaccatoCreationViewModel
                         if (memoryCandidates.memoryCandidate.isNotEmpty()) {
                             initSelectedMemoryAndVisitedAt(memoryId, memoryCandidates.memoryCandidate)
                         }
-                    }
+                    }.onException(::handleException)
+                    .onServerError(::handleError)
             }
         }
 
@@ -227,10 +231,8 @@ class StaccatoCreationViewModel
                     staccatoImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
                 ).onSuccess { response ->
                     _createdStaccatoId.postValue(response.staccatoId)
-                }.onFailure {
-                    _isPosting.value = false
-                    _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")
-                }
+                }.onException(::handleException)
+                    .onServerError(::handleError)
             }
 
         private fun createPhotoUploadJob(
@@ -241,10 +243,8 @@ class StaccatoCreationViewModel
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
-                }
-                .onException { _, message ->
-                    _errorMessage.postValue(message)
-                }
+                }.onException(::handleException)
+                .onServerError(::handleError)
         }
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
@@ -259,6 +259,39 @@ class StaccatoCreationViewModel
         ) {
             val updatedPhoto = targetPhoto.updateUrl(url)
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
+        }
+
+        private fun handleError(
+            status: Status,
+            errorMessage: String,
+        ) {
+            _isPosting.value = false
+            _errorMessage.postValue(errorMessage)
+            when (status) {
+                is Status.Message ->
+                    Log.e(
+                        this::class.java.simpleName,
+                        "Error Occurred | status: ${status.message}, message: $errorMessage",
+                    )
+
+                is Status.Code ->
+                    Log.e(
+                        this::class.java.simpleName,
+                        "Error Occurred | status: ${status.code}, message: $errorMessage",
+                    )
+            }
+        }
+
+        private fun handleException(
+            e: Throwable,
+            errorMessage: String,
+        ) {
+            _isPosting.value = false
+            _errorMessage.postValue(errorMessage)
+            Log.e(
+                this::class.java.simpleName,
+                "Exception Caught | throwable: $e, message: $errorMessage",
+            )
         }
 
         companion object {

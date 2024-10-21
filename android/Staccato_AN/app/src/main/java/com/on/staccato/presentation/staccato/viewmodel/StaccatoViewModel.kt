@@ -1,9 +1,14 @@
 package com.on.staccato.presentation.staccato.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.on.staccato.data.ApiResponseHandler.onException
+import com.on.staccato.data.ApiResponseHandler.onServerError
+import com.on.staccato.data.ApiResponseHandler.onSuccess
+import com.on.staccato.data.dto.Status
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -36,25 +41,61 @@ class StaccatoViewModel
         private val _isError = MutableSingleLiveData(false)
         val isError: SingleLiveData<Boolean> get() = _isError
 
+        private val _errorMessage = MutableSingleLiveData<String>()
+        val errorMessage: SingleLiveData<String> get() = _errorMessage
+
         fun loadStaccato(staccatoId: Long) {
             fetchStaccatoData(staccatoId)
         }
 
         fun deleteStaccato(staccatoId: Long) =
             viewModelScope.launch {
-                staccatoRepository.deleteStaccato(staccatoId).onSuccess {
-                    _isDeleted.postValue(true)
-                }
+                staccatoRepository.deleteStaccato(staccatoId)
+                    .onSuccess {
+                        _isDeleted.postValue(true)
+                    }.onException(::handleException)
+                    .onServerError(::handleError)
             }
 
         private fun fetchStaccatoData(staccatoId: Long) {
             viewModelScope.launch {
-                staccatoRepository.getStaccato(staccatoId).onSuccess { staccato ->
-                    _staccatoDetail.value = staccato.toStaccatoDetailUiModel()
-                    _feeling.value = staccato.feeling
-                }.onFailure {
-                    _isError.postValue(true)
-                }
+                staccatoRepository.getStaccato(staccatoId)
+                    .onSuccess { staccato ->
+                        _staccatoDetail.value = staccato.toStaccatoDetailUiModel()
+                        _feeling.value = staccato.feeling
+                    }.onException(::handleException)
+                    .onServerError(::handleError)
             }
+        }
+
+        private fun handleError(
+            status: Status,
+            errorMessage: String,
+        ) {
+            _errorMessage.postValue(errorMessage)
+            when (status) {
+                is Status.Message ->
+                    Log.e(
+                        this::class.java.simpleName,
+                        "Error Occurred | status: ${status.message}, message: $errorMessage",
+                    )
+
+                is Status.Code ->
+                    Log.e(
+                        this::class.java.simpleName,
+                        "Error Occurred | status: ${status.code}, message: $errorMessage",
+                    )
+            }
+        }
+
+        private fun handleException(
+            e: Throwable,
+            errorMessage: String,
+        ) {
+            _errorMessage.postValue(errorMessage)
+            Log.e(
+                this::class.java.simpleName,
+                "Exception Caught | throwable: $e, message: $errorMessage",
+            )
         }
     }

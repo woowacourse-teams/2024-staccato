@@ -3,13 +3,16 @@ package com.on.staccato.presentation.staccatoupdate.viewmodel
 import android.content.Context
 import android.location.Location
 import android.net.Uri
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.ApiResponseHandler.onException
+import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
+import com.on.staccato.data.dto.Status
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.repository.ImageRepository
@@ -178,13 +181,13 @@ class StaccatoUpdateViewModel
 
         fun updateStaccato(staccatoId: Long) {
             viewModelScope.launch {
-                val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleError()
-                val placeNameValue = placeName.value ?: return@launch handleError()
-                val addressValue = address.value ?: return@launch handleError()
-                val latitudeValue = latitude.value ?: return@launch handleError()
-                val longitudeValue = longitude.value ?: return@launch handleError()
-                val visitedAtValue = selectedVisitedAt.value ?: return@launch handleError()
-                val memoryIdValue = selectedMemory.value?.memoryId ?: return@launch handleError()
+                val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleException()
+                val placeNameValue = placeName.value ?: return@launch handleException()
+                val addressValue = address.value ?: return@launch handleException()
+                val latitudeValue = latitude.value ?: return@launch handleException()
+                val longitudeValue = longitude.value ?: return@launch handleException()
+                val visitedAtValue = selectedVisitedAt.value ?: return@launch handleException()
+                val memoryIdValue = selectedMemory.value?.memoryId ?: return@launch handleException()
                 val staccatoImageUrlsValue =
                     currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                         ?: emptyList()
@@ -201,9 +204,8 @@ class StaccatoUpdateViewModel
                     staccatoImageUrls = staccatoImageUrlsValue,
                 ).onSuccess {
                     _isUpdateCompleted.postValue(true)
-                }.onFailure { e ->
-                    handleError(e.message)
-                }
+                }.onException(::handleException)
+                    .onServerError(::handleError)
             }
         }
 
@@ -225,9 +227,8 @@ class StaccatoUpdateViewModel
                                 staccato.startAt,
                                 staccato.endAt,
                             )
-                    }.onFailure { e ->
-                        _errorMessage.postValue(e.message ?: "알 수 없는 오류가 발생했습니다.")
-                    }
+                    }.onException(::handleException)
+                    .onServerError(::handleError)
             }
         }
 
@@ -236,7 +237,8 @@ class StaccatoUpdateViewModel
                 timelineRepository.getMemoryCandidates()
                     .onSuccess { memoryCandidates ->
                         _memoryCandidates.value = memoryCandidates
-                    }
+                    }.onException(::handleException)
+                    .onServerError(::handleError)
             }
         }
 
@@ -253,10 +255,8 @@ class StaccatoUpdateViewModel
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
-                }
-                .onException { _, message ->
-                    _errorMessage.postValue(message)
-                }
+                }.onException(::handleException)
+                .onServerError(::handleError)
         }
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
@@ -273,13 +273,36 @@ class StaccatoUpdateViewModel
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
         }
 
-        private fun handleError() {
+        private fun handleError(
+            status: Status,
+            errorMessage: String,
+        ) {
             _isPosting.value = false
-            _errorMessage.postValue("알 수 없는 오류가 발생했습니다.")
+            _errorMessage.postValue(errorMessage)
+            when (status) {
+                is Status.Message ->
+                    Log.e(
+                        this::class.java.simpleName,
+                        "Error Occurred | status: ${status.message}, message: $errorMessage",
+                    )
+
+                is Status.Code ->
+                    Log.e(
+                        this::class.java.simpleName,
+                        "Error Occurred | status: ${status.code}, message: $errorMessage",
+                    )
+            }
         }
 
-        private fun handleError(errorMessage: String?) {
+        private fun handleException(
+            e: Throwable = IllegalArgumentException(),
+            errorMessage: String = "필수 값을 모두 입력해 주세요",
+        ) {
             _isPosting.value = false
-            _errorMessage.postValue(errorMessage ?: "알 수 없는 오류가 발생했습니다.")
+            _errorMessage.postValue(errorMessage)
+            Log.e(
+                this::class.java.simpleName,
+                "Exception Caught | throwable: $e, message: $errorMessage",
+            )
         }
     }
