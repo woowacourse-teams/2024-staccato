@@ -48,6 +48,6 @@ class TimelineDefaultRepository
         }
 
         companion object {
-            private const val EXCEPTION_ERROR_MESSAGE = "예기치 못한 오류입니다.\n잠시 후에 다시 시도해주세요."
+            private const val EXCEPTION_ERROR_MESSAGE = "네트워크 상태가 불안정 합니다."
         }
     }
