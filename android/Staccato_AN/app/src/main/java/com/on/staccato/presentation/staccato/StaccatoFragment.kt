@@ -32,22 +32,22 @@ class StaccatoFragment :
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private val commentsViewModel: StaccatoCommentsViewModel by viewModels()
     private val commentsAdapter: CommentsAdapter by lazy { CommentsAdapter(commentsViewModel) }
-    private val staccatoId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
-    private lateinit var pagePhotoAdapter: ViewpagePhotoAdapter
+    private val pagePhotoAdapter: ViewpagePhotoAdapter by lazy { ViewpagePhotoAdapter() }
     private val deleteDialog =
         DeleteDialogFragment {
             staccatoViewModel.deleteStaccato(staccatoId)
         }
+    private val staccatoId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        setUpBindings()
+        setUpBinding()
+        setNavigationClickListener()
+        setUpViewPager()
         setUpComments()
-        initToolbarHandler()
-        initViewPagerAdapter()
-        loadStaccatoData()
+        loadStaccato()
         loadComments()
         observeStaccatoViewModel()
         observeCommentsViewModel()
@@ -72,10 +72,18 @@ class StaccatoFragment :
         )
     }
 
-    private fun setUpBindings() {
+    private fun setUpBinding() {
+        binding.lifecycleOwner = this
+        binding.toolbarHandler = this
+        binding.commentHandler = commentsViewModel
         binding.staccatoViewModel = staccatoViewModel
         binding.commentsViewModel = commentsViewModel
-        binding.commentHandler = commentsViewModel
+    }
+
+    private fun setNavigationClickListener() {
+        binding.toolbarStaccato.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun setUpComments() {
@@ -83,15 +91,7 @@ class StaccatoFragment :
         binding.rvStaccatoComments.itemAnimator = null
     }
 
-    private fun initToolbarHandler() {
-        binding.toolbarHandler = this
-        binding.toolbarStaccato.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
-    }
-
-    private fun initViewPagerAdapter() {
-        pagePhotoAdapter = ViewpagePhotoAdapter()
+    private fun setUpViewPager() {
         binding.vpStaccatoPhotoHorizontal.adapter = pagePhotoAdapter
         TabLayoutMediator(
             binding.tabStaccatoPhotoHorizontal,
@@ -99,7 +99,7 @@ class StaccatoFragment :
         ) { _, _ -> }.attach()
     }
 
-    private fun loadStaccatoData() {
+    private fun loadStaccato() {
         staccatoViewModel.loadStaccato(staccatoId)
     }
 
