@@ -10,24 +10,31 @@
 
         <variable
             name="toolbarHandler"
-            type="com.on.staccato.presentation.moment.MomentToolbarHandler" />
+            type="com.on.staccato.presentation.staccato.StaccatoToolbarHandler" />
 
         <variable
-            name="viewModel"
-            type="com.on.staccato.presentation.moment.viewmodel.MomentViewModel" />
+            name="commentHandler"
+            type="com.on.staccato.presentation.staccato.comments.CommentHandler" />
+
+        <variable
+            name="staccatoViewModel"
+            type="com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel" />
+
+        <variable
+            name="commentsViewModel"
+            type="com.on.staccato.presentation.staccato.comments.StaccatoCommentsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint_moment"
+        android:id="@+id/constraint_staccato"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         tools:context=".presentation.ui.staccato.StaccatoActivity">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar_moment"
-            style="@style/DefaultToolbarStyle"
-            android:paddingEnd="8dp"
+            android:id="@+id/toolbar_staccato"
+            style="@style/NavigationToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -41,137 +48,224 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_detail_update"
                 style="@style/ToolbarMenuStyle"
-                android:onClick="@{() -> toolbarHandler.onUpdateClicked(viewModel.momentDetail.memoryId, viewModel.momentDetail.memoryTitle)}"
+                android:onClick="@{() -> toolbarHandler.onUpdateClicked(staccatoViewModel.staccatoDetail.memoryId, staccatoViewModel.staccatoDetail.memoryTitle)}"
                 android:text="@string/all_update" />
 
         </com.google.android.material.appbar.MaterialToolbar>
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_staccato"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginBottom="12dp"
             android:overScrollMode="never"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/et_staccato_comments_input"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_moment">
+            app:layout_constraintTop_toBottomOf="@id/toolbar_staccato">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_staccato_contents"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/vp_photo_horizontal"
+                    android:id="@+id/vp_staccato_photo_horizontal"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:orientation="horizontal"
-                    android:visibility="@{viewModel.momentDetail.momentImageUrls.isEmpty() ? View.GONE : View.VISIBLE}"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:listitem="@layout/item_viewpage_photo" />
+                    bind:visibleOrGone="@{!staccatoViewModel.staccatoDetail.staccatoImageUrls.isEmpty()}"
+                    tools:listitem="@layout/item_viewpage_photo"
+                    tools:visibility="gone" />
 
                 <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_photo_horizontal"
+                    android:id="@+id/tab_staccato_photo_horizontal"
                     android:layout_width="50dp"
                     android:layout_height="10dp"
                     android:layout_marginTop="10dp"
                     android:background="#00000000"
-                    android:visibility="@{viewModel.momentDetail.momentImageUrls.size > 1 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/vp_photo_horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/vp_staccato_photo_horizontal"
                     app:tabBackground="@drawable/selector_viewpager_indicator"
                     app:tabGravity="center"
                     app:tabIndicatorFullWidth="false"
-                    app:tabIndicatorHeight="0dp" />
+                    app:tabIndicatorHeight="0dp"
+                    bind:visibleOrGone="@{staccatoViewModel.staccatoDetail.staccatoImageUrls.size > 1}"
+                    tools:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/tv_title"
+                    android:id="@+id/tv_staccato_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="20dp"
-                    android:text="@{viewModel.momentDetail.staccatoTitle}"
+                    android:text="@{staccatoViewModel.staccatoDetail.staccatoTitle}"
                     android:textAppearance="@style/Typography.Title1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tab_photo_horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/tab_staccato_photo_horizontal"
                     tools:text="스타카토 제목" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider1"
+                    android:id="@+id/divider_staccato_first"
                     style="@style/DividerStyle"
                     android:layout_marginTop="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_title" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_title" />
 
                 <TextView
-                    android:id="@+id/tv_place_name"
+                    android:id="@+id/tv_staccato_place_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="20dp"
-                    android:text="@{viewModel.momentDetail.placeName}"
+                    android:text="@{staccatoViewModel.staccatoDetail.placeName}"
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider1"
+                    app:layout_constraintTop_toBottomOf="@id/divider_staccato_first"
                     tools:text="장소 제목" />
 
                 <TextView
-                    android:id="@+id/tv_detail"
+                    android:id="@+id/tv_staccato_detail"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="@{viewModel.momentDetail.address}"
+                    android:text="@{staccatoViewModel.staccatoDetail.address}"
                     android:textAppearance="@style/Typography.Body4"
-                    app:layout_constraintStart_toStartOf="@id/tv_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_place_name"
+                    app:layout_constraintEnd_toEndOf="@id/tv_staccato_place_name"
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_place_name"
                     tools:text="상세 주소" />
 
                 <TextView
-                    android:id="@+id/tv_visited_at"
+                    android:id="@+id/tv_staccato_visited_at"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:textAppearance="@style/Typography.Body2"
-                    app:layout_constraintStart_toStartOf="@id/tv_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_detail"
-                    bind:visitedAt="@{viewModel.momentDetail.visitedAt}"
-                    tools:text="2024년 7월 15일 2시에 방문했어요!" />
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_detail"
+                    bind:visitedAtHistory="@{staccatoViewModel.staccatoDetail.visitedAt}"
+                    tools:text="2024년 7월 15일 2시에 방문했어요" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider2"
+                    android:id="@+id/divider_staccato_second"
                     style="@style/DividerStyle"
                     android:layout_marginTop="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_visited_at" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/container_moment_feeling_selection"
-                    android:layout_width="match_parent"
+                    android:id="@+id/container_staccato_feeling_selection"
+                    android:name="com.on.staccato.presentation.staccato.feeling.StaccatoFeelingSelectionFragment"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@id/tv_staccato_comments_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider2"
-                    tools:layout="@layout/fragment_moment_feeling_selection" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_staccato_second"
+                    tools:layout="@layout/fragment_staccato_feeling_selection" />
 
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/container_moment_comments"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
+                <TextView
+                    android:id="@+id/tv_staccato_comments_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/staccato_logs"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/container_moment_feeling_selection"
-                    tools:layout="@layout/fragment_moment_comments" />
+                    app:layout_constraintTop_toBottomOf="@id/container_staccato_feeling_selection" />
+
+                <ImageView
+                    android:id="@+id/iv_staccato_comments_default_empty"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:contentDescription="@string/all_image_content_description"
+                    android:paddingBottom="10dp"
+                    android:src="@drawable/staccato_character"
+                    app:layout_constraintBottom_toTopOf="@id/tv_staccato_comments_empty"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_comments_title"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    bind:visibleOrGone="@{commentsViewModel.isEmpty}"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_staccato_comments_empty"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/staccato_empty_comments"
+                    android:textAppearance="@style/Typography.Body2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_staccato_comments_default_empty"
+                    bind:visibleOrGone="@{commentsViewModel.isEmpty}"
+                    tools:visibility="visible" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_staccato_comments"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="true"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_comments_title"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:reverseLayout="false"
+                    app:stackFromEnd="true"
+                    tools:itemCount="0"
+                    tools:listitem="@layout/item_staccato_my_comment" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_staccato_comments_input"
+            style="@style/TextInputEditTextStyle"
+            android:layout_width="0dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="12dp"
+            android:hint="@string/staccato_enter_log"
+            android:imeOptions="actionNone"
+            android:inputType="textMultiLine"
+            android:maxLength="500"
+            android:maxLines="10"
+            android:paddingEnd="55dp"
+            android:text="@={commentsViewModel.commentInput}"
+            android:textAppearance="@style/Typography.Body3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_staccato_comments_send"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageButton
+            android:id="@+id/iv_staccato_comments_send"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/selector_comment_sendable"
+            android:backgroundTint="@null"
+            android:contentDescription="@string/all_image_content_description"
+            android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/et_staccato_comments_input"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_staccato_comments_input"
+            bind:sendButtonEnabled="@{commentsViewModel.commentInput}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
