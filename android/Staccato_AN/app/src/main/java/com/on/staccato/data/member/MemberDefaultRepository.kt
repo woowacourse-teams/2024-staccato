@@ -16,13 +16,13 @@ class MemberDefaultRepository
         override suspend fun fetchTokenWithRecoveryCode(recoveryCode: String): ResponseResult<String> {
             val responseResult = handleApiResponse { memberApiService.postRecoveryCode(recoveryCode) }
             return when (responseResult) {
-                is Exception -> Exception(responseResult.e, EXCEPTION_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
                 is Success -> Success(responseResult.data.token)
             }
         }
 
         companion object {
-            private const val EXCEPTION_ERROR_MESSAGE = "예기치 못한 에러가 발생했습니다. 다시 시도해주세요."
+            private const val EXCEPTION_NETWORK_ERROR_MESSAGE = "네트워크 상태가 불안정 합니다."
         }
     }
