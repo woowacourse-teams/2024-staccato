@@ -27,7 +27,7 @@ import lombok.NonNull;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Memory extends BaseEntity {
     private static final String DEFAULT_TITLE = "기본 추억";
-    private static final String DEFAULT_DESCRIPTION = "스타카토를 담을 수 있는 추억입니다.";
+    private static final String DEFAULT_DESCRIPTION = "스타카토를 추억에 담아보세요.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
