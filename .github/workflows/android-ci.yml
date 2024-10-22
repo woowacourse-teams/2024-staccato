@@ -1,4 +1,4 @@
-name: Android CI for develop-an
+name: Android CI for develop
 
 on:
   pull_request:
