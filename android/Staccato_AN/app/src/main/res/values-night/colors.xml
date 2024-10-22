@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="absolute_black">#FF000000</color>
+    <color name="absolute_white">#FFFFFFFF</color>
+    <color name="black">#FFFFFF</color>
+    <color name="black_20">#33000000</color>
+
+    <color name="white">#FF222222</color>
+    <color name="white_80">#CC000000</color>
+
+    <color name="staccato_black">#DDDDDD</color>
+    <color name="staccato_blue">#ABB3FF</color>
+    <color name="staccato_blue_30">#4DABB3FF</color>>
+
+    <color name="gray1">#FF3E3E3E</color>
+    <color name="gray2">#FF777777</color>
+    <color name="gray3">#FF949494</color>
+    <color name="gray4">#FFD2D2D2</color>
+    <color name="gray5">#FFF4F4F4</color>
+</resources>

@@ -178,7 +178,7 @@ captures/
 # Keystore files
 *.jks
 *.keystore
-keystore.properties
+app/signing/keystore.properties
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
