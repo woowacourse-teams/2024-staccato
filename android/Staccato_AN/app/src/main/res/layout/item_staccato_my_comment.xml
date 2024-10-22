@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/iv_staccato_my_comment_profile"
             style="@style/CommentProfileImageStyle.MyProfile"
-            android:contentDescription="@string/all_image_content_description"
+            android:contentDescription="@string/staccato_my_comment_profile_image_description"
             android:elevation="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -20,7 +20,7 @@
             android:id="@+id/iv_mates"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:contentDescription="@string/all_image_content_description"
+            android:contentDescription="@string/mates_profile_image_description"
             app:layout_constraintEnd_toEndOf="@id/tv_mates_nickname"
             app:layout_constraintStart_toStartOf="@id/tv_mates_nickname"
             app:layout_constraintTop_toTopOf="parent"

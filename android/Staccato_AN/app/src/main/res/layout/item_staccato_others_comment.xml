@@ -22,7 +22,7 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:layout_marginStart="19dp"
-            android:contentDescription="@string/all_image_content_description"
+            android:contentDescription="@string/staccato_others_comment_profile_image_description"
             android:elevation="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
