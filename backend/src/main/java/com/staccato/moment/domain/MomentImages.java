@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MomentImages {
     private static final int MAX_COUNT = 5;
-    @OneToMany(mappedBy = "moment", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "moment", cascade = CascadeType.PERSIST)
     private List<MomentImage> images = new ArrayList<>();
 
     public MomentImages(List<String> addedImages) {
