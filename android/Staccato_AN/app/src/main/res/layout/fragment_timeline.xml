@@ -42,35 +42,22 @@
             android:onClick="@{() -> handler.onMemoryCreationClicked()}"
             android:paddingVertical="10dp"
             app:layout_constraintBottom_toBottomOf="@id/tv_timeline_my_timeline"
-            app:layout_constraintEnd_toStartOf="@id/frame_timeline_sort_memory"
+            app:layout_constraintEnd_toStartOf="@id/frame_timeline_sort_memories"
             app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline"
             bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
             bind:visibilityByTimeline="@{viewModel.timeline}">
 
             <Button
-                android:id="@+id/btn_timeline_add_visits"
-                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusable="false"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingVertical="3dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="10dp"
+                android:id="@+id/btn_timeline_add_memory"
+                style="@style/BoundedIconButtonStyle"
+                android:contentDescription="@string/timeline_memory_creation_btn_description"
                 android:text="@string/timeline_add_memory"
-                android:textAppearance="@style/Typography.Body4"
-                android:textColor="@color/gray3"
-                app:icon="@drawable/icon_folder"
-                app:iconTint="@color/gray3"
-                app:rippleColor="@android:color/transparent"
-                app:strokeColor="@color/gray3" />
+                app:icon="@drawable/icon_folder" />
 
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/frame_timeline_sort_memory"
+            android:id="@+id/frame_timeline_sort_memories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -81,24 +68,11 @@
             app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline">
 
             <Button
-                android:id="@+id/btn_timeline_sort_visits"
-                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusable="false"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingVertical="3dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="10dp"
+                android:id="@+id/btn_timeline_sort_memories"
+                style="@style/BoundedIconButtonStyle"
+                android:contentDescription="@string/timeline_sort_memories_btn_description"
                 android:text="@string/timeline_sort"
-                android:textAppearance="@style/Typography.Body4"
-                android:textColor="@color/gray3"
-                app:icon="@drawable/icon_filter"
-                app:iconTint="@color/gray3"
-                app:rippleColor="@android:color/transparent"
-                app:strokeColor="@color/gray3" />
+                app:icon="@drawable/icon_filter" />
 
         </FrameLayout>
 
@@ -119,23 +93,21 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_timeline_loading"
-            android:layout_width="wrap_content"
+            style="@style/LottieStyle"
             android:layout_height="0dp"
             android:visibility="@{viewModel.isTimelineLoading ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/frame_timeline_add_memory"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/dot_loading" />
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/iv_timeline_empty"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="50dp"
-            android:contentDescription="@string/all_image_content_description"
+            android:contentDescription="@string/all_staccato_main_character"
             android:src="@drawable/staccato_character"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.25"
@@ -152,7 +124,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="@string/timeline_empty"
-            android:textAppearance="@style/Typography.Body2"
+            android:textAppearance="@style/Typography.Body2.Not.Resizable"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_timeline_empty"
@@ -165,11 +137,13 @@
             style="@style/ButtonStyle.Save.Active"
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="20dp"
+            android:contentDescription="@string/timeline_memory_creation_btn_description"
             android:onClick="@{() -> handler.onMemoryCreationClicked()}"
             android:text="@string/timeline_create_memory"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_timeline_empty"
+            app:layout_constraintWidth_max="500dp"
             bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
             bind:visibilityByTimeline="@{viewModel.timeline}"
             tools:visibility="visible" />

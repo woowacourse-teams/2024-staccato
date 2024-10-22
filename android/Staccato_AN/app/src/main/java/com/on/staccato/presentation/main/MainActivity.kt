@@ -21,7 +21,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
@@ -31,7 +33,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDE
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
-import com.on.staccato.domain.model.MomentLocation
+import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.LocationPermissionManager
 import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
@@ -39,9 +41,9 @@ import com.on.staccato.presentation.main.model.MarkerUiModel
 import com.on.staccato.presentation.main.viewmodel.MapsViewModel
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.on.staccato.presentation.moment.MomentFragment.Companion.STACCATO_ID_KEY
-import com.on.staccato.presentation.momentcreation.MomentCreationActivity
 import com.on.staccato.presentation.mypage.MyPageActivity
+import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
+import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -76,7 +78,7 @@ class MainActivity :
         setupGoogleMap()
         setupFusedLocationProviderClient()
         observeCurrentLocation()
-        observeMomentLocations()
+        observeStaccatoLocations()
         observeStaccatoId()
         setupBottomSheetController()
         setupBackPressedHandler()
@@ -92,6 +94,7 @@ class MainActivity :
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        setMapStyle(map)
         moveDefaultLocation()
         checkLocationSetting()
         onMarkerClicked(map)
@@ -103,7 +106,7 @@ class MainActivity :
     }
 
     override fun onStaccatoCreationClicked() {
-        MomentCreationActivity.startWithResultLauncher(
+        StaccatoCreationActivity.startWithResultLauncher(
             0L,
             "임시 추억",
             this,
@@ -132,6 +135,12 @@ class MainActivity :
 
     private fun checkLocationSetting() {
         locationPermissionManager.checkLocationSetting(actionWhenHavePermission = ::enableMyLocation)
+    }
+
+    private fun setMapStyle(map: GoogleMap) {
+        map.setMapStyle(
+            MapStyleOptions.loadRawResourceStyle(this, R.raw.google_map_style),
+        )
     }
 
     private fun moveDefaultLocation() {
@@ -225,21 +234,25 @@ class MainActivity :
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
     }
 
-    private fun observeMomentLocations() {
-        mapsViewModel.momentLocations.observe(this) { momentLocations ->
-            if (this::googleMap.isInitialized) googleMap.clear()
-            addMarkers(momentLocations)
+    private fun observeStaccatoLocations() {
+        mapsViewModel.staccatoLocations.observe(this) { staccatoLocations ->
+            if (this::googleMap.isInitialized) {
+                googleMap.clear()
+                addMarkers(staccatoLocations)
+            }
         }
     }
 
-    private fun addMarkers(momentLocations: List<MomentLocation>) {
+    private fun addMarkers(staccatoLocations: List<StaccatoLocation>) {
         val markers: MutableList<MarkerUiModel> = mutableListOf()
-        momentLocations.forEach { momentLocation ->
-            val latLng = LatLng(momentLocation.latitude, momentLocation.longitude)
+        staccatoLocations.forEach { staccatoLocation ->
+            val latLng = LatLng(staccatoLocation.latitude, staccatoLocation.longitude)
             val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
-            val marker: Marker = googleMap.addMarker(markerOptions) ?: return
+            val marker: Marker =
+                googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_pin_3x)))
+                    ?: return
             val markerId: String = marker.id
-            markers.add(MarkerUiModel(momentLocation.momentId, markerId))
+            markers.add(MarkerUiModel(staccatoLocation.staccatoId, markerId))
         }
         mapsViewModel.setMarkers(markers)
     }
@@ -264,12 +277,12 @@ class MainActivity :
     private fun navigateToStaccato(staccatoId: Long?) {
         val navOptions =
             NavOptions.Builder()
-                .setPopUpTo(R.id.momentFragment, true)
+                .setPopUpTo(R.id.staccatoFragment, true)
                 .build()
         val bundle =
             bundleOf(STACCATO_ID_KEY to staccatoId)
 
-        navController.navigate(R.id.momentFragment, bundle, navOptions)
+        navController.navigate(R.id.staccatoFragment, bundle, navOptions)
     }
 
     private fun setupBackPressedHandler() {
@@ -322,7 +335,7 @@ class MainActivity :
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     val bundle: Bundle = makeBundle(it, STACCATO_ID_KEY)
-                    navigateTo(R.id.momentFragment, R.id.momentFragment, bundle, true)
+                    navigateTo(R.id.staccatoFragment, R.id.staccatoFragment, bundle, true)
                 }
             }
         }
