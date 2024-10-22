@@ -14,6 +14,7 @@ import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.auth.LoginRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
+import com.staccato.memory.repository.MemoryMemberRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -24,6 +25,8 @@ class AuthServiceTest extends ServiceSliceTest {
     private AuthService authService;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private MemoryMemberRepository memoryMemberRepository;
     @Autowired
     private TokenProvider tokenProvider;
 
@@ -40,6 +43,23 @@ class AuthServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(memberRepository.findAll()).hasSize(1),
                 () -> assertThat(loginResponse.token()).isNotNull()
+        );
+    }
+
+    @DisplayName("입력받은 닉네임으로 멤버를 저장할 때 기본 추억을 생성한다.")
+    @Test
+    void loginThenCreateBasicMemory() {
+        // given
+        LoginRequest loginRequest = LoginRequestFixture.create();
+
+        // when
+        LoginResponse loginResponse = authService.login(loginRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(memberRepository.findAll()).hasSize(1),
+                () -> assertThat(loginResponse.token()).isNotNull(),
+                () -> assertThat(memoryMemberRepository.findAll()).hasSize(1)
         );
     }
 
