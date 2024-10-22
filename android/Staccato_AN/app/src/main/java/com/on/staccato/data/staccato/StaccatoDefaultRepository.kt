@@ -20,7 +20,12 @@ class StaccatoDefaultRepository
     StaccatoRepository {
         override suspend fun getStaccatos(): ResponseResult<List<StaccatoLocation>> {
             return when (val responseResult = remoteDataSource.fetchStaccatos()) {
-                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_ERROR_MESSAGE,
+                    )
+
                 is ResponseResult.ServerError ->
                     ResponseResult.ServerError(
                         responseResult.status,
@@ -33,7 +38,12 @@ class StaccatoDefaultRepository
 
         override suspend fun getStaccato(staccatoId: Long): ResponseResult<Staccato> {
             return when (val responseResult = remoteDataSource.fetchStaccato(staccatoId)) {
-                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_ERROR_MESSAGE,
+                    )
+
                 is ResponseResult.ServerError ->
                     ResponseResult.ServerError(
                         responseResult.status,
@@ -69,7 +79,12 @@ class StaccatoDefaultRepository
                         ),
                     )
             ) {
-                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_ERROR_MESSAGE,
+                    )
+
                 is ResponseResult.ServerError ->
                     ResponseResult.ServerError(
                         responseResult.status,
@@ -108,7 +123,12 @@ class StaccatoDefaultRepository
                             ),
                     )
             ) {
-                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_ERROR_MESSAGE,
+                    )
+
                 is ResponseResult.ServerError ->
                     ResponseResult.ServerError(
                         responseResult.status,
@@ -121,7 +141,12 @@ class StaccatoDefaultRepository
 
         override suspend fun deleteStaccato(staccatoId: Long): ResponseResult<Unit> {
             return when (val responseResult = remoteDataSource.deleteStaccato(staccatoId)) {
-                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_ERROR_MESSAGE,
+                    )
+
                 is ResponseResult.ServerError ->
                     ResponseResult.ServerError(
                         responseResult.status,
@@ -143,7 +168,12 @@ class StaccatoDefaultRepository
                         feelingRequest = FeelingRequest(feeling),
                     )
             ) {
-                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_ERROR_MESSAGE,
+                    )
+
                 is ResponseResult.ServerError ->
                     ResponseResult.ServerError(
                         responseResult.status,
@@ -155,6 +185,6 @@ class StaccatoDefaultRepository
         }
 
         companion object {
-            const val ERROR_MESSAGE = "스타카토 목록을 조회할 수 없어요."
+            private const val EXCEPTION_ERROR_MESSAGE = "네트워크 상태가 불안정 합니다."
         }
     }

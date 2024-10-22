@@ -38,11 +38,11 @@ class StaccatoViewModel
         private val _isDeleted = MutableSingleLiveData(false)
         val isDeleted: SingleLiveData<Boolean> get() = _isDeleted
 
-        private val _isError = MutableSingleLiveData(false)
-        val isError: SingleLiveData<Boolean> get() = _isError
-
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
+
+        private val _exceptionMessage: MutableSingleLiveData<String> = MutableSingleLiveData()
+        val exceptionMessage: SingleLiveData<String> get() = _exceptionMessage
 
         fun loadStaccato(staccatoId: Long) {
             fetchStaccatoData(staccatoId)
@@ -76,13 +76,13 @@ class StaccatoViewModel
             when (status) {
                 is Status.Message ->
                     Log.e(
-                        this::class.java.simpleName,
+                        "StaccatoViewModel",
                         "Error Occurred | status: ${status.message}, message: $errorMessage",
                     )
 
                 is Status.Code ->
                     Log.e(
-                        this::class.java.simpleName,
+                        "StaccatoViewModel",
                         "Error Occurred | status: ${status.code}, message: $errorMessage",
                     )
             }
@@ -90,12 +90,12 @@ class StaccatoViewModel
 
         private fun handleException(
             e: Throwable,
-            errorMessage: String,
+            message: String,
         ) {
-            _errorMessage.postValue(errorMessage)
+            _exceptionMessage.postValue(message)
             Log.e(
-                this::class.java.simpleName,
-                "Exception Caught | throwable: $e, message: $errorMessage",
+                "StaccatoViewModel",
+                "Exception Caught | throwable: $e, message: $message",
             )
         }
     }

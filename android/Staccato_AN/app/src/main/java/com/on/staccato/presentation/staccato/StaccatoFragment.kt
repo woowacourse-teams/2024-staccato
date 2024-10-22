@@ -6,6 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentStaccatoBinding
@@ -18,6 +19,7 @@ import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.StaccatoFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
+import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.properties.Delegates
@@ -46,6 +48,8 @@ class StaccatoFragment :
         observeData()
         createChildFragments(savedInstanceState)
         observeViewModel()
+        showErrorToast()
+        showExceptionSnackBar()
     }
 
     private fun initViewPagerAdapter() {
@@ -77,7 +81,10 @@ class StaccatoFragment :
                 }
             val staccatoCommentsFragment = StaccatoCommentsFragment().apply { arguments = bundle }
             childFragmentManager.beginTransaction()
-                .replace(R.id.container_staccato_feeling_selection, staccatoFeelingSelectionFragment)
+                .replace(
+                    R.id.container_staccato_feeling_selection,
+                    staccatoFeelingSelectionFragment,
+                )
                 .replace(R.id.container_staccato_comments, staccatoCommentsFragment)
                 .commit()
         }
@@ -91,12 +98,6 @@ class StaccatoFragment :
     }
 
     private fun observeData() {
-        staccatoViewModel.isError.observe(viewLifecycleOwner) { isError ->
-            if (isError) {
-                showToast("스타카토를 불러올 수 없어요!")
-                findNavController().popBackStack()
-            }
-        }
         staccatoViewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
             if (isDeleted) {
                 sharedViewModel.setStaccatosHasUpdated()
@@ -121,6 +122,28 @@ class StaccatoFragment :
             context = requireContext(),
             activityLauncher = staccatoUpdateLauncher,
         )
+    }
+
+    private fun showErrorToast() {
+        staccatoViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+            showToast(message)
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun showExceptionSnackBar() {
+        staccatoViewModel.exceptionMessage.observe(viewLifecycleOwner) { message ->
+            view?.showSnackBarWithAction(
+                message = message,
+                actionLabel = R.string.all_retry,
+                onAction = ::onRetryAction,
+                Snackbar.LENGTH_INDEFINITE,
+            )
+        }
+    }
+
+    private fun onRetryAction() {
+        staccatoViewModel.loadStaccato(staccatoId)
     }
 
     companion object {
