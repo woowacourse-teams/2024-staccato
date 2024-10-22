@@ -106,19 +106,6 @@ class StaccatoCommentsViewModel
             message: String,
         ) {
             _isLoading.postValue(false)
-            when (status) {
-                is Status.Code ->
-                    Log.e(
-                        this.javaClass.simpleName,
-                        "ServerError(${status.code}): $message",
-                    )
-
-                is Status.Message ->
-                    Log.e(
-                        this.javaClass.simpleName,
-                        "ServerError(${status.message}): $message",
-                    )
-            }
         }
 
         private fun handleException(
@@ -126,6 +113,5 @@ class StaccatoCommentsViewModel
             message: String,
         ) {
             _isLoading.postValue(false)
-            Log.e(this.javaClass.simpleName, "Exception($e): $message")
         }
     }

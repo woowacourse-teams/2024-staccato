@@ -3,7 +3,6 @@ package com.on.staccato.presentation.staccatocreation.viewmodel
 import android.content.Context
 import android.location.Location
 import android.net.Uri
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -267,19 +266,6 @@ class StaccatoCreationViewModel
         ) {
             _isPosting.value = false
             _errorMessage.postValue(errorMessage)
-            when (status) {
-                is Status.Message ->
-                    Log.e(
-                        this::class.java.simpleName,
-                        "Error Occurred | status: ${status.message}, message: $errorMessage",
-                    )
-
-                is Status.Code ->
-                    Log.e(
-                        this::class.java.simpleName,
-                        "Error Occurred | status: ${status.code}, message: $errorMessage",
-                    )
-            }
         }
 
         private fun handleException(
@@ -288,10 +274,6 @@ class StaccatoCreationViewModel
         ) {
             _isPosting.value = false
             _errorMessage.postValue(errorMessage)
-            Log.e(
-                this::class.java.simpleName,
-                "Exception Caught | throwable: $e, message: $errorMessage",
-            )
         }
 
         companion object {

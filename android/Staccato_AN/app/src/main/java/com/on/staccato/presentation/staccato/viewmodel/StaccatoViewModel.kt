@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.staccato.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -73,19 +72,6 @@ class StaccatoViewModel
             errorMessage: String,
         ) {
             _errorMessage.postValue(errorMessage)
-            when (status) {
-                is Status.Message ->
-                    Log.e(
-                        "StaccatoViewModel",
-                        "Error Occurred | status: ${status.message}, message: $errorMessage",
-                    )
-
-                is Status.Code ->
-                    Log.e(
-                        "StaccatoViewModel",
-                        "Error Occurred | status: ${status.code}, message: $errorMessage",
-                    )
-            }
         }
 
         private fun handleException(
@@ -93,9 +79,5 @@ class StaccatoViewModel
             message: String,
         ) {
             _exceptionMessage.postValue(message)
-            Log.e(
-                "StaccatoViewModel",
-                "Exception Caught | throwable: $e, message: $message",
-            )
         }
     }

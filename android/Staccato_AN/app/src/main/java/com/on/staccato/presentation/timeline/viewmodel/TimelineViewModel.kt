@@ -74,19 +74,6 @@ class TimelineViewModel
             errorMessage: String,
         ) {
             _errorMessage.postValue(errorMessage)
-            when (status) {
-                is Status.Code ->
-                    Log.e(
-                        "TimelineViewModel",
-                        "An error occurred: ${status.code}, $errorMessage",
-                    )
-
-                is Status.Message ->
-                    Log.e(
-                        "TimelineViewModel",
-                        "An error occurred: ${status.message}, $errorMessage",
-                    )
-            }
         }
 
         private fun handleException(
@@ -94,6 +81,5 @@ class TimelineViewModel
             errorMessage: String,
         ) {
             _exceptionMessage.postValue(errorMessage)
-            Log.e("TimelineViewModel", "An exception occurred: $e, $errorMessage")
         }
     }

@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.memory.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -70,19 +69,6 @@ class MemoryViewModel
             message: String,
         ) {
             _errorMessage.postValue(message)
-            when (status) {
-                is Status.Code ->
-                    Log.e(
-                        "MemoryViewModel",
-                        "An error occurred\ncode : ${status.code}\nmessage : $errorMessage",
-                    )
-
-                is Status.Message ->
-                    Log.e(
-                        "MemoryViewModel",
-                        "An error occurred\nmessage : ${status.message}\nmessage : $errorMessage",
-                    )
-            }
         }
 
         private fun handelException(
@@ -90,6 +76,5 @@ class MemoryViewModel
             message: String,
         ) {
             _exceptionMessage.postValue(message)
-            Log.e("MemoryViewModel", "An exception occurred\n$e\n$message")
         }
     }
