@@ -60,6 +60,15 @@ class TimelineViewModel
             }
         }
 
+        fun sortByLatest() {
+            _timeline.value = _timeline.value?.sortedByDescending { it.startAt }
+        }
+
+        fun sortByOldest() {
+            val memoriesSortedByOldest = _timeline.value?.sortedWith(compareBy(nullsLast()) { it.startAt }) ?: emptyList()
+            _timeline.value = memoriesSortedByOldest
+        }
+
         private fun setTimelineUiModels(timeline: Timeline) {
             _timeline.value = timeline.toTimelineUiModel()
             _isTimelineLoading.value = false

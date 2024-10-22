@@ -1,7 +1,9 @@
 package com.on.staccato.presentation.timeline
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -49,7 +51,10 @@ class TimelineFragment :
     }
 
     override fun onSortClicked() {
-        showToast(getString(R.string.all_default_not_supported))
+        val sortButton = binding.btnTimelineSortMemories
+        val popup = sortButton.inflateCreationMenu()
+        setUpCreationMenu(popup)
+        popup.show()
     }
 
     private fun setupBinding() {
@@ -80,6 +85,30 @@ class TimelineFragment :
             if (isUpdated) {
                 timelineViewModel.loadTimeline()
             }
+        }
+    }
+
+    private fun View.inflateCreationMenu(): PopupMenu {
+        val popup =
+            PopupMenu(
+                this.context,
+                this,
+                Gravity.END,
+                0,
+                R.style.Theme_Staccato_AN_PopupMenu,
+            )
+        popup.menuInflater.inflate(R.menu.menu_sort, popup.menu)
+        return popup
+    }
+
+    private fun setUpCreationMenu(popup: PopupMenu) {
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.creation_order -> timelineViewModel.loadTimeline()
+                R.id.latest_order -> timelineViewModel.sortByLatest()
+                R.id.oldest_order -> timelineViewModel.sortByOldest()
+            }
+            false
         }
     }
 }
