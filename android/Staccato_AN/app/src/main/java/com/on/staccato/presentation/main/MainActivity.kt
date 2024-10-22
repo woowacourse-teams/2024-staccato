@@ -21,7 +21,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
@@ -92,6 +94,7 @@ class MainActivity :
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
+        setMapStyle(map)
         moveDefaultLocation()
         checkLocationSetting()
         onMarkerClicked(map)
@@ -132,6 +135,12 @@ class MainActivity :
 
     private fun checkLocationSetting() {
         locationPermissionManager.checkLocationSetting(actionWhenHavePermission = ::enableMyLocation)
+    }
+
+    private fun setMapStyle(map: GoogleMap) {
+        map.setMapStyle(
+            MapStyleOptions.loadRawResourceStyle(this, R.raw.google_map_style),
+        )
     }
 
     private fun moveDefaultLocation() {
@@ -227,8 +236,10 @@ class MainActivity :
 
     private fun observeStaccatoLocations() {
         mapsViewModel.staccatoLocations.observe(this) { staccatoLocations ->
-            if (this::googleMap.isInitialized) googleMap.clear()
-            addMarkers(staccatoLocations)
+            if (this::googleMap.isInitialized) {
+                googleMap.clear()
+                addMarkers(staccatoLocations)
+            }
         }
     }
 
@@ -237,7 +248,9 @@ class MainActivity :
         staccatoLocations.forEach { staccatoLocation ->
             val latLng = LatLng(staccatoLocation.latitude, staccatoLocation.longitude)
             val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
-            val marker: Marker = googleMap.addMarker(markerOptions) ?: return
+            val marker: Marker =
+                googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_pin_3x)))
+                    ?: return
             val markerId: String = marker.id
             markers.add(MarkerUiModel(staccatoLocation.staccatoId, markerId))
         }

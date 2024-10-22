@@ -75,12 +75,29 @@
         <item name="android:textAlignment">textStart</item>
     </style>
 
+    <style name="BoundedIconButtonStyle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingVertical">3dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:textAppearance">@style/Typography.Body4.Not.Resizable</item>
+        <item name="android:textColor">@color/gray3</item>
+        <item name="iconTint">@color/gray3</item>
+        <item name="rippleColor">@android:color/transparent</item>
+        <item name="strokeColor">@color/gray3</item>
+    </style>
+
     <style name="CurrentLocationStyle" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:clickable">true</item>
         <item name="android:text">@string/staccato_creation_load_current_location</item>
-        <item name="android:textAppearance">@style/Typography.Body4</item>
+        <item name="android:textAppearance">@style/Typography.Body4.Not.Resizable</item>
         <item name="android:textColor">@color/gray4</item>
         <item name="icon">@drawable/icon_crosshair</item>
         <item name="iconGravity">textStart</item>
