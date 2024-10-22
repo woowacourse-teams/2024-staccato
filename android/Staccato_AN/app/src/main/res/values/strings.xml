@@ -47,6 +47,11 @@
     <string name="timeline_memory_creation_btn_description">추억 만들기로 이동</string>
     <string name="timeline_sort_memories_btn_description">나의 추억들 정렬</string>
 
+    // menu_sort
+    <string name="sort_creation_order">생성 순</string>
+    <string name="sort_latest_order">최신 순</string>
+    <string name="sort_oldest_order">과거 순</string>
+
     // item_timeline
     <string name="timeline_memory_icon_description">추억 아이콘</string>
 
