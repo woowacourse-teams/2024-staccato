@@ -74,6 +74,7 @@ class TimelineViewModel
         }
 
         private fun setTimelineUiModels(timeline: Timeline) {
+            originalTimeline.clear()
             originalTimeline.addAll(timeline.toTimelineUiModel())
             sortByCreation()
             _isTimelineLoading.value = false
