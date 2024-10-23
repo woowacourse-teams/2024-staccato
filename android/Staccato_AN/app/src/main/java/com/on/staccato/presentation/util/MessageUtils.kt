@@ -33,3 +33,15 @@ fun View.showSnackBarWithAction(
         }
     snackBar.show()
 }
+
+fun View.getSnackBarWithAction(
+    message: String,
+    @StringRes actionLabel: Int,
+    onAction: () -> Unit,
+    length: Int,
+): Snackbar =
+    Snackbar.make(this, message, length).apply {
+        setAction(actionLabel) {
+            onAction()
+        }
+    }
