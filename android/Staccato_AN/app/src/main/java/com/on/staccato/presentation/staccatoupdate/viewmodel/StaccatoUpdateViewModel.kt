@@ -259,7 +259,7 @@ class StaccatoUpdateViewModel
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
-                }.onException(::handleException)
+                }.onException(::handleUpdatePhotoException)
                 .onServerError(::handleServerError)
         }
 
@@ -282,15 +282,22 @@ class StaccatoUpdateViewModel
             message: String,
         ) {
             _isPosting.value = false
-            _warningMessage.postValue(message)
+            _warningMessage.setValue(message)
+        }
+
+        private fun handleUpdatePhotoException(
+            e: Throwable = IllegalArgumentException(),
+            errorMessage: String = IMAGE_UPLOAD_ERROR_MESSAGE,
+        ) {
+            _warningMessage.setValue(errorMessage)
         }
 
         private fun handleException(
             e: Throwable = IllegalArgumentException(),
-            errorMessage: String = "필수 값을 모두 입력해 주세요",
+            errorMessage: String = REQUIRED_VALUES_ERROR_MESSAGE,
         ) {
             _isPosting.value = false
-            _warningMessage.postValue(errorMessage)
+            _warningMessage.setValue(errorMessage)
         }
 
         private fun handleMemoryCandidatesException(
@@ -309,9 +316,14 @@ class StaccatoUpdateViewModel
 
         private fun handleUpdateException(
             e: Throwable = IllegalArgumentException(),
-            message: String = "필수 값을 모두 입력해 주세요",
+            message: String = REQUIRED_VALUES_ERROR_MESSAGE,
         ) {
             _isPosting.value = false
             _error.setValue(StaccatoUpdateError.StaccatoUpdate(message))
+        }
+
+        companion object {
+            private const val IMAGE_UPLOAD_ERROR_MESSAGE = "이미지 업로드에 실패했습니다."
+            private const val REQUIRED_VALUES_ERROR_MESSAGE = "필수 값을 모두 입력해 주세요."
         }
     }
