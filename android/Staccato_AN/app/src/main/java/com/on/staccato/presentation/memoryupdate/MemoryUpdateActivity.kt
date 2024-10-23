@@ -132,14 +132,14 @@ class MemoryUpdateActivity :
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
-                is MemoryUpdateError.MemoryInitialize -> handleInitializeFail(error)
+                is MemoryUpdateError.MemoryInitialization -> handleInitializeFail(error)
                 is MemoryUpdateError.Thumbnail -> handleCreatePhotoUrlFail(error)
                 is MemoryUpdateError.MemoryUpdate -> handleMemoryUpdateFail(error)
             }
         }
     }
 
-    private fun handleInitializeFail(error: MemoryUpdateError.MemoryInitialize) {
+    private fun handleInitializeFail(error: MemoryUpdateError.MemoryInitialization) {
         finish()
         showToast(error.message)
     }

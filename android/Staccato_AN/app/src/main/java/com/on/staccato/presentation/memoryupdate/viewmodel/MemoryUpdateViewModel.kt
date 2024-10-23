@@ -195,7 +195,7 @@ class MemoryUpdateViewModel
             e: Throwable,
             message: String,
         ) {
-            _error.setValue(MemoryUpdateError.MemoryInitialize(message))
+            _error.setValue(MemoryUpdateError.MemoryInitialization(message))
         }
 
         private fun handleUpdateError(
