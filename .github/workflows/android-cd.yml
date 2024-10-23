@@ -85,7 +85,8 @@ jobs:
       - name: Deploy AAB On Google Play Console
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
           packageName: com.on.staccato
           releaseFiles: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
           track: product
+          whatsNewDirectory: android/Staccato_AN/deploy/whatsnew/
