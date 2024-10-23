@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMemoryUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
@@ -17,6 +18,7 @@ import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
+import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,6 +34,7 @@ class MemoryUpdateActivity :
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
+    private var currentSnackBar: Snackbar? = null
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
@@ -40,6 +43,7 @@ class MemoryUpdateActivity :
         updateMemoryPeriod()
         observeIsUpdateSuccess()
         showErrorToast()
+        handleError()
     }
 
     override fun onPeriodSelectionClicked() {
@@ -60,11 +64,13 @@ class MemoryUpdateActivity :
     }
 
     override fun onPhotoDeletionClicked() {
+        currentSnackBar?.dismiss()
         viewModel.setThumbnailUri(null)
         viewModel.setThumbnailUrl(null)
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
+        currentSnackBar?.dismiss()
         viewModel.setThumbnailUri(uris.first())
         viewModel.createThumbnailUrl(this, uris.first())
     }
@@ -121,6 +127,51 @@ class MemoryUpdateActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
+    }
+
+    private fun handleError() {
+        viewModel.error.observe(this) { error ->
+            when (error) {
+                is MemoryUpdateError.MemoryInitialize -> handleInitializeFail(error)
+                is MemoryUpdateError.Photo -> handleCreatePhotoUrlFail(error)
+                is MemoryUpdateError.MemoryUpdate -> handleMemoryUpdateFail(error)
+            }
+        }
+    }
+
+    private fun handleInitializeFail(error: MemoryUpdateError.MemoryInitialize) {
+        finish()
+        showToast(error.message)
+    }
+
+    private fun handleCreatePhotoUrlFail(error: MemoryUpdateError.Photo) {
+        showExceptionSnackBar(error.message) { recreateThumbnailUrl(error.uri) }
+    }
+
+    private fun handleMemoryUpdateFail(error: MemoryUpdateError.MemoryUpdate) {
+        window.clearFlags(FLAG_NOT_TOUCHABLE)
+        showExceptionSnackBar(error.message) { reUpdateMemory() }
+    }
+
+    private fun recreateThumbnailUrl(uri: Uri) {
+        viewModel.createThumbnailUrl(this, uri)
+    }
+
+    private fun reUpdateMemory() {
+        viewModel.updateMemory()
+    }
+
+    private fun showExceptionSnackBar(
+        message: String,
+        onRetryAction: () -> Unit,
+    ) {
+        currentSnackBar =
+            binding.root.getSnackBarWithAction(
+                message = message,
+                actionLabel = R.string.all_retry,
+                onAction = onRetryAction,
+                Snackbar.LENGTH_INDEFINITE,
+            ).apply { show() }
     }
 
     companion object {

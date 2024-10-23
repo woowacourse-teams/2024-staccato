@@ -17,7 +17,10 @@ import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.domain.model.NewMemory
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.MemoryRepository
+import com.on.staccato.presentation.common.MutableSingleLiveData
+import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
+import com.on.staccato.presentation.memorycreation.MemoryCreationError
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -43,9 +46,6 @@ class MemoryCreationViewModel
         private val _createdMemoryId = MutableLiveData<Long>()
         val createdMemoryId: LiveData<Long> get() = _createdMemoryId
 
-        private val _errorMessage = MutableLiveData<String>()
-        val errorMessage: LiveData<String> get() = _errorMessage
-
         private val _thumbnailUri = MutableLiveData<Uri?>(null)
         val thumbnailUri: LiveData<Uri?> get() = _thumbnailUri
 
@@ -60,6 +60,12 @@ class MemoryCreationViewModel
 
         val isPeriodActive = MutableLiveData<Boolean>(false)
 
+        private val _errorMessage = MutableLiveData<String>()
+        val errorMessage: LiveData<String> get() = _errorMessage
+
+        private val _error = MutableSingleLiveData<MemoryCreationError>()
+        val error: SingleLiveData<MemoryCreationError> get() = _error
+
         fun createThumbnailUrl(
             context: Context,
             thumbnailUri: Uri,
@@ -71,8 +77,10 @@ class MemoryCreationViewModel
                 val result: ResponseResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)
                 result.onSuccess(::setThumbnailUrl)
-                    .onServerError(::handleServerError)
-                    .onException(::handelException)
+                    .onServerError(::handlePhotoError)
+                    .onException { e, message ->
+                        handlePhotoException(e, message, thumbnailUri)
+                    }
             }
         }
 
@@ -101,8 +109,8 @@ class MemoryCreationViewModel
                     memoryRepository.createMemory(memory)
                 result
                     .onSuccess(::setCreatedMemoryId)
-                    .onServerError(::handleServerError)
-                    .onException(::handelException)
+                    .onServerError(::handleCreateServerError)
+                    .onException(::handleCreateException)
             }
         }
 
@@ -127,24 +135,38 @@ class MemoryCreationViewModel
             }
         }
 
-        private fun handleServerError(
+        private fun handlePhotoError(
+            status: Status,
+            message: String,
+        ) {
+            _errorMessage.postValue(message)
+        }
+
+        private fun handlePhotoException(
+            e: Throwable,
+            message: String,
+            thumbnailUri: Uri,
+        ) {
+            _error.setValue(MemoryCreationError.Photo(message, thumbnailUri))
+        }
+
+        private fun handleCreateServerError(
             status: Status,
             message: String,
         ) {
             _isPosting.value = false
-            _errorMessage.value = message
+            _errorMessage.postValue(message)
         }
 
-        private fun handelException(
+        private fun handleCreateException(
             e: Throwable,
             message: String,
         ) {
             _isPosting.value = false
-            _errorMessage.value = MEMORY_CREATION_ERROR_MESSAGE
+            _error.setValue(MemoryCreationError.MemoryCreate(message))
         }
 
         companion object {
             private const val MEMORY_FILE_NAME = "imageFile"
-            private const val MEMORY_CREATION_ERROR_MESSAGE = "추억 생성에 실패했습니다"
         }
     }
