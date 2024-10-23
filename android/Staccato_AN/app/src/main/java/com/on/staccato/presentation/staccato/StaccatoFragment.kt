@@ -113,22 +113,12 @@ class StaccatoFragment :
 
     private fun observeStaccatoViewModel() {
         observeStaccatoDetail()
-        observeStaccatoLoadingError()
         observeStaccatoDelete()
     }
 
     private fun observeStaccatoDetail() {
         staccatoViewModel.staccatoDetail.observe(viewLifecycleOwner) { staccatoDetail ->
             pagePhotoAdapter.submitList(staccatoDetail.staccatoImageUrls)
-        }
-    }
-
-    private fun observeStaccatoLoadingError() {
-        staccatoViewModel.isError.observe(viewLifecycleOwner) { isError ->
-            if (isError) {
-                showToast(getString(R.string.staccato_loading_failure))
-                findNavController().popBackStack()
-            }
         }
     }
 
@@ -218,6 +208,9 @@ class StaccatoFragment :
             showToast(message)
             findNavController().popBackStack()
         }
+        commentsViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+            showToast(message)
+        }
     }
 
     private fun showExceptionSnackBar() {
@@ -232,7 +225,8 @@ class StaccatoFragment :
     }
 
     private fun onRetryAction() {
-        staccatoViewModel.loadStaccato(staccatoId)
+        loadStaccato()
+        loadComments()
     }
 
     companion object {

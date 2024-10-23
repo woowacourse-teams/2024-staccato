@@ -21,7 +21,7 @@ class CommentDefaultRepository
                 }
 
                 is ResponseResult.Exception -> {
-                    ResponseResult.Exception(responseResult.e, responseResult.message)
+                    ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 }
 
                 is ResponseResult.Success -> {
@@ -36,7 +36,7 @@ class CommentDefaultRepository
                 }
 
                 is ResponseResult.Exception -> {
-                    ResponseResult.Exception(responseResult.e, responseResult.message)
+                    ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 }
 
                 is ResponseResult.Success -> {
@@ -59,7 +59,7 @@ class CommentDefaultRepository
                 }
 
                 is ResponseResult.Exception -> {
-                    ResponseResult.Exception(responseResult.e, responseResult.message)
+                    ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 }
 
                 is ResponseResult.Success -> {
@@ -75,11 +75,15 @@ class CommentDefaultRepository
                 }
 
                 is ResponseResult.Exception -> {
-                    ResponseResult.Exception(responseResult.e, responseResult.message)
+                    ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 }
 
                 is ResponseResult.Success -> {
                     ResponseResult.Success(responseResult.data)
                 }
             }
+
+        companion object {
+            private const val EXCEPTION_NETWORK_ERROR_MESSAGE = "네트워크 상태가 불안정 합니다."
+        }
     }
