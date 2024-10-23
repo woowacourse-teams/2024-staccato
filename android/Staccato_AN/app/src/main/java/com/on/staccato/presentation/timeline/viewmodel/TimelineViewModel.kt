@@ -30,13 +30,17 @@ class TimelineViewModel
         val timeline: LiveData<List<TimelineUiModel>>
             get() = _timeline
 
+        private val _isTimelineLoading = MutableLiveData(false)
+        val isTimelineLoading: LiveData<Boolean>
+            get() = _isTimelineLoading
+
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
 
-        private val _isTimelineLoading = MutableLiveData(false)
-        val isTimelineLoading: LiveData<Boolean>
-            get() = _isTimelineLoading
+        private val _exceptionMessage = MutableSingleLiveData<String>()
+        val exceptionMessage: SingleLiveData<String>
+            get() = _exceptionMessage
 
         private val coroutineExceptionHandler =
             CoroutineExceptionHandler { context, throwable ->
@@ -70,26 +74,12 @@ class TimelineViewModel
             errorMessage: String,
         ) {
             _errorMessage.postValue(errorMessage)
-            when (status) {
-                is Status.Code ->
-                    Log.e(
-                        "TimelineViewModel",
-                        "An error occurred: ${status.code}, $errorMessage",
-                    )
-
-                is Status.Message ->
-                    Log.e(
-                        "TimelineViewModel",
-                        "An error occurred: ${status.message}, $errorMessage",
-                    )
-            }
         }
 
         private fun handleException(
             e: Throwable,
             errorMessage: String,
         ) {
-            _errorMessage.postValue(errorMessage)
-            Log.e("TimelineViewModel", "An exception occurred: $e, $errorMessage")
+            _exceptionMessage.postValue(errorMessage)
         }
     }
