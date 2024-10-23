@@ -11,4 +11,9 @@ enum class SortType(
     OLDEST(R.id.oldest_order),
     WITH_PERIOD(R.id.with_period_order),
     WITHOUT_PERIOD(R.id.without_period_order),
+    ;
+
+    companion object {
+        fun from(menuId: Int): SortType = entries.first { it.menuId == menuId }
+    }
 }

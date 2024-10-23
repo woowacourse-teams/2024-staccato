@@ -104,7 +104,7 @@ class TimelineFragment :
 
     private fun setUpCreationMenu(popup: PopupMenu) {
         popup.setOnMenuItemClickListener { menuItem ->
-            val sortType: SortType = SortType.entries.first { it.menuId == menuItem.itemId }
+            val sortType: SortType = SortType.from(menuItem.itemId)
             timelineViewModel.sortTimeline(sortType)
             false
         }
