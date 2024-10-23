@@ -422,7 +422,7 @@ class StaccatoCreationActivity :
                 message = message,
                 actionLabel = R.string.all_retry,
                 onAction = onRetryAction,
-                Snackbar.LENGTH_INDEFINITE,
+                length = Snackbar.LENGTH_INDEFINITE,
             ).apply { show() }
     }
 
