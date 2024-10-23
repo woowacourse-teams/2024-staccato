@@ -130,19 +130,19 @@ class MemoryCreationActivity :
     }
 
     private fun handleCreatePhotoUrlFail(error: MemoryCreationError.Thumbnail) {
-        showExceptionSnackBar(error.message) { recreateThumbnailUrl(error.uri) }
+        showExceptionSnackBar(error.message) { reCreateThumbnailUrl(error.uri) }
     }
 
     private fun handleCreateException(error: MemoryCreationError.MemoryCreation) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(error.message) { recreateMemory() }
+        showExceptionSnackBar(error.message) { reCreateMemory() }
     }
 
-    private fun recreateThumbnailUrl(uri: Uri) {
+    private fun reCreateThumbnailUrl(uri: Uri) {
         viewModel.createThumbnailUrl(this, uri)
     }
 
-    private fun recreateMemory() {
+    private fun reCreateMemory() {
         viewModel.createMemory()
     }
 
