@@ -163,7 +163,7 @@ class MemoryCreationViewModel
             message: String,
         ) {
             _isPosting.value = false
-            _error.setValue(MemoryCreationError.MemoryCreate(message))
+            _error.setValue(MemoryCreationError.MemoryCreation(message))
         }
 
         companion object {

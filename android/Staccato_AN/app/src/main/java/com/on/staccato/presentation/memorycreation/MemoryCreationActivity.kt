@@ -124,7 +124,7 @@ class MemoryCreationActivity :
         viewModel.error.observe(this) { error ->
             when (error) {
                 is MemoryCreationError.Thumbnail -> handleCreatePhotoUrlFail(error)
-                is MemoryCreationError.MemoryCreate -> handleCreateException(error)
+                is MemoryCreationError.MemoryCreation -> handleCreateException(error)
             }
         }
     }
@@ -133,7 +133,7 @@ class MemoryCreationActivity :
         showExceptionSnackBar(error.message) { recreateThumbnailUrl(error.uri) }
     }
 
-    private fun handleCreateException(error: MemoryCreationError.MemoryCreate) {
+    private fun handleCreateException(error: MemoryCreationError.MemoryCreation) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
         showExceptionSnackBar(error.message) { recreateMemory() }
     }
