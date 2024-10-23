@@ -24,6 +24,7 @@ import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.createPhotosByUrls
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
+import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateError
 import com.on.staccato.presentation.util.convertExcretaFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -79,9 +80,6 @@ class StaccatoUpdateViewModel
         private val _isUpdateCompleted = MutableLiveData(false)
         val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String> get() = _errorMessage
-
         private val _isPosting = MutableLiveData<Boolean>(false)
         val isPosting: LiveData<Boolean> get() = _isPosting
 
@@ -90,9 +88,15 @@ class StaccatoUpdateViewModel
 
         private val photoJobs = mutableMapOf<String, Job>()
 
+        private val _warningMessage = MutableSingleLiveData<String>()
+        val warningMessage: SingleLiveData<String> get() = _warningMessage
+
+        private val _error = MutableSingleLiveData<StaccatoUpdateError>()
+        val error: SingleLiveData<StaccatoUpdateError> get() = _error
+
         override fun onAddClicked() {
             if ((currentPhotos.value?.size ?: 0) == StaccatoCreationViewModel.MAX_PHOTO_NUMBER) {
-                _errorMessage.postValue(StaccatoCreationViewModel.MAX_PHOTO_NUMBER_MESSAGE)
+                _warningMessage.postValue(StaccatoCreationViewModel.MAX_PHOTO_NUMBER_MESSAGE)
             } else {
                 _isAddPhotoClicked.postValue(true)
             }
@@ -203,8 +207,8 @@ class StaccatoUpdateViewModel
                     staccatoImageUrls = staccatoImageUrlsValue,
                 ).onSuccess {
                     _isUpdateCompleted.postValue(true)
-                }.onException(::handleException)
-                    .onServerError(::handleError)
+                }.onException(::handleUpdateException)
+                    .onServerError(::handleServerError)
             }
         }
 
@@ -226,8 +230,8 @@ class StaccatoUpdateViewModel
                                 staccato.startAt,
                                 staccato.endAt,
                             )
-                    }.onException(::handleException)
-                    .onServerError(::handleError)
+                    }.onException(::handleInitializeException)
+                    .onServerError(::handleServerError)
             }
         }
 
@@ -236,8 +240,8 @@ class StaccatoUpdateViewModel
                 timelineRepository.getMemoryCandidates()
                     .onSuccess { memoryCandidates ->
                         _memoryCandidates.value = memoryCandidates
-                    }.onException(::handleException)
-                    .onServerError(::handleError)
+                    }.onException(::handleMemoryCandidatesException)
+                    .onServerError(::handleServerError)
             }
         }
 
@@ -255,12 +259,12 @@ class StaccatoUpdateViewModel
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
                 }.onException(::handleException)
-                .onServerError(::handleError)
+                .onServerError(::handleServerError)
         }
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
             return CoroutineExceptionHandler { _, throwable ->
-                _errorMessage.postValue(throwable.message ?: "이미지 업로드에 실패했습니다.")
+                _warningMessage.postValue(throwable.message ?: "이미지 업로드에 실패했습니다.")
             }
         }
 
@@ -272,12 +276,12 @@ class StaccatoUpdateViewModel
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
         }
 
-        private fun handleError(
+        private fun handleServerError(
             status: Status,
-            errorMessage: String,
+            message: String,
         ) {
             _isPosting.value = false
-            _errorMessage.postValue(errorMessage)
+            _warningMessage.postValue(message)
         }
 
         private fun handleException(
@@ -285,6 +289,28 @@ class StaccatoUpdateViewModel
             errorMessage: String = "필수 값을 모두 입력해 주세요",
         ) {
             _isPosting.value = false
-            _errorMessage.postValue(errorMessage)
+            _warningMessage.postValue(errorMessage)
+        }
+
+        private fun handleMemoryCandidatesException(
+            e: Throwable,
+            message: String,
+        ) {
+            _error.setValue(StaccatoUpdateError.MemoryCandidates(message))
+        }
+
+        private fun handleInitializeException(
+            e: Throwable,
+            message: String,
+        ) {
+            _error.setValue(StaccatoUpdateError.StaccatoInitialize(message))
+        }
+
+        private fun handleUpdateException(
+            e: Throwable = IllegalArgumentException(),
+            message: String = "필수 값을 모두 입력해 주세요",
+        ) {
+            _isPosting.value = false
+            _error.setValue(StaccatoUpdateError.StaccatoUpdate(message))
         }
     }

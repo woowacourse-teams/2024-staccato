@@ -53,7 +53,7 @@ class StaccatoViewModel
                     .onSuccess {
                         _isDeleted.postValue(true)
                     }.onException(::handleException)
-                    .onServerError(::handleError)
+                    .onServerError(::handleServerError)
             }
 
         private fun fetchStaccatoData(staccatoId: Long) {
@@ -63,11 +63,11 @@ class StaccatoViewModel
                         _staccatoDetail.value = staccato.toStaccatoDetailUiModel()
                         _feeling.value = staccato.feeling
                     }.onException(::handleException)
-                    .onServerError(::handleError)
+                    .onServerError(::handleServerError)
             }
         }
 
-        private fun handleError(
+        private fun handleServerError(
             status: Status,
             errorMessage: String,
         ) {

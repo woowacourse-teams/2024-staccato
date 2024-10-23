@@ -15,7 +15,7 @@ class ImageDefaultRepository
         override suspend fun convertImageFileToUrl(imageFile: MultipartBody.Part): ResponseResult<ImageResponse> {
             val responseResult = handleApiResponse { imageApiService.postImage(imageFile) }
             return when (responseResult) {
-                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, ERROR_MESSAGE)
+                is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ResponseResult.ServerError ->
                     ResponseResult.ServerError(
                         responseResult.status,
@@ -27,6 +27,6 @@ class ImageDefaultRepository
         }
 
         companion object {
-            const val ERROR_MESSAGE = "이미지 업로드에 실패했습니다."
+            const val EXCEPTION_NETWORK_ERROR_MESSAGE = "네트워크 상태가 불안정 합니다."
         }
     }

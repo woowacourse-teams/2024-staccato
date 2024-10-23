@@ -21,6 +21,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityStaccatoUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
@@ -42,6 +43,7 @@ import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragm
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatoupdate.viewmodel.StaccatoUpdateViewModel
+import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -84,6 +86,7 @@ class StaccatoUpdateActivity :
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var address: String
+    private var currentSnackBar: Snackbar? = null
 
     override fun onNewPlaceSelected(
         placeId: String,
@@ -147,6 +150,8 @@ class StaccatoUpdateActivity :
         initItemTouchHelper()
         observeViewModelData()
         initGooglePlaceSearch()
+        showWarningMessage()
+        handleError()
         viewModel.fetchTargetData(staccatoId, memoryId, memoryTitle)
     }
 
@@ -307,9 +312,6 @@ class StaccatoUpdateActivity :
                 visitedAtSelectionFragment.initKeyWithSelectedValues(selectedVisitedAt)
             }
         }
-        viewModel.errorMessage.observe(this) { message ->
-            handleError(message)
-        }
     }
 
     private fun handleUpdateComplete(isUpdateCompleted: Boolean) {
@@ -323,11 +325,6 @@ class StaccatoUpdateActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
-    }
-
-    private fun handleError(errorMessage: String) {
-        window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showToast(errorMessage)
     }
 
     private fun fetchAddress(location: Location) {
@@ -384,6 +381,55 @@ class StaccatoUpdateActivity :
         lifecycleScope.launchWhenCreated {
             autocompleteFragment.setHint(getString(R.string.staccato_creation_place_search))
         }
+    }
+
+    private fun showWarningMessage() {
+        viewModel.warningMessage.observe(this) { message ->
+            window.clearFlags(FLAG_NOT_TOUCHABLE)
+            showToast(message)
+        }
+    }
+
+    private fun handleError() {
+        viewModel.error.observe(this) { error ->
+            when (error) {
+                is StaccatoUpdateError.MemoryCandidates -> handleMemoryCandidatesFail(error)
+                is StaccatoUpdateError.StaccatoInitialize -> handleInitializeFail(error)
+                is StaccatoUpdateError.StaccatoUpdate -> handleStaccatoUpdateFail(error)
+            }
+        }
+    }
+
+    private fun handleMemoryCandidatesFail(error: StaccatoUpdateError.MemoryCandidates) {
+        finish()
+        showToast(error.message)
+    }
+
+    private fun handleInitializeFail(error: StaccatoUpdateError.StaccatoInitialize) {
+        finish()
+        showToast(error.message)
+    }
+
+    private fun handleStaccatoUpdateFail(error: StaccatoUpdateError.StaccatoUpdate) {
+        window.clearFlags(FLAG_NOT_TOUCHABLE)
+        showExceptionSnackBar(error.message) { reUpdateStaccato() }
+    }
+
+    private fun reUpdateStaccato() {
+        viewModel.updateStaccato(staccatoId)
+    }
+
+    private fun showExceptionSnackBar(
+        message: String,
+        onRetryAction: () -> Unit,
+    ) {
+        currentSnackBar =
+            binding.root.getSnackBarWithAction(
+                message = message,
+                actionLabel = R.string.all_retry,
+                onAction = onRetryAction,
+                Snackbar.LENGTH_INDEFINITE,
+            ).apply { show() }
     }
 
     companion object {
