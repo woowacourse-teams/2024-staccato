@@ -133,7 +133,7 @@ class MemoryUpdateActivity :
         viewModel.error.observe(this) { error ->
             when (error) {
                 is MemoryUpdateError.MemoryInitialize -> handleInitializeFail(error)
-                is MemoryUpdateError.Photo -> handleCreatePhotoUrlFail(error)
+                is MemoryUpdateError.Thumbnail -> handleCreatePhotoUrlFail(error)
                 is MemoryUpdateError.MemoryUpdate -> handleMemoryUpdateFail(error)
             }
         }
@@ -144,7 +144,7 @@ class MemoryUpdateActivity :
         showToast(error.message)
     }
 
-    private fun handleCreatePhotoUrlFail(error: MemoryUpdateError.Photo) {
+    private fun handleCreatePhotoUrlFail(error: MemoryUpdateError.Thumbnail) {
         showExceptionSnackBar(error.message) { recreateThumbnailUrl(error.uri) }
     }
 

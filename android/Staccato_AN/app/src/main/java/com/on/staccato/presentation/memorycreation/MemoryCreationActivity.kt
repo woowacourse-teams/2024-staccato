@@ -123,13 +123,13 @@ class MemoryCreationActivity :
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
-                is MemoryCreationError.Photo -> handleCreatePhotoUrlFail(error)
+                is MemoryCreationError.Thumbnail -> handleCreatePhotoUrlFail(error)
                 is MemoryCreationError.MemoryCreate -> handleCreateException(error)
             }
         }
     }
 
-    private fun handleCreatePhotoUrlFail(error: MemoryCreationError.Photo) {
+    private fun handleCreatePhotoUrlFail(error: MemoryCreationError.Thumbnail) {
         showExceptionSnackBar(error.message) { recreateThumbnailUrl(error.uri) }
     }
 

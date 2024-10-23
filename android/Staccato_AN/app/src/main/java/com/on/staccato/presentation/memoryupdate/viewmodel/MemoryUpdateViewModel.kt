@@ -181,7 +181,7 @@ class MemoryUpdateViewModel
             message: String,
             uri: Uri,
         ) {
-            _error.setValue(MemoryUpdateError.Photo(message, uri))
+            _error.setValue(MemoryUpdateError.Thumbnail(message, uri))
         }
 
         private fun handleInitializeMemoryError(

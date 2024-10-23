@@ -5,7 +5,7 @@ import android.net.Uri
 sealed interface MemoryUpdateError {
     data class MemoryInitialize(val message: String) : MemoryUpdateError
 
-    data class Photo(val message: String, val uri: Uri) : MemoryUpdateError
+    data class Thumbnail(val message: String, val uri: Uri) : MemoryUpdateError
 
     data class MemoryUpdate(val message: String) : MemoryUpdateError
 }

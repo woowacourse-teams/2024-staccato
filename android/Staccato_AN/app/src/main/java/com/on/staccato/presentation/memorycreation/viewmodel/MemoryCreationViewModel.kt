@@ -147,7 +147,7 @@ class MemoryCreationViewModel
             message: String,
             thumbnailUri: Uri,
         ) {
-            _error.setValue(MemoryCreationError.Photo(message, thumbnailUri))
+            _error.setValue(MemoryCreationError.Thumbnail(message, thumbnailUri))
         }
 
         private fun handleCreateServerError(
