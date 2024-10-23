@@ -14,6 +14,7 @@ import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toTimelineUiModel
+import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -62,28 +63,41 @@ class TimelineViewModel
             }
         }
 
-        fun sortByLatest() {
-            _timeline.value = originalTimeline.sortedByDescending { it.startAt }
-        }
-
-        fun sortByOldest() {
-            val memoriesSortedByOldest = originalTimeline.sortedWith(compareBy(nullsLast()) { it.startAt }) ?: emptyList()
-            _timeline.value = memoriesSortedByOldest
-        }
-
-        fun filterWithPeriod() {
-            _timeline.value = originalTimeline.filter { it.startAt != null }
-        }
-
-        fun filterWithoutPeriod() {
-            _timeline.value = originalTimeline.filter { it.startAt == null }
+        fun sortTimeline(type: SortType) {
+            when (type) {
+                SortType.CREATION -> sortByCreation()
+                SortType.LATEST -> sortByLatest()
+                SortType.OLDEST -> sortByOldest()
+                SortType.WITH_PERIOD -> filterWithPeriod()
+                SortType.WITHOUT_PERIOD -> filterWithoutPeriod()
+            }
         }
 
         private fun setTimelineUiModels(timeline: Timeline) {
             _timeline.value = timeline.toTimelineUiModel()
-            if (originalTimeline.isNotEmpty()) originalTimeline.clear()
             originalTimeline.addAll(_timeline.value ?: emptyList())
             _isTimelineLoading.value = false
+        }
+
+        private fun sortByCreation() {
+            _timeline.value = originalTimeline
+        }
+
+        private fun sortByLatest() {
+            _timeline.value = originalTimeline.sortedByDescending { it.startAt }
+        }
+
+        private fun sortByOldest() {
+            val memoriesSortedByOldest = originalTimeline.sortedWith(compareBy(nullsLast()) { it.startAt }) ?: emptyList()
+            _timeline.value = memoriesSortedByOldest
+        }
+
+        private fun filterWithPeriod() {
+            _timeline.value = originalTimeline.filter { it.startAt != null }
+        }
+
+        private fun filterWithoutPeriod() {
+            _timeline.value = originalTimeline.filter { it.startAt == null }
         }
 
         private fun handleServerError(

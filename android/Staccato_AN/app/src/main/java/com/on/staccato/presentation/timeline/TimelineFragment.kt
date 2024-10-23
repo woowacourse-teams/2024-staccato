@@ -16,6 +16,7 @@ import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memorycreation.MemoryCreationActivity
 import com.on.staccato.presentation.timeline.adapter.TimelineAdapter
+import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -103,13 +104,8 @@ class TimelineFragment :
 
     private fun setUpCreationMenu(popup: PopupMenu) {
         popup.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.creation_order -> timelineViewModel.loadTimeline()
-                R.id.latest_order -> timelineViewModel.sortByLatest()
-                R.id.oldest_order -> timelineViewModel.sortByOldest()
-                R.id.with_period_order -> timelineViewModel.filterWithPeriod()
-                R.id.without_period_order -> timelineViewModel.filterWithoutPeriod()
-            }
+            val sortType: SortType = SortType.entries.first { it.menuId == menuItem.itemId }
+            timelineViewModel.sortTimeline(sortType)
             false
         }
     }
