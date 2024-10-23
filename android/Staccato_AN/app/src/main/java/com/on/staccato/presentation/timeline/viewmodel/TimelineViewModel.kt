@@ -89,12 +89,12 @@ class TimelineViewModel
         }
 
         private fun sortByOldest() {
-            val memoriesSortedByOldest = originalTimeline.sortedWith(compareBy(nullsLast()) { it.startAt }) ?: emptyList()
+            val memoriesSortedByOldest = originalTimeline.sortedWith(compareBy(nullsLast()) { it.startAt })
             _timeline.value = memoriesSortedByOldest
         }
 
         private fun filterWithPeriod() {
-            _timeline.value = originalTimeline.filter { it.startAt != null }
+            _timeline.value = originalTimeline.filter { it.startAt != null }.sortedByDescending { it.startAt }
         }
 
         private fun filterWithoutPeriod() {
