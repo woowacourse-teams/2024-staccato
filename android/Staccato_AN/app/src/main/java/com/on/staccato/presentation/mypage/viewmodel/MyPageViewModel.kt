@@ -36,15 +36,9 @@ class MyPageViewModel
             get() = _errorMessage
 
         override fun onCodeCopyClicked() {
-            checkMemberProfileNotNull { memberProfile ->
-                _uuidCode.setValue(memberProfile.uuidCode)
-            }
-        }
-
-        private fun checkMemberProfileNotNull(actionOnNotNull: (memberProfile: MemberProfile) -> Unit) {
             val memberProfile = memberProfile.value
             if (memberProfile != null) {
-                actionOnNotNull(memberProfile)
+                _uuidCode.setValue(memberProfile.uuidCode)
             } else {
                 _errorMessage.setValue(ERROR_NO_MEMBER_PROFILE)
             }

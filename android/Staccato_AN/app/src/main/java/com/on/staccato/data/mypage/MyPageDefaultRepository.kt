@@ -20,7 +20,7 @@ class MyPageDefaultRepository
                 is ResponseResult.Exception ->
                     ResponseResult.Exception(
                         responseResult.e,
-                        responseResult.message,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
 
                 is ResponseResult.ServerError ->
@@ -43,7 +43,7 @@ class MyPageDefaultRepository
                 is ResponseResult.Exception ->
                     ResponseResult.Exception(
                         responseResult.e,
-                        responseResult.message,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
 
                 is ResponseResult.ServerError ->
@@ -54,5 +54,9 @@ class MyPageDefaultRepository
 
                 is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
             }
+        }
+
+        companion object {
+            private const val EXCEPTION_NETWORK_ERROR_MESSAGE = "네트워크 상태가 불안정 합니다."
         }
     }

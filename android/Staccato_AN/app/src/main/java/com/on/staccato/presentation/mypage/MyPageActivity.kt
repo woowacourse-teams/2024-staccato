@@ -79,6 +79,7 @@ class MyPageActivity :
 
     private fun observeErrorMessage() {
         myPageViewModel.errorMessage.observe(this) { errorMessage ->
+            finish()
             showToast(errorMessage)
         }
     }
