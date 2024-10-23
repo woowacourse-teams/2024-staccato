@@ -24,6 +24,7 @@ import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.createPhotosByUrls
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
+import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel.Companion.FAIL_IMAGE_UPLOAD_MESSAGE
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateError
 import com.on.staccato.presentation.util.convertExcretaFile
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -264,7 +265,7 @@ class StaccatoUpdateViewModel
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
             return CoroutineExceptionHandler { _, throwable ->
-                _warningMessage.postValue(throwable.message ?: "이미지 업로드에 실패했습니다.")
+                _warningMessage.postValue(throwable.message ?: FAIL_IMAGE_UPLOAD_MESSAGE)
             }
         }
 

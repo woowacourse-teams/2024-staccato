@@ -252,7 +252,7 @@ class StaccatoCreationViewModel
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
             return CoroutineExceptionHandler { _, throwable ->
-                _warningMessage.postValue(throwable.message ?: "이미지 업로드에 실패했습니다.")
+                _warningMessage.postValue(throwable.message ?: FAIL_IMAGE_UPLOAD_MESSAGE)
             }
         }
 
@@ -298,6 +298,7 @@ class StaccatoCreationViewModel
         companion object {
             const val MAX_PHOTO_NUMBER = 5
             const val MAX_PHOTO_NUMBER_MESSAGE = "사진은 최대 ${MAX_PHOTO_NUMBER}장만 첨부할 수 있어요!"
+            const val FAIL_IMAGE_UPLOAD_MESSAGE = "이미지 업로드에 실패했습니다."
             const val FORM_DATA_NAME = "imageFile"
         }
     }
