@@ -31,17 +31,21 @@ class StaccatoCommentsViewModel
 
         val isEmpty: LiveData<Boolean> = _comments.map { it.isEmpty() }
 
-        val commentInput = MutableLiveData<String>("")
+        val commentInput = MutableLiveData("")
 
         private val _isDeleteSuccess = MutableSingleLiveData<Boolean>()
         val isDeleteSuccess: SingleLiveData<Boolean>
             get() = _isDeleteSuccess
 
-        private val _isLoading = MutableSingleLiveData(false)
-        val isLoading: SingleLiveData<Boolean>
-            get() = _isLoading
+        private val _isSendingSuccess = MutableSingleLiveData(false)
+        val isSendingSuccess: SingleLiveData<Boolean>
+            get() = _isSendingSuccess
 
-        private var staccatoId: Long = -1L
+        private val _errorMessage = MutableSingleLiveData<String>()
+        val errorMessage: SingleLiveData<String>
+            get() = _errorMessage
+
+        private var staccatoId: Long = STACCATO_DEFAULT_ID
 
         override fun onSendButtonClicked() {
             viewModelScope.launch {
@@ -50,14 +54,14 @@ class StaccatoCommentsViewModel
         }
 
         override fun onUpdateButtonClicked(commentId: Long) {
-            Log.d("hodu", "not implemented yet")
+            // TODO
         }
 
         override fun onDeleteButtonClicked(commentId: Long) {
             viewModelScope.launch {
                 commentRepository.deleteComment(commentId)
                     .onSuccess {
-                        fetchComments()
+                        fetchComments(staccatoId)
                         _isDeleteSuccess.postValue(true)
                     }
                     .onServerError(::handleServerError)
@@ -65,9 +69,10 @@ class StaccatoCommentsViewModel
             }
         }
 
-        fun fetchComments() {
+        fun fetchComments(id: Long) {
+            setStaccatoId(id)
             viewModelScope.launch {
-                commentRepository.fetchComments(staccatoId)
+                commentRepository.fetchComments(id)
                     .onSuccess { comments ->
                         setComments(comments.map { it.toCommentUiModel() })
                     }
@@ -76,24 +81,21 @@ class StaccatoCommentsViewModel
             }
         }
 
-        fun setMemoryId(id: Long) {
-            staccatoId = id
-        }
-
-        fun setComments(newComments: List<CommentUiModel>) {
-            _comments.value = newComments
+        private fun setStaccatoId(id: Long) {
+            if (staccatoId == STACCATO_DEFAULT_ID) {
+                staccatoId = id
+            }
         }
 
         private fun sendComment() {
             commentInput.value?.let {
-                _isLoading.setValue(true)
                 val newComment = NewComment(staccatoId, it)
+                commentInput.value = ""
                 viewModelScope.launch {
                     commentRepository.createComment(newComment)
                         .onSuccess {
-                            commentInput.value = ""
-                            fetchComments()
-                            _isLoading.postValue(false)
+                            fetchComments(staccatoId)
+                            _isSendingSuccess.postValue(true)
                         }
                         .onServerError(::handleServerError)
                         .onException(::handleException)
@@ -101,17 +103,25 @@ class StaccatoCommentsViewModel
             }
         }
 
+        private fun setComments(newComments: List<CommentUiModel>) {
+            _comments.value = newComments
+        }
+
         private fun handleServerError(
             status: Status,
             message: String,
         ) {
-            _isLoading.postValue(false)
+            _errorMessage.postValue(message)
         }
 
         private fun handleException(
             e: Throwable,
             message: String,
         ) {
-            _isLoading.postValue(false)
+            _errorMessage.postValue(message)
+        }
+
+        companion object {
+            const val STACCATO_DEFAULT_ID = -1L
         }
     }
