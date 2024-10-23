@@ -182,5 +182,7 @@
     // fragment_location_dialog
     <string name="location_dialog_title">위치 권한 설정</string>
     <string name="location_dialog_permission_rationale">위치 권한을 활성화하면 아래 기능들을 사용할 수 있어요. \n ▪️현 위치를 조회할 수 있어요 \n ▪️현 위치를 기반으로 빠르게 스타카토를\n &#160;생성할 수 있어요 \n\n더 나은 서비스 경험을 원하신다면 위치 권한을 허용해 주세요!</string>
+    <string name="sort_memories_with_period_order">기간 있는 추억</string>
+    <string name="sort_memories_without_period_order">기간 없는 추억</string>
 
 </resources>

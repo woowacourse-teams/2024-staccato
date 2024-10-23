@@ -9,4 +9,10 @@
     <item
         android:id="@+id/oldest_order"
         android:title="@string/sort_oldest_order" />
+    <item
+        android:id="@+id/with_period_order"
+        android:title="@string/sort_memories_with_period_order" />
+    <item
+        android:id="@+id/without_period_order"
+        android:title="@string/sort_memories_without_period_order" />
 </menu>

@@ -107,6 +107,8 @@ class TimelineFragment :
                 R.id.creation_order -> timelineViewModel.loadTimeline()
                 R.id.latest_order -> timelineViewModel.sortByLatest()
                 R.id.oldest_order -> timelineViewModel.sortByOldest()
+                R.id.with_period_order -> timelineViewModel.filterWithPeriod()
+                R.id.without_period_order -> timelineViewModel.filterWithoutPeriod()
             }
             false
         }

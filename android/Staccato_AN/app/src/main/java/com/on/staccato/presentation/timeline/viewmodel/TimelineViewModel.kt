@@ -38,6 +38,8 @@ class TimelineViewModel
         val isTimelineLoading: LiveData<Boolean>
             get() = _isTimelineLoading
 
+        private var originalTimeline = mutableListOf<TimelineUiModel>()
+
         private val coroutineExceptionHandler =
             CoroutineExceptionHandler { context, throwable ->
                 Log.e(
@@ -61,16 +63,26 @@ class TimelineViewModel
         }
 
         fun sortByLatest() {
-            _timeline.value = _timeline.value?.sortedByDescending { it.startAt }
+            _timeline.value = originalTimeline.sortedByDescending { it.startAt }
         }
 
         fun sortByOldest() {
-            val memoriesSortedByOldest = _timeline.value?.sortedWith(compareBy(nullsLast()) { it.startAt }) ?: emptyList()
+            val memoriesSortedByOldest = originalTimeline.sortedWith(compareBy(nullsLast()) { it.startAt }) ?: emptyList()
             _timeline.value = memoriesSortedByOldest
+        }
+
+        fun filterWithPeriod() {
+            _timeline.value = originalTimeline.filter { it.startAt != null }
+        }
+
+        fun filterWithoutPeriod() {
+            _timeline.value = originalTimeline.filter { it.startAt == null }
         }
 
         private fun setTimelineUiModels(timeline: Timeline) {
             _timeline.value = timeline.toTimelineUiModel()
+            if (originalTimeline.isNotEmpty()) originalTimeline.clear()
+            originalTimeline.addAll(_timeline.value ?: emptyList())
             _isTimelineLoading.value = false
         }
 
