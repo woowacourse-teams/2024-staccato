@@ -80,6 +80,7 @@ class MainActivity :
         observeCurrentLocation()
         observeStaccatoLocations()
         observeStaccatoId()
+        observeDeletedStaccato()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
@@ -271,6 +272,14 @@ class MainActivity :
                 BOTTOM_SHEET_STATE_REQUEST_KEY,
                 bundleOf(BOTTOM_SHEET_NEW_STATE to STATE_EXPANDED),
             )
+        }
+    }
+
+    private fun observeDeletedStaccato() {
+        sharedViewModel.isStaccatosUpdated.observe(this) { isDeleted ->
+            if (isDeleted) {
+                mapsViewModel.loadStaccatos()
+            }
         }
     }
 
