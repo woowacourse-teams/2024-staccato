@@ -308,4 +308,35 @@
         <item name="android:textColor">@color/gray3</item>
     </style>
 
+    <!--  Creation of Update Text styles  -->
+
+    <style name="BackgroundedTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
+        <item name="android:layout_marginHorizontal">24dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">12.5dp</item>
+        <item name="android:textAppearance">@style/Typography.Body1.Not.Resizable</item>
+        <item name="android:textColor">@color/staccato_black</item>
+    </style>
+
+    <style name="BoundedTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/shape_all_gray1_4dp</item>
+        <item name="android:layout_marginHorizontal">24dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">12.5dp</item>
+        <item name="android:textAppearance">@style/Typography.Body1.Not.Resizable</item>
+        <item name="android:textColor">@color/gray3</item>
+    </style>
+
+    <style name="HintTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/Typography.Body4.Not.Resizable</item>
+        <item name="android:textColor">@color/gray3</item>
+    </style>
+
 </resources>
