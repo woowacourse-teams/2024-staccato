@@ -31,6 +31,9 @@ class MemoryViewModel
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
 
+        private val _exceptionMessage = MutableSingleLiveData<String>()
+        val exceptionMessage: SingleLiveData<String> get() = _exceptionMessage
+
         private val _isDeleteSuccess = MutableSingleLiveData<Boolean>(false)
         val isDeleteSuccess: SingleLiveData<Boolean> get() = _isDeleteSuccess
 
@@ -65,17 +68,13 @@ class MemoryViewModel
             status: Status,
             message: String,
         ) {
-            _errorMessage.setValue(message)
+            _errorMessage.postValue(message)
         }
 
         private fun handelException(
             e: Throwable,
             message: String,
         ) {
-            _errorMessage.setValue(MEMORY_ERROR_MESSAGE)
-        }
-
-        companion object {
-            private const val MEMORY_ERROR_MESSAGE = "추억을 조회할 수 없습니다"
+            _exceptionMessage.postValue(message)
         }
     }

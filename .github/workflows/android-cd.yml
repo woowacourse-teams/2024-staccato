@@ -3,7 +3,7 @@ name: Android CI/CD for release
 on:
   push:
     paths:  'android/**'
-    branches: [ "main" ]
+    branches: [ "main", "release-an" ]
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
@@ -70,22 +70,23 @@ jobs:
       - name: Build Release AAB
         run: ./gradlew bundleRelease
 
-      - name: Upload Release APK
+      - name: Upload Release APK in artifact
         uses: actions/upload-artifact@v3
         with:
           name: app-release.apk
           path: android/Staccato_AN/app/build/outputs/apk/release/app-release.apk
 
-      - name: Upload Release AAB
+      - name: Upload Release AAB in artifact
         uses: actions/upload-artifact@v3
         with:
           name: app-release.aab
           path: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
 
-#      - name: Upload On Google Play
-#        uses: r0adkll/upload-google-play@v1
-#        with:
-#          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-#          packageName: com.on.staccato
-#          releaseFiles: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
-#          track: internal
+      - name: Deploy AAB On Google Play Console
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
+          packageName: com.on.staccato
+          releaseFiles: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
+          track: product
+          whatsNewDirectory: android/Staccato_AN/deploy/whatsnew

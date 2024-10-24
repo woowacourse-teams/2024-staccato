@@ -20,6 +20,7 @@ import com.on.staccato.domain.repository.MemoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
+import com.on.staccato.presentation.memoryupdate.MemoryUpdateError
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -54,9 +55,6 @@ class MemoryUpdateViewModel
         private val _isUpdateSuccess = MutableSingleLiveData<Boolean>(false)
         val isUpdateSuccess: SingleLiveData<Boolean> get() = _isUpdateSuccess
 
-        private val _errorMessage = MutableLiveData<String>()
-        val errorMessage: LiveData<String> get() = _errorMessage
-
         private val _isPosting = MutableLiveData<Boolean>()
         val isPosting: LiveData<Boolean> get() = _isPosting
 
@@ -67,14 +65,20 @@ class MemoryUpdateViewModel
 
         private var memoryId: Long = 0L
 
+        private val _errorMessage = MutableLiveData<String>()
+        val errorMessage: LiveData<String> get() = _errorMessage
+
+        private val _error = MutableSingleLiveData<MemoryUpdateError>()
+        val error: SingleLiveData<MemoryUpdateError> get() = _error
+
         fun fetchMemory(memoryId: Long) {
             fetchMemoryId(memoryId)
             viewModelScope.launch {
                 val result = memoryRepository.getMemory(memoryId)
                 result
                     .onSuccess(::initializeMemory)
-                    .onServerError(::handleServerError)
-                    .onException(::handelException)
+                    .onServerError(::handleInitializeMemoryError)
+                    .onException(::handleInitializeMemoryException)
             }
         }
 
@@ -94,8 +98,10 @@ class MemoryUpdateViewModel
                 val result: ResponseResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)
                 result.onSuccess(::setThumbnailUrl)
-                    .onServerError(::handleServerError)
-                    .onException(::handelException)
+                    .onServerError(::handlePhotoError)
+                    .onException { e, message ->
+                        handlePhotoException(e, message, thumbnailUri)
+                    }
             }
         }
 
@@ -115,8 +121,8 @@ class MemoryUpdateViewModel
                 val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory)
                 result
                     .onSuccess { updateSuccessStatus() }
-                    .onServerError(::handleServerError)
-                    .onException(::handelException)
+                    .onServerError(::handleUpdateError)
+                    .onException(::handleUpdateException)
             }
         }
 
@@ -163,7 +169,36 @@ class MemoryUpdateViewModel
             _isUpdateSuccess.setValue(true)
         }
 
-        private fun handleServerError(
+        private fun handlePhotoError(
+            status: Status,
+            message: String,
+        ) {
+            _errorMessage.value = message
+        }
+
+        private fun handlePhotoException(
+            e: Throwable,
+            message: String,
+            uri: Uri,
+        ) {
+            _error.setValue(MemoryUpdateError.Thumbnail(message, uri))
+        }
+
+        private fun handleInitializeMemoryError(
+            status: Status,
+            message: String,
+        ) {
+            _errorMessage.value = message
+        }
+
+        private fun handleInitializeMemoryException(
+            e: Throwable,
+            message: String,
+        ) {
+            _error.setValue(MemoryUpdateError.MemoryInitialization(message))
+        }
+
+        private fun handleUpdateError(
             status: Status,
             message: String,
         ) {
@@ -171,16 +206,15 @@ class MemoryUpdateViewModel
             _errorMessage.value = message
         }
 
-        private fun handelException(
+        private fun handleUpdateException(
             e: Throwable,
             message: String,
         ) {
             _isPosting.value = false
-            _errorMessage.value = MEMORY_UPDATE_ERROR_MESSAGE
+            _error.setValue(MemoryUpdateError.MemoryUpdate(message))
         }
 
         companion object {
             private const val MEMORY_FILE_NAME = "imageFile"
-            private const val MEMORY_UPDATE_ERROR_MESSAGE = "추억 수정에 실패했습니다"
         }
     }

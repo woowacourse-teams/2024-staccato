@@ -9,6 +9,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentStaccatoBinding
@@ -22,6 +23,7 @@ import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.StaccatoFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
+import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -52,6 +54,8 @@ class StaccatoFragment :
         observeStaccatoViewModel()
         observeCommentsViewModel()
         setStaccatoFeelingFragment(savedInstanceState)
+        showErrorToast()
+        showExceptionSnackBar()
     }
 
     override fun onDeleteClicked() {
@@ -109,22 +113,12 @@ class StaccatoFragment :
 
     private fun observeStaccatoViewModel() {
         observeStaccatoDetail()
-        observeStaccatoLoadingError()
         observeStaccatoDelete()
     }
 
     private fun observeStaccatoDetail() {
         staccatoViewModel.staccatoDetail.observe(viewLifecycleOwner) { staccatoDetail ->
             pagePhotoAdapter.submitList(staccatoDetail.staccatoImageUrls)
-        }
-    }
-
-    private fun observeStaccatoLoadingError() {
-        staccatoViewModel.isError.observe(viewLifecycleOwner) { isError ->
-            if (isError) {
-                showToast(getString(R.string.staccato_loading_failure))
-                findNavController().popBackStack()
-            }
         }
     }
 
@@ -207,6 +201,32 @@ class StaccatoFragment :
                 staccatoFeelingSelectionFragment,
             )
             .commit()
+    }
+
+    private fun showErrorToast() {
+        staccatoViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+            showToast(message)
+            findNavController().popBackStack()
+        }
+        commentsViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+            showToast(message)
+        }
+    }
+
+    private fun showExceptionSnackBar() {
+        staccatoViewModel.exceptionMessage.observe(viewLifecycleOwner) { message ->
+            view?.showSnackBarWithAction(
+                message = message,
+                actionLabel = R.string.all_retry,
+                onAction = ::onRetryAction,
+                Snackbar.LENGTH_INDEFINITE,
+            )
+        }
+    }
+
+    private fun onRetryAction() {
+        loadStaccato()
+        loadComments()
     }
 
     companion object {

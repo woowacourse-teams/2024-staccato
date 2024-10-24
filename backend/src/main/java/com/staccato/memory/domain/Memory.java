@@ -15,6 +15,7 @@ import jakarta.persistence.OneToMany;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
+import com.staccato.member.domain.Nickname;
 import com.staccato.moment.domain.Moment;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,7 +27,7 @@ import lombok.NonNull;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Memory extends BaseEntity {
-    private static final String DEFAULT_TITLE = "기본 추억";
+    private static final String DEFAULT_SUBTITLE = "의 추억";
     private static final String DEFAULT_DESCRIPTION = "스타카토를 추억에 담아보세요.";
 
     @Id
@@ -52,9 +53,9 @@ public class Memory extends BaseEntity {
         this.term = new Term(startAt, endAt);
     }
 
-    public static Memory basic() {
+    public static Memory basic(Nickname memberNickname) {
         return Memory.builder()
-                .title(DEFAULT_TITLE)
+                .title(memberNickname.getNickname() + DEFAULT_SUBTITLE)
                 .description(DEFAULT_DESCRIPTION)
                 .build();
     }

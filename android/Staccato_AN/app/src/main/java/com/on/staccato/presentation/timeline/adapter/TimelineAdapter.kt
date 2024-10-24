@@ -30,8 +30,11 @@ class TimelineAdapter(private val eventHandler: TimelineHandler) :
         holder.bind(currentList[position])
     }
 
-    fun updateTimeline(newTimeline: List<TimelineUiModel>) {
-        submitList(newTimeline)
+    fun updateTimeline(
+        newTimeline: List<TimelineUiModel>,
+        commitCallback: Runnable?,
+    ) {
+        submitList(newTimeline, commitCallback)
     }
 
     companion object {

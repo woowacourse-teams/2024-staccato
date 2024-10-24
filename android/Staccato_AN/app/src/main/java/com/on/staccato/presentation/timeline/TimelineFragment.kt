@@ -1,11 +1,14 @@
 package com.on.staccato.presentation.timeline
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentTimelineBinding
 import com.on.staccato.presentation.base.BindingFragment
@@ -14,7 +17,9 @@ import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memorycreation.MemoryCreationActivity
 import com.on.staccato.presentation.timeline.adapter.TimelineAdapter
+import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
+import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,7 +54,10 @@ class TimelineFragment :
     }
 
     override fun onSortClicked() {
-        showToast(getString(R.string.all_default_not_supported))
+        val sortButton = binding.btnTimelineSortMemories
+        val popup = sortButton.inflateCreationMenu()
+        setUpCreationMenu(popup)
+        popup.show()
     }
 
     private fun setupBinding() {
@@ -69,11 +77,22 @@ class TimelineFragment :
 
     private fun setUpObserving() {
         timelineViewModel.timeline.observe(viewLifecycleOwner) { timeline ->
-            adapter.updateTimeline(timeline)
+            adapter.updateTimeline(timeline) {
+                binding.rvTimeline.scrollToPosition(0)
+            }
         }
 
         timelineViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             showToast(message)
+        }
+
+        timelineViewModel.exceptionMessage.observe(viewLifecycleOwner) { message ->
+            view?.showSnackBarWithAction(
+                message = message,
+                actionLabel = R.string.all_retry,
+                onAction = ::onRetryAction,
+                Snackbar.LENGTH_INDEFINITE,
+            )
         }
 
         sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) { isUpdated ->
@@ -81,5 +100,30 @@ class TimelineFragment :
                 timelineViewModel.loadTimeline()
             }
         }
+    }
+
+    private fun View.inflateCreationMenu(): PopupMenu {
+        val popup =
+            PopupMenu(
+                this.context,
+                this,
+                Gravity.END,
+                0,
+                R.style.Theme_Staccato_AN_PopupMenu,
+            )
+        popup.menuInflater.inflate(R.menu.menu_sort, popup.menu)
+        return popup
+    }
+
+    private fun setUpCreationMenu(popup: PopupMenu) {
+        popup.setOnMenuItemClickListener { menuItem ->
+            val sortType: SortType = SortType.from(menuItem.itemId)
+            timelineViewModel.sortTimeline(sortType)
+            false
+        }
+    }
+
+    private fun onRetryAction() {
+        timelineViewModel.loadTimeline()
     }
 }

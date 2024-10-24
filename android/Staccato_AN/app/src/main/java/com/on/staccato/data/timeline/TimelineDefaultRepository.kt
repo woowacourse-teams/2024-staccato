@@ -25,7 +25,7 @@ class TimelineDefaultRepository
                 is ResponseResult.Exception ->
                     ResponseResult.Exception(
                         responseResult.e,
-                        EXCEPTION_ERROR_MESSAGE,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
             }
         }
@@ -42,12 +42,12 @@ class TimelineDefaultRepository
                 is ResponseResult.Exception ->
                     ResponseResult.Exception(
                         responseResult.e,
-                        EXCEPTION_ERROR_MESSAGE,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
             }
         }
 
         companion object {
-            private const val EXCEPTION_ERROR_MESSAGE = "예기치 못한 오류입니다.\n잠시 후에 다시 시도해주세요."
+            private const val EXCEPTION_NETWORK_ERROR_MESSAGE = "네트워크 연결이 불안정합니다.\n연결을 재설정한 후 다시 시도해 주세요."
         }
     }
