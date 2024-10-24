@@ -48,7 +48,7 @@ public class AuthService {
     }
 
     private void createBasicMemory(Member member) {
-        Memory memory = Memory.basic();
+        Memory memory = Memory.basic(member.getNickname());
         memory.addMemoryMember(member);
         memoryRepository.save(memory);
     }
