@@ -1,9 +1,9 @@
-name: Android CI for develop-an
+name: Android CI for develop
 
 on:
   pull_request:
     paths: 'android/**'
-    branches: [ "develop-an" ]
+    branches: [ "develop", "release-an", "main" ]
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
@@ -62,7 +62,7 @@ jobs:
         run: |
           mkdir ./app/signing
           echo "$UPLOAD_KEY_STORE_JKS" | base64 --decode > ./app/signing/upload_key_store.jks
-          echo $KEY_STORE_PROPERTIES > ./app/signing/keystore.properties
+          echo "$KEY_STORE_PROPERTIES" > ./app/signing/keystore.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew

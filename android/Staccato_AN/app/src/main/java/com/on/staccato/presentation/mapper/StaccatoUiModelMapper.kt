@@ -35,11 +35,11 @@ fun Comment.toCommentUiModel() =
 fun Feeling.toFeelingUiModel(selectedFeeling: String = Feeling.NOTHING.value): FeelingUiModel {
     val colorAndGraySrc =
         when (this) {
-            Feeling.HAPPY -> R.drawable.feeling_happy to R.drawable.feeling_happy_gray
-            Feeling.ANGRY -> R.drawable.feeling_angry to R.drawable.feeling_angry_gray
-            Feeling.SAD -> R.drawable.feeling_sad to R.drawable.feeling_sad_gray
-            Feeling.SCARED -> R.drawable.feeling_scared to R.drawable.feeling_scared_gray
-            Feeling.EXCITED -> R.drawable.feeling_excited to R.drawable.feeling_excited_gray
+            Feeling.HAPPY -> R.drawable.feeling_happy_note to R.drawable.feeling_happy_note_gray
+            Feeling.ANGRY -> R.drawable.feeling_angry_note to R.drawable.feeling_angry_note_gray
+            Feeling.SAD -> R.drawable.feeling_sad_note to R.drawable.feeling_sad_note_gray
+            Feeling.SCARED -> R.drawable.feeling_scared_note to R.drawable.feeling_scared_note_gray
+            Feeling.EXCITED -> R.drawable.feeling_excited_note to R.drawable.feeling_excited_note_gray
             Feeling.NOTHING -> null
         }
     return FeelingUiModel(

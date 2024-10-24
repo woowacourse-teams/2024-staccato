@@ -18,35 +18,36 @@ class StaccatoRemoteDataSource
         override suspend fun fetchStaccatos(): ResponseResult<StaccatoLocationResponse> =
             handleApiResponse { staccatoApiService.getStaccatos() }
 
-        override suspend fun fetchStaccato(staccatoId: Long): StaccatoResponse {
-            return staccatoApiService.getStaccato(momentId = staccatoId)
-        }
+        override suspend fun fetchStaccato(staccatoId: Long): ResponseResult<StaccatoResponse> =
+            handleApiResponse { staccatoApiService.getStaccato(momentId = staccatoId) }
 
-        override suspend fun createStaccato(staccatoCreationRequest: StaccatoCreationRequest): StaccatoCreationResponse {
-            return staccatoApiService.postStaccato(staccatoCreationRequest)
-        }
+        override suspend fun createStaccato(staccatoCreationRequest: StaccatoCreationRequest): ResponseResult<StaccatoCreationResponse> =
+            handleApiResponse { staccatoApiService.postStaccato(staccatoCreationRequest) }
 
         override suspend fun updateStaccato(
             staccatoId: Long,
             staccatoUpdateRequest: StaccatoUpdateRequest,
-        ) {
-            return staccatoApiService.putStaccato(
-                momentId = staccatoId,
-                staccatoUpdateRequest,
-            )
-        }
+        ): ResponseResult<Unit> =
+            handleApiResponse {
+                staccatoApiService.putStaccato(
+                    momentId = staccatoId,
+                    staccatoUpdateRequest,
+                )
+            }
 
-        override suspend fun deleteStaccato(staccatoId: Long) {
-            staccatoApiService.deleteStaccato(staccatoId)
-        }
+        override suspend fun deleteStaccato(staccatoId: Long): ResponseResult<Unit> =
+            handleApiResponse {
+                staccatoApiService.deleteStaccato(staccatoId)
+            }
 
         override suspend fun updateFeeling(
             staccatoId: Long,
             feelingRequest: FeelingRequest,
-        ) {
-            staccatoApiService.postFeeling(
-                momentId = staccatoId,
-                feelingRequest = feelingRequest,
-            )
-        }
+        ): ResponseResult<Unit> =
+            handleApiResponse {
+                staccatoApiService.postFeeling(
+                    momentId = staccatoId,
+                    feelingRequest = feelingRequest,
+                )
+            }
     }

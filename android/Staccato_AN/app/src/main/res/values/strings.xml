@@ -20,6 +20,7 @@
     <string name="all_default_not_supported">아직 지원하지 않는 기능이에요.</string>
     <string name="all_required_mark">*</string>
     <string name="all_setting">설정</string>
+    <string name="all_retry">재시도</string>
     <string name="all_am">오전</string>
     <string name="all_pm">오후</string>
     <string name="all_location_permission_denial">위치 권한을 거부 하셨습니다.</string>
@@ -46,6 +47,11 @@
     <string name="timeline_create_memory">추억 생성하기</string>
     <string name="timeline_memory_creation_btn_description">추억 만들기로 이동</string>
     <string name="timeline_sort_memories_btn_description">나의 추억들 정렬</string>
+
+    // menu_sort
+    <string name="sort_creation_order">생성 순</string>
+    <string name="sort_latest_order">최신 순</string>
+    <string name="sort_oldest_order">과거 순</string>
 
     // item_timeline
     <string name="timeline_memory_icon_description">추억 아이콘</string>
@@ -183,5 +189,7 @@
     // fragment_location_dialog
     <string name="location_dialog_title">위치 권한 설정</string>
     <string name="location_dialog_permission_rationale">위치 권한을 활성화하면 아래 기능들을 사용할 수 있어요. \n ▪️현 위치를 조회할 수 있어요 \n ▪️현 위치를 기반으로 빠르게 스타카토를\n &#160;생성할 수 있어요 \n\n더 나은 서비스 경험을 원하신다면 위치 권한을 허용해 주세요!</string>
+    <string name="sort_memories_with_period_order">기간 있는 추억</string>
+    <string name="sort_memories_without_period_order">기간 없는 추억</string>
 
 </resources>

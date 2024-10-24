@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.staccato.comments
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,13 +32,17 @@ class StaccatoCommentsViewModel
 
         val commentInput = MutableLiveData("")
 
+        private val _isDeleteSuccess = MutableSingleLiveData<Boolean>()
+        val isDeleteSuccess: SingleLiveData<Boolean>
+            get() = _isDeleteSuccess
+
         private val _isSendingSuccess = MutableSingleLiveData(false)
         val isSendingSuccess: SingleLiveData<Boolean>
             get() = _isSendingSuccess
 
-        private val _isDeleteSuccess = MutableSingleLiveData<Boolean>()
-        val isDeleteSuccess: SingleLiveData<Boolean>
-            get() = _isDeleteSuccess
+        private val _errorMessage = MutableSingleLiveData<String>()
+        val errorMessage: SingleLiveData<String>
+            get() = _errorMessage
 
         private var staccatoId: Long = STACCATO_DEFAULT_ID
 
@@ -50,7 +53,7 @@ class StaccatoCommentsViewModel
         }
 
         override fun onUpdateButtonClicked(commentId: Long) {
-            Log.d("hodu", "not implemented yet")
+            // TODO
         }
 
         override fun onDeleteButtonClicked(commentId: Long) {
@@ -107,26 +110,14 @@ class StaccatoCommentsViewModel
             status: Status,
             message: String,
         ) {
-            when (status) {
-                is Status.Code ->
-                    Log.e(
-                        this.javaClass.simpleName,
-                        "ServerError(${status.code}): $message",
-                    )
-
-                is Status.Message ->
-                    Log.e(
-                        this.javaClass.simpleName,
-                        "ServerError(${status.message}): $message",
-                    )
-            }
+            _errorMessage.postValue(message)
         }
 
         private fun handleException(
             e: Throwable,
             message: String,
         ) {
-            Log.e(this.javaClass.simpleName, "Exception($e): $message")
+            _errorMessage.postValue(message)
         }
 
         companion object {

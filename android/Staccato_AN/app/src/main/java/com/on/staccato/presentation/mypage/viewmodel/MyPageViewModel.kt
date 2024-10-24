@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.mypage.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,15 +36,9 @@ class MyPageViewModel
             get() = _errorMessage
 
         override fun onCodeCopyClicked() {
-            checkMemberProfileNotNull { memberProfile ->
-                _uuidCode.setValue(memberProfile.uuidCode)
-            }
-        }
-
-        private fun checkMemberProfileNotNull(actionOnNotNull: (memberProfile: MemberProfile) -> Unit) {
             val memberProfile = memberProfile.value
             if (memberProfile != null) {
-                actionOnNotNull(memberProfile)
+                _uuidCode.setValue(memberProfile.uuidCode)
             } else {
                 _errorMessage.setValue(ERROR_NO_MEMBER_PROFILE)
             }
@@ -69,19 +62,6 @@ class MyPageViewModel
             errorMessage: String,
         ) {
             _errorMessage.postValue(errorMessage)
-            when (status) {
-                is Status.Message ->
-                    Log.e(
-                        this::class.java.simpleName,
-                        "Error Occurred | status: ${status.message}, message: $errorMessage",
-                    )
-
-                is Status.Code ->
-                    Log.e(
-                        this::class.java.simpleName,
-                        "Error Occurred | status: ${status.code}, message: $errorMessage",
-                    )
-            }
         }
 
         private fun handleException(
@@ -89,10 +69,6 @@ class MyPageViewModel
             errorMessage: String,
         ) {
             _errorMessage.postValue(errorMessage)
-            Log.e(
-                this::class.java.simpleName,
-                "Exception Caught | throwable: $e, message: $errorMessage",
-            )
         }
 
         companion object {
