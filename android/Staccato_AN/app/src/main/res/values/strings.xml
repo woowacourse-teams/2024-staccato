@@ -161,7 +161,7 @@
     <string name="photo_attach_title">사진을 등록해 주세요</string>
     <string name="photo_attach_camera">카메라 열기</string>
     <string name="photo_attach_album">앨범에서 가져오기</string>
-    <string name="snack_bar_require_photo_album_permission">사진 및 동영상 액세스 권한을 허용해 주세요.</string>
+    <string name="snack_bar_require_photo_album_permission">카메라와 사진 및 동영상 접근 권한이 필요합니다.\n설정에서 권한을 허용해 주세요.</string>
     <string name="snack_bar_camera_error">카메라 실행 중 에러가 발생했습니다.\n잠시 후에 다시 시도해주세요.</string>
     <string name="snack_bar_gallery_error">사진을 불러올 수 없습니다.\n잠시 후에 다시 시도해주세요.</string>
     <string name="snack_bar_no_camera">실행할 수 있는 카메라 앱이 없습니다.</string>
