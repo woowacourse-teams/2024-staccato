@@ -9,11 +9,23 @@ spring:
       mode: always
   datasource:
     writer:
+      hikari:
+        maximum-pool-size: 10
+        minimum-idle: 10
+        idle-timeout: 600000
+        connection-timeout: 8000
+        max-lifetime: 1800000
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbcUrl: ${SPRING_WRITER_DATASOURCE_URL}
       username: ${SPRING_DATASOURCE_USERNAME}
       password: ${SPRING_DATASOURCE_PASSWORD}
     reader:
+      hikari:
+        maximum-pool-size: 10
+        minimum-idle: 10
+        idle-timeout: 600000
+        connection-timeout: 8000
+        max-lifetime: 1800000
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbcUrl: ${SPRING_READER_DATASOURCE_URL}
       username: ${SPRING_DATASOURCE_USERNAME}
@@ -79,5 +91,10 @@ management:
 
 server:
   tomcat:
+    accept-count: 100
+    max-connections: 2048
+    threads:
+      min-spare: 10
+      max: 30
     mbeanregistry:
       enabled: true
