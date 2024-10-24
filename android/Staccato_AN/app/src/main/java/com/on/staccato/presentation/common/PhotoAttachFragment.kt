@@ -78,7 +78,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
         checkPermissionsAndLaunch(
             permissions = CAMERA_REQUIRED_PERMISSIONS,
             requestPermissionLauncherOnNotGranted = requestCameraPermissionLauncher,
-            onGranted = { startCamera() }
+            onGranted = { startCamera() },
         )
     }
 
@@ -133,9 +133,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
             }
     }
 
-    private fun buildRequestPermissionLauncher(
-        actionOnPermissionGranted: () -> Unit,
-    ): ActivityResultLauncher<Array<String>> =
+    private fun buildRequestPermissionLauncher(actionOnPermissionGranted: () -> Unit): ActivityResultLauncher<Array<String>> =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions.all { (_, isGranted) -> isGranted }) {
                 actionOnPermissionGranted()
