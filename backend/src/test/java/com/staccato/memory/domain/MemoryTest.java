@@ -40,7 +40,7 @@ class MemoryTest {
         Memory memory = Memory.basic(new Nickname(nickname));
 
         // then
-        assertThat(memory.getTitle()).isEqualTo("staccato의 추억");
+        assertThat(memory.getTitle()).isEqualTo(nickname + "의 추억");
     }
 
     @DisplayName("추억을 수정 시 기존 스타카토 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
