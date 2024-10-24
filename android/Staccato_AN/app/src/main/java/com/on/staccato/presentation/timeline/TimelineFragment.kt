@@ -77,7 +77,9 @@ class TimelineFragment :
 
     private fun setUpObserving() {
         timelineViewModel.timeline.observe(viewLifecycleOwner) { timeline ->
-            adapter.updateTimeline(timeline)
+            adapter.updateTimeline(timeline) {
+                binding.rvTimeline.scrollToPosition(0)
+            }
         }
 
         timelineViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
