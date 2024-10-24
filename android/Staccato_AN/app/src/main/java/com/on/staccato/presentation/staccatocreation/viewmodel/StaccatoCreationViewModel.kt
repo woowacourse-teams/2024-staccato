@@ -9,7 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.ApiResponseHandler.onException
+import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
+import com.on.staccato.data.dto.Status
 import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
@@ -18,6 +20,7 @@ import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.staccatocreation.StaccatoCreationError
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.util.convertExcretaFile
@@ -73,9 +76,6 @@ class StaccatoCreationViewModel
         private val _createdStaccatoId = MutableSingleLiveData<Long>()
         val createdStaccatoId: SingleLiveData<Long> get() = _createdStaccatoId
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String> get() = _errorMessage
-
         private val _isPosting = MutableLiveData<Boolean>(false)
         val isPosting: LiveData<Boolean> get() = _isPosting
 
@@ -87,9 +87,15 @@ class StaccatoCreationViewModel
         private val _isPlaceSearchClicked = MutableLiveData(false)
         val isPlaceSearchClicked: LiveData<Boolean> get() = _isPlaceSearchClicked
 
+        private val _warningMessage = MutableSingleLiveData<String>()
+        val warningMessage: SingleLiveData<String> get() = _warningMessage
+
+        private val _error = MutableSingleLiveData<StaccatoCreationError>()
+        val error: SingleLiveData<StaccatoCreationError> get() = _error
+
         override fun onAddClicked() {
             if ((currentPhotos.value?.size ?: 0) == MAX_PHOTO_NUMBER) {
-                _errorMessage.postValue(MAX_PHOTO_NUMBER_MESSAGE)
+                _warningMessage.postValue(MAX_PHOTO_NUMBER_MESSAGE)
             } else {
                 _isAddPhotoClicked.postValue(true)
             }
@@ -153,7 +159,8 @@ class StaccatoCreationViewModel
                         if (memoryCandidates.memoryCandidate.isNotEmpty()) {
                             initSelectedMemoryAndVisitedAt(memoryId, memoryCandidates.memoryCandidate)
                         }
-                    }
+                    }.onException(::handleMemoryCandidatesException)
+                    .onServerError(::handleServerError)
             }
         }
 
@@ -227,10 +234,8 @@ class StaccatoCreationViewModel
                     staccatoImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
                 ).onSuccess { response ->
                     _createdStaccatoId.postValue(response.staccatoId)
-                }.onFailure {
-                    _isPosting.value = false
-                    _errorMessage.postValue(it.message ?: "방문을 생성할 수 없어요!")
-                }
+                }.onException(::handleCreateException)
+                    .onServerError(::handleServerError)
             }
 
         private fun createPhotoUploadJob(
@@ -241,15 +246,13 @@ class StaccatoCreationViewModel
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
-                }
-                .onException { _, message ->
-                    _errorMessage.postValue(message)
-                }
+                }.onException(::handleException)
+                .onServerError(::handleServerError)
         }
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
             return CoroutineExceptionHandler { _, throwable ->
-                _errorMessage.postValue(throwable.message ?: "이미지 업로드에 실패했습니다.")
+                _warningMessage.postValue(throwable.message ?: FAIL_IMAGE_UPLOAD_MESSAGE)
             }
         }
 
@@ -261,9 +264,41 @@ class StaccatoCreationViewModel
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
         }
 
+        private fun handleServerError(
+            status: Status,
+            errorMessage: String,
+        ) {
+            _isPosting.value = false
+            _warningMessage.postValue(errorMessage)
+        }
+
+        private fun handleException(
+            e: Throwable,
+            errorMessage: String,
+        ) {
+            _isPosting.value = false
+            _warningMessage.postValue(errorMessage)
+        }
+
+        private fun handleMemoryCandidatesException(
+            e: Throwable,
+            message: String,
+        ) {
+            _error.setValue(StaccatoCreationError.MemoryCandidates(message))
+        }
+
+        private fun handleCreateException(
+            e: Throwable,
+            message: String,
+        ) {
+            _isPosting.value = false
+            _error.setValue(StaccatoCreationError.StaccatoCreation(message))
+        }
+
         companion object {
             const val MAX_PHOTO_NUMBER = 5
             const val MAX_PHOTO_NUMBER_MESSAGE = "사진은 최대 ${MAX_PHOTO_NUMBER}장만 첨부할 수 있어요!"
+            const val FAIL_IMAGE_UPLOAD_MESSAGE = "이미지 업로드에 실패했습니다."
             const val FORM_DATA_NAME = "imageFile"
         }
     }

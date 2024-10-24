@@ -9,16 +9,18 @@ import retrofit2.Response
 
 object ApiResponseHandler {
     suspend fun <T : Any> handleApiResponse(execute: suspend () -> Response<T>): ResponseResult<T> {
-        val response: Response<T> = execute()
-        val body: T? = response.body()
-
         return try {
+            val response: Response<T> = execute()
+            val body: T? = response.body()
+
             when {
                 response.isSuccessful && response.code() == 201 -> ResponseResult.Success(body as T)
                 response.isSuccessful && body != null -> ResponseResult.Success(body)
                 response.isSuccessful && response.code() == 204 -> ResponseResult.Success(Unit as T)
                 else -> {
-                    val errorBody: ResponseBody = response.errorBody() ?: throw IllegalArgumentException("errorBody를 찾을 수 없습니다.")
+                    val errorBody: ResponseBody =
+                        response.errorBody()
+                            ?: throw IllegalArgumentException("errorBody를 찾을 수 없습니다.")
                     val errorResponse: ErrorResponse = getErrorResponse(errorBody)
                     ResponseResult.ServerError(
                         status = Status.Message(errorResponse.status),

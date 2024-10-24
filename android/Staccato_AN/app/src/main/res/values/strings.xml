@@ -20,6 +20,7 @@
     <string name="all_default_not_supported">아직 지원하지 않는 기능이에요.</string>
     <string name="all_required_mark">*</string>
     <string name="all_setting">설정</string>
+    <string name="all_retry">재시도</string>
     <string name="all_am">오전</string>
     <string name="all_pm">오후</string>
     <string name="all_location_permission_denial">위치 권한을 거부 하셨습니다.</string>
