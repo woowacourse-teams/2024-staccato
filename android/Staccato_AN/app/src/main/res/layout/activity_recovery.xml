@@ -42,24 +42,24 @@
 
         <TextView
             android:id="@+id/tv_recovery_title"
-            style="@style/Typography.Title1"
+            style="@style/Typography.Title1.Not.Resizable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="72dp"
             android:text="@string/recovery_title"
-            app:layout_constraintStart_toStartOf="@id/guideline_recovery_start_margin"
+            app:layout_constraintStart_toStartOf="@id/text_input_recovery_code"
             app:layout_constraintTop_toBottomOf="@id/toolbar_recovery" />
 
         <TextView
             android:id="@+id/tv_recovery_subtitle"
-            style="@style/Typography.Title1"
+            style="@style/Typography.Title1.Not.Resizable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
             android:text="@string/recovery_subtitle"
-            app:layout_constraintStart_toStartOf="@id/guideline_recovery_start_margin"
+            app:layout_constraintStart_toStartOf="@id/text_input_recovery_code"
             app:layout_constraintTop_toBottomOf="@id/tv_recovery_title" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -69,7 +69,8 @@
             app:counterMaxLength="36"
             app:layout_constraintEnd_toEndOf="@id/guideline_recovery_end_margin"
             app:layout_constraintStart_toStartOf="@id/guideline_recovery_start_margin"
-            app:layout_constraintTop_toBottomOf="@id/tv_recovery_subtitle">
+            app:layout_constraintTop_toBottomOf="@id/tv_recovery_subtitle"
+            app:layout_constraintWidth_max="500dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 style="@style/TextInputEditTextStyle.SingleLine"
@@ -88,6 +89,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline_recovery_end_margin"
             app:layout_constraintStart_toStartOf="@id/guideline_recovery_start_margin"
+            app:layout_constraintWidth_max="500dp"
             bind:recoveryButtonEnabled="@{viewModel.recoveryCode}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

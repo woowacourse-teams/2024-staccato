@@ -6,6 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentMemoryBinding
 import com.on.staccato.presentation.base.BindingFragment
@@ -20,6 +21,7 @@ import com.on.staccato.presentation.memory.viewmodel.MemoryViewModel
 import com.on.staccato.presentation.memoryupdate.MemoryUpdateActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
+import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -50,6 +52,7 @@ class MemoryFragment :
         observeMemory()
         observeIsDeleteSuccess()
         showErrorToast()
+        showExceptionSnackBar()
         viewModel.loadMemory(memoryId)
     }
 
@@ -133,9 +136,24 @@ class MemoryFragment :
     }
 
     private fun showErrorToast() {
-        viewModel.errorMessage.observe(viewLifecycleOwner) {
-            showToast(it)
+        viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+            showToast(message)
         }
+    }
+
+    private fun showExceptionSnackBar() {
+        viewModel.exceptionMessage.observe(viewLifecycleOwner) { message ->
+            view?.showSnackBarWithAction(
+                message = message,
+                actionLabel = R.string.all_retry,
+                onAction = ::onRetryAction,
+                Snackbar.LENGTH_INDEFINITE,
+            )
+        }
+    }
+
+    private fun onRetryAction() {
+        viewModel.loadMemory(memoryId)
     }
 
     companion object {

@@ -21,29 +21,29 @@ interface StaccatoApiService {
     @GET(STACCATO_PATH_WITH_ID)
     suspend fun getStaccato(
         @Path(value = "momentId") momentId: Long,
-    ): StaccatoResponse
+    ): Response<StaccatoResponse>
 
     @POST(STACCATOS_PATH)
     suspend fun postStaccato(
         @Body staccatoCreationRequest: StaccatoCreationRequest,
-    ): StaccatoCreationResponse
+    ): Response<StaccatoCreationResponse>
 
     @PUT(STACCATO_PATH_WITH_ID)
     suspend fun putStaccato(
         @Path(value = "momentId") momentId: Long,
         @Body staccatoUpdateRequest: StaccatoUpdateRequest,
-    )
+    ): Response<Unit>
 
     @DELETE(STACCATO_PATH_WITH_ID)
     suspend fun deleteStaccato(
         @Path(value = "momentId") momentId: Long,
-    )
+    ): Response<Unit>
 
     @POST(FEELING_PATH)
     suspend fun postFeeling(
         @Path(value = "momentId") momentId: Long,
         @Body feelingRequest: FeelingRequest,
-    )
+    ): Response<Unit>
 
     companion object {
         private const val STACCATOS_PATH = "/moments"

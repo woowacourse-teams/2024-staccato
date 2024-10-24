@@ -35,10 +35,10 @@
 
         <ImageView
             android:id="@+id/iv_mypage_profile_image"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginTop="16dp"
-            android:contentDescription="@string/all_image_content_description"
+            android:contentDescription="@string/mypage_user_profile_image_description"
             android:padding="10dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="12dp"
-            android:contentDescription="@string/all_image_content_description"
+            android:contentDescription="@string/mypage_update_profile_image_description"
             android:src="@drawable/icon_edit_circle"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/iv_mypage_profile_image"
@@ -67,7 +67,7 @@
             style="@style/Typography.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="12dp"
             android:text="@{viewModel.memberProfile.nickname}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -79,6 +79,7 @@
             style="@style/Typography.Body3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
             android:text="@string/mypage_uuid"
             android:textColor="@color/gray4"
@@ -118,14 +119,33 @@
             app:layout_constraintTop_toBottomOf="@id/divider_mypage_profile" />
 
         <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider_mypage_menu"
+            android:id="@+id/divider_mypage_feedback"
             style="@style/DividerStyle"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_mypage_menu_privacy_policy" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_mypage_menu_feedback"
+            style="@style/ButtonStyle.MyPage"
+            android:layout_marginTop="10dp"
+            android:onClick="@{() -> menuHandler.onFeedbackClicked()}"
+            android:text="@string/mypage_feedback"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_mypage_feedback" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_mypage_menu"
+            style="@style/DividerStyle"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_mypage_menu_feedback" />
+
         <TextView
+            android:id="@+id/tv_mypage_app_version"
             style="@style/Typography.Body4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -135,6 +155,25 @@
             android:textColor="@color/gray4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_mypage_menu" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:onClick="@{() -> menuHandler.onInstagramClicked()}"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_mypage_app_version"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_mypage_menu"
+            app:layout_constraintTop_toTopOf="@id/tv_mypage_app_version">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/icon_instagram"
+                android:contentDescription="@string/mypage_navigate_to_instagram_btn_description" />
+
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

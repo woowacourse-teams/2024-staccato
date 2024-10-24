@@ -4,6 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.on.staccato.data.ApiResponseHandler.onException
+import com.on.staccato.data.ApiResponseHandler.onServerError
+import com.on.staccato.data.ApiResponseHandler.onSuccess
+import com.on.staccato.data.dto.Status
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -33,8 +37,11 @@ class StaccatoViewModel
         private val _isDeleted = MutableSingleLiveData(false)
         val isDeleted: SingleLiveData<Boolean> get() = _isDeleted
 
-        private val _isError = MutableSingleLiveData(false)
-        val isError: SingleLiveData<Boolean> get() = _isError
+        private val _errorMessage = MutableSingleLiveData<String>()
+        val errorMessage: SingleLiveData<String> get() = _errorMessage
+
+        private val _exceptionMessage: MutableSingleLiveData<String> = MutableSingleLiveData()
+        val exceptionMessage: SingleLiveData<String> get() = _exceptionMessage
 
         fun loadStaccato(staccatoId: Long) {
             fetchStaccatoData(staccatoId)
@@ -42,19 +49,35 @@ class StaccatoViewModel
 
         fun deleteStaccato(staccatoId: Long) =
             viewModelScope.launch {
-                staccatoRepository.deleteStaccato(staccatoId).onSuccess {
-                    _isDeleted.postValue(true)
-                }
+                staccatoRepository.deleteStaccato(staccatoId)
+                    .onSuccess {
+                        _isDeleted.postValue(true)
+                    }.onException(::handleException)
+                    .onServerError(::handleServerError)
             }
 
         private fun fetchStaccatoData(staccatoId: Long) {
             viewModelScope.launch {
-                staccatoRepository.getStaccato(staccatoId).onSuccess { staccato ->
-                    _staccatoDetail.value = staccato.toStaccatoDetailUiModel()
-                    _feeling.value = staccato.feeling
-                }.onFailure {
-                    _isError.postValue(true)
-                }
+                staccatoRepository.getStaccato(staccatoId)
+                    .onSuccess { staccato ->
+                        _staccatoDetail.value = staccato.toStaccatoDetailUiModel()
+                        _feeling.value = staccato.feeling
+                    }.onException(::handleException)
+                    .onServerError(::handleServerError)
             }
+        }
+
+        private fun handleServerError(
+            status: Status,
+            errorMessage: String,
+        ) {
+            _errorMessage.postValue(errorMessage)
+        }
+
+        private fun handleException(
+            e: Throwable,
+            message: String,
+        ) {
+            _exceptionMessage.postValue(message)
         }
     }

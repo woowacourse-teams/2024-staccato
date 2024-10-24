@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -13,12 +12,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.domain.Moment;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +26,9 @@ import lombok.NonNull;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Memory extends BaseEntity {
+    private static final String DEFAULT_TITLE = "기본 추억";
+    private static final String DEFAULT_DESCRIPTION = "스타카토를 추억에 담아보세요.";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,7 +41,7 @@ public class Memory extends BaseEntity {
     @Column
     @Embedded
     private Term term;
-    @OneToMany(mappedBy = "memory", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "memory", cascade = CascadeType.PERSIST)
     private List<MemoryMember> memoryMembers = new ArrayList<>();
 
     @Builder
@@ -50,6 +50,13 @@ public class Memory extends BaseEntity {
         this.title = title.trim();
         this.description = description;
         this.term = new Term(startAt, endAt);
+    }
+
+    public static Memory basic() {
+        return Memory.builder()
+                .title(DEFAULT_TITLE)
+                .description(DEFAULT_DESCRIPTION)
+                .build();
     }
 
     public void addMemoryMember(Member member) {

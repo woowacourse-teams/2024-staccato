@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 interface StaccatoRepository {
     suspend fun getStaccatos(): ResponseResult<List<StaccatoLocation>>
 
-    suspend fun getStaccato(staccatoId: Long): Result<Staccato>
+    suspend fun getStaccato(staccatoId: Long): ResponseResult<Staccato>
 
     suspend fun createStaccato(
         memoryId: Long,
@@ -20,7 +20,7 @@ interface StaccatoRepository {
         address: String,
         visitedAt: LocalDateTime,
         staccatoImageUrls: List<String>,
-    ): Result<StaccatoCreationResponse>
+    ): ResponseResult<StaccatoCreationResponse>
 
     suspend fun updateStaccato(
         staccatoId: Long,
@@ -32,12 +32,12 @@ interface StaccatoRepository {
         visitedAt: LocalDateTime,
         memoryId: Long,
         staccatoImageUrls: List<String>,
-    ): Result<Unit>
+    ): ResponseResult<Unit>
 
-    suspend fun deleteStaccato(staccatoId: Long): Result<Unit>
+    suspend fun deleteStaccato(staccatoId: Long): ResponseResult<Unit>
 
     suspend fun updateFeeling(
         staccatoId: Long,
         feeling: String,
-    ): Result<Unit>
+    ): ResponseResult<Unit>
 }
