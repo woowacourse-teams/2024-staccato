@@ -43,7 +43,7 @@ class TimelineViewModel
         val exceptionMessage: SingleLiveData<String>
             get() = _exceptionMessage
 
-        private var originalTimeline = mutableListOf<TimelineUiModel>()
+        private var originalTimeline = listOf<TimelineUiModel>()
 
         private val coroutineExceptionHandler =
             CoroutineExceptionHandler { context, throwable ->
@@ -79,8 +79,7 @@ class TimelineViewModel
 
         private fun setTimelineUiModels(timeline: Timeline) {
             _timeline.value = timeline.toTimelineUiModel()
-            originalTimeline.clear()
-            originalTimeline.addAll(_timeline.value ?: emptyList())
+            originalTimeline = _timeline.value ?: emptyList()
             _isTimelineLoading.value = false
         }
 
