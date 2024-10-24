@@ -189,7 +189,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     }
 
     private fun showPermissionSnackBar() {
-        showSnackBar(R.string.snack_bar_require_photo_album_permission)
+        showSettingSnackBar(R.string.snack_bar_require_photo_album_permission)
     }
 
     private fun showCameraErrorSnackBar() {
@@ -208,7 +208,14 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
         @StringRes resId: Int,
     ) {
         val snackBar = makeSnackBar(resId)
-        setSnackBarAction(snackBar)
+        snackBar.show()
+    }
+
+    private fun showSettingSnackBar(
+        @StringRes resId: Int,
+    ) {
+        val snackBar = makeSnackBar(resId)
+        setSnackBarActionMoveToSetting(snackBar)
         snackBar.show()
     }
 
@@ -222,7 +229,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
         )
     }
 
-    private fun setSnackBarAction(snackBar: Snackbar) {
+    private fun setSnackBarActionMoveToSetting(snackBar: Snackbar) {
         snackBar.setAction(R.string.snack_bar_move_to_setting) {
             val uri = Uri.fromParts(PACKAGE_SCHEME, requireContext().packageName, null)
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri)
