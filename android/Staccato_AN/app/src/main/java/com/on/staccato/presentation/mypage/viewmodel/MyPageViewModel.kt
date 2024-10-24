@@ -4,25 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.onException
-import com.on.staccato.data.onServerError
-import com.on.staccato.data.onSuccess
+import com.on.staccato.data.ApiResponseHandler.onException
+import com.on.staccato.data.ApiResponseHandler.onServerError
+import com.on.staccato.data.ApiResponseHandler.onSuccess
+import com.on.staccato.data.dto.Status
 import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mypage.MemberProfileHandler
-import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel
     @Inject
     constructor(private val repository: MyPageRepository) :
-    ViewModel(), MemberProfileHandler {
+    ViewModel(),
+        MemberProfileHandler {
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile>
             get() = _memberProfile
@@ -44,34 +44,31 @@ class MyPageViewModel
             }
         }
 
-        fun changeProfileImage(multipart: MultipartBody.Part) {
-            viewModelScope.launch {
-                repository.changeProfileImage(multipart)
-                    .onSuccess {
-                        _memberProfile.value =
-                            memberProfile.value?.copy(profileImageUrl = it)
-                    }.onException(::handleException)
-                    .onServerError(::handleError)
-            }
-        }
-
         fun fetchMemberProfile() {
             viewModelScope.launch {
-                repository.getMemberProfile()
+                val result = repository.getMemberProfile()
+                result.onException(::handleException)
                     .onServerError(::handleError)
-                    .onException(::handleException)
-                    .onSuccess {
-                        _memberProfile.value = it
-                    }
+                    .onSuccess(::setMemberProfile)
             }
         }
 
-        private fun handleError(errorMessage: String) {
+        private fun setMemberProfile(memberProfile: MemberProfile) {
+            _memberProfile.value = memberProfile
+        }
+
+        private fun handleError(
+            status: Status,
+            errorMessage: String,
+        ) {
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(state: ExceptionState) {
-            _errorMessage.postValue(state.message)
+        private fun handleException(
+            e: Throwable,
+            errorMessage: String,
+        ) {
+            _errorMessage.postValue(errorMessage)
         }
 
         companion object {

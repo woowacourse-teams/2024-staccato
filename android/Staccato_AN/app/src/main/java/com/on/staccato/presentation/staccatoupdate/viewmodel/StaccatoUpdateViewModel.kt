@@ -31,7 +31,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -260,9 +259,7 @@ class StaccatoUpdateViewModel
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
-                }.onException { e, message ->
-                    if (this.isActive) handleUpdatePhotoException(e, message)
-                }
+                }.onException(::handleUpdatePhotoException)
                 .onServerError(::handleServerError)
         }
 

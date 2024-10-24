@@ -1,13 +1,11 @@
 package com.on.staccato.data.staccato
 
-import com.on.staccato.data.ApiResult
+import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDomain
-import com.on.staccato.data.dto.mapper.toFeelingRequest
+import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
 import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
-import com.on.staccato.data.handle
-import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.domain.repository.StaccatoRepository
@@ -20,16 +18,44 @@ class StaccatoDefaultRepository
         private val remoteDataSource: StaccatoRemoteDataSource,
     ) :
     StaccatoRepository {
-        override suspend fun getStaccatos(): ApiResult<List<StaccatoLocation>> =
-            remoteDataSource.fetchStaccatos().handle {
-                it.staccatoLocationResponses.map { dto -> dto.toDomain() }
-            }
+        override suspend fun getStaccatos(): ResponseResult<List<StaccatoLocation>> {
+            return when (val responseResult = remoteDataSource.fetchStaccatos()) {
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
+                    )
 
-        override suspend fun getStaccato(staccatoId: Long): ApiResult<Staccato> =
-            remoteDataSource.fetchStaccato(staccatoId).handle { staccatoResponse -> staccatoResponse.toDomain() }
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data.staccatoLocationResponses.map { it.toDomain() })
+            }
+        }
+
+        override suspend fun getStaccato(staccatoId: Long): ResponseResult<Staccato> {
+            return when (val responseResult = remoteDataSource.fetchStaccato(staccatoId)) {
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
+                    )
+
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
+            }
+        }
 
         override suspend fun createStaccato(
-            categoryId: Long,
+            memoryId: Long,
             staccatoTitle: String,
             placeName: String,
             latitude: Double,
@@ -37,19 +63,37 @@ class StaccatoDefaultRepository
             address: String,
             visitedAt: LocalDateTime,
             staccatoImageUrls: List<String>,
-        ): ApiResult<StaccatoCreationResponse> =
-            remoteDataSource.createStaccato(
-                StaccatoCreationRequest(
-                    categoryId = categoryId,
-                    staccatoTitle = staccatoTitle,
-                    placeName = placeName,
-                    latitude = latitude,
-                    longitude = longitude,
-                    address = address,
-                    visitedAt = visitedAt.toString(),
-                    staccatoImageUrls = staccatoImageUrls,
-                ),
-            ).handle { it }
+        ): ResponseResult<StaccatoCreationResponse> {
+            return when (
+                val responseResult =
+                    remoteDataSource.createStaccato(
+                        StaccatoCreationRequest(
+                            memoryId = memoryId,
+                            staccatoTitle = staccatoTitle,
+                            placeName = placeName,
+                            latitude = latitude,
+                            longitude = longitude,
+                            address = address,
+                            visitedAt = visitedAt.toString(),
+                            staccatoImageUrls = staccatoImageUrls,
+                        ),
+                    )
+            ) {
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
+                    )
+
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
+            }
+        }
 
         override suspend fun updateStaccato(
             staccatoId: Long,
@@ -59,32 +103,88 @@ class StaccatoDefaultRepository
             latitude: Double,
             longitude: Double,
             visitedAt: LocalDateTime,
-            categoryId: Long,
+            memoryId: Long,
             staccatoImageUrls: List<String>,
-        ): ApiResult<Unit> =
-            remoteDataSource.updateStaccato(
-                staccatoId = staccatoId,
-                staccatoUpdateRequest =
-                    StaccatoUpdateRequest(
-                        staccatoTitle = staccatoTitle,
-                        placeName = placeName,
-                        address = address,
-                        latitude = latitude,
-                        longitude = longitude,
-                        visitedAt = visitedAt.toString(),
-                        categoryId = categoryId,
-                        staccatoImageUrls = staccatoImageUrls,
-                    ),
-            ).handle()
+        ): ResponseResult<Unit> {
+            return when (
+                val responseResult =
+                    remoteDataSource.updateStaccato(
+                        staccatoId = staccatoId,
+                        staccatoUpdateRequest =
+                            StaccatoUpdateRequest(
+                                staccatoTitle = staccatoTitle,
+                                placeName = placeName,
+                                address = address,
+                                latitude = latitude,
+                                longitude = longitude,
+                                visitedAt = visitedAt.toString(),
+                                memoryId = memoryId,
+                                momentImageUrls = staccatoImageUrls,
+                            ),
+                    )
+            ) {
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
+                    )
 
-        override suspend fun deleteStaccato(staccatoId: Long): ApiResult<Unit> = remoteDataSource.deleteStaccato(staccatoId).handle()
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
+            }
+        }
+
+        override suspend fun deleteStaccato(staccatoId: Long): ResponseResult<Unit> {
+            return when (val responseResult = remoteDataSource.deleteStaccato(staccatoId)) {
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
+                    )
+
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
+            }
+        }
 
         override suspend fun updateFeeling(
             staccatoId: Long,
-            feeling: Feeling,
-        ): ApiResult<Unit> =
-            remoteDataSource.updateFeeling(
-                staccatoId = staccatoId,
-                feelingRequest = feeling.toFeelingRequest(),
-            ).handle()
+            feeling: String,
+        ): ResponseResult<Unit> {
+            return when (
+                val responseResult =
+                    remoteDataSource.updateFeeling(
+                        staccatoId = staccatoId,
+                        feelingRequest = FeelingRequest(feeling),
+                    )
+            ) {
+                is ResponseResult.Exception ->
+                    ResponseResult.Exception(
+                        responseResult.e,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
+                    )
+
+                is ResponseResult.ServerError ->
+                    ResponseResult.ServerError(
+                        responseResult.status,
+                        responseResult.message,
+                    )
+
+                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
+            }
+        }
+
+        companion object {
+            private const val EXCEPTION_NETWORK_ERROR_MESSAGE = "네트워크 연결이 불안정합니다.\n연결을 재설정한 후 다시 시도해 주세요."
+        }
     }

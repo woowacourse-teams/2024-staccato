@@ -8,38 +8,28 @@ spring:
     init:
       mode: always
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 10
-      idle-timeout: 600000
-      connection-timeout: 8000
-      max-lifetime: 1800000
-#    writer:
-#      hikari:
-#        maximum-pool-size: 10
-#        minimum-idle: 10
-#        idle-timeout: 600000
-#        connection-timeout: 8000
-#        max-lifetime: 1800000
-#      driver-class-name: com.mysql.cj.jdbc.Driver
-#      jdbcUrl: ${SPRING_WRITER_DATASOURCE_URL}
-#      username: ${SPRING_DATASOURCE_USERNAME}
-#      password: ${SPRING_DATASOURCE_PASSWORD}
-#    reader:
-#      hikari:
-#        maximum-pool-size: 10
-#        minimum-idle: 10
-#        idle-timeout: 600000
-#        connection-timeout: 8000
-#        max-lifetime: 1800000
-#      driver-class-name: com.mysql.cj.jdbc.Driver
-#      jdbcUrl: ${SPRING_READER_DATASOURCE_URL}
-#      username: ${SPRING_DATASOURCE_USERNAME}
-#      password: ${SPRING_DATASOURCE_PASSWORD}
+    writer:
+      hikari:
+        maximum-pool-size: 10
+        minimum-idle: 10
+        idle-timeout: 600000
+        connection-timeout: 8000
+        max-lifetime: 1800000
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbcUrl: ${SPRING_WRITER_DATASOURCE_URL}
+      username: ${SPRING_DATASOURCE_USERNAME}
+      password: ${SPRING_DATASOURCE_PASSWORD}
+    reader:
+      hikari:
+        maximum-pool-size: 10
+        minimum-idle: 10
+        idle-timeout: 600000
+        connection-timeout: 8000
+        max-lifetime: 1800000
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbcUrl: ${SPRING_READER_DATASOURCE_URL}
+      username: ${SPRING_DATASOURCE_USERNAME}
+      password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     database: MYSQL
     show-sql: true
@@ -55,6 +45,8 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 1
   servlet:
     multipart:
       max-file-size: 20MB
@@ -73,8 +65,6 @@ security:
     token: ${ADMIN_TOKEN}
 cloud:
   aws:
-    access-key: ${AWS_ACCESS_KEY}
-    secret-access-key: ${AWS_SECRET_ACCESS_KEY}
     s3:
       bucket: ${AWS_S3_BUCKET}
       endpoint: ${AWS_S3_ENDPOINT}
@@ -86,7 +76,7 @@ cloud:
       auto: false
 image:
   folder:
-    name: prod/
+    name: image-prod/
 
 management:
   server:
