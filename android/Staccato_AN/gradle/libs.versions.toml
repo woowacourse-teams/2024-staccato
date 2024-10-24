@@ -36,6 +36,7 @@ crashlytics = "3.0.2"
 mapsplatformSecretsGradlePlugin = "2.0.1"
 playServicesMaps = "19.0.0"
 viewpager2 = "1.1.0"
+camerax = "1.1.0-beta01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -76,6 +77,11 @@ coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
+androidx-camera-extension = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

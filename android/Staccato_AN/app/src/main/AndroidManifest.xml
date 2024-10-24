@@ -11,9 +11,9 @@
         </intent>
     </queries>
 
-    <!--  카메라(추후 기능 추가) -->
+    <!--  카메라  -->
     <uses-feature
-        android:name="android.hardware.camera"
+        android:name="android.hardware.camera.any"
         android:required="false" />
 
     <!-- 인터넷 -->
@@ -24,8 +24,9 @@
     <!-- 앨범 -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--  카메라(추후 기능 추가) -->
+    <!--  카메라  -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".StaccatoApplication"
