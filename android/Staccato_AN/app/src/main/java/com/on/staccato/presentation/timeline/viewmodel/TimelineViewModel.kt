@@ -14,6 +14,7 @@ import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toTimelineUiModel
+import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -42,6 +43,8 @@ class TimelineViewModel
         val exceptionMessage: SingleLiveData<String>
             get() = _exceptionMessage
 
+        private var originalTimeline = listOf<TimelineUiModel>()
+
         private val coroutineExceptionHandler =
             CoroutineExceptionHandler { context, throwable ->
                 Log.e(
@@ -64,9 +67,41 @@ class TimelineViewModel
             }
         }
 
+        fun sortTimeline(type: SortType) {
+            when (type) {
+                SortType.CREATION -> sortByCreation()
+                SortType.LATEST -> sortByLatest()
+                SortType.OLDEST -> sortByOldest()
+                SortType.WITH_PERIOD -> filterWithPeriod()
+                SortType.WITHOUT_PERIOD -> filterWithoutPeriod()
+            }
+        }
+
         private fun setTimelineUiModels(timeline: Timeline) {
             _timeline.value = timeline.toTimelineUiModel()
+            originalTimeline = _timeline.value ?: emptyList()
             _isTimelineLoading.value = false
+        }
+
+        private fun sortByCreation() {
+            _timeline.value = originalTimeline
+        }
+
+        private fun sortByLatest() {
+            _timeline.value = originalTimeline.sortedByDescending { it.startAt }
+        }
+
+        private fun sortByOldest() {
+            val memoriesSortedByOldest = originalTimeline.sortedWith(compareBy(nullsLast()) { it.startAt })
+            _timeline.value = memoriesSortedByOldest
+        }
+
+        private fun filterWithPeriod() {
+            _timeline.value = originalTimeline.filter { it.startAt != null }.sortedByDescending { it.startAt }
+        }
+
+        private fun filterWithoutPeriod() {
+            _timeline.value = originalTimeline.filter { it.startAt == null }
         }
 
         private fun handleServerError(
