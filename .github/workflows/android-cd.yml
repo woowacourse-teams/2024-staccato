@@ -89,4 +89,4 @@ jobs:
           packageName: com.on.staccato
           releaseFiles: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
           track: product
-          whatsNewDirectory: android/Staccato_AN/deploy/whatsnew/
+          whatsNewDirectory: android/Staccato_AN/deploy/whatsnew
