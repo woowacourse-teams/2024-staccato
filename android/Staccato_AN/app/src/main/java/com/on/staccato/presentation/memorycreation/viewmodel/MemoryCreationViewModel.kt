@@ -2,6 +2,7 @@ package com.on.staccato.presentation.memorycreation.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,6 +24,7 @@ import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLo
 import com.on.staccato.presentation.memorycreation.MemoryCreationError
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -66,26 +68,22 @@ class MemoryCreationViewModel
         private val _error = MutableSingleLiveData<MemoryCreationError>()
         val error: SingleLiveData<MemoryCreationError> get() = _error
 
+        private var currentThumbnailJob: Job = Job()
+
         fun createThumbnailUrl(
             context: Context,
             thumbnailUri: Uri,
         ) {
             _thumbnailUri.value = thumbnailUri
             _isPhotoPosting.value = true
-            val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
-            viewModelScope.launch {
-                val result: ResponseResult<ImageResponse> =
-                    imageRepository.convertImageFileToUrl(thumbnailFile)
-                result.onSuccess(::setThumbnailUrl)
-                    .onServerError(::handlePhotoError)
-                    .onException { e, message ->
-                        handlePhotoException(e, message, thumbnailUri)
-                    }
-            }
+            createThumbnailJob(context, thumbnailUri)
         }
 
         fun setThumbnailUri(thumbnailUri: Uri?) {
-            _thumbnailUri.value = thumbnailUri
+            if (_thumbnailUri.value != thumbnailUri) {
+                currentThumbnailJob.cancel()
+                _thumbnailUri.value = thumbnailUri
+            }
         }
 
         fun setThumbnailUrl(imageResponse: ImageResponse?) {
@@ -112,6 +110,23 @@ class MemoryCreationViewModel
                     .onServerError(::handleCreateServerError)
                     .onException(::handleCreateException)
             }
+        }
+
+        private fun createThumbnailJob(
+            context: Context,
+            thumbnailUri: Uri,
+        ) {
+            val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
+            currentThumbnailJob =
+                viewModelScope.launch {
+                    val result: ResponseResult<ImageResponse> =
+                        imageRepository.convertImageFileToUrl(thumbnailFile)
+                    result.onSuccess(::setThumbnailUrl)
+                        .onServerError(::handlePhotoError)
+                        .onException { e, message ->
+                            handlePhotoException(e, message, thumbnailUri)
+                        }
+                }
         }
 
         private fun setCreatedMemoryId(memoryCreationResponse: MemoryCreationResponse) {
