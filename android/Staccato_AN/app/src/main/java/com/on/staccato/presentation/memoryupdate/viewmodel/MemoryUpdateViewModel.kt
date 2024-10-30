@@ -23,6 +23,7 @@ import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLo
 import com.on.staccato.presentation.memoryupdate.MemoryUpdateError
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -65,6 +66,8 @@ class MemoryUpdateViewModel
 
         private var memoryId: Long = 0L
 
+        private var currentThumbnailJob: Job = Job()
+
         private val _errorMessage = MutableLiveData<String>()
         val errorMessage: LiveData<String> get() = _errorMessage
 
@@ -93,8 +96,15 @@ class MemoryUpdateViewModel
             _thumbnailUrl.value = null
             _thumbnailUri.value = thumbnailUri
             _isPhotoPosting.value = true
+            createThumbnailJob(context, thumbnailUri)
+        }
+
+        private fun createThumbnailJob(
+            context: Context,
+            thumbnailUri: Uri,
+        ) {
             val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
-            viewModelScope.launch {
+            currentThumbnailJob = viewModelScope.launch {
                 val result: ResponseResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)
                 result.onSuccess(::setThumbnailUrl)
@@ -106,8 +116,11 @@ class MemoryUpdateViewModel
         }
 
         fun setThumbnailUri(thumbnailUri: Uri?) {
-            _thumbnailUri.value = thumbnailUri
-            _thumbnailUrl.value = null
+            if (_thumbnailUri.value != thumbnailUri) {
+                currentThumbnailJob.cancel()
+                _thumbnailUri.value = thumbnailUri
+                _thumbnailUrl.value = null
+            }
         }
 
         fun setThumbnailUrl(imageResponse: ImageResponse?) {
