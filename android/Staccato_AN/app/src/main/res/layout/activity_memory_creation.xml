@@ -85,8 +85,7 @@
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
-                    bind:visibilityByEmptyThumbnailUri="@{viewModel.thumbnail.uri}"
-                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnail.url}" />
+                    bind:visibilityByEmptyThumbnail="@{viewModel.thumbnail}" />
 
                 <View
                     android:layout_width="0dp"
@@ -96,8 +95,7 @@
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
-                    bind:loadingVisibilityByThumbnailUri="@{viewModel.thumbnail.uri}"
-                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnail.url}"
+                    bind:loadingVisibilityByThumbnail="@{viewModel.thumbnail}"
                     tools:visibility="visible" />
 
                 <com.airbnb.lottie.LottieAnimationView
@@ -106,8 +104,7 @@
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
-                    bind:loadingVisibilityByThumbnailUri="@{viewModel.thumbnail.uri}"
-                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnail.url}"
+                    bind:loadingVisibilityByThumbnail="@{viewModel.thumbnail}"
                     tools:visibility="visible" />
 
                 <TextView

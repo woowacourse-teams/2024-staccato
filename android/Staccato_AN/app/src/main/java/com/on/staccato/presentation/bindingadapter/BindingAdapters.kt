@@ -1,10 +1,10 @@
 package com.on.staccato.presentation.bindingadapter
 
-import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import androidx.databinding.BindingAdapter
+import com.on.staccato.presentation.memorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 
 @BindingAdapter("visibleOrGone")
@@ -24,26 +24,20 @@ fun ScrollView.setScrollToBottom(isScrollable: Boolean) {
     }
 }
 
-@BindingAdapter(value = ["visibilityByEmptyThumbnailUri", "visibilityByEmptyThumbnailUrl"])
-fun View.setThumbnailVisibility(
-    thumbnailUri: Uri?,
-    thumbnailUrl: String?,
-) {
+@BindingAdapter(value = ["visibilityByEmptyThumbnail"])
+fun View.setThumbnailVisibility(thumbnail: ThumbnailUiModel) {
     visibility =
-        if (thumbnailUri == null && thumbnailUrl == null) {
+        if (thumbnail.uri == null && thumbnail.url == null) {
             View.VISIBLE
         } else {
             View.GONE
         }
 }
 
-@BindingAdapter(value = ["loadingVisibilityByThumbnailUri", "visibilityByEmptyThumbnailUrl"])
-fun View.setThumbnailLoadingVisibility(
-    thumbnailUri: Uri?,
-    thumbnailUrl: String?,
-) {
+@BindingAdapter(value = ["loadingVisibilityByThumbnail"])
+fun View.setThumbnailLoadingVisibility(thumbnail: ThumbnailUiModel) {
     visibility =
-        if (thumbnailUri != null && thumbnailUrl == null) {
+        if (thumbnail.uri != null && thumbnail.url == null) {
             View.VISIBLE
         } else {
             View.GONE
