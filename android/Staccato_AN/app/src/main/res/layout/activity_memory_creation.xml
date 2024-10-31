@@ -58,8 +58,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_max="500dp"
-                    bind:coilRoundedCornerImageUri="@{viewModel.thumbnailUri}"
-                    bind:coilRoundedCornerImageUrl="@{viewModel.thumbnailUrl}"
+                    bind:coilRoundedCornerImageUri="@{viewModel.thumbnail.uri}"
+                    bind:coilRoundedCornerImageUrl="@{viewModel.thumbnail.url}"
                     bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
                     bind:coilRoundingRadius="@{12f}" />
 
@@ -71,7 +71,7 @@
                     android:onClick="@{() -> handler.onImageDeletionClicked()}"
                     android:padding="12dp"
                     android:src="@drawable/ic_delete"
-                    android:visibility="@{viewModel.thumbnailUrl == null ? View.GONE : View.VISIBLE }"
+                    android:visibility="@{viewModel.thumbnail.url == null ? View.GONE : View.VISIBLE }"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
                     tools:visibility="visible" />
@@ -85,8 +85,8 @@
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
-                    bind:visibilityByEmptyThumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnailUrl}" />
+                    bind:visibilityByEmptyThumbnailUri="@{viewModel.thumbnail.uri}"
+                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnail.url}" />
 
                 <View
                     android:layout_width="0dp"
@@ -96,8 +96,8 @@
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
-                    bind:loadingVisibilityByThumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnailUrl}"
+                    bind:loadingVisibilityByThumbnailUri="@{viewModel.thumbnail.uri}"
+                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnail.url}"
                     tools:visibility="visible" />
 
                 <com.airbnb.lottie.LottieAnimationView
@@ -106,8 +106,8 @@
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_creation_photo_attach"
                     app:layout_constraintTop_toTopOf="@id/iv_memory_creation_photo_attach"
-                    bind:loadingVisibilityByThumbnailUri="@{viewModel.thumbnailUri}"
-                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnailUrl}"
+                    bind:loadingVisibilityByThumbnailUri="@{viewModel.thumbnail.uri}"
+                    bind:visibilityByEmptyThumbnailUrl="@{viewModel.thumbnail.url}"
                     tools:visibility="visible" />
 
                 <TextView

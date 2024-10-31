@@ -2,7 +2,6 @@ package com.on.staccato.presentation.memorycreation.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,6 +21,7 @@ import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
 import com.on.staccato.presentation.memorycreation.MemoryCreationError
+import com.on.staccato.presentation.memorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -48,11 +48,8 @@ class MemoryCreationViewModel
         private val _createdMemoryId = MutableLiveData<Long>()
         val createdMemoryId: LiveData<Long> get() = _createdMemoryId
 
-        private val _thumbnailUri = MutableLiveData<Uri?>(null)
-        val thumbnailUri: LiveData<Uri?> get() = _thumbnailUri
-
-        private val _thumbnailUrl = MutableLiveData<String?>(null)
-        val thumbnailUrl: LiveData<String?> get() = _thumbnailUrl
+        private val _thumbnail = MutableLiveData<ThumbnailUiModel>(ThumbnailUiModel())
+        val thumbnail: LiveData<ThumbnailUiModel> get() = _thumbnail
 
         private val _isPosting = MutableLiveData<Boolean>(false)
         val isPosting: LiveData<Boolean> get() = _isPosting
@@ -74,20 +71,22 @@ class MemoryCreationViewModel
             context: Context,
             thumbnailUri: Uri,
         ) {
-            _thumbnailUri.value = thumbnailUri
+            _thumbnail.value = _thumbnail.value?.updateUri(thumbnailUri)
             _isPhotoPosting.value = true
             createThumbnailJob(context, thumbnailUri)
         }
 
         fun setThumbnailUri(thumbnailUri: Uri?) {
-            if (_thumbnailUri.value != thumbnailUri) {
+            val isEqualUri: Boolean? = _thumbnail.value?.isEqualUri(thumbnailUri)
+            if (isEqualUri == false) {
                 currentThumbnailJob.cancel()
-                _thumbnailUri.value = thumbnailUri
+                _thumbnail.value = _thumbnail.value?.updateUri(thumbnailUri)
             }
         }
 
         fun setThumbnailUrl(imageResponse: ImageResponse?) {
-            _thumbnailUrl.value = imageResponse?.imageUrl
+            val newUrl = imageResponse?.imageUrl
+            _thumbnail.value = _thumbnail.value?.updateUrl(newUrl)
             _isPhotoPosting.value = false
         }
 
@@ -135,7 +134,7 @@ class MemoryCreationViewModel
 
         private fun makeNewMemory() =
             NewMemory(
-                memoryThumbnailUrl = thumbnailUrl.value,
+                memoryThumbnailUrl = _thumbnail.value?.url,
                 memoryTitle = title.get() ?: throw IllegalArgumentException(),
                 startAt = getDateByPeriodSetting(startDate),
                 endAt = getDateByPeriodSetting(endDate),
