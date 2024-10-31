@@ -21,7 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresExtension
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -46,7 +46,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private var multipleAbleOption: Boolean = false
     private var currentImageUri: Uri? = null
-    private var availableImageCount: Int? = null
+    private var attachableImageCount: Int = -1
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -99,7 +99,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     }
 
     fun setCurrentImageCount(count: Int) {
-        availableImageCount = count
+        attachableImageCount = count
     }
 
     private fun initUrisSelectedListener(context: Context) {
@@ -178,7 +178,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private fun launchGallery() {
         val intent =
             Intent(Intent.ACTION_PICK)
-                .setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+                .setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_TYPE)
                 .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multipleAbleOption)
         galleryLauncher.launch(intent)
     }
@@ -206,10 +206,10 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     }
 
     private fun handleGalleryPermissionNotGranted() {
-        if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (isPhotoPickerAvailable()) {
             val intent =
                 Intent(MediaStore.ACTION_PICK_IMAGES)
-                    .setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+                    .setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_TYPE)
                     .setImageCountLimit()
             galleryLauncher.launch(intent)
         } else {
@@ -217,14 +217,16 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
+    private fun isPhotoPickerAvailable() =
+        (Build.VERSION_CODES.TIRAMISU <= VERSION.SDK_INT) || (
+            (Build.VERSION_CODES.R <= VERSION.SDK_INT) &&
+                (MIN_EXTENSION_VERSION <= SdkExtensions.getExtensionVersion(Build.VERSION_CODES.R))
+        )
+
+    @RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)
     private fun Intent.setImageCountLimit(): Intent {
-        if (!multipleAbleOption && SdkExtensions.getExtensionVersion(Build.VERSION_CODES.R) < 2) return this
-        availableImageCount?.let { imageCount ->
-            if (MIN_COUNT_FOR_PICK_IMAGES_MAX < imageCount) {
-                putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX, imageCount)
-            }
-        }
+        if (!multipleAbleOption || attachableImageCount < MIN_COUNT_FOR_PICK_IMAGES_MAX) return this
+        putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX, attachableImageCount)
         return this
     }
 
@@ -299,14 +301,17 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private fun createImageContent(fileName: String): ContentValues =
         ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "img_$fileName.jpg")
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, IMAGE_JPG_TYPE)
         }
 
     companion object {
         const val TAG = "PhotoAttachModalBottomSheet"
         const val PACKAGE_SCHEME = "package"
+        private const val IMAGE_JPG_TYPE = "image/jpg"
+        private const val IMAGE_TYPE = "image/*"
         private const val FILENAME_DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private const val MIN_COUNT_FOR_PICK_IMAGES_MAX = 1
+        private const val MIN_COUNT_FOR_PICK_IMAGES_MAX = 2
+        private const val MIN_EXTENSION_VERSION = 2
         private val CAMERA_REQUIRED_PERMISSIONS =
             mutableListOf(
                 Manifest.permission.CAMERA,

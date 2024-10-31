@@ -298,7 +298,7 @@ class StaccatoCreationActivity :
         viewModel.currentPhotos.observe(this) { photos ->
             photoAttachFragment.setCurrentImageCount(StaccatoCreationViewModel.MAX_PHOTO_NUMBER - photos.size)
             photoAttachAdapter.submitList(
-                listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
+                listOf(AttachedPhotoUiModel.addPhotoButton, *photos.attachedPhotos.toTypedArray()),
             )
         }
         viewModel.memoryCandidates.observe(this) {
