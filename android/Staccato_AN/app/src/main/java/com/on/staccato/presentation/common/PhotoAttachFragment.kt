@@ -46,7 +46,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private var multipleAbleOption: Boolean = false
     private var currentImageUri: Uri? = null
-    private var attachableImageCount: Int = -1
+    private var attachableImageCount: Int = INVALID_ATTACHABLE_IMAGE_COUNT
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -312,6 +312,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
         private const val FILENAME_DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val MIN_COUNT_FOR_PICK_IMAGES_MAX = 2
         private const val MIN_EXTENSION_VERSION = 2
+        private const val INVALID_ATTACHABLE_IMAGE_COUNT = -1
         private val CAMERA_REQUIRED_PERMISSIONS =
             mutableListOf(
                 Manifest.permission.CAMERA,
