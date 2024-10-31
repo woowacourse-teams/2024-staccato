@@ -11,7 +11,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION
 import android.os.Bundle
+import android.os.ext.SdkExtensions
 import android.provider.MediaStore
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -19,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresExtension
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -43,6 +46,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private var multipleAbleOption: Boolean = false
     private var currentImageUri: Uri? = null
+    private var attachableImageCount: Int = INVALID_ATTACHABLE_IMAGE_COUNT
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -94,6 +98,10 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
         multipleAbleOption = option
     }
 
+    fun setCurrentImageCount(count: Int) {
+        attachableImageCount = count
+    }
+
     private fun initUrisSelectedListener(context: Context) {
         if (context is OnUrisSelectedListener) {
             uriSelectedListener = context
@@ -103,8 +111,10 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     }
 
     private fun initRequestPermissionLauncher() {
-        requestCameraPermissionLauncher = buildRequestPermissionLauncher { startCamera() }
-        requestGalleryPermissionLauncher = buildRequestPermissionLauncher { launchGallery() }
+        requestCameraPermissionLauncher =
+            buildRequestPermissionLauncher(::startCamera, ::handleCameraPermissionNotGranted)
+        requestGalleryPermissionLauncher =
+            buildRequestPermissionLauncher(::launchGallery, ::handleGalleryPermissionNotGranted)
     }
 
     private fun initCameraLauncher() {
@@ -133,12 +143,15 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
             }
     }
 
-    private fun buildRequestPermissionLauncher(actionOnPermissionGranted: () -> Unit): ActivityResultLauncher<Array<String>> =
+    private fun buildRequestPermissionLauncher(
+        actionOnPermissionGranted: () -> Unit,
+        actionOnPermissionNotGranted: () -> Unit,
+    ): ActivityResultLauncher<Array<String>> =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions.all { (_, isGranted) -> isGranted }) {
                 actionOnPermissionGranted()
             } else {
-                showPermissionSnackBar()
+                actionOnPermissionNotGranted()
             }
         }
 
@@ -165,7 +178,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private fun launchGallery() {
         val intent =
             Intent(Intent.ACTION_PICK)
-                .setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+                .setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_TYPE)
                 .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multipleAbleOption)
         galleryLauncher.launch(intent)
     }
@@ -188,8 +201,33 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
         }
     }
 
-    private fun showPermissionSnackBar() {
-        showSettingSnackBar(R.string.snack_bar_require_photo_album_permission)
+    private fun handleCameraPermissionNotGranted() {
+        showSettingSnackBar(R.string.photo_require_camera_permission)
+    }
+
+    private fun handleGalleryPermissionNotGranted() {
+        if (isPhotoPickerAvailable()) {
+            val intent =
+                Intent(MediaStore.ACTION_PICK_IMAGES)
+                    .setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_TYPE)
+                    .setImageCountLimit()
+            galleryLauncher.launch(intent)
+        } else {
+            showSettingSnackBar(R.string.photo_require_photo_album_permission)
+        }
+    }
+
+    private fun isPhotoPickerAvailable() =
+        (Build.VERSION_CODES.TIRAMISU <= VERSION.SDK_INT) || (
+            (Build.VERSION_CODES.R <= VERSION.SDK_INT) &&
+                (MIN_EXTENSION_VERSION <= SdkExtensions.getExtensionVersion(Build.VERSION_CODES.R))
+        )
+
+    @RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)
+    private fun Intent.setImageCountLimit(): Intent {
+        if (!multipleAbleOption || attachableImageCount < MIN_COUNT_FOR_PICK_IMAGES_MAX) return this
+        putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX, attachableImageCount)
+        return this
     }
 
     private fun showCameraErrorSnackBar() {
@@ -263,23 +301,28 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private fun createImageContent(fileName: String): ContentValues =
         ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "img_$fileName.jpg")
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, IMAGE_JPG_TYPE)
         }
 
     companion object {
         const val TAG = "PhotoAttachModalBottomSheet"
         const val PACKAGE_SCHEME = "package"
+        private const val IMAGE_JPG_TYPE = "image/jpg"
+        private const val IMAGE_TYPE = "image/*"
         private const val FILENAME_DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+        private const val MIN_COUNT_FOR_PICK_IMAGES_MAX = 2
+        private const val MIN_EXTENSION_VERSION = 2
+        private const val INVALID_ATTACHABLE_IMAGE_COUNT = -1
         private val CAMERA_REQUIRED_PERMISSIONS =
             mutableListOf(
                 Manifest.permission.CAMERA,
             ).apply {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                if (VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 }
             }.toTypedArray()
         private val GALLERY_REQUIRED_PERMISSION =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 READ_MEDIA_IMAGES
             } else {
                 READ_EXTERNAL_STORAGE
