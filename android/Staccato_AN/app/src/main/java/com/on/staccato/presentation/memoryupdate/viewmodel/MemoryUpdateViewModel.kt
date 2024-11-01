@@ -176,16 +176,16 @@ class MemoryUpdateViewModel
 
         private fun fetchThumbnail(
             context: Context,
-            thumbnailUri: Uri,
+            uri: Uri,
         ): Job {
-            val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
+            val thumbnailFile = convertMemoryUriToFile(context, uri, name = MEMORY_FILE_NAME)
             return viewModelScope.launch {
                 val result: ResponseResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)
                 result.onSuccess(::setThumbnailUrl)
                     .onServerError(::handlePhotoError)
                     .onException { e, message ->
-                        handlePhotoException(e, message, thumbnailUri)
+                        handlePhotoException(e, message, uri)
                     }
             }
         }
