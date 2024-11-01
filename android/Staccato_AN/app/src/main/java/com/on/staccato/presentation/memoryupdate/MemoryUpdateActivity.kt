@@ -65,13 +65,11 @@ class MemoryUpdateActivity :
 
     override fun onPhotoDeletionClicked() {
         currentSnackBar?.dismiss()
-        viewModel.setThumbnailUri(null)
-        viewModel.setThumbnailUrl(null)
+        viewModel.deleteThumbnail()
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
         currentSnackBar?.dismiss()
-        viewModel.setThumbnailUri(uris.first())
         viewModel.createThumbnailUrl(this, uris.first())
     }
 
