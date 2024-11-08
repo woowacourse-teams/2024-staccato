@@ -56,7 +56,7 @@
                     android:id="@+id/iv_memory_thumbnail"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:contentDescription="@string/all_image_content_description"
+                    android:contentDescription="@string/all_memory_thumbnail_photo_description"
                     android:scaleType="centerCrop"
                     app:layout_constraintDimensionRatio="3:2"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -83,7 +83,7 @@
                     android:layout_marginHorizontal="16dp"
                     android:text="@{viewModel.memory.title}"
                     android:textAppearance="@style/Typography.Title1"
-                    android:textColor="@color/white"
+                    android:textColor="@color/absolute_white"
                     app:layout_constraintBottom_toTopOf="@id/tv_memory_period"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:textAppearance="@style/Typography.Body4"
-                    android:textColor="@color/white"
+                    android:textColor="@color/absolute_white"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_title"
                     bind:memoryEndAt="@{viewModel.memory.endAt}"
@@ -159,49 +159,36 @@
                     app:layout_constraintTop_toBottomOf="@id/rv_memory_mates" />
 
                 <TextView
-                    android:id="@+id/tv_memory_visits"
+                    android:id="@+id/tv_memory_staccatos"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/memory_visits"
+                    android:text="@string/memory_staccatos"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_memory_third" />
 
                 <FrameLayout
-                    android:id="@+id/frame_memory_add_visits"
+                    android:id="@+id/frame_memory_add_staccatos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
-                    android:onClick="@{() -> memoryHandler.onVisitCreationClicked()}"
+                    android:onClick="@{() -> memoryHandler.onStaccatoCreationClicked()}"
                     android:paddingVertical="12dp"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_memory_visits"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_memory_staccatos"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_memory_visits">
+                    app:layout_constraintTop_toTopOf="@id/tv_memory_staccatos">
 
                     <Button
-                        android:id="@+id/btn_memory_add_visits"
-                        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp"
-                        android:paddingVertical="3dp"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="10dp"
-                        android:text="@string/visit_add"
-                        android:textAppearance="@style/Typography.Body4"
-                        android:textColor="@color/gray3"
-                        app:icon="@drawable/icon_edit"
-                        app:iconTint="@color/gray3"
-                        app:rippleColor="@android:color/transparent"
-                        app:strokeColor="@color/gray3" />
+                        android:id="@+id/btn_memory_add_staccatos"
+                        style="@style/BoundedIconButtonStyle"
+                        android:contentDescription="@string/memory_staccato_creation_btn_description"
+                        android:text="@string/staccato_add"
+                        app:icon="@drawable/icon_edit" />
 
                 </FrameLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_memory_visits"
+                    android:id="@+id/rv_memory_staccatos"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="12dp"
@@ -213,22 +200,22 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/frame_memory_add_visits"
-                    app:spanCount="2"
-                    tools:listitem="@layout/item_visits" />
+                    app:layout_constraintTop_toBottomOf="@id/frame_memory_add_staccatos"
+                    app:spanCount="@integer/staccato_span_count"
+                    tools:listitem="@layout/item_staccatos" />
 
                 <ImageView
                     android:id="@+id/iv_memory_empty"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
                     android:layout_marginTop="90dp"
-                    android:contentDescription="@string/all_image_content_description"
+                    android:contentDescription="@string/all_staccato_main_character"
                     android:paddingBottom="10dp"
                     android:src="@drawable/staccato_character"
-                    android:visibility="@{viewModel.memory.visits.empty ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.memory.staccatos.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_visits" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_staccatos" />
 
                 <TextView
                     android:id="@+id/tv_memory_empty"
@@ -236,9 +223,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:paddingBottom="100dp"
-                    android:text="@string/memory_visit_empty"
-                    android:textAppearance="@style/Typography.Body2"
-                    android:visibility="@{viewModel.memory.visits.empty ? View.VISIBLE : View.GONE}"
+                    android:text="@string/memory_staccato_empty"
+                    android:textAppearance="@style/Typography.Body2.Not.Resizable"
+                    android:visibility="@{viewModel.memory.staccatos.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_memory_empty"

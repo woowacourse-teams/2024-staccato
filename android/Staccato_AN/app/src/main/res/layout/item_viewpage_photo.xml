@@ -16,14 +16,13 @@
 
         <ImageView
             android:id="@+id/iv_item_photo"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
-            android:contentDescription="@string/all_image_content_description"
+            android:contentDescription="@string/viewpager_photo_description"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:coilImageUrl="@{photoUrl}"

@@ -10,13 +10,15 @@ import androidx.activity.viewModels
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMemoryUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel
-import com.on.staccato.presentation.momentcreation.OnUrisSelectedListener
+import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
+import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,6 +34,7 @@ class MemoryUpdateActivity :
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
+    private var currentSnackBar: Snackbar? = null
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
@@ -40,10 +43,13 @@ class MemoryUpdateActivity :
         updateMemoryPeriod()
         observeIsUpdateSuccess()
         showErrorToast()
+        handleError()
     }
 
     override fun onPeriodSelectionClicked() {
-        dateRangePicker.show(supportFragmentManager, dateRangePicker.toString())
+        if (!dateRangePicker.isAdded) {
+            dateRangePicker.show(supportFragmentManager, dateRangePicker.toString())
+        }
     }
 
     override fun onSaveClicked() {
@@ -58,14 +64,15 @@ class MemoryUpdateActivity :
     }
 
     override fun onPhotoDeletionClicked() {
+        currentSnackBar?.dismiss()
         viewModel.setThumbnailUri(null)
         viewModel.setThumbnailUrl(null)
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
+        currentSnackBar?.dismiss()
         viewModel.setThumbnailUri(uris.first())
         viewModel.createThumbnailUrl(this, uris.first())
-        showToast(getString(R.string.all_posting_photo))
     }
 
     private fun buildDateRangePicker() =
@@ -120,6 +127,51 @@ class MemoryUpdateActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
+    }
+
+    private fun handleError() {
+        viewModel.error.observe(this) { error ->
+            when (error) {
+                is MemoryUpdateError.MemoryInitialization -> handleInitializeFail(error)
+                is MemoryUpdateError.Thumbnail -> handleCreatePhotoUrlFail(error)
+                is MemoryUpdateError.MemoryUpdate -> handleMemoryUpdateFail(error)
+            }
+        }
+    }
+
+    private fun handleInitializeFail(error: MemoryUpdateError.MemoryInitialization) {
+        finish()
+        showToast(error.message)
+    }
+
+    private fun handleCreatePhotoUrlFail(error: MemoryUpdateError.Thumbnail) {
+        showExceptionSnackBar(error.message) { reCreateThumbnailUrl(error.uri) }
+    }
+
+    private fun handleMemoryUpdateFail(error: MemoryUpdateError.MemoryUpdate) {
+        window.clearFlags(FLAG_NOT_TOUCHABLE)
+        showExceptionSnackBar(error.message) { reUpdateMemory() }
+    }
+
+    private fun reCreateThumbnailUrl(uri: Uri) {
+        viewModel.createThumbnailUrl(this, uri)
+    }
+
+    private fun reUpdateMemory() {
+        viewModel.updateMemory()
+    }
+
+    private fun showExceptionSnackBar(
+        message: String,
+        onRetryAction: () -> Unit,
+    ) {
+        currentSnackBar =
+            binding.root.getSnackBarWithAction(
+                message = message,
+                actionLabel = R.string.all_retry,
+                onAction = onRetryAction,
+                length = Snackbar.LENGTH_INDEFINITE,
+            ).apply { show() }
     }
 
     companion object {

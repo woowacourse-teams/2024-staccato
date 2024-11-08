@@ -21,67 +21,76 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_recovery"
-            style="@style/TitleToolbarStyle"
+            style="@style/NavigationToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_recovery_start_margin"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="72dp"
-            android:paddingBottom="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_recovery">
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="24dp" />
 
-            <TextView
-                android:id="@+id/tv_recovery_title"
-                style="@style/Typography.Title1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="@string/recovery_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_recovery_end_margin"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="24dp" />
 
-            <TextView
-                android:id="@+id/tv_recovery_subtitle"
-                style="@style/Typography.Title1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/recovery_subtitle"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_recovery_title" />
+        <TextView
+            android:id="@+id/tv_recovery_title"
+            style="@style/Typography.Title1.Not.Resizable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="72dp"
+            android:text="@string/recovery_title"
+            app:layout_constraintStart_toStartOf="@id/text_input_recovery_code"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_recovery" />
 
-            <EditText
-                android:id="@+id/et_recovery_code"
-                style="@style/EditTextStyle"
-                android:layout_marginTop="40dp"
+        <TextView
+            android:id="@+id/tv_recovery_subtitle"
+            style="@style/Typography.Title1.Not.Resizable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/recovery_subtitle"
+            app:layout_constraintStart_toStartOf="@id/text_input_recovery_code"
+            app:layout_constraintTop_toBottomOf="@id/tv_recovery_title" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_recovery_code"
+            style="@style/TextInputLayoutStyle"
+            android:layout_marginTop="40dp"
+            app:counterMaxLength="36"
+            app:layout_constraintEnd_toEndOf="@id/guideline_recovery_end_margin"
+            app:layout_constraintStart_toStartOf="@id/guideline_recovery_start_margin"
+            app:layout_constraintTop_toBottomOf="@id/tv_recovery_subtitle"
+            app:layout_constraintWidth_max="500dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/TextInputEditTextStyle.SingleLine"
                 android:hint="@string/recovery_code_hint"
                 android:imeOptions="actionDone"
-                android:inputType="text"
                 android:maxLength="36"
-                android:maxLines="1"
-                android:text="@={viewModel.recoveryCode}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_recovery_subtitle" />
+                android:text="@={viewModel.recoveryCode}" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_start_staccato"
-                style="@style/ButtonStyle.Recovery"
-                android:onClick="@{() -> handler.onRecoveryClicked()}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                bind:recoveryEnabled="@{viewModel.recoveryCode}" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_start_staccato"
+            style="@style/ButtonStyle.Recovery"
+            android:layout_marginBottom="24dp"
+            android:onClick="@{() -> handler.onRecoveryClicked()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_recovery_end_margin"
+            app:layout_constraintStart_toStartOf="@id/guideline_recovery_start_margin"
+            app:layout_constraintWidth_max="500dp"
+            bind:recoveryButtonEnabled="@{viewModel.recoveryCode}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

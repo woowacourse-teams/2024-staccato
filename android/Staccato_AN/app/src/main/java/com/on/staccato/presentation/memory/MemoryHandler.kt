@@ -1,7 +1,7 @@
 package com.on.staccato.presentation.memory
 
 interface MemoryHandler {
-    fun onVisitClicked(visitId: Long)
+    fun onStaccatoClicked(staccatoId: Long)
 
-    fun onVisitCreationClicked()
+    fun onStaccatoCreationClicked()
 }

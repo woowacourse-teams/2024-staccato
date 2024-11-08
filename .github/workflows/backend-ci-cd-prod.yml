@@ -3,7 +3,7 @@ name: Backend CI/CD prod
 on:
   push:
     paths: [ 'backend/**', '.github/**' ]
-    branches: [ "main" ]
+    branches: [ "release-be" ]
 
 jobs:
   ci:
@@ -58,20 +58,5 @@ jobs:
         runner: [ prod-a, prod-b ]
 
     steps:
-      - name: Pull Docker image
-        run: |
-          sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
-          sudo docker pull staccato/staccato:prod
-
-      - name: Stop and remove existing container
-        run: |
-          sudo docker stop staccato-backend-app || true
-          sudo docker rm staccato-backend-app || true
-
-      - name: Docker run
-        run: |
-          sudo docker run --env-file /home/ubuntu/staccato/.env \
-          -v /home/ubuntu/staccato/logs:/logs \
-          -p 8080:8080 \
-          -d --name staccato-backend-app staccato/staccato:prod
-          sudo docker image prune -af
+      - name: execute deploy.sh
+        run: bash /home/ubuntu/staccato/deploy.sh

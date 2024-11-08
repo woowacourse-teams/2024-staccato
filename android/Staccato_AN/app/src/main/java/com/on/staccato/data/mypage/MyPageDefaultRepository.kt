@@ -4,7 +4,7 @@ import com.on.staccato.data.ApiResponseHandler.handleApiResponse
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.mypage.ProfileImageResponse
-import com.on.staccato.domain.model.AccountInformation
+import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.repository.MyPageRepository
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -14,13 +14,13 @@ class MyPageDefaultRepository
     constructor(
         private val myPageApiService: MyPageApiService,
     ) : MyPageRepository {
-        override suspend fun getAccountInformation(): ResponseResult<AccountInformation> {
-            val responseResult = handleApiResponse { myPageApiService.getAccountInformation() }
+        override suspend fun getMemberProfile(): ResponseResult<MemberProfile> {
+            val responseResult = handleApiResponse { myPageApiService.getMemberProfile() }
             return when (responseResult) {
                 is ResponseResult.Exception ->
                     ResponseResult.Exception(
                         responseResult.e,
-                        ERROR_MESSAGE_GET_PROFILE_FAIL,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
 
                 is ResponseResult.ServerError ->
@@ -43,7 +43,7 @@ class MyPageDefaultRepository
                 is ResponseResult.Exception ->
                     ResponseResult.Exception(
                         responseResult.e,
-                        ERROR_MESSAGE_CHANGE_PROFILE_IMAGE_FAIL,
+                        EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
 
                 is ResponseResult.ServerError ->
@@ -57,7 +57,6 @@ class MyPageDefaultRepository
         }
 
         companion object {
-            const val ERROR_MESSAGE_GET_PROFILE_FAIL = "프로필 정보를 가져올 수 없습니다."
-            const val ERROR_MESSAGE_CHANGE_PROFILE_IMAGE_FAIL = "프로필 이미지 변경에 실패했습니다."
+            private const val EXCEPTION_NETWORK_ERROR_MESSAGE = "네트워크 연결이 불안정합니다.\n연결을 재설정한 후 다시 시도해 주세요."
         }
     }

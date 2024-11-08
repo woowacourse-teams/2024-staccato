@@ -12,6 +12,8 @@ import com.staccato.exception.UnauthorizedException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.domain.Nickname;
 import com.staccato.member.repository.MemberRepository;
+import com.staccato.memory.domain.Memory;
+import com.staccato.memory.repository.MemoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,12 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class AuthService {
     private final MemberRepository memberRepository;
+    private final MemoryRepository memoryRepository;
     private final TokenProvider tokenProvider;
 
     @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
         Member member = createMember(loginRequest);
         String token = tokenProvider.create(member);
+        createBasicMemory(member);
         return new LoginResponse(token);
     }
 
@@ -41,6 +45,12 @@ public class AuthService {
         if (memberRepository.existsByNickname(nickname)) {
             throw new StaccatoException("이미 존재하는 닉네임입니다. 다시 설정해주세요.");
         }
+    }
+
+    private void createBasicMemory(Member member) {
+        Memory memory = Memory.basic(member.getNickname());
+        memory.addMemoryMember(member);
+        memoryRepository.save(memory);
     }
 
     public Member extractFromToken(String token) {
