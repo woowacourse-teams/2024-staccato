@@ -1,21 +1,18 @@
 package com.staccato.comment.controller;
 
 import java.net.URI;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.staccato.comment.controller.docs.CommentControllerDocs;
 import com.staccato.comment.service.CommentService;
 import com.staccato.comment.service.dto.request.CommentRequest;
@@ -24,18 +21,16 @@ import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
-
 import lombok.RequiredArgsConstructor;
 
 @Trace
 @RestController
-@RequestMapping("/comments")
 @RequiredArgsConstructor
 @Validated
 public class CommentController implements CommentControllerDocs {
     private final CommentService commentService;
 
-    @PostMapping
+    @PostMapping("/comments")
     public ResponseEntity<Void> createComment(
             @LoginMember Member member,
             @Valid @RequestBody CommentRequest commentRequest
@@ -45,7 +40,7 @@ public class CommentController implements CommentControllerDocs {
                 .build();
     }
 
-    @GetMapping
+    @GetMapping("/comments")
     public ResponseEntity<CommentResponses> readCommentsByMomentId(
             @LoginMember Member member,
             @RequestParam @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId
@@ -54,7 +49,7 @@ public class CommentController implements CommentControllerDocs {
         return ResponseEntity.ok().body(commentResponses);
     }
 
-    @PutMapping
+    @PutMapping("/comments")
     public ResponseEntity<Void> updateComment(
             @LoginMember Member member,
             @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
@@ -64,9 +59,28 @@ public class CommentController implements CommentControllerDocs {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping
+    @PutMapping("/v2/comments/{commentId}")
+    public ResponseEntity<Void> updateCommentV2(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
+            @Valid @RequestBody CommentUpdateRequest commentUpdateRequest
+    ) {
+        commentService.updateComment(member, commentId, commentUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/comments")
     public ResponseEntity<Void> deleteComment(
             @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
+            @LoginMember Member member
+    ) {
+        commentService.deleteComment(commentId, member);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/v2/comments/{commentId}")
+    public ResponseEntity<Void> deleteCommentV2(
+            @PathVariable @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
             @LoginMember Member member
     ) {
         commentService.deleteComment(commentId, member);
