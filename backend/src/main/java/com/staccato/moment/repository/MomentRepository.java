@@ -9,7 +9,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.moment.domain.Moment;
 
 public interface MomentRepository extends JpaRepository<Moment, Long> {
-    List<Moment> findAllByMemoryIdOrderByVisitedAt(long memoryId);
+    List<Moment> findAllByMemoryIdOrderByVisitedAtDesc(long memoryId);
 
     List<Moment> findAllByMemory_MemoryMembers_Member(Member member);
 

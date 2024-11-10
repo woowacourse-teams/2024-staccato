@@ -74,7 +74,7 @@ public class MemoryService {
     public MemoryDetailResponse readMemoryById(long memoryId, Member member) {
         Memory memory = getMemoryById(memoryId);
         validateOwner(memory, member);
-        List<MomentResponse> momentResponses = getMomentResponses(momentRepository.findAllByMemoryIdOrderByVisitedAt(memoryId));
+        List<MomentResponse> momentResponses = getMomentResponses(momentRepository.findAllByMemoryIdOrderByVisitedAtDesc(memoryId));
         return new MemoryDetailResponse(memory, momentResponses);
     }
 
@@ -99,7 +99,7 @@ public class MemoryService {
         if (originMemory.isNotSameTitle(memoryRequest.memoryTitle())) {
             validateMemoryTitle(updatedMemory, member);
         }
-        List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAt(memoryId);
+        List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAtDesc(memoryId);
         originMemory.update(updatedMemory, moments);
     }
 

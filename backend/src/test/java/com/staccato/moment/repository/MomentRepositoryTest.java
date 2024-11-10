@@ -94,7 +94,7 @@ class MomentRepositoryTest {
         );
     }
 
-    @DisplayName("사용자의 특정 추억에 해당하는 모든 스타카토를 조회한다.")
+    @DisplayName("사용자의 특정 추억에 해당하는 모든 스타카토를 최신순으로 조회한다.")
     @Test
     void findAllByMemoryIdOrderByVisitedAt() {
         // given
@@ -107,12 +107,12 @@ class MomentRepositoryTest {
         Moment moment3 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 10, 23, 21)));
 
         // when
-        List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAt(memory.getId());
+        List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAtDesc(memory.getId());
 
         // then
         assertAll(
                 () -> assertThat(moments.size()).isEqualTo(3),
-                () -> assertThat(moments).containsExactlyInAnyOrder(moment1, moment2, moment3)
+                () -> assertThat(moments).containsExactlyInAnyOrder(moment3, moment2, moment1)
         );
     }
 }
