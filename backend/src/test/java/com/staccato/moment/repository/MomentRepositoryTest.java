@@ -107,12 +107,33 @@ class MomentRepositoryTest {
         Moment moment3 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 10, 23, 21)));
 
         // when
-        List<Moment> moments = momentRepository.findAllByMemoryIdOrderByVisitedAtDesc(memory.getId());
+        List<Moment> moments = momentRepository.findAllByMemoryIdOrdered(memory.getId());
 
         // then
         assertAll(
                 () -> assertThat(moments.size()).isEqualTo(3),
                 () -> assertThat(moments).containsExactly(moment3, moment2, moment1)
+        );
+    }
+
+    @DisplayName("사용자의 스타카토 방문 날짜가 동일하다면, 생성날짜 기준 최신순으로 조회한다.")
+    @Test
+    void findAllByMemoryIdOrderByCreatedAt() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        memoryMemberRepository.save(new MemoryMember(member, memory));
+
+        Moment moment1 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 10, 23, 21)));
+        Moment moment2 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 10, 23, 21)));
+
+        // when
+        List<Moment> moments = momentRepository.findAllByMemoryIdOrdered(memory.getId());
+
+        // then
+        assertAll(
+                () -> assertThat(moments.size()).isEqualTo(2),
+                () -> assertThat(moments).containsExactly(moment2, moment1)
         );
     }
 }

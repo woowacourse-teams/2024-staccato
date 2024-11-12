@@ -9,7 +9,8 @@ import com.staccato.member.domain.Member;
 import com.staccato.moment.domain.Moment;
 
 public interface MomentRepository extends JpaRepository<Moment, Long> {
-    List<Moment> findAllByMemoryIdOrderByVisitedAtDesc(long memoryId);
+    @Query("SELECT m FROM Moment m WHERE m.memory.id = :memoryId order by m.visitedAt desc, m.createdAt desc")
+    List<Moment> findAllByMemoryIdOrdered(long memoryId);
 
     List<Moment> findAllByMemory_MemoryMembers_Member(Member member);
 
