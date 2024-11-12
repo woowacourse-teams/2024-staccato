@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
-private typealias URI = Uri
+private typealias ThumbnailUri = Uri
 
 @HiltViewModel
 class MemoryUpdateViewModel
@@ -72,7 +72,7 @@ class MemoryUpdateViewModel
         private val _error = MutableSingleLiveData<MemoryUpdateError>()
         val error: SingleLiveData<MemoryUpdateError> get() = _error
 
-        private val thumbnailJobs = mutableMapOf<URI, Job>()
+        private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
 
         fun fetchMemory(id: Long) {
             memoryId = id

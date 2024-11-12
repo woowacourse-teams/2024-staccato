@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
-private typealias URI = Uri
+private typealias ThumbnailUri = Uri
 
 @HiltViewModel
 class MemoryCreationViewModel
@@ -66,7 +66,7 @@ class MemoryCreationViewModel
         private val _error = MutableSingleLiveData<MemoryCreationError>()
         val error: SingleLiveData<MemoryCreationError> get() = _error
 
-        private val thumbnailJobs = mutableMapOf<URI, Job>()
+        private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
 
         fun createThumbnailUrl(
             context: Context,
