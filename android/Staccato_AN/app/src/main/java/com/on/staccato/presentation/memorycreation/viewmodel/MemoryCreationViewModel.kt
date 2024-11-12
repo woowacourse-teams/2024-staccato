@@ -106,12 +106,13 @@ class MemoryCreationViewModel
             uri: Uri?,
             url: String? = null,
         ) {
-            val isEqualUri: Boolean? = _thumbnail.value?.isEqualUri(uri)
-            if (isEqualUri == false) {
+            if (isNewUri(uri)) {
                 thumbnailJobs[_thumbnail.value?.uri]?.cancel()
                 _thumbnail.value = ThumbnailUiModel(uri = uri, url = url)
             }
         }
+
+        private fun isNewUri(uri: Uri?): Boolean = _thumbnail.value?.isEqualUri(uri) == false
 
         private fun registerThumbnailJob(
             context: Context,
