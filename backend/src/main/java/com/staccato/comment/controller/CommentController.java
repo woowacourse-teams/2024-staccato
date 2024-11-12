@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.staccato.comment.controller.docs.CommentControllerDocs;
@@ -25,12 +26,13 @@ import lombok.RequiredArgsConstructor;
 
 @Trace
 @RestController
+@RequestMapping("/comments")
 @RequiredArgsConstructor
 @Validated
 public class CommentController implements CommentControllerDocs {
     private final CommentService commentService;
 
-    @PostMapping("/comments")
+    @PostMapping
     public ResponseEntity<Void> createComment(
             @LoginMember Member member,
             @Valid @RequestBody CommentRequest commentRequest
@@ -40,7 +42,7 @@ public class CommentController implements CommentControllerDocs {
                 .build();
     }
 
-    @GetMapping("/comments")
+    @GetMapping
     public ResponseEntity<CommentResponses> readCommentsByMomentId(
             @LoginMember Member member,
             @RequestParam @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId
@@ -49,7 +51,7 @@ public class CommentController implements CommentControllerDocs {
         return ResponseEntity.ok().body(commentResponses);
     }
 
-    @PutMapping("/comments")
+    @PutMapping
     public ResponseEntity<Void> updateComment(
             @LoginMember Member member,
             @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
@@ -59,7 +61,7 @@ public class CommentController implements CommentControllerDocs {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/v2/comments/{commentId}")
+    @PutMapping("/v2/{commentId}")
     public ResponseEntity<Void> updateCommentV2(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
@@ -69,7 +71,7 @@ public class CommentController implements CommentControllerDocs {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/comments")
+    @DeleteMapping
     public ResponseEntity<Void> deleteComment(
             @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
             @LoginMember Member member
@@ -78,7 +80,7 @@ public class CommentController implements CommentControllerDocs {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/v2/comments/{commentId}")
+    @DeleteMapping("/v2/{commentId}")
     public ResponseEntity<Void> deleteCommentV2(
             @PathVariable @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
             @LoginMember Member member

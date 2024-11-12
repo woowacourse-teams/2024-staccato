@@ -185,7 +185,7 @@ public class CommentControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(put("/v2/comments/{commentId}", 1)
+        mockMvc.perform(put("/comments/v2/{commentId}", 1)
                         .content(commentUpdateRequest)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -243,7 +243,7 @@ public class CommentControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(delete("/v2/comments/{commentId}", 1)
+        mockMvc.perform(delete("/comments/v2/{commentId}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
