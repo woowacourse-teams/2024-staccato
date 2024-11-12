@@ -109,7 +109,7 @@ class MemoryUpdateViewModel
             uri: Uri,
         ) {
             _isPhotoPosting.value = true
-            createThumbnail(uri)
+            setThumbnailUri(uri)
             registerThumbnailJob(context, uri)
         }
 
@@ -152,7 +152,7 @@ class MemoryUpdateViewModel
             _isUpdateSuccess.setValue(true)
         }
 
-        private fun createThumbnail(
+        private fun setThumbnailUri(
             uri: Uri?,
             url: String? = null,
         ) {

@@ -73,7 +73,7 @@ class MemoryCreationViewModel
             uri: Uri,
         ) {
             _isPhotoPosting.value = true
-            createThumbnail(uri)
+            setThumbnailUri(uri)
             registerThumbnailJob(context, uri)
         }
 
@@ -102,7 +102,7 @@ class MemoryCreationViewModel
             }
         }
 
-        private fun createThumbnail(
+        private fun setThumbnailUri(
             uri: Uri?,
             url: String? = null,
         ) {
