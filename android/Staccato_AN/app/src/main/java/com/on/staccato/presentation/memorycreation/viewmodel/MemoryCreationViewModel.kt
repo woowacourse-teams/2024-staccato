@@ -141,8 +141,8 @@ class MemoryCreationViewModel
             }
         }
 
-        private fun setThumbnailUrl(imageResponse: ImageResponse?) {
-            val newUrl = imageResponse?.imageUrl
+        private fun setThumbnailUrl(imageResponse: ImageResponse) {
+            val newUrl = imageResponse.imageUrl
             _thumbnail.value = _thumbnail.value?.updateUrl(newUrl)
             _isPhotoPosting.value = false
         }
