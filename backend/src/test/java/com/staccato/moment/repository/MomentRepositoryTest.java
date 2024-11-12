@@ -112,7 +112,7 @@ class MomentRepositoryTest {
         // then
         assertAll(
                 () -> assertThat(moments.size()).isEqualTo(3),
-                () -> assertThat(moments).containsExactlyInAnyOrder(moment3, moment2, moment1)
+                () -> assertThat(moments).containsExactly(moment3, moment2, moment1)
         );
     }
 }
