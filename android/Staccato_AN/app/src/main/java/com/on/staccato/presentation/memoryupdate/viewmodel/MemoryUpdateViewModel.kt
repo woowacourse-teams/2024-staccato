@@ -152,13 +152,10 @@ class MemoryUpdateViewModel
             _isUpdateSuccess.setValue(true)
         }
 
-        private fun setThumbnailUri(
-            uri: Uri?,
-            url: String? = null,
-        ) {
+        private fun setThumbnailUri(uri: Uri?) {
             if (isNewUri(uri)) {
                 thumbnailJobs[_thumbnail.value?.uri]?.cancel()
-                _thumbnail.value = ThumbnailUiModel(uri = uri, url = url)
+                _thumbnail.value = ThumbnailUiModel(uri = uri, url = null)
             }
         }
 
