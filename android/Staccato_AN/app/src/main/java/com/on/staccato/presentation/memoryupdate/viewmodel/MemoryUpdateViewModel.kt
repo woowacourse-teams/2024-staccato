@@ -165,14 +165,14 @@ class MemoryUpdateViewModel
             context: Context,
             uri: Uri,
         ) {
-            val thumbnailJob = fetchThumbnail(context, uri)
+            val thumbnailJob = createFetchingThumbnailJob(context, uri)
             thumbnailJob.invokeOnCompletion {
                 thumbnailJobs.remove(uri)
             }
             thumbnailJobs[uri] = thumbnailJob
         }
 
-        private fun fetchThumbnail(
+        private fun createFetchingThumbnailJob(
             context: Context,
             uri: Uri,
         ): Job {

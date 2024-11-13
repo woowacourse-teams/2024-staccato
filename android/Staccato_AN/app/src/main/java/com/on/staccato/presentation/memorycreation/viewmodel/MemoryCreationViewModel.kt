@@ -115,14 +115,14 @@ class MemoryCreationViewModel
             context: Context,
             uri: Uri,
         ) {
-            val job = fetchThumbnail(context, uri)
+            val job = createFetchingThumbnailJob(context, uri)
             job.invokeOnCompletion {
                 thumbnailJobs.remove(uri)
             }
             thumbnailJobs[uri] = job
         }
 
-        private fun fetchThumbnail(
+        private fun createFetchingThumbnailJob(
             context: Context,
             uri: Uri,
         ): Job {
