@@ -239,7 +239,7 @@ class MemoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("특정 추억을 조회하면 스타카토는 오래된 순으로 반환한다.")
+    @DisplayName("특정 추억을 조회하면 스타카토는 최신순으로 반환한다.")
     @Test
     void readMemoryByIdOrderByVisitedAt() {
         // given
@@ -258,7 +258,7 @@ class MemoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(memoryDetailResponse.memoryId()).isEqualTo(memoryIdResponse.memoryId()),
                 () -> assertThat(memoryDetailResponse.moments()).hasSize(3),
                 () -> assertThat(memoryDetailResponse.moments().stream().map(MomentResponse::momentId).toList())
-                        .containsExactly(firstMoment.getId(), secondMoment.getId(), lastMoment.getId())
+                        .containsExactly(lastMoment.getId(), secondMoment.getId(), firstMoment.getId())
         );
     }
 
