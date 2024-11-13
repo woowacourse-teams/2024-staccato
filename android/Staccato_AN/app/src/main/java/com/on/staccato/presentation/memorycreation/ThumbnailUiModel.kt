@@ -10,5 +10,5 @@ data class ThumbnailUiModel(
 
     fun isEqualUri(newUri: Uri?): Boolean = uri == newUri
 
-    fun delete() = this.copy(uri = null, url = null)
+    fun clear() = this.copy(uri = null, url = null)
 }

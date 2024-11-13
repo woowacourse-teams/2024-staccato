@@ -78,7 +78,7 @@ class MemoryCreationViewModel
         }
 
         fun deleteThumbnail() {
-            _thumbnail.value = thumbnail.value?.delete()
+            _thumbnail.value = thumbnail.value?.clear()
         }
 
         fun setMemoryPeriod(

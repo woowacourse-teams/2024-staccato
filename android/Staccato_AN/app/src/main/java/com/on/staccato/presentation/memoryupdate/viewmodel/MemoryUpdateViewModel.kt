@@ -114,7 +114,7 @@ class MemoryUpdateViewModel
         }
 
         fun deleteThumbnail() {
-            _thumbnail.value = thumbnail.value?.delete()
+            _thumbnail.value = thumbnail.value?.clear()
         }
 
         private fun initializeMemory(memory: Memory) {
