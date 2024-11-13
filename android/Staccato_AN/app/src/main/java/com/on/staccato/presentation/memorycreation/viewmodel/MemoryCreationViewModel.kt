@@ -77,7 +77,7 @@ class MemoryCreationViewModel
             registerThumbnailJob(context, uri)
         }
 
-        fun deleteThumbnail() {
+        fun clearThumbnail() {
             _thumbnail.value = thumbnail.value?.clear()
         }
 
