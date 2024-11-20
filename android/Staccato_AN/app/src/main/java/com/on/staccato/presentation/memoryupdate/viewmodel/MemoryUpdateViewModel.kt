@@ -20,12 +20,16 @@ import com.on.staccato.domain.repository.MemoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
+import com.on.staccato.presentation.memorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.memoryupdate.MemoryUpdateError
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
+
+private typealias ThumbnailUri = Uri
 
 @HiltViewModel
 class MemoryUpdateViewModel
@@ -37,11 +41,8 @@ class MemoryUpdateViewModel
         private val _memory = MutableLiveData<NewMemory>()
         val memory: LiveData<NewMemory> get() = _memory
 
-        private val _thumbnailUri = MutableLiveData<Uri?>(null)
-        val thumbnailUri: LiveData<Uri?> get() = _thumbnailUri
-
-        private val _thumbnailUrl = MutableLiveData<String?>(null)
-        val thumbnailUrl: LiveData<String?> get() = _thumbnailUrl
+        private val _thumbnail = MutableLiveData<ThumbnailUiModel>(ThumbnailUiModel())
+        val thumbnail: LiveData<ThumbnailUiModel> get() = _thumbnail
 
         val title = ObservableField<String>()
         val description = ObservableField<String>()
@@ -71,8 +72,10 @@ class MemoryUpdateViewModel
         private val _error = MutableSingleLiveData<MemoryUpdateError>()
         val error: SingleLiveData<MemoryUpdateError> get() = _error
 
-        fun fetchMemory(memoryId: Long) {
-            fetchMemoryId(memoryId)
+        private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
+
+        fun fetchMemory(id: Long) {
+            memoryId = id
             viewModelScope.launch {
                 val result = memoryRepository.getMemory(memoryId)
                 result
@@ -80,39 +83,6 @@ class MemoryUpdateViewModel
                     .onServerError(::handleInitializeMemoryError)
                     .onException(::handleInitializeMemoryException)
             }
-        }
-
-        private fun fetchMemoryId(id: Long) {
-            memoryId = id
-        }
-
-        fun createThumbnailUrl(
-            context: Context,
-            thumbnailUri: Uri,
-        ) {
-            _thumbnailUrl.value = null
-            _thumbnailUri.value = thumbnailUri
-            _isPhotoPosting.value = true
-            val thumbnailFile = convertMemoryUriToFile(context, thumbnailUri, name = MEMORY_FILE_NAME)
-            viewModelScope.launch {
-                val result: ResponseResult<ImageResponse> =
-                    imageRepository.convertImageFileToUrl(thumbnailFile)
-                result.onSuccess(::setThumbnailUrl)
-                    .onServerError(::handlePhotoError)
-                    .onException { e, message ->
-                        handlePhotoException(e, message, thumbnailUri)
-                    }
-            }
-        }
-
-        fun setThumbnailUri(thumbnailUri: Uri?) {
-            _thumbnailUri.value = thumbnailUri
-            _thumbnailUrl.value = null
-        }
-
-        fun setThumbnailUrl(imageResponse: ImageResponse?) {
-            _thumbnailUrl.value = imageResponse?.imageUrl
-            _isPhotoPosting.value = false
         }
 
         fun updateMemory() {
@@ -134,8 +104,21 @@ class MemoryUpdateViewModel
             _endDate.value = convertLongToLocalDate(endAt)
         }
 
+        fun createThumbnailUrl(
+            context: Context,
+            uri: Uri,
+        ) {
+            _isPhotoPosting.value = true
+            setThumbnailUri(uri)
+            registerThumbnailJob(context, uri)
+        }
+
+        fun clearThumbnail() {
+            _thumbnail.value = thumbnail.value?.clear()
+        }
+
         private fun initializeMemory(memory: Memory) {
-            _thumbnailUrl.value = memory.memoryThumbnailUrl
+            _thumbnail.value = _thumbnail.value?.updateUrl(memory.memoryThumbnailUrl)
             title.set(memory.memoryTitle)
             description.set(memory.description)
             _startDate.value = memory.startAt
@@ -149,7 +132,7 @@ class MemoryUpdateViewModel
 
         private fun makeNewMemory() =
             NewMemory(
-                memoryThumbnailUrl = thumbnailUrl.value,
+                memoryThumbnailUrl = _thumbnail.value?.url,
                 memoryTitle = title.get() ?: throw IllegalArgumentException(),
                 startAt = getDateByPeriodSetting(startDate),
                 endAt = getDateByPeriodSetting(endDate),
@@ -169,6 +152,49 @@ class MemoryUpdateViewModel
             _isUpdateSuccess.setValue(true)
         }
 
+        private fun setThumbnailUri(uri: Uri?) {
+            val currentJob = thumbnailJobs[_thumbnail.value?.uri]
+            if (isNewUri(uri) && currentJob?.isActive == true) {
+                currentJob.cancel()
+            }
+            _thumbnail.value = ThumbnailUiModel(uri = uri, url = null)
+        }
+
+        private fun isNewUri(uri: Uri?): Boolean = _thumbnail.value?.isEqualUri(uri) == false
+
+        private fun registerThumbnailJob(
+            context: Context,
+            uri: Uri,
+        ) {
+            val thumbnailJob = createFetchingThumbnailJob(context, uri)
+            thumbnailJob.invokeOnCompletion {
+                thumbnailJobs.remove(uri)
+            }
+            thumbnailJobs[uri] = thumbnailJob
+        }
+
+        private fun createFetchingThumbnailJob(
+            context: Context,
+            uri: Uri,
+        ): Job {
+            val thumbnailFile = convertMemoryUriToFile(context, uri, name = MEMORY_FILE_NAME)
+            return viewModelScope.launch {
+                val result: ResponseResult<ImageResponse> =
+                    imageRepository.convertImageFileToUrl(thumbnailFile)
+                result.onSuccess(::setThumbnailUrl)
+                    .onServerError(::handlePhotoError)
+                    .onException { e, message ->
+                        handlePhotoException(e, message, uri)
+                    }
+            }
+        }
+
+        private fun setThumbnailUrl(imageResponse: ImageResponse) {
+            val newUrl = imageResponse.imageUrl
+            _thumbnail.value = _thumbnail.value?.updateUrl(newUrl)
+            _isPhotoPosting.value = false
+        }
+
         private fun handlePhotoError(
             status: Status,
             message: String,
@@ -181,7 +207,9 @@ class MemoryUpdateViewModel
             message: String,
             uri: Uri,
         ) {
-            _error.setValue(MemoryUpdateError.Thumbnail(message, uri))
+            if (thumbnailJobs[uri]?.isActive == true) {
+                _error.setValue(MemoryUpdateError.Thumbnail(message, uri))
+            }
         }
 
         private fun handleInitializeMemoryError(
