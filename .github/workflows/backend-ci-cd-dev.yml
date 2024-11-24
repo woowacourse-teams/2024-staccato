@@ -63,11 +63,6 @@ jobs:
           sudo docker stop staccato-backend-app || true
           sudo docker rm staccato-backend-app || true
 
-      - name: Docker run
-        run: |
-          sudo docker run --env-file /home/ubuntu/staccato/.env \
-          -v /home/ubuntu/staccato/logs:/logs \
-          -p 8080:8080 \
-          -d --name staccato-backend-app staccato/staccato:dev
-          sudo docker image prune -af
+      - name: Docker Compose up
+          run: sudo docker-compose -f /home/ubuntu/staccato/docker-compose.yml up -d
 
