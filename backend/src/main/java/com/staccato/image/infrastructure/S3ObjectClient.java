@@ -2,8 +2,8 @@ package com.staccato.image.infrastructure;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -20,11 +20,14 @@ public class S3ObjectClient {
     public S3ObjectClient(
             @Value("${cloud.aws.s3.bucket}") String bucketName,
             @Value("${cloud.aws.s3.endpoint}") String endPoint,
-            @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint
+            @Value("${cloud.aws.cloudfront.endpoint}") String cloudFrontEndPoint,
+            @Value("${cloud.aws.access-key}") String accessKey,
+            @Value("${cloud.aws.secret-access-key}") String secretAccessKey
     ) {
-        this.s3Client = software.amazon.awssdk.services.s3.S3Client.builder()
+        AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretAccessKey);
+        this.s3Client = S3Client.builder()
+                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
                 .region(Region.AP_NORTHEAST_2)
-                .credentialsProvider(InstanceProfileCredentialsProvider.create())
                 .build();
         this.bucketName = bucketName;
         this.endPoint = endPoint;
