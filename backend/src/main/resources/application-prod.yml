@@ -78,7 +78,7 @@ cloud:
       auto: false
 image:
   folder:
-    name: image-prod/
+    name: prod/
 
 management:
   server:

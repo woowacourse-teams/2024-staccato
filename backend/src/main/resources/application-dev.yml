@@ -56,7 +56,7 @@ cloud:
       auto: false
 image:
   folder:
-    name: image/
+    name: dev/
 
 management:
   server:
