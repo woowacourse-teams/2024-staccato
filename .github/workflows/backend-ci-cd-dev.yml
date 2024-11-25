@@ -25,6 +25,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -64,5 +74,5 @@ jobs:
           sudo docker rm staccato-backend-app || true
 
       - name: Docker Compose up
-          run: sudo docker-compose -f /home/ubuntu/staccato/docker-compose.yml up -d
+        run: sudo docker-compose -f /home/ubuntu/staccato/docker-compose.yml up -d
 
