@@ -65,6 +65,8 @@ security:
     token: ${ADMIN_TOKEN}
 cloud:
   aws:
+    access-key: ${AWS_ACCESS_KEY}
+    secret-access-key: ${AWS_SECRET_ACCESS_KEY}
     s3:
       bucket: ${AWS_S3_BUCKET}
       endpoint: ${AWS_S3_ENDPOINT}
