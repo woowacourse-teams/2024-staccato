@@ -43,18 +43,20 @@ security:
     token: ${ADMIN_TOKEN}
 cloud:
   aws:
+    access-key: ${AWS_ACCESS_KEY}
+    secret-access-key: ${AWS_SECRET_ACCESS_KEY}
     s3:
-      bucket: techcourse-project-2024
-      endpoint: https://techcourse-project-2024.s3.ap-northeast-2.amazonaws.com
+      bucket: ${AWS_S3_BUCKET}
+      endpoint: ${AWS_S3_ENDPOINT}
     cloudfront:
-      endpoint: https://d25aribbn0gp8k.cloudfront.net
+      endpoint: ${AWS_CLOUDFRONT_ENDPOINT}
     region:
-      static: ap-northeast-2
+      static: ${AWS_REGION_STATIC}
     stack:
       auto: false
 image:
   folder:
-    name: image/
+    name: dev/
 
 management:
   server:
