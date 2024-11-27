@@ -18,18 +18,6 @@
         </root>
     </springProfile>
 
-    <springProfile name="stage">
-        <include resource="error-appender.xml"/>
-        <include resource="warn-appender.xml"/>
-        <include resource="info-appender.xml"/>
-
-        <root level="info">
-            <appender-ref ref="INFO"/>
-            <appender-ref ref="ERROR"/>
-            <appender-ref ref="WARN"/>
-        </root>
-    </springProfile>
-
     <springProfile name="prod">
         <include resource="error-appender.xml"/>
         <include resource="warn-appender.xml"/>

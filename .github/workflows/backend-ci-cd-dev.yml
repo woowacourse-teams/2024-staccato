@@ -25,6 +25,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -58,16 +68,9 @@ jobs:
           sudo docker login --username ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }} --password ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
           sudo docker pull staccato/staccato:dev
 
-      - name: Stop and remove existing container
-        run: |
-          sudo docker stop staccato-backend-app || true
-          sudo docker rm staccato-backend-app || true
+      - name: Docker Compose up
+        run: sudo docker-compose -f /home/ubuntu/staccato/docker-compose.yml up -d
 
-      - name: Docker run
-        run: |
-          sudo docker run --env-file /home/ubuntu/staccato/.env \
-          -v /home/ubuntu/staccato/logs:/logs \
-          -p 8080:8080 \
-          -d --name staccato-backend-app staccato/staccato:dev
-          sudo docker image prune -af
+      - name: Docker image Prune
+        run: sudo docker image prune -af
 
