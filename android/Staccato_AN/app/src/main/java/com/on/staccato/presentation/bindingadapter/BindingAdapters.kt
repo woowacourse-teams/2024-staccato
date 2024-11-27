@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import androidx.databinding.BindingAdapter
-import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
+import com.on.staccato.presentation.memorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 
 @BindingAdapter("visibleOrGone")
@@ -57,7 +57,7 @@ fun View.setTimelineEmptyViewVisible(
 @BindingAdapter(
     value = ["visibilityByTimeline", "visibilityByLoading"],
 )
-fun ViewGroup.setCategoryAddButtonVisible(
+fun ViewGroup.setMemoryAddButtonVisible(
     timeLine: List<TimelineUiModel>? = null,
     isTimelineLoading: Boolean,
 ) {

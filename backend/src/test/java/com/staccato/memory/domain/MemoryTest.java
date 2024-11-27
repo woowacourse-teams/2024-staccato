@@ -6,8 +6,10 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.fixture.moment.MomentFixture;
+import com.staccato.member.domain.Member;
 import com.staccato.member.domain.Nickname;
 import com.staccato.moment.domain.Moment;
 
@@ -64,38 +66,6 @@ class MemoryTest {
 
         // when
         boolean result = memory.isNotSameTitle(title);
-
-        // then
-        assertThat(result).isFalse();
-    }
-
-    @DisplayName("추억이 기간을 가지고 있으면 참을 반환한다.")
-    @Test
-    void hasTerm() {
-        // given
-        Memory memory = Memory.builder()
-                .title("title")
-                .startAt(LocalDate.now())
-                .endAt(LocalDate.now().plusDays(4))
-                .build();
-
-        // when
-        boolean result = memory.hasTerm();
-
-        // then
-        assertThat(result).isTrue();
-    }
-
-    @DisplayName("추억이 기간을 가지고 있지 않으면 거짓을 반환한다.")
-    @Test
-    void doesNotHaveTerm() {
-        // given
-        Memory memory = Memory.builder()
-                .title("title")
-                .build();
-
-        // when
-        boolean result = memory.hasTerm();
 
         // then
         assertThat(result).isFalse();

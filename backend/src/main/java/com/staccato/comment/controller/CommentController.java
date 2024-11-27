@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.staccato.comment.controller.docs.CommentControllerDocs;
 import com.staccato.comment.service.CommentService;
 import com.staccato.comment.service.dto.request.CommentRequest;
-import com.staccato.comment.service.dto.request.CommentRequestV2;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.config.auth.LoginMember;
@@ -43,23 +42,6 @@ public class CommentController implements CommentControllerDocs {
                 .build();
     }
 
-    @PostMapping("/v2")
-    public ResponseEntity<Void> createComment(
-            @LoginMember Member member,
-            @Valid @RequestBody CommentRequestV2 commentRequestV2
-    ) {
-        long commentId = commentService.createComment(toCommentRequest(commentRequestV2), member);
-        return ResponseEntity.created(URI.create("/comments/" + commentId))
-                .build();
-    }
-
-    private CommentRequest toCommentRequest(CommentRequestV2 commentRequestV2) {
-        return new CommentRequest(
-                commentRequestV2.staccatoId(),
-                commentRequestV2.content()
-        );
-    }
-
     @GetMapping
     public ResponseEntity<CommentResponses> readCommentsByMomentId(
             @LoginMember Member member,
@@ -69,17 +51,18 @@ public class CommentController implements CommentControllerDocs {
         return ResponseEntity.ok().body(commentResponses);
     }
 
-    @GetMapping("/v2")
-    public ResponseEntity<CommentResponses> readCommentsByStaccatoId(
+    @PutMapping
+    public ResponseEntity<Void> updateComment(
             @LoginMember Member member,
-            @RequestParam @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId
+            @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
+            @Valid @RequestBody CommentUpdateRequest commentUpdateRequest
     ) {
-        CommentResponses commentResponses = commentService.readAllCommentsByMomentId(member, staccatoId);
-        return ResponseEntity.ok().body(commentResponses);
+        commentService.updateComment(member, commentId, commentUpdateRequest);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{commentId}")
-    public ResponseEntity<Void> updateComment(
+    @PutMapping("/v2/{commentId}")
+    public ResponseEntity<Void> updateCommentV2(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
             @Valid @RequestBody CommentUpdateRequest commentUpdateRequest
@@ -88,8 +71,17 @@ public class CommentController implements CommentControllerDocs {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping
     public ResponseEntity<Void> deleteComment(
+            @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
+            @LoginMember Member member
+    ) {
+        commentService.deleteComment(commentId, member);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/v2/{commentId}")
+    public ResponseEntity<Void> deleteCommentV2(
             @PathVariable @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
             @LoginMember Member member
     ) {
