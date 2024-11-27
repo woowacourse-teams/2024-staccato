@@ -63,14 +63,12 @@ class MemoryCreationActivity :
 
     override fun onImageDeletionClicked() {
         currentSnackBar?.dismiss()
-        viewModel.setThumbnailUri(null)
-        viewModel.setThumbnailUrl(null)
+        viewModel.clearThumbnail()
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
         currentSnackBar?.dismiss()
         viewModel.createThumbnailUrl(this, uris.first())
-        viewModel.setThumbnailUri(uris.first())
     }
 
     private fun buildDateRangePicker() =
