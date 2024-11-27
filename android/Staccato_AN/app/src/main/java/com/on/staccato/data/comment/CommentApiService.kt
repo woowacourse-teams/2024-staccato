@@ -15,7 +15,7 @@ import retrofit2.http.Query
 interface CommentApiService {
     @GET(COMMENTS_URI)
     suspend fun getComments(
-        @Query(MOMENT_ID) momentId: Long,
+        @Query(STACCATO_ID) staccatoId: Long,
     ): Response<CommentsResponse>
 
     @POST(COMMENTS_URI)
@@ -36,7 +36,7 @@ interface CommentApiService {
 
     companion object {
         private const val COMMENTS_URI = "/comments"
-        private const val MOMENT_ID = "momentId"
+        private const val STACCATO_ID = "momentId"
         private const val COMMENT_ID = "commentId"
         private const val COMMENTS_URI_WITH_COMMENT_ID = "$COMMENTS_URI/v2/{$COMMENT_ID}"
     }
