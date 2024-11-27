@@ -9,33 +9,35 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CommentApiService {
-    @GET(COMMENTS_PATH)
+    @GET(COMMENTS_URI)
     suspend fun getComments(
-        @Query("momentId") momentId: Long,
+        @Query(STACCATO_ID) staccatoId: Long,
     ): Response<CommentsResponse>
 
-    @POST(COMMENTS_PATH)
+    @POST(COMMENTS_URI)
     suspend fun postComment(
         @Body commentRequest: CommentRequest,
     ): Response<Unit>
 
-    @PUT(COMMENTS_PATH)
+    @PUT(COMMENTS_URI_WITH_COMMENT_ID)
     suspend fun putComment(
-        @Query("commentId") commentId: Long,
+        @Path(COMMENT_ID) commentId: Long,
         @Body commentUpdateRequest: CommentUpdateRequest,
     ): Response<Unit>
 
-    @DELETE(COMMENTS_PATH)
+    @DELETE(COMMENTS_URI_WITH_COMMENT_ID)
     suspend fun deleteComment(
-        @Query("commentId") commentId: Long,
+        @Path(COMMENT_ID) commentId: Long,
     ): Response<Unit>
 
     companion object {
-        private const val COMMENTS_PATH = "/comments"
-        private const val COMMENT_ID = "/{commentId}"
-        private const val COMMENTS_PATH_WITH_ID = "$COMMENTS_PATH$COMMENT_ID"
+        private const val COMMENTS_URI = "/comments"
+        private const val STACCATO_ID = "momentId"
+        private const val COMMENT_ID = "commentId"
+        private const val COMMENTS_URI_WITH_COMMENT_ID = "$COMMENTS_URI/v2/{$COMMENT_ID}"
     }
 }
