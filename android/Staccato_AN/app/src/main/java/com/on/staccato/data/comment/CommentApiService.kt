@@ -1,6 +1,6 @@
 package com.on.staccato.data.comment
 
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.comment.CommentRequest
 import com.on.staccato.data.dto.comment.CommentUpdateRequest
 import com.on.staccato.data.dto.comment.CommentsResponse
@@ -16,23 +16,23 @@ interface CommentApiService {
     @GET(COMMENTS_URI)
     suspend fun getComments(
         @Query(STACCATO_ID) staccatoId: Long,
-    ): ResponseResult<CommentsResponse>
+    ): ApiResult<CommentsResponse>
 
     @POST(COMMENTS_URI)
     suspend fun postComment(
         @Body commentRequest: CommentRequest,
-    ): ResponseResult<Unit>
+    ): ApiResult<Unit>
 
     @PUT(COMMENTS_URI_WITH_COMMENT_ID)
     suspend fun putComment(
         @Path(COMMENT_ID) commentId: Long,
         @Body commentUpdateRequest: CommentUpdateRequest,
-    ): ResponseResult<Unit>
+    ): ApiResult<Unit>
 
     @DELETE(COMMENTS_URI_WITH_COMMENT_ID)
     suspend fun deleteComment(
         @Path(COMMENT_ID) commentId: Long,
-    ): ResponseResult<Unit>
+    ): ApiResult<Unit>
 
     companion object {
         private const val COMMENTS_URI = "/comments"

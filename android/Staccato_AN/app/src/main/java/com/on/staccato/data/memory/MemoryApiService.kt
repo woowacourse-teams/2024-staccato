@@ -1,6 +1,6 @@
 package com.on.staccato.data.memory
 
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.memory.MemoriesResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryRequest
@@ -17,28 +17,28 @@ interface MemoryApiService {
     @GET(MEMORY_PATH_WITH_ID)
     suspend fun getMemory(
         @Path("memoryId") memoryId: Long,
-    ): ResponseResult<MemoryResponse>
+    ): ApiResult<MemoryResponse>
 
     @GET(MEMORY_PATH_WITH_CANDIDATES)
     suspend fun getMemories(
         @Query("currentDate") currentDate: String?,
-    ): ResponseResult<MemoriesResponse>
+    ): ApiResult<MemoriesResponse>
 
     @POST(MEMORIES_PATH)
     suspend fun postMemory(
         @Body memoryRequest: MemoryRequest,
-    ): ResponseResult<MemoryCreationResponse>
+    ): ApiResult<MemoryCreationResponse>
 
     @PUT(MEMORY_PATH_WITH_ID)
     suspend fun putMemory(
         @Path("memoryId") memoryId: Long,
         @Body memoryRequest: MemoryRequest,
-    ): ResponseResult<Unit>
+    ): ApiResult<Unit>
 
     @DELETE(MEMORY_PATH_WITH_ID)
     suspend fun deleteMemory(
         @Path("memoryId") memoryId: Long,
-    ): ResponseResult<Unit>
+    ): ApiResult<Unit>
 
     companion object {
         const val MEMORIES_PATH = "/memories"

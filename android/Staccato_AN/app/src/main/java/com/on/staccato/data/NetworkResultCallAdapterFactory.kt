@@ -17,7 +17,7 @@ class NetworkResultCallAdapterFactory : CallAdapter.Factory() {
         }
 
         val callType = getParameterUpperBound(0, returnType as ParameterizedType)
-        if (getRawType(callType) != ResponseResult::class.java) {
+        if (getRawType(callType) != ApiResult::class.java) {
             return null
         }
 

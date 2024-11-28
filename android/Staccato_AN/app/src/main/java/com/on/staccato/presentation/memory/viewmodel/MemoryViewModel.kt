@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
@@ -39,7 +39,7 @@ class MemoryViewModel
 
         fun loadMemory(memoryId: Long) {
             viewModelScope.launch {
-                val result: ResponseResult<Memory> = memoryRepository.getMemory(memoryId)
+                val result: ApiResult<Memory> = memoryRepository.getMemory(memoryId)
                 result
                     .onSuccess(::setMemory)
                     .onServerError(::handleServerError)
@@ -49,7 +49,7 @@ class MemoryViewModel
 
         fun deleteMemory(memoryId: Long) {
             viewModelScope.launch {
-                val result: ResponseResult<Unit> = memoryRepository.deleteMemory(memoryId)
+                val result: ApiResult<Unit> = memoryRepository.deleteMemory(memoryId)
                 result.onSuccess { updateIsDeleteSuccess() }
                     .onServerError(::handleServerError)
                     .onException(::handelException)

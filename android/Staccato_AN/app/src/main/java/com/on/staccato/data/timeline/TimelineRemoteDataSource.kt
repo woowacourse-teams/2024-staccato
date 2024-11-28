@@ -1,6 +1,6 @@
 package com.on.staccato.data.timeline
 
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.timeline.TimelineResponse
 import javax.inject.Inject
 
@@ -9,13 +9,13 @@ class TimelineRemoteDataSource
     constructor(
         private val timelineApiService: TimeLineApiService,
     ) : TimelineDataSource {
-        override suspend fun getAllTimeline(): ResponseResult<TimelineResponse> {
+        override suspend fun getAllTimeline(): ApiResult<TimelineResponse> {
             return fetchTimeline()
         }
 
-        override suspend fun getTimeline(year: Int): ResponseResult<TimelineResponse> {
+        override suspend fun getTimeline(year: Int): ApiResult<TimelineResponse> {
             return fetchTimeline(year)
         }
 
-        private suspend fun fetchTimeline(year: Int? = null): ResponseResult<TimelineResponse> = timelineApiService.getTimeline(year)
+        private suspend fun fetchTimeline(year: Int? = null): ApiResult<TimelineResponse> = timelineApiService.getTimeline(year)
     }

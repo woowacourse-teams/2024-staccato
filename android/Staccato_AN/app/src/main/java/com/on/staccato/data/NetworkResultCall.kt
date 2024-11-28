@@ -11,8 +11,8 @@ import retrofit2.Response
 
 class NetworkResultCall<T : Any>(
     private val proxy: Call<T>,
-) : Call<ResponseResult<T>> {
-    override fun enqueue(callback: retrofit2.Callback<ResponseResult<T>>) {
+) : Call<ApiResult<T>> {
+    override fun enqueue(callback: retrofit2.Callback<ApiResult<T>>) {
         proxy.enqueue(
             object : retrofit2.Callback<T> {
                 override fun onResponse(
@@ -34,9 +34,9 @@ class NetworkResultCall<T : Any>(
         )
     }
 
-    override fun execute(): Response<ResponseResult<T>> = throw NotImplementedError()
+    override fun execute(): Response<ApiResult<T>> = throw NotImplementedError()
 
-    override fun clone(): Call<ResponseResult<T>> = NetworkResultCall(proxy.clone())
+    override fun clone(): Call<ApiResult<T>> = NetworkResultCall(proxy.clone())
 
     override fun isExecuted(): Boolean = proxy.isExecuted
 
@@ -54,7 +54,7 @@ class NetworkResultCall<T : Any>(
 private const val CREATED = 201
 private const val NOT_FOUND_ERROR_BODY = "errorBody를 찾을 수 없습니다."
 
-private fun <T : Any> handleApiResponse(execute: () -> Response<T>): ResponseResult<T> {
+private fun <T : Any> handleApiResponse(execute: () -> Response<T>): ApiResult<T> {
     return try {
         val response: Response<T> = execute()
         val body: T? = response.body()

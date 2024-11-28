@@ -6,8 +6,8 @@ import java.lang.reflect.Type
 
 class NetworkResultCallAdapter(
     private val resultType: Type,
-) : CallAdapter<Type, Call<ResponseResult<Type>>> {
+) : CallAdapter<Type, Call<ApiResult<Type>>> {
     override fun responseType(): Type = resultType
 
-    override fun adapt(call: Call<Type>): Call<ResponseResult<Type>> = NetworkResultCall(call)
+    override fun adapt(call: Call<Type>): Call<ApiResult<Type>> = NetworkResultCall(call)
 }

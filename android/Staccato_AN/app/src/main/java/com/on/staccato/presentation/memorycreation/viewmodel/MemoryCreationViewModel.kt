@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
@@ -93,7 +93,7 @@ class MemoryCreationViewModel
             _isPosting.value = true
             viewModelScope.launch {
                 val memory: NewMemory = makeNewMemory()
-                val result: ResponseResult<MemoryCreationResponse> =
+                val result: ApiResult<MemoryCreationResponse> =
                     memoryRepository.createMemory(memory)
                 result
                     .onSuccess(::setCreatedMemoryId)
@@ -129,7 +129,7 @@ class MemoryCreationViewModel
         ): Job {
             val thumbnailFile = convertMemoryUriToFile(context, uri, name = MEMORY_FILE_NAME)
             return viewModelScope.launch {
-                val result: ResponseResult<ImageResponse> =
+                val result: ApiResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)
                 result
                     .onSuccess(::setThumbnailUrl)

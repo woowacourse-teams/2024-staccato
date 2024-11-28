@@ -1,7 +1,7 @@
 package com.on.staccato.data.mypage
 
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.Exception
-import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.ServerError
 import com.on.staccato.data.Success
 import com.on.staccato.data.dto.mapper.toDomain
@@ -16,7 +16,7 @@ class MyPageDefaultRepository
     constructor(
         private val myPageApiService: MyPageApiService,
     ) : MyPageRepository {
-        override suspend fun getMemberProfile(): ResponseResult<MemberProfile> {
+        override suspend fun getMemberProfile(): ApiResult<MemberProfile> {
             return when (val responseResult = myPageApiService.getMemberProfile()) {
                 is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
@@ -27,7 +27,7 @@ class MyPageDefaultRepository
             }
         }
 
-        override suspend fun changeProfileImage(profileImageFile: MultipartBody.Part): ResponseResult<ProfileImageResponse> {
+        override suspend fun changeProfileImage(profileImageFile: MultipartBody.Part): ApiResult<ProfileImageResponse> {
             return when (val responseResult = myPageApiService.postProfileImageChange(profileImageFile)) {
                 is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)

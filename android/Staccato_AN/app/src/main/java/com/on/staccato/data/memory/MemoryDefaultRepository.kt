@@ -1,7 +1,7 @@
 package com.on.staccato.data.memory
 
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.Exception
-import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.ServerError
 import com.on.staccato.data.Success
 import com.on.staccato.data.dto.mapper.toDomain
@@ -17,7 +17,7 @@ class MemoryDefaultRepository
     constructor(
         private val memoryDataSource: MemoryDataSource,
     ) : MemoryRepository {
-        override suspend fun getMemory(memoryId: Long): ResponseResult<Memory> {
+        override suspend fun getMemory(memoryId: Long): ApiResult<Memory> {
             return when (val responseResult = memoryDataSource.getMemory(memoryId)) {
                 is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
@@ -25,7 +25,7 @@ class MemoryDefaultRepository
             }
         }
 
-        override suspend fun getMemories(currentDate: String?): ResponseResult<MemoryCandidates> {
+        override suspend fun getMemories(currentDate: String?): ApiResult<MemoryCandidates> {
             return when (val responseResult = memoryDataSource.getMemories(currentDate)) {
                 is Success -> Success(responseResult.data.toDomain())
                 is Exception -> Exception(responseResult.e)
@@ -33,7 +33,7 @@ class MemoryDefaultRepository
             }
         }
 
-        override suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse> {
+        override suspend fun createMemory(newMemory: NewMemory): ApiResult<MemoryCreationResponse> {
             return when (val responseResult = memoryDataSource.createMemory(newMemory)) {
                 is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
@@ -44,7 +44,7 @@ class MemoryDefaultRepository
         override suspend fun updateMemory(
             memoryId: Long,
             newMemory: NewMemory,
-        ): ResponseResult<Unit> {
+        ): ApiResult<Unit> {
             return when (val responseResult = memoryDataSource.updateMemory(memoryId, newMemory)) {
                 is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
@@ -52,7 +52,7 @@ class MemoryDefaultRepository
             }
         }
 
-        override suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit> {
+        override suspend fun deleteMemory(memoryId: Long): ApiResult<Unit> {
             return when (val responseResult = memoryDataSource.deleteMemory(memoryId)) {
                 is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)

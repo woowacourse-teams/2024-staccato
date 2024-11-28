@@ -1,7 +1,7 @@
 package com.on.staccato.data.timeline
 
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.Exception
-import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.ServerError
 import com.on.staccato.data.Success
 import com.on.staccato.data.dto.mapper.toDomain
@@ -16,7 +16,7 @@ class TimelineDefaultRepository
     constructor(
         private val timelineDataSource: TimelineDataSource,
     ) : TimelineRepository {
-        override suspend fun getTimeline(): ResponseResult<Timeline> {
+        override suspend fun getTimeline(): ApiResult<Timeline> {
             return when (val responseResult = timelineDataSource.getAllTimeline()) {
                 is Success -> Success(responseResult.data.toDomain())
                 is ServerError ->
@@ -32,7 +32,7 @@ class TimelineDefaultRepository
             }
         }
 
-        override suspend fun getMemoryCandidates(): ResponseResult<MemoryCandidates> {
+        override suspend fun getMemoryCandidates(): ApiResult<MemoryCandidates> {
             return when (val responseResult = timelineDataSource.getAllTimeline()) {
                 is Success -> Success(responseResult.data.toMemoryCandidates())
                 is ServerError ->

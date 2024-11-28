@@ -1,6 +1,6 @@
 package com.on.staccato.data.mypage
 
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.mypage.MemberProfileResponse
 import com.on.staccato.data.dto.mypage.ProfileImageResponse
 import okhttp3.MultipartBody
@@ -11,13 +11,13 @@ import retrofit2.http.Part
 
 interface MyPageApiService {
     @GET(MYPAGE_PATH)
-    suspend fun getMemberProfile(): ResponseResult<MemberProfileResponse>
+    suspend fun getMemberProfile(): ApiResult<MemberProfileResponse>
 
     @Multipart
     @POST(PROFILE_IMAGE_CHANGE_PATH)
     suspend fun postProfileImageChange(
         @Part imageFile: MultipartBody.Part,
-    ): ResponseResult<ProfileImageResponse>
+    ): ApiResult<ProfileImageResponse>
 
     companion object {
         private const val MYPAGE_PATH = "/mypage"

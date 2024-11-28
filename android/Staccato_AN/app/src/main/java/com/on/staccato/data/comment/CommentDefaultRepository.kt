@@ -1,7 +1,7 @@
 package com.on.staccato.data.comment
 
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.Exception
-import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.ServerError
 import com.on.staccato.data.Success
 import com.on.staccato.data.dto.comment.CommentUpdateRequest
@@ -17,14 +17,14 @@ class CommentDefaultRepository
     constructor(
         private val commentDataSource: CommentDataSource,
     ) : CommentRepository {
-        override suspend fun fetchComments(staccatoId: Long): ResponseResult<List<Comment>> =
+        override suspend fun fetchComments(staccatoId: Long): ApiResult<List<Comment>> =
             when (val responseResult = commentDataSource.getComments(staccatoId)) {
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
                 is Exception -> Exception(responseResult.e)
                 is Success -> Success(responseResult.data.toDomain())
             }
 
-        override suspend fun createComment(newComment: NewComment): ResponseResult<Unit> =
+        override suspend fun createComment(newComment: NewComment): ApiResult<Unit> =
             when (val responseResult = commentDataSource.createComment(newComment.toDto())) {
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
                 is Exception -> Exception(responseResult.e)
@@ -34,7 +34,7 @@ class CommentDefaultRepository
         override suspend fun updateComment(
             commentId: Long,
             content: String,
-        ): ResponseResult<Unit> {
+        ): ApiResult<Unit> {
             val responseResult =
                 commentDataSource.updateComment(
                     commentId,
@@ -47,7 +47,7 @@ class CommentDefaultRepository
             }
         }
 
-        override suspend fun deleteComment(commentId: Long): ResponseResult<Unit> =
+        override suspend fun deleteComment(commentId: Long): ApiResult<Unit> =
             when (val responseResult = commentDataSource.deleteComment(commentId)) {
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
                 is Exception -> Exception(responseResult.e)

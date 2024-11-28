@@ -1,6 +1,6 @@
 package com.on.staccato.data.staccato
 
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
@@ -16,34 +16,34 @@ import retrofit2.http.Path
 
 interface StaccatoApiService {
     @GET(STACCATOS_PATH)
-    suspend fun getStaccatos(): ResponseResult<StaccatoLocationResponse>
+    suspend fun getStaccatos(): ApiResult<StaccatoLocationResponse>
 
     @GET(STACCATO_PATH_WITH_ID)
     suspend fun getStaccato(
         @Path(value = "momentId") momentId: Long,
-    ): ResponseResult<StaccatoResponse>
+    ): ApiResult<StaccatoResponse>
 
     @POST(STACCATOS_PATH)
     suspend fun postStaccato(
         @Body staccatoCreationRequest: StaccatoCreationRequest,
-    ): ResponseResult<StaccatoCreationResponse>
+    ): ApiResult<StaccatoCreationResponse>
 
     @PUT(STACCATO_PATH_WITH_ID)
     suspend fun putStaccato(
         @Path(value = "momentId") momentId: Long,
         @Body staccatoUpdateRequest: StaccatoUpdateRequest,
-    ): ResponseResult<Unit>
+    ): ApiResult<Unit>
 
     @DELETE(STACCATO_PATH_WITH_ID)
     suspend fun deleteStaccato(
         @Path(value = "momentId") momentId: Long,
-    ): ResponseResult<Unit>
+    ): ApiResult<Unit>
 
     @POST(FEELING_PATH)
     suspend fun postFeeling(
         @Path(value = "momentId") momentId: Long,
         @Body feelingRequest: FeelingRequest,
-    ): ResponseResult<Unit>
+    ): ApiResult<Unit>
 
     companion object {
         private const val STACCATOS_PATH = "/moments"

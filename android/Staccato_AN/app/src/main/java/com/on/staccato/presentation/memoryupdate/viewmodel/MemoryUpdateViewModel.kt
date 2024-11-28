@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.onException
@@ -88,7 +88,7 @@ class MemoryUpdateViewModel
         fun updateMemory() {
             viewModelScope.launch {
                 val newMemory: NewMemory = makeNewMemory()
-                val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory)
+                val result: ApiResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory)
                 result
                     .onSuccess { updateSuccessStatus() }
                     .onServerError(::handleUpdateError)
@@ -179,7 +179,7 @@ class MemoryUpdateViewModel
         ): Job {
             val thumbnailFile = convertMemoryUriToFile(context, uri, name = MEMORY_FILE_NAME)
             return viewModelScope.launch {
-                val result: ResponseResult<ImageResponse> =
+                val result: ApiResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)
                 result.onSuccess(::setThumbnailUrl)
                     .onServerError(::handlePhotoError)

@@ -1,7 +1,7 @@
 package com.on.staccato.data.staccato
 
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.Exception
-import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.ServerError
 import com.on.staccato.data.Success
 import com.on.staccato.data.dto.mapper.toDomain
@@ -21,7 +21,7 @@ class StaccatoDefaultRepository
         private val remoteDataSource: StaccatoRemoteDataSource,
     ) :
     StaccatoRepository {
-        override suspend fun getStaccatos(): ResponseResult<List<StaccatoLocation>> {
+        override suspend fun getStaccatos(): ApiResult<List<StaccatoLocation>> {
             return when (val responseResult = remoteDataSource.fetchStaccatos()) {
                 is Exception ->
                     Exception(
@@ -38,7 +38,7 @@ class StaccatoDefaultRepository
             }
         }
 
-        override suspend fun getStaccato(staccatoId: Long): ResponseResult<Staccato> {
+        override suspend fun getStaccato(staccatoId: Long): ApiResult<Staccato> {
             return when (val responseResult = remoteDataSource.fetchStaccato(staccatoId)) {
                 is Exception ->
                     Exception(
@@ -64,7 +64,7 @@ class StaccatoDefaultRepository
             address: String,
             visitedAt: LocalDateTime,
             staccatoImageUrls: List<String>,
-        ): ResponseResult<StaccatoCreationResponse> {
+        ): ApiResult<StaccatoCreationResponse> {
             return when (
                 val responseResult =
                     remoteDataSource.createStaccato(
@@ -105,7 +105,7 @@ class StaccatoDefaultRepository
             visitedAt: LocalDateTime,
             memoryId: Long,
             staccatoImageUrls: List<String>,
-        ): ResponseResult<Unit> {
+        ): ApiResult<Unit> {
             return when (
                 val responseResult =
                     remoteDataSource.updateStaccato(
@@ -138,7 +138,7 @@ class StaccatoDefaultRepository
             }
         }
 
-        override suspend fun deleteStaccato(staccatoId: Long): ResponseResult<Unit> {
+        override suspend fun deleteStaccato(staccatoId: Long): ApiResult<Unit> {
             return when (val responseResult = remoteDataSource.deleteStaccato(staccatoId)) {
                 is Exception ->
                     Exception(
@@ -158,7 +158,7 @@ class StaccatoDefaultRepository
         override suspend fun updateFeeling(
             staccatoId: Long,
             feeling: String,
-        ): ResponseResult<Unit> {
+        ): ApiResult<Unit> {
             return when (
                 val responseResult =
                     remoteDataSource.updateFeeling(

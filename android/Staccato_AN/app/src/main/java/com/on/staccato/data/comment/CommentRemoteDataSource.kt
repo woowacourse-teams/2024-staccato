@@ -1,6 +1,6 @@
 package com.on.staccato.data.comment
 
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.comment.CommentRequest
 import com.on.staccato.data.dto.comment.CommentUpdateRequest
 import com.on.staccato.data.dto.comment.CommentsResponse
@@ -11,9 +11,9 @@ class CommentRemoteDataSource
     constructor(
         private val commentApiService: CommentApiService,
     ) : CommentDataSource {
-        override suspend fun getComments(staccatoId: Long): ResponseResult<CommentsResponse> = commentApiService.getComments(staccatoId)
+        override suspend fun getComments(staccatoId: Long): ApiResult<CommentsResponse> = commentApiService.getComments(staccatoId)
 
-        override suspend fun createComment(commentRequest: CommentRequest): ResponseResult<Unit> =
+        override suspend fun createComment(commentRequest: CommentRequest): ApiResult<Unit> =
             commentApiService.postComment(
                 commentRequest,
             )
@@ -21,11 +21,11 @@ class CommentRemoteDataSource
         override suspend fun updateComment(
             commentId: Long,
             commentUpdateRequest: CommentUpdateRequest,
-        ): ResponseResult<Unit> =
+        ): ApiResult<Unit> =
             commentApiService.putComment(
                 commentId,
                 commentUpdateRequest,
             )
 
-        override suspend fun deleteComment(commentId: Long): ResponseResult<Unit> = commentApiService.deleteComment(commentId)
+        override suspend fun deleteComment(commentId: Long): ApiResult<Unit> = commentApiService.deleteComment(commentId)
     }
