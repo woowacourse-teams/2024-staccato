@@ -51,18 +51,21 @@ class NetworkResultCall<T : Any>(
     override fun timeout(): Timeout = proxy.timeout()
 }
 
+private const val CREATED = 201
+private const val NOT_FOUND_ERROR_BODY = "errorBody를 찾을 수 없습니다."
+
 fun <T : Any> handleApiResponse2(execute: () -> Response<T>): ResponseResult<T> {
     return try {
         val response: Response<T> = execute()
         val body: T? = response.body()
 
         when {
-            response.isSuccessful && response.code() == 201 -> Success(body as T)
+            response.isSuccessful && response.code() == CREATED -> Success(body as T)
             response.isSuccessful && body != null -> Success(body)
             else -> {
                 val errorBody: ResponseBody =
                     response.errorBody()
-                        ?: throw IllegalArgumentException("errorBody를 찾을 수 없습니다.")
+                        ?: throw IllegalArgumentException(NOT_FOUND_ERROR_BODY)
                 val errorResponse: ErrorResponse = StaccatoClient.getErrorResponse(errorBody)
                 ServerError(
                     status = Status.Message(errorResponse.status),
