@@ -19,7 +19,7 @@ class NetworkResultCall<T : Any>(
                     call: Call<T>,
                     response: Response<T>,
                 ) {
-                    val networkResult = handleApiResponse2 { response }
+                    val networkResult = handleApiResponse { response }
                     callback.onResponse(this@NetworkResultCall, Response.success(networkResult))
                 }
 
@@ -54,7 +54,7 @@ class NetworkResultCall<T : Any>(
 private const val CREATED = 201
 private const val NOT_FOUND_ERROR_BODY = "errorBody를 찾을 수 없습니다."
 
-fun <T : Any> handleApiResponse2(execute: () -> Response<T>): ResponseResult<T> {
+private fun <T : Any> handleApiResponse(execute: () -> Response<T>): ResponseResult<T> {
     return try {
         val response: Response<T> = execute()
         val body: T? = response.body()
