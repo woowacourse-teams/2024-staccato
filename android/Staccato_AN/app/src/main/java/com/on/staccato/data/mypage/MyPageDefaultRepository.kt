@@ -20,7 +20,7 @@ class MyPageDefaultRepository
         override suspend fun getMemberProfile(): ResponseResult<MemberProfile> {
             val responseResult = handleApiResponse { myPageApiService.getMemberProfile() }
             return when (responseResult) {
-                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
                 is Success -> {
                     val myProfile = responseResult.data.toDomain()
@@ -33,13 +33,9 @@ class MyPageDefaultRepository
             val responseResult =
                 handleApiResponse { myPageApiService.postProfileImageChange(profileImageFile) }
             return when (responseResult) {
-                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
                 is Success -> Success(responseResult.data)
             }
-        }
-
-        companion object {
-            private const val EXCEPTION_NETWORK_ERROR_MESSAGE = "네트워크 연결이 불안정합니다.\n연결을 재설정한 후 다시 시도해 주세요."
         }
     }

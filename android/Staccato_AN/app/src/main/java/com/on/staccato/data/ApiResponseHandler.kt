@@ -31,7 +31,7 @@ object ApiResponseHandler {
         } catch (e: HttpException) {
             ServerError(status = Status.Code(e.code()), message = e.message())
         } catch (e: Throwable) {
-            Exception(e, message = e.message.toString())
+            Exception(e)
         }
     }
 

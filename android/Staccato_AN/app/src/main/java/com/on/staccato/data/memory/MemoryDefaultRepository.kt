@@ -19,7 +19,7 @@ class MemoryDefaultRepository
     ) : MemoryRepository {
         override suspend fun getMemory(memoryId: Long): ResponseResult<Memory> {
             return when (val responseResult = memoryDataSource.getMemory(memoryId)) {
-                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
                 is Success -> Success(responseResult.data.toDomain())
             }
@@ -28,14 +28,14 @@ class MemoryDefaultRepository
         override suspend fun getMemories(currentDate: String?): ResponseResult<MemoryCandidates> {
             return when (val responseResult = memoryDataSource.getMemories(currentDate)) {
                 is Success -> Success(responseResult.data.toDomain())
-                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
             }
         }
 
         override suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse> {
             return when (val responseResult = memoryDataSource.createMemory(newMemory)) {
-                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
                 is Success -> Success(responseResult.data)
             }
@@ -46,7 +46,7 @@ class MemoryDefaultRepository
             newMemory: NewMemory,
         ): ResponseResult<Unit> {
             return when (val responseResult = memoryDataSource.updateMemory(memoryId, newMemory)) {
-                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
                 is Success -> Success(responseResult.data)
             }
@@ -54,13 +54,9 @@ class MemoryDefaultRepository
 
         override suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit> {
             return when (val responseResult = memoryDataSource.deleteMemory(memoryId)) {
-                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
                 is Success -> Success(Unit)
             }
-        }
-
-        companion object {
-            private const val EXCEPTION_NETWORK_ERROR_MESSAGE = "네트워크 연결이 불안정합니다.\n연결을 재설정한 후 다시 시도해 주세요."
         }
     }

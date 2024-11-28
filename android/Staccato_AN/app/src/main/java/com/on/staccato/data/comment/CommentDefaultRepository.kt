@@ -20,14 +20,14 @@ class CommentDefaultRepository
         override suspend fun fetchComments(staccatoId: Long): ResponseResult<List<Comment>> =
             when (val responseResult = commentDataSource.getComments(staccatoId)) {
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
-                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e)
                 is Success -> Success(responseResult.data.toDomain())
             }
 
         override suspend fun createComment(newComment: NewComment): ResponseResult<Unit> =
             when (val responseResult = commentDataSource.createComment(newComment.toDto())) {
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
-                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e)
                 is Success -> Success(responseResult.data)
             }
 
@@ -42,7 +42,7 @@ class CommentDefaultRepository
                 )
             return when (responseResult) {
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
-                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e)
                 is Success -> Success(responseResult.data)
             }
         }
@@ -50,11 +50,7 @@ class CommentDefaultRepository
         override suspend fun deleteComment(commentId: Long): ResponseResult<Unit> =
             when (val responseResult = commentDataSource.deleteComment(commentId)) {
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
-                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Exception -> Exception(responseResult.e)
                 is Success -> Success(responseResult.data)
             }
-
-        companion object {
-            private const val EXCEPTION_NETWORK_ERROR_MESSAGE = "네트워크 연결이 불안정합니다.\n연결을 재설정한 후 다시 시도해 주세요."
-        }
     }
