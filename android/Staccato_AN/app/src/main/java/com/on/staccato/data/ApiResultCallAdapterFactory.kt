@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class NetworkResultCallAdapterFactory : CallAdapter.Factory() {
+class ApiResultCallAdapterFactory : CallAdapter.Factory() {
     override fun get(
         returnType: Type,
         annotations: Array<out Annotation>,
@@ -26,6 +26,6 @@ class NetworkResultCallAdapterFactory : CallAdapter.Factory() {
     }
 
     companion object {
-        fun create(): NetworkResultCallAdapterFactory = NetworkResultCallAdapterFactory()
+        fun create(): ApiResultCallAdapterFactory = ApiResultCallAdapterFactory()
     }
 }
