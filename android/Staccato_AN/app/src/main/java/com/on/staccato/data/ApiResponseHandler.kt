@@ -16,7 +16,6 @@ object ApiResponseHandler {
             when {
                 response.isSuccessful && response.code() == 201 -> Success(body as T)
                 response.isSuccessful && body != null -> Success(body)
-                response.isSuccessful && response.code() == 204 -> Success(Unit as T)
                 else -> {
                     val errorBody: ResponseBody =
                         response.errorBody()
