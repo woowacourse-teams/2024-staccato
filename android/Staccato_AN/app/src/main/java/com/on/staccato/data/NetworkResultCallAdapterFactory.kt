@@ -22,7 +22,7 @@ class NetworkResultCallAdapterFactory : CallAdapter.Factory() {
         }
 
         val resultType = getParameterUpperBound(0, callType as ParameterizedType)
-        return NetworkResultCallAdapter(resultType)
+        return ApiResultCallAdapter(resultType)
     }
 
     companion object {

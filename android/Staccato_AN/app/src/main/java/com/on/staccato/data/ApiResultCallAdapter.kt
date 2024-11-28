@@ -4,7 +4,7 @@ import retrofit2.Call
 import retrofit2.CallAdapter
 import java.lang.reflect.Type
 
-class NetworkResultCallAdapter(
+class ApiResultCallAdapter(
     private val resultType: Type,
 ) : CallAdapter<Type, Call<ApiResult<Type>>> {
     override fun responseType(): Type = resultType
