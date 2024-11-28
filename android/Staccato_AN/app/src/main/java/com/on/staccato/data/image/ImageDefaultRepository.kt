@@ -1,6 +1,5 @@
 package com.on.staccato.data.image
 
-import com.on.staccato.data.ApiResponseHandler.handleApiResponse
 import com.on.staccato.data.Exception
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.ServerError
@@ -16,8 +15,7 @@ class ImageDefaultRepository
         private val imageApiService: ImageApiService,
     ) : ImageRepository {
         override suspend fun convertImageFileToUrl(imageFile: MultipartBody.Part): ResponseResult<ImageResponse> {
-            val responseResult = handleApiResponse { imageApiService.postImage(imageFile) }
-            return when (responseResult) {
+            return when (val responseResult = imageApiService.postImage(imageFile)) {
                 is Exception -> Exception(responseResult.e)
                 is ServerError -> ServerError(responseResult.status, responseResult.message)
                 is Success -> Success(responseResult.data)
