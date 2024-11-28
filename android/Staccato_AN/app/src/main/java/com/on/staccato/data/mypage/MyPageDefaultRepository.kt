@@ -1,7 +1,10 @@
 package com.on.staccato.data.mypage
 
 import com.on.staccato.data.ApiResponseHandler.handleApiResponse
+import com.on.staccato.data.Exception
 import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ServerError
+import com.on.staccato.data.Success
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.mypage.ProfileImageResponse
 import com.on.staccato.domain.model.MemberProfile
@@ -17,21 +20,11 @@ class MyPageDefaultRepository
         override suspend fun getMemberProfile(): ResponseResult<MemberProfile> {
             val responseResult = handleApiResponse { myPageApiService.getMemberProfile() }
             return when (responseResult) {
-                is ResponseResult.Exception ->
-                    ResponseResult.Exception(
-                        responseResult.e,
-                        EXCEPTION_NETWORK_ERROR_MESSAGE,
-                    )
-
-                is ResponseResult.ServerError ->
-                    ResponseResult.ServerError(
-                        responseResult.status,
-                        responseResult.message,
-                    )
-
-                is ResponseResult.Success -> {
+                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is ServerError -> ServerError(responseResult.status, responseResult.message)
+                is Success -> {
                     val myProfile = responseResult.data.toDomain()
-                    ResponseResult.Success(myProfile)
+                    Success(myProfile)
                 }
             }
         }
@@ -40,19 +33,9 @@ class MyPageDefaultRepository
             val responseResult =
                 handleApiResponse { myPageApiService.postProfileImageChange(profileImageFile) }
             return when (responseResult) {
-                is ResponseResult.Exception ->
-                    ResponseResult.Exception(
-                        responseResult.e,
-                        EXCEPTION_NETWORK_ERROR_MESSAGE,
-                    )
-
-                is ResponseResult.ServerError ->
-                    ResponseResult.ServerError(
-                        responseResult.status,
-                        responseResult.message,
-                    )
-
-                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
+                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is ServerError -> ServerError(responseResult.status, responseResult.message)
+                is Success -> Success(responseResult.data)
             }
         }
 

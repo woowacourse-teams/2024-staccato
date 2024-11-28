@@ -1,6 +1,9 @@
 package com.on.staccato.data.comment
 
+import com.on.staccato.data.Exception
 import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ServerError
+import com.on.staccato.data.Success
 import com.on.staccato.data.dto.comment.CommentUpdateRequest
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.mapper.toDto
@@ -16,32 +19,16 @@ class CommentDefaultRepository
     ) : CommentRepository {
         override suspend fun fetchComments(staccatoId: Long): ResponseResult<List<Comment>> =
             when (val responseResult = commentDataSource.getComments(staccatoId)) {
-                is ResponseResult.ServerError -> {
-                    ResponseResult.ServerError(responseResult.status, responseResult.message)
-                }
-
-                is ResponseResult.Exception -> {
-                    ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
-                }
-
-                is ResponseResult.Success -> {
-                    ResponseResult.Success(responseResult.data.toDomain())
-                }
+                is ServerError -> ServerError(responseResult.status, responseResult.message)
+                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Success -> Success(responseResult.data.toDomain())
             }
 
         override suspend fun createComment(newComment: NewComment): ResponseResult<Unit> =
             when (val responseResult = commentDataSource.createComment(newComment.toDto())) {
-                is ResponseResult.ServerError -> {
-                    ResponseResult.ServerError(responseResult.status, responseResult.message)
-                }
-
-                is ResponseResult.Exception -> {
-                    ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
-                }
-
-                is ResponseResult.Success -> {
-                    ResponseResult.Success(responseResult.data)
-                }
+                is ServerError -> ServerError(responseResult.status, responseResult.message)
+                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Success -> Success(responseResult.data)
             }
 
         override suspend fun updateComment(
@@ -54,33 +41,17 @@ class CommentDefaultRepository
                     CommentUpdateRequest(content),
                 )
             return when (responseResult) {
-                is ResponseResult.ServerError -> {
-                    ResponseResult.ServerError(responseResult.status, responseResult.message)
-                }
-
-                is ResponseResult.Exception -> {
-                    ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
-                }
-
-                is ResponseResult.Success -> {
-                    ResponseResult.Success(responseResult.data)
-                }
+                is ServerError -> ServerError(responseResult.status, responseResult.message)
+                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Success -> Success(responseResult.data)
             }
         }
 
         override suspend fun deleteComment(commentId: Long): ResponseResult<Unit> =
             when (val responseResult = commentDataSource.deleteComment(commentId)) {
-                is ResponseResult.ServerError -> {
-                    ResponseResult.ServerError(responseResult.status, responseResult.message)
-                }
-
-                is ResponseResult.Exception -> {
-                    ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
-                }
-
-                is ResponseResult.Success -> {
-                    ResponseResult.Success(responseResult.data)
-                }
+                is ServerError -> ServerError(responseResult.status, responseResult.message)
+                is Exception -> Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
+                is Success -> Success(responseResult.data)
             }
 
         companion object {

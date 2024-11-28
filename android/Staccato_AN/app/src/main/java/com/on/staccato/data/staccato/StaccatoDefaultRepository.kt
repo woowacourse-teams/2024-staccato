@@ -1,6 +1,9 @@
 package com.on.staccato.data.staccato
 
+import com.on.staccato.data.Exception
 import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ServerError
+import com.on.staccato.data.Success
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
@@ -20,37 +23,37 @@ class StaccatoDefaultRepository
     StaccatoRepository {
         override suspend fun getStaccatos(): ResponseResult<List<StaccatoLocation>> {
             return when (val responseResult = remoteDataSource.fetchStaccatos()) {
-                is ResponseResult.Exception ->
-                    ResponseResult.Exception(
+                is Exception ->
+                    Exception(
                         responseResult.e,
                         EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
 
-                is ResponseResult.ServerError ->
-                    ResponseResult.ServerError(
+                is ServerError ->
+                    ServerError(
                         responseResult.status,
                         responseResult.message,
                     )
 
-                is ResponseResult.Success -> ResponseResult.Success(responseResult.data.staccatoLocationResponses.map { it.toDomain() })
+                is Success -> Success(responseResult.data.staccatoLocationResponses.map { it.toDomain() })
             }
         }
 
         override suspend fun getStaccato(staccatoId: Long): ResponseResult<Staccato> {
             return when (val responseResult = remoteDataSource.fetchStaccato(staccatoId)) {
-                is ResponseResult.Exception ->
-                    ResponseResult.Exception(
+                is Exception ->
+                    Exception(
                         responseResult.e,
                         EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
 
-                is ResponseResult.ServerError ->
-                    ResponseResult.ServerError(
+                is ServerError ->
+                    ServerError(
                         responseResult.status,
                         responseResult.message,
                     )
 
-                is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
+                is Success -> Success(responseResult.data.toDomain())
             }
         }
 
@@ -79,19 +82,19 @@ class StaccatoDefaultRepository
                         ),
                     )
             ) {
-                is ResponseResult.Exception ->
-                    ResponseResult.Exception(
+                is Exception ->
+                    Exception(
                         responseResult.e,
                         EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
 
-                is ResponseResult.ServerError ->
-                    ResponseResult.ServerError(
+                is ServerError ->
+                    ServerError(
                         responseResult.status,
                         responseResult.message,
                     )
 
-                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
+                is Success -> Success(responseResult.data)
             }
         }
 
@@ -123,37 +126,37 @@ class StaccatoDefaultRepository
                             ),
                     )
             ) {
-                is ResponseResult.Exception ->
-                    ResponseResult.Exception(
+                is Exception ->
+                    Exception(
                         responseResult.e,
                         EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
 
-                is ResponseResult.ServerError ->
-                    ResponseResult.ServerError(
+                is ServerError ->
+                    ServerError(
                         responseResult.status,
                         responseResult.message,
                     )
 
-                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
+                is Success -> Success(responseResult.data)
             }
         }
 
         override suspend fun deleteStaccato(staccatoId: Long): ResponseResult<Unit> {
             return when (val responseResult = remoteDataSource.deleteStaccato(staccatoId)) {
-                is ResponseResult.Exception ->
-                    ResponseResult.Exception(
+                is Exception ->
+                    Exception(
                         responseResult.e,
                         EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
 
-                is ResponseResult.ServerError ->
-                    ResponseResult.ServerError(
+                is ServerError ->
+                    ServerError(
                         responseResult.status,
                         responseResult.message,
                     )
 
-                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
+                is Success -> Success(responseResult.data)
             }
         }
 
@@ -168,19 +171,19 @@ class StaccatoDefaultRepository
                         feelingRequest = FeelingRequest(feeling),
                     )
             ) {
-                is ResponseResult.Exception ->
-                    ResponseResult.Exception(
+                is Exception ->
+                    Exception(
                         responseResult.e,
                         EXCEPTION_NETWORK_ERROR_MESSAGE,
                     )
 
-                is ResponseResult.ServerError ->
-                    ResponseResult.ServerError(
+                is ServerError ->
+                    ServerError(
                         responseResult.status,
                         responseResult.message,
                     )
 
-                is ResponseResult.Success -> ResponseResult.Success(responseResult.data)
+                is Success -> Success(responseResult.data)
             }
         }
 

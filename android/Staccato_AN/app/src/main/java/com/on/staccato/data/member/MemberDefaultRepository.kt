@@ -1,10 +1,10 @@
 package com.on.staccato.data.member
 
 import com.on.staccato.data.ApiResponseHandler.handleApiResponse
+import com.on.staccato.data.Exception
 import com.on.staccato.data.ResponseResult
-import com.on.staccato.data.ResponseResult.Exception
-import com.on.staccato.data.ResponseResult.ServerError
-import com.on.staccato.data.ResponseResult.Success
+import com.on.staccato.data.ServerError
+import com.on.staccato.data.Success
 import com.on.staccato.domain.repository.MemberRepository
 import javax.inject.Inject
 

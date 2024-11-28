@@ -14,30 +14,30 @@ object ApiResponseHandler {
             val body: T? = response.body()
 
             when {
-                response.isSuccessful && response.code() == 201 -> ResponseResult.Success(body as T)
-                response.isSuccessful && body != null -> ResponseResult.Success(body)
-                response.isSuccessful && response.code() == 204 -> ResponseResult.Success(Unit as T)
+                response.isSuccessful && response.code() == 201 -> Success(body as T)
+                response.isSuccessful && body != null -> Success(body)
+                response.isSuccessful && response.code() == 204 -> Success(Unit as T)
                 else -> {
                     val errorBody: ResponseBody =
                         response.errorBody()
                             ?: throw IllegalArgumentException("errorBody를 찾을 수 없습니다.")
                     val errorResponse: ErrorResponse = getErrorResponse(errorBody)
-                    ResponseResult.ServerError(
+                    ServerError(
                         status = Status.Message(errorResponse.status),
                         message = errorResponse.message,
                     )
                 }
             }
         } catch (e: HttpException) {
-            ResponseResult.ServerError(status = Status.Code(e.code()), message = e.message())
+            ServerError(status = Status.Code(e.code()), message = e.message())
         } catch (e: Throwable) {
-            ResponseResult.Exception(e, message = e.message.toString())
+            Exception(e, message = e.message.toString())
         }
     }
 
     suspend fun <T : Any> ResponseResult<T>.onSuccess(executable: suspend (T) -> Unit): ResponseResult<T> =
         apply {
-            if (this is ResponseResult.Success<T>) {
+            if (this is Success<T>) {
                 executable(data)
             }
         }
@@ -46,14 +46,14 @@ object ApiResponseHandler {
         executable: suspend (status: Status, message: String) -> Unit,
     ): ResponseResult<T> =
         apply {
-            if (this is ResponseResult.ServerError<T>) {
+            if (this is ServerError<T>) {
                 executable(status, message)
             }
         }
 
     suspend fun <T : Any> ResponseResult<T>.onException(executable: suspend (e: Throwable, message: String) -> Unit): ResponseResult<T> =
         apply {
-            if (this is ResponseResult.Exception<T>) {
+            if (this is Exception<T>) {
                 executable(e, message)
             }
         }
