@@ -1,6 +1,5 @@
 package com.on.staccato.data.timeline
 
-import com.on.staccato.data.ApiResponseHandler.handleApiResponse
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.timeline.TimelineResponse
 import javax.inject.Inject
@@ -18,7 +17,5 @@ class TimelineRemoteDataSource
             return fetchTimeline(year)
         }
 
-        private suspend fun fetchTimeline(year: Int? = null): ResponseResult<TimelineResponse> {
-            return handleApiResponse { timelineApiService.getTimeline(year) }
-        }
+        private suspend fun fetchTimeline(year: Int? = null): ResponseResult<TimelineResponse> = timelineApiService.getTimeline(year)
     }
