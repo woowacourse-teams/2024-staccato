@@ -9,5 +9,5 @@ class NetworkResultCallAdapter(
 ) : CallAdapter<Type, Call<ApiResult<Type>>> {
     override fun responseType(): Type = resultType
 
-    override fun adapt(call: Call<Type>): Call<ApiResult<Type>> = NetworkResultCall(call)
+    override fun adapt(call: Call<Type>): Call<ApiResult<Type>> = ApiResultCall(call)
 }

@@ -9,7 +9,7 @@ import retrofit2.Call
 import retrofit2.HttpException
 import retrofit2.Response
 
-class NetworkResultCall<T : Any>(
+class ApiResultCall<T : Any>(
     private val proxy: Call<T>,
 ) : Call<ApiResult<T>> {
     override fun enqueue(callback: retrofit2.Callback<ApiResult<T>>) {
@@ -20,7 +20,7 @@ class NetworkResultCall<T : Any>(
                     response: Response<T>,
                 ) {
                     val networkResult = handleApiResponse { response }
-                    callback.onResponse(this@NetworkResultCall, Response.success(networkResult))
+                    callback.onResponse(this@ApiResultCall, Response.success(networkResult))
                 }
 
                 override fun onFailure(
@@ -28,7 +28,7 @@ class NetworkResultCall<T : Any>(
                     t: Throwable,
                 ) {
                     val networkResult = Exception<T>(t)
-                    callback.onResponse(this@NetworkResultCall, Response.success(networkResult))
+                    callback.onResponse(this@ApiResultCall, Response.success(networkResult))
                 }
             },
         )
@@ -36,7 +36,7 @@ class NetworkResultCall<T : Any>(
 
     override fun execute(): Response<ApiResult<T>> = throw NotImplementedError()
 
-    override fun clone(): Call<ApiResult<T>> = NetworkResultCall(proxy.clone())
+    override fun clone(): Call<ApiResult<T>> = ApiResultCall(proxy.clone())
 
     override fun isExecuted(): Boolean = proxy.isExecuted
 
