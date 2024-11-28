@@ -34,6 +34,7 @@ object StaccatoClient {
             .addConverterFactory(
                 jsonBuilder.asConverterFactory("application/json".toMediaType()),
             )
+            .addCallAdapterFactory(NetworkResultCallAdapterFactory.create())
             .build()
 
     fun getErrorResponse(errorBody: ResponseBody): ErrorResponse {
