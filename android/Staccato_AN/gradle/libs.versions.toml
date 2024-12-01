@@ -62,7 +62,8 @@ retrofit-serialization-converter = { group = "com.jakewharton.retrofit", name = 
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp-logging-interceptor" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
-mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
+mockk-agent = { group = "io.mockk", name = "mockk-agent-jvm", version.ref = "mockk" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }

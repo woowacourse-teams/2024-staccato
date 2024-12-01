@@ -140,8 +140,10 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
 
     // Mockk
-    testImplementation(libs.mockk.android)
+    testImplementation(libs.mockk)
     testImplementation(libs.mockk.agent)
+    androidTestImplementation(libs.mockk.agent)
+    androidTestImplementation(libs.mockk.android)
 
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
