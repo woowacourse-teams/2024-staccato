@@ -11,3 +11,11 @@ class Success<T : Any>(val data: T) : ApiResult<T>
 class ServerError<T : Any>(val status: Status, val message: String) : ApiResult<T>
 
 class Exception<T : Any>(val e: Throwable, val message: String = EXCEPTION_NETWORK_ERROR_MESSAGE) : ApiResult<T>
+
+inline fun <T : Any, R : Any> ApiResult<T>.handle(convert: (T) -> R): ApiResult<R> {
+    return when (this) {
+        is Exception -> Exception(e)
+        is ServerError -> ServerError(status, message)
+        is Success -> Success(convert(data))
+    }
+}
