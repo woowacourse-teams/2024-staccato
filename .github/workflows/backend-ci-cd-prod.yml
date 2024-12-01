@@ -63,10 +63,6 @@ jobs:
     needs: ci
     runs-on: [ self-hosted, prod ]
 
-    strategy:
-      matrix:
-        runner: [ prod-a, prod-b ]
-
     steps:
       - name: execute deploy.sh
         run: bash /home/ubuntu/staccato/deploy.sh
