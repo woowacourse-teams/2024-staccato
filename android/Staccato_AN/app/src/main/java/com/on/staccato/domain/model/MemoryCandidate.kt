@@ -3,14 +3,17 @@ package com.on.staccato.domain.model
 import java.time.LocalDate
 import java.time.YearMonth
 
-data class MemoryCandidates(val memoryCandidate: List<MemoryCandidate>)
-
 data class MemoryCandidate(
     val memoryId: Long,
     val memoryTitle: String,
     val startAt: LocalDate?,
     val endAt: LocalDate?,
 ) {
+    fun isDateWithinPeriod(date: LocalDate): Boolean {
+        if (startAt == null || endAt == null) return true
+        return date in startAt..endAt
+    }
+
     companion object {
         fun buildNumberPickerDates(
             startAt: LocalDate?,
