@@ -144,6 +144,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 
     // Mockk
+    testImplementation(libs.junitparams)
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.agent)
     androidTestImplementation(libs.mockk.agent)

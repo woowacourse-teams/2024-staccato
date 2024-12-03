@@ -4,6 +4,7 @@ converterScalars = "2.9.0"
 dotsindicator = "5.0"
 hiltAndroid = "2.51.1"
 archTestingVersion = "2.2.0"
+junitparams = "1.1.0"
 kotlin = "1.9.0"
 ktlint = "12.1.0"
 coreKtx = "1.13.1"
@@ -48,6 +49,7 @@ dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindi
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+junitparams = { module = "pl.pragmatists:JUnitParams",version.ref = "junitparams" }
 androidx-arch-core = { group = "androidx.arch.core", name = "core-testing", version.ref = "archTestingVersion" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
