@@ -1,6 +1,7 @@
 package com.on.staccato.domain.model
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.YearMonth
 
 data class MemoryCandidate(
@@ -9,6 +10,21 @@ data class MemoryCandidate(
     val startAt: LocalDate?,
     val endAt: LocalDate?,
 ) {
+    fun getClosestDateTime(
+        date : LocalDateTime
+    ): LocalDateTime {
+        if (startAt == null || endAt == null) return date
+
+        val startDateTime = startAt.atStartOfDay()
+        val endDateTime = endAt.atStartOfDay()
+
+        return when {
+            date.isBefore(startDateTime) -> startDateTime // 현재 시간이 startAt 이전일 때 startAt 반환
+            date.isAfter(endDateTime) -> endDateTime // 현재 시간이 endAt 이후일 때 endAt 반환
+            else -> date // 현재 시간이 범위 내에 있을 때 now 반환
+        }
+    }
+
     fun isDateWithinPeriod(date: LocalDate): Boolean {
         if (startAt == null || endAt == null) return true
         return date in startAt..endAt
