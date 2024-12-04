@@ -10,9 +10,7 @@ data class MemoryCandidate(
     val startAt: LocalDate?,
     val endAt: LocalDate?,
 ) {
-    fun getClosestDateTime(
-        date : LocalDateTime
-    ): LocalDateTime {
+    fun getClosestDateTime(date: LocalDateTime): LocalDateTime {
         if (startAt == null || endAt == null) return date
 
         val startDateTime = startAt.atStartOfDay()
