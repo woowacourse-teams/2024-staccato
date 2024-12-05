@@ -246,7 +246,7 @@ class MemoryControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.create(MemberFixture.create());
         MemoryNameResponses memoryNameResponses = MemoryNameResponsesFixture.create(memory);
-        when(memoryService.readAllMemoriesIncludingDate(any(Member.class), any())).thenReturn(memoryNameResponses);
+        when(memoryService.readAllMemoriesByDate(any(Member.class), any())).thenReturn(memoryNameResponses);
         String expectedResponse = """
                 {
                     "memories": [

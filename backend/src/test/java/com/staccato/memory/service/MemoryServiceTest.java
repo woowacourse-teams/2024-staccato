@@ -161,7 +161,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         memoryService.createMemory(MemoryRequestFixture.create(null, null, "title3"), member);
 
         // when
-        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
+        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesByDate(member, currentDate);
 
         // then
         assertThat(memoryNameResponses.memories()).hasSize(expectedSize);
@@ -177,7 +177,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2), "title2"), member);
 
         // when
-        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
+        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesByDate(member, currentDate);
 
         // then
         assertAll(

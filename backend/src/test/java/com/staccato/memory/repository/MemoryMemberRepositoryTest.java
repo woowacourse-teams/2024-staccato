@@ -57,7 +57,7 @@ class MemoryMemberRepositoryTest {
         memoryMemberRepository.save(new MemoryMember(member, memory2));
 
         // when
-        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndIncludingDate(member.getId(), LocalDate.of(2023, 12, 31));
+        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndDate(member.getId(), LocalDate.of(2023, 12, 31));
 
         // then
         assertThat(result).hasSize(1);
@@ -74,7 +74,7 @@ class MemoryMemberRepositoryTest {
         memoryMemberRepository.save(new MemoryMember(member, memory2));
 
         // when
-        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndIncludingDate(member.getId(), LocalDate.of(2023, 12, 30));
+        List<MemoryMember> result = memoryMemberRepository.findAllByMemberIdAndDate(member.getId(), LocalDate.of(2023, 12, 30));
 
         // then
         assertThat(result).hasSize(2);

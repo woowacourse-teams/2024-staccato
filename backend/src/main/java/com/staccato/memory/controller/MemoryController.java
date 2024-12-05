@@ -59,7 +59,7 @@ public class MemoryController implements MemoryControllerDocs {
             @LoginMember Member member,
             @RequestParam(value = "currentDate") LocalDate currentDate
     ) {
-        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
+        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesByDate(member, currentDate);
         return ResponseEntity.ok(memoryNameResponses);
     }
 

@@ -56,8 +56,8 @@ public class MemoryService {
         );
     }
 
-    public MemoryNameResponses readAllMemoriesIncludingDate(Member member, LocalDate currentDate) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndIncludingDate(member.getId(), currentDate);
+    public MemoryNameResponses readAllMemoriesByDate(Member member, LocalDate currentDate) {
+        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndDate(member.getId(), currentDate);
         sortByCreatedAtDescending(memoryMembers);
 
         return MemoryNameResponses.from(
