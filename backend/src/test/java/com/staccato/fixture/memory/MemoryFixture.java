@@ -25,7 +25,7 @@ public class MemoryFixture {
                 .build();
     }
 
-    public static Memory create(Member member) {
+    public static Memory createWithMember(Member member) {
         Memory memory = Memory.builder()
                 .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
                 .title("2024 여름 휴가")
@@ -38,7 +38,18 @@ public class MemoryFixture {
         return memory;
     }
 
-    public static Memory create(LocalDate startAt, LocalDate endAt, Member member) {
+    public static Memory createWithMember(String title, Member member) {
+        Memory memory = Memory.builder()
+                .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
+                .title(title)
+                .description("친구들과 함께한 여름 휴가 추억")
+                .build();
+        memory.addMemoryMember(member);
+
+        return memory;
+    }
+
+    public static Memory createWithMember(LocalDate startAt, LocalDate endAt, Member member) {
         Memory memory = Memory.builder()
                 .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
                 .title("2024 여름 휴가")

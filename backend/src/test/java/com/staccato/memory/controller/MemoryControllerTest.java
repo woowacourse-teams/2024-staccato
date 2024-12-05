@@ -173,7 +173,7 @@ class MemoryControllerTest extends ControllerTest {
     void readAllMemory() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
         when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
         String expectedResponse = """
@@ -202,7 +202,7 @@ class MemoryControllerTest extends ControllerTest {
     void readAllMemoryWithoutTerm() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
         when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
         String expectedResponse = """
@@ -229,7 +229,7 @@ class MemoryControllerTest extends ControllerTest {
     void readAllMemoryIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MemoryNameResponses memoryNameResponses = MemoryNameResponsesFixture.create(memory);
         when(memoryService.readAllMemoriesByDate(any(Member.class), any())).thenReturn(memoryNameResponses);
         String expectedResponse = """
@@ -273,7 +273,7 @@ class MemoryControllerTest extends ControllerTest {
         // given
         long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
         MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
@@ -316,7 +316,7 @@ class MemoryControllerTest extends ControllerTest {
         // given
         long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(null, null, MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(null, null, MemberFixture.create());
         MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
         MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);

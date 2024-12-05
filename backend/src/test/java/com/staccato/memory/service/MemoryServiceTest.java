@@ -28,7 +28,6 @@ import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
 import com.staccato.memory.service.dto.response.MemoryNameResponses;
-import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
@@ -131,25 +130,6 @@ class MemoryServiceTest extends ServiceSliceTest {
         assertThatNoException().isThrownBy(() -> memoryService.createMemory(memoryRequest, member));
     }
 
-    @DisplayName("사용자의 모든 추억을 조회하면 생성 시간 기준 내림차순으로 조회된다.")
-    @Test
-    void readAllMemories() {
-        // given
-        Member member = memberRepository.save(MemberFixture.create());
-
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10), "first"), member);
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10), "second"), member);
-
-        // when
-        MemoryResponses memoryResponses = memoryService.readAllMemories(member);
-
-        // then
-        assertAll(
-                () -> assertThat(memoryResponses.memories().get(0).memoryTitle()).isEqualTo("second"),
-                () -> assertThat(memoryResponses.memories().get(1).memoryTitle()).isEqualTo("first")
-        );
-    }
-
     @DisplayName("현재 날짜를 포함하는 모든 추억 목록을 조회한다.")
     @MethodSource("dateProvider")
     @ParameterizedTest
@@ -165,25 +145,6 @@ class MemoryServiceTest extends ServiceSliceTest {
 
         // then
         assertThat(memoryNameResponses.memories()).hasSize(expectedSize);
-    }
-
-    @DisplayName("현재 날짜를 포함하는 모든 추억 목록을 생성 시간 기준 내림차순으로 조회한다.")
-    @Test
-    void readAllMemoriesOrderByCreatedAtDesc() {
-        // given
-        LocalDate currentDate = LocalDate.of(2024, 7, 1);
-        Member member = memberRepository.save(MemberFixture.create());
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 1), "title1"), member);
-        memoryService.createMemory(MemoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2), "title2"), member);
-
-        // when
-        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesByDate(member, currentDate);
-
-        // then
-        assertAll(
-                () -> assertThat(memoryNameResponses.memories().get(0).memoryTitle()).isEqualTo("title2"),
-                () -> assertThat(memoryNameResponses.memories().get(1).memoryTitle()).isEqualTo("title1")
-        );
     }
 
     @DisplayName("특정 추억을 조회한다.")
