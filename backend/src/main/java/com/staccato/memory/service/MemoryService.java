@@ -1,7 +1,6 @@
 package com.staccato.memory.service;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +10,6 @@ import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
-import com.staccato.memory.domain.MemoryMember;
 import com.staccato.memory.repository.MemoryMemberRepository;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.memory.service.dto.request.MemoryRequest;
@@ -46,29 +44,17 @@ public class MemoryService {
     }
 
     public MemoryResponses readAllMemories(Member member) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberId(member.getId());
-        sortByCreatedAtDescending(memoryMembers);
+        MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
+        memoryMembers.descendByCreatedDate();
 
-        return MemoryResponses.from(
-                memoryMembers.stream()
-                        .map(MemoryMember::getMemory)
-                        .toList()
-        );
+        return MemoryResponses.from(memoryMembers.getMemories());
     }
 
     public MemoryNameResponses readAllMemoriesByDate(Member member, LocalDate currentDate) {
-        List<MemoryMember> memoryMembers = memoryMemberRepository.findAllByMemberIdAndDate(member.getId(), currentDate);
-        sortByCreatedAtDescending(memoryMembers);
+        MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberIdAndDate(member.getId(), currentDate));
+        memoryMembers.descendByCreatedDate();
 
-        return MemoryNameResponses.from(
-                memoryMembers.stream()
-                        .map(MemoryMember::getMemory)
-                        .toList()
-        );
-    }
-
-    private void sortByCreatedAtDescending(List<MemoryMember> memoryMembers) {
-        memoryMembers.sort(Comparator.comparing(MemoryMember::getCreatedAt).reversed());
+        return MemoryNameResponses.from(memoryMembers.getMemories());
     }
 
     public MemoryDetailResponse readMemoryById(long memoryId, Member member) {
