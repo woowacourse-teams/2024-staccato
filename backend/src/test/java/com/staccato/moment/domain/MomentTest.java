@@ -3,14 +3,12 @@ package com.staccato.moment.domain;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.memory.domain.Memory;
 
@@ -23,15 +21,12 @@ class MomentTest {
     @Test
     void createMoment() {
         // given
-        Memory memory = Memory.builder()
-                .title("Sample Memory")
-                .startAt(LocalDate.now())
-                .endAt(LocalDate.now().plusDays(1))
-                .build();
+        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        LocalDateTime visitedAt = LocalDateTime.now().plusDays(1);
 
         // when & then
         assertThatCode(() -> Moment.builder()
-                .visitedAt(LocalDateTime.now().plusDays(1))
+                .visitedAt(visitedAt)
                 .title("staccatoTitle")
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
@@ -39,20 +34,20 @@ class MomentTest {
                 .address("address")
                 .memory(memory)
                 .momentImages(new MomentImages(List.of()))
-                .build()).doesNotThrowAnyException();
+                .build())
+                .doesNotThrowAnyException();
     }
 
     @DisplayName("추억 기간이 없는 경우 스타카토를 날짜 상관없이 생성할 수 있다.")
     @Test
     void createMomentInUndefinedDuration() {
         // given
-        Memory memory = Memory.builder()
-                .title("Sample Memory")
-                .build();
+        Memory memory = MemoryFixture.create(null, null);
+        LocalDateTime visitedAt = LocalDateTime.now().plusDays(1);
 
         // when & then
         assertThatCode(() -> Moment.builder()
-                .visitedAt(LocalDateTime.now().plusDays(1))
+                .visitedAt(visitedAt)
                 .title("staccatoTitle")
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
@@ -60,20 +55,22 @@ class MomentTest {
                 .address("address")
                 .memory(memory)
                 .momentImages(new MomentImages(List.of()))
-                .build()).doesNotThrowAnyException();
+                .build())
+                .doesNotThrowAnyException();
     }
 
     @DisplayName("스타카토 생성 시 title의 앞 뒤 공백이 제거된다.")
     @Test
     void trimPlaceName() {
         // given
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        LocalDateTime visitedAt = LocalDateTime.now().plusDays(1);
         String title = " staccatoTitle ";
         String expectedTitle = "staccatoTitle";
 
         // when
         Moment moment = Moment.builder()
-                .visitedAt(LocalDateTime.of(memory.getTerm().getStartAt(), LocalTime.MIN))
+                .visitedAt(visitedAt)
                 .title(title)
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)
@@ -92,15 +89,12 @@ class MomentTest {
     @ParameterizedTest
     void failCreateMoment(long plusDays) {
         // given
-        Memory memory = Memory.builder()
-                .title("Sample Memory")
-                .startAt(LocalDate.now())
-                .endAt(LocalDate.now().plusDays(1))
-                .build();
+        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        LocalDateTime visitedAt = LocalDateTime.now().plusDays(plusDays);
 
         // when & then
         assertThatThrownBy(() -> Moment.builder()
-                .visitedAt(LocalDateTime.now().plusDays(plusDays))
+                .visitedAt(visitedAt)
                 .title("staccatoTitle")
                 .placeName("placeName")
                 .latitude(BigDecimal.ONE)
@@ -108,7 +102,8 @@ class MomentTest {
                 .address("address")
                 .memory(memory)
                 .momentImages(new MomentImages(List.of()))
-                .build()).isInstanceOf(StaccatoException.class)
+                .build())
+                .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("추억에 포함되지 않는 날짜입니다.");
     }
 }
