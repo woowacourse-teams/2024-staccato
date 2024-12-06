@@ -12,25 +12,25 @@ import java.time.LocalDate
 class MemoryCandidatesTest {
     @Test
     @Parameters(method = "parameters")
-    fun `date를 포함하는 후보들을 필터링해 반환`(date: LocalDate) {
+    fun `date를 포함하는 후보들을 필터링 하여 반환`(date: LocalDate) {
         // given
         val memoryCandidates = dummyMemoryCandidates
 
         // when
-        val selectableMemoryCandidate = memoryCandidates.getValidMemoryCandidate(date)
+        val actual = memoryCandidates.filterCandidatesBy(date)
 
         // then
-        val isEveryCandidatesContainDate = selectableMemoryCandidate.all { it.isDateWithinPeriod(date) }
+        val isEveryCandidatesContainDate = actual.all { it.isDateWithinPeriod(date) }
         assertTrue(isEveryCandidatesContainDate)
     }
 
     @Test
-    fun `아이디가 정확히 일치하는 memoryCandidate를 찾아 반환`() {
+    fun `아이디가 일치하는 memoryCandidate를 찾아 반환`() {
         // given
         val memoryCandidates = dummyMemoryCandidates
 
         // when
-        val actual = memoryCandidates.getValidMemoryCandidate(TARGET_MEMORY_ID)
+        val actual = memoryCandidates.filterCandidatesBy(TARGET_MEMORY_ID)
         val expected = listOf(targetMemoryCandidate)
 
         // then
