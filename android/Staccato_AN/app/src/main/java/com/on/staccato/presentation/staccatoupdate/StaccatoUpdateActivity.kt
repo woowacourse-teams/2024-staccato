@@ -49,8 +49,6 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class StaccatoUpdateActivity :
@@ -153,7 +151,7 @@ class StaccatoUpdateActivity :
         initGooglePlaceSearch()
         showWarningMessage()
         handleError()
-        viewModel.fetchTargetData(staccatoId, memoryId, memoryTitle)
+        viewModel.fetchTargetData(staccatoId)
     }
 
     override fun onResume() {
@@ -264,10 +262,6 @@ class StaccatoUpdateActivity :
 
     private fun initMemorySelectionFragment() {
         memorySelectionFragment.setOnMemorySelected { selectedMemory ->
-            val startAt = selectedMemory.startAt ?: LocalDate.now()
-            val initializedDateTime =
-                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
-            viewModel.selectedVisitedAt(initializedDateTime)
             viewModel.selectMemory(selectedMemory)
         }
     }
@@ -299,19 +293,24 @@ class StaccatoUpdateActivity :
                 listOf(AttachedPhotoUiModel.addPhotoButton, *photos.attachedPhotos.toTypedArray()),
             )
         }
-        viewModel.memoryCandidates.observe(this) {
-            memorySelectionFragment.setItems(it.memoryCandidate)
+        viewModel.selectableMemories.observe(this) {
+            it?.let {
+                memorySelectionFragment.setItems(it)
+            }
         }
-        viewModel.selectedMemory.observe(this) { selectedMemory ->
-            val startAt = selectedMemory.startAt ?: LocalDate.now()
-            val initializedDateTime =
-                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
-            memorySelectionFragment.updateKeyMemory(selectedMemory)
-            visitedAtSelectionFragment.initDateCandidates(selectedMemory, initializedDateTime)
+        viewModel.selectedMemory.observe(this) {
+            it?.let {
+                memorySelectionFragment.updateKeyMemory(it)
+            }
         }
-        viewModel.selectedVisitedAt.observe(this) { selectedVisitedAt ->
-            if (selectedVisitedAt != null) {
-                visitedAtSelectionFragment.initKeyWithSelectedValues(selectedVisitedAt)
+        viewModel.selectedVisitedAt.observe(this) {
+            it?.let {
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+                visitedAtSelectionFragment.setVisitedAtPeriod(
+                    it.toLocalDate().minusYears(10),
+                    it.toLocalDate().plusYears(10),
+                )
+                viewModel.setMemoryCandidateByVisitedAt(it)
             }
         }
     }
