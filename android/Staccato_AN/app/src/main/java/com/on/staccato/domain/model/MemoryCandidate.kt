@@ -14,12 +14,16 @@ data class MemoryCandidate(
         if (startAt == null || endAt == null) return date
 
         val startDateTime = startAt.atStartOfDay()
-        val endDateTime = endAt.atStartOfDay()
+        val endDateTime = endAt.atTime(23, 59)
 
         return when {
-            date.isBefore(startDateTime) -> startDateTime // 현재 시간이 startAt 이전일 때 startAt 반환
-            date.isAfter(endDateTime) -> endDateTime // 현재 시간이 endAt 이후일 때 endAt 반환
-            else -> date // 현재 시간이 범위 내에 있을 때 now 반환
+            date.isBefore(startDateTime) ->
+                startDateTime.toLocalDate()
+                    .atTime(12, 0)
+            date.isAfter(endDateTime) ->
+                endDateTime.toLocalDate()
+                    .atTime(12, 0)
+            else -> date
         }
     }
 

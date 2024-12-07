@@ -99,40 +99,42 @@ class MemoryCandidateTest {
 
     // 아래부터 getClosestDateTime 테스트
     @Test
-    fun `2024년 중 2023년 마지막 날 12시와 가장 가까운 날짜 및 시간을 반환한다`() {
+    fun `현재 시간이 startAt과 endAt의 범위 내일 때 현재 시간을 반환`() {
         // given
         val category =
             makeTestMemoryCandidate(memoryId = 2L, startAt = yearStart2024, endAt = yearEnd2024)
+        val currentLocalDateTime = yearMiddle2024.atTime(13, 30)
 
         // when & then
-        val actual = category.getClosestDateTime(yearEnd2023.atTime(12, 0))
-        val expected = yearStart2024.atTime(0, 0)
+        val actual = category.getClosestDateTime(currentLocalDateTime)
+
+        assertEquals(currentLocalDateTime, actual)
+    }
+
+    @Test
+    fun `현재 시간이 startAt보다 과거일 때 startAt의 정오를 반환`() {
+        // given
+        val category =
+            makeTestMemoryCandidate(memoryId = 2L, startAt = yearStart2024, endAt = yearEnd2024)
+        val currentLocalDateTime = yearEnd2023.atTime(13, 30)
+
+        // when & then
+        val actual = category.getClosestDateTime(currentLocalDateTime)
+        val expected = yearStart2024.atTime(12, 0)
 
         assertEquals(expected, actual)
     }
 
     @Test
-    fun `2024년 중 2024년 7월 1일 12시와 가장 가까운 날짜 및 시간을 반환한다`() {
+    fun `현재 시간이 endAt보다 미래일 때 endAt의 정오를 반환`() {
         // given
         val category =
             makeTestMemoryCandidate(memoryId = 2L, startAt = yearStart2024, endAt = yearEnd2024)
+        val currentLocalDateTime = yearStart2025.atTime(13, 30)
 
         // when & then
-        val actual = category.getClosestDateTime(yearMiddle2024.atTime(12, 0))
-        val expected = yearMiddle2024.atTime(12, 0)
-
-        assertEquals(expected, actual)
-    }
-
-    @Test
-    fun `2024년 중 2025년 첫번째 날 12시와 가장 가까운 날짜 및 시간을 반환한다`() {
-        // given
-        val category =
-            makeTestMemoryCandidate(memoryId = 2L, startAt = yearStart2024, endAt = yearEnd2024)
-
-        // when & then
-        val actual = category.getClosestDateTime(yearStart2025.atTime(12, 0))
-        val expected = yearEnd2024.atTime(0, 0)
+        val actual = category.getClosestDateTime(currentLocalDateTime)
+        val expected = yearEnd2024.atTime(12, 0)
 
         assertEquals(expected, actual)
     }
