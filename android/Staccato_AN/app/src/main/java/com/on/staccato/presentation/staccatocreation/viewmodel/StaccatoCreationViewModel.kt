@@ -29,7 +29,6 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -64,6 +63,9 @@ class StaccatoCreationViewModel
 
         private val _selectedMemory = MutableLiveData<MemoryCandidate>()
         val selectedMemory: LiveData<MemoryCandidate> get() = _selectedMemory
+
+        private val _selectableMemories = MutableLiveData<List<MemoryCandidate>>()
+        val selectableMemories: LiveData<List<MemoryCandidate>> get() = _selectableMemories
 
         private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
         val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
@@ -152,53 +154,54 @@ class StaccatoCreationViewModel
             _isCurrentLocationLoading.postValue(newValue)
         }
 
-        fun fetchMemoryCandidates(memoryId: Long) {
+        fun fetchMemoryCandidates() {
             viewModelScope.launch {
                 timelineRepository.getMemoryCandidates()
-                    .onSuccess { memoryCandidates ->
-                        _memoryCandidates.value = memoryCandidates
-                        if (memoryCandidates.memoryCandidate.isNotEmpty()) {
-                            initSelectedMemoryAndVisitedAt(memoryId, memoryCandidates.memoryCandidate)
-                        }
-                    }.onException(::handleMemoryCandidatesException)
+                    .onSuccess {
+                        _memoryCandidates.value = it
+                    }
+                    .onException(::handleMemoryCandidatesException)
                     .onServerError(::handleServerError)
             }
         }
 
+        fun initMemoryAndVisitedAt(
+            memoryId: Long,
+            currentDateTime: LocalDateTime,
+        ) {
+            if (memoryId == 0L) {
+                setCurrentDateTimeAsVisitedAt(currentDateTime)
+                setMemoryCandidateByVisitedAt(currentDateTime)
+            } else {
+                setMemoryCandidateById(memoryId)
+                setClosestDateTimeAsVisitedAt(currentDateTime)
+            }
+        }
+
+        private fun setCurrentDateTimeAsVisitedAt(visitedAt: LocalDateTime) {
+            _selectedVisitedAt.value = visitedAt
+        }
+
+        fun setMemoryCandidateByVisitedAt(visitedAt: LocalDateTime) {
+            _selectableMemories.value =
+                memoryCandidates.value?.filterCandidatesBy(visitedAt.toLocalDate())
+            _selectedMemory.value =
+                selectableMemories.value?.let { selectableMemories ->
+                    selectableMemories.find { it.memoryId == selectedMemory.value?.memoryId } ?: selectableMemories.first()
+                }
+        }
+
+        private fun setMemoryCandidateById(memoryId: Long) {
+            _selectableMemories.value = memoryCandidates.value?.filterCandidatesBy(memoryId)
+            _selectedMemory.value = selectableMemories.value?.first()
+        }
+
+        private fun setClosestDateTimeAsVisitedAt(visitedAt: LocalDateTime) {
+            _selectedVisitedAt.value = selectedMemory.value?.getClosestDateTime(visitedAt)
+        }
+
         fun setIsPlaceSearchClicked(value: Boolean) {
             _isPlaceSearchClicked.value = value
-        }
-
-        private fun initSelectedMemoryAndVisitedAt(
-            memoryId: Long,
-            memoryCandidates: List<MemoryCandidate>,
-        ) {
-            val targetMemory =
-                if (memoryId == 0L) {
-                    memoryCandidates.first()
-                } else {
-                    memoryCandidates.first { memoryId == it.memoryId }
-                }
-            _selectedMemory.value = targetMemory
-            _selectedVisitedAt.value = getClosestDateTime(targetMemory.startAt, targetMemory.endAt)
-        }
-
-        private fun getClosestDateTime(
-            startAt: LocalDate?,
-            endAt: LocalDate?,
-        ): LocalDateTime {
-            val now = LocalDateTime.now()
-
-            if (startAt == null || endAt == null) return now
-
-            val startDateTime = startAt.atStartOfDay()
-            val endDateTime = endAt.atStartOfDay()
-
-            return when {
-                now.isBefore(startDateTime) -> startDateTime // 현재 시간이 startAt 이전일 때 startAt 반환
-                now.isAfter(endDateTime) -> endDateTime // 현재 시간이 endAt 이후일 때 endAt 반환
-                else -> now // 현재 시간이 범위 내에 있을 때 now 반환
-            }
         }
 
         fun updateSelectedImageUris(newUris: Array<Uri>) {

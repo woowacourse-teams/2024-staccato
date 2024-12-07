@@ -45,7 +45,6 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
@@ -87,7 +86,7 @@ class StaccatoCreationActivity :
     private var currentSnackBar: Snackbar? = null
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        viewModel.fetchMemoryCandidates(memoryId)
+        viewModel.fetchMemoryCandidates()
         setupPermissionRequestLauncher()
         setupFusedLocationProviderClient()
         initBinding()
@@ -269,10 +268,6 @@ class StaccatoCreationActivity :
 
     private fun initMemorySelectionFragment() {
         memorySelectionFragment.setOnMemorySelected { selectedMemory ->
-            val startAt = selectedMemory.startAt ?: LocalDate.now()
-            val initializedDateTime =
-                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
-            viewModel.selectedVisitedAt(initializedDateTime)
             viewModel.selectMemory(selectedMemory)
         }
     }
@@ -302,18 +297,32 @@ class StaccatoCreationActivity :
             )
         }
         viewModel.memoryCandidates.observe(this) {
-            memorySelectionFragment.setItems(it.memoryCandidate)
+            it?.let {
+                viewModel.initMemoryAndVisitedAt(memoryId, LocalDateTime.now())
+            }
         }
-        viewModel.selectedMemory.observe(this) { selectedMemory ->
-            val startAt = selectedMemory.startAt ?: LocalDate.now()
-            val initializedDateTime =
-                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
-            memorySelectionFragment.updateKeyMemory(selectedMemory)
-            visitedAtSelectionFragment.initDateCandidates(selectedMemory, initializedDateTime)
+        viewModel.selectableMemories.observe(this) {
+            it?.let {
+                memorySelectionFragment.setItems(it)
+            }
         }
-        viewModel.selectedVisitedAt.observe(this) { selectedVisitedAt ->
-            if (selectedVisitedAt != null) {
-                visitedAtSelectionFragment.initKeyWithSelectedValues(selectedVisitedAt)
+        viewModel.selectedMemory.observe(this) { it ->
+            it?.let {
+                memorySelectionFragment.updateKeyMemory(it)
+                if (memoryId != 0L) {
+                    visitedAtSelectionFragment.setVisitedAtPeriod(
+                        it.startAt,
+                        it.endAt,
+                    )
+                }
+            }
+        }
+        viewModel.selectedVisitedAt.observe(this) {
+            it?.let {
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+                if (memoryId == 0L) {
+                    updateMemoryCandidateAndVisitedAt(it)
+                }
             }
         }
         viewModel.createdStaccatoId.observe(this) { createdStaccatoId ->
@@ -326,6 +335,14 @@ class StaccatoCreationActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
+    }
+
+    private fun updateMemoryCandidateAndVisitedAt(it: LocalDateTime) {
+        viewModel.setMemoryCandidateByVisitedAt(it)
+        visitedAtSelectionFragment.setVisitedAtPeriod(
+            it.toLocalDate().minusYears(10),
+            it.toLocalDate().plusYears(10),
+        )
     }
 
     private fun fetchAddress(location: Location) {
