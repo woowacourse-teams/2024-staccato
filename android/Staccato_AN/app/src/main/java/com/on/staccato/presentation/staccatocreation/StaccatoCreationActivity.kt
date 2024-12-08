@@ -337,11 +337,11 @@ class StaccatoCreationActivity :
         }
     }
 
-    private fun updateMemoryCandidateAndVisitedAt(it: LocalDateTime) {
-        viewModel.setMemoryCandidateByVisitedAt(it)
+    private fun updateMemoryCandidateAndVisitedAt(visitedAt: LocalDateTime) {
+        viewModel.setMemoryCandidateByVisitedAt(visitedAt)
         visitedAtSelectionFragment.setVisitedAtPeriod(
-            it.toLocalDate().minusYears(10),
-            it.toLocalDate().plusYears(10),
+            visitedAt.toLocalDate().minusYears(10),
+            visitedAt.toLocalDate().plusYears(10),
         )
     }
 
