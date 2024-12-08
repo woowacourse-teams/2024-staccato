@@ -182,12 +182,13 @@ class StaccatoUpdateViewModel
         }
 
         fun setMemoryCandidateByVisitedAt(visitedAt: LocalDateTime) {
-            _selectableMemories.value =
-                memoryCandidates.value?.filterCandidatesBy(visitedAt.toLocalDate())
-            _selectedMemory.value =
-                selectableMemories.value?.let { selectableMemories ->
-                    selectableMemories.find { it.memoryId == selectedMemory.value?.memoryId } ?: selectableMemories.first()
-                }
+            val filteredMemories =
+                memoryCandidates.value
+                    ?.filterCandidatesBy(visitedAt.toLocalDate())
+                    ?: emptyList()
+            _selectableMemories.value = filteredMemories
+            _selectedMemory.value = filteredMemories.find { it.memoryId == selectedMemory.value?.memoryId }
+                ?: filteredMemories.firstOrNull()
         }
 
         fun updateStaccato(staccatoId: Long) {
