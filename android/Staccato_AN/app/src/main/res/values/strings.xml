@@ -119,8 +119,8 @@
     <string name="staccato_creation_empty_address">"장소를 선택하면 상세 주소가 나타나요"</string>
     <string name="staccato_creation_address">상세 주소</string>
     <string name="staccato_creation_memory_selection">추억 선택</string>
-    <string name="staccato_creation_memory_selection_hint">추억을 선택해 주세요</string>
-    <string name="staccato_creation_no_memory_hint">스타카토를 남길 수 있는 추억이 없어요</string>
+    <string name="staccato_creation_no_memory_in_this_date">선택하신 날짜에는 추억이 없어요</string>
+    <string name="staccato_creation_no_memory">스타카토를 남길 수 있는 추억이 없어요</string>
     <string name="staccato_creation_unselected_memory">추억을 먼저 선택해 주세요</string>
     <string name="staccato_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨 보세요!</string>
     <string name="staccato_creation_toolbar_title">스타카토 기록하기</string>
