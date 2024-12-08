@@ -65,11 +65,6 @@ fun TextView.setIsMemoryCandidatesEmptyVisibility(memoryCandidates: MemoryCandid
     isGone = !memoryCandidates?.memoryCandidate.isNullOrEmpty()
 }
 
-@BindingAdapter("isMemoryEmpty")
-fun TextView.setIsMemoryEmptyVisibility(items: List<Int>?) {
-    isGone = !items.isNullOrEmpty()
-}
-
 @BindingAdapter("visitedAtHistory")
 fun TextView.formatVisitedAtHistory(visitedAt: LocalDateTime?) {
     text = visitedAt?.let {

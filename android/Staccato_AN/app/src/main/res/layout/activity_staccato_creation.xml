@@ -227,8 +227,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at_selection_title"
-                    bind:dateTimeWithAmPm="@{viewModel.selectedVisitedAt}"
-                    bind:memoryCandidates="@{viewModel.memoryCandidates}" />
+                    bind:dateTimeWithAmPm="@{viewModel.selectedVisitedAt}" />
 
                 <TextView
                     android:id="@+id/tv_memory_selection_title"
