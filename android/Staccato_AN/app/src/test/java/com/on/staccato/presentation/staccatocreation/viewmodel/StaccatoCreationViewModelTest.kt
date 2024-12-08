@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.staccatocreation.viewmodel
 
-import android.os.Looper
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.image.ImageDefaultRepository
@@ -13,33 +12,27 @@ import com.on.staccato.domain.model.yearMiddle2024
 import com.on.staccato.domain.model.yearStart2024
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
+import com.on.staccato.presentation.MainDispatcherRule
 import com.on.staccato.presentation.getOrAwaitValue
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import io.mockk.mockkStatic
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.util.concurrent.Executors
 
 @RunWith(JUnit4::class)
 class StaccatoCreationViewModelTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     @MockK
     private lateinit var timelineRepository: TimelineRepository
@@ -53,25 +46,9 @@ class StaccatoCreationViewModelTest {
     @InjectMockKs
     private lateinit var viewModel: StaccatoCreationViewModel
 
-    private val dispatcher =
-        Executors
-            .newSingleThreadExecutor()
-            .asCoroutineDispatcher()
-
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        mockkStatic(Looper::class)
-        every { Looper.getMainLooper() } returns mockk(relaxed = true)
-        Dispatchers.setMain(dispatcher)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        dispatcher.close()
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.staccatoupdate.viewmodel
 
-import android.os.Looper
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.image.ImageDefaultRepository
@@ -13,30 +12,24 @@ import com.on.staccato.domain.model.targetStaccato
 import com.on.staccato.domain.model.yearEnd2023
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
+import com.on.staccato.presentation.MainDispatcherRule
 import com.on.staccato.presentation.getOrAwaitValue
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import io.mockk.mockkStatic
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.concurrent.Executors
 
 class StaccatoUpdateViewModelTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     @MockK
     private lateinit var timelineRepository: TimelineRepository
@@ -50,25 +43,9 @@ class StaccatoUpdateViewModelTest {
     @InjectMockKs
     private lateinit var viewModel: StaccatoUpdateViewModel
 
-    private val dispatcher =
-        Executors
-            .newSingleThreadExecutor()
-            .asCoroutineDispatcher()
-
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        mockkStatic(Looper::class)
-        every { Looper.getMainLooper() } returns mockk(relaxed = true)
-        Dispatchers.setMain(dispatcher)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        dispatcher.close()
     }
 
     @Test
@@ -95,7 +72,8 @@ class StaccatoUpdateViewModelTest {
         Assert.assertEquals(targetStaccato.address, actualAddress)
 
         // 일시 선택을 위한 값 검사
-        val expectedSelectableMemories = dummyMemoryCandidates.filterCandidatesBy(targetStaccato.visitedAt.toLocalDate())
+        val expectedSelectableMemories =
+            dummyMemoryCandidates.filterCandidatesBy(targetStaccato.visitedAt.toLocalDate())
         val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
         Assert.assertEquals(expectedSelectableMemories, actualSelectableMemories)
 
