@@ -18,6 +18,8 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -62,6 +64,7 @@ class StaccatoCreationViewModelTest {
 
             // when
             viewModel.fetchMemoryCandidates()
+            advanceUntilIdle()
 
             // when & then
             val actualMemoryCandidates = viewModel.memoryCandidates.getOrAwaitValue()
@@ -69,7 +72,7 @@ class StaccatoCreationViewModelTest {
         }
 
     @Test
-    fun `카테고리 ID가 0L일 때는 현재 날짜를 기준으로 일시와 카테고리 후보를 정한다`() {
+    fun `카테고리 ID가 0L일 때는 현재 날짜를 기준으로 일시와 카테고리 후보를 정한다`() =
         runTest {
             // given
             coEvery { timelineRepository.getMemoryCandidates() } returns
@@ -77,77 +80,78 @@ class StaccatoCreationViewModelTest {
                     dummyMemoryCandidates,
                 )
             viewModel.fetchMemoryCandidates()
+            advanceUntilIdle()
+
+            // when
+            val currentLocalDate = yearMiddle2024.atStartOfDay()
+            viewModel.initMemoryAndVisitedAt(0L, currentLocalDate)
+
+            // then
+            val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
+            val actualMemories = viewModel.selectableMemories.getOrAwaitValue()
+            val actualMemory = viewModel.selectedMemory.getOrAwaitValue()
+
+            val selectableMemories = dummyMemoryCandidates.filterCandidatesBy(yearMiddle2024)
+            val selectedMemory = dummyMemoryCandidates.filterCandidatesBy(yearMiddle2024).first()
+
+            assertEquals(currentLocalDate, actualVisitedAt)
+            assertEquals(selectableMemories, actualMemories)
+            assertEquals(selectedMemory, actualMemory)
         }
-        // when
-        val currentLocalDate = yearMiddle2024.atStartOfDay()
-        viewModel.initMemoryAndVisitedAt(0L, currentLocalDate)
 
-        // then
-        val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
-        val actualMemories = viewModel.selectableMemories.getOrAwaitValue()
-        val actualMemory = viewModel.selectedMemory.getOrAwaitValue()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `카테고리 ID가 0L이 아닐 때는 특정 카테고리로 고정, 현재와 가장 가까운 일시를 선택한다`() =
+        runTest {
+            // given
+            coEvery { timelineRepository.getMemoryCandidates() } returns
+                ResponseResult.Success(
+                    dummyMemoryCandidates,
+                )
+            viewModel.fetchMemoryCandidates()
+            advanceUntilIdle()
 
-        val selectableMemories = dummyMemoryCandidates.filterCandidatesBy(yearMiddle2024)
-        val selectedMemory = dummyMemoryCandidates.filterCandidatesBy(yearMiddle2024).first()
+            // when
+            val currentVisitedAt = yearMiddle2024.atStartOfDay()
+            viewModel.initMemoryAndVisitedAt(TARGET_MEMORY_ID, currentVisitedAt)
 
-        assertEquals(currentLocalDate, actualVisitedAt)
-        assertEquals(selectableMemories, actualMemories)
-        assertEquals(selectedMemory, actualMemory)
-    }
+            // then
+            val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
+            val actualMemories = viewModel.selectableMemories.getOrAwaitValue()
+            val actualMemory = viewModel.selectedMemory.getOrAwaitValue()
+
+            val closestVisitedAt = targetMemoryCandidate.getClosestDateTime(currentVisitedAt)
+            val fixedMemories = listOf(targetMemoryCandidate)
+            val fixedMemory = targetMemoryCandidate
+
+            assertEquals(closestVisitedAt, actualVisitedAt)
+            assertEquals(fixedMemories, actualMemories)
+            assertEquals(fixedMemory, actualMemory)
+        }
 
     @Test
-    fun `카테고리 ID가 0L이 아닐 때는 특정 카테고리로 고정, 현재와 가장 가까운 일시를 선택한다`() {
+    fun `카테고리 ID가 0L일 때는 일시가 바뀌면 memoryCandidate도 바뀐다`() =
         runTest {
             // given
             coEvery { timelineRepository.getMemoryCandidates() } returns
-                ResponseResult.Success(
-                    dummyMemoryCandidates,
-                )
+                ResponseResult.Success(dummyMemoryCandidates)
             viewModel.fetchMemoryCandidates()
+
+            val oldLocalDate = yearStart2024.atStartOfDay()
+            viewModel.initMemoryAndVisitedAt(TARGET_MEMORY_ID, oldLocalDate)
+
+            // when
+            val newLocalDate = yearEnd2023.atStartOfDay()
+            viewModel.setMemoryCandidateByVisitedAt(newLocalDate)
+
+            // then
+            val expectedMemories = listOf(newMemoryCandidate)
+            val expectedMemory = newMemoryCandidate
+
+            val actualMemories = viewModel.selectableMemories.getOrAwaitValue()
+            val actualMemory = viewModel.selectedMemory.getOrAwaitValue()
+
+            assertEquals(expectedMemories, actualMemories)
+            assertEquals(expectedMemory, actualMemory)
         }
-        // when
-        val currentVisitedAt = yearMiddle2024.atStartOfDay()
-        viewModel.initMemoryAndVisitedAt(TARGET_MEMORY_ID, currentVisitedAt)
-
-        // then
-        val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
-        val actualMemories = viewModel.selectableMemories.getOrAwaitValue()
-        val actualMemory = viewModel.selectedMemory.getOrAwaitValue()
-
-        val closestVisitedAt = targetMemoryCandidate.getClosestDateTime(currentVisitedAt)
-        val fixedMemories = listOf(targetMemoryCandidate)
-        val fixedMemory = targetMemoryCandidate
-
-        assertEquals(closestVisitedAt, actualVisitedAt)
-        assertEquals(fixedMemories, actualMemories)
-        assertEquals(fixedMemory, actualMemory)
-    }
-
-    @Test
-    fun `카테고리 ID가 0L일 때는 일시가 바뀌면 memoryCandidate도 바뀐다`() {
-        runTest {
-            // given
-            coEvery { timelineRepository.getMemoryCandidates() } returns
-                ResponseResult.Success(
-                    dummyMemoryCandidates,
-                )
-            viewModel.fetchMemoryCandidates()
-        }
-        val oldLocalDate = yearStart2024.atStartOfDay()
-        viewModel.initMemoryAndVisitedAt(TARGET_MEMORY_ID, oldLocalDate)
-
-        // when
-        val newLocalDate = yearEnd2023.atStartOfDay()
-        viewModel.setMemoryCandidateByVisitedAt(newLocalDate)
-
-        // then
-        val expectedMemories = listOf(newMemoryCandidate)
-        val expectedMemory = newMemoryCandidate
-
-        val actualMemories = viewModel.selectableMemories.getOrAwaitValue()
-        val actualMemory = viewModel.selectedMemory.getOrAwaitValue()
-
-        assertEquals(expectedMemories, actualMemories)
-        assertEquals(expectedMemory, actualMemory)
-    }
 }
