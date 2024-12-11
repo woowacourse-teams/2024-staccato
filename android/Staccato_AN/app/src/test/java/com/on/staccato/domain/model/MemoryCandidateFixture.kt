@@ -1,6 +1,7 @@
 package com.on.staccato.domain.model
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 internal val yearEnd2023 = LocalDate.of(2023, 12, 31)
 internal val yearStart2024 = LocalDate.of(2024, 1, 1)
@@ -37,23 +38,6 @@ val dummyMemoryCandidates =
 
 internal const val TARGET_STACCATO_ID = 4L
 
-internal val targetStaccato =
-    Staccato(
-        staccatoId = TARGET_STACCATO_ID,
-        staccatoTitle = "테스트용 스타카토",
-        placeName = "Elmer Moon",
-        address = "nunc",
-        latitude = 8.9,
-        longitude = 10.11,
-        staccatoImageUrls = listOf(),
-        memoryId = targetMemoryCandidate.memoryId,
-        memoryTitle = targetMemoryCandidate.memoryTitle,
-        visitedAt = yearEnd2024.atTime(12, 0),
-        startAt = targetMemoryCandidate.startAt,
-        endAt = targetMemoryCandidate.endAt,
-        feeling = Feeling.EXCITED,
-    )
-
 internal fun makeTestMemoryCandidate(
     memoryId: Long = 1L,
     memoryTitle: String = "임시 카테고리",
@@ -64,4 +48,31 @@ internal fun makeTestMemoryCandidate(
     memoryTitle = memoryTitle,
     startAt = startAt,
     endAt = endAt,
+)
+
+internal fun makeTestStaccato(
+    staccatoId: Long = 1L,
+    staccatoTitle: String = "test",
+    placeName: String = "test",
+    address: String = "test",
+    latitude: Double = 1.1,
+    longitude: Double = 1.1,
+    staccatoImageUrls: List<String> = emptyList(),
+    visitedAt: LocalDateTime,
+    memoryCandidate: MemoryCandidate,
+    feeling: Feeling = Feeling.EXCITED,
+) = Staccato(
+    staccatoId = staccatoId,
+    staccatoTitle = staccatoTitle,
+    placeName = placeName,
+    address = address,
+    latitude = latitude,
+    longitude = longitude,
+    staccatoImageUrls = staccatoImageUrls,
+    memoryId = memoryCandidate.memoryId,
+    memoryTitle = memoryCandidate.memoryTitle,
+    visitedAt = visitedAt,
+    startAt = memoryCandidate.startAt,
+    endAt = memoryCandidate.endAt,
+    feeling = feeling,
 )
