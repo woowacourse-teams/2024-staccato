@@ -43,8 +43,6 @@ public class Moment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memory_id", nullable = false)
     private Memory memory;
-    @Embedded
-    private MomentImages momentImages = new MomentImages();
 
     @Builder
     public Moment(
@@ -54,14 +52,12 @@ public class Moment extends BaseEntity {
             @NonNull String address,
             @NonNull BigDecimal latitude,
             @NonNull BigDecimal longitude,
-            @NonNull MomentImages momentImages,
             @NonNull Memory memory
     ) {
         validateIsWithinMemoryDuration(visitedAt, memory);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
         this.title = title.trim();
         this.spot = new Spot(placeName, address, latitude, longitude);
-        this.momentImages.addAll(momentImages, this);
         this.memory = memory;
     }
 
@@ -71,25 +67,11 @@ public class Moment extends BaseEntity {
         }
     }
 
-    public void update(String title, MomentImages newMomentImages) {
-        this.title = title;
-        this.momentImages.update(newMomentImages, this);
-    }
-
     public void update(Moment updatedMoment) {
         this.visitedAt = updatedMoment.getVisitedAt();
         this.title = updatedMoment.getTitle();
         this.spot = updatedMoment.getSpot();
-        this.momentImages.update(updatedMoment.momentImages, this);
         this.memory = updatedMoment.getMemory();
-    }
-
-    public String getThumbnailUrl() {
-        return momentImages.getImages().get(0).getImageUrl();
-    }
-
-    public boolean hasImage() {
-        return momentImages.isNotEmpty();
     }
 
     public void changeFeeling(Feeling feeling) {

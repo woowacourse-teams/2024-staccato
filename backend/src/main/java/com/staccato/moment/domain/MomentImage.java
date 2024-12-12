@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,12 +27,10 @@ public class MomentImage {
     @JoinColumn(name = "moment_id", nullable = false)
     private Moment moment;
 
-    @Builder
-    public MomentImage(@Nonnull String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
-    protected void belongTo(Moment moment) {
+    @Builder
+    public MomentImage(@Nonnull String imageUrl, Moment moment) {
+        this.imageUrl = imageUrl;
         this.moment = moment;
     }
 }

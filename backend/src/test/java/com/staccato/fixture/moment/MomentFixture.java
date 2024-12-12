@@ -2,10 +2,8 @@ package com.staccato.fixture.moment;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import com.staccato.memory.domain.Memory;
 import com.staccato.moment.domain.Moment;
-import com.staccato.moment.domain.MomentImages;
 
 public class MomentFixture {
     private static final BigDecimal latitude = new BigDecimal("37.77490000000000");
@@ -20,7 +18,6 @@ public class MomentFixture {
                 .address("address")
                 .placeName("placeName")
                 .memory(memory)
-                .momentImages(new MomentImages(List.of()))
                 .build();
     }
 
@@ -33,20 +30,6 @@ public class MomentFixture {
                 .placeName("placeName")
                 .address("address")
                 .memory(memory)
-                .momentImages(new MomentImages(List.of()))
-                .build();
-    }
-
-    public static Moment createWithImages(Memory memory, LocalDateTime visitedAt, MomentImages momentImages) {
-        return Moment.builder()
-                .visitedAt(visitedAt)
-                .title("staccatoTitle")
-                .latitude(latitude)
-                .longitude(longitude)
-                .placeName("placeName")
-                .address("address")
-                .memory(memory)
-                .momentImages(momentImages)
                 .build();
     }
 }
