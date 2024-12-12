@@ -21,6 +21,7 @@ import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.MomentImage;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import lombok.RequiredArgsConstructor;
@@ -85,10 +86,9 @@ public class MemoryService {
     }
 
     private String getMomentThumbnail(Moment moment) {
-        if (moment.hasImage()) {
-            return moment.getThumbnailUrl();
-        }
-        return null;
+        return momentImageRepository.findFirstByMomentIdOrderByIdAsc(moment.getId())
+                .map(MomentImage::getImageUrl)
+                .orElse(null);
     }
 
     @Transactional

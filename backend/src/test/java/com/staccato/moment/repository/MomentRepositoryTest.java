@@ -19,7 +19,7 @@ import com.staccato.memory.domain.MemoryMember;
 import com.staccato.memory.repository.MemoryMemberRepository;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Moment;
-import com.staccato.moment.domain.MomentImages;
+import com.staccato.moment.domain.MomentImage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -34,6 +34,8 @@ class MomentRepositoryTest {
     private MemoryRepository memoryRepository;
     @Autowired
     private MemoryMemberRepository memoryMemberRepository;
+    @Autowired
+    private MomentImageRepository momentImageRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -102,9 +104,14 @@ class MomentRepositoryTest {
         Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
         memoryMemberRepository.save(new MemoryMember(member, memory));
 
-        Moment moment1 = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), new MomentImages(List.of("image1", "image2"))));
-        Moment moment2 = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2024, 1, 1, 22, 20), new MomentImages(List.of("image1", "image2"))));
+        Moment moment1 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2023, 12, 31, 22, 20)));
+        Moment moment2 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 1, 22, 20)));
         Moment moment3 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 10, 23, 21)));
+
+        List<MomentImage> momentImages1 = List.of(new MomentImage("url1", moment1), new MomentImage("url2", moment1));
+        List<MomentImage> momentImages2 = List.of(new MomentImage("url1", moment2), new MomentImage("url2", moment2));
+        momentImageRepository.saveAll(momentImages1);
+        momentImageRepository.saveAll(momentImages2);
 
         // when
         List<Moment> moments = momentRepository.findAllByMemoryIdOrdered(memory.getId());

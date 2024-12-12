@@ -9,9 +9,15 @@ import org.springframework.data.repository.query.Param;
 import com.staccato.moment.domain.MomentImage;
 
 public interface MomentImageRepository extends JpaRepository<MomentImage, Long> {
-    Optional<MomentImage> findFirstByMomentId(long momentId);
-
     @Modifying
     @Query("DELETE FROM MomentImage mi WHERE mi.moment.id In :momentIds")
     void deleteAllByMomentIdInBatch(@Param("momentIds") List<Long> momentIds);
+
+    @Modifying
+    @Query("DELETE FROM MomentImage mi WHERE mi.id In :ids")
+    void deleteAllByIdInBatch(@Param("ids") List<Long> ids);
+
+    List<MomentImage> findAllByMomentId(long momentId);
+
+    Optional<MomentImage> findFirstByMomentIdOrderByIdAsc(long momentId);
 }
