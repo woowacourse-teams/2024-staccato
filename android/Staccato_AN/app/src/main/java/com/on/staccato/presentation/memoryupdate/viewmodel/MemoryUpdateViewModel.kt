@@ -22,6 +22,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
 import com.on.staccato.presentation.memorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.memoryupdate.MemoryUpdateError
+import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -177,7 +178,7 @@ class MemoryUpdateViewModel
             context: Context,
             uri: Uri,
         ): Job {
-            val thumbnailFile = convertMemoryUriToFile(context, uri, name = MEMORY_FILE_NAME)
+            val thumbnailFile = convertMemoryUriToFile(context, uri, IMAGE_FORM_DATA_NAME)
             return viewModelScope.launch {
                 val result: ResponseResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)
@@ -240,9 +241,5 @@ class MemoryUpdateViewModel
         ) {
             _isPosting.value = false
             _error.setValue(MemoryUpdateError.MemoryUpdate(message))
-        }
-
-        companion object {
-            private const val MEMORY_FILE_NAME = "imageFile"
         }
     }
