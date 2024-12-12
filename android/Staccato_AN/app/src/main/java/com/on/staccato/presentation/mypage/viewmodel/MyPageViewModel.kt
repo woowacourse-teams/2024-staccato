@@ -15,6 +15,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mypage.MemberProfileHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,6 +51,12 @@ class MyPageViewModel
                 result.onException(::handleException)
                     .onServerError(::handleError)
                     .onSuccess(::setMemberProfile)
+            }
+        }
+
+        fun changeProfileImage(multipart: MultipartBody.Part) {
+            viewModelScope.launch {
+                repository.changeProfileImage(multipart)
             }
         }
 

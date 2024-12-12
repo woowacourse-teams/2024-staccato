@@ -8,10 +8,15 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.fragment.app.FragmentManager
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMypageBinding
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
+import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
+import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
+import com.on.staccato.presentation.util.convertMemoryUriToFile
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.webview.WebViewActivity
 import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_TOOLBAR_TITLE
@@ -21,11 +26,25 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MyPageActivity :
     BindingActivity<ActivityMypageBinding>(),
-    MyPageMenuHandler {
+    MyPageMenuHandler,
+    OnUrisSelectedListener {
     override val layoutResourceId: Int = R.layout.activity_mypage
     private val myPageViewModel: MyPageViewModel by viewModels()
+    private val photoAttachFragment by lazy { PhotoAttachFragment() }
+    private val fragmentManager: FragmentManager = supportFragmentManager
     private val clipboardManager: ClipboardManager by lazy {
         getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+    }
+
+    override fun onProfileImageChangeClicked() {
+        if (!photoAttachFragment.isAdded) {
+            photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+        }
+    }
+
+    override fun onUrisSelected(vararg uris: Uri) {
+        val imageFile = convertMemoryUriToFile(this, uris.first(), IMAGE_FORM_DATA_NAME)
+        myPageViewModel.changeProfileImage(imageFile)
     }
 
     override fun initStartView(savedInstanceState: Bundle?) {
