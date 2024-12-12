@@ -26,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MyPageActivity :
     BindingActivity<ActivityMypageBinding>(),
-    MyPageMenuHandler,
+    MyPageHandler,
     OnUrisSelectedListener {
     override val layoutResourceId: Int = R.layout.activity_mypage
     private val myPageViewModel: MyPageViewModel by viewModels()

@@ -16,7 +16,7 @@
 
         <variable
             name="menuHandler"
-            type="com.on.staccato.presentation.mypage.MyPageMenuHandler" />
+            type="com.on.staccato.presentation.mypage.MyPageHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

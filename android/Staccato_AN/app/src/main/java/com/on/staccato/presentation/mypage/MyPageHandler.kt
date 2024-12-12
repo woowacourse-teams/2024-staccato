@@ -1,6 +1,6 @@
 package com.on.staccato.presentation.mypage
 
-interface MyPageMenuHandler {
+interface MyPageHandler {
     fun onProfileImageChangeClicked()
 
     fun onPrivacyPolicyClicked()
