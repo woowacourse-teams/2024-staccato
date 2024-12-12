@@ -12,6 +12,8 @@ import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.MomentImage;
+import com.staccato.moment.domain.MomentImages;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
@@ -37,8 +39,10 @@ public class MomentService {
         Memory memory = getMemoryById(momentRequest.memoryId());
         validateMemoryOwner(memory, member);
         Moment moment = momentRequest.toMoment(memory);
+        MomentImages newMomentImages = momentRequest.toMomentImages(moment);
 
         momentRepository.save(moment);
+        momentImageRepository.saveAll(newMomentImages.images());
 
         return new MomentIdResponse(moment.getId());
     }
@@ -57,7 +61,8 @@ public class MomentService {
     public MomentDetailResponse readMomentById(long momentId, Member member) {
         Moment moment = getMomentById(momentId);
         validateMemoryOwner(moment.getMemory(), member);
-        return new MomentDetailResponse(moment);
+        MomentImages momentImages = getMomentImagesBy(moment);
+        return new MomentDetailResponse(moment, momentImages);
     }
 
     @Transactional
@@ -69,16 +74,41 @@ public class MomentService {
         Moment moment = getMomentById(momentId);
         validateMemoryOwner(moment.getMemory(), member);
 
-        Memory targetMemory = getMemoryById(momentRequest.memoryId());
-        validateMemoryOwner(targetMemory, member);
+        Memory memory = getMemoryById(momentRequest.memoryId());
+        validateMemoryOwner(memory, member);
 
-        Moment updatedMoment = momentRequest.toMoment(targetMemory);
-        moment.update(updatedMoment);
+        Moment newMoment = momentRequest.toMoment(memory);
+        moment.update(newMoment);
+
+        MomentImages momentImages = getMomentImagesBy(moment);
+        MomentImages newMomentImages = momentRequest.toMomentImages(moment);
+        removeExistImages(momentImages, newMomentImages);
+        saveNewImages(momentImages, newMomentImages);
     }
 
     private Moment getMomentById(long momentId) {
         return momentRepository.findById(momentId)
                 .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
+    }
+
+    private MomentImages getMomentImagesBy(Moment moment) {
+        List<MomentImage> momentImages = momentImageRepository.findAllByMomentId(moment.getId())
+                .stream()
+                .toList();
+        return new MomentImages(momentImages);
+    }
+
+    private void removeExistImages(MomentImages momentImages, MomentImages newMomentImages) {
+        List<MomentImage> removeList = momentImages.findValuesNotPresentIn(newMomentImages);
+        List<Long> ids = removeList.stream()
+                .map(MomentImage::getId)
+                .toList();
+        momentImageRepository.deleteAllByIdInBatch(ids);
+    }
+
+    private void saveNewImages(MomentImages momentImages, MomentImages newMomentImages) {
+        List<MomentImage> saveList = newMomentImages.findValuesNotPresentIn(momentImages);
+        momentImageRepository.saveAll(saveList);
     }
 
     @Transactional

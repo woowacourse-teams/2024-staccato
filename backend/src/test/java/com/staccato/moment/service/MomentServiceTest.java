@@ -23,6 +23,7 @@ import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.MomentImage;
 import com.staccato.moment.domain.MomentImages;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
@@ -78,7 +79,7 @@ class MomentServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(momentRepository.findById(momentId)).isNotEmpty(),
-                () -> assertThat(momentImageRepository.findFirstByMomentId(momentId)).isNotEmpty()
+                () -> assertThat(momentImageRepository.findFirstByMomentIdOrderByIdAsc(momentId)).isNotEmpty()
         );
     }
 
@@ -139,13 +140,14 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Memory memory = saveMemory(member);
-        Moment moment = saveMomentWithImages(memory);
+        Moment moment = saveMoment(memory);
+        MomentImages momentImages = saveMomentImages(moment);
 
         // when
         MomentDetailResponse actual = momentService.readMomentById(moment.getId(), member);
 
         // then
-        assertThat(actual).isEqualTo(new MomentDetailResponse(moment));
+        assertThat(actual).isEqualTo(new MomentDetailResponse(moment, momentImages));
     }
 
     @DisplayName("본인 것이 아닌 스타카토를 조회하려고 하면 예외가 발생한다.")
@@ -190,7 +192,12 @@ class MomentServiceTest extends ServiceSliceTest {
 
         // then
         Moment foundedMoment = momentRepository.findById(moment.getId()).get();
-        assertThat(foundedMoment.getTitle()).isEqualTo("newStaccatoTitle");
+        MomentImages images = new MomentImages(momentImageRepository.findAllByMomentId(moment.getId()));
+        assertAll(
+                () -> assertThat(foundedMoment.getTitle()).isEqualTo("newStaccatoTitle"),
+                () -> assertThat(images.getUrls()).hasSize(2)
+                        .containsExactly("https://existExample.com.jpg", "https://existExample2.com.jpg")
+        );
     }
 
     @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")
@@ -306,7 +313,20 @@ class MomentServiceTest extends ServiceSliceTest {
     }
 
     private Moment saveMomentWithImages(Memory memory) {
-        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
-        return momentRepository.save(moment);
+        Moment moment = saveMoment(memory);
+        saveMomentImages(moment);
+        return moment;
+    }
+
+    private Moment saveMoment(Memory memory) {
+        Moment moment = MomentFixture.create(memory, LocalDateTime.now());
+        momentRepository.save(moment);
+        return moment;
+    }
+
+    private MomentImages saveMomentImages(Moment moment) {
+        List<MomentImage> momentImages = List.of(new MomentImage("https://oldExample.com.jpg", moment), new MomentImage("https://existExample.com.jpg", moment));
+        momentImageRepository.saveAll(momentImages);
+        return new MomentImages(momentImages);
     }
 }
