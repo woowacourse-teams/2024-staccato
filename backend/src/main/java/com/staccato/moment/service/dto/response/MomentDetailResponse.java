@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.moment.domain.Moment;
-import com.staccato.moment.domain.MomentImage;
+import com.staccato.moment.domain.MomentImages;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -41,7 +41,7 @@ public record MomentDetailResponse(
         @Schema(example = "-0.12712788587027796")
         BigDecimal longitude
 ) {
-    public MomentDetailResponse(Moment moment) {
+    public MomentDetailResponse(Moment moment, MomentImages momentImages) {
         this(
                 moment.getId(),
                 moment.getMemory().getId(),
@@ -49,7 +49,7 @@ public record MomentDetailResponse(
                 moment.getMemory().getTerm().getStartAt(),
                 moment.getMemory().getTerm().getEndAt(),
                 moment.getTitle(),
-                moment.getMomentImages().getImages().stream().map(MomentImage::getImageUrl).toList(),
+                momentImages.getUrls(),
                 moment.getVisitedAt(),
                 moment.getFeeling().getValue(),
                 moment.getSpot().getPlaceName(),

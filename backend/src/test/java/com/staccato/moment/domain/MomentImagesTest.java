@@ -1,7 +1,5 @@
 package com.staccato.moment.domain;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -9,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.moment.MomentFixture;
-import com.staccato.memory.domain.Memory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -29,44 +25,32 @@ class MomentImagesTest {
         }
 
         // when & then
-        assertThatNoException().isThrownBy(() -> new MomentImages(images));
+        assertThatNoException().isThrownBy(() -> MomentImages.of(images, null));
     }
 
     @DisplayName("생성하려는 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
     @Test
     void failAddMomentImages() {
         // given & when & then
-        assertThatThrownBy(() -> new MomentImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
+        assertThatThrownBy(() -> MomentImages.of(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6"), null))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("사진은 5장을 초과할 수 없습니다.");
     }
 
-    @DisplayName("사진을 추가할 때 총 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
+    @DisplayName("인자와 비교하여 중복되지 않는 이미지들을 반환할 수 있다.")
     @Test
-    void failUpdateMomentImages() {
+    void findValuesNotPresentIn() {
         // given & when & then
-        assertThatThrownBy(() -> new MomentImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
-                .isInstanceOf(StaccatoException.class)
-                .hasMessage("사진은 5장을 초과할 수 없습니다.");
-    }
+        MomentImages momentImages = MomentImages.of(List.of("picture1", "picture2", "picture3", "picture4"), null);
+        MomentImages newMomentImages = MomentImages.of(List.of("picture2", "picture3", "picture5"), null);
 
-    @DisplayName("사진들을 추가할 때 기존 사진이 포함되지 않은 경우 삭제 후 추가한다.")
-    @Test
-    void update() {
-        // given
-        Memory memory = Memory.builder().title("Sample Memory").startAt(LocalDate.now().minusDays(1))
-                .endAt(LocalDate.now().plusDays(1)).build();
-        MomentImages existingImages = new MomentImages(List.of("picture1", "picture3"));
-        MomentImages updatedImages = new MomentImages(List.of("picture1", "picture4"));
-
-        // when
-        existingImages.update(updatedImages, MomentFixture.create(memory, LocalDateTime.now()));
-
-        // then
-        List<String> images = existingImages.getImages().stream().map(MomentImage::getImageUrl).toList();
         assertAll(
-                () -> assertThat(images).containsAll(List.of("picture1", "picture4")),
-                () -> assertThat(images.size()).isEqualTo(2)
+                () -> assertThat(momentImages.findValuesNotPresentIn(newMomentImages)).hasSize(2)
+                        .extracting(MomentImage::getImageUrl)
+                        .containsExactly("picture1", "picture4"),
+                () -> assertThat(newMomentImages.findValuesNotPresentIn(momentImages)).hasSize(1)
+                        .extracting(MomentImage::getImageUrl)
+                        .containsExactly("picture5")
         );
     }
 }

@@ -4,18 +4,14 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
 import com.staccato.memory.domain.Memory;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;
-
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -65,7 +61,10 @@ public record MomentRequest(
                 .longitude(longitude)
                 .address(address)
                 .memory(memory)
-                .momentImages(new MomentImages(momentImageUrls))
                 .build();
+    }
+
+    public MomentImages toMomentImages(Moment moment) {
+        return MomentImages.of(momentImageUrls, moment);
     }
 }
