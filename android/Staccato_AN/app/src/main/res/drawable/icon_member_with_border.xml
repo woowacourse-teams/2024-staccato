@@ -5,18 +5,18 @@
 
         <shape android:shape="oval">
 
-            <solid android:color="@color/white" />
+            <solid android:color="@color/gray2" />
 
         </shape>
 
     </item>
 
     <item
-        android:bottom="2dp"
+        android:bottom="0.5dp"
         android:drawable="@drawable/icon_member"
-        android:left="2dp"
-        android:right="2dp"
-        android:top="2dp" />
+        android:left="0.5dp"
+        android:right="0.5dp"
+        android:top="0.5dp" />
 
 </layer-list>
 
