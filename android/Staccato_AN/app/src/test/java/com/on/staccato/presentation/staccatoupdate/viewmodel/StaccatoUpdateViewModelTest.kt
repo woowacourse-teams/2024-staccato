@@ -3,7 +3,6 @@ package com.on.staccato.presentation.staccatoupdate.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.image.ImageDefaultRepository
-import com.on.staccato.domain.model.TARGET_MEMORY_ID
 import com.on.staccato.domain.model.TARGET_STACCATO_ID
 import com.on.staccato.domain.model.dummyMemoryCandidates
 import com.on.staccato.domain.model.makeTestStaccato
