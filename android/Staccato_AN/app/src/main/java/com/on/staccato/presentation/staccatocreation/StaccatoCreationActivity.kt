@@ -75,7 +75,7 @@ class StaccatoCreationActivity :
     private lateinit var photoAttachAdapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
 
-    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
+    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_CATEGORY_ID) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
     private val locationPermissionManager =
@@ -313,7 +313,7 @@ class StaccatoCreationActivity :
         viewModel.selectedVisitedAt.observe(this) {
             it?.let {
                 visitedAtSelectionFragment.updateSelectedVisitedAt(it)
-                if (memoryId == 0L) {
+                if (memoryId == DEFAULT_CATEGORY_ID) {
                     updateMemoryCandidateAndVisitedAt(it)
                 }
             }
@@ -334,7 +334,7 @@ class StaccatoCreationActivity :
         viewModel.selectedMemory.observe(this) { it ->
             it?.let {
                 memorySelectionFragment.updateKeyMemory(it)
-                if (memoryId != 0L) {
+                if (memoryId != DEFAULT_CATEGORY_ID) {
                     visitedAtSelectionFragment.setVisitedAtPeriod(
                         it.startAt,
                         it.endAt,
@@ -466,12 +466,14 @@ class StaccatoCreationActivity :
 
     companion object {
         const val MEMORY_TITLE_KEY = "memoryTitle"
+        const val DEFAULT_CATEGORY_ID = 0L
+        private const val DEFAULT_CATEGORY_TITLE = ""
 
         fun startWithResultLauncher(
-            memoryId: Long,
-            memoryTitle: String,
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
+            memoryId: Long = DEFAULT_CATEGORY_ID,
+            memoryTitle: String = DEFAULT_CATEGORY_TITLE,
         ) {
             Intent(context, StaccatoCreationActivity::class.java).apply {
                 putExtra(MEMORY_ID_KEY, memoryId)

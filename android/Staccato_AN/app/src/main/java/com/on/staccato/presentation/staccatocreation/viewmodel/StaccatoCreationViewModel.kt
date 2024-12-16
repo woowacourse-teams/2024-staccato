@@ -20,6 +20,7 @@ import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationError
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
@@ -169,7 +170,7 @@ class StaccatoCreationViewModel
             memoryId: Long,
             currentDateTime: LocalDateTime,
         ) {
-            if (memoryId == 0L) {
+            if (memoryId == DEFAULT_CATEGORY_ID) {
                 setCurrentDateTimeAsVisitedAt(currentDateTime)
                 setMemoryCandidateByVisitedAt(currentDateTime)
             } else {
