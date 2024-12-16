@@ -1,6 +1,8 @@
 package com.on.staccato.domain.model
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MemoryCandidateTest {
@@ -14,9 +16,7 @@ class MemoryCandidateTest {
             )
 
         val actual = category.isDateWithinPeriod(yearMiddle2024)
-        val expected = true
-
-        assertEquals(expected, actual)
+        assertTrue(actual)
     }
 
     @Test
@@ -28,9 +28,7 @@ class MemoryCandidateTest {
             )
 
         val actual = category.isDateWithinPeriod(yearStart2024)
-        val expected = true
-
-        assertEquals(expected, actual)
+        assertTrue(actual)
     }
 
     @Test
@@ -42,9 +40,7 @@ class MemoryCandidateTest {
             )
 
         val actual = category.isDateWithinPeriod(yearEnd2024)
-        val expected = true
-
-        assertEquals(expected, actual)
+        assertTrue(actual)
     }
 
     @Test
@@ -56,9 +52,7 @@ class MemoryCandidateTest {
             )
 
         val actual = category.isDateWithinPeriod(yearEnd2023)
-        val expected = false
-
-        assertEquals(expected, actual)
+        assertFalse(actual)
     }
 
     @Test
@@ -70,9 +64,7 @@ class MemoryCandidateTest {
             )
 
         val actual = category.isDateWithinPeriod(yearStart2025)
-        val expected = false
-
-        assertEquals(expected, actual)
+        assertFalse(actual)
     }
 
     @Test
@@ -86,15 +78,12 @@ class MemoryCandidateTest {
 
         // when & then
         val actual1 = categoryWithoutPeriod.isDateWithinPeriod(yearEnd2023)
-        val expected1 = true
         val actual2 = categoryWithoutPeriod.isDateWithinPeriod(yearMiddle2024)
-        val expected2 = true
         val actual3 = categoryWithoutPeriod.isDateWithinPeriod(yearStart2025)
-        val expected3 = true
 
-        assertEquals(expected1, actual1)
-        assertEquals(expected2, actual2)
-        assertEquals(expected3, actual3)
+        assertTrue(actual1)
+        assertTrue(actual2)
+        assertTrue(actual3)
     }
 
     // 아래부터 getClosestDateTime 테스트
