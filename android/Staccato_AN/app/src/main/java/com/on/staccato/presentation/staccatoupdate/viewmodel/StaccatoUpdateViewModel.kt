@@ -181,7 +181,7 @@ class StaccatoUpdateViewModel
             }
         }
 
-        fun setMemoryCandidateByVisitedAt(visitedAt: LocalDateTime) {
+        fun setMemoryCandidateBy(visitedAt: LocalDateTime) {
             val filteredMemories =
                 memoryCandidates.value
                     ?.filterCandidatesBy(visitedAt.toLocalDate())
@@ -227,14 +227,14 @@ class StaccatoUpdateViewModel
                     .onSuccess { staccato ->
                         staccatoTitle.set(staccato.staccatoTitle)
                         _currentPhotos.value = createPhotosByUrls(staccato.staccatoImageUrls)
-                        initializePlaceByStaccato(staccato)
+                        initializePlaceBy(staccato)
                         initMemoryAndVisitedAt(staccato)
                     }.onException(::handleInitializeException)
                     .onServerError(::handleServerError)
             }
         }
 
-        private fun initializePlaceByStaccato(staccato: Staccato) {
+        private fun initializePlaceBy(staccato: Staccato) {
             selectNewPlace(
                 placeId = "필요 없는 파라미터",
                 name = staccato.placeName,

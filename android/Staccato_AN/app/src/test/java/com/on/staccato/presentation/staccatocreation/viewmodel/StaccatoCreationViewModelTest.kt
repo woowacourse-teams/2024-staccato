@@ -142,7 +142,7 @@ class StaccatoCreationViewModelTest {
 
             // when
             val newLocalDate = yearEnd2023.atStartOfDay()
-            viewModel.setMemoryCandidateByVisitedAt(newLocalDate)
+            viewModel.setMemoryCandidateBy(newLocalDate)
 
             // then
             val expectedMemories = listOf(newMemoryCandidate)

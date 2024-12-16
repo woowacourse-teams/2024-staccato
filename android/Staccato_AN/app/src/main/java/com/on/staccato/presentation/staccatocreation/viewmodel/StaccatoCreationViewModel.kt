@@ -171,19 +171,19 @@ class StaccatoCreationViewModel
             currentDateTime: LocalDateTime,
         ) {
             if (memoryId == DEFAULT_CATEGORY_ID) {
-                setCurrentDateTimeAsVisitedAt(currentDateTime)
-                setMemoryCandidateByVisitedAt(currentDateTime)
+                setCurrentDateTimeAs(currentDateTime)
+                setMemoryCandidateBy(currentDateTime)
             } else {
-                setMemoryCandidateById(memoryId)
-                setClosestDateTimeAsVisitedAt(currentDateTime)
+                setMemoryCandidateBy(memoryId)
+                setClosestDateTimeAs(currentDateTime)
             }
         }
 
-        private fun setCurrentDateTimeAsVisitedAt(visitedAt: LocalDateTime) {
+        private fun setCurrentDateTimeAs(visitedAt: LocalDateTime) {
             _selectedVisitedAt.value = visitedAt
         }
 
-        fun setMemoryCandidateByVisitedAt(visitedAt: LocalDateTime) {
+        fun setMemoryCandidateBy(visitedAt: LocalDateTime) {
             val filteredMemories =
                 memoryCandidates.value
                     ?.filterCandidatesBy(visitedAt.toLocalDate())
@@ -193,12 +193,12 @@ class StaccatoCreationViewModel
                 ?: filteredMemories.firstOrNull()
         }
 
-        private fun setMemoryCandidateById(memoryId: Long) {
+        private fun setMemoryCandidateBy(memoryId: Long) {
             _selectableMemories.value = memoryCandidates.value?.filterCandidatesBy(memoryId)
             _selectedMemory.value = selectableMemories.value?.first()
         }
 
-        private fun setClosestDateTimeAsVisitedAt(visitedAt: LocalDateTime) {
+        private fun setClosestDateTimeAs(visitedAt: LocalDateTime) {
             _selectedVisitedAt.value = selectedMemory.value?.getClosestDateTime(visitedAt)
         }
 
