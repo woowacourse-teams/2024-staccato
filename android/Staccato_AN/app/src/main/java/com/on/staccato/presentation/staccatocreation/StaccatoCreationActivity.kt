@@ -359,9 +359,10 @@ class StaccatoCreationActivity :
 
     private fun updateMemoryCandidateAndVisitedAt(visitedAt: LocalDateTime) {
         viewModel.setMemoryCandidateByVisitedAt(visitedAt)
+        val visitedDate = visitedAt.toLocalDate()
         visitedAtSelectionFragment.setVisitedAtPeriod(
-            visitedAt.toLocalDate().minusYears(10),
-            visitedAt.toLocalDate().plusYears(10),
+            visitedDate.minusYears(10),
+            visitedDate.plusYears(10),
         )
     }
 
