@@ -16,21 +16,25 @@ fun TextView.setSelectedMemory(
     selectedMemory: MemoryCandidate?,
     memoryCandidates: MemoryCandidates?,
 ) {
-    if (memoryCandidates?.memoryCandidate?.isEmpty() == true) {
-        text = resources.getString(R.string.staccato_creation_no_memory)
-        setTextColor(resources.getColor(R.color.gray3, null))
-        isClickable = false
-        isFocusable = false
-    } else if (selectedMemory == null) {
-        text = resources.getString(R.string.staccato_creation_no_memory_in_this_date)
-        setTextColor(resources.getColor(R.color.gray3, null))
-        isClickable = false
-        isFocusable = false
-    } else {
-        text = selectedMemory.memoryTitle
-        isClickable = true
-        isFocusable = true
-        setTextColor(resources.getColor(R.color.staccato_black, null))
+    when {
+        (memoryCandidates?.memoryCandidate?.isEmpty() == true) -> {
+            text = resources.getString(R.string.staccato_creation_no_memory)
+            setTextColor(resources.getColor(R.color.gray3, null))
+            isClickable = false
+            isFocusable = false
+        }
+        (selectedMemory == null) -> {
+            text = resources.getString(R.string.staccato_creation_no_memory_in_this_date)
+            setTextColor(resources.getColor(R.color.gray3, null))
+            isClickable = false
+            isFocusable = false
+        }
+        else -> {
+            text = selectedMemory.memoryTitle
+            isClickable = true
+            isFocusable = true
+            setTextColor(resources.getColor(R.color.staccato_black, null))
+        }
     }
 }
 
