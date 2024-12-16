@@ -18,11 +18,11 @@ data class MemoryCandidate(
 
         return when {
             date.isBefore(startDateTime) ->
-                startDateTime.toLocalDate()
-                    .atTime(12, 0)
+                startDateTime.changeTimeToNoon()
+
             date.isAfter(endDateTime) ->
-                endDateTime.toLocalDate()
-                    .atTime(12, 0)
+                endDateTime.changeTimeToNoon()
+
             else -> date
         }
     }
@@ -31,6 +31,8 @@ data class MemoryCandidate(
         if (startAt == null || endAt == null) return true
         return date in startAt..endAt
     }
+
+    private fun LocalDateTime.changeTimeToNoon(): LocalDateTime = withHour(12).withMinute(0)
 
     companion object {
         fun buildNumberPickerDates(
