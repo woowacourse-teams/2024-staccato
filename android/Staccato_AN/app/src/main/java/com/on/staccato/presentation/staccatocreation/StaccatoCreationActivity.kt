@@ -279,9 +279,14 @@ class StaccatoCreationActivity :
     }
 
     private fun observeViewModelData() {
-        viewModel.placeName.observe(this) {
-            autocompleteFragment.setText(it)
-        }
+        observePhotoData()
+        observePlaceData()
+        observeVisitedAtData()
+        observeMemoryData()
+        observeCreatedStaccatoId()
+    }
+
+    private fun observePhotoData() {
         viewModel.isAddPhotoClicked.observe(this) {
             if (!photoAttachFragment.isAdded && it) {
                 photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
@@ -296,6 +301,26 @@ class StaccatoCreationActivity :
                 listOf(AttachedPhotoUiModel.addPhotoButton, *photos.attachedPhotos.toTypedArray()),
             )
         }
+    }
+
+    private fun observePlaceData() {
+        viewModel.placeName.observe(this) {
+            autocompleteFragment.setText(it)
+        }
+    }
+
+    private fun observeVisitedAtData() {
+        viewModel.selectedVisitedAt.observe(this) {
+            it?.let {
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+                if (memoryId == 0L) {
+                    updateMemoryCandidateAndVisitedAt(it)
+                }
+            }
+        }
+    }
+
+    private fun observeMemoryData() {
         viewModel.memoryCandidates.observe(this) {
             it?.let {
                 viewModel.initMemoryAndVisitedAt(memoryId, LocalDateTime.now())
@@ -317,14 +342,9 @@ class StaccatoCreationActivity :
                 }
             }
         }
-        viewModel.selectedVisitedAt.observe(this) {
-            it?.let {
-                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
-                if (memoryId == 0L) {
-                    updateMemoryCandidateAndVisitedAt(it)
-                }
-            }
-        }
+    }
+
+    private fun observeCreatedStaccatoId() {
         viewModel.createdStaccatoId.observe(this) { createdStaccatoId ->
             val resultIntent =
                 Intent()

@@ -273,16 +273,18 @@ class StaccatoUpdateActivity :
     }
 
     private fun observeViewModelData() {
-        viewModel.placeName.observe(this) {
-            autocompleteFragment.setText(it)
-        }
+        observePhotoData()
+        observePlaceData()
+        observeVisitedAtData()
+        observeMemoryData()
+        observeIsUpdateComplete()
+    }
+
+    private fun observePhotoData() {
         viewModel.isAddPhotoClicked.observe(this) {
             if (!photoAttachFragment.isAdded && it) {
                 photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
             }
-        }
-        viewModel.isUpdateCompleted.observe(this) { isUpdateCompleted ->
-            handleUpdateComplete(isUpdateCompleted)
         }
         viewModel.pendingPhotos.observe(this) {
             viewModel.fetchPhotosUrlsByUris(this)
@@ -293,6 +295,28 @@ class StaccatoUpdateActivity :
                 listOf(AttachedPhotoUiModel.addPhotoButton, *photos.attachedPhotos.toTypedArray()),
             )
         }
+    }
+
+    private fun observePlaceData() {
+        viewModel.placeName.observe(this) {
+            autocompleteFragment.setText(it)
+        }
+    }
+
+    private fun observeVisitedAtData() {
+        viewModel.selectedVisitedAt.observe(this) {
+            it?.let {
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+                visitedAtSelectionFragment.setVisitedAtPeriod(
+                    it.toLocalDate().minusYears(10),
+                    it.toLocalDate().plusYears(10),
+                )
+                viewModel.setMemoryCandidateByVisitedAt(it)
+            }
+        }
+    }
+
+    private fun observeMemoryData() {
         viewModel.selectableMemories.observe(this) {
             it?.let {
                 memorySelectionFragment.setItems(it)
@@ -303,15 +327,11 @@ class StaccatoUpdateActivity :
                 memorySelectionFragment.updateKeyMemory(it)
             }
         }
-        viewModel.selectedVisitedAt.observe(this) {
-            it?.let {
-                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
-                visitedAtSelectionFragment.setVisitedAtPeriod(
-                    it.toLocalDate().minusYears(10),
-                    it.toLocalDate().plusYears(10),
-                )
-                viewModel.setMemoryCandidateByVisitedAt(it)
-            }
+    }
+
+    private fun observeIsUpdateComplete() {
+        viewModel.isUpdateCompleted.observe(this) { isUpdateCompleted ->
+            handleUpdateComplete(isUpdateCompleted)
         }
     }
 
