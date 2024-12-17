@@ -29,6 +29,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class StaccatoCreationViewModelTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -51,22 +52,17 @@ class StaccatoCreationViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        givenMemoryCandidatesReturnsSuccessWithDummyData()
     }
 
     @Test
     fun `viewModel 초기화 시 카테고리 후보를 불러온다`() =
         runTest {
-            // given
-            coEvery { timelineRepository.getMemoryCandidates() } returns
-                ResponseResult.Success(
-                    dummyMemoryCandidates,
-                )
-
             // when
             viewModel.fetchMemoryCandidates()
             advanceUntilIdle()
 
-            // when & then
+            // then
             val actualMemoryCandidates = viewModel.memoryCandidates.getOrAwaitValue()
             assertEquals(dummyMemoryCandidates, actualMemoryCandidates)
         }
@@ -75,10 +71,6 @@ class StaccatoCreationViewModelTest {
     fun `카테고리 ID가 0L일 때는 현재 날짜를 기준으로 일시와 카테고리 후보를 정한다`() =
         runTest {
             // given
-            coEvery { timelineRepository.getMemoryCandidates() } returns
-                ResponseResult.Success(
-                    dummyMemoryCandidates,
-                )
             viewModel.fetchMemoryCandidates()
             advanceUntilIdle()
 
@@ -99,15 +91,10 @@ class StaccatoCreationViewModelTest {
             assertEquals(selectedMemory, actualMemory)
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `카테고리 ID가 0L이 아닐 때는 특정 카테고리로 고정, 현재와 가장 가까운 일시를 선택한다`() =
         runTest {
             // given
-            coEvery { timelineRepository.getMemoryCandidates() } returns
-                ResponseResult.Success(
-                    dummyMemoryCandidates,
-                )
             viewModel.fetchMemoryCandidates()
             advanceUntilIdle()
 
@@ -133,8 +120,6 @@ class StaccatoCreationViewModelTest {
     fun `카테고리 ID가 0L일 때는 일시가 바뀌면 memoryCandidate도 바뀐다`() =
         runTest {
             // given
-            coEvery { timelineRepository.getMemoryCandidates() } returns
-                ResponseResult.Success(dummyMemoryCandidates)
             viewModel.fetchMemoryCandidates()
 
             val oldLocalDate = yearStart2024.atStartOfDay()
@@ -154,4 +139,11 @@ class StaccatoCreationViewModelTest {
             assertEquals(expectedMemories, actualMemories)
             assertEquals(expectedMemory, actualMemory)
         }
+
+    private fun givenMemoryCandidatesReturnsSuccessWithDummyData() {
+        coEvery { timelineRepository.getMemoryCandidates() } returns
+            ResponseResult.Success(
+                dummyMemoryCandidates,
+            )
+    }
 }

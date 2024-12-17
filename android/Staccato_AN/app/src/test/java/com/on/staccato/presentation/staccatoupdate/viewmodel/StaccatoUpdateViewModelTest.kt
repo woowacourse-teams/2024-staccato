@@ -3,6 +3,7 @@ package com.on.staccato.presentation.staccatoupdate.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.image.ImageDefaultRepository
+import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.TARGET_STACCATO_ID
 import com.on.staccato.domain.model.dummyMemoryCandidates
 import com.on.staccato.domain.model.makeTestStaccato
@@ -21,7 +22,7 @@ import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -55,19 +56,7 @@ class StaccatoUpdateViewModelTest {
     fun `수정하려는 스타카토, 추억 후보를 불러온 뒤 뷰모델의 스타카토, 일시 및 추억 관련 데이터를 초기화 한다`() =
         runTest {
             // given : 뷰모델 메서드 반환값 지정
-            val targetStaccato =
-                makeTestStaccato(
-                    staccatoId = TARGET_STACCATO_ID,
-                    memoryCandidate = targetMemoryCandidate,
-                    visitedAt = yearEnd2024.atTime(12, 0),
-                )
-
-            coEvery { timelineRepository.getMemoryCandidates() } returns
-                ResponseResult.Success(
-                    dummyMemoryCandidates,
-                )
-            coEvery { staccatoRepository.getStaccato(TARGET_STACCATO_ID) } returns
-                ResponseResult.Success(targetStaccato)
+            val targetStaccato = givenTargetStaccatoWithRepositorySetup()
 
             // when : TARGET_STACCATO_ID에 맞는 스타카토를 불러온다.
             viewModel.fetchTargetData(staccatoId = TARGET_STACCATO_ID)
@@ -78,8 +67,8 @@ class StaccatoUpdateViewModelTest {
             val actualPlaceName = viewModel.placeName.getOrAwaitValue()
             val actualAddress = viewModel.address.getOrAwaitValue()
 
-            Assert.assertEquals(targetStaccato.placeName, actualPlaceName)
-            Assert.assertEquals(targetStaccato.address, actualAddress)
+            assertEquals(targetStaccato.placeName, actualPlaceName)
+            assertEquals(targetStaccato.address, actualAddress)
 
             // 추억 선택을 위한 데이터 검사
             val expectedSelectableMemories =
@@ -87,31 +76,20 @@ class StaccatoUpdateViewModelTest {
             val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
             val actualMemoryCandidates = viewModel.memoryCandidates.getOrAwaitValue()
             val actualSelectedMemory = viewModel.selectedMemory.getOrAwaitValue()
-            Assert.assertEquals(expectedSelectableMemories, actualSelectableMemories)
-            Assert.assertEquals(dummyMemoryCandidates, actualMemoryCandidates)
-            Assert.assertEquals(targetMemoryCandidate, actualSelectedMemory)
+            assertEquals(expectedSelectableMemories, actualSelectableMemories)
+            assertEquals(dummyMemoryCandidates, actualMemoryCandidates)
+            assertEquals(targetMemoryCandidate, actualSelectedMemory)
 
             // 일시 선택을 위한 데이터 검사
             val actualSelectedVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
-            Assert.assertEquals(targetStaccato.visitedAt, actualSelectedVisitedAt)
+            assertEquals(targetStaccato.visitedAt, actualSelectedVisitedAt)
         }
 
     @Test
     fun `일시가 바뀌면 그에 따라 선택 가능 카테고리, 선택된 카테고리를 업데이트 한다`() =
         runTest {
             // given : 뷰모델을 초기화 한다
-            val targetStaccato =
-                makeTestStaccato(
-                    staccatoId = TARGET_STACCATO_ID,
-                    memoryCandidate = targetMemoryCandidate,
-                    visitedAt = yearEnd2024.atTime(12, 0),
-                )
-            coEvery { timelineRepository.getMemoryCandidates() } returns
-                ResponseResult.Success(
-                    dummyMemoryCandidates,
-                )
-            coEvery { staccatoRepository.getStaccato(TARGET_STACCATO_ID) } returns
-                ResponseResult.Success(targetStaccato)
+            givenTargetStaccatoWithRepositorySetup()
 
             viewModel.fetchTargetData(staccatoId = TARGET_STACCATO_ID)
             advanceUntilIdle()
@@ -127,7 +105,27 @@ class StaccatoUpdateViewModelTest {
             val expectedMemory = newMemoryCandidate
             val actualMemory = viewModel.selectedMemory.getOrAwaitValue()
 
-            Assert.assertEquals(expectedMemories, actualMemories)
-            Assert.assertEquals(expectedMemory, actualMemory)
+            assertEquals(expectedMemories, actualMemories)
+            assertEquals(expectedMemory, actualMemory)
         }
+
+    private fun givenTargetStaccatoWithRepositorySetup(): Staccato {
+        val targetStaccato =
+            makeTestStaccato(
+                staccatoId = TARGET_STACCATO_ID,
+                memoryCandidate = targetMemoryCandidate,
+                visitedAt = yearEnd2024.atTime(12, 0),
+            )
+        setupRepositoriesWithDummyData(targetStaccato)
+        return targetStaccato
+    }
+
+    private fun setupRepositoriesWithDummyData(targetStaccato: Staccato) {
+        coEvery { timelineRepository.getMemoryCandidates() } returns
+            ResponseResult.Success(
+                dummyMemoryCandidates,
+            )
+        coEvery { staccatoRepository.getStaccato(TARGET_STACCATO_ID) } returns
+            ResponseResult.Success(targetStaccato)
+    }
 }
