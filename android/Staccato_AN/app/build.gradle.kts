@@ -117,6 +117,7 @@ dependencies {
 
     // OkHttp
     implementation(libs.okhttp.logging.interceptor)
+    testImplementation(libs.okhttp.mockwebserver)
 
     // Lifecycle
     implementation(libs.lifecycle.viewmodel)
