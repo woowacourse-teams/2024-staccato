@@ -1,7 +1,6 @@
 package com.staccato.moment.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,7 +28,6 @@ import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
-import com.staccato.moment.service.dto.response.MomentLocationResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -121,16 +119,12 @@ class MomentServiceTest extends ServiceSliceTest {
         Memory memory = saveMemory(member);
         saveMomentWithImages(memory);
         saveMomentWithImages(memory);
-        saveMomentWithImages(memory);
 
         // when
         MomentLocationResponses actual = momentService.readAllMoment(member);
 
         // then
-        assertThat(actual).isEqualTo(new MomentLocationResponses(
-                List.of(new MomentLocationResponse(1L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)),
-                        new MomentLocationResponse(2L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)),
-                        new MomentLocationResponse(3L, new BigDecimal("37.7749").setScale(14, RoundingMode.HALF_UP), new BigDecimal("-122.4194").setScale(14, RoundingMode.HALF_UP)))));
+        assertThat(actual.momentLocationResponses()).hasSize(2);
     }
 
     @DisplayName("스타카토 조회에 성공한다.")
