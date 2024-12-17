@@ -3,6 +3,7 @@ agp = "8.3.0"
 converterScalars = "2.9.0"
 dotsindicator = "5.0"
 hiltAndroid = "2.51.1"
+junitJupiter = "5.10.2"
 kotlin = "1.9.0"
 ktlint = "12.1.0"
 coreKtx = "1.13.1"
@@ -39,6 +40,7 @@ mapsplatformSecretsGradlePlugin = "2.0.1"
 playServicesMaps = "19.0.0"
 viewpager2 = "1.1.0"
 camerax = "1.1.0-beta01"
+androidJunit5 = "1.10.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -48,9 +50,11 @@ dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindi
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiter" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -97,3 +101,4 @@ googleServices = { id = "com.google.gms.google-services", version.ref = "googleS
 firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 mapsplatformSecretsGradlePlugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "mapsplatformSecretsGradlePlugin" }
 hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+androidJunit5 = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunit5" }
