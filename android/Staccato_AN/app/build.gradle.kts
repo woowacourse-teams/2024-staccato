@@ -139,6 +139,9 @@ dependencies {
     // Fragment
     implementation(libs.androidx.fragment.ktx)
 
+    // Coroutines Test
+    testImplementation(libs.kotlinx.coroutines.test)
+
     // Mockk
     testImplementation(libs.mockk.android)
     testImplementation(libs.mockk.agent)
