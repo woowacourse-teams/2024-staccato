@@ -1,6 +1,5 @@
 package com.staccato.moment.service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +15,7 @@ import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.fixture.moment.MomentFixture;
+import com.staccato.fixture.moment.MomentRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
@@ -53,8 +53,8 @@ class MomentServiceTest extends ServiceSliceTest {
     void createMoment() {
         // given
         Member member = saveMember();
-        saveMemory(member);
-        MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of());
+        Memory memory = saveMemory(member);
+        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
 
         // when
         long momentId = momentService.createMoment(momentRequest, member).momentId();
@@ -68,10 +68,11 @@ class MomentServiceTest extends ServiceSliceTest {
     void createMomentWithMomentImages() {
         // given
         Member member = saveMember();
-        saveMemory(member);
+        Memory memory = saveMemory(member);
+        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
 
         // when
-        long momentId = momentService.createMoment(getMomentRequest(), member).momentId();
+        long momentId = momentService.createMoment(momentRequest, member).momentId();
 
         // then
         assertAll(
@@ -86,8 +87,8 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        saveMemory(member);
-        MomentRequest momentRequest = getMomentRequest();
+        Memory memory = saveMemory(member);
+        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
 
         // when & then
         assertThatThrownBy(() -> momentService.createMoment(momentRequest, otherMember))
@@ -100,15 +101,13 @@ class MomentServiceTest extends ServiceSliceTest {
     void failCreateMoment() {
         // given
         Member member = saveMember();
+        Memory memory = saveMemory(member);
+        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
 
         // when & then
-        assertThatThrownBy(() -> momentService.createMoment(getMomentRequest(), member))
+        assertThatThrownBy(() -> momentService.createMoment(momentRequest, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 추억을 찾을 수 없어요.");
-    }
-
-    private MomentRequest getMomentRequest() {
-        return new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
     }
 
     @DisplayName("스타카토 목록 조회에 성공한다.")
@@ -179,12 +178,12 @@ class MomentServiceTest extends ServiceSliceTest {
         Moment moment = saveMomentWithImages(memory);
 
         // when
-        MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory2.getId(), List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
+        MomentRequest momentRequest = MomentRequestFixture.create(memory2.getId());
         momentService.updateMomentById(moment.getId(), momentRequest, member);
 
         // then
         Moment foundedMoment = momentRepository.findById(moment.getId()).get();
-        assertThat(foundedMoment.getTitle()).isEqualTo("newStaccatoTitle");
+        assertThat(foundedMoment.getMemory().getId()).isEqualTo(memory2.getId());
     }
 
     @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")
@@ -195,7 +194,7 @@ class MomentServiceTest extends ServiceSliceTest {
         Member otherMember = saveMember();
         Memory memory = saveMemory(member);
         Moment moment = saveMomentWithImages(memory);
-        MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory.getId(), List.of("https://existExample.com.jpg", "https://existExample2.com.jpg"));
+        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
 
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentRequest, otherMember))
@@ -212,7 +211,7 @@ class MomentServiceTest extends ServiceSliceTest {
         Memory memory = saveMemory(member);
         Memory otherMemory = saveMemory(otherMember);
         Moment moment = saveMomentWithImages(memory);
-        MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), otherMemory.getId(), List.of());
+        MomentRequest momentRequest = MomentRequestFixture.create(otherMemory.getId());
 
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentRequest, member))
@@ -226,10 +225,10 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Memory memory = saveMemory(member);
-        MomentRequest momentUpdateRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory.getId(), List.of());
+        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
 
         // when & then
-        assertThatThrownBy(() -> momentService.updateMomentById(1L, momentUpdateRequest, member))
+        assertThatThrownBy(() -> momentService.updateMomentById(1L, momentRequest, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 스타카토를 찾을 수 없어요.");
     }

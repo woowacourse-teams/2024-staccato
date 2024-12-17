@@ -17,6 +17,7 @@ import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.moment.MomentDetailResponseFixture;
 import com.staccato.fixture.moment.MomentLocationResponsesFixture;
+import com.staccato.fixture.moment.MomentRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
@@ -274,7 +275,7 @@ class MomentControllerTest extends ControllerTest {
         // given
         long momentId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
-        MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L,
+        MomentRequest momentRequest = MomentRequestFixture.create(1L,
                 List.of("https://example.com/images/namsan_tower1.jpg",
                         "https://example.com/images/namsan_tower2.jpg",
                         "https://example.com/images/namsan_tower3.jpg",
@@ -297,7 +298,7 @@ class MomentControllerTest extends ControllerTest {
     void failUpdateMomentById() throws Exception {
         // given
         long momentId = 0L;
-        MomentRequest momentRequest = new MomentRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L, List.of("https://example.com/images/namsan_tower.jpg"));
+        MomentRequest momentRequest = MomentRequestFixture.create(1L);
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
