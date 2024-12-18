@@ -1,9 +1,12 @@
 package com.on.staccato.data
 
 import com.on.staccato.CoroutinesTestExtension
+import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryRequest
+import com.on.staccato.data.image.ImageApiService
 import com.on.staccato.data.memory.MemoryApiService
+import com.on.staccato.makeFakeImageFile
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
@@ -20,6 +23,7 @@ class CallAdapterTest {
     private val mockWebServer = MockWebServer()
 
     private lateinit var memoryApiService: MemoryApiService
+    private lateinit var imageApiService: ImageApiService
 
     @BeforeEach
     fun setUp() {
@@ -27,6 +31,7 @@ class CallAdapterTest {
 
         val retrofit = buildRetrofitFor(mockWebServer)
         memoryApiService = retrofit.create(MemoryApiService::class.java)
+        imageApiService = retrofit.create(ImageApiService::class.java)
     }
 
     @Test
@@ -69,6 +74,29 @@ class CallAdapterTest {
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
                 memoryApiService.postMemory(MemoryRequest(memoryTitle = ""))
+
+            assertTrue(actual is ServerError)
+        }
+    }
+
+    @Test
+    fun `20MB를 초과하는 사진을 업로드 요청하면 오류가 발생한다`() {
+        val serverError =
+            makeMockResponse(
+                code = 413,
+                body =
+                    """
+                    {
+                        "status": "413 Payload Too Large",
+                        "message": "20MB 이하의 사진을 업로드해 주세요."
+                    }
+                    """.trimIndent(),
+            )
+        mockWebServer.enqueue(serverError)
+
+        runTest {
+            val actual: ApiResult<ImageResponse> =
+                imageApiService.postImage(imageFile = makeFakeImageFile())
 
             assertTrue(actual is ServerError)
         }
