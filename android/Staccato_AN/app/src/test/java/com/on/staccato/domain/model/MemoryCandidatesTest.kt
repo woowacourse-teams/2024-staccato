@@ -18,10 +18,10 @@ class MemoryCandidatesTest {
         val categoryCandidates = dummyMemoryCandidates
 
         // when
-        val actual = categoryCandidates.filterCandidatesBy(date)
+        val filteredCandidates = categoryCandidates.filterCandidatesBy(date)
 
         // then
-        val isEveryCandidatesContainDate = actual.all { it.isDateWithinPeriod(date) }
+        val isEveryCandidatesContainDate = filteredCandidates.all { it.isDateWithinPeriod(date) }
         assertTrue(isEveryCandidatesContainDate)
     }
 

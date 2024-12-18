@@ -71,13 +71,14 @@ class StaccatoUpdateViewModelTest {
             assertEquals(targetStaccato.address, actualAddress)
 
             // 추억 선택을 위한 데이터 검사
+            val actualMemoryCandidates = viewModel.memoryCandidates.getOrAwaitValue()
+            val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
             val expectedSelectableMemories =
                 dummyMemoryCandidates.filterCandidatesBy(targetStaccato.visitedAt.toLocalDate())
-            val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
-            val actualMemoryCandidates = viewModel.memoryCandidates.getOrAwaitValue()
             val actualSelectedMemory = viewModel.selectedMemory.getOrAwaitValue()
-            assertEquals(expectedSelectableMemories, actualSelectableMemories)
+
             assertEquals(dummyMemoryCandidates, actualMemoryCandidates)
+            assertEquals(expectedSelectableMemories, actualSelectableMemories)
             assertEquals(targetMemoryCandidate, actualSelectedMemory)
 
             // 일시 선택을 위한 데이터 검사
