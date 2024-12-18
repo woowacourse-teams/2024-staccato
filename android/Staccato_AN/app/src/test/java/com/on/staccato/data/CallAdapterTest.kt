@@ -84,6 +84,29 @@ class CallAdapterTest {
     }
 
     @Test
+    fun `인증되지 않은 사용자가 카테고리 생성을 요청하면 오류가 발생한다`() {
+        val serverError: MockResponse =
+            makeMockResponse(
+                code = 401,
+                body =
+                    """
+                    {
+                        "status": "401 UNAUTHORIZED"
+                        "message": "인증되지 않은 사용자입니다."
+                    }
+                    """.trimIndent(),
+            )
+        mockWebServer.enqueue(serverError)
+
+        runTest {
+            val actual: ApiResult<MemoryCreationResponse> =
+                memoryApiService.postMemory(MemoryRequest(memoryTitle = "해나의 추억"))
+
+            assertTrue(actual is ServerError)
+        }
+    }
+
+    @Test
     fun `댓글 삭제를 요청한 사용자와 댓글 작성자의 인증 정보가 일치하지 않으면 오류가 발생한다`() {
         val serverError: MockResponse =
             makeMockResponse(
