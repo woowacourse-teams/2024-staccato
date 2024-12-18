@@ -4,11 +4,19 @@ import com.on.staccato.CoroutinesTestExtension
 import com.on.staccato.data.comment.CommentApiService
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
-import com.on.staccato.data.dto.memory.MemoryRequest
 import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.data.image.ImageApiService
 import com.on.staccato.data.memory.MemoryApiService
+import com.on.staccato.errorBy400
+import com.on.staccato.errorBy401
+import com.on.staccato.errorBy403
+import com.on.staccato.errorBy413
+import com.on.staccato.errorBy500
+import com.on.staccato.invalidMemoryRequest
 import com.on.staccato.makeFakeImageFile
+import com.on.staccato.memoryCreationResponse
+import com.on.staccato.memoryResponse
+import com.on.staccato.validMemoryRequest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
@@ -44,28 +52,7 @@ class CallAdapterTest {
         val success: MockResponse =
             makeMockResponse(
                 code = 200,
-                body =
-                    """
-                        {
-                        "memoryId": 1,
-                        "memoryTitle": "해나의 추억",
-                        "mates": [
-                            {
-                                "memberId": 1,
-                                "nickname": "hannah",
-                                "memberImageUrl": "https://example.com/members/profile.jpg"
-                            }
-                        ],
-                        "moments": [
-                            {
-                                "momentId": 1,
-                                "staccatoTitle": "스타카토 제목",
-                                "momentImageUrl": "https://example.com/staccato/image.jpg",
-                                "visitedAt": "2024-12-18T19:31:09.681Z"
-                            }
-                        ]
-                    }
-                    """.trimIndent(),
+                body = memoryResponse,
             )
         mockWebServer.enqueue(success)
 
@@ -82,18 +69,13 @@ class CallAdapterTest {
         val success: MockResponse =
             makeMockResponse(
                 code = 201,
-                body =
-                    """
-                    {
-                        "memoryId": 1
-                    }
-                    """.trimIndent(),
+                body = memoryCreationResponse,
             )
         mockWebServer.enqueue(success)
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(MemoryRequest(memoryTitle = "해나의 추억"))
+                memoryApiService.postMemory(validMemoryRequest)
 
             assertTrue(actual is Success)
         }
@@ -104,19 +86,13 @@ class CallAdapterTest {
         val serverError: MockResponse =
             makeMockResponse(
                 code = 400,
-                body =
-                    """
-                    {
-                        "status": "400 BAD_REQUEST"
-                        "message": "추억 제목을 입력해주세요"
-                    }
-                    """.trimIndent(),
+                body = errorBy400,
             )
         mockWebServer.enqueue(serverError)
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(MemoryRequest(memoryTitle = ""))
+                memoryApiService.postMemory(invalidMemoryRequest)
 
             assertTrue(actual is ServerError)
         }
@@ -127,19 +103,13 @@ class CallAdapterTest {
         val serverError: MockResponse =
             makeMockResponse(
                 code = 401,
-                body =
-                    """
-                    {
-                        "status": "401 UNAUTHORIZED"
-                        "message": "인증되지 않은 사용자입니다."
-                    }
-                    """.trimIndent(),
+                body = errorBy401,
             )
         mockWebServer.enqueue(serverError)
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(MemoryRequest(memoryTitle = "해나의 추억"))
+                memoryApiService.postMemory(validMemoryRequest)
 
             assertTrue(actual is ServerError)
         }
@@ -150,13 +120,7 @@ class CallAdapterTest {
         val serverError: MockResponse =
             makeMockResponse(
                 code = 403,
-                body =
-                    """
-                    {
-                        "status": "403 FORBIDDEN"
-                        "message": "요청하신 작업을 처리할 권한이 없습니다."
-                    }
-                    """.trimIndent(),
+                body = errorBy403,
             )
         mockWebServer.enqueue(serverError)
 
@@ -173,13 +137,7 @@ class CallAdapterTest {
         val serverError =
             makeMockResponse(
                 code = 413,
-                body =
-                    """
-                    {
-                        "status": "413 Payload Too Large",
-                        "message": "20MB 이하의 사진을 업로드해 주세요."
-                    }
-                    """.trimIndent(),
+                body = errorBy413,
             )
         mockWebServer.enqueue(serverError)
 
@@ -196,19 +154,13 @@ class CallAdapterTest {
         val serverError =
             makeMockResponse(
                 code = 500,
-                body =
-                    """
-                    {
-                        "status": "500 Internal Server Error",
-                        "message": "예기치 못한 서버 오류입니다. 다시 시도하세요."
-                    }
-                    """.trimIndent(),
+                body = errorBy500,
             )
         mockWebServer.enqueue(serverError)
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(MemoryRequest(memoryTitle = "해나의 추억"))
+                memoryApiService.postMemory(validMemoryRequest)
 
             assertTrue(actual is ServerError)
         }
@@ -220,7 +172,7 @@ class CallAdapterTest {
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(MemoryRequest(memoryTitle = "해나의 추억"))
+                memoryApiService.postMemory(validMemoryRequest)
 
             assertTrue(actual is Exception)
         }
