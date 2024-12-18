@@ -49,6 +49,27 @@ class CallAdapterTest {
         }
     }
 
+    @Test
+    fun `유효하지 않은 형식의 카테고리로 생성을 요청하면 오류가 발생한다`() {
+        val serverError: MockResponse =
+            MockResponse().setResponseCode(400).setBody(
+                """
+                {
+                    "status": "400 BAD_REQUEST"
+                    "message": "추억 제목을 입력해주세요"
+                }
+                """.trimIndent(),
+            )
+        mockWebServer.enqueue(serverError)
+
+        runTest {
+            val actual: ApiResult<MemoryCreationResponse> =
+                memoryApiService.postMemory(MemoryRequest(memoryTitle = ""))
+
+            assertTrue(actual is ServerError)
+        }
+    }
+
     @AfterEach
     fun tearDown() {
         mockWebServer.shutdown()
