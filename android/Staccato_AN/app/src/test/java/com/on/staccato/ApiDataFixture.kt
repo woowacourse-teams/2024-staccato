@@ -2,7 +2,7 @@ package com.on.staccato
 
 import com.on.staccato.data.dto.memory.MemoryRequest
 
-val memoryResponse: String =
+fun createMemoryResponse(): String =
     """
         {
         "memoryId": 1,
@@ -25,18 +25,14 @@ val memoryResponse: String =
     }
     """.trimIndent()
 
-val memoryCreationResponse: String =
+fun createMemoryCreationResponse(): String =
     """
     {
         "memoryId": 1
     }
     """.trimIndent()
 
-val validMemoryRequest = MemoryRequest(memoryTitle = "해나의 추억")
-
-val invalidMemoryRequest = MemoryRequest(memoryTitle = "")
-
-val errorBy400: String =
+fun createErrorBy400(): String =
     """
     {
         "status": "400 BAD_REQUEST"
@@ -44,7 +40,7 @@ val errorBy400: String =
     }
     """.trimIndent()
 
-val errorBy401: String =
+fun createErrorBy401(): String =
     """
     {
         "status": "401 UNAUTHORIZED"
@@ -52,7 +48,7 @@ val errorBy401: String =
     }
     """.trimIndent()
 
-val errorBy403: String =
+fun createErrorBy403(): String =
     """
     {
         "status": "403 FORBIDDEN"
@@ -60,7 +56,7 @@ val errorBy403: String =
     }
     """.trimIndent()
 
-val errorBy413: String =
+fun createErrorBy413(): String =
     """
     {
         "status": "413 Payload Too Large",
@@ -68,10 +64,14 @@ val errorBy413: String =
     }
     """.trimIndent()
 
-val errorBy500: String =
+fun createErrorBy500(): String =
     """
     {
         "status": "500 Internal Server Error",
         "message": "예기치 못한 서버 오류입니다. 다시 시도하세요."
     }
     """.trimIndent()
+
+fun createValidMemoryRequest(): MemoryRequest = MemoryRequest(memoryTitle = "해나의 추억")
+
+fun createInvalidMemoryRequest(): MemoryRequest = MemoryRequest(memoryTitle = "")

@@ -7,16 +7,16 @@ import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.data.image.ImageApiService
 import com.on.staccato.data.memory.MemoryApiService
-import com.on.staccato.errorBy400
-import com.on.staccato.errorBy401
-import com.on.staccato.errorBy403
-import com.on.staccato.errorBy413
-import com.on.staccato.errorBy500
-import com.on.staccato.invalidMemoryRequest
+import com.on.staccato.createErrorBy400
+import com.on.staccato.createErrorBy401
+import com.on.staccato.createErrorBy403
+import com.on.staccato.createErrorBy413
+import com.on.staccato.createErrorBy500
 import com.on.staccato.makeFakeImageFile
-import com.on.staccato.memoryCreationResponse
-import com.on.staccato.memoryResponse
-import com.on.staccato.validMemoryRequest
+import com.on.staccato.createInvalidMemoryRequest
+import com.on.staccato.createValidMemoryRequest
+import com.on.staccato.createMemoryCreationResponse
+import com.on.staccato.createMemoryResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
@@ -52,7 +52,7 @@ class ApiResultCallAdapterTest {
         val success: MockResponse =
             makeMockResponse(
                 code = 200,
-                body = memoryResponse,
+                body = createMemoryResponse(),
             )
         mockWebServer.enqueue(success)
 
@@ -69,13 +69,13 @@ class ApiResultCallAdapterTest {
         val success: MockResponse =
             makeMockResponse(
                 code = 201,
-                body = memoryCreationResponse,
+                body = createMemoryCreationResponse(),
             )
         mockWebServer.enqueue(success)
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(validMemoryRequest)
+                memoryApiService.postMemory(createValidMemoryRequest())
 
             assertTrue(actual is Success)
         }
@@ -86,13 +86,13 @@ class ApiResultCallAdapterTest {
         val serverError: MockResponse =
             makeMockResponse(
                 code = 400,
-                body = errorBy400,
+                body = createErrorBy400(),
             )
         mockWebServer.enqueue(serverError)
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(invalidMemoryRequest)
+                memoryApiService.postMemory(createInvalidMemoryRequest())
 
             assertTrue(actual is ServerError)
         }
@@ -103,13 +103,13 @@ class ApiResultCallAdapterTest {
         val serverError: MockResponse =
             makeMockResponse(
                 code = 401,
-                body = errorBy401,
+                body = createErrorBy401(),
             )
         mockWebServer.enqueue(serverError)
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(validMemoryRequest)
+                memoryApiService.postMemory(createValidMemoryRequest())
 
             assertTrue(actual is ServerError)
         }
@@ -120,7 +120,7 @@ class ApiResultCallAdapterTest {
         val serverError: MockResponse =
             makeMockResponse(
                 code = 403,
-                body = errorBy403,
+                body = createErrorBy403(),
             )
         mockWebServer.enqueue(serverError)
 
@@ -137,7 +137,7 @@ class ApiResultCallAdapterTest {
         val serverError =
             makeMockResponse(
                 code = 413,
-                body = errorBy413,
+                body = createErrorBy413(),
             )
         mockWebServer.enqueue(serverError)
 
@@ -154,13 +154,13 @@ class ApiResultCallAdapterTest {
         val serverError =
             makeMockResponse(
                 code = 500,
-                body = errorBy500,
+                body = createErrorBy500(),
             )
         mockWebServer.enqueue(serverError)
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(validMemoryRequest)
+                memoryApiService.postMemory(createValidMemoryRequest())
 
             assertTrue(actual is ServerError)
         }
@@ -172,7 +172,7 @@ class ApiResultCallAdapterTest {
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(validMemoryRequest)
+                memoryApiService.postMemory(createValidMemoryRequest())
 
             assertTrue(actual is Exception)
         }
