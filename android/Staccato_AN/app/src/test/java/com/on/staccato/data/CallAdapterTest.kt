@@ -42,7 +42,7 @@ class CallAdapterTest {
     fun `유효한 형식의 카테고리로 생성을 요청하면 카테고리 생성에 성공한다`() {
         val success: MockResponse =
             makeMockResponse(
-                code = 200,
+                code = 201,
                 body =
                     """
                     {
