@@ -4,7 +4,7 @@ import com.on.staccato.data.dto.memory.MemoryRequest
 
 fun createMemoryResponse(): String =
     """
-        {
+    {
         "memoryId": 1,
         "memoryTitle": "해나의 추억",
         "mates": [

@@ -1,12 +1,6 @@
 package com.on.staccato.data
 
 import com.on.staccato.CoroutinesTestExtension
-import com.on.staccato.data.comment.CommentApiService
-import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.dto.memory.MemoryCreationResponse
-import com.on.staccato.data.dto.memory.MemoryResponse
-import com.on.staccato.data.image.ImageApiService
-import com.on.staccato.data.memory.MemoryApiService
 import com.on.staccato.createErrorBy400
 import com.on.staccato.createErrorBy401
 import com.on.staccato.createErrorBy403
@@ -14,9 +8,15 @@ import com.on.staccato.createErrorBy413
 import com.on.staccato.createErrorBy500
 import com.on.staccato.createFakeImageFile
 import com.on.staccato.createInvalidMemoryRequest
-import com.on.staccato.createValidMemoryRequest
 import com.on.staccato.createMemoryCreationResponse
 import com.on.staccato.createMemoryResponse
+import com.on.staccato.createValidMemoryRequest
+import com.on.staccato.data.comment.CommentApiService
+import com.on.staccato.data.dto.image.ImageResponse
+import com.on.staccato.data.dto.memory.MemoryCreationResponse
+import com.on.staccato.data.dto.memory.MemoryResponse
+import com.on.staccato.data.image.ImageApiService
+import com.on.staccato.data.memory.MemoryApiService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
