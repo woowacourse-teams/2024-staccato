@@ -5,5 +5,5 @@ import java.time.LocalDate
 data class MemoryCandidates(val memoryCandidate: List<MemoryCandidate>) {
     fun filterCandidatesBy(date: LocalDate): List<MemoryCandidate> = memoryCandidate.filter { it.isDateWithinPeriod(date) }
 
-    fun filterCandidatesBy(memoryId: Long): List<MemoryCandidate> = memoryCandidate.filter { it.memoryId == memoryId }
+    fun findCandidatesBy(memoryId: Long): MemoryCandidate? = memoryCandidate.find { it.memoryId == memoryId }
 }

@@ -194,8 +194,9 @@ class StaccatoCreationViewModel
         }
 
         private fun setMemoryCandidateBy(memoryId: Long) {
-            _selectableMemories.value = memoryCandidates.value?.filterCandidatesBy(memoryId)
-            _selectedMemory.value = selectableMemories.value?.first()
+            val selectedMemory = memoryCandidates.value?.findCandidatesBy(memoryId) ?: throw IllegalArgumentException()
+            _selectableMemories.value = listOf(selectedMemory)
+            _selectedMemory.value = selectedMemory
         }
 
         private fun setClosestDateTimeAs(visitedAt: LocalDateTime) {
