@@ -1,6 +1,7 @@
 package com.on.staccato.data
 
 import com.on.staccato.CoroutinesTestExtension
+import com.on.staccato.data.comment.CommentApiService
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryRequest
@@ -25,6 +26,7 @@ class CallAdapterTest {
 
     private lateinit var memoryApiService: MemoryApiService
     private lateinit var imageApiService: ImageApiService
+    private lateinit var commentApiService: CommentApiService
 
     @BeforeEach
     fun setUp() {
@@ -33,6 +35,7 @@ class CallAdapterTest {
         val retrofit = buildRetrofitFor(mockWebServer)
         memoryApiService = retrofit.create(MemoryApiService::class.java)
         imageApiService = retrofit.create(ImageApiService::class.java)
+        commentApiService = retrofit.create(CommentApiService::class.java)
     }
 
     @Test
@@ -75,6 +78,29 @@ class CallAdapterTest {
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
                 memoryApiService.postMemory(MemoryRequest(memoryTitle = ""))
+
+            assertTrue(actual is ServerError)
+        }
+    }
+
+    @Test
+    fun `댓글 삭제를 요청한 사용자와 댓글 작성자의 인증 정보가 일치하지 않으면 오류가 발생한다`() {
+        val serverError: MockResponse =
+            makeMockResponse(
+                code = 403,
+                body =
+                    """
+                    {
+                        "status": "403 FORBIDDEN"
+                        "message": "요청하신 작업을 처리할 권한이 없습니다."
+                    }
+                    """.trimIndent(),
+            )
+        mockWebServer.enqueue(serverError)
+
+        runTest {
+            val actual: ApiResult<Unit> =
+                commentApiService.deleteComment(commentId = 1)
 
             assertTrue(actual is ServerError)
         }
