@@ -30,7 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
-class CallAdapterTest {
+class ApiResultCallAdapterTest {
     private val mockWebServer = MockWebServer()
 
     private lateinit var memoryApiService: MemoryApiService
