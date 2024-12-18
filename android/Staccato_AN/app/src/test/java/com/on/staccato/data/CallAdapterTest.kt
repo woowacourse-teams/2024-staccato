@@ -32,12 +32,14 @@ class CallAdapterTest {
     @Test
     fun `유효한 형식의 카테고리로 생성을 요청하면 카테고리 생성에 성공한다`() {
         val success: MockResponse =
-            MockResponse().setResponseCode(200).setBody(
-                """
-                {
-                    "memoryId": 1
-                }
-                """.trimIndent(),
+            makeMockResponse(
+                code = 200,
+                body =
+                    """
+                    {
+                        "memoryId": 1
+                    }
+                    """.trimIndent(),
             )
         mockWebServer.enqueue(success)
 
@@ -52,13 +54,15 @@ class CallAdapterTest {
     @Test
     fun `유효하지 않은 형식의 카테고리로 생성을 요청하면 오류가 발생한다`() {
         val serverError: MockResponse =
-            MockResponse().setResponseCode(400).setBody(
-                """
-                {
-                    "status": "400 BAD_REQUEST"
-                    "message": "추억 제목을 입력해주세요"
-                }
-                """.trimIndent(),
+            makeMockResponse(
+                code = 400,
+                body =
+                    """
+                    {
+                        "status": "400 BAD_REQUEST"
+                        "message": "추억 제목을 입력해주세요"
+                    }
+                    """.trimIndent(),
             )
         mockWebServer.enqueue(serverError)
 

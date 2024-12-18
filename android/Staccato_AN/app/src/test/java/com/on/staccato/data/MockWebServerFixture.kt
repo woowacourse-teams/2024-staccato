@@ -3,6 +3,7 @@ package com.on.staccato.data
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import retrofit2.Retrofit
 
@@ -18,3 +19,8 @@ fun buildRetrofitFor(mockWebServer: MockWebServer): Retrofit {
         .addCallAdapterFactory(ApiResultCallAdapterFactory.create())
         .build()
 }
+
+fun makeMockResponse(
+    code: Int,
+    body: String,
+) = MockResponse().setResponseCode(code).setBody(body)
