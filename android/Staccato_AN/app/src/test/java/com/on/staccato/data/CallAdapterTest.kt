@@ -5,6 +5,7 @@ import com.on.staccato.data.comment.CommentApiService
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryRequest
+import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.data.image.ImageApiService
 import com.on.staccato.data.memory.MemoryApiService
 import com.on.staccato.makeFakeImageFile
@@ -36,6 +37,44 @@ class CallAdapterTest {
         memoryApiService = retrofit.create(MemoryApiService::class.java)
         imageApiService = retrofit.create(ImageApiService::class.java)
         commentApiService = retrofit.create(CommentApiService::class.java)
+    }
+
+    @Test
+    fun `존재하는 카테고리를 조회하면 카테고리 조회에 성공한다`() {
+        val success: MockResponse =
+            makeMockResponse(
+                code = 200,
+                body =
+                    """
+                        {
+                        "memoryId": 1,
+                        "memoryTitle": "해나의 추억",
+                        "mates": [
+                            {
+                                "memberId": 1,
+                                "nickname": "hannah",
+                                "memberImageUrl": "https://example.com/members/profile.jpg"
+                            }
+                        ],
+                        "moments": [
+                            {
+                                "momentId": 1,
+                                "staccatoTitle": "스타카토 제목",
+                                "momentImageUrl": "https://example.com/staccato/image.jpg",
+                                "visitedAt": "2024-12-18T19:31:09.681Z"
+                            }
+                        ]
+                    }
+                    """.trimIndent(),
+            )
+        mockWebServer.enqueue(success)
+
+        runTest {
+            val actual: ApiResult<MemoryResponse> =
+                memoryApiService.getMemory(memoryId = 1)
+
+            assertTrue(actual is Success)
+        }
     }
 
     @Test
