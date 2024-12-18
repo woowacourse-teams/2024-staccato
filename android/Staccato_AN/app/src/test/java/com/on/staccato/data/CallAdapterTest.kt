@@ -11,6 +11,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.SocketPolicy
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -99,6 +100,18 @@ class CallAdapterTest {
                 imageApiService.postImage(imageFile = makeFakeImageFile())
 
             assertTrue(actual is ServerError)
+        }
+    }
+
+    @Test
+    fun `카테고리 생성 요청 중 서버의 응답이 없다면 예외가 발생한다`() {
+        mockWebServer.enqueue(MockResponse().setSocketPolicy(SocketPolicy.NO_RESPONSE))
+
+        runTest {
+            val actual: ApiResult<MemoryCreationResponse> =
+                memoryApiService.postMemory(MemoryRequest(memoryTitle = "해나의 추억"))
+
+            assertTrue(actual is Exception)
         }
     }
 
