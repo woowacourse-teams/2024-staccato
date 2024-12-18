@@ -32,24 +32,6 @@ class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
 
     private lateinit var handler: VisitedAtSelectionHandler
 
-    fun setOnVisitedAtSelected(newHandler: VisitedAtSelectionHandler) {
-        handler = newHandler
-    }
-
-    fun setVisitedAtPeriod(
-        startAt: LocalDate?,
-        endAt: LocalDate?,
-    ) {
-        yearCandidates = buildNumberPickerDates(startAt, endAt)
-    }
-
-    fun updateSelectedVisitedAt(visitedAt: LocalDateTime) {
-        selectedYear = visitedAt.year
-        selectedMonth = visitedAt.monthValue
-        selectedDay = visitedAt.dayOfMonth
-        selectedHour = visitedAt.hour
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,6 +51,29 @@ class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
         setupPickerListeners()
         initConfirmButton()
         initPickerPosition()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    fun setOnVisitedAtSelected(newHandler: VisitedAtSelectionHandler) {
+        handler = newHandler
+    }
+
+    fun setVisitedAtPeriod(
+        startAt: LocalDate?,
+        endAt: LocalDate?,
+    ) {
+        yearCandidates = buildNumberPickerDates(startAt, endAt)
+    }
+
+    fun updateSelectedVisitedAt(visitedAt: LocalDateTime) {
+        selectedYear = visitedAt.year
+        selectedMonth = visitedAt.monthValue
+        selectedDay = visitedAt.dayOfMonth
+        selectedHour = visitedAt.hour
     }
 
     private fun setYearsByPeriod() {
@@ -98,11 +103,6 @@ class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
         targetKey: Int,
     ) {
         this.value = targetList.indexOf(targetKey).takeIf { it >= 0 } ?: 0
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun resetMonthsBy(year: Int) {

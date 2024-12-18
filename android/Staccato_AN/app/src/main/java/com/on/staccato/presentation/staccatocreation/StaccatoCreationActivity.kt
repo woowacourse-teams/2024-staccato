@@ -331,7 +331,7 @@ class StaccatoCreationActivity :
                 memorySelectionFragment.setItems(it)
             }
         }
-        viewModel.selectedMemory.observe(this) { it ->
+        viewModel.selectedMemory.observe(this) {
             it?.let {
                 memorySelectionFragment.updateKeyMemory(it)
                 if (memoryId != DEFAULT_CATEGORY_ID) {
