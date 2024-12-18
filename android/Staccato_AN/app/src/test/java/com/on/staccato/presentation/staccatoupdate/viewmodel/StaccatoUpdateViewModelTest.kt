@@ -6,11 +6,11 @@ import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.TARGET_STACCATO_ID
 import com.on.staccato.domain.model.dummyMemoryCandidates
+import com.on.staccato.domain.model.endDateOf2023
+import com.on.staccato.domain.model.endDateOf2024
 import com.on.staccato.domain.model.makeTestStaccato
 import com.on.staccato.domain.model.newMemoryCandidate
 import com.on.staccato.domain.model.targetMemoryCandidate
-import com.on.staccato.domain.model.yearEnd2023
-import com.on.staccato.domain.model.yearEnd2024
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.MainDispatcherRule
@@ -95,7 +95,7 @@ class StaccatoUpdateViewModelTest {
             advanceUntilIdle()
 
             // when : 현재 선택된 카테고리 범위 밖의 날짜로 바뀌면
-            val newLocalDate = yearEnd2023.atStartOfDay() // 수정 후 방문 날짜
+            val newLocalDate = endDateOf2023.atStartOfDay() // 수정 후 방문 날짜
             viewModel.setMemoryCandidateBy(newLocalDate)
 
             // then : 바뀐 날짜 기준으로 유효한 값을 업데이트한다
@@ -114,7 +114,7 @@ class StaccatoUpdateViewModelTest {
             makeTestStaccato(
                 staccatoId = TARGET_STACCATO_ID,
                 memoryCandidate = targetMemoryCandidate,
-                visitedAt = yearEnd2024.atTime(12, 0),
+                visitedAt = endDateOf2024.atTime(12, 0),
             )
         setupRepositoriesWithDummyData(targetStaccato)
         return targetStaccato

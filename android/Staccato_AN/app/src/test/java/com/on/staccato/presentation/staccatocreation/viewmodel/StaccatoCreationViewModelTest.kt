@@ -5,11 +5,11 @@ import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.domain.model.TARGET_MEMORY_ID
 import com.on.staccato.domain.model.dummyMemoryCandidates
+import com.on.staccato.domain.model.endDateOf2023
+import com.on.staccato.domain.model.middleDateOf2024
 import com.on.staccato.domain.model.newMemoryCandidate
+import com.on.staccato.domain.model.startDateOf2024
 import com.on.staccato.domain.model.targetMemoryCandidate
-import com.on.staccato.domain.model.yearEnd2023
-import com.on.staccato.domain.model.yearMiddle2024
-import com.on.staccato.domain.model.yearStart2024
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.MainDispatcherRule
@@ -75,7 +75,7 @@ class StaccatoCreationViewModelTest {
             advanceUntilIdle()
 
             // when
-            val currentLocalDate = yearMiddle2024.atStartOfDay()
+            val currentLocalDate = middleDateOf2024.atStartOfDay()
             viewModel.initMemoryAndVisitedAt(0L, currentLocalDate)
 
             // then
@@ -83,8 +83,8 @@ class StaccatoCreationViewModelTest {
             val actualMemories = viewModel.selectableMemories.getOrAwaitValue()
             val actualMemory = viewModel.selectedMemory.getOrAwaitValue()
 
-            val selectableMemories = dummyMemoryCandidates.filterCandidatesBy(yearMiddle2024)
-            val selectedMemory = dummyMemoryCandidates.filterCandidatesBy(yearMiddle2024).first()
+            val selectableMemories = dummyMemoryCandidates.filterCandidatesBy(middleDateOf2024)
+            val selectedMemory = dummyMemoryCandidates.filterCandidatesBy(middleDateOf2024).first()
 
             assertEquals(currentLocalDate, actualVisitedAt)
             assertEquals(selectableMemories, actualMemories)
@@ -99,7 +99,7 @@ class StaccatoCreationViewModelTest {
             advanceUntilIdle()
 
             // when
-            val currentVisitedAt = yearMiddle2024.atStartOfDay()
+            val currentVisitedAt = middleDateOf2024.atStartOfDay()
             viewModel.initMemoryAndVisitedAt(TARGET_MEMORY_ID, currentVisitedAt)
 
             // then
@@ -122,11 +122,11 @@ class StaccatoCreationViewModelTest {
             // given
             viewModel.fetchMemoryCandidates()
 
-            val oldLocalDate = yearStart2024.atStartOfDay()
+            val oldLocalDate = startDateOf2024.atStartOfDay()
             viewModel.initMemoryAndVisitedAt(TARGET_MEMORY_ID, oldLocalDate)
 
             // when
-            val newLocalDate = yearEnd2023.atStartOfDay()
+            val newLocalDate = endDateOf2023.atStartOfDay()
             viewModel.setMemoryCandidateBy(newLocalDate)
 
             // then

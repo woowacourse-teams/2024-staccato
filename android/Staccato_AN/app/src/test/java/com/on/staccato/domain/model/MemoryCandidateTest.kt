@@ -17,8 +17,8 @@ class MemoryCandidateTest {
         // given
         val category =
             makeTestMemoryCandidate(
-                startAt = yearStart2024,
-                endAt = yearEnd2024,
+                startAt = startDateOf2024,
+                endAt = endDateOf2024,
             )
         // when
         val actual = category.isDateWithinPeriod(targetLocalDate)
@@ -31,10 +31,10 @@ class MemoryCandidateTest {
         // given
         val category =
             makeTestMemoryCandidate(
-                startAt = yearStart2024,
-                endAt = yearEnd2024,
+                startAt = startDateOf2024,
+                endAt = endDateOf2024,
             )
-        val targetLocalDate = yearEnd2023
+        val targetLocalDate = endDateOf2023
         // when
         val actual = category.isDateWithinPeriod(targetLocalDate)
         // then
@@ -46,10 +46,10 @@ class MemoryCandidateTest {
         // given
         val category =
             makeTestMemoryCandidate(
-                startAt = yearStart2024,
-                endAt = yearEnd2024,
+                startAt = startDateOf2024,
+                endAt = endDateOf2024,
             )
-        val targetLocalDate = yearStart2025
+        val targetLocalDate = startDateOf2025
         // when
         val actual = category.isDateWithinPeriod(targetLocalDate)
         // then
@@ -75,8 +75,8 @@ class MemoryCandidateTest {
     fun `타겟 일시가 기간 범위 내면 그대로 반환`() {
         // given
         val category =
-            makeTestMemoryCandidate(memoryId = 2L, startAt = yearStart2024, endAt = yearEnd2024)
-        val targetLocalDateTime = yearMiddle2024.atTime(13, 30)
+            makeTestMemoryCandidate(memoryId = 2L, startAt = startDateOf2024, endAt = endDateOf2024)
+        val targetLocalDateTime = middleDateOf2024.atTime(13, 30)
         // when
         val actual = category.getClosestDateTime(targetLocalDateTime)
         // then
@@ -87,11 +87,11 @@ class MemoryCandidateTest {
     fun `타겟 일시가 기간보다 과거라면 시작일의 정오를 반환`() {
         // given
         val category =
-            makeTestMemoryCandidate(memoryId = 2L, startAt = yearStart2024, endAt = yearEnd2024)
-        val targetLocalDateTime = yearEnd2023.atTime(13, 30)
+            makeTestMemoryCandidate(memoryId = 2L, startAt = startDateOf2024, endAt = endDateOf2024)
+        val targetLocalDateTime = endDateOf2023.atTime(13, 30)
         // when
         val actual = category.getClosestDateTime(targetLocalDateTime)
-        val expected = yearStart2024.atTime(12, 0)
+        val expected = startDateOf2024.atTime(12, 0)
         // then
         assertEquals(expected, actual)
     }
@@ -100,16 +100,16 @@ class MemoryCandidateTest {
     fun `타겟 일시가 기간보다 미래라면 종료일의 정오를 반환`() {
         // given
         val category =
-            makeTestMemoryCandidate(memoryId = 2L, startAt = yearStart2024, endAt = yearEnd2024)
-        val targetLocalDateTime = yearStart2025.atTime(13, 30)
+            makeTestMemoryCandidate(memoryId = 2L, startAt = startDateOf2024, endAt = endDateOf2024)
+        val targetLocalDateTime = startDateOf2025.atTime(13, 30)
         // when
         val actual = category.getClosestDateTime(targetLocalDateTime)
-        val expected = yearEnd2024.atTime(12, 0)
+        val expected = endDateOf2024.atTime(12, 0)
         // then
         assertEquals(expected, actual)
     }
 
-    private fun validLocalDateParameters(): List<LocalDate> = listOf(yearStart2024, yearMiddle2024, yearEnd2024)
+    private fun validLocalDateParameters(): List<LocalDate> = listOf(startDateOf2024, middleDateOf2024, endDateOf2024)
 
     private fun localDateParameters(): List<LocalDate> =
         listOf(

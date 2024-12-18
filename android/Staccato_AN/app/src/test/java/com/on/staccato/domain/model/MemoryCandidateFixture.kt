@@ -3,26 +3,26 @@ package com.on.staccato.domain.model
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-internal val yearEnd2023 = LocalDate.of(2023, 12, 31)
-internal val yearStart2024 = LocalDate.of(2024, 1, 1)
-internal val yearMiddle2024 = LocalDate.of(2024, 7, 1)
-internal val yearEnd2024 = LocalDate.of(2024, 12, 31)
-internal val yearStart2025 = LocalDate.of(2025, 1, 1)
+internal val endDateOf2023 = LocalDate.of(2023, 12, 31)
+internal val startDateOf2024 = LocalDate.of(2024, 1, 1)
+internal val middleDateOf2024 = LocalDate.of(2024, 7, 1)
+internal val endDateOf2024 = LocalDate.of(2024, 12, 31)
+internal val startDateOf2025 = LocalDate.of(2025, 1, 1)
 
 internal const val TARGET_MEMORY_ID = 4L
 
 internal val newMemoryCandidate =
     makeTestMemoryCandidate(
         memoryId = 1L,
-        startAt = yearEnd2023,
-        endAt = yearStart2024,
+        startAt = endDateOf2023,
+        endAt = startDateOf2024,
     )
 
 internal val targetMemoryCandidate =
     makeTestMemoryCandidate(
         memoryId = TARGET_MEMORY_ID,
-        startAt = yearEnd2024,
-        endAt = yearStart2025,
+        startAt = endDateOf2024,
+        endAt = startDateOf2025,
     )
 
 val dummyMemoryCandidates =
@@ -30,8 +30,8 @@ val dummyMemoryCandidates =
         memoryCandidate =
             listOf(
                 newMemoryCandidate,
-                makeTestMemoryCandidate(memoryId = 2L, startAt = yearStart2024, endAt = yearMiddle2024),
-                makeTestMemoryCandidate(memoryId = 3L, startAt = yearMiddle2024, endAt = yearEnd2024),
+                makeTestMemoryCandidate(memoryId = 2L, startAt = startDateOf2024, endAt = middleDateOf2024),
+                makeTestMemoryCandidate(memoryId = 3L, startAt = middleDateOf2024, endAt = endDateOf2024),
                 targetMemoryCandidate,
             ),
     )

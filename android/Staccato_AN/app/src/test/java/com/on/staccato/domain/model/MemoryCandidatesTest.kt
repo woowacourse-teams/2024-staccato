@@ -51,7 +51,7 @@ class MemoryCandidatesTest {
         assertNull(actual)
     }
 
-    private fun parameters(): List<LocalDate> = listOf(yearEnd2023, yearStart2024, yearMiddle2024, yearEnd2024, yearStart2025)
+    private fun parameters(): List<LocalDate> = listOf(endDateOf2023, startDateOf2024, middleDateOf2024, endDateOf2024, startDateOf2025)
 
     private fun nonExistentCategoryIds(): List<Long> = listOf(80L, 999L, 1000L, 1234L)
 }
