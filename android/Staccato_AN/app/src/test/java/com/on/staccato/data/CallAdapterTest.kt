@@ -104,6 +104,29 @@ class CallAdapterTest {
     }
 
     @Test
+    fun `카테고리 생성 요청 중 서버 장애가 생기면 오류가 발생한다`() {
+        val serverError =
+            makeMockResponse(
+                code = 500,
+                body =
+                    """
+                    {
+                        "status": "500 Internal Server Error",
+                        "message": "예기치 못한 서버 오류입니다. 다시 시도하세요."
+                    }
+                    """.trimIndent(),
+            )
+        mockWebServer.enqueue(serverError)
+
+        runTest {
+            val actual: ApiResult<MemoryCreationResponse> =
+                memoryApiService.postMemory(MemoryRequest(memoryTitle = "해나의 추억"))
+
+            assertTrue(actual is ServerError)
+        }
+    }
+
+    @Test
     fun `카테고리 생성 요청 중 서버의 응답이 없다면 예외가 발생한다`() {
         mockWebServer.enqueue(MockResponse().setSocketPolicy(SocketPolicy.NO_RESPONSE))
 
