@@ -12,7 +12,7 @@ import com.on.staccato.createErrorBy401
 import com.on.staccato.createErrorBy403
 import com.on.staccato.createErrorBy413
 import com.on.staccato.createErrorBy500
-import com.on.staccato.makeFakeImageFile
+import com.on.staccato.createFakeImageFile
 import com.on.staccato.createInvalidMemoryRequest
 import com.on.staccato.createValidMemoryRequest
 import com.on.staccato.createMemoryCreationResponse
@@ -143,7 +143,7 @@ class ApiResultCallAdapterTest {
 
         runTest {
             val actual: ApiResult<ImageResponse> =
-                imageApiService.postImage(imageFile = makeFakeImageFile())
+                imageApiService.postImage(imageFile = createFakeImageFile())
 
             assertTrue(actual is ServerError)
         }

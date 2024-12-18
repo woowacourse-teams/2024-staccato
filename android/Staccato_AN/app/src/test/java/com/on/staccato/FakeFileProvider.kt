@@ -6,7 +6,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okio.BufferedSink
 
-fun makeFakeImageFile(): MultipartBody.Part = MultipartBody.Part.createFormData(name = "image", filename = "fileName", FakeRequestBody())
+fun createFakeImageFile(): MultipartBody.Part = MultipartBody.Part.createFormData(name = "image", filename = "fileName", FakeRequestBody())
 
 class FakeRequestBody : RequestBody() {
     override fun contentType(): MediaType? = "image/jpeg".toMediaTypeOrNull()
