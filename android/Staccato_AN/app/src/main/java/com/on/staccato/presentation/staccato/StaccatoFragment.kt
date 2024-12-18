@@ -40,8 +40,7 @@ class StaccatoFragment :
             staccatoViewModel.deleteStaccato(staccatoId)
         }
     private val staccatoId by lazy {
-        arguments?.getLong(STACCATO_ID_KEY)
-            ?: throw IllegalStateException("staccatoId must not be null")
+        arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID
     }
 
     override fun onViewCreated(
@@ -234,5 +233,6 @@ class StaccatoFragment :
 
     companion object {
         const val STACCATO_ID_KEY = "staccatoId"
+        const val DEFAULT_STACCATO_ID = 0L
     }
 }
