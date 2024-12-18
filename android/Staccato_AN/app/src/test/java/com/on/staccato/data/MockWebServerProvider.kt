@@ -20,7 +20,7 @@ fun buildRetrofitFor(mockWebServer: MockWebServer): Retrofit {
         .build()
 }
 
-fun makeMockResponse(
+fun createMockResponse(
     code: Int,
     body: String,
 ) = MockResponse().setResponseCode(code).setBody(body)

@@ -50,7 +50,7 @@ class ApiResultCallAdapterTest {
     @Test
     fun `존재하는 카테고리를 조회하면 카테고리 조회에 성공한다`() {
         val success: MockResponse =
-            makeMockResponse(
+            createMockResponse(
                 code = 200,
                 body = createMemoryResponse(),
             )
@@ -67,7 +67,7 @@ class ApiResultCallAdapterTest {
     @Test
     fun `유효한 형식의 카테고리로 생성을 요청하면 카테고리 생성에 성공한다`() {
         val success: MockResponse =
-            makeMockResponse(
+            createMockResponse(
                 code = 201,
                 body = createMemoryCreationResponse(),
             )
@@ -84,7 +84,7 @@ class ApiResultCallAdapterTest {
     @Test
     fun `유효하지 않은 형식의 카테고리로 생성을 요청하면 오류가 발생한다`() {
         val serverError: MockResponse =
-            makeMockResponse(
+            createMockResponse(
                 code = 400,
                 body = createErrorBy400(),
             )
@@ -101,7 +101,7 @@ class ApiResultCallAdapterTest {
     @Test
     fun `인증되지 않은 사용자가 카테고리 생성을 요청하면 오류가 발생한다`() {
         val serverError: MockResponse =
-            makeMockResponse(
+            createMockResponse(
                 code = 401,
                 body = createErrorBy401(),
             )
@@ -118,7 +118,7 @@ class ApiResultCallAdapterTest {
     @Test
     fun `댓글 삭제를 요청한 사용자와 댓글 작성자의 인증 정보가 일치하지 않으면 오류가 발생한다`() {
         val serverError: MockResponse =
-            makeMockResponse(
+            createMockResponse(
                 code = 403,
                 body = createErrorBy403(),
             )
@@ -135,7 +135,7 @@ class ApiResultCallAdapterTest {
     @Test
     fun `20MB를 초과하는 사진을 업로드 요청하면 오류가 발생한다`() {
         val serverError =
-            makeMockResponse(
+            createMockResponse(
                 code = 413,
                 body = createErrorBy413(),
             )
@@ -152,7 +152,7 @@ class ApiResultCallAdapterTest {
     @Test
     fun `카테고리 생성 요청 중 서버 장애가 생기면 오류가 발생한다`() {
         val serverError =
-            makeMockResponse(
+            createMockResponse(
                 code = 500,
                 body = createErrorBy500(),
             )
