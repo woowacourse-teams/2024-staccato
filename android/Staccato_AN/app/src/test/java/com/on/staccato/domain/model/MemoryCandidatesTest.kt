@@ -18,40 +18,69 @@ class MemoryCandidatesTest {
         val categoryCandidates = dummyMemoryCandidates
 
         // when
-        val filteredCandidates = categoryCandidates.filterCandidatesBy(date)
+        val filteredCandidates = categoryCandidates.filterBy(date)
 
         // then
-        val isEveryCandidatesContainDate = filteredCandidates.all { it.isDateWithinPeriod(date) }
+        val isEveryCandidatesContainDate = filteredCandidates.memoryCandidate.all { it.isDateWithinPeriod(date) }
         assertTrue(isEveryCandidatesContainDate)
     }
 
     @Test
-    fun `아이디가 일치하는 카테고리를 찾아 반환`() {
+    @Parameters(method = "existentCategoryIds")
+    fun `findBy는 아이디가 일치하는 카테고리를 찾아 반환`(categoryId: Long) {
         // given
         val categoryCandidates = dummyMemoryCandidates
 
         // when
-        val actual = categoryCandidates.findCandidatesBy(TARGET_MEMORY_ID)
-        val expected = targetMemoryCandidate
+        val actual = categoryCandidates.findBy(categoryId)
 
         // then
-        assertEquals(expected, actual)
+        assertEquals(categoryId, actual?.memoryId)
     }
 
     @Test
     @Parameters(method = "nonExistentCategoryIds")
-    fun `아이디가 일치하는 카테고리가 없으면 null을 반환`(categoryId: Long) {
+    fun `findBy는 일치하는 아이디가 없으면 null을 반환`(categoryId: Long) {
         // given
         val categoryCandidates = dummyMemoryCandidates
 
         // when
-        val actual = categoryCandidates.findCandidatesBy(categoryId)
+        val actual = categoryCandidates.findBy(categoryId)
 
         // then
         assertNull(actual)
     }
 
+    @Test
+    @Parameters(method = "existentCategoryIds")
+    fun `findByIdOrFirst는 아이디가 일치하는 카테고리를 찾아 반환`(categoryId: Long) {
+        // given
+        val categoryCandidates = dummyMemoryCandidates
+
+        // when
+        val actual = categoryCandidates.findByIdOrFirst(categoryId)
+
+        // then
+        assertEquals(categoryId, actual?.memoryId)
+    }
+
+    @Test
+    @Parameters(method = "nonExistentCategoryIds")
+    fun `findByIdOrFirst는일치하는 아이디가 없으면 첫번째 카테고리를 반환`(categoryId: Long) {
+        // given
+        val categoryCandidates = dummyMemoryCandidates
+
+        // when
+        val actual = categoryCandidates.findByIdOrFirst(categoryId)
+        val expected = memoryCandidateWithId1
+
+        // then
+        assertEquals(expected, actual)
+    }
+
     private fun parameters(): List<LocalDate> = listOf(endDateOf2023, startDateOf2024, middleDateOf2024, endDateOf2024, startDateOf2025)
 
     private fun nonExistentCategoryIds(): List<Long> = listOf(80L, 999L, 1000L, 1234L)
+
+    private fun existentCategoryIds(): List<Long> = listOf(1L, 2L, 3L, 4L)
 }

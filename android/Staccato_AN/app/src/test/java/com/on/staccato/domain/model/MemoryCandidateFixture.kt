@@ -11,7 +11,7 @@ internal val startDateOf2025 = LocalDate.of(2025, 1, 1)
 
 internal const val TARGET_MEMORY_ID = 4L
 
-internal val newMemoryCandidate =
+internal val memoryCandidateWithId1 =
     makeTestMemoryCandidate(
         memoryId = 1L,
         startAt = endDateOf2023,
@@ -29,7 +29,7 @@ val dummyMemoryCandidates =
     MemoryCandidates(
         memoryCandidate =
             listOf(
-                newMemoryCandidate,
+                memoryCandidateWithId1,
                 makeTestMemoryCandidate(memoryId = 2L, startAt = startDateOf2024, endAt = middleDateOf2024),
                 makeTestMemoryCandidate(memoryId = 3L, startAt = middleDateOf2024, endAt = endDateOf2024),
                 targetMemoryCandidate,

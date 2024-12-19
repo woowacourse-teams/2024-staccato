@@ -3,13 +3,14 @@ package com.on.staccato.presentation.staccatoupdate.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.image.ImageDefaultRepository
+import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.TARGET_STACCATO_ID
 import com.on.staccato.domain.model.dummyMemoryCandidates
 import com.on.staccato.domain.model.endDateOf2023
 import com.on.staccato.domain.model.endDateOf2024
 import com.on.staccato.domain.model.makeTestStaccato
-import com.on.staccato.domain.model.newMemoryCandidate
+import com.on.staccato.domain.model.memoryCandidateWithId1
 import com.on.staccato.domain.model.targetMemoryCandidate
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
@@ -74,7 +75,7 @@ class StaccatoUpdateViewModelTest {
             val actualMemoryCandidates = viewModel.memoryCandidates.getOrAwaitValue()
             val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
             val expectedSelectableMemories =
-                dummyMemoryCandidates.filterCandidatesBy(targetStaccato.visitedAt.toLocalDate())
+                dummyMemoryCandidates.filterBy(targetStaccato.visitedAt.toLocalDate())
             val actualSelectedMemory = viewModel.selectedMemory.getOrAwaitValue()
 
             assertEquals(dummyMemoryCandidates, actualMemoryCandidates)
@@ -100,14 +101,14 @@ class StaccatoUpdateViewModelTest {
             viewModel.setMemoryCandidateBy(newLocalDate)
 
             // then : 바뀐 날짜 기준으로 유효한 값을 업데이트한다
-            val expectedMemories = listOf(newMemoryCandidate)
-            val actualMemories = viewModel.selectableMemories.getOrAwaitValue()
+            val expectedSelectableMemories = MemoryCandidates.from(memoryCandidateWithId1)
+            val actualSelectedMemories = viewModel.selectableMemories.getOrAwaitValue()
 
-            val expectedMemory = newMemoryCandidate
-            val actualMemory = viewModel.selectedMemory.getOrAwaitValue()
+            val expectedSelectableMemory = memoryCandidateWithId1
+            val actualSelectedMemory = viewModel.selectedMemory.getOrAwaitValue()
 
-            assertEquals(expectedMemories, actualMemories)
-            assertEquals(expectedMemory, actualMemory)
+            assertEquals(expectedSelectableMemories, actualSelectedMemories)
+            assertEquals(expectedSelectableMemory, actualSelectedMemory)
         }
 
     private fun givenTargetStaccatoWithRepositorySetup(): Staccato {
