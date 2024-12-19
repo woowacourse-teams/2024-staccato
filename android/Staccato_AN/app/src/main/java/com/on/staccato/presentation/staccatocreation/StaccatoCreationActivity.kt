@@ -328,7 +328,7 @@ class StaccatoCreationActivity :
         }
         viewModel.selectableMemories.observe(this) {
             it?.let {
-                memorySelectionFragment.setItems(it)
+                memorySelectionFragment.setItems(it.memoryCandidate)
             }
         }
         viewModel.selectedMemory.observe(this) {

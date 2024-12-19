@@ -65,8 +65,8 @@ class StaccatoCreationViewModel
         private val _selectedMemory = MutableLiveData<MemoryCandidate>()
         val selectedMemory: LiveData<MemoryCandidate> get() = _selectedMemory
 
-        private val _selectableMemories = MutableLiveData<List<MemoryCandidate>>()
-        val selectableMemories: LiveData<List<MemoryCandidate>> get() = _selectableMemories
+        private val _selectableMemories = MutableLiveData<MemoryCandidates>()
+        val selectableMemories: LiveData<MemoryCandidates> get() = _selectableMemories
 
         private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
         val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
@@ -184,18 +184,14 @@ class StaccatoCreationViewModel
         }
 
         fun setMemoryCandidateBy(visitedAt: LocalDateTime) {
-            val filteredMemories =
-                memoryCandidates.value
-                    ?.filterCandidatesBy(visitedAt.toLocalDate())
-                    ?: emptyList()
+            val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: MemoryCandidates.emptyMemoryCandidates
             _selectableMemories.value = filteredMemories
-            _selectedMemory.value = filteredMemories.find { it.memoryId == selectedMemory.value?.memoryId }
-                ?: filteredMemories.firstOrNull()
+            _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.memoryId)
         }
 
         private fun setMemoryCandidateBy(memoryId: Long) {
-            val selectedMemory = memoryCandidates.value?.findCandidatesBy(memoryId) ?: throw IllegalArgumentException()
-            _selectableMemories.value = listOf(selectedMemory)
+            val selectedMemory = memoryCandidates.value?.findBy(memoryId) ?: throw IllegalArgumentException()
+            _selectableMemories.value = MemoryCandidates.from(selectedMemory)
             _selectedMemory.value = selectedMemory
         }
 
