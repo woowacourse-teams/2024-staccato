@@ -182,7 +182,7 @@ class StaccatoUpdateViewModel
             }
         }
 
-        fun setMemoryCandidateBy(visitedAt: LocalDateTime) {
+        fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
             val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyMemoryCandidates
             _selectableMemories.value = filteredMemories
             _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.memoryId)

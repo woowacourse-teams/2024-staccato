@@ -311,7 +311,7 @@ class StaccatoUpdateActivity :
                     it.toLocalDate().minusYears(10),
                     it.toLocalDate().plusYears(10),
                 )
-                viewModel.setMemoryCandidateBy(it)
+                viewModel.updateMemorySelectionBy(it)
             }
         }
     }

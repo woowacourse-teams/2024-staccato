@@ -172,9 +172,9 @@ class StaccatoCreationViewModel
         ) {
             if (memoryId == DEFAULT_CATEGORY_ID) {
                 setCurrentDateTimeAs(currentDateTime)
-                setMemoryCandidateBy(currentDateTime)
+                updateMemorySelectionBy(currentDateTime)
             } else {
-                setMemoryCandidateBy(memoryId)
+                updateMemorySelectionBy(memoryId)
                 setClosestDateTimeAs(currentDateTime)
             }
         }
@@ -183,13 +183,13 @@ class StaccatoCreationViewModel
             _selectedVisitedAt.value = visitedAt
         }
 
-        fun setMemoryCandidateBy(visitedAt: LocalDateTime) {
+        fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
             val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: MemoryCandidates.emptyMemoryCandidates
             _selectableMemories.value = filteredMemories
             _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.memoryId)
         }
 
-        private fun setMemoryCandidateBy(memoryId: Long) {
+        private fun updateMemorySelectionBy(memoryId: Long) {
             val selectedMemory = memoryCandidates.value?.findBy(memoryId) ?: throw IllegalArgumentException()
             _selectableMemories.value = MemoryCandidates.from(selectedMemory)
             _selectedMemory.value = selectedMemory
