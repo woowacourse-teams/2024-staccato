@@ -195,6 +195,6 @@ secrets {
 
 tasks.withType<Test> {
     testLogging {
-        events("started", "passed", "skipped", "failed")
+        events("started", "passed", "skipped", "failed", "standardError", "standardOut")
     }
 }
