@@ -192,3 +192,9 @@ secrets {
     ignoreList.add("keyToIgnore")
     ignoreList.add("sdk.*")
 }
+
+tasks.withType<Test> {
+    testLogging {
+        events("started", "passed", "skipped", "failed")
+    }
+}
