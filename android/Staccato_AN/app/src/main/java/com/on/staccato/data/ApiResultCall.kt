@@ -19,7 +19,7 @@ class ApiResultCall<T : Any>(
                     call: Call<T>,
                     response: Response<T>,
                 ) {
-                    val networkResult = handleApiResponse { response }
+                    val networkResult: ApiResult<T> = handleApiResponse { response }
                     callback.onResponse(this@ApiResultCall, Response.success(networkResult))
                 }
 
