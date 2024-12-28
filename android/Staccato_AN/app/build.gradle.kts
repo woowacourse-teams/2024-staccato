@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -196,5 +197,6 @@ secrets {
 tasks.withType<Test> {
     testLogging {
         events("started", "passed", "skipped", "failed", "standardError", "standardOut")
+        exceptionFormat = TestExceptionFormat.FULL
     }
 }
