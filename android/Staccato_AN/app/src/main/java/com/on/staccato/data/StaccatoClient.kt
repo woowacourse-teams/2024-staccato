@@ -47,4 +47,8 @@ object StaccatoClient {
     fun <T> create(service: Class<T>): T {
         return provideRetrofit.create(service)
     }
+
+    fun test() {
+        println("client 초기화 확인")
+    }
 }

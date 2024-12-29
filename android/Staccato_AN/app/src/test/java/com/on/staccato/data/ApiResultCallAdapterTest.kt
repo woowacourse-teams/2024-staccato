@@ -38,10 +38,15 @@ class ApiResultCallAdapterTest {
     private lateinit var imageApiService: ImageApiService
     private lateinit var commentApiService: CommentApiService
 
+    private lateinit var staccatoClient: StaccatoClient
+
     @BeforeEach
     fun setUp() {
         mockWebServer = MockWebServer()
         mockWebServer.start()
+
+        staccatoClient = StaccatoClient
+        staccatoClient.test()
 
         val retrofit = buildRetrofitFor(mockWebServer)
         memoryApiService = retrofit.create(MemoryApiService::class.java)
@@ -91,6 +96,7 @@ class ApiResultCallAdapterTest {
                 body = createErrorBy400(),
             )
         mockWebServer.enqueue(serverError)
+        staccatoClient.test()
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =
