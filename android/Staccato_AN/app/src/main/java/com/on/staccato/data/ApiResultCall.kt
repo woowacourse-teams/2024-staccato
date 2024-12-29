@@ -57,6 +57,7 @@ private const val NOT_FOUND_ERROR_BODY = "errorBody를 찾을 수 없습니다."
 private fun <T : Any> handleApiResponse(execute: () -> Response<T>): ApiResult<T> {
     return try {
         val response: Response<T> = execute()
+        println("##### $response")
         val body: T? = response.body()
 
         when {
