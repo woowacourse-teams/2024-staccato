@@ -23,6 +23,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.SocketPolicy
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -95,7 +96,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<MemoryCreationResponse> =
                 memoryApiService.postMemory(createInvalidMemoryRequest())
 
-            assertTrue(actual is ServerError)
+            assertInstanceOf(ServerError::class.java, actual)
         }
     }
 
@@ -112,7 +113,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<MemoryCreationResponse> =
                 memoryApiService.postMemory(createValidMemoryRequest())
 
-            assertTrue(actual is ServerError)
+            assertInstanceOf(ServerError::class.java, actual)
         }
     }
 
@@ -129,7 +130,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<Unit> =
                 commentApiService.deleteComment(commentId = 1)
 
-            assertTrue(actual is ServerError)
+            assertInstanceOf(ServerError::class.java, actual)
         }
     }
 
@@ -146,7 +147,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<ImageResponse> =
                 imageApiService.postImage(imageFile = createFakeImageFile())
 
-            assertTrue(actual is ServerError)
+            assertInstanceOf(ServerError::class.java, actual)
         }
     }
 
@@ -163,7 +164,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<MemoryCreationResponse> =
                 memoryApiService.postMemory(createValidMemoryRequest())
 
-            assertTrue(actual is ServerError)
+            assertInstanceOf(ServerError::class.java, actual)
         }
     }
 
