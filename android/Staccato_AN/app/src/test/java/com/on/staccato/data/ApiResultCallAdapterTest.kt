@@ -31,7 +31,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
 class ApiResultCallAdapterTest {
-    private val mockWebServer = MockWebServer()
+    private lateinit var mockWebServer: MockWebServer
 
     private lateinit var memoryApiService: MemoryApiService
     private lateinit var imageApiService: ImageApiService
@@ -39,6 +39,7 @@ class ApiResultCallAdapterTest {
 
     @BeforeEach
     fun setUp() {
+        mockWebServer = MockWebServer()
         mockWebServer.start()
 
         val retrofit = buildRetrofitFor(mockWebServer)
