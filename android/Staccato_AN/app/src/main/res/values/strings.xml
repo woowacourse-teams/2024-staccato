@@ -29,7 +29,7 @@
     <string name="all_staccato_main_character">스타카토 메인 캐릭터</string>
     <string name="all_delete_image">사진 삭제 버튼</string>
     <string name="all_photo_attach_icon_description">사진 첨부란</string>
-    <string name="all_memory_thumbnail_photo_description">추억 썸네일 사진</string>
+    <string name="all_memory_thumbnail_photo_description">카테고리 썸네일 사진</string>
 
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
@@ -39,14 +39,14 @@
     <string name="main_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
 
     // fragment_timeline
-    <string name="timeline_my_timeline">나의 추억들</string>
+    <string name="timeline_my_timeline">나의 카테고리들</string>
     <string name="timeline_order">최근 생성 순</string>
-    <string name="timeline_empty">아직 추억이 없네요!\n스타카토를 담을 추억을 만들어보세요.</string>
+    <string name="timeline_empty">아직 카테고리가 없네요!\n스타카토를 담을 카테고리를 만들어보세요.</string>
     <string name="timeline_add_memory">추가</string>
     <string name="timeline_sort">정렬</string>
-    <string name="timeline_create_memory">추억 생성하기</string>
-    <string name="timeline_memory_creation_btn_description">추억 만들기로 이동</string>
-    <string name="timeline_sort_memories_btn_description">나의 추억들 정렬</string>
+    <string name="timeline_create_memory">카테고리 생성하기</string>
+    <string name="timeline_memory_creation_btn_description">카테고리 만들기로 이동</string>
+    <string name="timeline_sort_memories_btn_description">나의 카테고리 정렬</string>
 
     // menu_sort
     <string name="sort_creation_order">생성 순</string>
@@ -54,14 +54,14 @@
     <string name="sort_oldest_order">과거 순</string>
 
     // item_timeline
-    <string name="timeline_memory_icon_description">추억 아이콘</string>
+    <string name="timeline_memory_icon_description">카테고리 아이콘</string>
 
     // fragment_memory
     <string name="memory_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
     <string name="memory_period_dot">%s. %s. %s ~ %s. %s. %s</string>
     <string name="memory_mates">함께 한 사람들</string>
     <string name="memory_staccatos">스타카토</string>
-    <string name="memory_delete_complete">추억이 삭제되었습니다.</string>
+    <string name="memory_delete_complete">카테고리가 삭제되었습니다.</string>
     <string name="memory_staccato_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
     <string name="memory_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
 
@@ -73,20 +73,20 @@
     <string name="staccatos_thumbnail_photo_description">스타카토 썸네일 사진</string>
 
     // activity_memory_creation / activity_memory_update
-    <string name="memory_creation_title">추억 제목</string>
-    <string name="memory_creation_title_hint">추억 제목을 입력해 주세요</string>
-    <string name="memory_creation_description">추억 소개</string>
-    <string name="memory_creation_description_hint">추억 소개를 입력해 주세요</string>
+    <string name="memory_creation_title">카테고리 제목</string>
+    <string name="memory_creation_title_hint">카테고리 제목을 입력해 주세요</string>
+    <string name="memory_creation_description">카테고리 소개</string>
+    <string name="memory_creation_description_hint">카테고리 소개를 입력해 주세요</string>
     <string name="memory_creation_period_setting">기간 설정</string>
-    <string name="memory_creation_period_hint">추억 기간을 선택해 주세요</string>
+    <string name="memory_creation_period_hint">카테고리 기간을 선택해 주세요</string>
     <string name="memory_creation_selected_period">%s ~ %s</string>
-    <string name="memory_creation_period_descripton">‘여행’ 과 같은 추억이라면 기간을 설정할 수 있어요</string>
-    <string name="memory_creation_toolbar_title">추억 만들기</string>
-    <string name="memory_creation_toolbar_subtitle">스타카토를 담을 추억을 만들어 보세요!</string>
+    <string name="memory_creation_period_descripton">‘여행’ 과 같은 카테고리라면 기간을 설정할 수 있어요</string>
+    <string name="memory_creation_toolbar_title">카테고리 만들기</string>
+    <string name="memory_creation_toolbar_subtitle">스타카토를 담을 카테고리를 만들어 보세요!</string>
 
     // activity_memory_update
-    <string name="memory_update_toolbar_title">추억 수정하기</string>
-    <string name="memory_update_toolbar_subtitle">스타카토를 담을 추억을 수정해 보세요!</string>
+    <string name="memory_update_toolbar_title">카테고리 수정하기</string>
+    <string name="memory_update_toolbar_subtitle">스타카토를 담을 카테고리를 수정해 보세요!</string>
 
     // fragment_staccato
     <string name="staccato_at_history">%s에 방문했어요</string>
@@ -118,10 +118,10 @@
     <string name="staccato_creation_load_current_location">현재 위치의 주소 불러오기</string>
     <string name="staccato_creation_empty_address">"장소를 선택하면 상세 주소가 나타나요"</string>
     <string name="staccato_creation_address">상세 주소</string>
-    <string name="staccato_creation_memory_selection">추억 선택</string>
-    <string name="staccato_creation_memory_selection_hint">추억을 선택해 주세요</string>
-    <string name="staccato_creation_no_memory_hint">스타카토를 남길 수 있는 추억이 없어요</string>
-    <string name="staccato_creation_unselected_memory">추억을 먼저 선택해 주세요</string>
+    <string name="staccato_creation_memory_selection">카테고리 선택</string>
+    <string name="staccato_creation_memory_selection_hint">카테고리를 선택해 주세요</string>
+    <string name="staccato_creation_no_memory_hint">스타카토를 남길 수 있는 카테고리가 없어요</string>
+    <string name="staccato_creation_unselected_memory">카테고리를 먼저 선택해 주세요</string>
     <string name="staccato_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨 보세요!</string>
     <string name="staccato_creation_toolbar_title">스타카토 기록하기</string>
     <string name="staccato_creation_not_found_address">주소를 찾지 못했습니다</string>
@@ -175,7 +175,7 @@
     <string name="snack_bar_move_to_setting">설정하기</string>
 
     // dialog_delete_impossibility
-    <string name="memory_delete_title">추억을 삭제할 수 없어요.</string>
+    <string name="memory_delete_title">카테고리를 삭제할 수 없어요.</string>
     <string name="memory_delete_description">아직 스타카토가 남아있어요!</string>
 
     // dialog_delete
@@ -190,7 +190,7 @@
     // fragment_location_dialog
     <string name="location_dialog_title">위치 권한 설정</string>
     <string name="location_dialog_permission_rationale">위치 권한을 활성화하면 아래 기능들을 사용할 수 있어요. \n ▪️현 위치를 조회할 수 있어요 \n ▪️현 위치를 기반으로 빠르게 스타카토를\n &#160;생성할 수 있어요 \n\n더 나은 서비스 경험을 원하신다면 위치 권한을 허용해 주세요!</string>
-    <string name="sort_memories_with_period_order">기간 있는 추억</string>
-    <string name="sort_memories_without_period_order">기간 없는 추억</string>
+    <string name="sort_memories_with_period_order">기간 있는 카테고리</string>
+    <string name="sort_memories_without_period_order">기간 없는 카테고리</string>
 
 </resources>
