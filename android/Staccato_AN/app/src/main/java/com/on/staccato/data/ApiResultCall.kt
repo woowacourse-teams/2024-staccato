@@ -1,5 +1,7 @@
 package com.on.staccato.data
 
+import com.on.staccato.StaccatoApplication.Companion.retrofit
+import com.on.staccato.data.StaccatoClient.getErrorResponse
 import com.on.staccato.data.dto.ErrorResponse
 import com.on.staccato.data.dto.Status
 import okhttp3.Request
@@ -67,7 +69,7 @@ private fun <T : Any> handleApiResponse(execute: () -> Response<T>): ApiResult<T
                 val errorBody: ResponseBody =
                     response.errorBody()
                         ?: throw IllegalArgumentException(NOT_FOUND_ERROR_BODY)
-                val errorResponse: ErrorResponse = StaccatoClient.getErrorResponse(errorBody)
+                val errorResponse: ErrorResponse = retrofit.getErrorResponse(errorBody)
                 ServerError(
                     status = Status.Message(errorResponse.status),
                     message = errorResponse.message,

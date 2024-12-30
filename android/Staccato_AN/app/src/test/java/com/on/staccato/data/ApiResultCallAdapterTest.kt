@@ -1,6 +1,7 @@
 package com.on.staccato.data
 
 import com.on.staccato.CoroutinesTestExtension
+import com.on.staccato.StaccatoApplication.Companion.retrofit
 import com.on.staccato.createErrorBy400
 import com.on.staccato.createErrorBy401
 import com.on.staccato.createErrorBy403
@@ -32,23 +33,17 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
 class ApiResultCallAdapterTest {
-    private lateinit var mockWebServer: MockWebServer
+    private val mockWebServer: MockWebServer = MockWebServer()
 
     private lateinit var memoryApiService: MemoryApiService
     private lateinit var imageApiService: ImageApiService
     private lateinit var commentApiService: CommentApiService
 
-    private lateinit var staccatoClient: StaccatoClient
-
     @BeforeEach
     fun setUp() {
-        mockWebServer = MockWebServer()
         mockWebServer.start()
 
-        staccatoClient = StaccatoClient
-        staccatoClient.test()
-
-        val retrofit = buildRetrofitFor(mockWebServer)
+        retrofit = buildRetrofitFor(mockWebServer)
         memoryApiService = retrofit.create(MemoryApiService::class.java)
         imageApiService = retrofit.create(ImageApiService::class.java)
         commentApiService = retrofit.create(CommentApiService::class.java)
@@ -96,7 +91,6 @@ class ApiResultCallAdapterTest {
                 body = createErrorBy400(),
             )
         mockWebServer.enqueue(serverError)
-        staccatoClient.test()
 
         runTest {
             val actual: ApiResult<MemoryCreationResponse> =

@@ -27,7 +27,7 @@ object StaccatoClient {
 
     private val jsonBuilder = Json { coerceInputValues = true }
 
-    private val provideRetrofit =
+    fun initialize(): Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(provideHttpClient)
@@ -37,18 +37,9 @@ object StaccatoClient {
             .addCallAdapterFactory(ApiResultCallAdapterFactory.create())
             .build()
 
-    fun getErrorResponse(errorBody: ResponseBody): ErrorResponse {
-        return provideRetrofit.responseBodyConverter<ErrorResponse>(
+    fun Retrofit.getErrorResponse(errorBody: ResponseBody): ErrorResponse =
+        responseBodyConverter<ErrorResponse>(
             ErrorResponse::class.java,
             ErrorResponse::class.java.annotations,
         ).convert(errorBody) ?: throw IllegalArgumentException("errorBody를 변환할 수 없습니다.")
-    }
-
-    fun <T> create(service: Class<T>): T {
-        return provideRetrofit.create(service)
-    }
-
-    fun test() {
-        println("client 초기화 확인")
-    }
 }
