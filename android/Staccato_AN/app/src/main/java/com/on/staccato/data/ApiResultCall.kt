@@ -60,7 +60,6 @@ private fun <T : Any> handleApiResponse(execute: () -> Response<T>): ApiResult<T
     return try {
         val response: Response<T> = execute()
         val body: T? = response.body()
-        println("##### $response body: $body errorBody: ${response.errorBody()}")
 
         when {
             response.isSuccessful && response.code() == CREATED -> Success(body as T)
@@ -79,7 +78,6 @@ private fun <T : Any> handleApiResponse(execute: () -> Response<T>): ApiResult<T
     } catch (e: HttpException) {
         ServerError(status = Status.Code(e.code()), message = e.message())
     } catch (e: Throwable) {
-        println("##### $e")
         Exception(e, message = e.message.toString())
     }
 }
