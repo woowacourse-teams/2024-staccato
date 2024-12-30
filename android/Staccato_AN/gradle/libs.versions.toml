@@ -1,5 +1,6 @@
 [versions]
 agp = "8.3.0"
+assertjCore = "3.27.0"
 converterScalars = "2.9.0"
 dotsindicator = "5.0"
 hiltAndroid = "2.51.1"
@@ -45,6 +46,7 @@ androidJunit5 = "1.10.0.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertjCore" }
 converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "converterScalars" }
 dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }

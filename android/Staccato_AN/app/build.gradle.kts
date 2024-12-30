@@ -109,6 +109,9 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.jupiter.engine)
 
+    // AssertJ
+    testImplementation(libs.assertj.core)
+
     // Glide
     implementation(libs.glide)
 
