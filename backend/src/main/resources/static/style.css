@@ -1,0 +1,69 @@
+/* Reset and Basic Styling */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+h1, h2, p {
+    margin: 0;
+}
+
+/* Features Section */
+.features {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    align-items: center;
+    gap: 2rem; /* 각 아이템 간의 간격 */
+    padding: 0;
+    background-color: #ffffff;
+}
+
+.feature {
+    width: 100%;            /* 부모 컨테이너 전체 너비 */
+    height: auto;          /* 화면 높이만큼 채우기 */
+    position: relative;     /* 내부 이미지 정렬을 위한 상대 위치 설정 */
+    overflow: hidden;       /* 넘치는 이미지 잘라내기 */
+    display: flex;          /* 내부 이미지 중앙 정렬 */
+    align-items: center;
+    justify-content: center;
+}
+
+.feature img {
+    width: 100%;            /* 부모 컨테이너의 가로 크기에 맞추기 */
+    object-fit: contain;    /* 비율을 유지하며 잘리지 않도록 설정 */
+}
+
+/* Footer 기본 스타일 */
+footer {
+    text-align: center;
+    padding: 3rem; /* 기본 패딩 */
+    background: #E3C7FF;
+    color: #222222;
+    font-size: 1.5rem; /* 기본 글씨 크기 */
+}
+
+/* 1024px 이하 화면 */
+@media (max-width: 1024px) {
+    footer {
+        padding: 2rem; /* 패딩 줄이기 */
+        font-size: 1.25rem; /* 글씨 크기 줄이기 */
+    }
+}
+
+/* 768px 이하 화면 */
+@media (max-width: 768px) {
+    footer {
+        padding: 1.5rem; /* 더 작은 패딩 */
+        font-size: 1rem; /* 더 작은 글씨 크기 */
+    }
+}
+
+/* 480px 이하 화면 */
+@media (max-width: 480px) {
+    footer {
+        padding: 1rem; /* 최소 패딩 */
+        font-size: 0.875rem; /* 가장 작은 글씨 크기 */
+    }
+}
