@@ -23,9 +23,8 @@ import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.SocketPolicy
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertInstanceOf
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -62,7 +61,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<MemoryResponse> =
                 memoryApiService.getMemory(memoryId = 1)
 
-            assertTrue(actual is Success)
+            assertThat(actual).isInstanceOf(Success::class.java)
         }
     }
 
@@ -79,7 +78,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<MemoryCreationResponse> =
                 memoryApiService.postMemory(createValidMemoryRequest())
 
-            assertTrue(actual is Success)
+            assertThat(actual).isInstanceOf(Success::class.java)
         }
     }
 
@@ -96,7 +95,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<MemoryCreationResponse> =
                 memoryApiService.postMemory(createInvalidMemoryRequest())
 
-            assertInstanceOf(ServerError::class.java, actual)
+            assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
@@ -113,7 +112,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<MemoryCreationResponse> =
                 memoryApiService.postMemory(createValidMemoryRequest())
 
-            assertInstanceOf(ServerError::class.java, actual)
+            assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
@@ -130,7 +129,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<Unit> =
                 commentApiService.deleteComment(commentId = 1)
 
-            assertInstanceOf(ServerError::class.java, actual)
+            assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
@@ -147,7 +146,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<ImageResponse> =
                 imageApiService.postImage(imageFile = createFakeImageFile())
 
-            assertInstanceOf(ServerError::class.java, actual)
+            assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
@@ -164,7 +163,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<MemoryCreationResponse> =
                 memoryApiService.postMemory(createValidMemoryRequest())
 
-            assertInstanceOf(ServerError::class.java, actual)
+            assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
@@ -176,7 +175,7 @@ class ApiResultCallAdapterTest {
             val actual: ApiResult<MemoryCreationResponse> =
                 memoryApiService.postMemory(createValidMemoryRequest())
 
-            assertTrue(actual is Exception)
+            assertThat(actual).isInstanceOf(Exception::class.java)
         }
     }
 
