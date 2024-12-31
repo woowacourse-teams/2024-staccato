@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staccato</title>
+    <link rel="stylesheet" href="/css/share.css">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</head>
+<body>
+<div class="container">
+    <!-- Image Slider Section -->
+    <div class="image-slider">
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" th:each="url : ${momentImageUrls}">
+                    <img th:src="${url}" alt="Moment Image">
+                </div>
+            </div>
+            <!-- Add Swiper navigation buttons -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <!-- Add Swiper pagination -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+
+    <!-- Title Section -->
+    <div class="title">
+        <h1 th:text="${staccatoTitle}"></h1>
+    </div>
+
+    <!-- Place and Date Section -->
+    <div class="details">
+        <p class="place-name" th:text="${placeName}"></p>
+        <p class="address" th:text="${address}"></p>
+        <p class="visited-at" th:text="${visitedAt}"></p>
+    </div>
+
+    <!-- Feeling Section -->
+    <div class="feeling">
+        <p>이 때의 기분은 어땠나요?</p>
+        <div class="emojis">
+            <img th:src="${emojiPaths['happy']}" alt="Happy Emoji">
+            <img th:src="${emojiPaths['angry']}" alt="Angry Emoji">
+            <img th:src="${emojiPaths['sad']}" alt="Sad Emoji">
+            <img th:src="${emojiPaths['scared']}" alt="Scared Emoji">
+            <img th:src="${emojiPaths['excited']}" alt="Excited Emoji">
+        </div>
+    </div>
+
+    <!-- Promotion Image Section -->
+    <div class="promotion">
+        <img src="/images/share/promotion.png" alt="Promotion Image">
+    </div>
+
+<!--    &lt;!&ndash; Comments Section &ndash;&gt;-->
+<!--    <div class="comments">-->
+<!--        <h2>코멘트</h2>-->
+<!--        <div class="comment" th:each="comment : ${comments}">-->
+<!--            <img th:src="${comment.memberImageUrl}" alt="User Image">-->
+<!--            <div>-->
+<!--                <p th:text="${comment.nickname}"></p>-->
+<!--                <p th:text="${comment.content}"></p>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!-- Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="/js/share.js"></script>
+</div>
+</body>
+</html>

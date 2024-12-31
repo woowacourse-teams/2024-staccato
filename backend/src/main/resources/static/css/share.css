@@ -1,0 +1,184 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.image-slider {
+    width: 100%; /* 슬라이더가 전체 너비를 차지하도록 설정 */
+    max-width: 600px; /* 슬라이더 최대 너비 제한 */
+    aspect-ratio: 1 / 1; /* 슬라이더를 정사각형 비율로 설정 */
+    border-radius: 8px;
+    overflow: hidden; /* 넘치는 이미지를 숨김 */
+    position: relative;
+    display: flex; /* Flexbox를 사용해 중앙 정렬 */
+    justify-content: center;
+    align-items: center;
+}
+
+.image-slider img {
+    width: 100%; /* 슬라이더 너비에 맞춤 */
+    height: 500px; /* 슬라이더 높이에 맞춤 */
+    object-fit: cover; /* 이미지가 잘리더라도 비율 유지 */
+    object-position: center; /* 이미지 중앙 기준으로 잘리도록 설정 */
+    display: block;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #666;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    opacity: 1;
+}
+
+/* Swiper 페이지네이션 스타일 */
+.swiper-pagination {
+    bottom: 10px; /* 페이지네이션 위치 */
+    text-align: center;
+}
+
+.swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background-color: #ccc; /* 기본 색상 */
+    border-radius: 50%; /* 동그란 모양 */
+    margin: 0 5px; /* 점 간격 */
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: #333; /* 활성화된 점 색상 */
+    opacity: 1; /* 활성화된 점 불투명도 */
+}
+
+.title h1 {
+    font-weight: bold;
+    font-size: 1.8rem;
+    text-align: left;
+    margin: 0 0 1.5rem 0;
+    padding-left: 0.8rem;
+}
+
+.details {
+    text-align: left;
+    font-size: 1rem;
+    color: #666;
+    border: 1px solid #ccc;
+    padding: 0 0 0 1rem;
+    border-radius: 8px;
+    margin: 0 0 1.5rem 0;
+}
+
+.details p {
+    margin: 1rem 0;
+}
+
+.details .place-name {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.details .address {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.details .visited-at {
+    font-size: 0.9rem;
+}
+
+.feeling {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.feeling p {
+    margin: 0 0 1rem 0;
+    font-weight: bold;
+}
+
+.feeling .emojis {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.feeling .emojis img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.feeling .emojis img:hover {
+    transform: scale(1.2);
+}
+
+/*.comments {*/
+/*    margin-bottom: 2rem;*/
+/*    padding: 1rem;*/
+/*    border: 1px solid #ddd;*/
+/*    border-radius: 8px;*/
+/*}*/
+
+/*.comments h2 {*/
+/*    font-size: 1.2rem;*/
+/*    margin-bottom: 1rem;*/
+/*}*/
+
+/*.comment {*/
+/*    display: flex;*/
+/*    gap: 1rem;*/
+/*    margin-bottom: 1rem;*/
+/*    border: 1px solid #eee;*/
+/*    padding: 1rem;*/
+/*    border-radius: 8px;*/
+/*    background-color: #f9f9f9;*/
+/*}*/
+
+/*.comment img {*/
+/*    width: 40px;*/
+/*    height: 40px;*/
+/*    border-radius: 50%;*/
+/*}*/
+
+/*.comment div {*/
+/*    flex-grow: 1;*/
+/*}*/
+
+.promotion {
+    margin-top: 2rem; /* 위의 컨텐츠와 간격 추가 */
+    text-align: center; /* 이미지 중앙 정렬 */
+    padding: 1rem; /* 내부 여백 추가 */
+    border: 1px solid #ccc; /* 테두리 추가 */
+    border-radius: 8px; /* 둥근 모서리 추가 */
+    background-color: #fff; /* 배경색 추가 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+}
+
+.promotion img {
+    width: 100%; /* 이미지가 컨테이너 너비에 맞게 조정 */
+    max-width: 600px; /* 최대 너비 제한 */
+    height: auto; /* 비율 유지 */
+    border-radius: 8px; /* 이미지 모서리도 둥글게 설정 */
+}
