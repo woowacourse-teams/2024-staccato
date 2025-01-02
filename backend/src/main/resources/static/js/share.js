@@ -1,6 +1,6 @@
 const swiper = new Swiper('.swiper', {
     loop: false,
-    speed: 700,
+    speed: 500,
     navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',

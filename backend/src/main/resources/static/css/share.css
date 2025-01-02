@@ -8,18 +8,36 @@ body {
 .container {
     max-width: 600px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 0;
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.memory-header {
+    text-align: left;
+    background-color: #fff; /* 배경색 */
+    padding: 1.5rem; /* 내부 여백 */
+}
+
+.memory-title {
+    font-size: 1.5rem; /* 제목 크기 */
+    font-weight: bold;
+    color: #333; /* 제목 색상 */
+    margin: 0.5rem 0; /* 제목 여백 */
+}
+
+.memory-subtitle {
+    font-size: 1rem; /* 서브텍스트 크기 */
+    color: #555; /* 서브텍스트 색상 */
+    margin: 0; /* 서브텍스트 여백 */
+}
+
 .image-slider {
     width: 100%; /* 슬라이더가 전체 너비를 차지하도록 설정 */
     max-width: 600px; /* 슬라이더 최대 너비 제한 */
     aspect-ratio: 1 / 1; /* 슬라이더를 정사각형 비율로 설정 */
-    border-radius: 8px;
     overflow: hidden; /* 넘치는 이미지를 숨김 */
     position: relative;
     display: flex; /* Flexbox를 사용해 중앙 정렬 */
@@ -29,7 +47,7 @@ body {
 
 .image-slider img {
     width: 100%; /* 슬라이더 너비에 맞춤 */
-    height: 500px; /* 슬라이더 높이에 맞춤 */
+    height: 600px; /* 슬라이더 높이에 맞춤 */
     object-fit: cover; /* 이미지가 잘리더라도 비율 유지 */
     object-position: center; /* 이미지 중앙 기준으로 잘리도록 설정 */
     display: block;
@@ -72,18 +90,15 @@ body {
     font-weight: bold;
     font-size: 1.8rem;
     text-align: left;
-    margin: 0 0 1.5rem 0;
-    padding-left: 0.8rem;
+    margin: 2rem 0 1rem 0;
+    padding-left: 1.5rem;
 }
 
 .details {
     text-align: left;
     font-size: 1rem;
     color: #666;
-    border: 1px solid #ccc;
-    padding: 0 0 0 1rem;
-    border-radius: 8px;
-    margin: 0 0 1.5rem 0;
+    padding: 0.5rem 0 0.5rem 1.5rem;
 }
 
 .details p {
@@ -104,16 +119,22 @@ body {
     font-size: 0.9rem;
 }
 
+/* 가로선 스타일 추가 */
+.section-divider {
+    width: 100%;
+    height: 1px;
+    background-color: #ddd; /* 가로선 색상 */
+    margin: 0;
+}
+
 .feeling {
     text-align: center;
-    margin-bottom: 2rem;
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    padding: 1.5rem;
 }
 
 .feeling p {
     margin: 0 0 1rem 0;
+    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -126,7 +147,7 @@ body {
 .feeling .emojis img {
     width: 50px;
     height: 50px;
-    cursor: pointer;
+    cursor: default;
     transition: transform 0.2s ease;
 }
 
@@ -134,51 +155,88 @@ body {
     transform: scale(1.2);
 }
 
-/*.comments {*/
-/*    margin-bottom: 2rem;*/
-/*    padding: 1rem;*/
-/*    border: 1px solid #ddd;*/
-/*    border-radius: 8px;*/
-/*}*/
+.comments {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* 코멘트 간 간격 */
+    padding: 1rem 1.5rem 1rem 1.5rem;
+}
 
-/*.comments h2 {*/
-/*    font-size: 1.2rem;*/
-/*    margin-bottom: 1rem;*/
-/*}*/
+.content-wrapper {
+    display: flex;
+    justify-content: space-between; /* 텍스트와 프로필 사진 간 간격 유지 */
+    align-items: flex-start; /* 텍스트와 프로필 사진 위쪽 정렬 */
+    gap: 1rem; /* 텍스트와 프로필 사진 간 간격 */
+    width: 90%; /* 전체 가로 폭 사용 */
+    margin-left: auto;
+}
 
-/*.comment {*/
-/*    display: flex;*/
-/*    gap: 1rem;*/
-/*    margin-bottom: 1rem;*/
-/*    border: 1px solid #eee;*/
-/*    padding: 1rem;*/
-/*    border-radius: 8px;*/
-/*    background-color: #f9f9f9;*/
-/*}*/
+.text-section {
+    display: flex;
+    flex-direction: column; /* 닉네임과 박스를 세로 배치 */
+    gap: 0.5rem; /* 닉네임과 박스 간 간격 */
+    flex-grow: 1; /* 텍스트 섹션이 남은 공간을 차지 */
+    justify-content: space-between;
+}
 
-/*.comment img {*/
-/*    width: 40px;*/
-/*    height: 40px;*/
-/*    border-radius: 50%;*/
-/*}*/
+.nickname-wrapper {
+    display: flex;
+    justify-content: flex-end; /* 닉네임 오른쪽 정렬 */
+}
 
-/*.comment div {*/
-/*    flex-grow: 1;*/
-/*}*/
+.nickname {
+    font-size: 1rem;
+    color: #333; /* 닉네임 색상 */
+    margin: 0;
+}
+
+.comment-box {
+    background-color: #f7f7f7; /* 박스 배경 */
+    border: 1px solid #ddd; /* 박스 테두리 */
+    border-radius: 8px; /* 둥근 모서리 */
+    padding: 0 1rem 0 1rem; /* 내부 여백 */
+    width: auto; /* 가로 크기는 내용에 맞게 조정 */
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+    font-size: 0.9rem;
+    color: #555; /* 코멘트 내용 색상 */
+    line-height: 1.4; /* 줄 간격 */
+    display: flex; /* 높이를 부모 요소에 맞춤 */
+    flex-grow: 1; /* 부모 높이에 맞게 확장 */
+    align-items: center; /* 내부 텍스트 중앙 정렬 */
+}
+
+.profile-picture {
+    width: 50px; /* 프로필 이미지 크기 */
+    height: 50px;
+    border-radius: 50%; /* 둥근 이미지 */
+    object-fit: cover; /* 이미지 비율 유지 */
+}
 
 .promotion {
-    margin-top: 2rem; /* 위의 컨텐츠와 간격 추가 */
-    text-align: center; /* 이미지 중앙 정렬 */
-    padding: 1rem; /* 내부 여백 추가 */
-    border: 1px solid #ccc; /* 테두리 추가 */
-    border-radius: 8px; /* 둥근 모서리 추가 */
-    background-color: #fff; /* 배경색 추가 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    background-color: #fff; /* 배경색 */
+    padding: 2rem; /* 내부 여백 */
+    margin: 2rem 0 1rem 0;
+}
+
+.promotion h2 {
+    font-size: 2rem; /* 제목 크기 */
+    font-weight: bold;
+    color: #333; /* 제목 색상 */
+    margin-bottom: 0; /* 제목 하단 여백 */
 }
 
 .promotion img {
-    width: 100%; /* 이미지가 컨테이너 너비에 맞게 조정 */
-    max-width: 600px; /* 최대 너비 제한 */
-    height: auto; /* 비율 유지 */
-    border-radius: 8px; /* 이미지 모서리도 둥글게 설정 */
+    width: 300px; /* 이미지 크기 */
+    margin: 1rem 0; /* 상하 여백 */
+}
+
+.promotion p {
+    font-size: 1.5rem; /* 하단 텍스트 크기 */
+    color: #555; /* 텍스트 색상 */
+    margin: 0; /* 텍스트 여백 없음 */
+}
+
+.google-play-link {
+    text-decoration: none; /* 링크 밑줄 제거 */
 }

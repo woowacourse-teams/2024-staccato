@@ -10,6 +10,12 @@
 </head>
 <body>
 <div class="container">
+    <!-- header Section -->
+    <div class="memory-header">
+        <h1 class="memory-title" th:text="${userName} + '님이 공유한 추억'"></h1>
+        <p class="memory-subtitle" th:text="${expiredAt} + '까지 열람할 수 있어요!'"></p>
+    </div>
+
     <!-- Image Slider Section -->
     <div class="image-slider">
         <div class="swiper">
@@ -31,12 +37,16 @@
         <h1 th:text="${staccatoTitle}"></h1>
     </div>
 
+    <div class="section-divider"></div> <!-- 가로선 -->
+
     <!-- Place and Date Section -->
     <div class="details">
         <p class="place-name" th:text="${placeName}"></p>
         <p class="address" th:text="${address}"></p>
-        <p class="visited-at" th:text="${visitedAt}"></p>
+        <p class="visited-at" th:text="${visitedAt} + '에 방문했어요'"></p>
     </div>
+
+    <div class="section-divider"></div> <!-- 가로선 -->
 
     <!-- Feeling Section -->
     <div class="feeling">
@@ -50,23 +60,34 @@
         </div>
     </div>
 
-    <!-- Promotion Image Section -->
-    <div class="promotion">
-        <img src="/images/share/promotion.png" alt="Promotion Image">
+    <div class="section-divider"></div> <!-- 가로선 -->
+
+    <!-- Comments Section-->
+    <div class="comments">
+        <h2>코멘트</h2>
+        <div class="comment" th:each="comment : ${comments}">
+            <div class="content-wrapper">
+                <div class="text-section">
+                    <div class="nickname-wrapper">
+                        <p class="nickname" th:text="${comment.nickname}"></p>
+                    </div>
+                    <div class="comment-box">
+                        <p class="content" th:text="${comment.content}"></p>
+                    </div>
+                </div>
+                <img class="profile-picture" th:src="${comment.memberImageUrl}" alt="User Image">
+            </div>
+        </div>
     </div>
 
-<!--    &lt;!&ndash; Comments Section &ndash;&gt;-->
-<!--    <div class="comments">-->
-<!--        <h2>코멘트</h2>-->
-<!--        <div class="comment" th:each="comment : ${comments}">-->
-<!--            <img th:src="${comment.memberImageUrl}" alt="User Image">-->
-<!--            <div>-->
-<!--                <p th:text="${comment.nickname}"></p>-->
-<!--                <p th:text="${comment.content}"></p>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+    <!-- Promotion Section -->
+    <div class="promotion">
+        <h2>더 많은 추억을 남기고 싶다면?</h2>
+        <a href="https://play.google.com/store/apps/details?id=com.on.staccato&pcampaignid=web_share" target="_blank" class="google-play-link">
+            <img src="/images/share/google-play-badge.png" alt="Get it on Google Play">
+        </a>
+        <p>플레이 스토어에서 스타카토를 만나보세요!</p>
+    </div>
 
 <!-- Swiper JS -->
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
