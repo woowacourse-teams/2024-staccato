@@ -2,9 +2,9 @@ package com.staccato.moment.domain.support;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import jakarta.persistence.PostPersist;
-import jakarta.persistence.PostRemove;
-import jakarta.persistence.PostUpdate;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreRemove;
+import jakarta.persistence.PreUpdate;
 import org.springframework.stereotype.Component;
 import com.staccato.moment.domain.Moment;
 import lombok.extern.slf4j.Slf4j;
@@ -12,9 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class MomentEntityListener {
-    @PostPersist
-    @PostUpdate
-    @PostRemove
+    @PrePersist
+    @PreUpdate
+    @PreRemove
     public void touchForWrite(Object target) {
         if (Objects.isNull(target)) {
             log.debug("Entity must not be null");
