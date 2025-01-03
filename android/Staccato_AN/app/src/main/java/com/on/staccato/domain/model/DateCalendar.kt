@@ -15,19 +15,21 @@ data class DateCalendar private constructor(val availableDates: List<Int>) {
             periodStart: LocalDate? = null,
             periodEnd: LocalDate? = null,
         ): DateCalendar {
-            if (periodStart != null && periodEnd != null) checkValid(year, month, periodStart, periodEnd)
-            val dateRange = createDateRangeIn(year, month, periodStart, periodEnd)
+            val lastDateOfMonth = YearMonth.of(year, month).lengthOfMonth()
+            if (periodStart != null && periodEnd != null) checkValid(year, month, lastDateOfMonth, periodStart, periodEnd)
+            val dateRange = createDateRangeIn(year, month, lastDateOfMonth, periodStart, periodEnd)
             return DateCalendar(dateRange)
         }
 
         private fun checkValid(
             year: Int,
             month: Int,
+            lastDateOfMonth: Int,
             periodStart: LocalDate,
             periodEnd: LocalDate,
         ) {
-            val startDate = LocalDate.of(year, month, periodStart.dayOfMonth)
-            val endDate = LocalDate.of(year, month, periodEnd.dayOfMonth)
+            val startDate = LocalDate.of(year, month, periodStart.dayOfMonth.coerceAtMost(lastDateOfMonth))
+            val endDate = LocalDate.of(year, month, periodEnd.dayOfMonth.coerceAtMost(lastDateOfMonth))
             val isBetweenPeriod = periodStart.isBeforeOrEqual(startDate) && periodEnd.isAfterOrEqual(endDate)
             val isValidPeriod = periodStart.isBeforeOrEqual(periodEnd)
             require(isBetweenPeriod) { IllegalArgumentException("${year}년 ${month}월은 $periodStart $periodEnd 사이여야 합니다.") }
@@ -41,10 +43,10 @@ data class DateCalendar private constructor(val availableDates: List<Int>) {
         private fun createDateRangeIn(
             year: Int,
             month: Int,
+            lastDateOfMonth: Int,
             periodStart: LocalDate?,
             periodEnd: LocalDate?,
         ): List<Int> {
-            val lastDateOfMonth = YearMonth.of(year, month).lengthOfMonth()
             return if (periodStart != null && periodEnd != null) {
                 calculateDateRangeIn(year, month, lastDateOfMonth, periodStart, periodEnd)
             } else {
