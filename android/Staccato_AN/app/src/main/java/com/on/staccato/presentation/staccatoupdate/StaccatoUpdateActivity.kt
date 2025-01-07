@@ -309,11 +309,7 @@ class StaccatoUpdateActivity :
     private fun observeVisitedAtData() {
         viewModel.selectedVisitedAt.observe(this) {
             it?.let {
-                visitedAtSelectionFragment.initCalendarByPeriod(
-                    it.toLocalDate().minusYears(10),
-                    it.toLocalDate().plusYears(10),
-                )
-                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+                visitedAtSelectionFragment.initCalendarByVisitedAt(it)
                 viewModel.updateMemorySelectionBy(it)
             }
         }

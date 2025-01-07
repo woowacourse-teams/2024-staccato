@@ -49,15 +49,20 @@ class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
         handler = newHandler
     }
 
+    fun initCalendarByVisitedAt(visitedAt: LocalDateTime) {
+        yearCalendar = YearCalendar.from(visitedAt.toLocalDate())
+        updateSelectedVisitedAt(visitedAt)
+    }
+
+    fun updateSelectedVisitedAt(visitedAt: LocalDateTime) {
+        yearCalendar.initSelectedDateTime(visitedAt)
+    }
+
     fun initCalendarByPeriod(
         startAt: LocalDate? = null,
         endAt: LocalDate? = null,
     ) {
         yearCalendar = YearCalendar.of(startAt, endAt)
-    }
-
-    fun updateSelectedVisitedAt(visitedAt: LocalDateTime) {
-        yearCalendar.initSelectedDateTime(visitedAt)
     }
 
     private fun initPickerPosition() {
