@@ -1,5 +1,6 @@
 package com.staccato.memory.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,27 @@ class MemoryMembersTest extends ServiceSliceTest {
     @Autowired
     private MemoryMemberRepository memoryMemberRepository;
 
-    @DisplayName("MemoryMember 목록을 수정 시간 기준 내림차순으로 조회된다.")
+    @DisplayName("기간이 있는 추억 목록만 조회된다.")
+    @Test
+    void readAllMemoriesWithTerm() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        memoryRepository.save(MemoryFixture.createWithMember("first", member));
+        memoryRepository.save(MemoryFixture.createWithMember(LocalDate.now(), LocalDate.now().plusDays(3), member));
+
+        MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
+
+        // when
+        List<Memory> result = memoryMembers.filterMemoryWithTerm();
+
+        // then
+        assertAll(
+                () -> assertThat(result).hasSize(1),
+                () -> assertThat(result.get(0).hasTerm()).isTrue()
+        );
+    }
+
+    @DisplayName("수정 시간 기준 내림차순으로 추억 목록을 조회된다.")
     @Test
     void readAllMemoriesByUpdatedAtDesc() {
         // given
@@ -44,7 +65,7 @@ class MemoryMembersTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("MemoryMember 목록을 생성 시간 기준 내림차순으로 조회된다.")
+    @DisplayName("생성 시간 기준 내림차순으로 추억 목록을 조회된다.")
     @Test
     void readAllMemoriesByCreatedAtDesc() {
         // given
@@ -64,7 +85,7 @@ class MemoryMembersTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("MemoryMember 목록을 생성 시간 기준 오름차순으로 조회된다.")
+    @DisplayName("생성 시간 기준 오름차순으로 추억 목록을 조회된다.")
     @Test
     void readAllMemoriesByCreatedAtAsc() {
         // given

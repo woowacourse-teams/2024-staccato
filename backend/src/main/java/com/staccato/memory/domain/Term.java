@@ -4,12 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-
 import com.staccato.exception.StaccatoException;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -54,6 +51,10 @@ public class Term {
     }
 
     private boolean isExist(LocalDate startAt, LocalDate endAt) {
+        return Objects.nonNull(startAt) && Objects.nonNull(endAt);
+    }
+
+    public boolean isNotEmpty() {
         return Objects.nonNull(startAt) && Objects.nonNull(endAt);
     }
 }
