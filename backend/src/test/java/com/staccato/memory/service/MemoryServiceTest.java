@@ -24,6 +24,7 @@ import com.staccato.memory.domain.Memory;
 import com.staccato.memory.domain.MemoryMember;
 import com.staccato.memory.repository.MemoryMemberRepository;
 import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
@@ -159,9 +160,10 @@ class MemoryServiceTest extends ServiceSliceTest {
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(null, null, "first"), member);
         memoryService.createMemory(MemoryRequestFixture.create(null, null, "second"), member);
         momentService.createMoment(MomentRequestFixture.create(memoryIdResponse.memoryId()), member);
+        MemoryReadRequest memoryReadRequest = new MemoryReadRequest(null, null);
 
         // when
-        MemoryResponses memoryResponses = memoryService.readAllMemories(member);
+        MemoryResponses memoryResponses = memoryService.readAllMemories(member, memoryReadRequest);
 
         // then
         assertAll(

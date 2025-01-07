@@ -12,6 +12,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryMemberRepository;
 import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
@@ -43,7 +44,7 @@ public class MemoryService {
         return new MemoryIdResponse(memory.getId());
     }
 
-    public MemoryResponses readAllMemories(Member member) {
+    public MemoryResponses readAllMemories(Member member, MemoryReadRequest memoryReadRequest) {
         MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
         List<Memory> memories = memoryMembers.orderMemoryByRecentlyUpdated();
 

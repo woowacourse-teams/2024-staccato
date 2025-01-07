@@ -22,6 +22,7 @@ import com.staccato.fixture.memory.MemoryResponsesFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
+import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
@@ -175,7 +176,7 @@ class MemoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
-        when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
+        when(memoryService.readAllMemories(any(Member.class), any(MemoryReadRequest.class))).thenReturn(memoryResponses);
         String expectedResponse = """
                 {
                     "memories": [
@@ -204,7 +205,7 @@ class MemoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
-        when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
+        when(memoryService.readAllMemories(any(Member.class), any(MemoryReadRequest.class))).thenReturn(memoryResponses);
         String expectedResponse = """
                 {
                     "memories": [
