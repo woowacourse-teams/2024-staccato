@@ -11,9 +11,21 @@ import lombok.RequiredArgsConstructor;
 public class MemoryMembers {
     private final List<MemoryMember> memoryMembers;
 
-    public List<Memory> descendMemoryByUpdatedAt() {
+    public List<Memory> orderMemoryByRecentlyUpdated() {
         List<Memory> memories = getMemories();
         memories.sort(Comparator.comparing(Memory::getUpdatedAt).reversed());
+        return memories;
+    }
+    
+    public List<Memory> orderMemoryByNewest() {
+        List<Memory> memories = getMemories();
+        memories.sort(Comparator.comparing(Memory::getCreatedAt).reversed());
+        return memories;
+    }
+
+    public List<Memory> orderMemoryByOldest() {
+        List<Memory> memories = getMemories();
+        memories.sort(Comparator.comparing(Memory::getCreatedAt));
         return memories;
     }
 

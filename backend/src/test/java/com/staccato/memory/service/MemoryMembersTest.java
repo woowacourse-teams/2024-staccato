@@ -26,7 +26,7 @@ class MemoryMembersTest extends ServiceSliceTest {
 
     @DisplayName("MemoryMember 목록을 수정 시간 기준 내림차순으로 조회된다.")
     @Test
-    void readAllMemories() {
+    void readAllMemoriesByUpdatedAtDesc() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         memoryRepository.save(MemoryFixture.createWithMember("first", member));
@@ -35,12 +35,52 @@ class MemoryMembersTest extends ServiceSliceTest {
         MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
 
         // when
-        List<Memory> result = memoryMembers.descendMemoryByUpdatedAt();
+        List<Memory> result = memoryMembers.orderMemoryByRecentlyUpdated();
 
         // then
         assertAll(
                 () -> assertThat(result.get(0).getTitle()).isEqualTo("second"),
                 () -> assertThat(result.get(1).getTitle()).isEqualTo("first")
+        );
+    }
+
+    @DisplayName("MemoryMember 목록을 생성 시간 기준 내림차순으로 조회된다.")
+    @Test
+    void readAllMemoriesByCreatedAtDesc() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        memoryRepository.save(MemoryFixture.createWithMember("first", member));
+        memoryRepository.save(MemoryFixture.createWithMember("second", member));
+
+        MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
+
+        // when
+        List<Memory> result = memoryMembers.orderMemoryByNewest();
+
+        // then
+        assertAll(
+                () -> assertThat(result.get(0).getTitle()).isEqualTo("second"),
+                () -> assertThat(result.get(1).getTitle()).isEqualTo("first")
+        );
+    }
+
+    @DisplayName("MemoryMember 목록을 생성 시간 기준 오름차순으로 조회된다.")
+    @Test
+    void readAllMemoriesByCreatedAtAsc() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        memoryRepository.save(MemoryFixture.createWithMember("first", member));
+        memoryRepository.save(MemoryFixture.createWithMember("second", member));
+
+        MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
+
+        // when
+        List<Memory> result = memoryMembers.orderMemoryByOldest();
+
+        // then
+        assertAll(
+                () -> assertThat(result.get(0).getTitle()).isEqualTo("first"),
+                () -> assertThat(result.get(1).getTitle()).isEqualTo("second")
         );
     }
 }
