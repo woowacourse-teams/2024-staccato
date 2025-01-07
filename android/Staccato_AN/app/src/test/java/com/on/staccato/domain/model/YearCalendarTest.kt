@@ -75,10 +75,10 @@ class YearCalendarTest {
     }
 
     @Test
-    fun `방문일이 주어지면 해당 날짜를 기준 앞,뒤로 10년씩의 범위를 가진 YearCalendar가 생성된다`() {
+    fun `방문일이 주어지면 해당 날짜를 기준 앞,뒤로 100년씩의 범위를 가진 YearCalendar가 생성된다`() {
         // given
         val visitedAt = LocalDate.of(2025, 1, 7)
-        val expectedYearRange = (visitedAt.minusYears(10).year..visitedAt.plusYears(10).year).toList()
+        val expectedYearRange = (visitedAt.minusYears(100).year..visitedAt.plusYears(100).year).toList()
 
         // when
         val yearCalendar = YearCalendar.from(visitedAt)
@@ -102,10 +102,10 @@ class YearCalendarTest {
     }
 
     @Test
-    fun `시작일과 종료일을 지정하지 않으면 현재 날짜를 기준으로 앞,뒤로 10년씩의 범위를 가진 YearCalendar가 생성된다`() {
+    fun `시작일과 종료일을 지정하지 않으면 현재 날짜를 기준으로 앞,뒤로 100년씩의 범위를 가진 YearCalendar가 생성된다`() {
         // given
         val now = LocalDate.of(2025, 1, 1)
-        val expectedYearRange = (now.minusYears(10).year..now.plusYears(10).year).toList()
+        val expectedYearRange = (now.minusYears(100).year..now.plusYears(100).year).toList()
 
         // when
         val yearCalendar = YearCalendar.of()
