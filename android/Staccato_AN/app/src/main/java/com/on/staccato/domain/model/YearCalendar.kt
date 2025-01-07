@@ -74,6 +74,15 @@ data class YearCalendar private constructor(private val yearToMonthCalender: Map
         private const val DECADE_RANGE: Long = 10L
         val hours = (0 until 24).toList()
 
+        fun from(visitedAt: LocalDate): YearCalendar {
+            val yearRange = createDecadeOfYearsAroundCurrent(visitedAt)
+            return YearCalendar(
+                yearRange.associateWith { year ->
+                    of(year)
+                },
+            )
+        }
+
         fun of(
             periodStart: LocalDate? = null,
             periodEnd: LocalDate? = null,
@@ -104,7 +113,7 @@ data class YearCalendar private constructor(private val yearToMonthCalender: Map
             if (periodStart != null && periodEnd != null) {
                 createYearsBetween(periodStart.year, periodEnd.year)
             } else {
-                createDecadeOfYearsAroundCurrent()
+                createDecadeOfYearsAroundCurrent(LocalDate.now())
             }
 
         private fun createYearsBetween(
@@ -114,10 +123,9 @@ data class YearCalendar private constructor(private val yearToMonthCalender: Map
             return (startYear..endYear).toList()
         }
 
-        private fun createDecadeOfYearsAroundCurrent(): List<Int> {
-            val now = LocalDate.now()
-            val decadeAgo = now.minusYears(DECADE_RANGE)
-            val decadeAhead = now.plusYears(DECADE_RANGE)
+        private fun createDecadeOfYearsAroundCurrent(targetDate: LocalDate): List<Int> {
+            val decadeAgo = targetDate.minusYears(DECADE_RANGE)
+            val decadeAhead = targetDate.plusYears(DECADE_RANGE)
             return createYearsBetween(decadeAgo.year, decadeAhead.year)
         }
     }
