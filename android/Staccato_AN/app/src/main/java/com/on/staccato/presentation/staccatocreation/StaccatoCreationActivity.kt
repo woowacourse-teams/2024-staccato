@@ -153,6 +153,9 @@ class StaccatoCreationActivity :
 
     override fun onVisitedAtSelectionClicked() {
         if (!visitedAtSelectionFragment.isAdded) {
+            viewModel.selectedVisitedAt.value?.let {
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+            }
             visitedAtSelectionFragment.show(
                 fragmentManager,
                 VisitedAtSelectionFragment.TAG,
@@ -314,7 +317,7 @@ class StaccatoCreationActivity :
             it?.let {
                 visitedAtSelectionFragment.updateSelectedVisitedAt(it)
                 if (memoryId == DEFAULT_CATEGORY_ID) {
-                    updateMemoryCandidateAndVisitedAt(it)
+                    viewModel.updateMemorySelectionBy(it)
                 }
             }
         }
@@ -323,6 +326,9 @@ class StaccatoCreationActivity :
     private fun observeMemoryData() {
         viewModel.memoryCandidates.observe(this) {
             it?.let {
+                if (memoryId == DEFAULT_CATEGORY_ID) {
+                    visitedAtSelectionFragment.initCalendarByPeriod()
+                }
                 viewModel.initMemoryAndVisitedAt(memoryId, LocalDateTime.now())
             }
         }
@@ -335,7 +341,7 @@ class StaccatoCreationActivity :
             it?.let {
                 memorySelectionFragment.updateKeyMemory(it)
                 if (memoryId != DEFAULT_CATEGORY_ID) {
-                    visitedAtSelectionFragment.setVisitedAtPeriod(
+                    visitedAtSelectionFragment.initCalendarByPeriod(
                         it.startAt,
                         it.endAt,
                     )
@@ -355,15 +361,6 @@ class StaccatoCreationActivity :
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
-    }
-
-    private fun updateMemoryCandidateAndVisitedAt(visitedAt: LocalDateTime) {
-        viewModel.updateMemorySelectionBy(visitedAt)
-        val visitedDate = visitedAt.toLocalDate()
-        visitedAtSelectionFragment.setVisitedAtPeriod(
-            visitedDate.minusYears(10),
-            visitedDate.plusYears(10),
-        )
     }
 
     private fun fetchAddress(location: Location) {

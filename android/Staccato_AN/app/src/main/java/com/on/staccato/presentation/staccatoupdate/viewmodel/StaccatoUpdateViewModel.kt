@@ -118,7 +118,7 @@ class StaccatoUpdateViewModel
             _selectedMemory.value = memory
         }
 
-        fun selectedVisitedAt(visitedAt: LocalDateTime) {
+        fun selectVisitedAt(visitedAt: LocalDateTime) {
             _selectedVisitedAt.value = visitedAt
         }
 
@@ -225,7 +225,8 @@ class StaccatoUpdateViewModel
                         staccatoTitle.set(staccato.staccatoTitle)
                         _currentPhotos.value = createPhotosByUrls(staccato.staccatoImageUrls)
                         initializePlaceBy(staccato)
-                        initMemoryAndVisitedAt(staccato)
+                        selectVisitedAt(staccato.visitedAt)
+                        initMemory(staccato)
                     }.onException(::handleInitializeException)
                     .onServerError(::handleServerError)
             }
@@ -241,8 +242,7 @@ class StaccatoUpdateViewModel
             )
         }
 
-        private fun initMemoryAndVisitedAt(staccato: Staccato) {
-            _selectedVisitedAt.value = staccato.visitedAt
+        private fun initMemory(staccato: Staccato) {
             _selectedMemory.value =
                 MemoryCandidate(
                     staccato.memoryId,

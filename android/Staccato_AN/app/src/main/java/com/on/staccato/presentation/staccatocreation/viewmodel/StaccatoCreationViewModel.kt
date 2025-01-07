@@ -171,8 +171,8 @@ class StaccatoCreationViewModel
             currentDateTime: LocalDateTime,
         ) {
             if (memoryId == DEFAULT_CATEGORY_ID) {
-                setCurrentDateTimeAs(currentDateTime)
                 updateMemorySelectionBy(currentDateTime)
+                setCurrentDateTimeAs(currentDateTime)
             } else {
                 updateMemorySelectionBy(memoryId)
                 setClosestDateTimeAs(currentDateTime)

@@ -126,6 +126,9 @@ class StaccatoUpdateActivity :
 
     override fun onVisitedAtSelectionClicked() {
         if (!visitedAtSelectionFragment.isAdded) {
+            viewModel.selectedVisitedAt.value?.let {
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+            }
             visitedAtSelectionFragment.show(
                 fragmentManager,
                 VisitedAtSelectionFragment.TAG,
@@ -268,7 +271,7 @@ class StaccatoUpdateActivity :
 
     private fun initVisitedAtSelectionFragment() {
         visitedAtSelectionFragment.setOnVisitedAtSelected { selectedVisitedAt ->
-            viewModel.selectedVisitedAt(selectedVisitedAt)
+            viewModel.selectVisitedAt(selectedVisitedAt)
         }
     }
 
@@ -306,11 +309,11 @@ class StaccatoUpdateActivity :
     private fun observeVisitedAtData() {
         viewModel.selectedVisitedAt.observe(this) {
             it?.let {
-                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
-                visitedAtSelectionFragment.setVisitedAtPeriod(
+                visitedAtSelectionFragment.initCalendarByPeriod(
                     it.toLocalDate().minusYears(10),
                     it.toLocalDate().plusYears(10),
                 )
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
                 viewModel.updateMemorySelectionBy(it)
             }
         }
