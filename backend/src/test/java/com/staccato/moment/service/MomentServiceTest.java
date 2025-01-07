@@ -69,7 +69,7 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Memory memory = saveMemory(member);
-        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
+        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId(), List.of("image.jpg"));
 
         // when
         long momentId = momentService.createMoment(momentRequest, member).momentId();
@@ -101,8 +101,7 @@ class MomentServiceTest extends ServiceSliceTest {
     void failCreateMoment() {
         // given
         Member member = saveMember();
-        Memory memory = saveMemory(member);
-        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
+        MomentRequest momentRequest = MomentRequestFixture.create(0L);
 
         // when & then
         assertThatThrownBy(() -> momentService.createMoment(momentRequest, member))
