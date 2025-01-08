@@ -35,6 +35,19 @@ h1, h2, p {
     object-fit: contain;    /* 비율을 유지하며 잘리지 않도록 설정 */
 }
 
+.feature .background-image {
+    width: 100%;
+    object-fit: contain;
+}
+
+.feature .overlay-image {
+    position: absolute;     /* 부모를 기준으로 절대 위치 */
+    top: 13%;               /* 세로 중앙 정렬 */
+    left: 65%;              /* 가로 중앙 정렬 */
+    width: 28%;             /* 덮어씌울 이미지의 크기 */
+    object-fit: contain;
+}
+
 /* Footer 기본 스타일 */
 footer {
     text-align: center;
