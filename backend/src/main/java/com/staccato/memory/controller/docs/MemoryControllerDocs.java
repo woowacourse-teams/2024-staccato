@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.request.MemoryRequest;
@@ -48,7 +47,7 @@ public interface MemoryControllerDocs {
     @ApiResponse(description = "추억 목록 조회 성공", responseCode = "200")
     ResponseEntity<MemoryResponses> readAllMemories(
             @Parameter(hidden = true) Member member,
-            @ModelAttribute("MemoryReadRequest") MemoryReadRequest memoryReadRequest
+            @Parameter(description = "정렬 기준은 생략 시 최근 수정 순(UPDATED), 필터링 조건은 생략 시 적용되지 않습니다.") MemoryReadRequest memoryReadRequest
     );
 
     @Operation(summary = "특정 날짜를 포함하는 사용자의 모든 추억 목록 조회", description = "특정 날짜를 포함하는 사용자의 모든 추억 목록을 조회합니다.")
