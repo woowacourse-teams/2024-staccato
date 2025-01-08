@@ -10,40 +10,38 @@
 </head>
 <body>
 <div class="container">
-    <!-- header Section -->
+    <!-- Header Section -->
     <div class="memory-header">
-        <h1 class="memory-title" th:text="${userName} + '님이 공유한 추억'"></h1>
-        <p class="memory-subtitle" th:text="${expiredAt} + '까지 열람할 수 있어요!'"></p>
+        <h1 class="memory-title"></h1>
+        <p class="memory-subtitle"></p>
     </div>
 
     <!-- Image Slider Section -->
     <div class="image-slider">
         <div class="swiper">
             <div class="swiper-wrapper">
-                <div class="swiper-slide" th:each="url : ${momentImageUrls}">
-                    <img th:src="${url}" alt="Moment Image">
-                </div>
+                <!-- 이미지 슬라이드가 JavaScript에서 동적으로 추가됨 -->
             </div>
-            <!-- Add Swiper navigation buttons -->
+            <!-- Swiper navigation buttons -->
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
-            <!-- Add Swiper pagination -->
+            <!-- Swiper pagination -->
             <div class="swiper-pagination"></div>
         </div>
     </div>
 
     <!-- Title Section -->
     <div class="title">
-        <h1 th:text="${staccatoTitle}"></h1>
+        <h1></h1>
     </div>
 
     <div class="section-divider"></div> <!-- 가로선 -->
 
     <!-- Place and Date Section -->
     <div class="details">
-        <p class="place-name" th:text="${placeName}"></p>
-        <p class="address" th:text="${address}"></p>
-        <p class="visited-at" th:text="${visitedAt} + '에 방문했어요'"></p>
+        <p class="place-name"></p>
+        <p class="address"></p>
+        <p class="visited-at"></p>
     </div>
 
     <div class="section-divider"></div> <!-- 가로선 -->
@@ -51,33 +49,15 @@
     <!-- Feeling Section -->
     <div class="feeling">
         <p>이 때의 기분은 어땠나요?</p>
-        <div class="emojis">
-            <img th:src="${emojiPaths['happy']}" alt="Happy Emoji">
-            <img th:src="${emojiPaths['angry']}" alt="Angry Emoji">
-            <img th:src="${emojiPaths['sad']}" alt="Sad Emoji">
-            <img th:src="${emojiPaths['scared']}" alt="Scared Emoji">
-            <img th:src="${emojiPaths['excited']}" alt="Excited Emoji">
-        </div>
+        <div class="emojis"></div>
     </div>
 
     <div class="section-divider"></div> <!-- 가로선 -->
 
-    <!-- Comments Section-->
+    <!-- Comments Section -->
     <div class="comments">
         <h2>코멘트</h2>
-        <div class="comment" th:each="comment : ${comments}">
-            <div class="content-wrapper">
-                <div class="text-section">
-                    <div class="nickname-wrapper">
-                        <p class="nickname" th:text="${comment.nickname}"></p>
-                    </div>
-                    <div class="comment-box">
-                        <p class="content" th:text="${comment.content}"></p>
-                    </div>
-                </div>
-                <img class="profile-picture" th:src="${comment.memberImageUrl}" alt="User Image">
-            </div>
-        </div>
+        <!-- 댓글 데이터가 JavaScript에서 동적으로 추가됨 -->
     </div>
 
     <!-- Promotion Section -->
@@ -88,10 +68,10 @@
         </a>
         <p>플레이 스토어에서 스타카토를 만나보세요!</p>
     </div>
+</div>
 
 <!-- Swiper JS -->
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="/js/share.js"></script>
-</div>
 </body>
 </html>

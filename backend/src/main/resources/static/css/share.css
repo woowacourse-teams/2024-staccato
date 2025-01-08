@@ -190,19 +190,29 @@ body {
     margin: 0;
 }
 
+/*.comment-box {*/
+/*    background-color: #f7f7f7; !* 박스 배경 *!*/
+/*    border: 1px solid #ddd; !* 박스 테두리 *!*/
+/*    border-radius: 8px; !* 둥근 모서리 *!*/
+/*    padding: 0 1rem 0 1rem; !* 내부 여백 *!*/
+/*    width: auto; !* 가로 크기는 내용에 맞게 조정 *!*/
+/*    box-sizing: border-box; !* 패딩 포함 크기 계산 *!*/
+/*    font-size: 0.9rem;*/
+/*    color: #555; !* 코멘트 내용 색상 *!*/
+/*    line-height: 1.4; !* 줄 간격 *!*/
+/*    display: flex; !* 높이를 부모 요소에 맞춤 *!*/
+/*    flex-grow: 1; !* 부모 높이에 맞게 확장 *!*/
+/*    align-items: center; !* 내부 텍스트 중앙 정렬 *!*/
+/*}*/
+
 .comment-box {
     background-color: #f7f7f7; /* 박스 배경 */
     border: 1px solid #ddd; /* 박스 테두리 */
     border-radius: 8px; /* 둥근 모서리 */
-    padding: 0 1rem 0 1rem; /* 내부 여백 */
-    width: auto; /* 가로 크기는 내용에 맞게 조정 */
-    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+    padding: 1rem; /* 내부 여백 */
     font-size: 0.9rem;
     color: #555; /* 코멘트 내용 색상 */
     line-height: 1.4; /* 줄 간격 */
-    display: flex; /* 높이를 부모 요소에 맞춤 */
-    flex-grow: 1; /* 부모 높이에 맞게 확장 */
-    align-items: center; /* 내부 텍스트 중앙 정렬 */
 }
 
 .profile-picture {
@@ -210,6 +220,22 @@ body {
     height: 50px;
     border-radius: 50%; /* 둥근 이미지 */
     object-fit: cover; /* 이미지 비율 유지 */
+}
+
+/* 추가된 코멘트 정렬 */
+.comment-left .content-wrapper {
+    display: flex;
+    flex-direction: row; /* 왼쪽 정렬 */
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.comment-right .content-wrapper {
+    display: flex;
+    flex-direction: row-reverse; /* 오른쪽 정렬 */
+    align-items: flex-start;
+    text-align: right;
+    gap: 1rem;
 }
 
 .promotion {
