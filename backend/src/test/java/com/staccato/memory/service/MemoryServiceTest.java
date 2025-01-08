@@ -160,7 +160,7 @@ class MemoryServiceTest extends ServiceSliceTest {
         MemoryIdResponse memoryIdResponse = memoryService.createMemory(MemoryRequestFixture.create(null, null, "first"), member);
         memoryService.createMemory(MemoryRequestFixture.create(null, null, "second"), member);
         momentService.createMoment(MomentRequestFixture.create(memoryIdResponse.memoryId()), member);
-        MemoryReadRequest memoryReadRequest = new MemoryReadRequest(null, "false");
+        MemoryReadRequest memoryReadRequest = new MemoryReadRequest("false", null);
 
         // when
         MemoryResponses memoryResponses = memoryService.readAllMemories(member, memoryReadRequest);
