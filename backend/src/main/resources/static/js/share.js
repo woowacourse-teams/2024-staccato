@@ -4,19 +4,25 @@ fetch('/share')
     .then(data => {
         const {
             userName,
-            comments,
-            emojiPaths,
-            staccatoTitle,
+            expiredAt,
             momentImageUrls,
-            visitedAt,
+            staccatoTitle,
             placeName,
             address,
-            expiredAt,
+            visitedAt,
+            feeling,
+            comments,
         } = data;
 
         // Header 섹션 업데이트
         document.querySelector('.memory-title').innerText = `${userName}님이 공유한 추억`;
-        document.querySelector('.memory-subtitle').innerText = `${expiredAt}까지 열람할 수 있어요!`;
+
+        const expiredDate = new Date(expiredAt);
+        const expiredYear = expiredDate.getUTCFullYear();
+        const expiredMonth = expiredDate.getUTCMonth() + 1;
+        const expiredDay = expiredDate.getUTCDate();
+        const formattedExpiredAt = `${expiredYear}년 ${expiredMonth}월 ${expiredDay}일`;
+        document.querySelector('.memory-subtitle').innerText = `${formattedExpiredAt}까지 열람할 수 있어요!`;
 
         // Image Slider 섹션 업데이트
         const sliderWrapper = document.querySelector('.swiper-wrapper');
@@ -40,15 +46,33 @@ fetch('/share')
         // Place and Date 섹션 업데이트
         document.querySelector('.details .place-name').innerText = placeName;
         document.querySelector('.details .address').innerText = address;
-        document.querySelector('.details .visited-at').innerText = `${visitedAt}에 방문했어요`;
+
+        const visitedDate = new Date(visitedAt);
+        const visitedYear = visitedDate.getUTCFullYear();
+        const visitedMonth = visitedDate.getUTCMonth() + 1;
+        const visitedDay = visitedDate.getUTCDate();
+        const formattedVisitedAt = `${visitedYear}년 ${visitedMonth}월 ${visitedDay}일`;
+        document.querySelector('.details .visited-at').innerText = `${formattedVisitedAt}에 방문했어요`;
+
+        // 고정된 경로 템플릿 정의
+        const emojiPaths = {
+            happy: "/images/share/happy",
+            angry: "/images/share/angry",
+            sad: "/images/share/sad",
+            scared: "/images/share/scared",
+            excited: "/images/share/excited"
+        };
 
         // Feeling 섹션 업데이트
         const emojisContainer = document.querySelector('.feeling .emojis');
         emojisContainer.innerHTML = ''; // 초기화
-        Object.entries(emojiPaths).forEach(([key, path]) => {
+
+        // 각 감정에 해당하는 이미지를 추가
+        Object.keys(emojiPaths).forEach((key) => {
             const emojiImg = document.createElement('img');
-            emojiImg.src = path;
+            emojiImg.src = key === feeling ? `${emojiPaths[key]}.png` : `${emojiPaths[key]}-gray.png`;
             emojiImg.alt = `${key} emoji`;
+            emojiImg.classList.add('emoji');
             emojisContainer.appendChild(emojiImg);
         });
 
@@ -151,6 +175,6 @@ function setupWheelScrollPrevention() {
                 event.preventDefault();
             }
         },
-        { passive: false }
+        {passive: false}
     );
 }
