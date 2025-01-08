@@ -53,7 +53,7 @@ fetch('/share')
         });
 
         // Comments 섹션 업데이트
-        const commentsContainer = document.querySelector('.comments');
+        const commentsContainer = document.querySelector('.comments-list');
         commentsContainer.innerHTML = ''; // 초기화
         comments.forEach((comment) => {
             const commentElement = document.createElement('div');
@@ -61,13 +61,16 @@ fetch('/share')
             commentElement.setAttribute('data-nickname', comment.nickname);
 
             // 댓글 정렬 클래스 추가
-            const alignmentClass = comment.nickname === userName ? 'comment-right' : 'comment-left';
-            commentElement.classList.add(alignmentClass);
+            const commentAlignmentClass = comment.nickname === userName ? 'comment-right' : 'comment-left';
+            const nicknameAlignmentClass = comment.nickname === userName ? 'nickname-right' : 'nickname-left';
+            const contentWrapperAlignmentClass = comment.nickname === userName ? 'margin-right-auto' : 'margin-left-auto';
+
+            commentElement.classList.add(commentAlignmentClass);
 
             commentElement.innerHTML = `
-                <div class="content-wrapper">
+                <div class="content-wrapper ${contentWrapperAlignmentClass}">
                     <div class="text-section">
-                        <div class="nickname-wrapper">
+                        <div class="nickname-wrapper ${nicknameAlignmentClass}">
                             <p class="nickname">${comment.nickname}</p>
                         </div>
                         <div class="comment-box">
