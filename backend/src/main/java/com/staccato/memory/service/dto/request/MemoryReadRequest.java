@@ -6,9 +6,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "추억 목록 조회시 정렬과 필터링 조건을 위한 요청 형식입니다.")
 public record MemoryReadRequest(
-        @Schema(description = "기간 필터 사용 여부", example = "true")
+        @Schema(description = "기간 필터 사용 여부 (대소문자 구분 X)", example = "true")
         String term,
-        @Schema(description = "정렬 기준 (UPDATED, NEWEST, OLDEST)", example = "NEWEST")
+        @Schema(description = "정렬 기준 (UPDATED, NEWEST, OLDEST / 대소문자 구분 X)", example = "NEWEST")
         String sort
 ) {
     private static final String TERM = "term";
