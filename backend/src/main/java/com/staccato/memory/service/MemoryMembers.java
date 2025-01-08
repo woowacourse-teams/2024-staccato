@@ -1,6 +1,5 @@
 package com.staccato.memory.service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.staccato.memory.domain.Memory;
@@ -11,28 +10,14 @@ import lombok.RequiredArgsConstructor;
 public class MemoryMembers {
     private final List<MemoryMember> memoryMembers;
 
-    public List<Memory> filterMemoryWithTerm() {
-        return getMemories().stream()
-                .filter(Memory::hasTerm)
-                .toList();
+    public List<Memory> operate(List<String> filters, String sort) {
+        List<Memory> memories = getMemories();
+        List<Memory> filteredMemories = MemoryFilter.apply(filters, memories);
+        return MemorySort.apply(sort, filteredMemories);
     }
 
-    public List<Memory> orderMemoryByRecentlyUpdated() {
-        List<Memory> memories = getMemories();
-        memories.sort(Comparator.comparing(Memory::getUpdatedAt).reversed());
-        return memories;
-    }
-
-    public List<Memory> orderMemoryByNewest() {
-        List<Memory> memories = getMemories();
-        memories.sort(Comparator.comparing(Memory::getCreatedAt).reversed());
-        return memories;
-    }
-
-    public List<Memory> orderMemoryByOldest() {
-        List<Memory> memories = getMemories();
-        memories.sort(Comparator.comparing(Memory::getCreatedAt));
-        return memories;
+    public List<Memory> operate() {
+        return operate(List.of(), null);
     }
 
     private List<Memory> getMemories() {

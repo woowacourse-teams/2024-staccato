@@ -46,14 +46,14 @@ public class MemoryService {
 
     public MemoryResponses readAllMemories(Member member, MemoryReadRequest memoryReadRequest) {
         MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
-        List<Memory> memories = memoryMembers.orderMemoryByRecentlyUpdated();
+        List<Memory> memories = memoryMembers.operate(memoryReadRequest.getFilters(), memoryReadRequest.sort());
 
         return MemoryResponses.from(memories);
     }
 
     public MemoryNameResponses readAllMemoriesByDate(Member member, LocalDate currentDate) {
         MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberIdAndDate(member.getId(), currentDate));
-        List<Memory> memories = memoryMembers.orderMemoryByRecentlyUpdated();
+        List<Memory> memories = memoryMembers.operate();
 
         return MemoryNameResponses.from(memories);
     }

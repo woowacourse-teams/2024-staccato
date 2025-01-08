@@ -25,83 +25,25 @@ class MemoryMembersTest extends ServiceSliceTest {
     @Autowired
     private MemoryMemberRepository memoryMemberRepository;
 
-    @DisplayName("기간이 있는 추억 목록만 조회된다.")
+    @DisplayName("주어진 조건을 적용하여 추억 목록을 반환한다.")
     @Test
     void readAllMemoriesWithTerm() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        memoryRepository.save(MemoryFixture.createWithMember("first", member));
-        memoryRepository.save(MemoryFixture.createWithMember(LocalDate.now(), LocalDate.now().plusDays(3), member));
+        Memory memory = memoryRepository.save(MemoryFixture.createWithMember("first", member));
+        Memory memory2 = memoryRepository.save(MemoryFixture.createWithMember(LocalDate.now(), LocalDate.now()
+                .plusDays(3), member));
 
         MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
 
         // when
-        List<Memory> result = memoryMembers.filterMemoryWithTerm();
+        List<Memory> result = memoryMembers.operate(List.of(), "OLDEST");
 
         // then
         assertAll(
-                () -> assertThat(result).hasSize(1),
-                () -> assertThat(result.get(0).hasTerm()).isTrue()
-        );
-    }
-
-    @DisplayName("수정 시간 기준 내림차순으로 추억 목록을 조회된다.")
-    @Test
-    void readAllMemoriesByUpdatedAtDesc() {
-        // given
-        Member member = memberRepository.save(MemberFixture.create());
-        memoryRepository.save(MemoryFixture.createWithMember("first", member));
-        memoryRepository.save(MemoryFixture.createWithMember("second", member));
-
-        MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
-
-        // when
-        List<Memory> result = memoryMembers.orderMemoryByRecentlyUpdated();
-
-        // then
-        assertAll(
-                () -> assertThat(result.get(0).getTitle()).isEqualTo("second"),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo("first")
-        );
-    }
-
-    @DisplayName("생성 시간 기준 내림차순으로 추억 목록을 조회된다.")
-    @Test
-    void readAllMemoriesByCreatedAtDesc() {
-        // given
-        Member member = memberRepository.save(MemberFixture.create());
-        memoryRepository.save(MemoryFixture.createWithMember("first", member));
-        memoryRepository.save(MemoryFixture.createWithMember("second", member));
-
-        MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
-
-        // when
-        List<Memory> result = memoryMembers.orderMemoryByNewest();
-
-        // then
-        assertAll(
-                () -> assertThat(result.get(0).getTitle()).isEqualTo("second"),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo("first")
-        );
-    }
-
-    @DisplayName("생성 시간 기준 오름차순으로 추억 목록을 조회된다.")
-    @Test
-    void readAllMemoriesByCreatedAtAsc() {
-        // given
-        Member member = memberRepository.save(MemberFixture.create());
-        memoryRepository.save(MemoryFixture.createWithMember("first", member));
-        memoryRepository.save(MemoryFixture.createWithMember("second", member));
-
-        MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
-
-        // when
-        List<Memory> result = memoryMembers.orderMemoryByOldest();
-
-        // then
-        assertAll(
-                () -> assertThat(result.get(0).getTitle()).isEqualTo("first"),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo("second")
+                () -> assertThat(result).hasSize(2),
+                () -> assertThat(result.get(0).getTitle()).isEqualTo(memory.getTitle()),
+                () -> assertThat(result.get(1).getTitle()).isEqualTo(memory2.getTitle())
         );
     }
 }

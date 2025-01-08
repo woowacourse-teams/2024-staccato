@@ -1,13 +1,16 @@
 package com.staccato.memory.service.dto.request;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public record MemoryReadRequest(String sort, Boolean term) {
-    private static final String DEFAULT_SORT = "UPDATED";
-    private static final boolean DEFAULT_FLAG = false;
+    private static final String TERM = "term";
 
-    public MemoryReadRequest(String sort, Boolean term) {
-        this.sort = Objects.nonNull(sort) ? sort : DEFAULT_SORT;
-        this.term = Objects.nonNull(term) ? term : DEFAULT_FLAG;
+    public List<String> getFilters() {
+        List<String> filters = new ArrayList<>();
+        if (term) {
+            filters.add(TERM.toLowerCase());
+        }
+        return filters;
     }
 }
