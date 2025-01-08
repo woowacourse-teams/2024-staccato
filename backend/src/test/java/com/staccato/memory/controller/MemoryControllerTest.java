@@ -198,6 +198,26 @@ class MemoryControllerTest extends ControllerTest {
                 .andExpect(content().json(expectedResponse));
     }
 
+    @DisplayName("유효하지 않은 필터링 조건은 무시하고, 모든 추억 목록을 조회한다.")
+    @Test
+    void readAllMemoryIgnoringInvalidFilter() throws Exception {
+        // given
+        Member member = MemberFixture.create();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        Memory memory = MemoryFixture.createWithMember(member);
+        Memory memory2 = MemoryFixture.createWithMember(LocalDate.of(2023, 8, 1), LocalDate.of(2023, 8, 10), member);
+        MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory, memory2);
+
+        when(memoryService.readAllMemories(any(Member.class), any(MemoryReadRequest.class))).thenReturn(memoryResponses);
+
+        // when & then
+        mockMvc.perform(get("/memories")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("term", "invalid"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.memories.size()").value(2));
+    }
+
     @DisplayName("사용자가 기간이 없는 추억을 포함한 목록을 조회하는 응답 직렬화에 성공한다.")
     @Test
     void readAllMemoryWithoutTerm() throws Exception {
