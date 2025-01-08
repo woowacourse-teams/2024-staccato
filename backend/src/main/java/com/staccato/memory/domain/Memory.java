@@ -105,6 +105,6 @@ public class Memory extends BaseEntity {
     }
 
     public boolean hasTerm() {
-        return term.isNotEmpty();
+        return term.isExist();
     }
 }

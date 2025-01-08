@@ -39,22 +39,18 @@ public class Term {
     }
 
     private boolean isInvalidTerm(LocalDate startAt, LocalDate endAt) {
-        return isExist(startAt, endAt) && endAt.isBefore(startAt);
+        return Objects.nonNull(startAt) && Objects.nonNull(endAt) && endAt.isBefore(startAt);
     }
 
     public boolean doesNotContain(LocalDateTime date) {
-        if (isExist(startAt, endAt)) {
+        if (isExist()) {
             ChronoLocalDate targetDate = ChronoLocalDate.from(date);
             return (startAt.isAfter(targetDate) || endAt.isBefore(targetDate));
         }
         return false;
     }
 
-    private boolean isExist(LocalDate startAt, LocalDate endAt) {
-        return Objects.nonNull(startAt) && Objects.nonNull(endAt);
-    }
-
-    public boolean isNotEmpty() {
+    public boolean isExist() {
         return Objects.nonNull(startAt) && Objects.nonNull(endAt);
     }
 }

@@ -72,7 +72,7 @@ class TermTest {
         Term term = new Term(LocalDate.now(), LocalDate.now().plusDays(3));
 
         // when
-        boolean result = term.isNotEmpty();
+        boolean result = term.isExist();
 
         // then
         assertThat(result).isTrue();
@@ -85,7 +85,7 @@ class TermTest {
         Term term = new Term(null, null);
 
         // when
-        boolean result = term.isNotEmpty();
+        boolean result = term.isExist();
 
         // then
         assertThat(result).isFalse();
