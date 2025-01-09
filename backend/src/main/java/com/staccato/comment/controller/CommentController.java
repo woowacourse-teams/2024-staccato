@@ -51,18 +51,8 @@ public class CommentController implements CommentControllerDocs {
         return ResponseEntity.ok().body(commentResponses);
     }
 
-    @PutMapping
+    @PutMapping("/{commentId}")
     public ResponseEntity<Void> updateComment(
-            @LoginMember Member member,
-            @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
-            @Valid @RequestBody CommentUpdateRequest commentUpdateRequest
-    ) {
-        commentService.updateComment(member, commentId, commentUpdateRequest);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/v2/{commentId}")
-    public ResponseEntity<Void> updateCommentV2(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
             @Valid @RequestBody CommentUpdateRequest commentUpdateRequest
@@ -71,17 +61,8 @@ public class CommentController implements CommentControllerDocs {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
-            @RequestParam @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
-            @LoginMember Member member
-    ) {
-        commentService.deleteComment(commentId, member);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/v2/{commentId}")
-    public ResponseEntity<Void> deleteCommentV2(
             @PathVariable @Min(value = 1L, message = "댓글 식별자는 양수로 이루어져야 합니다.") long commentId,
             @LoginMember Member member
     ) {
