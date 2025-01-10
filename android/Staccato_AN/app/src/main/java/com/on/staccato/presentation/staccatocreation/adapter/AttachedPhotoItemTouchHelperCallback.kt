@@ -47,8 +47,8 @@ class AttachedPhotoItemTouchHelperCallback(
         super.onSelectedChanged(viewHolder, actionState)
         when (actionState) {
             ItemTouchHelper.ACTION_STATE_DRAG -> {
-                if (viewHolder != null) {
-                    (viewHolder as PhotoAttachViewHolder.AttachedPhotoViewHolder).startMoving()
+                if (viewHolder is PhotoAttachViewHolder.AttachedPhotoViewHolder) {
+                    viewHolder.startMoving()
                 }
             }
 
@@ -62,7 +62,9 @@ class AttachedPhotoItemTouchHelperCallback(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
     ) {
-        (viewHolder as PhotoAttachViewHolder.AttachedPhotoViewHolder).stopMoving()
+        if (viewHolder is PhotoAttachViewHolder.AttachedPhotoViewHolder) {
+            viewHolder.stopMoving()
+        }
     }
 
     override fun onSwiped(
