@@ -14,10 +14,14 @@ class AttachedPhotoItemTouchHelperCallback(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
     ): Int {
-        return makeFlag(
-            ItemTouchHelper.ACTION_STATE_DRAG,
-            ItemTouchHelper.DOWN or ItemTouchHelper.UP or ItemTouchHelper.START or ItemTouchHelper.END,
-        )
+        return if (viewHolder is PhotoAttachViewHolder.AttachedPhotoViewHolder) {
+            makeFlag(
+                ItemTouchHelper.ACTION_STATE_DRAG,
+                ItemTouchHelper.DOWN or ItemTouchHelper.UP or ItemTouchHelper.START or ItemTouchHelper.END,
+            )
+        } else {
+            ItemTouchHelper.ACTION_STATE_IDLE
+        }
     }
 
     override fun onMove(
