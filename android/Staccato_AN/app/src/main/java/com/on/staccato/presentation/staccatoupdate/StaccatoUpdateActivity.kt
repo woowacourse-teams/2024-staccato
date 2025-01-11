@@ -15,7 +15,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -37,7 +36,6 @@ import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO
 import com.on.staccato.presentation.staccatocreation.CurrentLocationHandler
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
-import com.on.staccato.presentation.staccatocreation.adapter.ItemDragListener
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragment
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
@@ -237,18 +235,7 @@ class StaccatoUpdateActivity :
 
     private fun initAdapter() {
         photoAttachAdapter =
-            PhotoAttachAdapter(
-                object : ItemDragListener {
-                    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
-                        itemTouchHelper.startDrag(viewHolder)
-                    }
-
-                    override fun onStopDrag(list: List<AttachedPhotoUiModel>) {
-                        viewModel.setUrisWithNewOrder(list)
-                    }
-                },
-                viewModel,
-            )
+            PhotoAttachAdapter(viewModel) { viewModel.setUrisWithNewOrder(it) }
         binding.rvPhotoAttach.adapter = photoAttachAdapter
     }
 
