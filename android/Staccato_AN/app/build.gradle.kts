@@ -108,7 +108,7 @@ dependencies {
 
     // JUnit5
     testImplementation(libs.junit.jupiter)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.junit.vintage.engine)
 
     // AssertJ
     testImplementation(libs.assertj.core)
