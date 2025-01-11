@@ -6,10 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 class AttachedPhotoItemTouchHelperCallback(
     private val moveListener: ItemMoveListener,
 ) : ItemTouchHelper.Callback() {
-    override fun isLongPressDragEnabled(): Boolean {
-        return true
-    }
-
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
