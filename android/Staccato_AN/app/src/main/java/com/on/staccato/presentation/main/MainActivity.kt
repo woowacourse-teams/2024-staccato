@@ -108,10 +108,8 @@ class MainActivity :
 
     override fun onStaccatoCreationClicked() {
         StaccatoCreationActivity.startWithResultLauncher(
-            0L,
-            "임시 추억",
-            this,
-            staccatoCreationLauncher,
+            context = this,
+            activityLauncher = staccatoCreationLauncher,
         )
     }
 

@@ -45,7 +45,6 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
@@ -76,7 +75,7 @@ class StaccatoCreationActivity :
     private lateinit var photoAttachAdapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
 
-    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
+    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_CATEGORY_ID) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
     private val locationPermissionManager =
@@ -87,7 +86,7 @@ class StaccatoCreationActivity :
     private var currentSnackBar: Snackbar? = null
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        viewModel.fetchMemoryCandidates(memoryId)
+        viewModel.fetchMemoryCandidates()
         setupPermissionRequestLauncher()
         setupFusedLocationProviderClient()
         initBinding()
@@ -154,6 +153,9 @@ class StaccatoCreationActivity :
 
     override fun onVisitedAtSelectionClicked() {
         if (!visitedAtSelectionFragment.isAdded) {
+            viewModel.selectedVisitedAt.value?.let {
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+            }
             visitedAtSelectionFragment.show(
                 fragmentManager,
                 VisitedAtSelectionFragment.TAG,
@@ -269,10 +271,6 @@ class StaccatoCreationActivity :
 
     private fun initMemorySelectionFragment() {
         memorySelectionFragment.setOnMemorySelected { selectedMemory ->
-            val startAt = selectedMemory.startAt ?: LocalDate.now()
-            val initializedDateTime =
-                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
-            viewModel.selectedVisitedAt(initializedDateTime)
             viewModel.selectMemory(selectedMemory)
         }
     }
@@ -284,9 +282,14 @@ class StaccatoCreationActivity :
     }
 
     private fun observeViewModelData() {
-        viewModel.placeName.observe(this) {
-            autocompleteFragment.setText(it)
-        }
+        observePhotoData()
+        observePlaceData()
+        observeVisitedAtData()
+        observeMemoryData()
+        observeCreatedStaccatoId()
+    }
+
+    private fun observePhotoData() {
         viewModel.isAddPhotoClicked.observe(this) {
             if (!photoAttachFragment.isAdded && it) {
                 photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
@@ -301,21 +304,53 @@ class StaccatoCreationActivity :
                 listOf(AttachedPhotoUiModel.addPhotoButton, *photos.attachedPhotos.toTypedArray()),
             )
         }
-        viewModel.memoryCandidates.observe(this) {
-            memorySelectionFragment.setItems(it.memoryCandidate)
+    }
+
+    private fun observePlaceData() {
+        viewModel.placeName.observe(this) {
+            autocompleteFragment.setText(it)
         }
-        viewModel.selectedMemory.observe(this) { selectedMemory ->
-            val startAt = selectedMemory.startAt ?: LocalDate.now()
-            val initializedDateTime =
-                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
-            memorySelectionFragment.updateKeyMemory(selectedMemory)
-            visitedAtSelectionFragment.initDateCandidates(selectedMemory, initializedDateTime)
-        }
-        viewModel.selectedVisitedAt.observe(this) { selectedVisitedAt ->
-            if (selectedVisitedAt != null) {
-                visitedAtSelectionFragment.initKeyWithSelectedValues(selectedVisitedAt)
+    }
+
+    private fun observeVisitedAtData() {
+        viewModel.selectedVisitedAt.observe(this) {
+            it?.let {
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+                if (memoryId == DEFAULT_CATEGORY_ID) {
+                    viewModel.updateMemorySelectionBy(it)
+                }
             }
         }
+    }
+
+    private fun observeMemoryData() {
+        viewModel.memoryCandidates.observe(this) {
+            it?.let {
+                if (memoryId == DEFAULT_CATEGORY_ID) {
+                    visitedAtSelectionFragment.initCalendarByPeriod()
+                }
+                viewModel.initMemoryAndVisitedAt(memoryId, LocalDateTime.now())
+            }
+        }
+        viewModel.selectableMemories.observe(this) {
+            it?.let {
+                memorySelectionFragment.setItems(it.memoryCandidate)
+            }
+        }
+        viewModel.selectedMemory.observe(this) {
+            it?.let {
+                memorySelectionFragment.updateKeyMemory(it)
+                if (memoryId != DEFAULT_CATEGORY_ID) {
+                    visitedAtSelectionFragment.initCalendarByPeriod(
+                        it.startAt,
+                        it.endAt,
+                    )
+                }
+            }
+        }
+    }
+
+    private fun observeCreatedStaccatoId() {
         viewModel.createdStaccatoId.observe(this) { createdStaccatoId ->
             val resultIntent =
                 Intent()
@@ -429,12 +464,14 @@ class StaccatoCreationActivity :
 
     companion object {
         const val MEMORY_TITLE_KEY = "memoryTitle"
+        const val DEFAULT_CATEGORY_ID = 0L
+        private const val DEFAULT_CATEGORY_TITLE = ""
 
         fun startWithResultLauncher(
-            memoryId: Long,
-            memoryTitle: String,
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
+            memoryId: Long = DEFAULT_CATEGORY_ID,
+            memoryTitle: String = DEFAULT_CATEGORY_TITLE,
         ) {
             Intent(context, StaccatoCreationActivity::class.java).apply {
                 putExtra(MEMORY_ID_KEY, memoryId)
