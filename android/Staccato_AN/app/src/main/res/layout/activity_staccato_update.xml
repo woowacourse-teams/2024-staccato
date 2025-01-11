@@ -208,15 +208,40 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
+                    android:id="@+id/tv_visited_at_selection_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginTop="40dp"
+                    android:text="@string/all_visited_at"
+                    app:layout_constraintStart_toStartOf="@id/constraint_current_location"
+                    app:layout_constraintTop_toBottomOf="@id/constraint_current_location" />
+
+                <TextView
+                    android:id="@+id/tv_staccato_creation_required_mark_fourth"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_visited_at_selection_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_visited_at_selection_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_visited_at_selection_title" />
+
+                <TextView
+                    android:id="@+id/tv_visited_at"
+                    style="@style/BackgroundedTextStyle"
+                    android:layout_marginTop="8dp"
+                    android:onClick="@{() -> staccatoUpdateHandler.onVisitedAtSelectionClicked()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at_selection_title"
+                    bind:dateTimeWithAmPm="@{viewModel.selectedVisitedAt}" />
+
+                <TextView
                     android:id="@+id/tv_memory_selection_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="40dp"
                     android:text="@string/staccato_creation_memory_selection"
-                    app:layout_constraintStart_toStartOf="@id/tv_photo_title"
-                    app:layout_constraintTop_toBottomOf="@id/constraint_current_location" />
+                    app:layout_constraintStart_toStartOf="@id/tv_visited_at_selection_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at" />
 
                 <TextView
-                    android:id="@+id/tv_staccato_update_required_mark_third"
+                    android:id="@+id/tv_staccato_creation_required_mark_third"
                     style="@style/RequiredMarkStyle"
                     app:layout_constraintBottom_toBottomOf="@id/tv_memory_selection_title"
                     app:layout_constraintStart_toEndOf="@id/tv_memory_selection_title"
@@ -230,34 +255,9 @@
                     android:text="@{viewModel.selectedMemory.memoryTitle}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title" />
-
-                <TextView
-                    android:id="@+id/tv_select_memory_title"
-                    style="@style/SubTitleStyle"
-                    android:layout_marginTop="40dp"
-                    android:text="@string/all_visited_at"
-                    app:layout_constraintStart_toStartOf="@id/tv_memory_selection_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_selection" />
-
-                <TextView
-                    android:id="@+id/tv_staccato_update_required_mark_fourth"
-                    style="@style/RequiredMarkStyle"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_select_memory_title"
-                    app:layout_constraintStart_toEndOf="@id/tv_select_memory_title"
-                    app:layout_constraintTop_toTopOf="@id/tv_select_memory_title" />
-
-                <TextView
-                    android:id="@+id/tv_visited_at"
-                    style="@style/BackgroundedTextStyle"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/shape_button_gray1_5dp"
-                    android:onClick="@{() -> staccatoUpdateHandler.onVisitedAtSelectionClicked()}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_select_memory_title"
-                    bind:dateTimeWithAmPm="@{viewModel.selectedVisitedAt}"
-                    bind:memoryCandidates="@{viewModel.memoryCandidates}" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title"
+                    bind:memoryCandidates="@{viewModel.memoryCandidates}"
+                    bind:selectedMemory="@{viewModel.selectedMemory}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_staccato_update_done"
@@ -270,7 +270,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_selection"
                     bind:staccatoAddress="@{viewModel.address}"
                     bind:staccatoMemory="@{viewModel.selectedMemory}"
                     bind:staccatoPhotos="@{viewModel.currentPhotos}"
