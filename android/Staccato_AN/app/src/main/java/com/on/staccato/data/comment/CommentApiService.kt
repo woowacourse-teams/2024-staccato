@@ -38,6 +38,6 @@ interface CommentApiService {
         private const val COMMENTS_URI = "/comments"
         private const val STACCATO_ID = "momentId"
         private const val COMMENT_ID = "commentId"
-        private const val COMMENTS_URI_WITH_COMMENT_ID = "$COMMENTS_URI/v2/{$COMMENT_ID}"
+        private const val COMMENTS_URI_WITH_COMMENT_ID = "$COMMENTS_URI/{$COMMENT_ID}"
     }
 }
