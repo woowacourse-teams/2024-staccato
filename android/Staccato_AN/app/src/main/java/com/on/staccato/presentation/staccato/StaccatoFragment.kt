@@ -39,7 +39,9 @@ class StaccatoFragment :
         DeleteDialogFragment {
             staccatoViewModel.deleteStaccato(staccatoId)
         }
-    private val staccatoId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
+    private val staccatoId by lazy {
+        arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID
+    }
 
     override fun onViewCreated(
         view: View,
@@ -231,6 +233,6 @@ class StaccatoFragment :
 
     companion object {
         const val STACCATO_ID_KEY = "staccatoId"
-        const val DEFAULT_STACCATO_ID = -1L
+        const val DEFAULT_STACCATO_ID = 0L
     }
 }

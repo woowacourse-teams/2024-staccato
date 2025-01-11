@@ -87,10 +87,10 @@ class MemoryFragment :
         viewModel.memory.value?.let {
             val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
             StaccatoCreationActivity.startWithResultLauncher(
-                memoryId,
-                it.title,
                 requireContext(),
                 staccatoCreationLauncher,
+                memoryId,
+                it.title,
             )
         }
     }
