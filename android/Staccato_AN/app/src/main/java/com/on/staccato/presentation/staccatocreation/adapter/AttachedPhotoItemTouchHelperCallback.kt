@@ -44,7 +44,6 @@ class AttachedPhotoItemTouchHelperCallback(
         viewHolder: RecyclerView.ViewHolder?,
         actionState: Int,
     ) {
-        super.onSelectedChanged(viewHolder, actionState)
         when (actionState) {
             ItemTouchHelper.ACTION_STATE_DRAG -> {
                 if (viewHolder is PhotoAttachViewHolder.AttachedPhotoViewHolder) {
@@ -56,6 +55,7 @@ class AttachedPhotoItemTouchHelperCallback(
                 moveListener.onStopDrag()
             }
         }
+        super.onSelectedChanged(viewHolder, actionState)
     }
 
     override fun clearView(
