@@ -15,7 +15,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -37,7 +36,6 @@ import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO
 import com.on.staccato.presentation.staccatocreation.CurrentLocationHandler
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
-import com.on.staccato.presentation.staccatocreation.adapter.ItemDragListener
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragment
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
@@ -49,8 +47,6 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class StaccatoUpdateActivity :
@@ -128,6 +124,9 @@ class StaccatoUpdateActivity :
 
     override fun onVisitedAtSelectionClicked() {
         if (!visitedAtSelectionFragment.isAdded) {
+            viewModel.selectedVisitedAt.value?.let {
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+            }
             visitedAtSelectionFragment.show(
                 fragmentManager,
                 VisitedAtSelectionFragment.TAG,
@@ -153,7 +152,7 @@ class StaccatoUpdateActivity :
         initGooglePlaceSearch()
         showWarningMessage()
         handleError()
-        viewModel.fetchTargetData(staccatoId, memoryId, memoryTitle)
+        viewModel.fetchTargetData(staccatoId)
     }
 
     override fun onResume() {
@@ -236,18 +235,7 @@ class StaccatoUpdateActivity :
 
     private fun initAdapter() {
         photoAttachAdapter =
-            PhotoAttachAdapter(
-                object : ItemDragListener {
-                    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
-                        itemTouchHelper.startDrag(viewHolder)
-                    }
-
-                    override fun onStopDrag(list: List<AttachedPhotoUiModel>) {
-                        viewModel.setUrisWithNewOrder(list)
-                    }
-                },
-                viewModel,
-            )
+            PhotoAttachAdapter(viewModel) { viewModel.setUrisWithNewOrder(it) }
         binding.rvPhotoAttach.adapter = photoAttachAdapter
     }
 
@@ -264,31 +252,29 @@ class StaccatoUpdateActivity :
 
     private fun initMemorySelectionFragment() {
         memorySelectionFragment.setOnMemorySelected { selectedMemory ->
-            val startAt = selectedMemory.startAt ?: LocalDate.now()
-            val initializedDateTime =
-                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
-            viewModel.selectedVisitedAt(initializedDateTime)
             viewModel.selectMemory(selectedMemory)
         }
     }
 
     private fun initVisitedAtSelectionFragment() {
         visitedAtSelectionFragment.setOnVisitedAtSelected { selectedVisitedAt ->
-            viewModel.selectedVisitedAt(selectedVisitedAt)
+            viewModel.selectVisitedAt(selectedVisitedAt)
         }
     }
 
     private fun observeViewModelData() {
-        viewModel.placeName.observe(this) {
-            autocompleteFragment.setText(it)
-        }
+        observePhotoData()
+        observePlaceData()
+        observeVisitedAtData()
+        observeMemoryData()
+        observeIsUpdateComplete()
+    }
+
+    private fun observePhotoData() {
         viewModel.isAddPhotoClicked.observe(this) {
             if (!photoAttachFragment.isAdded && it) {
                 photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
             }
-        }
-        viewModel.isUpdateCompleted.observe(this) { isUpdateCompleted ->
-            handleUpdateComplete(isUpdateCompleted)
         }
         viewModel.pendingPhotos.observe(this) {
             viewModel.fetchPhotosUrlsByUris(this)
@@ -299,20 +285,39 @@ class StaccatoUpdateActivity :
                 listOf(AttachedPhotoUiModel.addPhotoButton, *photos.attachedPhotos.toTypedArray()),
             )
         }
-        viewModel.memoryCandidates.observe(this) {
-            memorySelectionFragment.setItems(it.memoryCandidate)
+    }
+
+    private fun observePlaceData() {
+        viewModel.placeName.observe(this) {
+            autocompleteFragment.setText(it)
         }
-        viewModel.selectedMemory.observe(this) { selectedMemory ->
-            val startAt = selectedMemory.startAt ?: LocalDate.now()
-            val initializedDateTime =
-                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
-            memorySelectionFragment.updateKeyMemory(selectedMemory)
-            visitedAtSelectionFragment.initDateCandidates(selectedMemory, initializedDateTime)
-        }
-        viewModel.selectedVisitedAt.observe(this) { selectedVisitedAt ->
-            if (selectedVisitedAt != null) {
-                visitedAtSelectionFragment.initKeyWithSelectedValues(selectedVisitedAt)
+    }
+
+    private fun observeVisitedAtData() {
+        viewModel.selectedVisitedAt.observe(this) {
+            it?.let {
+                visitedAtSelectionFragment.initCalendarByVisitedAt(it)
+                viewModel.updateMemorySelectionBy(it)
             }
+        }
+    }
+
+    private fun observeMemoryData() {
+        viewModel.selectableMemories.observe(this) {
+            it?.let {
+                memorySelectionFragment.setItems(it.memoryCandidate)
+            }
+        }
+        viewModel.selectedMemory.observe(this) {
+            it?.let {
+                memorySelectionFragment.updateKeyMemory(it)
+            }
+        }
+    }
+
+    private fun observeIsUpdateComplete() {
+        viewModel.isUpdateCompleted.observe(this) { isUpdateCompleted ->
+            handleUpdateComplete(isUpdateCompleted)
         }
     }
 

@@ -14,6 +14,8 @@ import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.dto.Status
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
+import com.on.staccato.domain.model.MemoryCandidates.Companion.emptyMemoryCandidates
+import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
@@ -74,10 +76,11 @@ class StaccatoUpdateViewModel
         private val _isCurrentLocationLoading = MutableLiveData(false)
         val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
 
-        private var targetMemoryId: Long = 0
-
         private val _selectedMemory = MutableLiveData<MemoryCandidate>()
         val selectedMemory: LiveData<MemoryCandidate> get() = _selectedMemory
+
+        private val _selectableMemories = MutableLiveData<MemoryCandidates>()
+        val selectableMemories: LiveData<MemoryCandidates> get() = _selectableMemories
 
         private val _isUpdateCompleted = MutableLiveData(false)
         val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
@@ -115,16 +118,11 @@ class StaccatoUpdateViewModel
             _selectedMemory.value = memory
         }
 
-        fun selectedVisitedAt(visitedAt: LocalDateTime) {
+        fun selectVisitedAt(visitedAt: LocalDateTime) {
             _selectedVisitedAt.value = visitedAt
         }
 
-        fun fetchTargetData(
-            staccatoId: Long,
-            memoryId: Long,
-            memoryTitle: String,
-        ) {
-            targetMemoryId = memoryId
+        fun fetchTargetData(staccatoId: Long) {
             fetchMemoryCandidates()
             fetchStaccatoBy(staccatoId)
         }
@@ -184,6 +182,12 @@ class StaccatoUpdateViewModel
             }
         }
 
+        fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
+            val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyMemoryCandidates
+            _selectableMemories.value = filteredMemories
+            _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.memoryId)
+        }
+
         fun updateStaccato(staccatoId: Long) {
             viewModelScope.launch {
                 val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleException()
@@ -219,22 +223,35 @@ class StaccatoUpdateViewModel
                 staccatoRepository.getStaccato(staccatoId = staccatoId)
                     .onSuccess { staccato ->
                         staccatoTitle.set(staccato.staccatoTitle)
-                        _address.value = staccato.address
-                        _latitude.value = staccato.latitude
-                        _longitude.value = staccato.longitude
-                        _selectedVisitedAt.value = staccato.visitedAt
-                        _placeName.value = staccato.placeName
                         _currentPhotos.value = createPhotosByUrls(staccato.staccatoImageUrls)
-                        _selectedMemory.value =
-                            MemoryCandidate(
-                                staccato.memoryId,
-                                staccato.memoryTitle,
-                                staccato.startAt,
-                                staccato.endAt,
-                            )
+                        initializePlaceBy(staccato)
+                        selectVisitedAt(staccato.visitedAt)
+                        initMemory(staccato)
                     }.onException(::handleInitializeException)
                     .onServerError(::handleServerError)
             }
+        }
+
+        private fun initializePlaceBy(staccato: Staccato) {
+            selectNewPlace(
+                placeId = "필요 없는 파라미터",
+                name = staccato.placeName,
+                address = staccato.address,
+                longitude = staccato.longitude,
+                latitude = staccato.latitude,
+            )
+        }
+
+        private fun initMemory(staccato: Staccato) {
+            _selectedMemory.value =
+                MemoryCandidate(
+                    staccato.memoryId,
+                    staccato.memoryTitle,
+                    staccato.startAt,
+                    staccato.endAt,
+                )
+            _selectableMemories.value =
+                memoryCandidates.value?.filterBy(staccato.visitedAt.toLocalDate())
         }
 
         private fun fetchMemoryCandidates() {

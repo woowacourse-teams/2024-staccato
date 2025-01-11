@@ -6,18 +6,18 @@ import androidx.recyclerview.widget.RecyclerView
 class AttachedPhotoItemTouchHelperCallback(
     private val moveListener: ItemMoveListener,
 ) : ItemTouchHelper.Callback() {
-    override fun isLongPressDragEnabled(): Boolean {
-        return true
-    }
-
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
     ): Int {
-        return makeFlag(
-            ItemTouchHelper.ACTION_STATE_DRAG,
-            ItemTouchHelper.DOWN or ItemTouchHelper.UP or ItemTouchHelper.START or ItemTouchHelper.END,
-        )
+        return if (viewHolder is PhotoAttachViewHolder.AttachedPhotoViewHolder) {
+            makeFlag(
+                ItemTouchHelper.ACTION_STATE_DRAG,
+                ItemTouchHelper.DOWN or ItemTouchHelper.UP or ItemTouchHelper.START or ItemTouchHelper.END,
+            )
+        } else {
+            ItemTouchHelper.ACTION_STATE_IDLE
+        }
     }
 
     override fun onMove(
@@ -40,11 +40,10 @@ class AttachedPhotoItemTouchHelperCallback(
         viewHolder: RecyclerView.ViewHolder?,
         actionState: Int,
     ) {
-        super.onSelectedChanged(viewHolder, actionState)
         when (actionState) {
             ItemTouchHelper.ACTION_STATE_DRAG -> {
-                if (viewHolder != null) {
-                    (viewHolder as PhotoAttachViewHolder.AttachedPhotoViewHolder).startMoving()
+                if (viewHolder is PhotoAttachViewHolder.AttachedPhotoViewHolder) {
+                    viewHolder.startMoving()
                 }
             }
 
@@ -52,13 +51,16 @@ class AttachedPhotoItemTouchHelperCallback(
                 moveListener.onStopDrag()
             }
         }
+        super.onSelectedChanged(viewHolder, actionState)
     }
 
     override fun clearView(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
     ) {
-        (viewHolder as PhotoAttachViewHolder.AttachedPhotoViewHolder).stopMoving()
+        if (viewHolder is PhotoAttachViewHolder.AttachedPhotoViewHolder) {
+            viewHolder.stopMoving()
+        }
     }
 
     override fun onSwiped(

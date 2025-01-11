@@ -98,6 +98,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
+    testImplementation(libs.androidx.arch.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
@@ -139,9 +140,15 @@ dependencies {
     // Fragment
     implementation(libs.androidx.fragment.ktx)
 
+    // Coroutines Test
+    testImplementation(libs.kotlinx.coroutines.test)
+
     // Mockk
-    testImplementation(libs.mockk.android)
+    testImplementation(libs.junitparams)
+    testImplementation(libs.mockk)
     testImplementation(libs.mockk.agent)
+    androidTestImplementation(libs.mockk.agent)
+    androidTestImplementation(libs.mockk.android)
 
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)

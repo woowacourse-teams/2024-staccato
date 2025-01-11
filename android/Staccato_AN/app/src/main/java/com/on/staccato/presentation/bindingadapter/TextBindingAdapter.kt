@@ -16,38 +16,34 @@ fun TextView.setSelectedMemory(
     selectedMemory: MemoryCandidate?,
     memoryCandidates: MemoryCandidates?,
 ) {
-    if (memoryCandidates?.memoryCandidate?.isEmpty() == true) {
-        text = resources.getString(R.string.staccato_creation_no_memory_hint)
-        setTextColor(resources.getColor(R.color.gray3, null))
-        isClickable = false
-        isFocusable = false
-    } else if (selectedMemory == null) {
-        text = resources.getString(R.string.staccato_creation_memory_selection_hint)
-        setTextColor(resources.getColor(R.color.gray3, null))
-        isClickable = true
-        isFocusable = true
-    } else {
-        text = selectedMemory.memoryTitle
-        setTextColor(resources.getColor(R.color.staccato_black, null))
+    when {
+        (memoryCandidates?.memoryCandidate?.isEmpty() == true) -> {
+            text = resources.getString(R.string.staccato_creation_no_memory)
+            setTextColor(resources.getColor(R.color.gray3, null))
+            isClickable = false
+            isFocusable = false
+        }
+        (selectedMemory == null) -> {
+            text = resources.getString(R.string.staccato_creation_no_memory_in_this_date)
+            setTextColor(resources.getColor(R.color.gray3, null))
+            isClickable = false
+            isFocusable = false
+        }
+        else -> {
+            text = selectedMemory.memoryTitle
+            isClickable = true
+            isFocusable = true
+            setTextColor(resources.getColor(R.color.staccato_black, null))
+        }
     }
 }
 
-@BindingAdapter(value = ["dateTimeWithAmPm", "memoryCandidates"])
-fun TextView.setDateTimeWithAmPm(
-    dateTime: LocalDateTime?,
-    memoryCandidates: MemoryCandidates?,
-) {
-    if (memoryCandidates?.memoryCandidate?.isEmpty() == true) {
-        text = resources.getString(R.string.staccato_creation_memory_selection_hint)
-        setTextColor(resources.getColor(R.color.gray3, null))
-        isClickable = false
-        isFocusable = false
-    } else {
-        text = dateTime?.let(::getFormattedLocalDateTime) ?: EMPTY_TEXT
-        setTextColor(resources.getColor(R.color.staccato_black, null))
-        isClickable = true
-        isFocusable = true
-    }
+@BindingAdapter("dateTimeWithAmPm")
+fun TextView.setDateTimeWithAmPm(dateTime: LocalDateTime?) {
+    text = dateTime?.let(::getFormattedLocalDateTime) ?: EMPTY_TEXT
+    setTextColor(resources.getColor(R.color.staccato_black, null))
+    isClickable = true
+    isFocusable = true
 }
 
 @BindingAdapter(
@@ -71,11 +67,6 @@ fun TextView.setMemoryPeriod(
 @BindingAdapter("isMemoryCandidatesEmpty")
 fun TextView.setIsMemoryCandidatesEmptyVisibility(memoryCandidates: MemoryCandidates?) {
     isGone = !memoryCandidates?.memoryCandidate.isNullOrEmpty()
-}
-
-@BindingAdapter("isMemoryEmpty")
-fun TextView.setIsMemoryEmptyVisibility(items: List<Int>?) {
-    isGone = !items.isNullOrEmpty()
 }
 
 @BindingAdapter("visitedAtHistory")
