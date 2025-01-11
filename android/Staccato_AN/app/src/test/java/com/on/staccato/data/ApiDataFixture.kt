@@ -1,4 +1,4 @@
-package com.on.staccato
+package com.on.staccato.data
 
 import com.on.staccato.data.dto.memory.MemoryRequest
 

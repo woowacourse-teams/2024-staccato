@@ -1,4 +1,4 @@
-package com.on.staccato
+package com.on.staccato.data
 
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
