@@ -42,6 +42,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class StaccatoCreationActivity :
@@ -74,7 +75,9 @@ class StaccatoCreationActivity :
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_CATEGORY_ID) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
-    private val locationManager = LocationManager(context = this)
+    @Inject
+    lateinit var locationManager: LocationManager
+
     private val locationPermissionManager = LocationPermissionManager(context = this)
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var address: String

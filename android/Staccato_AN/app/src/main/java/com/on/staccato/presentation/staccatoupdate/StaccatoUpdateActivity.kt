@@ -45,6 +45,7 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class StaccatoUpdateActivity :
@@ -76,7 +77,9 @@ class StaccatoUpdateActivity :
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
     }
 
-    private val locationManager = LocationManager(context = this)
+    @Inject
+    lateinit var locationManager: LocationManager
+
     private val locationPermissionManager = LocationPermissionManager(context = this)
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var address: String

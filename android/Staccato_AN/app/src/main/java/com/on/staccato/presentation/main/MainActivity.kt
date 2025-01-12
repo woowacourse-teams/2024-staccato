@@ -44,6 +44,7 @@ import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity :
@@ -61,7 +62,9 @@ class MainActivity :
 
     private val sharedViewModel: SharedViewModel by viewModels()
     private val mapsViewModel: MapsViewModel by viewModels()
-    private val locationManager = LocationManager(context = this)
+
+    @Inject
+    lateinit var locationManager: LocationManager
     private val locationPermissionManager = LocationPermissionManager(context = this)
 
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()

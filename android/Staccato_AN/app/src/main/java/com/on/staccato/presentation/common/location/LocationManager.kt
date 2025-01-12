@@ -15,65 +15,69 @@ import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.Task
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class LocationManager(
-    context: Context,
-) {
-    private val locationRequest: LocationRequest by lazy { buildLocationRequest() }
-    private val locationSettingsRequest: LocationSettingsRequest.Builder by lazy {
-        LocationSettingsRequest.Builder()
-            .addLocationRequest(locationRequest)
-    }
-
-    private val fusedLocationProviderClient: FusedLocationProviderClient by lazy {
-        LocationServices.getFusedLocationProviderClient(context)
-    }
-
-    fun checkLocationSetting(
-        activity: Activity,
-        actionWhenHavePermission: () -> Unit,
+class LocationManager
+    @Inject
+    constructor(
+        @ApplicationContext context: Context,
     ) {
-        val settingsClient: SettingsClient = LocationServices.getSettingsClient(activity)
-        val locationSettingsResponse: Task<LocationSettingsResponse> =
-            settingsClient.checkLocationSettings(locationSettingsRequest.build())
-
-        locationSettingsResponse.handleLocationSettings(actionWhenHavePermission, activity)
-    }
-
-    @SuppressLint("MissingPermission")
-    fun getCurrentLocation(): Task<Location> =
-        fusedLocationProviderClient.getCurrentLocation(
-            PRIORITY_HIGH_ACCURACY,
-            CancellationTokenSource().token,
-        )
-
-    private fun buildLocationRequest(): LocationRequest =
-        LocationRequest.Builder(PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS)
-            .setGranularity(GRANULARITY_PERMISSION_LEVEL)
-            .setWaitForAccurateLocation(true)
-            .build()
-
-    private fun Task<LocationSettingsResponse>.handleLocationSettings(
-        actionWhenHavePermission: () -> Unit,
-        activity: Activity,
-    ) {
-        addOnSuccessListener { actionWhenHavePermission() }
-        addOnFailureListener { exception ->
-            exception.actionWhenHaveNoPermission(activity)
+        private val locationRequest: LocationRequest by lazy { buildLocationRequest() }
+        private val locationSettingsRequest: LocationSettingsRequest.Builder by lazy {
+            LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest)
         }
-    }
 
-    private fun Exception.actionWhenHaveNoPermission(activity: Activity) {
-        if (this is ResolvableApiException) {
-            startResolutionForResult(
-                activity,
-                REQUEST_CODE_LOCATION,
+        private val fusedLocationProviderClient: FusedLocationProviderClient by lazy {
+            LocationServices.getFusedLocationProviderClient(context)
+        }
+
+        fun checkLocationSetting(
+            activity: Activity,
+            actionWhenHavePermission: () -> Unit,
+        ) {
+            val settingsClient: SettingsClient = LocationServices.getSettingsClient(activity)
+            val locationSettingsResponse: Task<LocationSettingsResponse> =
+                settingsClient.checkLocationSettings(locationSettingsRequest.build())
+
+            locationSettingsResponse.handleLocationSettings(actionWhenHavePermission, activity)
+        }
+
+        @SuppressLint("MissingPermission")
+        fun getCurrentLocation(): Task<Location> =
+            fusedLocationProviderClient.getCurrentLocation(
+                PRIORITY_HIGH_ACCURACY,
+                CancellationTokenSource().token,
             )
+
+        private fun buildLocationRequest(): LocationRequest =
+            LocationRequest.Builder(PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS)
+                .setGranularity(GRANULARITY_PERMISSION_LEVEL)
+                .setWaitForAccurateLocation(true)
+                .build()
+
+        private fun Task<LocationSettingsResponse>.handleLocationSettings(
+            actionWhenHavePermission: () -> Unit,
+            activity: Activity,
+        ) {
+            addOnSuccessListener { actionWhenHavePermission() }
+            addOnFailureListener { exception ->
+                exception.actionWhenHaveNoPermission(activity)
+            }
+        }
+
+        private fun Exception.actionWhenHaveNoPermission(activity: Activity) {
+            if (this is ResolvableApiException) {
+                startResolutionForResult(
+                    activity,
+                    REQUEST_CODE_LOCATION,
+                )
+            }
+        }
+
+        companion object {
+            private const val INTERVAL_MILLIS = 10000L
+            private const val REQUEST_CODE_LOCATION = 100
         }
     }
-
-    companion object {
-        private const val INTERVAL_MILLIS = 10000L
-        private const val REQUEST_CODE_LOCATION = 100
-    }
-}

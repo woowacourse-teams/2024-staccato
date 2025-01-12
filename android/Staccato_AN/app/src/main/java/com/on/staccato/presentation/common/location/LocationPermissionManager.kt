@@ -11,12 +11,15 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.on.staccato.R
 import com.on.staccato.presentation.util.showSnackBar
+import javax.inject.Inject
 
 class LocationPermissionManager(
     private val context: Context,
 ) {
     private val locationDialog = LocationDialogFragment()
-    private val locationManager = LocationManager(context)
+
+    @Inject
+    lateinit var locationManager: LocationManager
 
     fun requestPermissionLauncher(
         activity: AppCompatActivity,
