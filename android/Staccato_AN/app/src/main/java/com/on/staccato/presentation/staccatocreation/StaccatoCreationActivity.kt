@@ -166,6 +166,7 @@ class StaccatoCreationActivity :
     private fun setupPermissionRequestLauncher() {
         permissionRequestLauncher =
             locationPermissionManager.requestPermissionLauncher(
+                activity = this,
                 view = binding.root,
                 actionWhenHavePermission = ::fetchCurrentLocationAddress,
             )
@@ -173,6 +174,7 @@ class StaccatoCreationActivity :
 
     private fun checkLocationSetting(isCurrentLocationCallClicked: Boolean = false) {
         locationManager.checkLocationSetting(
+            activity = this,
             actionWhenHavePermission = {
                 fetchCurrentLocationAddress(
                     isCurrentLocationCallClicked,
@@ -184,7 +186,7 @@ class StaccatoCreationActivity :
     private fun fetchCurrentLocationAddress(isCurrentLocationCallClicked: Boolean = false) {
         val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
         val shouldShowRequestLocationPermissionsRationale =
-            locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
+            locationPermissionManager.shouldShowRequestLocationPermissionsRationale(activity = this)
 
         when {
             isLocationPermissionGranted -> {

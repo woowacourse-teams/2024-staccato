@@ -31,7 +31,10 @@ class LocationManager(
         LocationServices.getFusedLocationProviderClient(context)
     }
 
-    fun checkLocationSetting(actionWhenHavePermission: () -> Unit) {
+    fun checkLocationSetting(
+        activity: Activity,
+        actionWhenHavePermission: () -> Unit,
+    ) {
         val settingsClient: SettingsClient = LocationServices.getSettingsClient(activity)
         val locationSettingsResponse: Task<LocationSettingsResponse> =
             settingsClient.checkLocationSettings(locationSettingsRequest.build())

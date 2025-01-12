@@ -14,19 +14,20 @@ import com.on.staccato.presentation.util.showSnackBar
 
 class LocationPermissionManager(
     private val context: Context,
-    private val activity: AppCompatActivity,
+    activity: AppCompatActivity,
 ) {
     private val locationDialog = LocationDialogFragment()
     private val locationManager = LocationManager(activity, context)
 
     fun requestPermissionLauncher(
+        activity: AppCompatActivity,
         view: View,
         actionWhenHavePermission: () -> Unit,
     ) = activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         permissions.forEach { (_, isGranted) ->
             if (isGranted) {
                 view.showSnackBar(context.resources.getString(R.string.maps_location_permission_granted_message))
-                locationManager.checkLocationSetting(actionWhenHavePermission)
+                locationManager.checkLocationSetting(activity, actionWhenHavePermission)
             } else {
                 view.showSnackBar(context.resources.getString(R.string.all_location_permission_denial))
             }
@@ -49,7 +50,7 @@ class LocationPermissionManager(
         return isGrantedCoarseLocation && isGrantedFineLocation
     }
 
-    fun shouldShowRequestLocationPermissionsRationale(): Boolean {
+    fun shouldShowRequestLocationPermissionsRationale(activity: AppCompatActivity): Boolean {
         val shouldRequestCoarseLocation =
             ActivityCompat.shouldShowRequestPermissionRationale(
                 activity,

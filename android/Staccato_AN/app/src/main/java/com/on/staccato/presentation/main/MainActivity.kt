@@ -118,6 +118,7 @@ class MainActivity :
     private fun setupPermissionRequestLauncher() {
         permissionRequestLauncher =
             locationPermissionManager.requestPermissionLauncher(
+                activity = this,
                 view = binding.root,
                 actionWhenHavePermission = ::enableMyLocation,
             )
@@ -130,7 +131,7 @@ class MainActivity :
     }
 
     private fun checkLocationSetting() {
-        locationManager.checkLocationSetting(actionWhenHavePermission = ::enableMyLocation)
+        locationManager.checkLocationSetting(activity = this, actionWhenHavePermission = ::enableMyLocation)
     }
 
     private fun setMapStyle(map: GoogleMap) {
@@ -148,7 +149,7 @@ class MainActivity :
     private fun enableMyLocation() {
         val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
         val shouldShowRequestLocationPermissionsRationale =
-            locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
+            locationPermissionManager.shouldShowRequestLocationPermissionsRationale(activity = this)
 
         when {
             isLocationPermissionGranted -> {
