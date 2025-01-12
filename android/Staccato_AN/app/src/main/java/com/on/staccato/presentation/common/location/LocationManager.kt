@@ -31,10 +31,10 @@ class LocationManager(
     }
 
     private fun buildLocationRequest(): LocationRequest =
-        LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS).apply {
-            setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
-            setWaitForAccurateLocation(true)
-        }.build()
+        LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS)
+            .setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
+            .setWaitForAccurateLocation(true)
+            .build()
 
     private fun Task<LocationSettingsResponse>.handleLocationSettings(
         actionWhenHavePermission: () -> Unit,
