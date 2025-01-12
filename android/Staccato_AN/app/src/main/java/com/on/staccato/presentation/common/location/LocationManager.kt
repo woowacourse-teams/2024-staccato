@@ -1,8 +1,12 @@
 package com.on.staccato.presentation.common.location
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -10,15 +14,21 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.Task
 
 class LocationManager(
     private val activity: AppCompatActivity,
+    context: Context,
 ) {
     private val locationRequest: LocationRequest by lazy { buildLocationRequest() }
     private val locationSettingsRequest: LocationSettingsRequest.Builder by lazy {
         LocationSettingsRequest.Builder()
             .addLocationRequest(locationRequest)
+    }
+
+    private val fusedLocationProviderClient: FusedLocationProviderClient by lazy {
+        LocationServices.getFusedLocationProviderClient(context)
     }
 
     fun checkLocationSetting(actionWhenHavePermission: () -> Unit) {
@@ -28,6 +38,13 @@ class LocationManager(
 
         locationSettingsResponse.handleLocationSettings(actionWhenHavePermission, activity)
     }
+
+    @SuppressLint("MissingPermission")
+    fun getCurrentLocation(): Task<Location> =
+        fusedLocationProviderClient.getCurrentLocation(
+            Priority.PRIORITY_HIGH_ACCURACY,
+            CancellationTokenSource().token,
+        )
 
     private fun buildLocationRequest(): LocationRequest =
         LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS)

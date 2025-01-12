@@ -17,7 +17,7 @@ class LocationPermissionManager(
     private val activity: AppCompatActivity,
 ) {
     private val locationDialog = LocationDialogFragment()
-    private val locationManager = LocationManager(activity)
+    private val locationManager = LocationManager(activity, context)
 
     fun requestPermissionLauncher(
         view: View,

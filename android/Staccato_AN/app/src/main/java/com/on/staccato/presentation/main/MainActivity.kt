@@ -14,9 +14,6 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -61,11 +58,10 @@ class MainActivity :
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private val sharedViewModel: SharedViewModel by viewModels()
     private val mapsViewModel: MapsViewModel by viewModels()
-    private val locationManager = LocationManager(activity = this)
+    private val locationManager = LocationManager(activity = this, context = this)
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
 
@@ -78,7 +74,6 @@ class MainActivity :
         binding.handler = this
         setupPermissionRequestLauncher()
         setupGoogleMap()
-        setupFusedLocationProviderClient()
         observeCurrentLocation()
         observeStaccatoLocations()
         observeStaccatoId()
@@ -158,11 +153,7 @@ class MainActivity :
         when {
             isLocationPermissionGranted -> {
                 googleMap.isMyLocationEnabled = true
-                val currentLocation: Task<Location> =
-                    fusedLocationProviderClient.getCurrentLocation(
-                        PRIORITY_HIGH_ACCURACY,
-                        null,
-                    )
+                val currentLocation: Task<Location> = locationManager.getCurrentLocation()
                 mapsViewModel.setCurrentLocation(currentLocation)
             }
 
@@ -188,10 +179,6 @@ class MainActivity :
         sharedViewModel.isPermissionCancelClicked.observe(this) { isCancel ->
             if (!isCancel) requestLocationPermissions()
         }
-    }
-
-    private fun setupFusedLocationProviderClient() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
     private fun observeCurrentLocation() {

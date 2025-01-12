@@ -15,9 +15,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.material.snackbar.Snackbar
@@ -79,11 +76,10 @@ class StaccatoUpdateActivity :
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
     }
 
-    private val locationManager = LocationManager(activity = this)
+    private val locationManager = LocationManager(activity = this, context = this)
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var address: String
     private var currentSnackBar: Snackbar? = null
 
@@ -143,7 +139,6 @@ class StaccatoUpdateActivity :
 
     override fun initStartView(savedInstanceState: Bundle?) {
         setupPermissionRequestLauncher()
-        setupFusedLocationProviderClient()
         initBinding()
         initToolbar()
         initMemorySelectionFragment()
@@ -176,10 +171,6 @@ class StaccatoUpdateActivity :
         )
     }
 
-    private fun setupFusedLocationProviderClient() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-    }
-
     private fun fetchCurrentLocationAddress() {
         val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
         val shouldShowRequestLocationPermissionsRationale =
@@ -188,11 +179,7 @@ class StaccatoUpdateActivity :
         when {
             isLocationPermissionGranted -> {
                 viewModel.setCurrentLocationLoading(true)
-                val currentLocation: Task<Location> =
-                    fusedLocationProviderClient.getCurrentLocation(
-                        Priority.PRIORITY_HIGH_ACCURACY,
-                        null,
-                    )
+                val currentLocation: Task<Location> = locationManager.getCurrentLocation()
                 currentLocation.addOnSuccessListener { location ->
                     fetchAddress(location)
                 }
@@ -217,10 +204,7 @@ class StaccatoUpdateActivity :
 
             if (isSettingClicked && checkSelfLocationPermission) {
                 val currentLocation: Task<Location> =
-                    fusedLocationProviderClient.getCurrentLocation(
-                        Priority.PRIORITY_HIGH_ACCURACY,
-                        null,
-                    )
+                    locationManager.getCurrentLocation()
                 currentLocation.addOnSuccessListener { location ->
                     fetchAddress(location)
                 }
