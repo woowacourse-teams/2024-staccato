@@ -74,9 +74,8 @@ class StaccatoCreationActivity :
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_CATEGORY_ID) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
-    private val locationManager = LocationManager(activity = this, context = this)
-    private val locationPermissionManager =
-        LocationPermissionManager(context = this, activity = this)
+    private val locationManager = LocationManager(context = this)
+    private val locationPermissionManager = LocationPermissionManager(context = this)
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var address: String
     private var currentSnackBar: Snackbar? = null

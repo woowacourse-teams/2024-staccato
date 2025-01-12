@@ -61,9 +61,8 @@ class MainActivity :
 
     private val sharedViewModel: SharedViewModel by viewModels()
     private val mapsViewModel: MapsViewModel by viewModels()
-    private val locationManager = LocationManager(activity = this, context = this)
-    private val locationPermissionManager =
-        LocationPermissionManager(context = this, activity = this)
+    private val locationManager = LocationManager(context = this)
+    private val locationPermissionManager = LocationPermissionManager(context = this)
 
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Granularity.GRANULARITY_PERMISSION_LEVEL
@@ -18,7 +17,6 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.Task
 
 class LocationManager(
-    private val activity: AppCompatActivity,
     context: Context,
 ) {
     private val locationRequest: LocationRequest by lazy { buildLocationRequest() }

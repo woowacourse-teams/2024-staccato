@@ -76,9 +76,8 @@ class StaccatoUpdateActivity :
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
     }
 
-    private val locationManager = LocationManager(activity = this, context = this)
-    private val locationPermissionManager =
-        LocationPermissionManager(context = this, activity = this)
+    private val locationManager = LocationManager(context = this)
+    private val locationPermissionManager = LocationPermissionManager(context = this)
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var address: String
     private var currentSnackBar: Snackbar? = null
