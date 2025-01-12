@@ -85,7 +85,7 @@ public class MomentService {
     public void deleteMomentById(long momentId, Member member) {
         momentRepository.findById(momentId).ifPresent(moment -> {
             validateMemoryOwner(moment.getMemory(), member);
-            commentRepository.deleteAllByMomentIdInBatch(List.of(momentId));
+            commentRepository.deleteAllByMomentIdInBulk(List.of(momentId));
             momentImageRepository.deleteAllByMomentIdInBulk(List.of(momentId));
             momentRepository.deleteById(momentId);
         });

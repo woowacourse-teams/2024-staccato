@@ -129,9 +129,9 @@ public class MemoryService {
                 .map(Moment::getId)
                 .toList();
         momentImageRepository.deleteAllByMomentIdInBulk(momentIds);
-        commentRepository.deleteAllByMomentIdInBatch(momentIds);
-        momentRepository.deleteAllByMemoryIdInBatch(memoryId);
-        memoryMemberRepository.deleteAllByMemoryIdInBatch(memoryId);
+        commentRepository.deleteAllByMomentIdInBulk(momentIds);
+        momentRepository.deleteAllByMemoryIdInBulk(memoryId);
+        memoryMemberRepository.deleteAllByMemoryIdInBulk(memoryId);
     }
 
     private void validateOwner(Memory memory, Member member) {

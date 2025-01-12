@@ -35,7 +35,7 @@ class CommentRepositoryTest {
 
     @DisplayName("특정 스타카토의 id를 여러개를 가지고 있는 모든 댓글들을 삭제한다.")
     @Test
-    void deleteAllByMomentIdInBatch() {
+    void deleteAllByMomentIdInBulk() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         Memory memory = memoryRepository.save(MemoryFixture.create(null, null));
@@ -47,7 +47,7 @@ class CommentRepositoryTest {
         momentRepository.save(moment2);
 
         // when
-        commentRepository.deleteAllByMomentIdInBatch(List.of(moment1.getId(), moment2.getId()));
+        commentRepository.deleteAllByMomentIdInBulk(List.of(moment1.getId(), moment2.getId()));
         em.flush();
         em.clear();
 
