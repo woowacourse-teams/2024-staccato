@@ -16,16 +16,15 @@ class LocationManager(
     private val activity: AppCompatActivity,
 ) {
     private val locationRequest: LocationRequest by lazy { buildLocationRequest() }
+    private val locationSettingsRequest: LocationSettingsRequest.Builder by lazy {
+        LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+    }
 
     fun checkLocationSetting(actionWhenHavePermission: () -> Unit) {
-        val builder =
-            LocationSettingsRequest
-                .Builder()
-                .addLocationRequest(locationRequest)
-
         val settingsClient: SettingsClient = LocationServices.getSettingsClient(activity)
         val locationSettingsResponse: Task<LocationSettingsResponse> =
-            settingsClient.checkLocationSettings(builder.build())
+            settingsClient.checkLocationSettings(locationSettingsRequest.build())
 
         locationSettingsResponse.handleLocationSettings(actionWhenHavePermission, activity)
     }
