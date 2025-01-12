@@ -14,10 +14,9 @@ import com.on.staccato.presentation.util.showSnackBar
 
 class LocationPermissionManager(
     private val context: Context,
-    activity: AppCompatActivity,
 ) {
     private val locationDialog = LocationDialogFragment()
-    private val locationManager = LocationManager(activity, context)
+    private val locationManager = LocationManager(context)
 
     fun requestPermissionLauncher(
         activity: AppCompatActivity,
