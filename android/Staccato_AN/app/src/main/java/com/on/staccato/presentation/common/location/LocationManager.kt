@@ -7,7 +7,7 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.Granularity
+import com.google.android.gms.location.Granularity.GRANULARITY_PERMISSION_LEVEL
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
@@ -48,7 +48,7 @@ class LocationManager(
 
     private fun buildLocationRequest(): LocationRequest =
         LocationRequest.Builder(PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS)
-            .setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
+            .setGranularity(GRANULARITY_PERMISSION_LEVEL)
             .setWaitForAccurateLocation(true)
             .build()
 
