@@ -71,17 +71,12 @@ public class Moment extends BaseEntity {
         }
     }
 
-    public void update(String title, MomentImages newMomentImages) {
-        this.title = title;
-        this.momentImages.update(newMomentImages, this);
-    }
-
-    public void update(Moment updatedMoment) {
-        this.visitedAt = updatedMoment.getVisitedAt();
-        this.title = updatedMoment.getTitle();
-        this.spot = updatedMoment.getSpot();
-        this.momentImages.update(updatedMoment.momentImages, this);
-        this.memory = updatedMoment.getMemory();
+    public void update(Moment newMoment) {
+        this.visitedAt = newMoment.getVisitedAt();
+        this.title = newMoment.getTitle();
+        this.spot = newMoment.getSpot();
+        this.momentImages.update(newMoment.momentImages, this);
+        this.memory = newMoment.getMemory();
     }
 
     public String getThumbnailUrl() {

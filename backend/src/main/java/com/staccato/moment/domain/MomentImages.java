@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MomentImages {
     private static final int MAX_COUNT = 5;
-    @OneToMany(mappedBy = "moment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "moment", cascade = CascadeType.PERSIST)
     private List<MomentImage> images = new ArrayList<>();
 
     public MomentImages(List<String> addedImages) {
@@ -38,16 +38,43 @@ public class MomentImages {
         });
     }
 
-    protected void update(MomentImages momentImages, Moment moment) {
-        removeExistsImages(new ArrayList<>(images));
-        addAll(momentImages, moment);
-    }
-
-    private void removeExistsImages(List<MomentImage> originalImages) {
-        originalImages.forEach(this.images::remove);
-    }
-
     public boolean isNotEmpty() {
         return !images.isEmpty();
+    }
+
+    protected void update(MomentImages newMomentImages, Moment moment) {
+        removeExistImages(newMomentImages);
+        saveNewImages(newMomentImages, moment);
+    }
+
+    private void removeExistImages(MomentImages newMomentImages) {
+        List<MomentImage> momentImages = findImagesNotPresentIn(newMomentImages);
+        images.removeAll(momentImages);
+    }
+
+    private void saveNewImages(MomentImages newMomentImages, Moment moment) {
+        List<MomentImage> momentImages = newMomentImages.findImagesNotPresentIn(this);
+        momentImages.forEach(image -> {
+            this.images.add(image);
+            image.belongTo(moment);
+        });
+    }
+
+    public List<Long> findRemovalImageIds(MomentImages newMomentImages) {
+        List<MomentImage> momentImages = findImagesNotPresentIn(newMomentImages);
+        return momentImages.stream()
+                .map(MomentImage::getId)
+                .toList();
+    }
+
+    private List<MomentImage> findImagesNotPresentIn(MomentImages targetMomentImages) {
+        return images.stream()
+                .filter(image -> !targetMomentImages.contains(image))
+                .toList();
+    }
+
+    private boolean contains(MomentImage momentImage) {
+        return this.images.stream()
+                .anyMatch(image -> image.getImageUrl().equals(momentImage.getImageUrl()));
     }
 }
