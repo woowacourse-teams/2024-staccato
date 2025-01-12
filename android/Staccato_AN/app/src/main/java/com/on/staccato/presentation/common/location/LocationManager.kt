@@ -35,13 +35,13 @@ class LocationManager
 
         fun checkLocationSetting(
             activity: Activity,
-            actionWhenHavePermission: () -> Unit,
+            actionWhenGPSIsOn: () -> Unit,
         ) {
             val settingsClient: SettingsClient = LocationServices.getSettingsClient(activity)
             val locationSettingsResponse: Task<LocationSettingsResponse> =
                 settingsClient.checkLocationSettings(locationSettingsRequest.build())
 
-            locationSettingsResponse.handleLocationSettings(actionWhenHavePermission, activity)
+            locationSettingsResponse.handleLocationSettings(actionWhenGPSIsOn, activity)
         }
 
         @SuppressLint("MissingPermission")
@@ -58,16 +58,16 @@ class LocationManager
                 .build()
 
         private fun Task<LocationSettingsResponse>.handleLocationSettings(
-            actionWhenHavePermission: () -> Unit,
+            actionWhenGPSIsOn: () -> Unit,
             activity: Activity,
         ) {
-            addOnSuccessListener { actionWhenHavePermission() }
+            addOnSuccessListener { actionWhenGPSIsOn() }
             addOnFailureListener { exception ->
-                exception.actionWhenHaveNoPermission(activity)
+                exception.actionWhenGPSIsOff(activity)
             }
         }
 
-        private fun Exception.actionWhenHaveNoPermission(activity: Activity) {
+        private fun Exception.actionWhenGPSIsOff(activity: Activity) {
             if (this is ResolvableApiException) {
                 startResolutionForResult(
                     activity,

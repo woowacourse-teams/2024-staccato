@@ -135,7 +135,7 @@ class MainActivity :
     }
 
     private fun checkLocationSetting() {
-        locationManager.checkLocationSetting(activity = this, actionWhenHavePermission = ::enableMyLocation)
+        locationManager.checkLocationSetting(activity = this, actionWhenGPSIsOn = ::enableMyLocation)
     }
 
     private fun setMapStyle(map: GoogleMap) {

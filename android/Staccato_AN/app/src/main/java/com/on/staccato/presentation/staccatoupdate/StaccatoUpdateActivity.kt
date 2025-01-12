@@ -173,7 +173,7 @@ class StaccatoUpdateActivity :
     private fun checkLocationSetting() {
         locationManager.checkLocationSetting(
             activity = this,
-            actionWhenHavePermission = { fetchCurrentLocationAddress() },
+            actionWhenGPSIsOn = { fetchCurrentLocationAddress() },
         )
     }
 

@@ -179,7 +179,7 @@ class StaccatoCreationActivity :
     private fun checkLocationSetting(isCurrentLocationCallClicked: Boolean = false) {
         locationManager.checkLocationSetting(
             activity = this,
-            actionWhenHavePermission = {
+            actionWhenGPSIsOn = {
                 fetchCurrentLocationAddress(
                     isCurrentLocationCallClicked,
                 )
