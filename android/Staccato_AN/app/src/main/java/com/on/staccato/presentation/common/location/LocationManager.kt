@@ -15,9 +15,9 @@ import com.google.android.gms.tasks.Task
 class LocationManager(
     private val activity: AppCompatActivity,
 ) {
-    fun checkLocationSetting(actionWhenHavePermission: () -> Unit) {
-        val locationRequest: LocationRequest = buildLocationRequest()
+    private val locationRequest: LocationRequest by lazy { buildLocationRequest() }
 
+    fun checkLocationSetting(actionWhenHavePermission: () -> Unit) {
         val builder =
             LocationSettingsRequest
                 .Builder()
