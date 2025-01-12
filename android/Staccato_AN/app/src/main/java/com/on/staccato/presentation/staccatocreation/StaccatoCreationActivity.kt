@@ -27,6 +27,7 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.location.LocationManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
@@ -76,6 +77,7 @@ class StaccatoCreationActivity :
     private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_CATEGORY_ID) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
+    private val locationManager = LocationManager(activity = this)
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
@@ -175,7 +177,7 @@ class StaccatoCreationActivity :
     }
 
     private fun checkLocationSetting(isCurrentLocationCallClicked: Boolean = false) {
-        locationPermissionManager.checkLocationSetting(
+        locationManager.checkLocationSetting(
             actionWhenHavePermission = {
                 fetchCurrentLocationAddress(
                     isCurrentLocationCallClicked,

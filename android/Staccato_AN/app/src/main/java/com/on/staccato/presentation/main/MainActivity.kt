@@ -35,6 +35,7 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.common.location.LocationManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.main.model.MarkerUiModel
@@ -64,6 +65,7 @@ class MainActivity :
 
     private val sharedViewModel: SharedViewModel by viewModels()
     private val mapsViewModel: MapsViewModel by viewModels()
+    private val locationManager = LocationManager(activity = this)
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
 
@@ -133,7 +135,7 @@ class MainActivity :
     }
 
     private fun checkLocationSetting() {
-        locationPermissionManager.checkLocationSetting(actionWhenHavePermission = ::enableMyLocation)
+        locationManager.checkLocationSetting(actionWhenHavePermission = ::enableMyLocation)
     }
 
     private fun setMapStyle(map: GoogleMap) {

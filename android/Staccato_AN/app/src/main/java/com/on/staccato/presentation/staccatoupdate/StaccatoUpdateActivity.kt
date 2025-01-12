@@ -27,6 +27,7 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.location.LocationManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
@@ -78,6 +79,7 @@ class StaccatoUpdateActivity :
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
     }
 
+    private val locationManager = LocationManager(activity = this)
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
@@ -169,7 +171,7 @@ class StaccatoUpdateActivity :
     }
 
     private fun checkLocationSetting() {
-        locationPermissionManager.checkLocationSetting(
+        locationManager.checkLocationSetting(
             actionWhenHavePermission = { fetchCurrentLocationAddress() },
         )
     }
