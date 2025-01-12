@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.common
+package com.on.staccato.presentation.common.location
 
 import android.Manifest
 import android.app.Activity
@@ -20,7 +20,6 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 import com.on.staccato.R
-import com.on.staccato.presentation.common.location.LocationDialogFragment
 import com.on.staccato.presentation.util.showSnackBar
 
 class LocationPermissionManager(
