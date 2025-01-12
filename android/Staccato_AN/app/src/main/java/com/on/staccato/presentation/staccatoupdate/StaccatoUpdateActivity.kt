@@ -80,7 +80,9 @@ class StaccatoUpdateActivity :
     @Inject
     lateinit var locationManager: LocationManager
 
-    private val locationPermissionManager = LocationPermissionManager(context = this)
+    @Inject
+    lateinit var locationPermissionManager: LocationPermissionManager
+
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var address: String
     private var currentSnackBar: Snackbar? = null

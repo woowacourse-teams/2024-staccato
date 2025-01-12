@@ -65,7 +65,9 @@ class MainActivity :
 
     @Inject
     lateinit var locationManager: LocationManager
-    private val locationPermissionManager = LocationPermissionManager(context = this)
+
+    @Inject
+    lateinit var locationPermissionManager: LocationPermissionManager
 
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
