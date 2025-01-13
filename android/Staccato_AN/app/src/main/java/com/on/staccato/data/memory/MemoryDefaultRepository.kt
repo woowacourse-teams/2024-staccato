@@ -15,7 +15,7 @@ class MemoryDefaultRepository
         private val memoryDataSource: MemoryDataSource,
     ) : MemoryRepository {
         override suspend fun getMemory(memoryId: Long): ResponseResult<Memory> {
-            return when (val responseResult = memoryDataSource.getMemory(memoryId)) {
+            return when (val responseResult = memoryDataSource.getCategory(memoryId)) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ResponseResult.ServerError ->
                     ResponseResult.ServerError(
@@ -28,7 +28,7 @@ class MemoryDefaultRepository
         }
 
         override suspend fun getMemories(currentDate: String?): ResponseResult<MemoryCandidates> {
-            return when (val responseResult = memoryDataSource.getMemories(currentDate)) {
+            return when (val responseResult = memoryDataSource.getCategories(currentDate)) {
                 is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ResponseResult.ServerError ->
@@ -40,7 +40,7 @@ class MemoryDefaultRepository
         }
 
         override suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse> {
-            return when (val responseResult = memoryDataSource.createMemory(newMemory)) {
+            return when (val responseResult = memoryDataSource.createCategory(newMemory)) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ResponseResult.ServerError ->
                     ResponseResult.ServerError(
@@ -56,7 +56,7 @@ class MemoryDefaultRepository
             memoryId: Long,
             newMemory: NewMemory,
         ): ResponseResult<Unit> {
-            return when (val responseResult = memoryDataSource.updateMemory(memoryId, newMemory)) {
+            return when (val responseResult = memoryDataSource.updateCategory(memoryId, newMemory)) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ResponseResult.ServerError ->
                     ResponseResult.ServerError(
@@ -69,7 +69,7 @@ class MemoryDefaultRepository
         }
 
         override suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit> {
-            return when (val responseResult = memoryDataSource.deleteMemory(memoryId)) {
+            return when (val responseResult = memoryDataSource.deleteCategory(memoryId)) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ResponseResult.ServerError ->
                     ResponseResult.ServerError(
