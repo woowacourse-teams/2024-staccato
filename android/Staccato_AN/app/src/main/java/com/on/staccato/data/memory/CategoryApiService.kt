@@ -13,7 +13,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface MemoryApiService {
+interface CategoryApiService {
     @GET(CATEGORY_PATH_WITH_ID)
     suspend fun getCategory(
         @Path(CATEGORY_ID) categoryId: Long,

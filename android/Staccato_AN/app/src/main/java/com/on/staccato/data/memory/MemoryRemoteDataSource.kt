@@ -12,7 +12,7 @@ import javax.inject.Inject
 class MemoryRemoteDataSource
     @Inject
     constructor(
-        private val memoryApiService: MemoryApiService,
+        private val memoryApiService: CategoryApiService,
     ) : MemoryDataSource {
         override suspend fun getMemory(memoryId: Long): ResponseResult<MemoryResponse> =
             handleApiResponse { memoryApiService.getCategory(memoryId) }
