@@ -9,7 +9,7 @@ import com.on.staccato.domain.model.NewMemory
 import com.on.staccato.domain.repository.MemoryRepository
 import javax.inject.Inject
 
-class MemoryDefaultRepository
+class CategoryDefaultRepository
     @Inject
     constructor(
         private val categoryDataSource: CategoryDataSource,
