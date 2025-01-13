@@ -12,17 +12,17 @@ import javax.inject.Inject
 class MemoryRemoteDataSource
     @Inject
     constructor(
-        private val memoryApiService: CategoryApiService,
+        private val categoryApiService: CategoryApiService,
     ) : CategoryDataSource {
         override suspend fun getCategory(categoryId: Long): ResponseResult<MemoryResponse> =
-            handleApiResponse { memoryApiService.getCategory(categoryId) }
+            handleApiResponse { categoryApiService.getCategory(categoryId) }
 
         override suspend fun getCategories(currentDate: String?): ResponseResult<MemoriesResponse> =
-            handleApiResponse { memoryApiService.getCategories(currentDate) }
+            handleApiResponse { categoryApiService.getCategories(currentDate) }
 
         override suspend fun createCategory(newCategory: NewMemory): ResponseResult<MemoryCreationResponse> =
             handleApiResponse {
-                memoryApiService.postCategory(newCategory.toDto())
+                categoryApiService.postCategory(newCategory.toDto())
             }
 
         override suspend fun updateCategory(
@@ -30,12 +30,12 @@ class MemoryRemoteDataSource
             newCategory: NewMemory,
         ): ResponseResult<Unit> =
             handleApiResponse {
-                memoryApiService.putCategory(categoryId, newCategory.toDto())
+                categoryApiService.putCategory(categoryId, newCategory.toDto())
             }
 
         override suspend fun deleteCategory(categoryId: Long): ResponseResult<Unit> =
             handleApiResponse {
-                memoryApiService.deleteCategory(
+                categoryApiService.deleteCategory(
                     categoryId,
                 )
             }
