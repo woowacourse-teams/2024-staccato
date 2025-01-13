@@ -16,12 +16,12 @@ import retrofit2.http.Query
 interface MemoryApiService {
     @GET(CATEGORY_PATH_WITH_ID)
     suspend fun getCategory(
-        @Path("categoryId") categoryId: Long,
+        @Path(CATEGORY_ID) categoryId: Long,
     ): Response<MemoryResponse>
 
     @GET(CATEGORY_PATH_WITH_CANDIDATES)
     suspend fun getCategories(
-        @Query("currentDate") currentDate: String?,
+        @Query(CURRENT_DATE) currentDate: String?,
     ): Response<MemoriesResponse>
 
     @POST(CATEGORIES_PATH)
@@ -31,20 +31,21 @@ interface MemoryApiService {
 
     @PUT(CATEGORY_PATH_WITH_ID)
     suspend fun putCategory(
-        @Path("categoryId") categoryId: Long,
+        @Path(CATEGORY_ID) categoryId: Long,
         @Body categoryRequest: MemoryRequest,
     ): Response<Unit>
 
     @DELETE(CATEGORY_PATH_WITH_ID)
     suspend fun deleteCategory(
-        @Path("categoryId") categoryId: Long,
+        @Path(CATEGORY_ID) categoryId: Long,
     ): Response<Unit>
 
     companion object {
         const val CATEGORIES_PATH = "/categories"
         private const val CANDIDATES_PATH = "/candidates"
-        private const val CATEGORY_ID = "/{categoryId}"
-        private const val CATEGORY_PATH_WITH_ID = "$CATEGORIES_PATH$CATEGORY_ID"
+        private const val CATEGORY_ID = "categoryId"
+        private const val CATEGORY_PATH_WITH_ID = "$CATEGORIES_PATH/{$CATEGORY_ID}"
         private const val CATEGORY_PATH_WITH_CANDIDATES = "$CATEGORIES_PATH$CANDIDATES_PATH"
+        private const val CURRENT_DATE = "currentDate"
     }
 }
