@@ -9,7 +9,7 @@ import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.domain.model.NewMemory
 import javax.inject.Inject
 
-class MemoryRemoteDataSource
+class CategoryRemoteDataSource
     @Inject
     constructor(
         private val categoryApiService: CategoryApiService,
