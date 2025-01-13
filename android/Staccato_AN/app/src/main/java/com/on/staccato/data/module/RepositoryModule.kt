@@ -4,7 +4,7 @@ import com.on.staccato.data.comment.CommentDefaultRepository
 import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.data.login.LoginDefaultRepository
 import com.on.staccato.data.member.MemberDefaultRepository
-import com.on.staccato.data.memory.CategoryDefaultRepository
+import com.on.staccato.data.category.CategoryDefaultRepository
 import com.on.staccato.data.mypage.MyPageDefaultRepository
 import com.on.staccato.data.staccato.StaccatoDefaultRepository
 import com.on.staccato.data.timeline.TimelineDefaultRepository

@@ -1,4 +1,4 @@
-package com.on.staccato.data.memory
+package com.on.staccato.data.category
 
 import com.on.staccato.data.ApiResponseHandler.handleApiResponse
 import com.on.staccato.data.ResponseResult
