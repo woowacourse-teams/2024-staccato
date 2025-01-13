@@ -4,7 +4,7 @@ import com.on.staccato.data.comment.CommentDataSource
 import com.on.staccato.data.comment.CommentRemoteDataSource
 import com.on.staccato.data.login.LoginDataSource
 import com.on.staccato.data.login.LoginRemoteDataSource
-import com.on.staccato.data.memory.MemoryDataSource
+import com.on.staccato.data.memory.CategoryDataSource
 import com.on.staccato.data.memory.MemoryRemoteDataSource
 import com.on.staccato.data.staccato.StaccatoDataSource
 import com.on.staccato.data.staccato.StaccatoRemoteDataSource
@@ -25,7 +25,7 @@ abstract class DataSourceModule {
     abstract fun bindLoginDataSource(loginRemoteDataSource: LoginRemoteDataSource): LoginDataSource
 
     @Binds
-    abstract fun bindMemoryDataSource(memoryRemoteDataSource: MemoryRemoteDataSource): MemoryDataSource
+    abstract fun bindMemoryDataSource(memoryRemoteDataSource: MemoryRemoteDataSource): CategoryDataSource
 
     @Binds
     abstract fun bindStaccatoDataSource(staccatoRemoteDataSource: StaccatoRemoteDataSource): StaccatoDataSource

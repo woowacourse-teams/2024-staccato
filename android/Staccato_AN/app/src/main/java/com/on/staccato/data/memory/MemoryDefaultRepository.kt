@@ -12,7 +12,7 @@ import javax.inject.Inject
 class MemoryDefaultRepository
     @Inject
     constructor(
-        private val memoryDataSource: MemoryDataSource,
+        private val memoryDataSource: CategoryDataSource,
     ) : MemoryRepository {
         override suspend fun getMemory(memoryId: Long): ResponseResult<Memory> {
             return when (val responseResult = memoryDataSource.getCategory(memoryId)) {

@@ -13,7 +13,7 @@ class MemoryRemoteDataSource
     @Inject
     constructor(
         private val memoryApiService: CategoryApiService,
-    ) : MemoryDataSource {
+    ) : CategoryDataSource {
         override suspend fun getCategory(categoryId: Long): ResponseResult<MemoryResponse> =
             handleApiResponse { memoryApiService.getCategory(categoryId) }
 

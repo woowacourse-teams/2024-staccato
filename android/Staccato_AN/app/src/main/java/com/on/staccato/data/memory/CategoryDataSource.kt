@@ -6,7 +6,7 @@ import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.domain.model.NewMemory
 
-interface MemoryDataSource {
+interface CategoryDataSource {
     suspend fun getCategory(categoryId: Long): ResponseResult<MemoryResponse>
 
     suspend fun getCategories(currentDate: String?): ResponseResult<MemoriesResponse>
