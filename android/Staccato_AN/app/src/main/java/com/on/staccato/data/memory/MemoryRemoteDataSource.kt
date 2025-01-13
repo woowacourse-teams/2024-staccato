@@ -15,14 +15,14 @@ class MemoryRemoteDataSource
         private val memoryApiService: MemoryApiService,
     ) : MemoryDataSource {
         override suspend fun getMemory(memoryId: Long): ResponseResult<MemoryResponse> =
-            handleApiResponse { memoryApiService.getMemory(memoryId) }
+            handleApiResponse { memoryApiService.getCategory(memoryId) }
 
         override suspend fun getMemories(currentDate: String?): ResponseResult<MemoriesResponse> =
-            handleApiResponse { memoryApiService.getMemories(currentDate) }
+            handleApiResponse { memoryApiService.getCategories(currentDate) }
 
         override suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse> =
             handleApiResponse {
-                memoryApiService.postMemory(newMemory.toDto())
+                memoryApiService.postCategory(newMemory.toDto())
             }
 
         override suspend fun updateMemory(
@@ -30,12 +30,12 @@ class MemoryRemoteDataSource
             newMemory: NewMemory,
         ): ResponseResult<Unit> =
             handleApiResponse {
-                memoryApiService.putMemory(memoryId, newMemory.toDto())
+                memoryApiService.putCategory(memoryId, newMemory.toDto())
             }
 
         override suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit> =
             handleApiResponse {
-                memoryApiService.deleteMemory(
+                memoryApiService.deleteCategory(
                     memoryId,
                 )
             }
