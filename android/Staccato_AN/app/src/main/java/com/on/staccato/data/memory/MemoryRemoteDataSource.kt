@@ -14,29 +14,29 @@ class MemoryRemoteDataSource
     constructor(
         private val memoryApiService: CategoryApiService,
     ) : MemoryDataSource {
-        override suspend fun getMemory(memoryId: Long): ResponseResult<MemoryResponse> =
-            handleApiResponse { memoryApiService.getCategory(memoryId) }
+        override suspend fun getMemory(categoryId: Long): ResponseResult<MemoryResponse> =
+            handleApiResponse { memoryApiService.getCategory(categoryId) }
 
         override suspend fun getMemories(currentDate: String?): ResponseResult<MemoriesResponse> =
             handleApiResponse { memoryApiService.getCategories(currentDate) }
 
-        override suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse> =
+        override suspend fun createMemory(newCategory: NewMemory): ResponseResult<MemoryCreationResponse> =
             handleApiResponse {
-                memoryApiService.postCategory(newMemory.toDto())
+                memoryApiService.postCategory(newCategory.toDto())
             }
 
         override suspend fun updateMemory(
-            memoryId: Long,
-            newMemory: NewMemory,
+            categoryId: Long,
+            newCategory: NewMemory,
         ): ResponseResult<Unit> =
             handleApiResponse {
-                memoryApiService.putCategory(memoryId, newMemory.toDto())
+                memoryApiService.putCategory(categoryId, newCategory.toDto())
             }
 
-        override suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit> =
+        override suspend fun deleteMemory(categoryId: Long): ResponseResult<Unit> =
             handleApiResponse {
                 memoryApiService.deleteCategory(
-                    memoryId,
+                    categoryId,
                 )
             }
     }

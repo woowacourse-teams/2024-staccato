@@ -7,16 +7,16 @@ import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.domain.model.NewMemory
 
 interface MemoryDataSource {
-    suspend fun getMemory(memoryId: Long): ResponseResult<MemoryResponse>
+    suspend fun getMemory(categoryId: Long): ResponseResult<MemoryResponse>
 
     suspend fun getMemories(currentDate: String?): ResponseResult<MemoriesResponse>
 
-    suspend fun createMemory(newMemory: NewMemory): ResponseResult<MemoryCreationResponse>
+    suspend fun createMemory(newCategory: NewMemory): ResponseResult<MemoryCreationResponse>
 
     suspend fun updateMemory(
-        memoryId: Long,
-        newMemory: NewMemory,
+        categoryId: Long,
+        newCategory: NewMemory,
     ): ResponseResult<Unit>
 
-    suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit>
+    suspend fun deleteMemory(categoryId: Long): ResponseResult<Unit>
 }
