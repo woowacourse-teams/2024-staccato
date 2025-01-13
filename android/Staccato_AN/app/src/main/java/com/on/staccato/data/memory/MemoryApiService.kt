@@ -14,37 +14,37 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MemoryApiService {
-    @GET(MEMORY_PATH_WITH_ID)
+    @GET(CATEGORY_PATH_WITH_ID)
     suspend fun getMemory(
         @Path("categoryId") memoryId: Long,
     ): Response<MemoryResponse>
 
-    @GET(MEMORY_PATH_WITH_CANDIDATES)
+    @GET(CATEGORY_PATH_WITH_CANDIDATES)
     suspend fun getMemories(
         @Query("currentDate") currentDate: String?,
     ): Response<MemoriesResponse>
 
-    @POST(MEMORIES_PATH)
+    @POST(CATEGORIES_PATH)
     suspend fun postMemory(
         @Body memoryRequest: MemoryRequest,
     ): Response<MemoryCreationResponse>
 
-    @PUT(MEMORY_PATH_WITH_ID)
+    @PUT(CATEGORY_PATH_WITH_ID)
     suspend fun putMemory(
         @Path("categoryId") memoryId: Long,
         @Body memoryRequest: MemoryRequest,
     ): Response<Unit>
 
-    @DELETE(MEMORY_PATH_WITH_ID)
+    @DELETE(CATEGORY_PATH_WITH_ID)
     suspend fun deleteMemory(
         @Path("categoryId") memoryId: Long,
     ): Response<Unit>
 
     companion object {
-        const val MEMORIES_PATH = "/categories"
+        const val CATEGORIES_PATH = "/categories"
         private const val CANDIDATES_PATH = "/candidates"
-        private const val MEMORY_ID = "/{categoryId}"
-        private const val MEMORY_PATH_WITH_ID = "$MEMORIES_PATH$MEMORY_ID"
-        private const val MEMORY_PATH_WITH_CANDIDATES = "$MEMORIES_PATH$CANDIDATES_PATH"
+        private const val CATEGORY_ID = "/{categoryId}"
+        private const val CATEGORY_PATH_WITH_ID = "$CATEGORIES_PATH$CATEGORY_ID"
+        private const val CATEGORY_PATH_WITH_CANDIDATES = "$CATEGORIES_PATH$CANDIDATES_PATH"
     }
 }
