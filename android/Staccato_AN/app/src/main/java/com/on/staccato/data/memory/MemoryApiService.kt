@@ -16,7 +16,7 @@ import retrofit2.http.Query
 interface MemoryApiService {
     @GET(MEMORY_PATH_WITH_ID)
     suspend fun getMemory(
-        @Path("memoryId") memoryId: Long,
+        @Path("categoryId") memoryId: Long,
     ): Response<MemoryResponse>
 
     @GET(MEMORY_PATH_WITH_CANDIDATES)
@@ -31,19 +31,19 @@ interface MemoryApiService {
 
     @PUT(MEMORY_PATH_WITH_ID)
     suspend fun putMemory(
-        @Path("memoryId") memoryId: Long,
+        @Path("categoryId") memoryId: Long,
         @Body memoryRequest: MemoryRequest,
     ): Response<Unit>
 
     @DELETE(MEMORY_PATH_WITH_ID)
     suspend fun deleteMemory(
-        @Path("memoryId") memoryId: Long,
+        @Path("categoryId") memoryId: Long,
     ): Response<Unit>
 
     companion object {
-        const val MEMORIES_PATH = "/memories"
+        const val MEMORIES_PATH = "/categories"
         private const val CANDIDATES_PATH = "/candidates"
-        private const val MEMORY_ID = "/{memoryId}"
+        private const val MEMORY_ID = "/{categoryId}"
         private const val MEMORY_PATH_WITH_ID = "$MEMORIES_PATH$MEMORY_ID"
         private const val MEMORY_PATH_WITH_CANDIDATES = "$MEMORIES_PATH$CANDIDATES_PATH"
     }
