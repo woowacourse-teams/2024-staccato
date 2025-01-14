@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MemoryStaccatoDto(
+data class CategoryStaccatoDto(
     @SerialName("momentId") val staccatoId: Long,
     @SerialName("staccatoTitle") val staccatoTitle: String,
     @SerialName("momentImageUrl") val staccatoImageUrl: String? = null,

@@ -3,7 +3,7 @@ package com.on.staccato.data.dto.mapper
 import com.on.staccato.data.dto.memory.CategoriesResponse
 import com.on.staccato.data.dto.memory.CategoryRequest
 import com.on.staccato.data.dto.memory.CategoryResponse
-import com.on.staccato.data.dto.memory.MemoryStaccatoDto
+import com.on.staccato.data.dto.memory.CategoryStaccatoDto
 import com.on.staccato.domain.model.Memory
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
@@ -36,7 +36,7 @@ fun CategoriesResponse.toDomain(): MemoryCandidates =
         },
     )
 
-fun MemoryStaccatoDto.toDomain() =
+fun CategoryStaccatoDto.toDomain() =
     MemoryStaccato(
         staccatoId = staccatoId,
         staccatoTitle = staccatoTitle,
