@@ -14,9 +14,9 @@ import java.time.LocalDateTime
 
 fun MemoryResponse.toDomain() =
     Memory(
-        memoryId = memoryId,
-        memoryThumbnailUrl = memoryThumbnailUrl,
-        memoryTitle = memoryTitle,
+        memoryId = categoryId,
+        memoryThumbnailUrl = categoryThumbnailUrl,
+        memoryTitle = categoryTitle,
         startAt = startAt?.let { LocalDate.parse(startAt) },
         endAt = endAt?.let { LocalDate.parse(endAt) },
         description = description,
