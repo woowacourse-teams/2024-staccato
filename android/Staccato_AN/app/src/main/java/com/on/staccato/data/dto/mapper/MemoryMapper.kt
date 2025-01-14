@@ -26,7 +26,7 @@ fun MemoryResponse.toDomain() =
 
 fun MemoriesResponse.toDomain(): MemoryCandidates =
     MemoryCandidates(
-        this.memories.map {
+        this.categories.map {
             MemoryCandidate(
                 memoryId = it.memoryId,
                 memoryTitle = it.memoryTitle,
