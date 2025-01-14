@@ -47,8 +47,7 @@ public class StaccatoController implements StaccatoControllerDocs {
             @LoginMember Member member,
             @Valid @RequestBody StaccatoRequest staccatoRequest
     ) {
-        MomentRequest momentRequest = StaccatoDtoMapper.toMomentRequest(staccatoRequest);
-        MomentIdResponse momentIdResponse = momentService.createMoment(momentRequest, member);
+        MomentIdResponse momentIdResponse = momentService.createMoment(StaccatoDtoMapper.toMomentRequest(staccatoRequest), member);
         StaccatoIdResponse staccatoIdResponse = StaccatoDtoMapper.toStaccatoIdResponse(momentIdResponse);
         return ResponseEntity.created(URI.create("/staccatos/" + staccatoIdResponse.staccatoId()))
                 .body(staccatoIdResponse);
@@ -57,8 +56,7 @@ public class StaccatoController implements StaccatoControllerDocs {
     @GetMapping
     public ResponseEntity<StaccatoLocationResponses> readAllStaccato(@LoginMember Member member) {
         MomentLocationResponses momentLocationResponses = momentService.readAllMoment(member);
-        StaccatoLocationResponses staccatoLocationResponses = StaccatoDtoMapper.toStaccatoLocationResponses(momentLocationResponses);
-        return ResponseEntity.ok().body(staccatoLocationResponses);
+        return ResponseEntity.ok().body(StaccatoDtoMapper.toStaccatoLocationResponses(momentLocationResponses));
     }
 
     @GetMapping("/{staccatoId}")
@@ -66,8 +64,7 @@ public class StaccatoController implements StaccatoControllerDocs {
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId) {
         MomentDetailResponse momentDetailResponse = momentService.readMomentById(staccatoId, member);
-        StaccatoDetailResponse staccatoDetailResponse = StaccatoDtoMapper.toStaccatoDetailResponse(momentDetailResponse);
-        return ResponseEntity.ok().body(staccatoDetailResponse);
+        return ResponseEntity.ok().body(StaccatoDtoMapper.toStaccatoDetailResponse(momentDetailResponse));
     }
 
     @PutMapping(path = "/{staccatoId}")
