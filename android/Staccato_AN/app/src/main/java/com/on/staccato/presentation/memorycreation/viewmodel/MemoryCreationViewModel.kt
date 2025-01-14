@@ -147,7 +147,7 @@ class MemoryCreationViewModel
         }
 
         private fun setCreatedMemoryId(memoryCreationResponse: MemoryCreationResponse) {
-            _createdMemoryId.value = memoryCreationResponse.memoryId
+            _createdMemoryId.value = memoryCreationResponse.categoryId
         }
 
         private fun makeNewMemory() =

@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MemoryCreationResponse(
-    @SerialName("categoryId") val memoryId: Long,
+    @SerialName("categoryId") val categoryId: Long,
 )
