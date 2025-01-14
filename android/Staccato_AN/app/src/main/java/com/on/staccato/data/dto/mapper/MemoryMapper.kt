@@ -1,6 +1,6 @@
 package com.on.staccato.data.dto.mapper
 
-import com.on.staccato.data.dto.memory.MemoriesResponse
+import com.on.staccato.data.dto.memory.CategoriesResponse
 import com.on.staccato.data.dto.memory.MemoryRequest
 import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.data.dto.memory.MemoryStaccatoDto
@@ -24,7 +24,7 @@ fun MemoryResponse.toDomain() =
         staccatos = staccatos.map { it.toDomain() },
     )
 
-fun MemoriesResponse.toDomain(): MemoryCandidates =
+fun CategoriesResponse.toDomain(): MemoryCandidates =
     MemoryCandidates(
         this.categories.map {
             MemoryCandidate(

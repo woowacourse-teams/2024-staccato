@@ -1,6 +1,6 @@
 package com.on.staccato.data.category
 
-import com.on.staccato.data.dto.memory.MemoriesResponse
+import com.on.staccato.data.dto.memory.CategoriesResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryRequest
 import com.on.staccato.data.dto.memory.MemoryResponse
@@ -22,7 +22,7 @@ interface CategoryApiService {
     @GET(CATEGORY_PATH_WITH_CANDIDATES)
     suspend fun getCategories(
         @Query(CURRENT_DATE) currentDate: String?,
-    ): Response<MemoriesResponse>
+    ): Response<CategoriesResponse>
 
     @POST(CATEGORIES_PATH)
     suspend fun postCategory(

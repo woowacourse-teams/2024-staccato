@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MemoriesResponse(
+data class CategoriesResponse(
     @SerialName("categories") val categories: List<MemoryCandidateResponse>,
 )
 

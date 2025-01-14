@@ -1,7 +1,7 @@
 package com.on.staccato.data.category
 
 import com.on.staccato.data.ResponseResult
-import com.on.staccato.data.dto.memory.MemoriesResponse
+import com.on.staccato.data.dto.memory.CategoriesResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.domain.model.NewMemory
@@ -9,7 +9,7 @@ import com.on.staccato.domain.model.NewMemory
 interface CategoryDataSource {
     suspend fun getCategory(categoryId: Long): ResponseResult<MemoryResponse>
 
-    suspend fun getCategories(currentDate: String?): ResponseResult<MemoriesResponse>
+    suspend fun getCategories(currentDate: String?): ResponseResult<CategoriesResponse>
 
     suspend fun createCategory(newCategory: NewMemory): ResponseResult<MemoryCreationResponse>
 

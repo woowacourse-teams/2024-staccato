@@ -3,7 +3,7 @@ package com.on.staccato.data.category
 import com.on.staccato.data.ApiResponseHandler.handleApiResponse
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDto
-import com.on.staccato.data.dto.memory.MemoriesResponse
+import com.on.staccato.data.dto.memory.CategoriesResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.domain.model.NewMemory
@@ -17,7 +17,7 @@ class CategoryRemoteDataSource
         override suspend fun getCategory(categoryId: Long): ResponseResult<MemoryResponse> =
             handleApiResponse { categoryApiService.getCategory(categoryId) }
 
-        override suspend fun getCategories(currentDate: String?): ResponseResult<MemoriesResponse> =
+        override suspend fun getCategories(currentDate: String?): ResponseResult<CategoriesResponse> =
             handleApiResponse { categoryApiService.getCategories(currentDate) }
 
         override suspend fun createCategory(newCategory: NewMemory): ResponseResult<MemoryCreationResponse> =
