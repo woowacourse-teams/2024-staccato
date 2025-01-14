@@ -65,7 +65,7 @@ public class CategoryDtoMapper {
     public static StaccatoResponse toStaccatoResponse(MomentResponse momentResponse) {
         return new StaccatoResponse(
                 momentResponse.momentId(),
-                momentResponse.momentTitle(),
+                momentResponse.staccatoTitle(),
                 momentResponse.momentImageUrl(),
                 momentResponse.visitedAt()
         );

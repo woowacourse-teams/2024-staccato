@@ -70,14 +70,14 @@ public class CategoryController implements CategoryControllerDocs {
     @GetMapping("/v2/{categoryId}")
     public ResponseEntity<CategoryDetailResponse> readCategory(
             @LoginMember Member member,
-            @PathVariable @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long categoryId) {
+            @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
         MemoryDetailResponse memoryDetailResponse = memoryService.readMemoryById(categoryId, member);
         return ResponseEntity.ok(CategoryDtoMapper.toCategoryDetailResponse(memoryDetailResponse));
     }
 
     @PutMapping(path = "/v2/{categoryId}")
     public ResponseEntity<Void> updateCategory(
-            @PathVariable @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member) {
         memoryService.updateMemory(CategoryDtoMapper.toMemoryRequest(categoryRequest), categoryId, member);
@@ -86,7 +86,7 @@ public class CategoryController implements CategoryControllerDocs {
 
     @DeleteMapping("/v2/{categoryId}")
     public ResponseEntity<Void> deleteCategory(
-            @PathVariable @Min(value = 1L, message = "추억 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @LoginMember Member member) {
         memoryService.deleteMemory(categoryId, member);
         return ResponseEntity.ok().build();
