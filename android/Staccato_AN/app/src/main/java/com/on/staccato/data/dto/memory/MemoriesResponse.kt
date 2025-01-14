@@ -10,8 +10,8 @@ data class MemoriesResponse(
 
 @Serializable
 data class MemoryCandidateResponse(
-    @SerialName("categoryId") val memoryId: Long,
-    @SerialName("categoryTitle") val memoryTitle: String,
+    @SerialName("categoryId") val categoryId: Long,
+    @SerialName("categoryTitle") val categoryTitle: String,
     @SerialName("startAt") val startAt: String,
     @SerialName("endAt") val endAt: String,
 )
