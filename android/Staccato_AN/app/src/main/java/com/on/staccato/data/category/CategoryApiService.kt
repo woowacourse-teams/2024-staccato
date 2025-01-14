@@ -2,7 +2,7 @@ package com.on.staccato.data.category
 
 import com.on.staccato.data.dto.memory.CategoriesResponse
 import com.on.staccato.data.dto.memory.CategoryCreationResponse
-import com.on.staccato.data.dto.memory.MemoryRequest
+import com.on.staccato.data.dto.memory.CategoryRequest
 import com.on.staccato.data.dto.memory.MemoryResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -26,13 +26,13 @@ interface CategoryApiService {
 
     @POST(CATEGORIES_PATH)
     suspend fun postCategory(
-        @Body categoryRequest: MemoryRequest,
+        @Body categoryRequest: CategoryRequest,
     ): Response<CategoryCreationResponse>
 
     @PUT(CATEGORY_PATH_WITH_ID)
     suspend fun putCategory(
         @Path(CATEGORY_ID) categoryId: Long,
-        @Body categoryRequest: MemoryRequest,
+        @Body categoryRequest: CategoryRequest,
     ): Response<Unit>
 
     @DELETE(CATEGORY_PATH_WITH_ID)

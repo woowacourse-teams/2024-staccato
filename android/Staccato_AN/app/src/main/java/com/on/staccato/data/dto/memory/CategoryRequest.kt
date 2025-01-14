@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MemoryRequest(
+data class CategoryRequest(
     @SerialName("categoryThumbnailUrl") val categoryThumbnailUrl: String? = null,
     @SerialName("categoryTitle") val categoryTitle: String,
     @SerialName("description") val description: String? = null,
