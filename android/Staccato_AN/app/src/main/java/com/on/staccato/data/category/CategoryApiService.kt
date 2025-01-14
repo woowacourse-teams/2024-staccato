@@ -1,7 +1,7 @@
 package com.on.staccato.data.category
 
 import com.on.staccato.data.dto.memory.CategoriesResponse
-import com.on.staccato.data.dto.memory.MemoryCreationResponse
+import com.on.staccato.data.dto.memory.CategoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryRequest
 import com.on.staccato.data.dto.memory.MemoryResponse
 import retrofit2.Response
@@ -27,7 +27,7 @@ interface CategoryApiService {
     @POST(CATEGORIES_PATH)
     suspend fun postCategory(
         @Body categoryRequest: MemoryRequest,
-    ): Response<MemoryCreationResponse>
+    ): Response<CategoryCreationResponse>
 
     @PUT(CATEGORY_PATH_WITH_ID)
     suspend fun putCategory(

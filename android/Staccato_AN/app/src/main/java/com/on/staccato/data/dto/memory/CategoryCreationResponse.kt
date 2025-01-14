@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MemoryCreationResponse(
+data class CategoryCreationResponse(
     @SerialName("categoryId") val categoryId: Long,
 )

@@ -4,7 +4,7 @@ import com.on.staccato.data.ApiResponseHandler.handleApiResponse
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDto
 import com.on.staccato.data.dto.memory.CategoriesResponse
-import com.on.staccato.data.dto.memory.MemoryCreationResponse
+import com.on.staccato.data.dto.memory.CategoryCreationResponse
 import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.domain.model.NewMemory
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class CategoryRemoteDataSource
         override suspend fun getCategories(currentDate: String?): ResponseResult<CategoriesResponse> =
             handleApiResponse { categoryApiService.getCategories(currentDate) }
 
-        override suspend fun createCategory(newCategory: NewMemory): ResponseResult<MemoryCreationResponse> =
+        override suspend fun createCategory(newCategory: NewMemory): ResponseResult<CategoryCreationResponse> =
             handleApiResponse {
                 categoryApiService.postCategory(newCategory.toDto())
             }

@@ -13,7 +13,7 @@ import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.dto.memory.MemoryCreationResponse
+import com.on.staccato.data.dto.memory.CategoryCreationResponse
 import com.on.staccato.domain.model.NewMemory
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.MemoryRepository
@@ -93,7 +93,7 @@ class MemoryCreationViewModel
             _isPosting.value = true
             viewModelScope.launch {
                 val memory: NewMemory = makeNewMemory()
-                val result: ResponseResult<MemoryCreationResponse> =
+                val result: ResponseResult<CategoryCreationResponse> =
                     memoryRepository.createMemory(memory)
                 result
                     .onSuccess(::setCreatedMemoryId)
@@ -146,7 +146,7 @@ class MemoryCreationViewModel
             _isPhotoPosting.value = false
         }
 
-        private fun setCreatedMemoryId(memoryCreationResponse: MemoryCreationResponse) {
+        private fun setCreatedMemoryId(memoryCreationResponse: CategoryCreationResponse) {
             _createdMemoryId.value = memoryCreationResponse.categoryId
         }
 
