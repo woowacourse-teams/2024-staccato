@@ -46,8 +46,8 @@ fun MemoryStaccatoDto.toDomain() =
 
 fun NewMemory.toDto() =
     MemoryRequest(
-        memoryThumbnailUrl = memoryThumbnailUrl,
-        memoryTitle = memoryTitle,
+        categoryThumbnailUrl = memoryThumbnailUrl,
+        categoryTitle = memoryTitle,
         description = description,
         startAt = startAt?.toString(),
         endAt = endAt?.toString(),
