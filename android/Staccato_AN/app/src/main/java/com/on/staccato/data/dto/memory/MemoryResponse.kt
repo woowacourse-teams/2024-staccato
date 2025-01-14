@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MemoryResponse(
-    @SerialName("memoryId") val memoryId: Long,
-    @SerialName("memoryThumbnailUrl") val memoryThumbnailUrl: String? = null,
-    @SerialName("memoryTitle") val memoryTitle: String,
+    @SerialName("categoryId") val memoryId: Long,
+    @SerialName("categoryThumbnailUrl") val memoryThumbnailUrl: String? = null,
+    @SerialName("categoryTitle") val memoryTitle: String,
     @SerialName("startAt") val startAt: String? = null,
     @SerialName("endAt") val endAt: String? = null,
     @SerialName("description") val description: String? = null,
