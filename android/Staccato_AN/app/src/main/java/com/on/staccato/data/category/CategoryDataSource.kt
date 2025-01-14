@@ -1,9 +1,9 @@
 package com.on.staccato.data.category
 
 import com.on.staccato.data.ResponseResult
-import com.on.staccato.data.dto.memory.CategoriesResponse
-import com.on.staccato.data.dto.memory.CategoryCreationResponse
-import com.on.staccato.data.dto.memory.CategoryResponse
+import com.on.staccato.data.dto.category.CategoriesResponse
+import com.on.staccato.data.dto.category.CategoryCreationResponse
+import com.on.staccato.data.dto.category.CategoryResponse
 import com.on.staccato.domain.model.NewMemory
 
 interface CategoryDataSource {

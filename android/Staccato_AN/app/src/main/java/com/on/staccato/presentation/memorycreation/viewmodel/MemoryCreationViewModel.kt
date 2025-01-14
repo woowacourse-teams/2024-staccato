@@ -13,7 +13,7 @@ import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.dto.memory.CategoryCreationResponse
+import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.domain.model.NewMemory
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.MemoryRepository

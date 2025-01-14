@@ -1,4 +1,4 @@
-package com.on.staccato.data.dto.memory
+package com.on.staccato.data.dto.category
 
 import com.on.staccato.data.dto.member.MemberDto
 import kotlinx.serialization.SerialName

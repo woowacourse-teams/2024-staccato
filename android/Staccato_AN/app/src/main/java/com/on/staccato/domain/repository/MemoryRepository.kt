@@ -1,7 +1,7 @@
 package com.on.staccato.domain.repository
 
 import com.on.staccato.data.ResponseResult
-import com.on.staccato.data.dto.memory.CategoryCreationResponse
+import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.domain.model.Memory
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.model.NewMemory
