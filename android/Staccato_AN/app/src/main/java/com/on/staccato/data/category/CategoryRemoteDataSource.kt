@@ -5,7 +5,7 @@ import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDto
 import com.on.staccato.data.dto.memory.CategoriesResponse
 import com.on.staccato.data.dto.memory.CategoryCreationResponse
-import com.on.staccato.data.dto.memory.MemoryResponse
+import com.on.staccato.data.dto.memory.CategoryResponse
 import com.on.staccato.domain.model.NewMemory
 import javax.inject.Inject
 
@@ -14,7 +14,7 @@ class CategoryRemoteDataSource
     constructor(
         private val categoryApiService: CategoryApiService,
     ) : CategoryDataSource {
-        override suspend fun getCategory(categoryId: Long): ResponseResult<MemoryResponse> =
+        override suspend fun getCategory(categoryId: Long): ResponseResult<CategoryResponse> =
             handleApiResponse { categoryApiService.getCategory(categoryId) }
 
         override suspend fun getCategories(currentDate: String?): ResponseResult<CategoriesResponse> =

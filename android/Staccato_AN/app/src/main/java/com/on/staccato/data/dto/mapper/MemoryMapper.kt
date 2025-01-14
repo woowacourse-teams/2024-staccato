@@ -2,7 +2,7 @@ package com.on.staccato.data.dto.mapper
 
 import com.on.staccato.data.dto.memory.CategoriesResponse
 import com.on.staccato.data.dto.memory.CategoryRequest
-import com.on.staccato.data.dto.memory.MemoryResponse
+import com.on.staccato.data.dto.memory.CategoryResponse
 import com.on.staccato.data.dto.memory.MemoryStaccatoDto
 import com.on.staccato.domain.model.Memory
 import com.on.staccato.domain.model.MemoryCandidate
@@ -12,7 +12,7 @@ import com.on.staccato.domain.model.NewMemory
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-fun MemoryResponse.toDomain() =
+fun CategoryResponse.toDomain() =
     Memory(
         memoryId = categoryId,
         memoryThumbnailUrl = categoryThumbnailUrl,

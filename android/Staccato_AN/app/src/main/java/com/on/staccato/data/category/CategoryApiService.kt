@@ -3,7 +3,7 @@ package com.on.staccato.data.category
 import com.on.staccato.data.dto.memory.CategoriesResponse
 import com.on.staccato.data.dto.memory.CategoryCreationResponse
 import com.on.staccato.data.dto.memory.CategoryRequest
-import com.on.staccato.data.dto.memory.MemoryResponse
+import com.on.staccato.data.dto.memory.CategoryResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -17,7 +17,7 @@ interface CategoryApiService {
     @GET(CATEGORY_PATH_WITH_ID)
     suspend fun getCategory(
         @Path(CATEGORY_ID) categoryId: Long,
-    ): Response<MemoryResponse>
+    ): Response<CategoryResponse>
 
     @GET(CATEGORY_PATH_WITH_CANDIDATES)
     suspend fun getCategories(
