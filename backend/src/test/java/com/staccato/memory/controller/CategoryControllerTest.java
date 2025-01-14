@@ -402,7 +402,6 @@ class CategoryControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    // 수정
     @DisplayName("적합하지 않은 경로변수의 경우 카테고리 수정에 실패한다.")
     @ParameterizedTest
     @MethodSource("categoryRequestProvider")
