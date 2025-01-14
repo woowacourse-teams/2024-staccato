@@ -38,12 +38,12 @@ import lombok.RequiredArgsConstructor;
 @Trace
 @Validated
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/categories/v2")
 @RequiredArgsConstructor
 public class CategoryController implements CategoryControllerDocs {
     private final MemoryService memoryService;
 
-    @PostMapping("/v2")
+    @PostMapping
     public ResponseEntity<CategoryIdResponse> createCategory(
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member
@@ -52,13 +52,13 @@ public class CategoryController implements CategoryControllerDocs {
         return ResponseEntity.created(URI.create("/categories/" + memoryIdResponse.memoryId())).body(CategoryDtoMapper.toCategoryIdResponse(memoryIdResponse));
     }
 
-    @GetMapping("/v2")
+    @GetMapping
     public ResponseEntity<CategoryResponses> readAllCategories(@LoginMember Member member) {
         MemoryResponses memoryResponses = memoryService.readAllMemories(member);
         return ResponseEntity.ok(CategoryDtoMapper.toCategoryResponses(memoryResponses));
     }
 
-    @GetMapping("/v2/candidates")
+    @GetMapping("/candidates")
     public ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @LoginMember Member member,
             @RequestParam(value = "currentDate") LocalDate currentDate
@@ -67,7 +67,7 @@ public class CategoryController implements CategoryControllerDocs {
         return ResponseEntity.ok(CategoryDtoMapper.toCategoryNameResponses(memoryNameResponses));
     }
 
-    @GetMapping("/v2/{categoryId}")
+    @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryDetailResponse> readCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
@@ -75,7 +75,7 @@ public class CategoryController implements CategoryControllerDocs {
         return ResponseEntity.ok(CategoryDtoMapper.toCategoryDetailResponse(memoryDetailResponse));
     }
 
-    @PutMapping(path = "/v2/{categoryId}")
+    @PutMapping(path = "/{categoryId}")
     public ResponseEntity<Void> updateCategory(
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Valid @RequestBody CategoryRequest categoryRequest,
@@ -84,7 +84,7 @@ public class CategoryController implements CategoryControllerDocs {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/v2/{categoryId}")
+    @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @LoginMember Member member) {
