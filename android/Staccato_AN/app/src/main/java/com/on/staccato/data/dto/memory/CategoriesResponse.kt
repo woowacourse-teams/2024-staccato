@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CategoriesResponse(
-    @SerialName("categories") val categories: List<MemoryCandidateResponse>,
+    @SerialName("categories") val categories: List<CategoryCandidateResponse>,
 )
 
 @Serializable
-data class MemoryCandidateResponse(
+data class CategoryCandidateResponse(
     @SerialName("categoryId") val categoryId: Long,
     @SerialName("categoryTitle") val categoryTitle: String,
     @SerialName("startAt") val startAt: String,
