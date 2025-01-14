@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 
 @Trace
 @RestController
-@RequestMapping("/staccatos/v2")
+@RequestMapping("/staccatos")
 @RequiredArgsConstructor
 @Validated
 public class StaccatoController implements StaccatoControllerDocs {

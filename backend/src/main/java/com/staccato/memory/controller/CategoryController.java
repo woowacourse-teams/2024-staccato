@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 @Trace
 @Validated
 @RestController
-@RequestMapping("/categories/v2")
+@RequestMapping("/categories")
 @RequiredArgsConstructor
 public class CategoryController implements CategoryControllerDocs {
     private final MemoryService memoryService;

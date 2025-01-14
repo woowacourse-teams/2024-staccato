@@ -113,7 +113,7 @@ class CategoryControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(post("/categories/v2")
+        mockMvc.perform(post("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(categoryRequest)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -142,7 +142,7 @@ class CategoryControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(post("/categories/v2")
+        mockMvc.perform(post("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(categoryRequest)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -160,7 +160,7 @@ class CategoryControllerTest {
         when(memoryService.createMemory(any(), any())).thenReturn(new MemoryIdResponse(1));
 
         // when & then
-        mockMvc.perform(post("/categories/v2")
+        mockMvc.perform(post("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest))
                         .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -178,7 +178,7 @@ class CategoryControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
-        mockMvc.perform(post("/categories/v2")
+        mockMvc.perform(post("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest))
                         .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -209,7 +209,7 @@ class CategoryControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(get("/categories/v2")
+        mockMvc.perform(get("/categories")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
@@ -236,7 +236,7 @@ class CategoryControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(get("/categories/v2")
+        mockMvc.perform(get("/categories")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
@@ -262,7 +262,7 @@ class CategoryControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(get("/categories/v2/candidates")
+        mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .param("currentDate", LocalDate.now().toString()))
                 .andExpect(status().isOk())
@@ -278,7 +278,7 @@ class CategoryControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
 
         // when & then
-        mockMvc.perform(get("/categories/v2/candidates")
+        mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .param("currentDate", currentDate))
                 .andExpect(status().isBadRequest())
@@ -321,7 +321,7 @@ class CategoryControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(get("/categories/v2/{categoryId}", categoryId)
+        mockMvc.perform(get("/categories/{categoryId}", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
@@ -362,7 +362,7 @@ class CategoryControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(get("/categories/v2/{categoryId}", categoryId)
+        mockMvc.perform(get("/categories/{categoryId}", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
@@ -377,7 +377,7 @@ class CategoryControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
-        mockMvc.perform(put("/categories/v2/{categoryId}", categoryId)
+        mockMvc.perform(put("/categories/{categoryId}", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
@@ -394,7 +394,7 @@ class CategoryControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
-        mockMvc.perform(put("/categories/v2/{categoryId}", categoryId)
+        mockMvc.perform(put("/categories/{categoryId}", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
@@ -412,7 +412,7 @@ class CategoryControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "카테고리 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(put("/categories/v2/{categoryId}", categoryId)
+        mockMvc.perform(put("/categories/{categoryId}", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
@@ -428,7 +428,7 @@ class CategoryControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
-        mockMvc.perform(delete("/categories/v2/{categoryId}", categoryId)
+        mockMvc.perform(delete("/categories/{categoryId}", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
     }
@@ -441,7 +441,7 @@ class CategoryControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "카테고리 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(delete("/categories/v2/{categoryId}", invalidId)
+        mockMvc.perform(delete("/categories/{categoryId}", invalidId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));

@@ -123,7 +123,7 @@ class StaccatoControllerTest {
         when(momentService.createMoment(any(MomentRequest.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
 
         // when & then
-        mockMvc.perform(post("/staccatos/v2")
+        mockMvc.perform(post("/staccatos")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(staccatoRequest))
@@ -151,7 +151,7 @@ class StaccatoControllerTest {
         when(momentService.createMoment(any(MomentRequest.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
 
         // when & then
-        mockMvc.perform(post("/staccatos/v2")
+        mockMvc.perform(post("/staccatos")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(staccatoRequest))
@@ -169,7 +169,7 @@ class StaccatoControllerTest {
         when(momentService.createMoment(any(MomentRequest.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
 
         // when & then
-        mockMvc.perform(post("/staccatos/v2")
+        mockMvc.perform(post("/staccatos")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(staccatoRequest)))
@@ -207,7 +207,7 @@ class StaccatoControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(get("/staccatos/v2")
+        mockMvc.perform(get("/staccatos")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
@@ -240,7 +240,7 @@ class StaccatoControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(get("/staccatos/v2/{staccatoId}", staccatoId)
+        mockMvc.perform(get("/staccatos/{staccatoId}", staccatoId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
@@ -253,7 +253,7 @@ class StaccatoControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(get("/staccatos/v2/{staccatoId}", 0))
+        mockMvc.perform(get("/staccatos/{staccatoId}", 0))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -280,7 +280,7 @@ class StaccatoControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
-        mockMvc.perform(put("/staccatos/v2/{staccatoId}", staccatoId)
+        mockMvc.perform(put("/staccatos/{staccatoId}", staccatoId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(staccatoRequest))
@@ -303,7 +303,7 @@ class StaccatoControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
-        mockMvc.perform(put("/staccatos/v2/{StaccatoId}", staccatoId)
+        mockMvc.perform(put("/staccatos/{StaccatoId}", staccatoId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(staccatoRequest)))
@@ -321,7 +321,7 @@ class StaccatoControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
-        mockMvc.perform(put("/staccatos/v2/{staccatoId}", staccatoId)
+        mockMvc.perform(put("/staccatos/{staccatoId}", staccatoId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(staccatoRequest)))
@@ -337,7 +337,7 @@ class StaccatoControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
 
         // when & then
-        mockMvc.perform(delete("/staccatos/v2/{staccatoId}", staccatoId)
+        mockMvc.perform(delete("/staccatos/{staccatoId}", staccatoId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
     }
@@ -350,7 +350,7 @@ class StaccatoControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(delete("/staccatos/v2/{staccatoId}", staccatoId)
+        mockMvc.perform(delete("/staccatos/{staccatoId}", staccatoId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
@@ -365,7 +365,7 @@ class StaccatoControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "기분 값을 입력해주세요.");
 
         // when & then
-        mockMvc.perform(post("/staccatos/v2/{staccatoId}/feeling", staccatoId)
+        mockMvc.perform(post("/staccatos/{staccatoId}/feeling", staccatoId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .content(objectMapper.writeValueAsString(feelingRequest)))
                 .andExpect(status().isBadRequest())
