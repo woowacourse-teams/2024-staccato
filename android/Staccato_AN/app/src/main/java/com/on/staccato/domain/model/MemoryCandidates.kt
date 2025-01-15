@@ -12,7 +12,7 @@ data class MemoryCandidates(val categoryCandidates: List<CategoryCandidate>) {
             ?: categoryCandidates.firstOrNull()
 
     companion object {
-        val emptyMemoryCandidates = MemoryCandidates(emptyList())
+        val emptyCategoryCandidates = MemoryCandidates(emptyList())
 
         fun from(vararg categoryCandidate: CategoryCandidate) = MemoryCandidates(listOf(*categoryCandidate))
     }

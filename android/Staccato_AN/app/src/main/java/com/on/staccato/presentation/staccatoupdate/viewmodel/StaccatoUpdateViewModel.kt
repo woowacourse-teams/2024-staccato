@@ -14,7 +14,7 @@ import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.dto.Status
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
-import com.on.staccato.domain.model.MemoryCandidates.Companion.emptyMemoryCandidates
+import com.on.staccato.domain.model.MemoryCandidates.Companion.emptyCategoryCandidates
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.StaccatoRepository
@@ -183,7 +183,7 @@ class StaccatoUpdateViewModel
         }
 
         fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
-            val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyMemoryCandidates
+            val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
             _selectableMemories.value = filteredMemories
             _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.categoryId)
         }
