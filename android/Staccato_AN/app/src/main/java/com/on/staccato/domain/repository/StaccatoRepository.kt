@@ -12,7 +12,7 @@ interface StaccatoRepository {
     suspend fun getStaccato(staccatoId: Long): ResponseResult<Staccato>
 
     suspend fun createStaccato(
-        memoryId: Long,
+        categoryId: Long,
         staccatoTitle: String,
         placeName: String,
         latitude: Double,
@@ -30,7 +30,7 @@ interface StaccatoRepository {
         latitude: Double,
         longitude: Double,
         visitedAt: LocalDateTime,
-        memoryId: Long,
+        categoryId: Long,
         staccatoImageUrls: List<String>,
     ): ResponseResult<Unit>
 

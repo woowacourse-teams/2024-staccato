@@ -227,7 +227,7 @@ class StaccatoCreationViewModel
             viewModelScope.launch {
                 _isPosting.value = true
                 staccatoRepository.createStaccato(
-                    memoryId = selectedMemory.value!!.categoryId,
+                    categoryId = selectedMemory.value!!.categoryId,
                     staccatoTitle = staccatoTitle.get() ?: return@launch,
                     placeName = placeName.value ?: return@launch,
                     latitude = latitude.value ?: return@launch,

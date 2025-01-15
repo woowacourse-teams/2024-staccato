@@ -55,7 +55,7 @@ class StaccatoDefaultRepository
         }
 
         override suspend fun createStaccato(
-            memoryId: Long,
+            categoryId: Long,
             staccatoTitle: String,
             placeName: String,
             latitude: Double,
@@ -68,7 +68,7 @@ class StaccatoDefaultRepository
                 val responseResult =
                     remoteDataSource.createStaccato(
                         StaccatoCreationRequest(
-                            categoryId = memoryId,
+                            categoryId = categoryId,
                             staccatoTitle = staccatoTitle,
                             placeName = placeName,
                             latitude = latitude,
@@ -103,7 +103,7 @@ class StaccatoDefaultRepository
             latitude: Double,
             longitude: Double,
             visitedAt: LocalDateTime,
-            memoryId: Long,
+            categoryId: Long,
             staccatoImageUrls: List<String>,
         ): ResponseResult<Unit> {
             return when (
@@ -118,7 +118,7 @@ class StaccatoDefaultRepository
                                 latitude = latitude,
                                 longitude = longitude,
                                 visitedAt = visitedAt.toString(),
-                                categoryId = memoryId,
+                                categoryId = categoryId,
                                 momentImageUrls = staccatoImageUrls,
                             ),
                     )

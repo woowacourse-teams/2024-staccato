@@ -209,7 +209,7 @@ class StaccatoUpdateViewModel
                     latitude = latitudeValue,
                     longitude = longitudeValue,
                     visitedAt = visitedAtValue,
-                    memoryId = memoryIdValue,
+                    categoryId = memoryIdValue,
                     staccatoImageUrls = staccatoImageUrlsValue,
                 ).onSuccess {
                     _isUpdateCompleted.postValue(true)
