@@ -15,19 +15,27 @@ h1, h2, p {
     display: flex;
     flex-direction: column; /* 세로 정렬 */
     align-items: center;
-    gap: 2rem; /* 각 아이템 간의 간격 */
+    gap: 15rem; /* 각 아이템 간의 간격 */
     padding: 0;
     background-color: #ffffff;
 }
 
 .feature {
-    width: 100%;            /* 부모 컨테이너 전체 너비 */
+    width: 80%;            /* 부모 컨테이너 전체 너비 */
     height: auto;          /* 화면 높이만큼 채우기 */
     position: relative;     /* 내부 이미지 정렬을 위한 상대 위치 설정 */
     overflow: hidden;       /* 넘치는 이미지 잘라내기 */
     display: flex;          /* 내부 이미지 중앙 정렬 */
     align-items: center;
     justify-content: center;
+}
+
+.feature-start {
+    width: 100%;
+}
+
+.feature-end {
+    width: 90%;
 }
 
 .feature img {
@@ -51,7 +59,7 @@ h1, h2, p {
 /* Footer 기본 스타일 */
 footer {
     text-align: center;
-    padding: 3rem; /* 기본 패딩 */
+    padding: 2rem; /* 기본 패딩 */
     background: #E3C7FF;
     color: #222222;
     font-size: 1.5rem; /* 기본 글씨 크기 */
