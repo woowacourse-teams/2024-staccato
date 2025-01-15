@@ -14,6 +14,6 @@ data class MemoryCandidates(val categoryCandidates: List<CategoryCandidate>) {
     companion object {
         val emptyMemoryCandidates = MemoryCandidates(emptyList())
 
-        fun from(vararg memoryCandidate: CategoryCandidate) = MemoryCandidates(listOf(*memoryCandidate))
+        fun from(vararg categoryCandidate: CategoryCandidate) = MemoryCandidates(listOf(*categoryCandidate))
     }
 }
