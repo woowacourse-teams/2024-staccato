@@ -12,7 +12,7 @@ import com.on.staccato.domain.repository.CommentRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.LoginRepository
 import com.on.staccato.domain.repository.MemberRepository
-import com.on.staccato.domain.repository.MemoryRepository
+import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
@@ -34,7 +34,7 @@ abstract class RepositoryModule {
     abstract fun bindLoginRepository(loginDefaultRepository: LoginDefaultRepository): LoginRepository
 
     @Binds
-    abstract fun bindCategoryRepository(categoryDefaultRepository: CategoryDefaultRepository): MemoryRepository
+    abstract fun bindCategoryRepository(categoryDefaultRepository: CategoryDefaultRepository): CategoryRepository
 
     @Binds
     abstract fun bindStaccatoRepository(staccatoDefaultRepository: StaccatoDefaultRepository): StaccatoRepository

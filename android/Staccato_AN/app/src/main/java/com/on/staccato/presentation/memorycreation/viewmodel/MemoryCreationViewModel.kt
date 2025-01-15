@@ -16,7 +16,7 @@ import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.ImageRepository
-import com.on.staccato.domain.repository.MemoryRepository
+import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
@@ -35,7 +35,7 @@ private typealias ThumbnailUri = Uri
 class MemoryCreationViewModel
     @Inject
     constructor(
-        private val memoryRepository: MemoryRepository,
+        private val memoryRepository: CategoryRepository,
         private val imageRepository: ImageRepository,
     ) : ViewModel() {
         val title = ObservableField<String>()

@@ -6,7 +6,7 @@ import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.NewCategory
 
-interface MemoryRepository {
+interface CategoryRepository {
     suspend fun getCategory(categoryId: Long): ResponseResult<Category>
 
     suspend fun getCategories(currentDate: String?): ResponseResult<CategoryCandidates>

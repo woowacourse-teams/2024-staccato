@@ -6,14 +6,14 @@ import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.NewCategory
-import com.on.staccato.domain.repository.MemoryRepository
+import com.on.staccato.domain.repository.CategoryRepository
 import javax.inject.Inject
 
 class CategoryDefaultRepository
     @Inject
     constructor(
         private val categoryDataSource: CategoryDataSource,
-    ) : MemoryRepository {
+    ) : CategoryRepository {
         override suspend fun getCategory(categoryId: Long): ResponseResult<Category> {
             return when (val responseResult = categoryDataSource.getCategory(categoryId)) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)

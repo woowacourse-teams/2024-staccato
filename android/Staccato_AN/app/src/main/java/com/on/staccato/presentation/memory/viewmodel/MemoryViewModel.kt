@@ -10,7 +10,7 @@ import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.Status
 import com.on.staccato.domain.model.Category
-import com.on.staccato.domain.repository.MemoryRepository
+import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class MemoryViewModel
     @Inject
     constructor(
-        private val memoryRepository: MemoryRepository,
+        private val memoryRepository: CategoryRepository,
     ) : ViewModel() {
         private val _memory = MutableLiveData<MemoryUiModel>()
         val memory: LiveData<MemoryUiModel> get() = _memory
