@@ -24,7 +24,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideMemoryApiService(): CategoryApiService = StaccatoClient.create(CategoryApiService::class.java)
+    fun provideCategoryApiService(): CategoryApiService = StaccatoClient.create(CategoryApiService::class.java)
 
     @Singleton
     @Provides
