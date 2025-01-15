@@ -16,10 +16,10 @@ fun TimelineResponse.toDomain(): Timeline {
     return Timeline(categories)
 }
 
-fun TimelineResponse.toMemoryCandidates(): CategoryCandidates {
+fun TimelineResponse.toCategoryCandidates(): CategoryCandidates {
     val memories: List<CategoryCandidate> =
-        categories.map { timelineMemoryDto ->
-            timelineMemoryDto.toCategoryCandidate()
+        categories.map { timelineCategoryDto ->
+            timelineCategoryDto.toCategoryCandidate()
         }
     return CategoryCandidates(memories)
 }
