@@ -7,7 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import com.staccato.RepositoryTest;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.member.domain.Member;
@@ -18,8 +18,7 @@ import com.staccato.memory.domain.MemoryMember;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@DataJpaTest
-class MemoryMemberRepositoryTest {
+class MemoryMemberRepositoryTest extends RepositoryTest {
     @Autowired
     private MemoryMemberRepository memoryMemberRepository;
     @Autowired
