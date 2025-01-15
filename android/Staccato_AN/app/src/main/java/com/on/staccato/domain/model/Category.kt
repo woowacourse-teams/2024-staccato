@@ -10,5 +10,5 @@ data class Category(
     val endAt: LocalDate? = null,
     val description: String? = null,
     val mates: List<Member>,
-    val staccatos: List<MemoryStaccato>,
+    val staccatos: List<CategoryStaccato>,
 )
