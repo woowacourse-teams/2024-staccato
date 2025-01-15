@@ -26,9 +26,9 @@ fun TimelineResponse.toMemoryCandidates(): CategoryCandidates {
 
 fun TimelineMemoryDto.toDomain(): Category {
     return Category(
-        categoryId = memoryId,
-        categoryThumbnailUrl = memoryThumbnailUrl,
-        categoryTitle = memoryTitle,
+        categoryId = categoryId,
+        categoryThumbnailUrl = categoryThumbnailUrl,
+        categoryTitle = categoryTitle,
         startAt = startAt?.let { LocalDate.parse(it) },
         endAt = endAt?.let { LocalDate.parse(it) },
         description = description,
@@ -39,8 +39,8 @@ fun TimelineMemoryDto.toDomain(): Category {
 
 fun TimelineMemoryDto.toMemoryCandidate(): CategoryCandidate {
     return CategoryCandidate(
-        categoryId = memoryId,
-        categoryTitle = memoryTitle,
+        categoryId = categoryId,
+        categoryTitle = categoryTitle,
         startAt = startAt?.let { LocalDate.parse(it) },
         endAt = endAt?.let { LocalDate.parse(it) },
     )
