@@ -28,8 +28,8 @@ fun CategoriesResponse.toDomain(): MemoryCandidates =
     MemoryCandidates(
         this.categories.map {
             MemoryCandidate(
-                memoryId = it.categoryId,
-                memoryTitle = it.categoryTitle,
+                categoryId = it.categoryId,
+                categoryTitle = it.categoryTitle,
                 startAt = LocalDate.parse(it.startAt),
                 endAt = LocalDate.parse(it.endAt),
             )

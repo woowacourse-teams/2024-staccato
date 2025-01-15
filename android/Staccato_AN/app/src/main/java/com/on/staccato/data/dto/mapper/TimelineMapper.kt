@@ -39,8 +39,8 @@ fun TimelineMemoryDto.toDomain(): Category {
 
 fun TimelineMemoryDto.toMemoryCandidate(): MemoryCandidate {
     return MemoryCandidate(
-        memoryId = memoryId,
-        memoryTitle = memoryTitle,
+        categoryId = memoryId,
+        categoryTitle = memoryTitle,
         startAt = startAt?.let { LocalDate.parse(it) },
         endAt = endAt?.let { LocalDate.parse(it) },
     )

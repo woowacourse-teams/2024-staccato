@@ -249,7 +249,7 @@
                     style="@style/BackgroundedTextStyle"
                     android:layout_marginTop="8dp"
                     android:onClick="@{() -> staccatoCreationHandler.onMemorySelectionClicked()}"
-                    android:text="@{viewModel.selectedMemory.memoryTitle}"
+                    android:text="@{viewModel.selectedMemory.categoryTitle}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title"

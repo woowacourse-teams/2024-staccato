@@ -35,7 +35,7 @@ class CategoryCandidatesTest {
         val actual = categoryCandidates.findBy(categoryId)
 
         // then
-        assertEquals(categoryId, actual?.memoryId)
+        assertEquals(categoryId, actual?.categoryId)
     }
 
     @Test
@@ -61,7 +61,7 @@ class CategoryCandidatesTest {
         val actual = categoryCandidates.findByIdOrFirst(categoryId)
 
         // then
-        assertEquals(categoryId, actual?.memoryId)
+        assertEquals(categoryId, actual?.categoryId)
     }
 
     @Test

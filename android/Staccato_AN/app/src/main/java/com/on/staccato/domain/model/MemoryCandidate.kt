@@ -4,8 +4,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class MemoryCandidate(
-    val memoryId: Long,
-    val memoryTitle: String,
+    val categoryId: Long,
+    val categoryTitle: String,
     val startAt: LocalDate?,
     val endAt: LocalDate?,
 ) {

@@ -185,7 +185,7 @@ class StaccatoUpdateViewModel
         fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
             val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyMemoryCandidates
             _selectableMemories.value = filteredMemories
-            _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.memoryId)
+            _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.categoryId)
         }
 
         fun updateStaccato(staccatoId: Long) {
@@ -196,7 +196,7 @@ class StaccatoUpdateViewModel
                 val latitudeValue = latitude.value ?: return@launch handleException()
                 val longitudeValue = longitude.value ?: return@launch handleException()
                 val visitedAtValue = selectedVisitedAt.value ?: return@launch handleException()
-                val memoryIdValue = selectedMemory.value?.memoryId ?: return@launch handleException()
+                val memoryIdValue = selectedMemory.value?.categoryId ?: return@launch handleException()
                 val staccatoImageUrlsValue =
                     currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                         ?: emptyList()

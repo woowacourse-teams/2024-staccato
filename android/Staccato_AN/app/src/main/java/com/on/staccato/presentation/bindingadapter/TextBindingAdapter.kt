@@ -30,7 +30,7 @@ fun TextView.setSelectedMemory(
             isFocusable = false
         }
         else -> {
-            text = selectedMemory.memoryTitle
+            text = selectedMemory.categoryTitle
             isClickable = true
             isFocusable = true
             setTextColor(resources.getColor(R.color.staccato_black, null))

@@ -186,7 +186,7 @@ class StaccatoCreationViewModel
         fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
             val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: MemoryCandidates.emptyMemoryCandidates
             _selectableMemories.value = filteredMemories
-            _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.memoryId)
+            _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.categoryId)
         }
 
         private fun updateMemorySelectionBy(memoryId: Long) {
@@ -227,7 +227,7 @@ class StaccatoCreationViewModel
             viewModelScope.launch {
                 _isPosting.value = true
                 staccatoRepository.createStaccato(
-                    memoryId = selectedMemory.value!!.memoryId,
+                    memoryId = selectedMemory.value!!.categoryId,
                     staccatoTitle = staccatoTitle.get() ?: return@launch,
                     placeName = placeName.value ?: return@launch,
                     latitude = latitude.value ?: return@launch,

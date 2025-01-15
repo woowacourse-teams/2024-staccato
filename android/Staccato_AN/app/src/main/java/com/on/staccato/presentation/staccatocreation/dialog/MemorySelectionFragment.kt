@@ -54,7 +54,7 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
             displayedValues = null
             minValue = 0
             maxValue = (items.size - 1).coerceAtLeast(0)
-            displayedValues = items.map { it.memoryTitle }.toTypedArray()
+            displayedValues = items.map { it.categoryTitle }.toTypedArray()
             wrapSelectorWheel = false
             setPickerValue(items, keyMemory)
         }

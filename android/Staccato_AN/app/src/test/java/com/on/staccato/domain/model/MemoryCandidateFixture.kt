@@ -44,8 +44,8 @@ internal fun makeTestMemoryCandidate(
     startAt: LocalDate? = null,
     endAt: LocalDate? = null,
 ) = MemoryCandidate(
-    memoryId = memoryId,
-    memoryTitle = memoryTitle,
+    categoryId = memoryId,
+    categoryTitle = memoryTitle,
     startAt = startAt,
     endAt = endAt,
 )
@@ -69,8 +69,8 @@ internal fun makeTestStaccato(
     latitude = latitude,
     longitude = longitude,
     staccatoImageUrls = staccatoImageUrls,
-    memoryId = memoryCandidate.memoryId,
-    memoryTitle = memoryCandidate.memoryTitle,
+    memoryId = memoryCandidate.categoryId,
+    memoryTitle = memoryCandidate.categoryTitle,
     visitedAt = visitedAt,
     startAt = memoryCandidate.startAt,
     endAt = memoryCandidate.endAt,
