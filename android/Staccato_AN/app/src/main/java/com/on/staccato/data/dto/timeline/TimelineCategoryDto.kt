@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TimelineMemoryDto(
+data class TimelineCategoryDto(
     @SerialName("categoryId") val categoryId: Long,
     @SerialName("categoryTitle") val categoryTitle: String,
     @SerialName("categoryThumbnailUrl") val categoryThumbnailUrl: String? = null,
