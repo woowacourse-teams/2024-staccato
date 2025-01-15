@@ -46,8 +46,8 @@ fun CategoryStaccatoDto.toDomain() =
 
 fun NewMemory.toDto() =
     CategoryRequest(
-        categoryThumbnailUrl = memoryThumbnailUrl,
-        categoryTitle = memoryTitle,
+        categoryThumbnailUrl = categoryThumbnailUrl,
+        categoryTitle = categoryTitle,
         description = description,
         startAt = startAt?.toString(),
         endAt = endAt?.toString(),
