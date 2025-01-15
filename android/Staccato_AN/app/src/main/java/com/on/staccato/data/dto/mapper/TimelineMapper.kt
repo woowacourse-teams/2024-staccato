@@ -9,11 +9,11 @@ import com.on.staccato.domain.model.Timeline
 import java.time.LocalDate
 
 fun TimelineResponse.toDomain(): Timeline {
-    val memories =
-        categories.map { timelineMemoryDto ->
-            timelineMemoryDto.toDomain()
+    val categories =
+        categories.map { timelineCategoryDto ->
+            timelineCategoryDto.toDomain()
         }
-    return Timeline(memories)
+    return Timeline(categories)
 }
 
 fun TimelineResponse.toMemoryCandidates(): CategoryCandidates {
