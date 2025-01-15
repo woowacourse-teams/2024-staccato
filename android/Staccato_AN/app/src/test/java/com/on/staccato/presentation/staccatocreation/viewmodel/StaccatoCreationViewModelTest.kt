@@ -142,7 +142,7 @@ class StaccatoCreationViewModelTest {
         }
 
     private fun givenMemoryCandidatesReturnsSuccessWithDummyData() {
-        coEvery { timelineRepository.getMemoryCandidates() } returns
+        coEvery { timelineRepository.getCategoryCandidates() } returns
             ResponseResult.Success(
                 dummyMemoryCandidates,
             )

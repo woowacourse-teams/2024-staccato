@@ -123,7 +123,7 @@ class StaccatoUpdateViewModelTest {
     }
 
     private fun setupRepositoriesWithDummyData(targetStaccato: Staccato) {
-        coEvery { timelineRepository.getMemoryCandidates() } returns
+        coEvery { timelineRepository.getCategoryCandidates() } returns
             ResponseResult.Success(
                 dummyMemoryCandidates,
             )

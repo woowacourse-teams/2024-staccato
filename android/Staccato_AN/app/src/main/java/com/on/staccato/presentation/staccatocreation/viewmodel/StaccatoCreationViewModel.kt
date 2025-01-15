@@ -157,7 +157,7 @@ class StaccatoCreationViewModel
 
         fun fetchMemoryCandidates() {
             viewModelScope.launch {
-                timelineRepository.getMemoryCandidates()
+                timelineRepository.getCategoryCandidates()
                     .onSuccess {
                         _memoryCandidates.value = it
                     }

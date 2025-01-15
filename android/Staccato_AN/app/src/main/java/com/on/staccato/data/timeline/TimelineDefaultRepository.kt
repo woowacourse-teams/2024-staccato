@@ -30,7 +30,7 @@ class TimelineDefaultRepository
             }
         }
 
-        override suspend fun getMemoryCandidates(): ResponseResult<CategoryCandidates> {
+        override suspend fun getCategoryCandidates(): ResponseResult<CategoryCandidates> {
             return when (val responseResult = timelineDataSource.getAllTimeline()) {
                 is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toCategoryCandidates())
                 is ResponseResult.ServerError ->

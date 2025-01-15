@@ -7,5 +7,5 @@ import com.on.staccato.domain.model.Timeline
 interface TimelineRepository {
     suspend fun getTimeline(): ResponseResult<Timeline>
 
-    suspend fun getMemoryCandidates(): ResponseResult<CategoryCandidates>
+    suspend fun getCategoryCandidates(): ResponseResult<CategoryCandidates>
 }

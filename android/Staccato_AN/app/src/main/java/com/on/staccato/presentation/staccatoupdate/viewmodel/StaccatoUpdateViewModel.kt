@@ -256,7 +256,7 @@ class StaccatoUpdateViewModel
 
         private fun fetchMemoryCandidates() {
             viewModelScope.launch {
-                timelineRepository.getMemoryCandidates()
+                timelineRepository.getCategoryCandidates()
                     .onSuccess { memoryCandidates ->
                         _memoryCandidates.value = memoryCandidates
                     }.onException(::handleMemoryCandidatesException)
