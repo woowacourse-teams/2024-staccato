@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TimelineResponse(
-    @SerialName("memories") val memories: List<TimelineCategoryDto>,
+    @SerialName("categories") val memories: List<TimelineCategoryDto>,
 )
