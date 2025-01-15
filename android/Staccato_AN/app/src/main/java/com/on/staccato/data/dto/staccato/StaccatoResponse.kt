@@ -19,3 +19,4 @@ data class StaccatoResponse(
     @SerialName("visitedAt") val visitedAt: String,
     @SerialName("feeling") val feeling: String,
 )
+
