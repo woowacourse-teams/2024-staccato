@@ -118,7 +118,7 @@ class StaccatoDefaultRepository
                                 latitude = latitude,
                                 longitude = longitude,
                                 visitedAt = visitedAt.toString(),
-                                memoryId = memoryId,
+                                categoryId = memoryId,
                                 momentImageUrls = staccatoImageUrls,
                             ),
                     )
