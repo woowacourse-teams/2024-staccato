@@ -29,7 +29,7 @@ public enum MemorySort {
     private final Function<List<Memory>, List<Memory>> operation;
 
     public static List<Memory> apply(String sortValue, List<Memory> memories) {
-        return Stream.of(MemorySort.values())
+        return Stream.of(values())
                 .filter(sort -> sort.isSame(sortValue))
                 .findFirst()
                 .map(sort -> sort.operation.apply(memories))

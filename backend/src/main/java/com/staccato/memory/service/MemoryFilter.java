@@ -19,7 +19,7 @@ public enum MemoryFilter {
     private final Function<List<Memory>, List<Memory>> operation;
 
     public static List<Memory> apply(List<String> filters, List<Memory> memories) {
-        List<MemoryFilter> applicableFilters = Stream.of(MemoryFilter.values())
+        List<MemoryFilter> applicableFilters = Stream.of(values())
                 .filter(filter -> filters.contains(filter.name))
                 .toList();
 
