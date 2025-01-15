@@ -35,7 +35,11 @@ public class Term {
     }
 
     private boolean isOnlyOneDatePresent(LocalDate startAt, LocalDate endAt) {
-        return (Objects.nonNull(startAt) && Objects.isNull(endAt)) || (Objects.isNull(startAt) && Objects.nonNull(endAt));
+        return isExist(startAt, endAt) || (Objects.isNull(startAt) && Objects.nonNull(endAt));
+    }
+
+    private boolean isExist(LocalDate startAt, LocalDate endAt) {
+        return Objects.nonNull(startAt) && Objects.isNull(endAt);
     }
 
     private boolean isInvalidTerm(LocalDate startAt, LocalDate endAt) {
