@@ -26,9 +26,9 @@ fun TimelineResponse.toMemoryCandidates(): MemoryCandidates {
 
 fun TimelineMemoryDto.toDomain(): Memory {
     return Memory(
-        memoryId = memoryId,
-        memoryThumbnailUrl = memoryThumbnailUrl,
-        memoryTitle = memoryTitle,
+        categoryId = memoryId,
+        categoryThumbnailUrl = memoryThumbnailUrl,
+        categoryTitle = memoryTitle,
         startAt = startAt?.let { LocalDate.parse(it) },
         endAt = endAt?.let { LocalDate.parse(it) },
         description = description,

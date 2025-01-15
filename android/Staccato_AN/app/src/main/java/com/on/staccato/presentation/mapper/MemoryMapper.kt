@@ -9,9 +9,9 @@ import com.on.staccato.presentation.memory.model.MemoryUiModel
 
 fun Memory.toUiModel() =
     MemoryUiModel(
-        id = memoryId,
-        title = memoryTitle,
-        memoryThumbnailUrl = memoryThumbnailUrl,
+        id = categoryId,
+        title = categoryTitle,
+        memoryThumbnailUrl = categoryThumbnailUrl,
         startAt = startAt,
         endAt = endAt,
         description = description,

@@ -14,9 +14,9 @@ import java.time.LocalDateTime
 
 fun CategoryResponse.toDomain() =
     Memory(
-        memoryId = categoryId,
-        memoryThumbnailUrl = categoryThumbnailUrl,
-        memoryTitle = categoryTitle,
+        categoryId = categoryId,
+        categoryThumbnailUrl = categoryThumbnailUrl,
+        categoryTitle = categoryTitle,
         startAt = startAt?.let { LocalDate.parse(startAt) },
         endAt = endAt?.let { LocalDate.parse(endAt) },
         description = description,

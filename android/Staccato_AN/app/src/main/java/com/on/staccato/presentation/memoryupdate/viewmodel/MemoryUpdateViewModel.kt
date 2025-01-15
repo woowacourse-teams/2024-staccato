@@ -118,8 +118,8 @@ class MemoryUpdateViewModel
         }
 
         private fun initializeMemory(memory: Memory) {
-            _thumbnail.value = _thumbnail.value?.updateUrl(memory.memoryThumbnailUrl)
-            title.set(memory.memoryTitle)
+            _thumbnail.value = _thumbnail.value?.updateUrl(memory.categoryThumbnailUrl)
+            title.set(memory.categoryTitle)
             description.set(memory.description)
             _startDate.value = memory.startAt
             _endDate.value = memory.endAt

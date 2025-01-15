@@ -12,9 +12,9 @@ fun Timeline.toTimelineUiModel(): List<TimelineUiModel> {
 
 fun Memory.toTimelineUiModel(): TimelineUiModel {
     return TimelineUiModel(
-        memoryId = memoryId,
-        memoryTitle = memoryTitle,
-        memoryThumbnailUrl = memoryThumbnailUrl,
+        memoryId = categoryId,
+        memoryTitle = categoryTitle,
+        memoryThumbnailUrl = categoryThumbnailUrl,
         startAt = startAt,
         endAt = endAt,
     )
