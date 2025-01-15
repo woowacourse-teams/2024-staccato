@@ -1,4 +1,3 @@
-/* Reset and Basic Styling */
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
@@ -10,22 +9,21 @@ h1, h2, p {
     margin: 0;
 }
 
-/* Features Section */
 .features {
     display: flex;
-    flex-direction: column; /* 세로 정렬 */
+    flex-direction: column;
     align-items: center;
-    gap: 15rem; /* 각 아이템 간의 간격 */
+    gap: 10rem;
     padding: 0;
     background-color: #ffffff;
 }
 
 .feature {
-    width: 80%;            /* 부모 컨테이너 전체 너비 */
-    height: auto;          /* 화면 높이만큼 채우기 */
-    position: relative;     /* 내부 이미지 정렬을 위한 상대 위치 설정 */
-    overflow: hidden;       /* 넘치는 이미지 잘라내기 */
-    display: flex;          /* 내부 이미지 중앙 정렬 */
+    width: 80%;
+    height: auto;
+    position: relative;
+    overflow: hidden;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -39,8 +37,8 @@ h1, h2, p {
 }
 
 .feature img {
-    width: 100%;            /* 부모 컨테이너의 가로 크기에 맞추기 */
-    object-fit: contain;    /* 비율을 유지하며 잘리지 않도록 설정 */
+    width: 100%;
+    object-fit: contain;
 }
 
 .feature .background-image {
@@ -49,42 +47,50 @@ h1, h2, p {
 }
 
 .feature .overlay-image {
-    position: absolute;     /* 부모를 기준으로 절대 위치 */
-    top: 13%;               /* 세로 중앙 정렬 */
-    left: 65%;              /* 가로 중앙 정렬 */
-    width: 28%;             /* 덮어씌울 이미지의 크기 */
+    position: absolute;
+    top: 13%;
+    left: 65%;
+    width: 28%;
     object-fit: contain;
 }
 
-/* Footer 기본 스타일 */
 footer {
     text-align: center;
-    padding: 2rem; /* 기본 패딩 */
+    padding: 2rem;
     background: #E3C7FF;
     color: #222222;
-    font-size: 1.5rem; /* 기본 글씨 크기 */
+    font-size: 1.5rem;
 }
 
-/* 1024px 이하 화면 */
 @media (max-width: 1024px) {
     footer {
-        padding: 2rem; /* 패딩 줄이기 */
-        font-size: 1.25rem; /* 글씨 크기 줄이기 */
+        padding: 1.5rem;
+        font-size: 1.25rem;
+    }
+
+    .features {
+        gap: 5rem;
     }
 }
 
-/* 768px 이하 화면 */
 @media (max-width: 768px) {
     footer {
-        padding: 1.5rem; /* 더 작은 패딩 */
-        font-size: 1rem; /* 더 작은 글씨 크기 */
+        padding: 1.2rem;
+        font-size: 1rem;
+    }
+
+    .features {
+        gap: 2rem;
     }
 }
 
-/* 480px 이하 화면 */
 @media (max-width: 480px) {
     footer {
-        padding: 1rem; /* 최소 패딩 */
-        font-size: 0.875rem; /* 가장 작은 글씨 크기 */
+        padding: 1rem;
+        font-size: 0.875rem;
+    }
+
+    .features {
+        gap: 1rem;
     }
 }
