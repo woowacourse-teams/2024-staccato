@@ -10,7 +10,7 @@ import java.time.LocalDate
 
 fun TimelineResponse.toDomain(): Timeline {
     val memories =
-        memories.map { timelineMemoryDto ->
+        categories.map { timelineMemoryDto ->
             timelineMemoryDto.toDomain()
         }
     return Timeline(memories)
@@ -18,7 +18,7 @@ fun TimelineResponse.toDomain(): Timeline {
 
 fun TimelineResponse.toMemoryCandidates(): CategoryCandidates {
     val memories: List<CategoryCandidate> =
-        memories.map { timelineMemoryDto ->
+        categories.map { timelineMemoryDto ->
             timelineMemoryDto.toMemoryCandidate()
         }
     return CategoryCandidates(memories)
