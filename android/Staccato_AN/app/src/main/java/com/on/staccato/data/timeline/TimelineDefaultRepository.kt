@@ -3,7 +3,7 @@ package com.on.staccato.data.timeline
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.mapper.toMemoryCandidates
-import com.on.staccato.domain.model.MemoryCandidates
+import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.Timeline
 import com.on.staccato.domain.repository.TimelineRepository
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class TimelineDefaultRepository
             }
         }
 
-        override suspend fun getMemoryCandidates(): ResponseResult<MemoryCandidates> {
+        override suspend fun getMemoryCandidates(): ResponseResult<CategoryCandidates> {
             return when (val responseResult = timelineDataSource.getAllTimeline()) {
                 is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toMemoryCandidates())
                 is ResponseResult.ServerError ->

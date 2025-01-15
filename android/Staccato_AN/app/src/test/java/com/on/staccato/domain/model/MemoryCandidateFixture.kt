@@ -26,7 +26,7 @@ internal val targetMemoryCandidate =
     )
 
 val dummyMemoryCandidates =
-    MemoryCandidates(
+    CategoryCandidates(
         categoryCandidates =
             listOf(
                 memoryCandidateWithId1,

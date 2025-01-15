@@ -13,8 +13,8 @@ import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.dto.Status
 import com.on.staccato.domain.model.CategoryCandidate
-import com.on.staccato.domain.model.MemoryCandidates
-import com.on.staccato.domain.model.MemoryCandidates.Companion.emptyCategoryCandidates
+import com.on.staccato.domain.model.CategoryCandidates
+import com.on.staccato.domain.model.CategoryCandidates.Companion.emptyCategoryCandidates
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.StaccatoRepository
@@ -67,8 +67,8 @@ class StaccatoUpdateViewModel
         private val _longitude = MutableLiveData<Double?>()
         private val longitude: LiveData<Double?> get() = _longitude
 
-        private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
-        val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
+        private val _memoryCandidates = MutableLiveData<CategoryCandidates>()
+        val memoryCandidates: LiveData<CategoryCandidates> get() = _memoryCandidates
 
         private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
@@ -79,8 +79,8 @@ class StaccatoUpdateViewModel
         private val _selectedMemory = MutableLiveData<CategoryCandidate>()
         val selectedMemory: LiveData<CategoryCandidate> get() = _selectedMemory
 
-        private val _selectableMemories = MutableLiveData<MemoryCandidates>()
-        val selectableMemories: LiveData<MemoryCandidates> get() = _selectableMemories
+        private val _selectableMemories = MutableLiveData<CategoryCandidates>()
+        val selectableMemories: LiveData<CategoryCandidates> get() = _selectableMemories
 
         private val _isUpdateCompleted = MutableLiveData(false)
         val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted

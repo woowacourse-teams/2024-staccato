@@ -6,7 +6,7 @@ import com.on.staccato.data.dto.category.CategoryResponse
 import com.on.staccato.data.dto.category.CategoryStaccatoDto
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryCandidate
-import com.on.staccato.domain.model.MemoryCandidates
+import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.MemoryStaccato
 import com.on.staccato.domain.model.NewMemory
 import java.time.LocalDate
@@ -24,8 +24,8 @@ fun CategoryResponse.toDomain() =
         staccatos = staccatos.map { it.toDomain() },
     )
 
-fun CategoriesResponse.toDomain(): MemoryCandidates =
-    MemoryCandidates(
+fun CategoriesResponse.toDomain(): CategoryCandidates =
+    CategoryCandidates(
         this.categories.map {
             CategoryCandidate(
                 categoryId = it.categoryId,

@@ -6,7 +6,7 @@ import androidx.core.view.isGone
 import androidx.databinding.BindingAdapter
 import com.on.staccato.R
 import com.on.staccato.domain.model.CategoryCandidate
-import com.on.staccato.domain.model.MemoryCandidates
+import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 @BindingAdapter(value = ["selectedMemory", "memoryCandidates"])
 fun TextView.setSelectedMemory(
     selectedMemory: CategoryCandidate?,
-    memoryCandidates: MemoryCandidates?,
+    memoryCandidates: CategoryCandidates?,
 ) {
     when {
         (memoryCandidates?.categoryCandidates?.isEmpty() == true) -> {
@@ -65,7 +65,7 @@ fun TextView.setMemoryPeriod(
 }
 
 @BindingAdapter("isMemoryCandidatesEmpty")
-fun TextView.setIsMemoryCandidatesEmptyVisibility(memoryCandidates: MemoryCandidates?) {
+fun TextView.setIsMemoryCandidatesEmptyVisibility(memoryCandidates: CategoryCandidates?) {
     isGone = !memoryCandidates?.categoryCandidates.isNullOrEmpty()
 }
 

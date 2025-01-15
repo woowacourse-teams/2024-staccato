@@ -4,7 +4,7 @@ import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.domain.model.Category
-import com.on.staccato.domain.model.MemoryCandidates
+import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.NewMemory
 import com.on.staccato.domain.repository.MemoryRepository
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class CategoryDefaultRepository
             }
         }
 
-        override suspend fun getMemories(currentDate: String?): ResponseResult<MemoryCandidates> {
+        override suspend fun getMemories(currentDate: String?): ResponseResult<CategoryCandidates> {
             return when (val responseResult = categoryDataSource.getCategories(currentDate)) {
                 is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)

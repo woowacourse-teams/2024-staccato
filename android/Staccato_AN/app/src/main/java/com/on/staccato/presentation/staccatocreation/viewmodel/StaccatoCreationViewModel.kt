@@ -14,7 +14,7 @@ import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.domain.model.CategoryCandidate
-import com.on.staccato.domain.model.MemoryCandidates
+import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
@@ -65,11 +65,11 @@ class StaccatoCreationViewModel
         private val _selectedMemory = MutableLiveData<CategoryCandidate>()
         val selectedMemory: LiveData<CategoryCandidate> get() = _selectedMemory
 
-        private val _selectableMemories = MutableLiveData<MemoryCandidates>()
-        val selectableMemories: LiveData<MemoryCandidates> get() = _selectableMemories
+        private val _selectableMemories = MutableLiveData<CategoryCandidates>()
+        val selectableMemories: LiveData<CategoryCandidates> get() = _selectableMemories
 
-        private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
-        val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
+        private val _memoryCandidates = MutableLiveData<CategoryCandidates>()
+        val memoryCandidates: LiveData<CategoryCandidates> get() = _memoryCandidates
 
         private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
@@ -184,14 +184,14 @@ class StaccatoCreationViewModel
         }
 
         fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
-            val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: MemoryCandidates.emptyCategoryCandidates
+            val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: CategoryCandidates.emptyCategoryCandidates
             _selectableMemories.value = filteredMemories
             _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.categoryId)
         }
 
         private fun updateMemorySelectionBy(memoryId: Long) {
             val selectedMemory = memoryCandidates.value?.findBy(memoryId) ?: throw IllegalArgumentException()
-            _selectableMemories.value = MemoryCandidates.from(selectedMemory)
+            _selectableMemories.value = CategoryCandidates.from(selectedMemory)
             _selectedMemory.value = selectedMemory
         }
 

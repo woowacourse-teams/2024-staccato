@@ -3,7 +3,7 @@ package com.on.staccato.presentation.staccatocreation.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.image.ImageDefaultRepository
-import com.on.staccato.domain.model.MemoryCandidates
+import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.TARGET_MEMORY_ID
 import com.on.staccato.domain.model.dummyMemoryCandidates
 import com.on.staccato.domain.model.endDateOf2023
@@ -109,7 +109,7 @@ class StaccatoCreationViewModelTest {
             val actualSelectedMemory = viewModel.selectedMemory.getOrAwaitValue()
 
             val closestVisitedAt = targetMemoryCandidate.getClosestDateTime(currentVisitedAt)
-            val fixedSelectableMemories = MemoryCandidates.from(targetMemoryCandidate)
+            val fixedSelectableMemories = CategoryCandidates.from(targetMemoryCandidate)
             val fixedSelectedMemory = targetMemoryCandidate
 
             assertEquals(closestVisitedAt, actualVisitedAt)
@@ -131,7 +131,7 @@ class StaccatoCreationViewModelTest {
             viewModel.updateMemorySelectionBy(newLocalDate)
 
             // then
-            val expectedSelectableMemories = MemoryCandidates.from(memoryCandidateWithId1)
+            val expectedSelectableMemories = CategoryCandidates.from(memoryCandidateWithId1)
             val expectedSelectedMemory = memoryCandidateWithId1
 
             val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
