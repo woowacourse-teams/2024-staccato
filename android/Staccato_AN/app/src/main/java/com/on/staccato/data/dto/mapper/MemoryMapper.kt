@@ -8,7 +8,7 @@ import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.CategoryStaccato
-import com.on.staccato.domain.model.NewMemory
+import com.on.staccato.domain.model.NewCategory
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -44,7 +44,7 @@ fun CategoryStaccatoDto.toDomain() =
         visitedAt = LocalDateTime.parse(visitedAt),
     )
 
-fun NewMemory.toDto() =
+fun NewCategory.toDto() =
     CategoryRequest(
         categoryThumbnailUrl = categoryThumbnailUrl,
         categoryTitle = categoryTitle,

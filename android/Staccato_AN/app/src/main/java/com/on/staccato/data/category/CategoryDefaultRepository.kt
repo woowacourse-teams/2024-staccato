@@ -5,7 +5,7 @@ import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryCandidates
-import com.on.staccato.domain.model.NewMemory
+import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.MemoryRepository
 import javax.inject.Inject
 
@@ -39,7 +39,7 @@ class CategoryDefaultRepository
             }
         }
 
-        override suspend fun createMemory(newCategory: NewMemory): ResponseResult<CategoryCreationResponse> {
+        override suspend fun createMemory(newCategory: NewCategory): ResponseResult<CategoryCreationResponse> {
             return when (val responseResult = categoryDataSource.createCategory(newCategory)) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ResponseResult.ServerError ->
@@ -54,7 +54,7 @@ class CategoryDefaultRepository
 
         override suspend fun updateMemory(
             categoryId: Long,
-            newCategory: NewMemory,
+            newCategory: NewCategory,
         ): ResponseResult<Unit> {
             return when (val responseResult = categoryDataSource.updateCategory(categoryId, newCategory)) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)

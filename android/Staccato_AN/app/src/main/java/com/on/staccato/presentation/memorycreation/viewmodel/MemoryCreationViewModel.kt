@@ -14,7 +14,7 @@ import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.dto.category.CategoryCreationResponse
-import com.on.staccato.domain.model.NewMemory
+import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.MemoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -92,7 +92,7 @@ class MemoryCreationViewModel
         fun createMemory() {
             _isPosting.value = true
             viewModelScope.launch {
-                val memory: NewMemory = makeNewMemory()
+                val memory: NewCategory = makeNewMemory()
                 val result: ResponseResult<CategoryCreationResponse> =
                     memoryRepository.createMemory(memory)
                 result
@@ -151,7 +151,7 @@ class MemoryCreationViewModel
         }
 
         private fun makeNewMemory() =
-            NewMemory(
+            NewCategory(
                 categoryThumbnailUrl = _thumbnail.value?.url,
                 categoryTitle = title.get() ?: throw IllegalArgumentException(),
                 startAt = getDateByPeriodSetting(startDate),

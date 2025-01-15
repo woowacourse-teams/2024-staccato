@@ -14,7 +14,7 @@ import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.domain.model.Category
-import com.on.staccato.domain.model.NewMemory
+import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.MemoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -38,8 +38,8 @@ class MemoryUpdateViewModel
         private val memoryRepository: MemoryRepository,
         private val imageRepository: ImageRepository,
     ) : ViewModel() {
-        private val _memory = MutableLiveData<NewMemory>()
-        val memory: LiveData<NewMemory> get() = _memory
+        private val _memory = MutableLiveData<NewCategory>()
+        val memory: LiveData<NewCategory> get() = _memory
 
         private val _thumbnail = MutableLiveData<ThumbnailUiModel>(ThumbnailUiModel())
         val thumbnail: LiveData<ThumbnailUiModel> get() = _thumbnail
@@ -87,7 +87,7 @@ class MemoryUpdateViewModel
 
         fun updateMemory() {
             viewModelScope.launch {
-                val newMemory: NewMemory = makeNewMemory()
+                val newMemory: NewCategory = makeNewMemory()
                 val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory)
                 result
                     .onSuccess { updateSuccessStatus() }
@@ -131,7 +131,7 @@ class MemoryUpdateViewModel
         }
 
         private fun makeNewMemory() =
-            NewMemory(
+            NewCategory(
                 categoryThumbnailUrl = _thumbnail.value?.url,
                 categoryTitle = title.get() ?: throw IllegalArgumentException(),
                 startAt = getDateByPeriodSetting(startDate),
