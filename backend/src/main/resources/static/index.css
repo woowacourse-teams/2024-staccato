@@ -15,7 +15,7 @@ h1, h2, p {
     display: flex;
     flex-direction: column; /* 세로 정렬 */
     align-items: center;
-    gap: 15rem; /* 각 아이템 간의 간격 */
+    gap: 10rem; /* 각 아이템 간의 간격 */
     padding: 0;
     background-color: #ffffff;
 }
@@ -68,16 +68,24 @@ footer {
 /* 1024px 이하 화면 */
 @media (max-width: 1024px) {
     footer {
-        padding: 2rem; /* 패딩 줄이기 */
+        padding: 1.5rem; /* 패딩 줄이기 */
         font-size: 1.25rem; /* 글씨 크기 줄이기 */
+    }
+
+    .features {
+        gap: 5rem;
     }
 }
 
 /* 768px 이하 화면 */
 @media (max-width: 768px) {
     footer {
-        padding: 1.5rem; /* 더 작은 패딩 */
+        padding: 1.2rem; /* 더 작은 패딩 */
         font-size: 1rem; /* 더 작은 글씨 크기 */
+    }
+
+    .features {
+        gap: 2rem;
     }
 }
 
@@ -86,5 +94,9 @@ footer {
     footer {
         padding: 1rem; /* 최소 패딩 */
         font-size: 0.875rem; /* 가장 작은 글씨 크기 */
+    }
+
+    .features {
+        gap: 1rem;
     }
 }
