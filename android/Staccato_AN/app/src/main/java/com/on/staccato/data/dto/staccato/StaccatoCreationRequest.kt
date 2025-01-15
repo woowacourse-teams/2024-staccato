@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class StaccatoCreationRequest(
     @SerialName("staccatoTitle") val staccatoTitle: String,
-    @SerialName("categoryId") val memoryId: Long,
+    @SerialName("categoryId") val categoryId: Long,
     @SerialName("placeName") val placeName: String,
     @SerialName("latitude") val latitude: Double,
     @SerialName("longitude") val longitude: Double,

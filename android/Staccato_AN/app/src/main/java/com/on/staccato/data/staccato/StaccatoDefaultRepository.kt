@@ -68,7 +68,7 @@ class StaccatoDefaultRepository
                 val responseResult =
                     remoteDataSource.createStaccato(
                         StaccatoCreationRequest(
-                            memoryId = memoryId,
+                            categoryId = memoryId,
                             staccatoTitle = staccatoTitle,
                             placeName = placeName,
                             latitude = latitude,
