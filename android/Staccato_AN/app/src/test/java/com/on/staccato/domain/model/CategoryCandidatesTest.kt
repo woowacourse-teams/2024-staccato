@@ -21,7 +21,7 @@ class CategoryCandidatesTest {
         val filteredCandidates = categoryCandidates.filterBy(date)
 
         // then
-        val isEveryCandidatesContainDate = filteredCandidates.memoryCandidate.all { it.isDateWithinPeriod(date) }
+        val isEveryCandidatesContainDate = filteredCandidates.categoryCandidates.all { it.isDateWithinPeriod(date) }
         assertTrue(isEveryCandidatesContainDate)
     }
 

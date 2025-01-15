@@ -17,7 +17,7 @@ fun TextView.setSelectedMemory(
     memoryCandidates: MemoryCandidates?,
 ) {
     when {
-        (memoryCandidates?.memoryCandidate?.isEmpty() == true) -> {
+        (memoryCandidates?.categoryCandidates?.isEmpty() == true) -> {
             text = resources.getString(R.string.staccato_creation_no_memory)
             setTextColor(resources.getColor(R.color.gray3, null))
             isClickable = false
@@ -66,7 +66,7 @@ fun TextView.setMemoryPeriod(
 
 @BindingAdapter("isMemoryCandidatesEmpty")
 fun TextView.setIsMemoryCandidatesEmptyVisibility(memoryCandidates: MemoryCandidates?) {
-    isGone = !memoryCandidates?.memoryCandidate.isNullOrEmpty()
+    isGone = !memoryCandidates?.categoryCandidates.isNullOrEmpty()
 }
 
 @BindingAdapter("visitedAtHistory")

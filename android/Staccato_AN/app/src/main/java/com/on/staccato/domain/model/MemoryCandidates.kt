@@ -2,14 +2,14 @@ package com.on.staccato.domain.model
 
 import java.time.LocalDate
 
-data class MemoryCandidates(val memoryCandidate: List<CategoryCandidate>) {
-    fun filterBy(date: LocalDate): MemoryCandidates = copy(memoryCandidate = memoryCandidate.filter { it.isDateWithinPeriod(date) })
+data class MemoryCandidates(val categoryCandidates: List<CategoryCandidate>) {
+    fun filterBy(date: LocalDate): MemoryCandidates = copy(categoryCandidates = categoryCandidates.filter { it.isDateWithinPeriod(date) })
 
-    fun findBy(memoryId: Long): CategoryCandidate? = memoryCandidate.find { it.categoryId == memoryId }
+    fun findBy(memoryId: Long): CategoryCandidate? = categoryCandidates.find { it.categoryId == memoryId }
 
     fun findByIdOrFirst(targetId: Long?): CategoryCandidate? =
-        memoryCandidate.find { it.categoryId == targetId }
-            ?: memoryCandidate.firstOrNull()
+        categoryCandidates.find { it.categoryId == targetId }
+            ?: categoryCandidates.firstOrNull()
 
     companion object {
         val emptyMemoryCandidates = MemoryCandidates(emptyList())

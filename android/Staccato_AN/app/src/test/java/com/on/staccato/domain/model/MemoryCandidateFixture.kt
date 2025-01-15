@@ -27,7 +27,7 @@ internal val targetMemoryCandidate =
 
 val dummyMemoryCandidates =
     MemoryCandidates(
-        memoryCandidate =
+        categoryCandidates =
             listOf(
                 memoryCandidateWithId1,
                 makeTestMemoryCandidate(memoryId = 2L, startAt = startDateOf2024, endAt = middleDateOf2024),
