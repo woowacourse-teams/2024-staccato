@@ -9,7 +9,7 @@ import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.Status
-import com.on.staccato.domain.model.Memory
+import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.repository.MemoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
@@ -39,7 +39,7 @@ class MemoryViewModel
 
         fun loadMemory(memoryId: Long) {
             viewModelScope.launch {
-                val result: ResponseResult<Memory> = memoryRepository.getMemory(memoryId)
+                val result: ResponseResult<Category> = memoryRepository.getMemory(memoryId)
                 result
                     .onSuccess(::setMemory)
                     .onServerError(::handleServerError)
@@ -56,7 +56,7 @@ class MemoryViewModel
             }
         }
 
-        private fun setMemory(memory: Memory) {
+        private fun setMemory(memory: Category) {
             _memory.value = memory.toUiModel()
         }
 

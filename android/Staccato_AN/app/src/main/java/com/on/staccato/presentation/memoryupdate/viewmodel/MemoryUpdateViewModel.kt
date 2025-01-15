@@ -13,7 +13,7 @@ import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.domain.model.Memory
+import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.NewMemory
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.MemoryRepository
@@ -117,7 +117,7 @@ class MemoryUpdateViewModel
             _thumbnail.value = thumbnail.value?.clear()
         }
 
-        private fun initializeMemory(memory: Memory) {
+        private fun initializeMemory(memory: Category) {
             _thumbnail.value = _thumbnail.value?.updateUrl(memory.categoryThumbnailUrl)
             title.set(memory.categoryTitle)
             description.set(memory.description)
@@ -126,7 +126,7 @@ class MemoryUpdateViewModel
             checkMemoryHasPeriod(memory)
         }
 
-        private fun checkMemoryHasPeriod(memory: Memory) {
+        private fun checkMemoryHasPeriod(memory: Category) {
             isPeriodActive.value = memory.startAt != null && memory.endAt != null
         }
 

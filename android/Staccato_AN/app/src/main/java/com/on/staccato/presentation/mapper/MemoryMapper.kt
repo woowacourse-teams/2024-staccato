@@ -1,13 +1,13 @@
 package com.on.staccato.presentation.mapper
 
 import com.on.staccato.domain.model.Member
-import com.on.staccato.domain.model.Memory
+import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.MemoryStaccato
 import com.on.staccato.presentation.common.MemberUiModel
 import com.on.staccato.presentation.memory.model.MemoryStaccatoUiModel
 import com.on.staccato.presentation.memory.model.MemoryUiModel
 
-fun Memory.toUiModel() =
+fun Category.toUiModel() =
     MemoryUiModel(
         id = categoryId,
         title = categoryTitle,

@@ -2,12 +2,12 @@ package com.on.staccato.domain.repository
 
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.category.CategoryCreationResponse
-import com.on.staccato.domain.model.Memory
+import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.model.NewMemory
 
 interface MemoryRepository {
-    suspend fun getMemory(memoryId: Long): ResponseResult<Memory>
+    suspend fun getMemory(memoryId: Long): ResponseResult<Category>
 
     suspend fun getMemories(currentDate: String?): ResponseResult<MemoryCandidates>
 

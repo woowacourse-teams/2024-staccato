@@ -4,7 +4,7 @@ import com.on.staccato.data.dto.category.CategoriesResponse
 import com.on.staccato.data.dto.category.CategoryRequest
 import com.on.staccato.data.dto.category.CategoryResponse
 import com.on.staccato.data.dto.category.CategoryStaccatoDto
-import com.on.staccato.domain.model.Memory
+import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.model.MemoryStaccato
@@ -13,7 +13,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 fun CategoryResponse.toDomain() =
-    Memory(
+    Category(
         categoryId = categoryId,
         categoryThumbnailUrl = categoryThumbnailUrl,
         categoryTitle = categoryTitle,

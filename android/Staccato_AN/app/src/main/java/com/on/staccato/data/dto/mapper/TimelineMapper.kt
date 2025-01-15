@@ -2,7 +2,7 @@ package com.on.staccato.data.dto.mapper
 
 import com.on.staccato.data.dto.timeline.TimelineMemoryDto
 import com.on.staccato.data.dto.timeline.TimelineResponse
-import com.on.staccato.domain.model.Memory
+import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.model.Timeline
@@ -24,8 +24,8 @@ fun TimelineResponse.toMemoryCandidates(): MemoryCandidates {
     return MemoryCandidates(memories)
 }
 
-fun TimelineMemoryDto.toDomain(): Memory {
-    return Memory(
+fun TimelineMemoryDto.toDomain(): Category {
+    return Category(
         categoryId = memoryId,
         categoryThumbnailUrl = memoryThumbnailUrl,
         categoryTitle = memoryTitle,

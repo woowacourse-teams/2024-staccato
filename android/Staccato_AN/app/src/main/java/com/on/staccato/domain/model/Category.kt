@@ -2,7 +2,7 @@ package com.on.staccato.domain.model
 
 import java.time.LocalDate
 
-data class Memory(
+data class Category(
     val categoryId: Long,
     val categoryThumbnailUrl: String? = null,
     val categoryTitle: String,

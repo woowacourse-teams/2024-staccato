@@ -10,7 +10,7 @@ import org.junit.runner.RunWith
 import java.time.LocalDate
 
 @RunWith(JUnitParamsRunner::class)
-class MemoryCandidateTest {
+class CategoryCandidateTest {
     @Test
     @Parameters(method = "validLocalDateParameters")
     fun `타겟 날짜가 기간 내면 true를 반환`(targetLocalDate: LocalDate) {

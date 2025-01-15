@@ -3,7 +3,7 @@ package com.on.staccato.data.category
 import com.on.staccato.data.ResponseResult
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.category.CategoryCreationResponse
-import com.on.staccato.domain.model.Memory
+import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.model.NewMemory
 import com.on.staccato.domain.repository.MemoryRepository
@@ -14,7 +14,7 @@ class CategoryDefaultRepository
     constructor(
         private val categoryDataSource: CategoryDataSource,
     ) : MemoryRepository {
-        override suspend fun getMemory(categoryId: Long): ResponseResult<Memory> {
+        override suspend fun getMemory(categoryId: Long): ResponseResult<Category> {
             return when (val responseResult = categoryDataSource.getCategory(categoryId)) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ResponseResult.ServerError ->

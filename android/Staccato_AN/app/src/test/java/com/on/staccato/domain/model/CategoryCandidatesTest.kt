@@ -10,7 +10,7 @@ import org.junit.runner.RunWith
 import java.time.LocalDate
 
 @RunWith(JUnitParamsRunner::class)
-class MemoryCandidatesTest {
+class CategoryCandidatesTest {
     @Test
     @Parameters(method = "parameters")
     fun `날짜를 포함하는 카테고리들을 필터링 하여 반환`(date: LocalDate) {
