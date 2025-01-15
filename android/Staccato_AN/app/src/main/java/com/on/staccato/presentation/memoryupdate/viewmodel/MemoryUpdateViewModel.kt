@@ -77,7 +77,7 @@ class MemoryUpdateViewModel
         fun fetchMemory(id: Long) {
             memoryId = id
             viewModelScope.launch {
-                val result = memoryRepository.getMemory(memoryId)
+                val result = memoryRepository.getCategory(memoryId)
                 result
                     .onSuccess(::initializeMemory)
                     .onServerError(::handleInitializeMemoryError)
@@ -88,7 +88,7 @@ class MemoryUpdateViewModel
         fun updateMemory() {
             viewModelScope.launch {
                 val newMemory: NewCategory = makeNewMemory()
-                val result: ResponseResult<Unit> = memoryRepository.updateMemory(memoryId, newMemory)
+                val result: ResponseResult<Unit> = memoryRepository.updateCategory(memoryId, newMemory)
                 result
                     .onSuccess { updateSuccessStatus() }
                     .onServerError(::handleUpdateError)

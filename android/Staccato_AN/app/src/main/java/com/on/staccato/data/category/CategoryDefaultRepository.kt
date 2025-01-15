@@ -14,7 +14,7 @@ class CategoryDefaultRepository
     constructor(
         private val categoryDataSource: CategoryDataSource,
     ) : MemoryRepository {
-        override suspend fun getMemory(categoryId: Long): ResponseResult<Category> {
+        override suspend fun getCategory(categoryId: Long): ResponseResult<Category> {
             return when (val responseResult = categoryDataSource.getCategory(categoryId)) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ResponseResult.ServerError ->
@@ -27,7 +27,7 @@ class CategoryDefaultRepository
             }
         }
 
-        override suspend fun getMemories(currentDate: String?): ResponseResult<CategoryCandidates> {
+        override suspend fun getCategories(currentDate: String?): ResponseResult<CategoryCandidates> {
             return when (val responseResult = categoryDataSource.getCategories(currentDate)) {
                 is ResponseResult.Success -> ResponseResult.Success(responseResult.data.toDomain())
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
@@ -39,7 +39,7 @@ class CategoryDefaultRepository
             }
         }
 
-        override suspend fun createMemory(newCategory: NewCategory): ResponseResult<CategoryCreationResponse> {
+        override suspend fun createCategory(newCategory: NewCategory): ResponseResult<CategoryCreationResponse> {
             return when (val responseResult = categoryDataSource.createCategory(newCategory)) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ResponseResult.ServerError ->
@@ -52,7 +52,7 @@ class CategoryDefaultRepository
             }
         }
 
-        override suspend fun updateMemory(
+        override suspend fun updateCategory(
             categoryId: Long,
             newCategory: NewCategory,
         ): ResponseResult<Unit> {
@@ -68,7 +68,7 @@ class CategoryDefaultRepository
             }
         }
 
-        override suspend fun deleteMemory(categoryId: Long): ResponseResult<Unit> {
+        override suspend fun deleteCategory(categoryId: Long): ResponseResult<Unit> {
             return when (val responseResult = categoryDataSource.deleteCategory(categoryId)) {
                 is ResponseResult.Exception -> ResponseResult.Exception(responseResult.e, EXCEPTION_NETWORK_ERROR_MESSAGE)
                 is ResponseResult.ServerError ->

@@ -39,7 +39,7 @@ class MemoryViewModel
 
         fun loadMemory(memoryId: Long) {
             viewModelScope.launch {
-                val result: ResponseResult<Category> = memoryRepository.getMemory(memoryId)
+                val result: ResponseResult<Category> = memoryRepository.getCategory(memoryId)
                 result
                     .onSuccess(::setMemory)
                     .onServerError(::handleServerError)
@@ -49,7 +49,7 @@ class MemoryViewModel
 
         fun deleteMemory(memoryId: Long) {
             viewModelScope.launch {
-                val result: ResponseResult<Unit> = memoryRepository.deleteMemory(memoryId)
+                val result: ResponseResult<Unit> = memoryRepository.deleteCategory(memoryId)
                 result.onSuccess { updateIsDeleteSuccess() }
                     .onServerError(::handleServerError)
                     .onException(::handelException)
