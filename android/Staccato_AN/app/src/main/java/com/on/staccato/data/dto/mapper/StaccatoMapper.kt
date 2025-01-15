@@ -11,8 +11,8 @@ import java.time.LocalDateTime
 fun StaccatoResponse.toDomain() =
     Staccato(
         staccatoId = staccatoId,
-        memoryId = memoryId,
-        memoryTitle = memoryTitle,
+        memoryId = categoryId,
+        memoryTitle = categoryTitle,
         staccatoTitle = staccatoTitle,
         placeName = placeName,
         latitude = latitude,
