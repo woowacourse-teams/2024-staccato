@@ -19,7 +19,7 @@ fun TimelineResponse.toDomain(): Timeline {
 fun TimelineResponse.toMemoryCandidates(): CategoryCandidates {
     val memories: List<CategoryCandidate> =
         categories.map { timelineMemoryDto ->
-            timelineMemoryDto.toMemoryCandidate()
+            timelineMemoryDto.toCategoryCandidate()
         }
     return CategoryCandidates(memories)
 }
@@ -37,7 +37,7 @@ fun TimelineCategoryDto.toDomain(): Category {
     )
 }
 
-fun TimelineCategoryDto.toMemoryCandidate(): CategoryCandidate {
+fun TimelineCategoryDto.toCategoryCandidate(): CategoryCandidate {
     return CategoryCandidate(
         categoryId = categoryId,
         categoryTitle = categoryTitle,
