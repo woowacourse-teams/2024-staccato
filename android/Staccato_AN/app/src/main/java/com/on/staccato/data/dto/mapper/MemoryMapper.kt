@@ -5,7 +5,7 @@ import com.on.staccato.data.dto.category.CategoryRequest
 import com.on.staccato.data.dto.category.CategoryResponse
 import com.on.staccato.data.dto.category.CategoryStaccatoDto
 import com.on.staccato.domain.model.Category
-import com.on.staccato.domain.model.MemoryCandidate
+import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.model.MemoryStaccato
 import com.on.staccato.domain.model.NewMemory
@@ -27,7 +27,7 @@ fun CategoryResponse.toDomain() =
 fun CategoriesResponse.toDomain(): MemoryCandidates =
     MemoryCandidates(
         this.categories.map {
-            MemoryCandidate(
+            CategoryCandidate(
                 categoryId = it.categoryId,
                 categoryTitle = it.categoryTitle,
                 startAt = LocalDate.parse(it.startAt),

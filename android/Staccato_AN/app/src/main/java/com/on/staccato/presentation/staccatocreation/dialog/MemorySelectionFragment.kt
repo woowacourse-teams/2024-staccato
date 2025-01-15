@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.NumberPicker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.on.staccato.databinding.FragmentMemorySelectionBinding
-import com.on.staccato.domain.model.MemoryCandidate
+import com.on.staccato.domain.model.CategoryCandidate
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -16,19 +16,19 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
     private lateinit var handler: MemorySelectionHandler
 
-    private val items = mutableListOf<MemoryCandidate>()
-    private lateinit var keyMemory: MemoryCandidate
+    private val items = mutableListOf<CategoryCandidate>()
+    private lateinit var keyMemory: CategoryCandidate
 
     fun setOnMemorySelected(newHandler: MemorySelectionHandler) {
         handler = newHandler
     }
 
-    fun setItems(newItems: List<MemoryCandidate>) {
+    fun setItems(newItems: List<CategoryCandidate>) {
         items.clear()
         items.addAll(newItems)
     }
 
-    fun updateKeyMemory(selectedMemory: MemoryCandidate) {
+    fun updateKeyMemory(selectedMemory: CategoryCandidate) {
         keyMemory = selectedMemory
     }
 
@@ -61,8 +61,8 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
     }
 
     private fun NumberPicker.setPickerValue(
-        targetList: List<MemoryCandidate>,
-        targetKey: MemoryCandidate,
+        targetList: List<CategoryCandidate>,
+        targetKey: CategoryCandidate,
     ) {
         this.value = targetList.indexOf(targetKey).takeIf { it >= 0 } ?: 0
     }

@@ -13,7 +13,7 @@ import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.image.ImageDefaultRepository
-import com.on.staccato.domain.model.MemoryCandidate
+import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
@@ -62,8 +62,8 @@ class StaccatoCreationViewModel
         private val _longitude = MutableLiveData<Double?>()
         private val longitude: LiveData<Double?> get() = _longitude
 
-        private val _selectedMemory = MutableLiveData<MemoryCandidate>()
-        val selectedMemory: LiveData<MemoryCandidate> get() = _selectedMemory
+        private val _selectedMemory = MutableLiveData<CategoryCandidate>()
+        val selectedMemory: LiveData<CategoryCandidate> get() = _selectedMemory
 
         private val _selectableMemories = MutableLiveData<MemoryCandidates>()
         val selectableMemories: LiveData<MemoryCandidates> get() = _selectableMemories
@@ -116,7 +116,7 @@ class StaccatoCreationViewModel
             _selectedVisitedAt.value = visitedAt
         }
 
-        fun selectMemory(memory: MemoryCandidate) {
+        fun selectMemory(memory: CategoryCandidate) {
             _selectedMemory.value = memory
         }
 

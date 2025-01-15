@@ -43,7 +43,7 @@ internal fun makeTestMemoryCandidate(
     memoryTitle: String = "임시 카테고리",
     startAt: LocalDate? = null,
     endAt: LocalDate? = null,
-) = MemoryCandidate(
+) = CategoryCandidate(
     categoryId = memoryId,
     categoryTitle = memoryTitle,
     startAt = startAt,
@@ -59,7 +59,7 @@ internal fun makeTestStaccato(
     longitude: Double = 1.1,
     staccatoImageUrls: List<String> = emptyList(),
     visitedAt: LocalDateTime,
-    memoryCandidate: MemoryCandidate,
+    memoryCandidate: CategoryCandidate,
     feeling: Feeling = Feeling.EXCITED,
 ) = Staccato(
     staccatoId = staccatoId,

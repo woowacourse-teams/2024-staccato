@@ -12,7 +12,7 @@ import com.on.staccato.data.ApiResponseHandler.onException
 import com.on.staccato.data.ApiResponseHandler.onServerError
 import com.on.staccato.data.ApiResponseHandler.onSuccess
 import com.on.staccato.data.dto.Status
-import com.on.staccato.domain.model.MemoryCandidate
+import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.model.MemoryCandidates.Companion.emptyMemoryCandidates
 import com.on.staccato.domain.model.Staccato
@@ -76,8 +76,8 @@ class StaccatoUpdateViewModel
         private val _isCurrentLocationLoading = MutableLiveData(false)
         val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
 
-        private val _selectedMemory = MutableLiveData<MemoryCandidate>()
-        val selectedMemory: LiveData<MemoryCandidate> get() = _selectedMemory
+        private val _selectedMemory = MutableLiveData<CategoryCandidate>()
+        val selectedMemory: LiveData<CategoryCandidate> get() = _selectedMemory
 
         private val _selectableMemories = MutableLiveData<MemoryCandidates>()
         val selectableMemories: LiveData<MemoryCandidates> get() = _selectableMemories
@@ -114,7 +114,7 @@ class StaccatoUpdateViewModel
             }
         }
 
-        fun selectMemory(memory: MemoryCandidate) {
+        fun selectMemory(memory: CategoryCandidate) {
             _selectedMemory.value = memory
         }
 
@@ -244,7 +244,7 @@ class StaccatoUpdateViewModel
 
         private fun initMemory(staccato: Staccato) {
             _selectedMemory.value =
-                MemoryCandidate(
+                CategoryCandidate(
                     staccato.memoryId,
                     staccato.memoryTitle,
                     staccato.startAt,

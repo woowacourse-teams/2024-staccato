@@ -5,7 +5,7 @@ import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.databinding.BindingAdapter
 import com.on.staccato.R
-import com.on.staccato.domain.model.MemoryCandidate
+import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
 import java.time.LocalDate
@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 
 @BindingAdapter(value = ["selectedMemory", "memoryCandidates"])
 fun TextView.setSelectedMemory(
-    selectedMemory: MemoryCandidate?,
+    selectedMemory: CategoryCandidate?,
     memoryCandidates: MemoryCandidates?,
 ) {
     when {

@@ -3,7 +3,7 @@ package com.on.staccato.domain.model
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-data class MemoryCandidate(
+data class CategoryCandidate(
     val categoryId: Long,
     val categoryTitle: String,
     val startAt: LocalDate?,

@@ -3,7 +3,7 @@ package com.on.staccato.data.dto.mapper
 import com.on.staccato.data.dto.timeline.TimelineMemoryDto
 import com.on.staccato.data.dto.timeline.TimelineResponse
 import com.on.staccato.domain.model.Category
-import com.on.staccato.domain.model.MemoryCandidate
+import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.model.Timeline
 import java.time.LocalDate
@@ -17,7 +17,7 @@ fun TimelineResponse.toDomain(): Timeline {
 }
 
 fun TimelineResponse.toMemoryCandidates(): MemoryCandidates {
-    val memories: List<MemoryCandidate> =
+    val memories: List<CategoryCandidate> =
         memories.map { timelineMemoryDto ->
             timelineMemoryDto.toMemoryCandidate()
         }
@@ -37,8 +37,8 @@ fun TimelineMemoryDto.toDomain(): Category {
     )
 }
 
-fun TimelineMemoryDto.toMemoryCandidate(): MemoryCandidate {
-    return MemoryCandidate(
+fun TimelineMemoryDto.toMemoryCandidate(): CategoryCandidate {
+    return CategoryCandidate(
         categoryId = memoryId,
         categoryTitle = memoryTitle,
         startAt = startAt?.let { LocalDate.parse(it) },

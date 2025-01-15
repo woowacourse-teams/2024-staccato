@@ -5,7 +5,7 @@ import android.widget.ImageButton
 import androidx.databinding.BindingAdapter
 import com.google.android.material.button.MaterialButton
 import com.on.staccato.R
-import com.on.staccato.domain.model.MemoryCandidate
+import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -30,7 +30,7 @@ fun Button.setStaccatoSaveButtonEnabled(
     staccatoAddress: String?,
     staccatoVisitedAt: LocalDateTime?,
     staccatoPhotos: AttachedPhotosUiModel?,
-    staccatoMemory: MemoryCandidate?,
+    staccatoMemory: CategoryCandidate?,
 ) {
     isEnabled =
         if (staccatoTitle.isNullOrBlank() ||
