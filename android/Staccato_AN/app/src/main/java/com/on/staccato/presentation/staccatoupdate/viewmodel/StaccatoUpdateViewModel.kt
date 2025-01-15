@@ -245,8 +245,8 @@ class StaccatoUpdateViewModel
         private fun initMemory(staccato: Staccato) {
             _selectedMemory.value =
                 CategoryCandidate(
-                    staccato.memoryId,
-                    staccato.memoryTitle,
+                    staccato.categoryId,
+                    staccato.categoryTitle,
                     staccato.startAt,
                     staccato.endAt,
                 )
