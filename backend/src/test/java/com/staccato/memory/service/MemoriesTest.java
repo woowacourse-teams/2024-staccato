@@ -17,7 +17,7 @@ import com.staccato.memory.repository.MemoryRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class MemoryMembersTest extends ServiceSliceTest {
+class MemoriesTest extends ServiceSliceTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -34,10 +34,10 @@ class MemoryMembersTest extends ServiceSliceTest {
         Memory memory2 = memoryRepository.save(MemoryFixture.createWithMember(LocalDate.now(), LocalDate.now()
                 .plusDays(3), member));
 
-        MemoryMembers memoryMembers = new MemoryMembers(memoryMemberRepository.findAllByMemberId(member.getId()));
+        Memories memories = Memories.from(memoryMemberRepository.findAllByMemberId(member.getId()));
 
         // when
-        List<Memory> result = memoryMembers.operate(List.of(), "OLDEST");
+        List<Memory> result = memories.operate(List.of(), "OLDEST");
 
         // then
         assertAll(
