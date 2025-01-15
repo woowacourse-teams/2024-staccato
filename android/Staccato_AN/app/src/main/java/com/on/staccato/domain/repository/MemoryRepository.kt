@@ -7,16 +7,16 @@ import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.NewCategory
 
 interface MemoryRepository {
-    suspend fun getMemory(memoryId: Long): ResponseResult<Category>
+    suspend fun getMemory(categoryId: Long): ResponseResult<Category>
 
     suspend fun getMemories(currentDate: String?): ResponseResult<CategoryCandidates>
 
-    suspend fun createMemory(newMemory: NewCategory): ResponseResult<CategoryCreationResponse>
+    suspend fun createMemory(newCategory: NewCategory): ResponseResult<CategoryCreationResponse>
 
     suspend fun updateMemory(
-        memoryId: Long,
-        newMemory: NewCategory,
+        categoryId: Long,
+        newCategory: NewCategory,
     ): ResponseResult<Unit>
 
-    suspend fun deleteMemory(memoryId: Long): ResponseResult<Unit>
+    suspend fun deleteMemory(categoryId: Long): ResponseResult<Unit>
 }
