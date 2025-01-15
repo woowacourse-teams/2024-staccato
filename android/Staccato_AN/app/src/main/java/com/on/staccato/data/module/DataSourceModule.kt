@@ -25,7 +25,7 @@ abstract class DataSourceModule {
     abstract fun bindLoginDataSource(loginRemoteDataSource: LoginRemoteDataSource): LoginDataSource
 
     @Binds
-    abstract fun bindMemoryDataSource(memoryRemoteDataSource: CategoryRemoteDataSource): CategoryDataSource
+    abstract fun bindCategoryDataSource(categoryRemoteDataSource: CategoryRemoteDataSource): CategoryDataSource
 
     @Binds
     abstract fun bindStaccatoDataSource(staccatoRemoteDataSource: StaccatoRemoteDataSource): StaccatoDataSource
