@@ -16,12 +16,13 @@ class ApiResultCallAdapterFactory : CallAdapter.Factory() {
             return null
         }
 
-        val callType = getParameterUpperBound(0, returnType as ParameterizedType)
-        if (getRawType(callType) != ApiResult::class.java) {
+        val responseType = getParameterUpperBound(0, returnType as ParameterizedType)
+
+        if (getRawType(responseType) != ApiResult::class.java) {
             return null
         }
 
-        val resultType = getParameterUpperBound(0, callType as ParameterizedType)
+        val resultType = getParameterUpperBound(0, responseType as ParameterizedType)
         return ApiResultCallAdapter(resultType)
     }
 
