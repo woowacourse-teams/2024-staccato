@@ -1,5 +1,7 @@
 package com.on.staccato.data
 
+import com.on.staccato.data.dto.PostRequest
+
 fun createGetResponse(): String =
     """
     {

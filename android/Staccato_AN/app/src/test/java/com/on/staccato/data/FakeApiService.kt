@@ -1,5 +1,8 @@
 package com.on.staccato.data
 
+import com.on.staccato.data.dto.GetResponse
+import com.on.staccato.data.dto.PostRequest
+import com.on.staccato.data.dto.PostResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET

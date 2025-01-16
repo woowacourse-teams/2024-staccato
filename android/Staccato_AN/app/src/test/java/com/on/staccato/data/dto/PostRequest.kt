@@ -1,4 +1,4 @@
-package com.on.staccato.data
+package com.on.staccato.data.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
