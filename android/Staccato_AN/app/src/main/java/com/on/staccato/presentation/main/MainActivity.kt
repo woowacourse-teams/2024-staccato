@@ -73,6 +73,7 @@ class MainActivity :
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
 
+    private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
@@ -122,8 +123,7 @@ class MainActivity :
     }
 
     override fun onMyPageClicked() {
-        val intent = Intent(this, MyPageActivity::class.java)
-        startActivity(intent)
+        MyPageActivity.startWithResultLauncher(this, myPageLauncher)
     }
 
     private fun setupPermissionRequestLauncher() {
@@ -377,6 +377,16 @@ class MainActivity :
                 result.data?.let {
                     val bundle: Bundle = makeBundle(it, STACCATO_ID_KEY)
                     navigateTo(R.id.staccatoFragment, R.id.staccatoFragment, bundle, true)
+                }
+            }
+        }
+
+    private fun handleMyPageResult() =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                lifecycleScope.launch {
+                    val cachedMemberProfile = getCachedMemberProfile(this)
+                    sharedViewModel.setMemberProfile(cachedMemberProfile)
                 }
             }
         }

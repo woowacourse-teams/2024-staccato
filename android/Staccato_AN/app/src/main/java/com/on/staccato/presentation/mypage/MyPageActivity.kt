@@ -2,11 +2,13 @@ package com.on.staccato.presentation.mypage
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -120,6 +122,7 @@ class MyPageActivity :
             lifecycleScope.launch {
                 userInfoPrefsManager.setProfileImageUrl(memberProfile.profileImageUrl ?: EMPTY_STRING)
             }
+            setResult(RESULT_OK)
         }
     }
 
@@ -156,5 +159,14 @@ class MyPageActivity :
             "https://forms.gle/fuxgta7HxDNY5KvSA"
         private const val STACCATO_INSTAGRAM_URL =
             "https://www.instagram.com/staccato_team/profilecard/?igsh=Y241bHoybnZmZjA5"
+
+        fun startWithResultLauncher(
+            context: Context,
+            activityLauncher: ActivityResultLauncher<Intent>,
+        ) {
+            Intent(context, MyPageActivity::class.java).apply {
+                activityLauncher.launch(this)
+            }
+        }
     }
 }
