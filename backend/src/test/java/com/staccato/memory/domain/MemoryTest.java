@@ -86,7 +86,7 @@ class MemoryTest {
         assertThat(result).isTrue();
     }
 
-    @DisplayName("추억이 기간을 가지고 있으면 참을 반환한다.")
+    @DisplayName("추억이 기간을 가지고 있지 않으면 거짓을 반환한다.")
     @Test
     void doesNotHaveTerm() {
         // given
