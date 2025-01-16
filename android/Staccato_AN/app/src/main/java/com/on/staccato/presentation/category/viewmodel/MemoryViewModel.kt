@@ -14,7 +14,7 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
-import com.on.staccato.presentation.category.model.MemoryUiModel
+import com.on.staccato.presentation.category.model.CategoryUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,8 +25,8 @@ class MemoryViewModel
     constructor(
         private val memoryRepository: CategoryRepository,
     ) : ViewModel() {
-        private val _memory = MutableLiveData<MemoryUiModel>()
-        val memory: LiveData<MemoryUiModel> get() = _memory
+        private val _memory = MutableLiveData<CategoryUiModel>()
+        val memory: LiveData<CategoryUiModel> get() = _memory
 
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage

@@ -3,7 +3,7 @@ package com.on.staccato.presentation.category.model
 import com.on.staccato.presentation.common.MemberUiModel
 import java.time.LocalDate
 
-data class MemoryUiModel(
+data class CategoryUiModel(
     val id: Long,
     val title: String,
     val categoryThumbnailUrl: String? = null,

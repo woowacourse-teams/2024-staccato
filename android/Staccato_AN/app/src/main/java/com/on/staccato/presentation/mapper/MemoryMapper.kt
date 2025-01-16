@@ -5,10 +5,10 @@ import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryStaccato
 import com.on.staccato.presentation.common.MemberUiModel
 import com.on.staccato.presentation.category.model.CategoryStaccatoUiModel
-import com.on.staccato.presentation.category.model.MemoryUiModel
+import com.on.staccato.presentation.category.model.CategoryUiModel
 
 fun Category.toUiModel() =
-    MemoryUiModel(
+    CategoryUiModel(
         id = categoryId,
         title = categoryTitle,
         categoryThumbnailUrl = categoryThumbnailUrl,
