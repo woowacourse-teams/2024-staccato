@@ -68,26 +68,30 @@ class InlineStudyTest {
 }
 
 fun createFakeMemory(): Success<Memory> {
-    return Success(Memory(
-        memoryId = 1L,
-        memoryThumbnailUrl = "https://example.com/fake-thumbnail.jpg",
-        memoryTitle = "Fake Memory Title",
-        startAt = LocalDate.of(2025, 1, 1),
-        endAt = LocalDate.of(2025, 12, 31),
-        description = "This is a fake memory description used for testing.",
-        mates = listOf(
-            Member(1L, "Member 1"),
-            Member(2L, "Member 2")
+    return Success(
+        Memory(
+            memoryId = 1L,
+            memoryThumbnailUrl = "https://example.com/fake-thumbnail.jpg",
+            memoryTitle = "Fake Memory Title",
+            startAt = LocalDate.of(2025, 1, 1),
+            endAt = LocalDate.of(2025, 12, 31),
+            description = "This is a fake memory description used for testing.",
+            mates =
+                listOf(
+                    Member(1L, "Member 1"),
+                    Member(2L, "Member 2"),
+                ),
+            staccatos =
+                (1..20).map { id ->
+                    MemoryStaccato(
+                        staccatoId = id.toLong(),
+                        staccatoTitle = "Staccato Title $id",
+                        staccatoImageUrl = "https://example.com/image$id-1.jpg",
+                        visitedAt = LocalDateTime.now().minusDays(id.toLong()),
+                    )
+                },
         ),
-        staccatos = (1..20).map { id ->
-            MemoryStaccato(
-                staccatoId = id.toLong(),
-                staccatoTitle = "Staccato Title $id",
-                staccatoImageUrl = "https://example.com/image$id-1.jpg",
-                visitedAt = LocalDateTime.now().minusDays(id.toLong()),
-            )
-        }
-    ))
+    )
 }
 
 inline fun <T : Any, R : Any> ApiResult<T>.inlineFunction(convert: (T) -> R): ApiResult<R> =
@@ -96,7 +100,6 @@ inline fun <T : Any, R : Any> ApiResult<T>.inlineFunction(convert: (T) -> R): Ap
         is ServerError -> ServerError(status, message)
         is Success -> Success(convert(data))
     }
-
 
 fun <T : Any, R : Any> ApiResult<T>.noInlineFunction(convert: (T) -> R): ApiResult<R> =
     when (this) {
