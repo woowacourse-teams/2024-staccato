@@ -103,7 +103,7 @@ class ApiResultCallAdapterTest {
     }
 
     @Test
-    fun `댓글 삭제를 요청한 사용자와 댓글 작성자의 인증 정보가 일치하지 않으면 오류가 발생한다`() {
+    fun `데이터 삭제를 요청한 사용자와 데이터 작성자의 인증 정보가 일치하지 않으면 오류가 발생한다`() {
         val serverError: MockResponse =
             createMockResponse(
                 code = 403,
@@ -112,8 +112,7 @@ class ApiResultCallAdapterTest {
         mockWebServer.enqueue(serverError)
 
         runTest {
-            val actual: ApiResult<Unit> =
-                commentApiService.deleteComment(commentId = 1)
+            val actual: ApiResult<Unit> = fakeApiService.delete(id = 1)
 
             assertThat(actual).isInstanceOf(ServerError::class.java)
         }
