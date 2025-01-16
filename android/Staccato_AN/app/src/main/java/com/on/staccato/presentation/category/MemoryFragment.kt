@@ -53,7 +53,7 @@ class MemoryFragment :
         observeIsDeleteSuccess()
         showErrorToast()
         showExceptionSnackBar()
-        viewModel.loadMemory(memoryId)
+        viewModel.loadCategory(memoryId)
     }
 
     override fun onUpdateClicked() {
@@ -80,7 +80,7 @@ class MemoryFragment :
     }
 
     override fun onConfirmClicked() {
-        viewModel.deleteMemory(memoryId)
+        viewModel.deleteCategory(memoryId)
     }
 
     override fun onStaccatoCreationClicked() {
@@ -153,7 +153,7 @@ class MemoryFragment :
     }
 
     private fun onRetryAction() {
-        viewModel.loadMemory(memoryId)
+        viewModel.loadCategory(memoryId)
     }
 
     companion object {

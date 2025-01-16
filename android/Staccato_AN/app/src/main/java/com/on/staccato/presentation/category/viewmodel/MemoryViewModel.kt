@@ -37,27 +37,27 @@ class MemoryViewModel
         private val _isDeleteSuccess = MutableSingleLiveData<Boolean>(false)
         val isDeleteSuccess: SingleLiveData<Boolean> get() = _isDeleteSuccess
 
-        fun loadMemory(memoryId: Long) {
+        fun loadCategory(categoryId: Long) {
             viewModelScope.launch {
-                val result: ResponseResult<Category> = categoryRepository.getCategory(memoryId)
+                val result: ResponseResult<Category> = categoryRepository.getCategory(categoryId)
                 result
-                    .onSuccess(::setMemory)
+                    .onSuccess(::setCategory)
                     .onServerError(::handleServerError)
                     .onException(::handelException)
             }
         }
 
-        fun deleteMemory(memoryId: Long) {
+        fun deleteCategory(categoryId: Long) {
             viewModelScope.launch {
-                val result: ResponseResult<Unit> = categoryRepository.deleteCategory(memoryId)
+                val result: ResponseResult<Unit> = categoryRepository.deleteCategory(categoryId)
                 result.onSuccess { updateIsDeleteSuccess() }
                     .onServerError(::handleServerError)
                     .onException(::handelException)
             }
         }
 
-        private fun setMemory(memory: Category) {
-            _category.value = memory.toUiModel()
+        private fun setCategory(category: Category) {
+            _category.value = category.toUiModel()
         }
 
         private fun updateIsDeleteSuccess() {
