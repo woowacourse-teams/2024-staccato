@@ -62,7 +62,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:coilImageUrl="@{viewModel.memory.categoryThumbnailUrl}"
+                    bind:coilImageUrl="@{viewModel.category.categoryThumbnailUrl}"
                     bind:coilPlaceHolder="@{@drawable/memory_gradient}"
                     tools:src="@drawable/shape_place_holder_rectangle" />
 
@@ -70,7 +70,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@drawable/memory_gradient"
-                    android:visibility="@{viewModel.memory.categoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{viewModel.category.categoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_thumbnail"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_thumbnail"
@@ -81,7 +81,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    android:text="@{viewModel.memory.title}"
+                    android:text="@{viewModel.category.title}"
                     android:textAppearance="@style/Typography.Title1"
                     android:textColor="@color/absolute_white"
                     app:layout_constraintBottom_toTopOf="@id/tv_memory_period"
@@ -99,8 +99,8 @@
                     android:textColor="@color/absolute_white"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
                     app:layout_constraintStart_toStartOf="@id/tv_memory_title"
-                    bind:memoryEndAt="@{viewModel.memory.endAt}"
-                    bind:memoryStartAt="@{viewModel.memory.startAt}"
+                    bind:memoryEndAt="@{viewModel.category.endAt}"
+                    bind:memoryStartAt="@{viewModel.category.startAt}"
                     tools:text="2023년 7월 1일 ~ 7월 5일" />
 
                 <TextView
@@ -108,8 +108,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:text="@{viewModel.memory.description}"
-                    android:visibility="@{viewModel.memory.description == null ? View.GONE : View.VISIBLE }"
+                    android:text="@{viewModel.category.description}"
+                    android:visibility="@{viewModel.category.description == null ? View.GONE : View.VISIBLE }"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_memory_thumbnail"
@@ -119,7 +119,7 @@
                     android:id="@+id/divider_memory_second"
                     style="@style/DividerStyle"
                     android:layout_marginTop="16dp"
-                    android:visibility="@{viewModel.memory.description == null ? View.GONE : View.VISIBLE }"
+                    android:visibility="@{viewModel.category.description == null ? View.GONE : View.VISIBLE }"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_description" />
@@ -212,7 +212,7 @@
                     android:contentDescription="@string/all_staccato_main_character"
                     android:paddingBottom="10dp"
                     android:src="@drawable/staccato_character"
-                    android:visibility="@{viewModel.memory.staccatos.empty ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.category.staccatos.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_staccatos" />
@@ -225,7 +225,7 @@
                     android:paddingBottom="100dp"
                     android:text="@string/memory_staccato_empty"
                     android:textAppearance="@style/Typography.Body2.Not.Resizable"
-                    android:visibility="@{viewModel.memory.staccatos.empty ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.category.staccatos.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_memory_empty"

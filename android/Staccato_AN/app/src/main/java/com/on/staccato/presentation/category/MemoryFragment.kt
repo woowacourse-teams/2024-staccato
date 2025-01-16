@@ -70,7 +70,7 @@ class MemoryFragment :
     }
 
     override fun onStaccatoClicked(staccatoId: Long) {
-        viewModel.memory.value?.let {
+        viewModel.category.value?.let {
             val bundle =
                 bundleOf(
                     STACCATO_ID_KEY to staccatoId,
@@ -84,7 +84,7 @@ class MemoryFragment :
     }
 
     override fun onStaccatoCreationClicked() {
-        viewModel.memory.value?.let {
+        viewModel.category.value?.let {
             val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
             StaccatoCreationActivity.startWithResultLauncher(
                 requireContext(),
@@ -109,7 +109,7 @@ class MemoryFragment :
     }
 
     private fun observeMemory() {
-        viewModel.memory.observe(viewLifecycleOwner) { memory ->
+        viewModel.category.observe(viewLifecycleOwner) { memory ->
             matesAdapter.updateMates(memory.mates)
             staccatosAdapter.updateStaccatos(memory.staccatos)
         }

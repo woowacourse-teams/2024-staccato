@@ -23,10 +23,10 @@ import javax.inject.Inject
 class MemoryViewModel
     @Inject
     constructor(
-        private val memoryRepository: CategoryRepository,
+        private val categoryRepository: CategoryRepository,
     ) : ViewModel() {
-        private val _memory = MutableLiveData<CategoryUiModel>()
-        val memory: LiveData<CategoryUiModel> get() = _memory
+        private val _category = MutableLiveData<CategoryUiModel>()
+        val category: LiveData<CategoryUiModel> get() = _category
 
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
@@ -39,7 +39,7 @@ class MemoryViewModel
 
         fun loadMemory(memoryId: Long) {
             viewModelScope.launch {
-                val result: ResponseResult<Category> = memoryRepository.getCategory(memoryId)
+                val result: ResponseResult<Category> = categoryRepository.getCategory(memoryId)
                 result
                     .onSuccess(::setMemory)
                     .onServerError(::handleServerError)
@@ -49,7 +49,7 @@ class MemoryViewModel
 
         fun deleteMemory(memoryId: Long) {
             viewModelScope.launch {
-                val result: ResponseResult<Unit> = memoryRepository.deleteCategory(memoryId)
+                val result: ResponseResult<Unit> = categoryRepository.deleteCategory(memoryId)
                 result.onSuccess { updateIsDeleteSuccess() }
                     .onServerError(::handleServerError)
                     .onException(::handelException)
@@ -57,7 +57,7 @@ class MemoryViewModel
         }
 
         private fun setMemory(memory: Category) {
-            _memory.value = memory.toUiModel()
+            _category.value = memory.toUiModel()
         }
 
         private fun updateIsDeleteSuccess() {
