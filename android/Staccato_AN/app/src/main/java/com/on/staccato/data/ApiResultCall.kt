@@ -12,10 +12,10 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 class ApiResultCall<T : Any>(
-    private val proxy: Call<T>,
+    private val delegate: Call<T>,
 ) : Call<ApiResult<T>> {
     override fun enqueue(callback: retrofit2.Callback<ApiResult<T>>) {
-        proxy.enqueue(
+        delegate.enqueue(
             object : retrofit2.Callback<T> {
                 override fun onResponse(
                     call: Call<T>,
@@ -38,19 +38,19 @@ class ApiResultCall<T : Any>(
 
     override fun execute(): Response<ApiResult<T>> = throw NotImplementedError()
 
-    override fun clone(): Call<ApiResult<T>> = ApiResultCall(proxy.clone())
+    override fun clone(): Call<ApiResult<T>> = ApiResultCall(delegate.clone())
 
-    override fun isExecuted(): Boolean = proxy.isExecuted
+    override fun isExecuted(): Boolean = delegate.isExecuted
 
     override fun cancel() {
-        proxy.cancel()
+        delegate.cancel()
     }
 
-    override fun isCanceled(): Boolean = proxy.isCanceled
+    override fun isCanceled(): Boolean = delegate.isCanceled
 
-    override fun request(): Request = proxy.request()
+    override fun request(): Request = delegate.request()
 
-    override fun timeout(): Timeout = proxy.timeout()
+    override fun timeout(): Timeout = delegate.timeout()
 }
 
 private const val CREATED = 201
