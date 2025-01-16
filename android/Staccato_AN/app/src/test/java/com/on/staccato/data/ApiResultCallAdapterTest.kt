@@ -2,10 +2,8 @@ package com.on.staccato.data
 
 import com.on.staccato.CoroutinesTestExtension
 import com.on.staccato.StaccatoApplication.Companion.retrofit
-import com.on.staccato.data.comment.CommentApiService
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.image.ImageApiService
-import com.on.staccato.data.memory.MemoryApiService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
@@ -22,9 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 class ApiResultCallAdapterTest {
     private val mockWebServer: MockWebServer = MockWebServer()
 
-    private lateinit var memoryApiService: MemoryApiService
     private lateinit var imageApiService: ImageApiService
-    private lateinit var commentApiService: CommentApiService
     private lateinit var fakeApiService: FakeApiService
 
     @BeforeEach
@@ -32,9 +28,7 @@ class ApiResultCallAdapterTest {
         mockWebServer.start()
 
         retrofit = buildRetrofitFor(mockWebServer)
-        memoryApiService = retrofit.create(MemoryApiService::class.java)
         imageApiService = retrofit.create(ImageApiService::class.java)
-        commentApiService = retrofit.create(CommentApiService::class.java)
         fakeApiService = retrofit.create(FakeApiService::class.java)
     }
 
