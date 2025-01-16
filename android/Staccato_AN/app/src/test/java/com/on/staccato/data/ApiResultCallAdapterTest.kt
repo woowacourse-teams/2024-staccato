@@ -5,7 +5,6 @@ import com.on.staccato.StaccatoApplication.Companion.retrofit
 import com.on.staccato.data.comment.CommentApiService
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
-import com.on.staccato.data.dto.memory.MemoryResponse
 import com.on.staccato.data.image.ImageApiService
 import com.on.staccato.data.memory.MemoryApiService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,6 +26,7 @@ class ApiResultCallAdapterTest {
     private lateinit var memoryApiService: MemoryApiService
     private lateinit var imageApiService: ImageApiService
     private lateinit var commentApiService: CommentApiService
+    private lateinit var fakeApiService: FakeApiService
 
     @BeforeEach
     fun setUp() {
@@ -36,20 +36,20 @@ class ApiResultCallAdapterTest {
         memoryApiService = retrofit.create(MemoryApiService::class.java)
         imageApiService = retrofit.create(ImageApiService::class.java)
         commentApiService = retrofit.create(CommentApiService::class.java)
+        fakeApiService = retrofit.create(FakeApiService::class.java)
     }
 
     @Test
-    fun `존재하는 카테고리를 조회하면 카테고리 조회에 성공한다`() {
+    fun `존재하는 데이터를를 조회하면 데이터 조회에 성공한다`() {
         val success: MockResponse =
             createMockResponse(
                 code = 200,
-                body = createMemoryResponse(),
+                body = createGetResponse(),
             )
         mockWebServer.enqueue(success)
 
         runTest {
-            val actual: ApiResult<MemoryResponse> =
-                memoryApiService.getMemory(memoryId = 1)
+            val actual: ApiResult<GetResponse> = fakeApiService.get(id = 1)
 
             assertThat(actual).isInstanceOf(Success::class.java)
         }

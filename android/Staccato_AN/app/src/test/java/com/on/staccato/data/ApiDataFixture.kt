@@ -2,26 +2,11 @@ package com.on.staccato.data
 
 import com.on.staccato.data.dto.memory.MemoryRequest
 
-fun createMemoryResponse(): String =
+fun createGetResponse(): String =
     """
     {
-        "memoryId": 1,
-        "memoryTitle": "해나의 추억",
-        "mates": [
-            {
-                "memberId": 1,
-                "nickname": "hannah",
-                "memberImageUrl": "https://example.com/members/profile.jpg"
-            }
-        ],
-        "moments": [
-            {
-                "momentId": 1,
-                "staccatoTitle": "스타카토 제목",
-                "momentImageUrl": "https://example.com/staccato/image.jpg",
-                "visitedAt": "2024-12-18T19:31:09.681Z"
-            }
-        ]
+        "id": 1
+        "content": "post 성공"
     }
     """.trimIndent()
 
