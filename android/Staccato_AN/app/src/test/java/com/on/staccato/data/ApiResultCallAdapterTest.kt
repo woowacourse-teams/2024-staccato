@@ -4,7 +4,6 @@ import com.on.staccato.CoroutinesTestExtension
 import com.on.staccato.StaccatoApplication.Companion.retrofit
 import com.on.staccato.data.comment.CommentApiService
 import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.image.ImageApiService
 import com.on.staccato.data.memory.MemoryApiService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -56,24 +55,23 @@ class ApiResultCallAdapterTest {
     }
 
     @Test
-    fun `유효한 형식의 카테고리로 생성을 요청하면 카테고리 생성에 성공한다`() {
+    fun `유효한 형식의 데이터로 생성을 요청하면 데이터 생성에 성공한다`() {
         val success: MockResponse =
             createMockResponse(
                 code = 201,
-                body = createMemoryCreationResponse(),
+                body = createPostResponse(),
             )
         mockWebServer.enqueue(success)
 
         runTest {
-            val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(createValidMemoryRequest())
+            val actual: ApiResult<PostResponse> = fakeApiService.post(request = createValidRequest())
 
             assertThat(actual).isInstanceOf(Success::class.java)
         }
     }
 
     @Test
-    fun `유효하지 않은 형식의 카테고리로 생성을 요청하면 오류가 발생한다`() {
+    fun `유효하지 않은 형식의 데이터로 생성을 요청하면 오류가 발생한다`() {
         val serverError: MockResponse =
             createMockResponse(
                 code = 400,
@@ -82,15 +80,14 @@ class ApiResultCallAdapterTest {
         mockWebServer.enqueue(serverError)
 
         runTest {
-            val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(createInvalidMemoryRequest())
+            val actual: ApiResult<PostResponse> = fakeApiService.post(request = createInvalidRequest())
 
             assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
     @Test
-    fun `인증되지 않은 사용자가 카테고리 생성을 요청하면 오류가 발생한다`() {
+    fun `인증되지 않은 사용자가 데이터 생성을 요청하면 오류가 발생한다`() {
         val serverError: MockResponse =
             createMockResponse(
                 code = 401,
@@ -99,8 +96,7 @@ class ApiResultCallAdapterTest {
         mockWebServer.enqueue(serverError)
 
         runTest {
-            val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(createValidMemoryRequest())
+            val actual: ApiResult<PostResponse> = fakeApiService.post(request = createValidRequest())
 
             assertThat(actual).isInstanceOf(ServerError::class.java)
         }
@@ -133,15 +129,14 @@ class ApiResultCallAdapterTest {
         mockWebServer.enqueue(serverError)
 
         runTest {
-            val actual: ApiResult<ImageResponse> =
-                imageApiService.postImage(imageFile = createFakeImageFile())
+            val actual: ApiResult<ImageResponse> = imageApiService.postImage(imageFile = createFakeImageFile())
 
             assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
     @Test
-    fun `카테고리 생성 요청 중 서버 장애가 생기면 오류가 발생한다`() {
+    fun `데이터 생성 요청 중 서버 장애가 생기면 오류가 발생한다`() {
         val serverError =
             createMockResponse(
                 code = 500,
@@ -150,20 +145,18 @@ class ApiResultCallAdapterTest {
         mockWebServer.enqueue(serverError)
 
         runTest {
-            val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(createValidMemoryRequest())
+            val actual: ApiResult<PostResponse> = fakeApiService.post(request = createValidRequest())
 
             assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
     @Test
-    fun `카테고리 생성 요청 중 서버의 응답이 없다면 예외가 발생한다`() {
+    fun `데이터 생성 요청 중 서버의 응답이 없다면 예외가 발생한다`() {
         mockWebServer.enqueue(MockResponse().setSocketPolicy(SocketPolicy.NO_RESPONSE))
 
         runTest {
-            val actual: ApiResult<MemoryCreationResponse> =
-                memoryApiService.postMemory(createValidMemoryRequest())
+            val actual: ApiResult<PostResponse> = fakeApiService.post(request = createValidRequest())
 
             assertThat(actual).isInstanceOf(Exception::class.java)
         }

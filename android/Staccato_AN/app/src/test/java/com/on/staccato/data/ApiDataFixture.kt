@@ -1,7 +1,5 @@
 package com.on.staccato.data
 
-import com.on.staccato.data.dto.memory.MemoryRequest
-
 fun createGetResponse(): String =
     """
     {
@@ -10,10 +8,10 @@ fun createGetResponse(): String =
     }
     """.trimIndent()
 
-fun createMemoryCreationResponse(): String =
+fun createPostResponse(): String =
     """
     {
-        "memoryId": 1
+        "id": 1
     }
     """.trimIndent()
 
@@ -57,6 +55,6 @@ fun createErrorBy500(): String =
     }
     """.trimIndent()
 
-fun createValidMemoryRequest(): MemoryRequest = MemoryRequest(memoryTitle = "해나의 추억")
+fun createValidRequest(): PostRequest = PostRequest(content = "유효한 형식")
 
-fun createInvalidMemoryRequest(): MemoryRequest = MemoryRequest(memoryTitle = "")
+fun createInvalidRequest(): PostRequest = PostRequest(content = "유효하지 않은 형식")

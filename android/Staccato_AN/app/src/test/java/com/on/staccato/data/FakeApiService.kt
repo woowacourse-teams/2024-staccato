@@ -1,6 +1,8 @@
 package com.on.staccato.data
 
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface FakeApiService {
@@ -8,4 +10,9 @@ interface FakeApiService {
     suspend fun get(
         @Path("id") id: Long,
     ): ApiResult<GetResponse>
+
+    @POST("/post")
+    suspend fun post(
+        @Body request: PostRequest,
+    ): ApiResult<PostResponse>
 }
