@@ -17,7 +17,7 @@ import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.category.adapter.MatesAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
-import com.on.staccato.presentation.category.viewmodel.MemoryViewModel
+import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
 import com.on.staccato.presentation.memoryupdate.MemoryUpdateActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
@@ -34,7 +34,7 @@ class MemoryFragment :
     private val memoryId by lazy {
         arguments?.getLong(MEMORY_ID_KEY) ?: throw IllegalArgumentException()
     }
-    private val viewModel: MemoryViewModel by viewModels()
+    private val viewModel: CategoryViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
 
