@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.on.staccato.databinding.ItemStaccatosBinding
 import com.on.staccato.presentation.category.MemoryHandler
-import com.on.staccato.presentation.category.model.MemoryStaccatoUiModel
+import com.on.staccato.presentation.category.model.CategoryStaccatoUiModel
 
-class StaccatosAdapter(private val handler: MemoryHandler) : ListAdapter<MemoryStaccatoUiModel, StaccatoViewHolder>(diffUtil) {
+class StaccatosAdapter(private val handler: MemoryHandler) : ListAdapter<CategoryStaccatoUiModel, StaccatoViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -25,21 +25,21 @@ class StaccatosAdapter(private val handler: MemoryHandler) : ListAdapter<MemoryS
         holder.bind(getItem(position))
     }
 
-    fun updateStaccatos(staccatos: List<MemoryStaccatoUiModel>) {
+    fun updateStaccatos(staccatos: List<CategoryStaccatoUiModel>) {
         submitList(staccatos)
     }
 
     companion object {
         val diffUtil =
-            object : DiffUtil.ItemCallback<MemoryStaccatoUiModel>() {
+            object : DiffUtil.ItemCallback<CategoryStaccatoUiModel>() {
                 override fun areItemsTheSame(
-                    oldItem: MemoryStaccatoUiModel,
-                    newItem: MemoryStaccatoUiModel,
+                    oldItem: CategoryStaccatoUiModel,
+                    newItem: CategoryStaccatoUiModel,
                 ): Boolean = oldItem.id == newItem.id
 
                 override fun areContentsTheSame(
-                    oldItem: MemoryStaccatoUiModel,
-                    newItem: MemoryStaccatoUiModel,
+                    oldItem: CategoryStaccatoUiModel,
+                    newItem: CategoryStaccatoUiModel,
                 ): Boolean = oldItem == newItem
             }
     }

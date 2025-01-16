@@ -12,7 +12,7 @@
 
         <variable
             name="staccato"
-            type="com.on.staccato.presentation.category.model.MemoryStaccatoUiModel" />
+            type="com.on.staccato.presentation.category.model.CategoryStaccatoUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
