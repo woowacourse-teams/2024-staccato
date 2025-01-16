@@ -8,7 +8,6 @@ import com.on.staccato.data.handle
 import com.on.staccato.domain.model.Comment
 import com.on.staccato.domain.model.NewComment
 import com.on.staccato.domain.repository.CommentRepository
-import kotlinx.serialization.json.JsonNull.content
 import javax.inject.Inject
 
 class CommentDefaultRepository
