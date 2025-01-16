@@ -59,29 +59,6 @@ class MemoryFilterTest extends ServiceSliceTest {
         assertThat(result).isEmpty();
     }
 
-    @DisplayName("필터링 조건이 없으면 추억 목록을 그대로 반환한다.")
-    @Test
-    void readAllMemoriesIfNoCondition() {
-        // given
-        Member member = memberRepository.save(MemberFixture.create());
-        Memory memory = memoryRepository.save(MemoryFixture.createWithMember("first", member));
-        Memory memory2 = memoryRepository.save(MemoryFixture.createWithMember(LocalDate.now(), LocalDate.now()
-                .plusDays(3), member));
-        List<Memory> memories = new ArrayList<>();
-        memories.add(memory);
-        memories.add(memory2);
-
-        // when
-        List<Memory> result = MemoryFilter.apply(List.of(), memories);
-
-        // then
-        assertAll(
-                () -> assertThat(result).hasSize(2),
-                () -> assertThat(result.get(0).getTitle()).isEqualTo(memory.getTitle()),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo(memory2.getTitle())
-        );
-    }
-
     @DisplayName("기간이 있는 추억 목록만 조회된다.")
     @Test
     void readAllMemoriesWithTerm() {
@@ -95,7 +72,7 @@ class MemoryFilterTest extends ServiceSliceTest {
         memories.add(memory2);
 
         // when
-        List<Memory> result = MemoryFilter.apply(List.of(MemoryFilter.TERM), memories);
+        List<Memory> result = MemoryFilter.TERM.apply(memories);
 
         // then
         assertAll(

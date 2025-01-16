@@ -19,11 +19,8 @@ public enum MemoryFilter {
     private final String name;
     private final Function<List<Memory>, List<Memory>> operation;
 
-    public static List<Memory> apply(List<MemoryFilter> filters, List<Memory> memories) {
-        for (MemoryFilter filter : filters) {
-            memories = filter.operation.apply(memories);
-        }
-        return memories;
+    public List<Memory> apply(List<Memory> memories) {
+        return operation.apply(memories);
     }
 
     public static List<MemoryFilter> findAllByName(List<String> filters) {

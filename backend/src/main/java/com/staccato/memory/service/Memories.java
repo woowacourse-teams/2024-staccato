@@ -18,7 +18,10 @@ public class Memories {
     }
 
     public List<Memory> operate(List<MemoryFilter> filters, MemorySort sort) {
-        List<Memory> filteredMemories = MemoryFilter.apply(filters, memories);
+        List<Memory> filteredMemories = memories;
+        for (MemoryFilter filter : filters) {
+            filteredMemories = filter.apply(filteredMemories);
+        }
         return sort.apply(filteredMemories);
     }
 
