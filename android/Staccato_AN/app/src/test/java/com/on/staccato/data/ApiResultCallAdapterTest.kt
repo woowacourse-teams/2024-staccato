@@ -33,7 +33,7 @@ class ApiResultCallAdapterTest {
     }
 
     @Test
-    fun `존재하는 데이터를를 조회하면 데이터 조회에 성공한다`() {
+    fun `존재하는 데이터를 조회하면 데이터 조회에 성공한다`() {
         val success: MockResponse =
             createMockResponse(
                 code = 200,
