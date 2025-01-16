@@ -13,10 +13,7 @@ class CommentRemoteDataSource
     ) : CommentDataSource {
         override suspend fun getComments(staccatoId: Long): ApiResult<CommentsResponse> = commentApiService.getComments(staccatoId)
 
-        override suspend fun createComment(commentRequest: CommentRequest): ApiResult<Unit> =
-            commentApiService.postComment(
-                commentRequest,
-            )
+        override suspend fun createComment(commentRequest: CommentRequest): ApiResult<Unit> = commentApiService.postComment(commentRequest)
 
         override suspend fun updateComment(
             commentId: Long,
