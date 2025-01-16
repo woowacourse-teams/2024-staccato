@@ -9,8 +9,8 @@ class StaccatoViewHolder(
     private val binding: ItemStaccatosBinding,
     private val handler: MemoryHandler,
 ) : ViewHolder(binding.root) {
-    fun bind(memoryStaccato: MemoryStaccatoUiModel) {
-        binding.staccato = memoryStaccato
+    fun bind(categoryStaccato: MemoryStaccatoUiModel) {
+        binding.staccato = categoryStaccato
         binding.handler = handler
     }
 }
