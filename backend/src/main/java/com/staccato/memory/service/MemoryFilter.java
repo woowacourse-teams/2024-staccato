@@ -1,6 +1,7 @@
 package com.staccato.memory.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum MemoryFilter {
-    FILTER_WITH_TERM("term", memoryList ->
+    TERM("term", memoryList ->
             memoryList.stream()
                     .filter(Memory::hasTerm)
                     .collect(Collectors.toList())
@@ -18,15 +19,28 @@ public enum MemoryFilter {
     private final String name;
     private final Function<List<Memory>, List<Memory>> operation;
 
-    public static List<Memory> apply(List<String> filters, List<Memory> memories) {
-        List<MemoryFilter> applicableFilters = Stream.of(values())
-                .filter(filter -> filters.contains(filter.name))
-                .toList();
-
-        List<Memory> filteredMemories = memories;
-        for (MemoryFilter filter : applicableFilters) {
-            filteredMemories = filter.operation.apply(filteredMemories);
+    public static List<Memory> apply(List<MemoryFilter> filters, List<Memory> memories) {
+        for (MemoryFilter filter : filters) {
+            memories = filter.operation.apply(memories);
         }
-        return filteredMemories;
+        return memories;
+    }
+
+    public static List<MemoryFilter> findAllByName(List<String> filters) {
+        return filters.stream()
+                .map(name -> MemoryFilter.findByName(name.trim()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+    }
+
+    private static Optional<MemoryFilter> findByName(String name) {
+        return Stream.of(values())
+                .filter(value -> value.isSame(name))
+                .findFirst();
+    }
+
+    private boolean isSame(String name) {
+        return this.name.equalsIgnoreCase(name);
     }
 }

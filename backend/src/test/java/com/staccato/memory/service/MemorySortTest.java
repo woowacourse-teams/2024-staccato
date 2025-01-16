@@ -25,44 +25,26 @@ public class MemorySortTest extends ServiceSliceTest {
     @Autowired
     private MemoryRepository memoryRepository;
 
-    @DisplayName("조건에 맞지 않는 값이나 유효하지 않는 값이 들어올 경우 기본 정렬(최근 수정 순)로 추억 목록을 조회된다.")
-    @ParameterizedTest
-    @NullSource
-    @ValueSource(strings = "invalid")
-    void readAllMemoriesIfInvalidCondition(String name) {
-        // given
-        Member member = memberRepository.save(MemberFixture.create());
-        List<Memory> memories = new ArrayList<>();
-        memories.add(memoryRepository.save(MemoryFixture.createWithMember("first", member)));
-        memories.add(memoryRepository.save(MemoryFixture.createWithMember("second", member)));
-
+    @DisplayName("정렬명이 주어졌을 때 대소문자 구분 없이 MemorySort을 반환한다.")
+    @Test
+    void findByNameWithValidSort() {
         // when
-        List<Memory> result = MemorySort.apply(name, memories);
+        MemorySort result = MemorySort.findByName("newest");
 
         // then
-        assertAll(
-                () -> assertThat(result.get(0).getTitle()).isEqualTo("second"),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo("first")
-        );
+        assertThat(result).isEqualTo(MemorySort.NEWEST);
     }
 
-    @DisplayName("조건 판별 시 대소문자 관계 없이 추억 목록을 조회된다.")
-    @Test
-    void ignoreCaseOfSortName() {
-        // given
-        Member member = memberRepository.save(MemberFixture.create());
-        List<Memory> memories = new ArrayList<>();
-        memories.add(memoryRepository.save(MemoryFixture.createWithMember("first", member)));
-        memories.add(memoryRepository.save(MemoryFixture.createWithMember("second", member)));
-
+    @DisplayName("유효하지 않거나 null인 정렬명이 주어졌을 때 기본값인 UPDATED를 반환한다.")
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"invalid"})
+    void findByNameWithInvalidOrNull(String name) {
         // when
-        List<Memory> result = MemorySort.apply("oldest", memories);
+        MemorySort result = MemorySort.findByName(name);
 
         // then
-        assertAll(
-                () -> assertThat(result.get(0).getTitle()).isEqualTo("first"),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo("second")
-        );
+        assertThat(result).isEqualTo(MemorySort.UPDATED);
     }
 
     @DisplayName("수정 시간 기준 내림차순으로 추억 목록을 조회된다.")
@@ -75,7 +57,7 @@ public class MemorySortTest extends ServiceSliceTest {
         memories.add(memoryRepository.save(MemoryFixture.createWithMember("second", member)));
 
         // when
-        List<Memory> result = MemorySort.apply("UPDATED", memories);
+        List<Memory> result = MemorySort.UPDATED.apply(memories);
 
         // then
         assertAll(
@@ -94,7 +76,7 @@ public class MemorySortTest extends ServiceSliceTest {
         memories.add(memoryRepository.save(MemoryFixture.createWithMember("second", member)));
 
         // when
-        List<Memory> result = MemorySort.apply("NEWEST", memories);
+        List<Memory> result = MemorySort.NEWEST.apply(memories);
 
         // then
         assertAll(
@@ -113,7 +95,7 @@ public class MemorySortTest extends ServiceSliceTest {
         memories.add(memoryRepository.save(MemoryFixture.createWithMember("second", member)));
 
         // when
-        List<Memory> result = MemorySort.apply("OLDEST", memories);
+        List<Memory> result = MemorySort.OLDEST.apply(memories);
 
         // then
         assertAll(

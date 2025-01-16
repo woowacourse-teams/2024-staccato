@@ -23,6 +23,42 @@ class MemoryFilterTest extends ServiceSliceTest {
     @Autowired
     private MemoryRepository memoryRepository;
 
+    @DisplayName("필터링명이 주어졌을 때 대소문자 구분 없이 MemoryFilter을 반환한다.")
+    @Test
+    void findByNameWithValidFilter() {
+        // when
+        List<MemoryFilter> result = MemoryFilter.findAllByName(List.of("term"));
+
+        // then
+        assertAll(
+                () -> assertThat(result).hasSize(1),
+                () -> assertThat(result.get(0)).isEqualTo(MemoryFilter.TERM)
+        );
+    }
+
+    @DisplayName("필터링명이 주어졌을 때 유효한 MemoryFilter 목록 민 반환한다.")
+    @Test
+    void findAllByNameIfOnlyValid() {
+        // when
+        List<MemoryFilter> result = MemoryFilter.findAllByName(List.of("invalid", "term"));
+
+        // then
+        assertAll(
+                () -> assertThat(result).hasSize(1),
+                () -> assertThat(result.get(0)).isEqualTo(MemoryFilter.TERM)
+        );
+    }
+
+    @DisplayName("유효하지 않거나 null인 정렬명이 주어졌을 때 빈 값을 반환한다.")
+    @Test
+    void findByNameWithInvalid() {
+        // when
+        List<MemoryFilter> result = MemoryFilter.findAllByName(List.of("invalid"));
+
+        // then
+        assertThat(result).isEmpty();
+    }
+
     @DisplayName("필터링 조건이 없으면 추억 목록을 그대로 반환한다.")
     @Test
     void readAllMemoriesIfNoCondition() {
@@ -46,29 +82,6 @@ class MemoryFilterTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("유효하지 않은 필터링 조건은 적용되지 않고 추억 목록을 그대로 반환한다.")
-    @Test
-    void readAllMemoriesIfInvalidCondition() {
-        // given
-        Member member = memberRepository.save(MemberFixture.create());
-        Memory memory = memoryRepository.save(MemoryFixture.createWithMember("first", member));
-        Memory memory2 = memoryRepository.save(MemoryFixture.createWithMember(LocalDate.now(), LocalDate.now()
-                .plusDays(3), member));
-        List<Memory> memories = new ArrayList<>();
-        memories.add(memory);
-        memories.add(memory2);
-
-        // when
-        List<Memory> result = MemoryFilter.apply(List.of("invalid"), memories);
-
-        // then
-        assertAll(
-                () -> assertThat(result).hasSize(2),
-                () -> assertThat(result.get(0).getTitle()).isEqualTo(memory.getTitle()),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo(memory2.getTitle())
-        );
-    }
-
     @DisplayName("기간이 있는 추억 목록만 조회된다.")
     @Test
     void readAllMemoriesWithTerm() {
@@ -82,7 +95,7 @@ class MemoryFilterTest extends ServiceSliceTest {
         memories.add(memory2);
 
         // when
-        List<Memory> result = MemoryFilter.apply(List.of("term"), memories);
+        List<Memory> result = MemoryFilter.apply(List.of(MemoryFilter.TERM), memories);
 
         // then
         assertAll(

@@ -213,7 +213,7 @@ class MemoryControllerTest extends ControllerTest {
         // when & then
         mockMvc.perform(get("/memories")
                         .header(HttpHeaders.AUTHORIZATION, "token")
-                        .param("term", "invalid"))
+                        .param("filters", "invalid"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.memories.size()").value(2));
     }

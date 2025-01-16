@@ -46,7 +46,7 @@ public class MemoryService {
 
     public MemoryResponses readAllMemories(Member member, MemoryReadRequest memoryReadRequest) {
         Memories rawMemories = Memories.from(memoryMemberRepository.findAllByMemberId(member.getId()));
-        List<Memory> memories = rawMemories.operate(memoryReadRequest.getFilters(), memoryReadRequest.sort());
+        List<Memory> memories = rawMemories.operate(memoryReadRequest.getFilters(), memoryReadRequest.getSort());
 
         return MemoryResponses.from(memories);
     }

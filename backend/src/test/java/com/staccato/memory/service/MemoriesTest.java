@@ -37,7 +37,7 @@ class MemoriesTest extends ServiceSliceTest {
         Memories memories = Memories.from(memoryMemberRepository.findAllByMemberId(member.getId()));
 
         // when
-        List<Memory> result = memories.operate(List.of(), "OLDEST");
+        List<Memory> result = memories.operate(List.of(), MemorySort.OLDEST);
 
         // then
         assertAll(

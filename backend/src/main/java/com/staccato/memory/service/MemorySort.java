@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum MemorySort {
-    RECENTLY_UPDATED("UPDATED", memoryList ->
+    UPDATED("UPDATED", memoryList ->
             memoryList.stream()
                     .sorted(Comparator.comparing(Memory::getUpdatedAt).reversed())
                     .toList()
@@ -28,15 +28,18 @@ public enum MemorySort {
     private final String name;
     private final Function<List<Memory>, List<Memory>> operation;
 
-    public static List<Memory> apply(String sortValue, List<Memory> memories) {
-        return Stream.of(values())
-                .filter(sort -> sort.isSame(sortValue))
-                .findFirst()
-                .map(sort -> sort.operation.apply(memories))
-                .orElse(RECENTLY_UPDATED.operation.apply(memories));
+    public List<Memory> apply(List<Memory> memories) {
+        return operation.apply(memories);
     }
 
-    private boolean isSame(String sortValue) {
-        return this.name.equalsIgnoreCase(sortValue);
+    public static MemorySort findByName(String name) {
+        return Stream.of(values())
+                .filter(sort -> sort.isSame(name))
+                .findFirst()
+                .orElse(UPDATED);
+    }
+
+    private boolean isSame(String name) {
+        return this.name.equalsIgnoreCase(name);
     }
 }
