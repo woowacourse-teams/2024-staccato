@@ -4,8 +4,8 @@ import com.on.staccato.domain.model.Member
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryStaccato
 import com.on.staccato.presentation.common.MemberUiModel
-import com.on.staccato.presentation.memory.model.MemoryStaccatoUiModel
-import com.on.staccato.presentation.memory.model.MemoryUiModel
+import com.on.staccato.presentation.category.model.MemoryStaccatoUiModel
+import com.on.staccato.presentation.category.model.MemoryUiModel
 
 fun Category.toUiModel() =
     MemoryUiModel(

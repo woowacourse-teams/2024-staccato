@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memory
+package com.on.staccato.presentation.category
 
 import android.os.Bundle
 import android.view.View
@@ -15,9 +15,9 @@ import com.on.staccato.presentation.common.DialogHandler
 import com.on.staccato.presentation.common.ToolbarHandler
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
-import com.on.staccato.presentation.memory.adapter.MatesAdapter
-import com.on.staccato.presentation.memory.adapter.StaccatosAdapter
-import com.on.staccato.presentation.memory.viewmodel.MemoryViewModel
+import com.on.staccato.presentation.category.adapter.MatesAdapter
+import com.on.staccato.presentation.category.adapter.StaccatosAdapter
+import com.on.staccato.presentation.category.viewmodel.MemoryViewModel
 import com.on.staccato.presentation.memoryupdate.MemoryUpdateActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity

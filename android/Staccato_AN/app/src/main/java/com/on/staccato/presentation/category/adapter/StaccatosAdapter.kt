@@ -1,12 +1,12 @@
-package com.on.staccato.presentation.memory.adapter
+package com.on.staccato.presentation.category.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.on.staccato.databinding.ItemStaccatosBinding
-import com.on.staccato.presentation.memory.MemoryHandler
-import com.on.staccato.presentation.memory.model.MemoryStaccatoUiModel
+import com.on.staccato.presentation.category.MemoryHandler
+import com.on.staccato.presentation.category.model.MemoryStaccatoUiModel
 
 class StaccatosAdapter(private val handler: MemoryHandler) : ListAdapter<MemoryStaccatoUiModel, StaccatoViewHolder>(diffUtil) {
     override fun onCreateViewHolder(

@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/memoryFragment"
-        android:name="com.on.staccato.presentation.memory.MemoryFragment"
+        android:name="com.on.staccato.presentation.category.MemoryFragment"
         android:label="fragment_memory"
         tools:layout="@layout/fragment_memory">
 

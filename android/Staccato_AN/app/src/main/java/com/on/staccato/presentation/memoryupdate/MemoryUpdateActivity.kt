@@ -15,7 +15,7 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMemoryUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
-import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
+import com.on.staccato.presentation.category.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.getSnackBarWithAction

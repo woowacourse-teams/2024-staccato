@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memory.model
+package com.on.staccato.presentation.category.model
 
 import com.on.staccato.presentation.common.MemberUiModel
 import java.time.LocalDate

@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memory.adapter
+package com.on.staccato.presentation.category.adapter
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.on.staccato.databinding.ItemMatesBinding

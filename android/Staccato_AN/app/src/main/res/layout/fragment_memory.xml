@@ -10,11 +10,11 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.memory.viewmodel.MemoryViewModel" />
+            type="com.on.staccato.presentation.category.viewmodel.MemoryViewModel" />
 
         <variable
             name="memoryHandler"
-            type="com.on.staccato.presentation.memory.MemoryHandler" />
+            type="com.on.staccato.presentation.category.MemoryHandler" />
 
         <variable
             name="toolbarHandler"
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".presentation.memory.MemoryFragment">
+        tools:context=".presentation.category.MemoryFragment">
 
         <include
             android:id="@+id/include_memory_toolbar"

@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memory.viewmodel
+package com.on.staccato.presentation.category.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +14,7 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
-import com.on.staccato.presentation.memory.model.MemoryUiModel
+import com.on.staccato.presentation.category.model.MemoryUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

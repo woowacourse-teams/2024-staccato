@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memory.adapter
+package com.on.staccato.presentation.category.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
