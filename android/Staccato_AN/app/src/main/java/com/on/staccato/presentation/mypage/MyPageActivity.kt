@@ -9,8 +9,12 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.on.staccato.R
+import com.on.staccato.StaccatoApplication.Companion.userInfoPrefsManager
+import com.on.staccato.data.UserInfoPreferencesManager.Companion.EMPTY_STRING
 import com.on.staccato.databinding.ActivityMypageBinding
+import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
@@ -22,6 +26,9 @@ import com.on.staccato.presentation.webview.WebViewActivity
 import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_TOOLBAR_TITLE
 import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_URL
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MyPageActivity :
@@ -51,6 +58,7 @@ class MyPageActivity :
         initToolbar()
         initBindings()
         loadMemberProfile()
+        observeMemberProfile()
         observeCopyingUuidCode()
         observeErrorMessage()
     }
@@ -95,7 +103,24 @@ class MyPageActivity :
     }
 
     private fun loadMemberProfile() {
-        myPageViewModel.fetchMemberProfile()
+        lifecycleScope.launch {
+            val cachedMemberProfile = getCachedMemberProfile(this)
+            myPageViewModel.setMemberProfile(cachedMemberProfile)
+        }
+    }
+
+    private suspend fun getCachedMemberProfile(scope: CoroutineScope): MemberProfile {
+        return scope.async {
+            userInfoPrefsManager.getMemberProfile()
+        }.await()
+    }
+
+    private fun observeMemberProfile() {
+        myPageViewModel.memberProfile.observe(this) { memberProfile ->
+            lifecycleScope.launch {
+                userInfoPrefsManager.setProfileImageUrl(memberProfile.profileImageUrl ?: EMPTY_STRING)
+            }
+        }
     }
 
     private fun observeCopyingUuidCode() {

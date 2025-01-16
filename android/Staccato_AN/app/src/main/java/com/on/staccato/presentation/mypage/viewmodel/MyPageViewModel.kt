@@ -45,15 +45,6 @@ class MyPageViewModel
             }
         }
 
-        fun fetchMemberProfile() {
-            viewModelScope.launch {
-                val result = repository.getMemberProfile()
-                result.onException(::handleException)
-                    .onServerError(::handleError)
-                    .onSuccess(::setMemberProfile)
-            }
-        }
-
         fun changeProfileImage(multipart: MultipartBody.Part) {
             viewModelScope.launch {
                 repository.changeProfileImage(multipart)
@@ -69,7 +60,7 @@ class MyPageViewModel
             }
         }
 
-        private fun setMemberProfile(memberProfile: MemberProfile) {
+        fun setMemberProfile(memberProfile: MemberProfile) {
             _memberProfile.value = memberProfile
         }
 
