@@ -124,7 +124,7 @@ class ApiResultCallAdapterTest {
     }
 
     @Test
-    fun `20MB를 초과하는 사진을 업로드 요청하면 오류가 발생한다`() {
+    fun `서버의 제한 용량을 초과하는 사진을 업로드하면 오류가 발생한다`() {
         val serverError =
             createMockResponse(
                 code = 413,
