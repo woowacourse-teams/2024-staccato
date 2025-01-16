@@ -11,7 +11,7 @@ fun Category.toUiModel() =
     MemoryUiModel(
         id = categoryId,
         title = categoryTitle,
-        memoryThumbnailUrl = categoryThumbnailUrl,
+        categoryThumbnailUrl = categoryThumbnailUrl,
         startAt = startAt,
         endAt = endAt,
         description = description,

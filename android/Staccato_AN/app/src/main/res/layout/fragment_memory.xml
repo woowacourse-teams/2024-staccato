@@ -62,7 +62,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:coilImageUrl="@{viewModel.memory.memoryThumbnailUrl}"
+                    bind:coilImageUrl="@{viewModel.memory.categoryThumbnailUrl}"
                     bind:coilPlaceHolder="@{@drawable/memory_gradient}"
                     tools:src="@drawable/shape_place_holder_rectangle" />
 
@@ -70,7 +70,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@drawable/memory_gradient"
-                    android:visibility="@{viewModel.memory.memoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{viewModel.memory.categoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
                     app:layout_constraintEnd_toEndOf="@id/iv_memory_thumbnail"
                     app:layout_constraintStart_toStartOf="@id/iv_memory_thumbnail"
