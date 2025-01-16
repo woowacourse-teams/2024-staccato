@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
@@ -32,7 +33,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPS
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
 import com.on.staccato.R
+import com.on.staccato.StaccatoApplication.Companion.userInfoPrefsManager
 import com.on.staccato.databinding.ActivityMainBinding
+import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.LocationPermissionManager
@@ -46,6 +49,9 @@ import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity :
@@ -77,6 +83,8 @@ class MainActivity :
         setupPermissionRequestLauncher()
         setupGoogleMap()
         setupFusedLocationProviderClient()
+        loadMemberProfile()
+        observeMemberProfile()
         observeCurrentLocation()
         observeStaccatoLocations()
         observeStaccatoId()
@@ -190,6 +198,32 @@ class MainActivity :
 
     private fun setupFusedLocationProviderClient() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+    }
+
+    private fun loadMemberProfile() {
+        lifecycleScope.launch {
+            val cachedMemberProfile = getCachedMemberProfile(this)
+            if (cachedMemberProfile.isValid()) {
+                sharedViewModel.setMemberProfile(cachedMemberProfile)
+            } else {
+                sharedViewModel.fetchMemberProfile()
+            }
+        }
+    }
+
+    private suspend fun getCachedMemberProfile(scope: CoroutineScope): MemberProfile {
+        return scope.async {
+            userInfoPrefsManager.getMemberProfile()
+        }.await()
+    }
+
+    private fun observeMemberProfile() {
+        sharedViewModel.memberProfile.observe(this) { memberProfile ->
+            lifecycleScope.launch {
+                userInfoPrefsManager.setMemberProfile(memberProfile)
+            }
+            binding.memberProfile = memberProfile
+        }
     }
 
     private fun observeCurrentLocation() {
