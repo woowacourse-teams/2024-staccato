@@ -64,4 +64,30 @@ class TermTest {
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("추억의 시작 날짜와 끝 날짜는 함께 입력되거나, 함께 비워져 있어야 합니다.");
     }
+
+    @DisplayName("기간이 있으면 참을 반환한다.")
+    @Test
+    void isNotEmpty() {
+        // given
+        Term term = new Term(LocalDate.now(), LocalDate.now().plusDays(3));
+
+        // when
+        boolean result = term.isExist();
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("기간이 없으면 거짓을 반환한다.")
+    @Test
+    void isEmpty() {
+        // given
+        Term term = new Term(null, null);
+
+        // when
+        boolean result = term.isExist();
+
+        // then
+        assertThat(result).isFalse();
+    }
 }

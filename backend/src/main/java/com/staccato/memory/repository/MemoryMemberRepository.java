@@ -19,7 +19,7 @@ public interface MemoryMemberRepository extends JpaRepository<MemoryMember, Long
             AND ((mm.memory.term.startAt is null AND mm.memory.term.endAt is null)
             or (:date BETWEEN mm.memory.term.startAt AND mm.memory.term.endAt))
             """)
-    List<MemoryMember> findAllByMemberIdAndIncludingDate(@Param("memberId") long memberId, @Param("date") LocalDate date);
+    List<MemoryMember> findAllByMemberIdAndDate(@Param("memberId") long memberId, @Param("date") LocalDate date);
 
     boolean existsByMemberAndMemoryTitle(Member member, String title);
 
