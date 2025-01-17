@@ -31,19 +31,19 @@ public class StaccatoDtoMapper {
         return new StaccatoIdResponse(momentIdResponse.momentId());
     }
 
-    public static StaccatoLocationResponse toStaccatoLocationResponse(MomentLocationResponse momentLocationResponse) {
-        return new StaccatoLocationResponse(
-                momentLocationResponse.momentId(),
-                momentLocationResponse.latitude(),
-                momentLocationResponse.longitude()
-        );
-    }
-
     public static StaccatoLocationResponses toStaccatoLocationResponses(MomentLocationResponses momentLocationResponses) {
         List<StaccatoLocationResponse> staccatoLocationResponses = momentLocationResponses.momentLocationResponses().stream()
                 .map(StaccatoDtoMapper::toStaccatoLocationResponse)
                 .toList();
         return new StaccatoLocationResponses(staccatoLocationResponses);
+    }
+
+    private static StaccatoLocationResponse toStaccatoLocationResponse(MomentLocationResponse momentLocationResponse) {
+        return new StaccatoLocationResponse(
+                momentLocationResponse.momentId(),
+                momentLocationResponse.latitude(),
+                momentLocationResponse.longitude()
+        );
     }
 
     public static StaccatoDetailResponse toStaccatoDetailResponse(MomentDetailResponse momentDetailResponse) {

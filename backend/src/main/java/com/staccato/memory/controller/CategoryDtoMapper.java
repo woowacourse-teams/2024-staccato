@@ -62,15 +62,6 @@ public class CategoryDtoMapper {
         return new CategoryNameResponses(categoryNameResponses);
     }
 
-    public static StaccatoResponse toStaccatoResponse(MomentResponse momentResponse) {
-        return new StaccatoResponse(
-                momentResponse.momentId(),
-                momentResponse.staccatoTitle(),
-                momentResponse.momentImageUrl(),
-                momentResponse.visitedAt()
-        );
-    }
-
     public static CategoryDetailResponse toCategoryDetailResponse(MemoryDetailResponse memoryDetailResponse) {
         List<StaccatoResponse> staccatoResponses = memoryDetailResponse.moments().stream()
                 .map(CategoryDtoMapper::toStaccatoResponse)
@@ -84,6 +75,15 @@ public class CategoryDtoMapper {
                 memoryDetailResponse.endAt(),
                 memoryDetailResponse.mates(),
                 staccatoResponses
+        );
+    }
+
+    private static StaccatoResponse toStaccatoResponse(MomentResponse momentResponse) {
+        return new StaccatoResponse(
+                momentResponse.momentId(),
+                momentResponse.staccatoTitle(),
+                momentResponse.momentImageUrl(),
+                momentResponse.visitedAt()
         );
     }
 }
