@@ -6,7 +6,7 @@ import com.staccato.memory.domain.Memory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "추억 목록 조회 시 반환 되는 응답 형식입니다.")
+@Schema(description = "카테고리 목록 조회 시 반환 되는 응답 형식입니다.")
 public record CategoryResponses(
         List<CategoryResponse> categories
 ) {

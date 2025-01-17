@@ -14,7 +14,7 @@ public record CategoryResponse(
         @Schema(example = "https://example.com/memorys/geumohrm.jpg")
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String categoryThumbnailUrl,
-        @Schema(example = "런던 추억")
+        @Schema(example = "런던 여행")
         String categoryTitle,
         @Schema(example = "2024-07-27")
         @JsonInclude(JsonInclude.Include.NON_NULL)

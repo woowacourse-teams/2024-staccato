@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record CategoryNameResponse(
         @Schema(example = "1")
         Long categoryId,
-        @Schema(example = "런던 추억")
+        @Schema(example = "런던 여행")
         String categoryTitle
 ) {
     public CategoryNameResponse(Memory memory) {
