@@ -42,7 +42,7 @@ public record StaccatoRequest(
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime visitedAt,
         @Schema(example = "1")
-        @NotNull(message = "추억을 선택해주세요.")
+        @NotNull(message = "카테고리를 선택해주세요.")
         @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.")
         long categoryId,
         @ArraySchema(

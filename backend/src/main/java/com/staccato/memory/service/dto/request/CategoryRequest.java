@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record CategoryRequest(
         @Schema(example = "http://example.com/london.png")
         String categoryThumbnailUrl,
-        @Schema(example = "런던 추억")
+        @Schema(example = "런던 여행")
         @NotBlank(message = "카테고리 제목을 입력해주세요.")
         @Size(max = 30, message = "제목은 공백 포함 30자 이하로 설정해주세요.")
         String categoryTitle,
