@@ -2,14 +2,13 @@ package com.staccato.memory.controller;
 
 import java.net.URI;
 import java.time.LocalDate;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,18 +16,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.controller.docs.MemoryControllerDocs;
 import com.staccato.memory.service.MemoryService;
+import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
 import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MemoryResponses;
-
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -49,8 +47,11 @@ public class MemoryController implements MemoryControllerDocs {
     }
 
     @GetMapping
-    public ResponseEntity<MemoryResponses> readAllMemories(@LoginMember Member member) {
-        MemoryResponses memoryResponses = memoryService.readAllMemories(member);
+    public ResponseEntity<MemoryResponses> readAllMemories(
+            @LoginMember Member member,
+            @ModelAttribute("MemoryReadRequest") MemoryReadRequest memoryReadRequest
+    ) {
+        MemoryResponses memoryResponses = memoryService.readAllMemories(member, memoryReadRequest);
         return ResponseEntity.ok(memoryResponses);
     }
 
@@ -59,7 +60,7 @@ public class MemoryController implements MemoryControllerDocs {
             @LoginMember Member member,
             @RequestParam(value = "currentDate") LocalDate currentDate
     ) {
-        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
+        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesByDate(member, currentDate);
         return ResponseEntity.ok(memoryNameResponses);
     }
 

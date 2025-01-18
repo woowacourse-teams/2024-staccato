@@ -9,15 +9,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.staccato.auth.service.AuthService;
+import com.staccato.ControllerTest;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.memory.MemoryFixture;
@@ -27,7 +22,7 @@ import com.staccato.fixture.memory.MemoryResponsesFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
-import com.staccato.memory.service.MemoryService;
+import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
@@ -48,16 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(MemoryController.class)
-class MemoryControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private MemoryService memoryService;
-    @MockBean
-    private AuthService authService;
+class MemoryControllerTest extends ControllerTest {
 
     static Stream<MemoryRequest> memoryRequestProvider() {
         return Stream.of(
@@ -188,9 +174,9 @@ class MemoryControllerTest {
     void readAllMemory() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
-        when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
+        when(memoryService.readAllMemories(any(Member.class), any(MemoryReadRequest.class))).thenReturn(memoryResponses);
         String expectedResponse = """
                 {
                     "memories": [
@@ -212,14 +198,34 @@ class MemoryControllerTest {
                 .andExpect(content().json(expectedResponse));
     }
 
+    @DisplayName("유효하지 않은 필터링 조건은 무시하고, 모든 추억 목록을 조회한다.")
+    @Test
+    void readAllMemoryIgnoringInvalidFilter() throws Exception {
+        // given
+        Member member = MemberFixture.create();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        Memory memory = MemoryFixture.createWithMember(member);
+        Memory memory2 = MemoryFixture.createWithMember(LocalDate.of(2023, 8, 1), LocalDate.of(2023, 8, 10), member);
+        MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory, memory2);
+
+        when(memoryService.readAllMemories(any(Member.class), any(MemoryReadRequest.class))).thenReturn(memoryResponses);
+
+        // when & then
+        mockMvc.perform(get("/memories")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("filters", "invalid"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.memories.size()").value(2));
+    }
+
     @DisplayName("사용자가 기간이 없는 추억을 포함한 목록을 조회하는 응답 직렬화에 성공한다.")
     @Test
     void readAllMemoryWithoutTerm() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
-        when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
+        when(memoryService.readAllMemories(any(Member.class), any(MemoryReadRequest.class))).thenReturn(memoryResponses);
         String expectedResponse = """
                 {
                     "memories": [
@@ -244,9 +250,9 @@ class MemoryControllerTest {
     void readAllMemoryIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MemoryNameResponses memoryNameResponses = MemoryNameResponsesFixture.create(memory);
-        when(memoryService.readAllMemoriesIncludingDate(any(Member.class), any())).thenReturn(memoryNameResponses);
+        when(memoryService.readAllMemoriesByDate(any(Member.class), any())).thenReturn(memoryNameResponses);
         String expectedResponse = """
                 {
                     "memories": [
@@ -288,7 +294,7 @@ class MemoryControllerTest {
         // given
         long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
         MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
@@ -331,7 +337,7 @@ class MemoryControllerTest {
         // given
         long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(null, null, MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(null, null, MemberFixture.create());
         MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
         MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);

@@ -6,7 +6,7 @@ import com.staccato.image.infrastructure.FakeS3ObjectClient;
 import com.staccato.image.infrastructure.S3ObjectClient;
 
 @TestConfiguration
-public class TestConfig {
+public class ServiceTestConfig {
     @Bean
     public S3ObjectClient cloudStorageClient() {
         return new FakeS3ObjectClient();
