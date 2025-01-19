@@ -162,14 +162,7 @@ public class CommentControllerTest extends ControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(put("/comments")
-                        .param("commentId", "1")
-                        .content(commentUpdateRequest)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isOk());
-
-        mockMvc.perform(put("/comments/v2/{commentId}", 1)
+        mockMvc.perform(put("/comments/{commentId}", 1)
                         .content(commentUpdateRequest)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -185,8 +178,7 @@ public class CommentControllerTest extends ControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(put("/comments")
-                        .param("commentId", "0")
+        mockMvc.perform(put("/comments/{commentId}", 0)
                         .content(objectMapper.writeValueAsString(commentUpdateRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -205,8 +197,7 @@ public class CommentControllerTest extends ControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "댓글 내용을 입력해주세요.");
 
         // when & then
-        mockMvc.perform(put("/comments")
-                        .param("commentId", "1")
+        mockMvc.perform(put("/comments/{commentId}", 1)
                         .content(objectMapper.writeValueAsString(commentUpdateRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -221,13 +212,7 @@ public class CommentControllerTest extends ControllerTest {
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
 
         // when & then
-        mockMvc.perform(delete("/comments")
-                        .param("commentId", "1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isOk());
-
-        mockMvc.perform(delete("/comments/v2/{commentId}", 1)
+        mockMvc.perform(delete("/comments/{commentId}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
@@ -241,8 +226,7 @@ public class CommentControllerTest extends ControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(delete("/comments")
-                        .param("commentId", "0")
+        mockMvc.perform(delete("/comments/{commentId}", 0)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
