@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 
 import com.staccato.member.domain.Member;
+import com.staccato.memory.service.dto.request.CategoryReadRequest;
 import com.staccato.memory.service.dto.request.CategoryRequest;
 import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.response.CategoryDetailResponse;
@@ -52,7 +53,7 @@ public interface CategoryControllerDocs {
     @ApiResponse(description = "카테고리 목록 조회 성공", responseCode = "200")
     ResponseEntity<CategoryResponses> readAllCategories(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "정렬 기준은 생략하거나 유효하지 않은 값에 대해서는 최근 수정 순(UPDATED)이 기본 정렬로 적용됩니다. 필터링 조건은 생략하거나 유효하지 않은 값이 들어오면 적용되지 않습니다.") MemoryReadRequest memoryReadRequest
+            @Parameter(description = "정렬 기준은 생략하거나 유효하지 않은 값에 대해서는 최근 수정 순(UPDATED)이 기본 정렬로 적용됩니다. 필터링 조건은 생략하거나 유효하지 않은 값이 들어오면 적용되지 않습니다.") CategoryReadRequest categoryReadRequest
     );
 
     @Operation(summary = "특정 날짜를 포함하는 사용자의 모든 카테고리 목록 조회", description = "특정 날짜를 포함하는 사용자의 모든 카테고리 목록을 조회합니다.")

@@ -24,6 +24,7 @@ import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.controller.docs.CategoryControllerDocs;
 import com.staccato.memory.service.MemoryService;
+import com.staccato.memory.service.dto.request.CategoryReadRequest;
 import com.staccato.memory.service.dto.request.CategoryRequest;
 import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.response.CategoryDetailResponse;
@@ -57,9 +58,9 @@ public class CategoryController implements CategoryControllerDocs {
     @GetMapping
     public ResponseEntity<CategoryResponses> readAllCategories(
             @LoginMember Member member,
-            @ModelAttribute("MemoryReadRequest") MemoryReadRequest memoryReadRequest
+            @ModelAttribute("CategoryReadRequest") CategoryReadRequest categoryReadRequest
     ) {
-        MemoryResponses memoryResponses = memoryService.readAllMemories(member, memoryReadRequest);
+        MemoryResponses memoryResponses = memoryService.readAllMemories(member, CategoryDtoMapper.toMemoryReadRequest(categoryReadRequest));
         return ResponseEntity.ok(CategoryDtoMapper.toCategoryResponses(memoryResponses));
     }
 

@@ -2,7 +2,9 @@ package com.staccato.memory.controller;
 
 import java.util.List;
 
+import com.staccato.memory.service.dto.request.CategoryReadRequest;
 import com.staccato.memory.service.dto.request.CategoryRequest;
+import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.CategoryDetailResponse;
 import com.staccato.memory.service.dto.response.CategoryIdResponse;
@@ -84,6 +86,13 @@ public class CategoryDtoMapper {
                 momentResponse.staccatoTitle(),
                 momentResponse.momentImageUrl(),
                 momentResponse.visitedAt()
+        );
+    }
+
+    public static MemoryReadRequest toMemoryReadRequest(CategoryReadRequest categoryReadRequest) {
+        return new MemoryReadRequest(
+                categoryReadRequest.filters(),
+                categoryReadRequest.sort()
         );
     }
 }
