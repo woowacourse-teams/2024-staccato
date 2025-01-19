@@ -53,16 +53,7 @@ import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MemoryResponses;
 import com.staccato.memory.service.dto.response.MomentResponse;
 
-@WebMvcTest(CategoryController.class)
-class CategoryControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private MemoryService memoryService;
-    @MockBean
-    private AuthService authService;
+class CategoryControllerTest extends ControllerTest {
 
     static Stream<CategoryRequest> categoryRequestProvider() {
         return Stream.of(

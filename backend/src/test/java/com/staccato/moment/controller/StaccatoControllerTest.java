@@ -32,6 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.staccato.ControllerTest;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
@@ -46,17 +47,7 @@ import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
-@WebMvcTest(controllers = StaccatoController.class)
-class StaccatoControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private MomentService momentService;
-    @MockBean
-    private AuthService authService;
-
+class StaccatoControllerTest extends ControllerTest {
     static Stream<Arguments> invalidStaccatoRequestProvider() {
         return Stream.of(
                 Arguments.of(
