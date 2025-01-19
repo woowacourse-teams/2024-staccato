@@ -24,10 +24,10 @@ public record MemoryReadRequest(
     }
 
     private List<String> parseFilters() {
-        if (Objects.nonNull(filters)) {
-            return Arrays.stream(filters.split(DELIMITER)).toList();
+        if (Objects.isNull(filters)) {
+            return List.of();
         }
-        return List.of();
+        return Arrays.stream(filters.split(DELIMITER)).toList();
     }
 
     public MemorySort getSort() {
