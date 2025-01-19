@@ -2,6 +2,7 @@ package com.staccato.memory.service.dto.request;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import com.staccato.memory.service.MemoryFilter;
 import com.staccato.memory.service.MemorySort;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,10 +17,17 @@ public record MemoryReadRequest(
     private static final String DELIMITER = ",";
 
     public List<MemoryFilter> getFilters() {
-        List<String> filters = Arrays.stream(this.filters.split(DELIMITER))
+        List<String> filters = parseFilters().stream()
                 .map(String::trim)
                 .toList();
         return MemoryFilter.findAllByName(filters);
+    }
+
+    private List<String> parseFilters() {
+        if (Objects.nonNull(filters)) {
+            return Arrays.stream(filters.split(DELIMITER)).toList();
+        }
+        return List.of();
     }
 
     public MemorySort getSort() {
