@@ -1,7 +1,7 @@
-name: Backend CI/CD multi prod
+name: Backend CI/CD multi dev
 
 on:
-  pull_request:
+  push:
     paths: [ 'backend/**', '.github/**' ]
     branches: [ "develop" ]
 

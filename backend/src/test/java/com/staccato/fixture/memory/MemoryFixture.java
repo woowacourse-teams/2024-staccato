@@ -15,7 +15,17 @@ public class MemoryFixture {
                 .build();
     }
 
-    public static Memory create(Member member) {
+    public static Memory create(LocalDate startAt, LocalDate endAt) {
+        return Memory.builder()
+                .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
+                .title("2024 여름 휴가")
+                .description("친구들과 함께한 여름 휴가 추억")
+                .startAt(startAt)
+                .endAt(endAt)
+                .build();
+    }
+
+    public static Memory createWithMember(Member member) {
         Memory memory = Memory.builder()
                 .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
                 .title("2024 여름 휴가")
@@ -28,18 +38,18 @@ public class MemoryFixture {
         return memory;
     }
 
-    public static Memory create(LocalDate startAt, LocalDate endAt) {
-        return Memory.builder()
+    public static Memory createWithMember(String title, Member member) {
+        Memory memory = Memory.builder()
                 .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
-                .title("2024 여름 휴가")
+                .title(title)
                 .description("친구들과 함께한 여름 휴가 추억")
-                .startAt(startAt)
-                .endAt(endAt)
                 .build();
+        memory.addMemoryMember(member);
+
+        return memory;
     }
 
-
-    public static Memory create(LocalDate startAt, LocalDate endAt, Member member) {
+    public static Memory createWithMember(LocalDate startAt, LocalDate endAt, Member member) {
         Memory memory = Memory.builder()
                 .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
                 .title("2024 여름 휴가")
@@ -48,6 +58,7 @@ public class MemoryFixture {
                 .endAt(endAt)
                 .build();
         memory.addMemoryMember(member);
+
         return memory;
     }
 }
