@@ -1,4 +1,4 @@
-name: Backend CI/CD multi prod
+name: Backend CI/CD multi dev
 
 on:
   push:

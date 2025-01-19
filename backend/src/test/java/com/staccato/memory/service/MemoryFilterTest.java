@@ -36,11 +36,24 @@ class MemoryFilterTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("필터링명이 주어졌을 때 유효한 MemoryFilter 목록 민 반환한다.")
+    @DisplayName("필터링명이 주어졌을 때 유효한 MemoryFilter 목록만 반환한다.")
     @Test
     void findAllByNameIfOnlyValid() {
         // when
         List<MemoryFilter> result = MemoryFilter.findAllByName(List.of("invalid", "term"));
+
+        // then
+        assertAll(
+                () -> assertThat(result).hasSize(1),
+                () -> assertThat(result.get(0)).isEqualTo(MemoryFilter.TERM)
+        );
+    }
+
+    @DisplayName("필터링명이 중복으로 주어졌을 때 중복 없이 MemoryFilter 목록을 반환한다.")
+    @Test
+    void findAllByNameDistinct() {
+        // when
+        List<MemoryFilter> result = MemoryFilter.findAllByName(List.of("TERM", "term"));
 
         // then
         assertAll(
