@@ -28,6 +28,7 @@ public enum MemoryFilter {
                 .map(name -> MemoryFilter.findByName(name.trim()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .distinct()
                 .toList();
     }
 
