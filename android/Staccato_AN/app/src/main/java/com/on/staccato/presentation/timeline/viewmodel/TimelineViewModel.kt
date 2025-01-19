@@ -16,6 +16,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toTimelineUiModel
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -111,10 +112,7 @@ class TimelineViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(
-            e: Throwable,
-            errorMessage: String,
-        ) {
-            _exceptionMessage.postValue(errorMessage)
+        private fun handleException(state: ExceptionState) {
+            _exceptionMessage.postValue(state.message)
         }
     }

@@ -14,6 +14,7 @@ import com.on.staccato.domain.repository.CommentRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toCommentUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -113,11 +114,8 @@ class StaccatoCommentsViewModel
             _errorMessage.postValue(message)
         }
 
-        private fun handleException(
-            e: Throwable,
-            message: String,
-        ) {
-            _errorMessage.postValue(message)
+        private fun handleException(state: ExceptionState) {
+            _errorMessage.postValue(state.message)
         }
 
         companion object {

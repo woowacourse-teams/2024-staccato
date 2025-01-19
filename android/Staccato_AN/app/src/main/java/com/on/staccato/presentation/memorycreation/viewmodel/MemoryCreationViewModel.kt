@@ -22,6 +22,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
 import com.on.staccato.presentation.memorycreation.MemoryCreationError
 import com.on.staccato.presentation.memorycreation.ThumbnailUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -134,8 +135,8 @@ class MemoryCreationViewModel
                 result
                     .onSuccess(::setThumbnailUrl)
                     .onServerError(::handlePhotoError)
-                    .onException { e, message ->
-                        handlePhotoException(e, message, uri)
+                    .onException { state ->
+                        handlePhotoException(state, uri)
                     }
             }
         }
@@ -175,12 +176,11 @@ class MemoryCreationViewModel
         }
 
         private fun handlePhotoException(
-            e: Throwable,
-            message: String,
+            state: ExceptionState,
             uri: Uri,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(MemoryCreationError.Thumbnail(message, uri))
+                _error.setValue(MemoryCreationError.Thumbnail(state.message, uri))
             }
         }
 
@@ -192,12 +192,9 @@ class MemoryCreationViewModel
             _errorMessage.postValue(message)
         }
 
-        private fun handleCreateException(
-            e: Throwable,
-            message: String,
-        ) {
+        private fun handleCreateException(state: ExceptionState) {
             _isPosting.value = false
-            _error.setValue(MemoryCreationError.MemoryCreation(message))
+            _error.setValue(MemoryCreationError.MemoryCreation(state.message))
         }
 
         companion object {

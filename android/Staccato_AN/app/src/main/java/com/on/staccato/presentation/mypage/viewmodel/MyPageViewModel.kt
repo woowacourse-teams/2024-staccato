@@ -13,6 +13,7 @@ import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mypage.MemberProfileHandler
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -64,11 +65,8 @@ class MyPageViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(
-            e: Throwable,
-            errorMessage: String,
-        ) {
-            _errorMessage.postValue(errorMessage)
+        private fun handleException(state: ExceptionState) {
+            _errorMessage.postValue(state.message)
         }
 
         companion object {

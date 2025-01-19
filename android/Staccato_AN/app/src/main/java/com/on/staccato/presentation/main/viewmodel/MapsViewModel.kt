@@ -15,6 +15,7 @@ import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.main.model.MarkerUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -80,14 +81,7 @@ class MapsViewModel
             _errorMessage.setValue(message)
         }
 
-        private fun handelException(
-            e: Throwable,
-            message: String,
-        ) {
-            _errorMessage.setValue(STACCATO_LOCATIONS_ERROR_MESSAGE)
-        }
-
-        companion object {
-            private const val STACCATO_LOCATIONS_ERROR_MESSAGE = "스타카토 기록을 조회할 수 없습니다"
+        private fun handelException(state: ExceptionState) {
+            _errorMessage.setValue(state.message)
         }
     }

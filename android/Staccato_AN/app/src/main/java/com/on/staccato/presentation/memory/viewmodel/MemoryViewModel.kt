@@ -15,6 +15,7 @@ import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.memory.model.MemoryUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -71,10 +72,7 @@ class MemoryViewModel
             _errorMessage.postValue(message)
         }
 
-        private fun handelException(
-            e: Throwable,
-            message: String,
-        ) {
-            _exceptionMessage.postValue(message)
+        private fun handelException(state: ExceptionState) {
+            _exceptionMessage.postValue(state.message)
         }
     }

@@ -22,6 +22,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
 import com.on.staccato.presentation.memorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.memoryupdate.MemoryUpdateError
+import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -183,8 +184,8 @@ class MemoryUpdateViewModel
                     imageRepository.convertImageFileToUrl(thumbnailFile)
                 result.onSuccess(::setThumbnailUrl)
                     .onServerError(::handlePhotoError)
-                    .onException { e, message ->
-                        handlePhotoException(e, message, uri)
+                    .onException { state ->
+                        handlePhotoException(state, uri)
                     }
             }
         }
@@ -203,12 +204,11 @@ class MemoryUpdateViewModel
         }
 
         private fun handlePhotoException(
-            e: Throwable,
-            message: String,
+            state: ExceptionState,
             uri: Uri,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(MemoryUpdateError.Thumbnail(message, uri))
+                _error.setValue(MemoryUpdateError.Thumbnail(state.message, uri))
             }
         }
 
@@ -219,11 +219,8 @@ class MemoryUpdateViewModel
             _errorMessage.value = message
         }
 
-        private fun handleInitializeMemoryException(
-            e: Throwable,
-            message: String,
-        ) {
-            _error.setValue(MemoryUpdateError.MemoryInitialization(message))
+        private fun handleInitializeMemoryException(state: ExceptionState) {
+            _error.setValue(MemoryUpdateError.MemoryInitialization(state.message))
         }
 
         private fun handleUpdateError(
@@ -234,12 +231,9 @@ class MemoryUpdateViewModel
             _errorMessage.value = message
         }
 
-        private fun handleUpdateException(
-            e: Throwable,
-            message: String,
-        ) {
+        private fun handleUpdateException(state: ExceptionState) {
             _isPosting.value = false
-            _error.setValue(MemoryUpdateError.MemoryUpdate(message))
+            _error.setValue(MemoryUpdateError.MemoryUpdate(state.message))
         }
 
         companion object {

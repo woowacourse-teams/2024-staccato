@@ -11,6 +11,7 @@ import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.repository.LoginRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -55,10 +56,7 @@ class LoginViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(
-            e: Throwable,
-            errorMessage: String,
-        ) {
-            _errorMessage.postValue(errorMessage)
+        private fun handleException(state: ExceptionState) {
+            _errorMessage.postValue(state.message)
         }
     }

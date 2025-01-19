@@ -15,6 +15,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toStaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.comments.CommentUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -74,10 +75,7 @@ class StaccatoViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(
-            e: Throwable,
-            message: String,
-        ) {
-            _exceptionMessage.postValue(message)
+        private fun handleException(state: ExceptionState) {
+            _exceptionMessage.postValue(state.message)
         }
     }

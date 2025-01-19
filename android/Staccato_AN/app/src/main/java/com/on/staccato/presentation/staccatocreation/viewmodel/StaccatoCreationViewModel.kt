@@ -24,6 +24,7 @@ import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity.Co
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationError
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.convertExcretaFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -249,8 +250,8 @@ class StaccatoCreationViewModel
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
-                }.onException { e, message ->
-                    if (this.isActive) handleException(e, message)
+                }.onException { state ->
+                    if (this.isActive) handleException(state)
                 }
                 .onServerError(::handleServerError)
         }
@@ -277,27 +278,18 @@ class StaccatoCreationViewModel
             _warningMessage.postValue(errorMessage)
         }
 
-        private fun handleException(
-            e: Throwable,
-            errorMessage: String,
-        ) {
+        private fun handleException(exceptionState: ExceptionState) {
             _isPosting.value = false
-            _warningMessage.postValue(errorMessage)
+            _warningMessage.postValue(exceptionState.message)
         }
 
-        private fun handleMemoryCandidatesException(
-            e: Throwable,
-            message: String,
-        ) {
-            _error.setValue(StaccatoCreationError.MemoryCandidates(message))
+        private fun handleMemoryCandidatesException(exceptionState: ExceptionState) {
+            _error.setValue(StaccatoCreationError.MemoryCandidates(exceptionState.message))
         }
 
-        private fun handleCreateException(
-            e: Throwable,
-            message: String,
-        ) {
+        private fun handleCreateException(state: ExceptionState) {
             _isPosting.value = false
-            _error.setValue(StaccatoCreationError.StaccatoCreation(message))
+            _error.setValue(StaccatoCreationError.StaccatoCreation(state.message))
         }
 
         companion object {

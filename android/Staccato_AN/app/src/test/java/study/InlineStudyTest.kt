@@ -95,14 +95,16 @@ fun createFakeMemory(): Success<Memory> {
 
 inline fun <T : Any, R : Any> ApiResult<T>.inlineFunction(convert: (T) -> R): ApiResult<R> =
     when (this) {
-        is Exception -> Exception(e)
+        is Exception.NetworkError -> Exception.NetworkError()
+        is Exception.UnknownError -> Exception.UnknownError()
         is ServerError -> ServerError(status, message)
         is Success -> Success(convert(data))
     }
 
 fun <T : Any, R : Any> ApiResult<T>.noInlineFunction(convert: (T) -> R): ApiResult<R> =
     when (this) {
-        is Exception -> Exception(e)
+        is Exception.NetworkError -> Exception.NetworkError()
+        is Exception.UnknownError -> Exception.UnknownError()
         is ServerError -> ServerError(status, message)
         is Success -> Success(convert(data))
     }

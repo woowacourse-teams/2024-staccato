@@ -10,6 +10,7 @@ import okio.Timeout
 import retrofit2.Call
 import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 
 class ApiResultCall<T : Any>(
     private val delegate: Call<T>,
@@ -27,10 +28,10 @@ class ApiResultCall<T : Any>(
 
                 override fun onFailure(
                     call: Call<T>,
-                    t: Throwable,
+                    throwable: Throwable,
                 ) {
-                    val networkResult = Exception<T>(t)
-                    callback.onResponse(this@ApiResultCall, Response.success(networkResult))
+                    val exception = handleException<T>(throwable)
+                    callback.onResponse(this@ApiResultCall, Response.success(exception))
                 }
             },
         )
@@ -75,9 +76,15 @@ private fun <T : Any> handleApiResponse(execute: () -> Response<T>): ApiResult<T
                 )
             }
         }
-    } catch (e: HttpException) {
-        ServerError(status = Status.Code(e.code()), message = e.message())
-    } catch (e: Throwable) {
-        Exception(e, message = e.message.toString())
+    } catch (httpException: HttpException) {
+        ServerError(status = Status.Code(httpException.code()), message = httpException.message())
+    } catch (throwable: Throwable) {
+        handleException<T>(throwable)
     }
 }
+
+private fun <T : Any> handleException(throwable: Throwable) =
+    when (throwable) {
+        is IOException -> Exception.NetworkError<T>()
+        else -> Exception.UnknownError<T>()
+    }
