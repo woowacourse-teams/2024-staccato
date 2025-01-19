@@ -32,6 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.staccato.ControllerTest;
 import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
@@ -44,6 +45,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.service.MemoryService;
 import com.staccato.memory.service.dto.request.CategoryRequest;
+import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
@@ -191,9 +193,9 @@ class CategoryControllerTest {
     void readAllCategory() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
-        when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
+        when(memoryService.readAllMemories(any(Member.class), any(MemoryReadRequest.class))).thenReturn(memoryResponses);
         String expectedResponse = """
                 {
                     "categories": [
@@ -220,9 +222,9 @@ class CategoryControllerTest {
     void readAllCategoryWithoutTerm() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
-        when(memoryService.readAllMemories(any(Member.class))).thenReturn(memoryResponses);
+        when(memoryService.readAllMemories(any(Member.class), any(MemoryReadRequest.class))).thenReturn(memoryResponses);
         String expectedResponse = """
                 {
                     "categories": [
@@ -247,9 +249,9 @@ class CategoryControllerTest {
     void readAllCategoryIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MemoryNameResponses memoryNameResponses = MemoryNameResponsesFixture.create(memory);
-        when(memoryService.readAllMemoriesIncludingDate(any(Member.class), any())).thenReturn(memoryNameResponses);
+        when(memoryService.readAllMemoriesByDate(any(Member.class), any())).thenReturn(memoryNameResponses);
         String expectedResponse = """
                 {
                     "categories": [
@@ -291,7 +293,7 @@ class CategoryControllerTest {
         // given
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
         MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
         MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
@@ -334,7 +336,7 @@ class CategoryControllerTest {
         // given
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Memory memory = MemoryFixture.create(null, null, MemberFixture.create());
+        Memory memory = MemoryFixture.createWithMember(null, null, MemberFixture.create());
         MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
         MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);

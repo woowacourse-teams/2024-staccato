@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,6 +25,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.memory.controller.docs.CategoryControllerDocs;
 import com.staccato.memory.service.MemoryService;
 import com.staccato.memory.service.dto.request.CategoryRequest;
+import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.response.CategoryDetailResponse;
 import com.staccato.memory.service.dto.response.CategoryIdResponse;
 import com.staccato.memory.service.dto.response.CategoryNameResponses;
@@ -53,8 +55,11 @@ public class CategoryController implements CategoryControllerDocs {
     }
 
     @GetMapping
-    public ResponseEntity<CategoryResponses> readAllCategories(@LoginMember Member member) {
-        MemoryResponses memoryResponses = memoryService.readAllMemories(member);
+    public ResponseEntity<CategoryResponses> readAllCategories(
+            @LoginMember Member member,
+            @ModelAttribute("MemoryReadRequest") MemoryReadRequest memoryReadRequest
+    ) {
+        MemoryResponses memoryResponses = memoryService.readAllMemories(member, memoryReadRequest);
         return ResponseEntity.ok(CategoryDtoMapper.toCategoryResponses(memoryResponses));
     }
 
@@ -63,7 +68,7 @@ public class CategoryController implements CategoryControllerDocs {
             @LoginMember Member member,
             @RequestParam(value = "currentDate") LocalDate currentDate
     ) {
-        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesIncludingDate(member, currentDate);
+        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesByDate(member, currentDate);
         return ResponseEntity.ok(CategoryDtoMapper.toCategoryNameResponses(memoryNameResponses));
     }
 
