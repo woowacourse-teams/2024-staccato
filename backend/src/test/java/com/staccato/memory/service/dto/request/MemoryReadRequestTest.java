@@ -11,7 +11,7 @@ import com.staccato.memory.service.MemorySort;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MemoryReadRequestTest {
-    @DisplayName("필터가 주어졌을 때 올바른 MemoryFilter 리스트를 반환한다")
+    @DisplayName("필터가 주어졌을 때 올바른 필터 목록을 반환한다")
     @Test
     void getFiltersWithValidFilters() {
         // given
@@ -24,7 +24,7 @@ class MemoryReadRequestTest {
         assertThat(filters).hasSize(1).containsOnly(MemoryFilter.TERM);
     }
 
-    @DisplayName("필터가 주어지지 않았을 때 빈 리스트를 반환한다")
+    @DisplayName("필터가 주어지지 않았을 때 빈 목록을 반환한다")
     @ParameterizedTest
     @NullAndEmptySource
     void getFiltersWithNullOrEmptyFilters(String filters) {
