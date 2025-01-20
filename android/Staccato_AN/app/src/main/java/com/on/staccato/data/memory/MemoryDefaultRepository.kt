@@ -26,7 +26,7 @@ class MemoryDefaultRepository
         override suspend fun updateMemory(
             memoryId: Long,
             newMemory: NewMemory,
-        ): ApiResult<Unit> = memoryDataSource.updateMemory(memoryId, newMemory).handle { Unit }
+        ): ApiResult<Unit> = memoryDataSource.updateMemory(memoryId, newMemory).handle()
 
-        override suspend fun deleteMemory(memoryId: Long): ApiResult<Unit> = memoryDataSource.deleteMemory(memoryId).handle { Unit }
+        override suspend fun deleteMemory(memoryId: Long): ApiResult<Unit> = memoryDataSource.deleteMemory(memoryId).handle()
     }

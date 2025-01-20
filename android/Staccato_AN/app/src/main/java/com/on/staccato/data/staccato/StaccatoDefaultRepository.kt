@@ -74,9 +74,9 @@ class StaccatoDefaultRepository
                         memoryId = memoryId,
                         momentImageUrls = staccatoImageUrls,
                     ),
-            ).handle { Unit }
+            ).handle()
 
-        override suspend fun deleteStaccato(staccatoId: Long): ApiResult<Unit> = remoteDataSource.deleteStaccato(staccatoId).handle { Unit }
+        override suspend fun deleteStaccato(staccatoId: Long): ApiResult<Unit> = remoteDataSource.deleteStaccato(staccatoId).handle()
 
         override suspend fun updateFeeling(
             staccatoId: Long,
@@ -85,5 +85,5 @@ class StaccatoDefaultRepository
             remoteDataSource.updateFeeling(
                 staccatoId = staccatoId,
                 feelingRequest = FeelingRequest(feeling),
-            ).handle { Unit }
+            ).handle()
     }

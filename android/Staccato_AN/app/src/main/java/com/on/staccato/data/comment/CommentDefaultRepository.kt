@@ -21,7 +21,7 @@ class CommentDefaultRepository
         override suspend fun createComment(newComment: NewComment): ApiResult<Unit> =
             commentDataSource.createComment(
                 newComment.toDto(),
-            ).handle { Unit }
+            ).handle()
 
         override suspend fun updateComment(
             commentId: Long,
@@ -30,7 +30,7 @@ class CommentDefaultRepository
             commentDataSource.updateComment(
                 commentId,
                 CommentUpdateRequest(content),
-            ).handle { Unit }
+            ).handle()
 
-        override suspend fun deleteComment(commentId: Long): ApiResult<Unit> = commentDataSource.deleteComment(commentId).handle { Unit }
+        override suspend fun deleteComment(commentId: Long): ApiResult<Unit> = commentDataSource.deleteComment(commentId).handle()
     }

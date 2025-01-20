@@ -21,3 +21,11 @@ inline fun <T : Any, R : Any> ApiResult<T>.handle(convert: (T) -> R): ApiResult<
         is ServerError -> ServerError(status, message)
         is Success -> Success(convert(data))
     }
+
+fun ApiResult<Unit>.handle(): ApiResult<Unit> =
+    when (this) {
+        is Exception.NetworkError -> Exception.NetworkError()
+        is Exception.UnknownError -> Exception.UnknownError()
+        is ServerError -> ServerError(status, message)
+        is Success -> Success(data)
+    }
