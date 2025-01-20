@@ -3,7 +3,6 @@ package com.on.staccato.presentation.login.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.StaccatoApplication
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
@@ -36,17 +35,14 @@ class LoginViewModel
             val nickname = nickname.value ?: ""
             viewModelScope.launch {
                 repository.loginWithNickname(nickname)
-                    .onSuccess(::saveUserToken)
+                    .onSuccess { updateIsLoginSuccess() }
                     .onServerError(::handleError)
                     .onException(::handleException)
             }
         }
 
-        private fun saveUserToken(newToken: String) {
-            viewModelScope.launch {
-                StaccatoApplication.userInfoPrefsManager.setToken(newToken)
-                _isLoginSuccess.postValue(true)
-            }
+        private fun updateIsLoginSuccess() {
+            _isLoginSuccess.postValue(true)
         }
 
         private fun handleError(
