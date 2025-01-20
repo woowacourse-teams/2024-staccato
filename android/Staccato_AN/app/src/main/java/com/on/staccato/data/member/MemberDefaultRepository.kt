@@ -1,5 +1,6 @@
 package com.on.staccato.data.member
 
+import com.on.staccato.StaccatoApplication
 import com.on.staccato.data.ApiResult
 import com.on.staccato.data.handle
 import com.on.staccato.domain.repository.MemberRepository
@@ -10,6 +11,6 @@ class MemberDefaultRepository
     constructor(
         private val memberApiService: MemberApiService,
     ) : MemberRepository {
-        override suspend fun fetchTokenWithRecoveryCode(recoveryCode: String): ApiResult<String> =
-            memberApiService.postRecoveryCode(recoveryCode).handle { it.token }
+        override suspend fun fetchTokenWithRecoveryCode(recoveryCode: String): ApiResult<Unit> =
+            memberApiService.postRecoveryCode(recoveryCode).handle { StaccatoApplication.userInfoPrefsManager.setToken(it.token) }
     }

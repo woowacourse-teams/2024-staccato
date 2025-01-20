@@ -3,7 +3,6 @@ package com.on.staccato.presentation.recovery.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.StaccatoApplication
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
@@ -41,17 +40,14 @@ class RecoveryViewModel
             val code = recoveryCode.value ?: ""
             viewModelScope.launch {
                 repository.fetchTokenWithRecoveryCode(code)
-                    .onSuccess(::saveUserToken)
+                    .onSuccess { updateIsRecoverySuccess() }
                     .onServerError(::handleError)
                     .onException(::handleException)
             }
         }
 
-        private fun saveUserToken(newToken: String) {
-            viewModelScope.launch {
-                StaccatoApplication.userInfoPrefsManager.setToken(newToken)
-                _isRecoverySuccess.postValue(true)
-            }
+        private fun updateIsRecoverySuccess() {
+            _isRecoverySuccess.postValue(true)
         }
 
         private fun handleError(
