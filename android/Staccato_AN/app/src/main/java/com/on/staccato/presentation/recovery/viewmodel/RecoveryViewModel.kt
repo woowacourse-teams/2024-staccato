@@ -3,7 +3,6 @@ package com.on.staccato.presentation.recovery.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.dto.Status
 import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
@@ -50,10 +49,7 @@ class RecoveryViewModel
             _isRecoverySuccess.postValue(true)
         }
 
-        private fun handleError(
-            status: Status,
-            errorMessage: String,
-        ) {
+        private fun handleError(errorMessage: String) {
             _errorMessage.postValue(errorMessage)
         }
 

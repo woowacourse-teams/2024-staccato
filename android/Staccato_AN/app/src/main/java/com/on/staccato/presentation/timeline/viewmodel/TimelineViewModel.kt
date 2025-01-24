@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.dto.Status
 import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
@@ -105,10 +104,7 @@ class TimelineViewModel
             _timeline.value = originalTimeline.filter { it.startAt == null }
         }
 
-        private fun handleServerError(
-            status: Status,
-            errorMessage: String,
-        ) {
+        private fun handleServerError(errorMessage: String) {
             _errorMessage.postValue(errorMessage)
         }
 

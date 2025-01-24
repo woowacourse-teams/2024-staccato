@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.dto.Status
 import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
@@ -270,10 +269,7 @@ class StaccatoCreationViewModel
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
         }
 
-        private fun handleServerError(
-            status: Status,
-            errorMessage: String,
-        ) {
+        private fun handleServerError(errorMessage: String) {
             _isPosting.value = false
             _warningMessage.postValue(errorMessage)
         }

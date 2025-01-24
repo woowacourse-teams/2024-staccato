@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.ApiResult
-import com.on.staccato.data.dto.Status
 import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
@@ -65,10 +64,7 @@ class MemoryViewModel
             _isDeleteSuccess.setValue(true)
         }
 
-        private fun handleServerError(
-            status: Status,
-            message: String,
-        ) {
+        private fun handleServerError(message: String) {
             _errorMessage.postValue(message)
         }
 

@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.ApiResult
-import com.on.staccato.data.dto.Status
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.dto.memory.MemoryCreationResponse
 import com.on.staccato.data.onException
@@ -168,10 +167,7 @@ class MemoryCreationViewModel
             }
         }
 
-        private fun handlePhotoError(
-            status: Status,
-            message: String,
-        ) {
+        private fun handlePhotoError(message: String) {
             _errorMessage.postValue(message)
         }
 
@@ -184,10 +180,7 @@ class MemoryCreationViewModel
             }
         }
 
-        private fun handleCreateServerError(
-            status: Status,
-            message: String,
-        ) {
+        private fun handleCreateServerError(message: String) {
             _isPosting.value = false
             _errorMessage.postValue(message)
         }
