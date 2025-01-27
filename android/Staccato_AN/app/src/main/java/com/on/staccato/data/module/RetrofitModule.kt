@@ -1,13 +1,13 @@
 package com.on.staccato.data.module
 
-import com.on.staccato.data.StaccatoClient
+import com.on.staccato.StaccatoApplication.Companion.retrofit
 import com.on.staccato.data.comment.CommentApiService
 import com.on.staccato.data.image.ImageApiService
 import com.on.staccato.data.login.LoginApiService
 import com.on.staccato.data.member.MemberApiService
 import com.on.staccato.data.memory.MemoryApiService
-import com.on.staccato.data.moment.MomentApiService
 import com.on.staccato.data.mypage.MyPageApiService
+import com.on.staccato.data.staccato.StaccatoApiService
 import com.on.staccato.data.timeline.TimeLineApiService
 import dagger.Module
 import dagger.Provides
@@ -20,33 +20,33 @@ import javax.inject.Singleton
 object RetrofitModule {
     @Singleton
     @Provides
-    fun provideLoginApiService(): LoginApiService = StaccatoClient.create(LoginApiService::class.java)
+    fun provideLoginApiService(): LoginApiService = retrofit.create(LoginApiService::class.java)
 
     @Singleton
     @Provides
-    fun provideMemoryApiService(): MemoryApiService = StaccatoClient.create(MemoryApiService::class.java)
+    fun provideMemoryApiService(): MemoryApiService = retrofit.create(MemoryApiService::class.java)
 
     @Singleton
     @Provides
-    fun provideTimelineApiService(): TimeLineApiService = StaccatoClient.create(TimeLineApiService::class.java)
+    fun provideTimelineApiService(): TimeLineApiService = retrofit.create(TimeLineApiService::class.java)
 
     @Singleton
     @Provides
-    fun provideStaccatoApiService(): MomentApiService = StaccatoClient.create(MomentApiService::class.java)
+    fun provideStaccatoApiService(): StaccatoApiService = retrofit.create(StaccatoApiService::class.java)
 
     @Singleton
     @Provides
-    fun provideCommentApiService(): CommentApiService = StaccatoClient.create(CommentApiService::class.java)
+    fun provideCommentApiService(): CommentApiService = retrofit.create(CommentApiService::class.java)
 
     @Singleton
     @Provides
-    fun provideImageApiService(): ImageApiService = StaccatoClient.create(ImageApiService::class.java)
+    fun provideImageApiService(): ImageApiService = retrofit.create(ImageApiService::class.java)
 
     @Singleton
     @Provides
-    fun memberApiService(): MemberApiService = StaccatoClient.create(MemberApiService::class.java)
+    fun memberApiService(): MemberApiService = retrofit.create(MemberApiService::class.java)
 
     @Singleton
     @Provides
-    fun myPageApiService(): MyPageApiService = StaccatoClient.create(MyPageApiService::class.java)
+    fun myPageApiService(): MyPageApiService = retrofit.create(MyPageApiService::class.java)
 }
