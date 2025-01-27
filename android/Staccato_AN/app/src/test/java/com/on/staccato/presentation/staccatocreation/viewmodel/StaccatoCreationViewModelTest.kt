@@ -1,7 +1,7 @@
 package com.on.staccato.presentation.staccatocreation.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.Success
 import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.model.TARGET_MEMORY_ID
@@ -143,7 +143,7 @@ class StaccatoCreationViewModelTest {
 
     private fun givenMemoryCandidatesReturnsSuccessWithDummyData() {
         coEvery { timelineRepository.getMemoryCandidates() } returns
-            ResponseResult.Success(
+            Success(
                 dummyMemoryCandidates,
             )
     }

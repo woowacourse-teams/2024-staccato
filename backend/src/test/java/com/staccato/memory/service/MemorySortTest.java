@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +27,21 @@ public class MemorySortTest extends ServiceSliceTest {
     private MemoryRepository memoryRepository;
 
     @DisplayName("정렬명이 주어졌을 때 대소문자 구분 없이 MemorySort을 반환한다.")
-    @Test
-    void findByNameWithValidSort() {
+    @ParameterizedTest
+    @CsvSource({
+            "UPDATED, UPDATED",
+            "NEWEST, NEWEST",
+            "OLDEST, OLDEST",
+            "updated, UPDATED",
+            "newest, NEWEST",
+            "oldest, OLDEST"
+    })
+    void findByNameWithValidSort(String name, MemorySort sort) {
         // when
-        MemorySort result = MemorySort.findByName("newest");
+        MemorySort result = MemorySort.findByName(name);
 
         // then
-        assertThat(result).isEqualTo(MemorySort.NEWEST);
+        assertThat(result).isEqualTo(sort);
     }
 
     @DisplayName("유효하지 않거나 null인 정렬명이 주어졌을 때 기본값인 UPDATED를 반환한다.")

@@ -6,15 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.Task
-import com.on.staccato.data.ApiResponseHandler.onException
-import com.on.staccato.data.ApiResponseHandler.onServerError
-import com.on.staccato.data.ApiResponseHandler.onSuccess
-import com.on.staccato.data.dto.Status
+import com.on.staccato.data.onException
+import com.on.staccato.data.onServerError
+import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.main.model.MarkerUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -73,21 +73,11 @@ class MapsViewModel
             _staccatoLocations.value = staccatoLocations
         }
 
-        private fun handleServerError(
-            status: Status,
-            message: String,
-        ) {
+        private fun handleServerError(message: String) {
             _errorMessage.setValue(message)
         }
 
-        private fun handelException(
-            e: Throwable,
-            message: String,
-        ) {
-            _errorMessage.setValue(STACCATO_LOCATIONS_ERROR_MESSAGE)
-        }
-
-        companion object {
-            private const val STACCATO_LOCATIONS_ERROR_MESSAGE = "스타카토 기록을 조회할 수 없습니다"
+        private fun handelException(state: ExceptionState) {
+            _errorMessage.setValue(state.message)
         }
     }

@@ -8,11 +8,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ApiResponseHandler.onException
-import com.on.staccato.data.ApiResponseHandler.onServerError
-import com.on.staccato.data.ApiResponseHandler.onSuccess
-import com.on.staccato.data.dto.Status
 import com.on.staccato.data.image.ImageDefaultRepository
+import com.on.staccato.data.onException
+import com.on.staccato.data.onServerError
+import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.repository.StaccatoRepository
@@ -24,6 +23,7 @@ import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity.Co
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationError
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertExcretaFile
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -250,8 +250,8 @@ class StaccatoCreationViewModel
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
-                }.onException { e, message ->
-                    if (this.isActive) handleException(e, message)
+                }.onException { state ->
+                    if (this.isActive) handleException(state)
                 }
                 .onServerError(::handleServerError)
         }
@@ -270,35 +270,23 @@ class StaccatoCreationViewModel
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
         }
 
-        private fun handleServerError(
-            status: Status,
-            errorMessage: String,
-        ) {
+        private fun handleServerError(errorMessage: String) {
             _isPosting.value = false
             _warningMessage.postValue(errorMessage)
         }
 
-        private fun handleException(
-            e: Throwable,
-            errorMessage: String,
-        ) {
+        private fun handleException(exceptionState: ExceptionState) {
             _isPosting.value = false
-            _warningMessage.postValue(errorMessage)
+            _warningMessage.postValue(exceptionState.message)
         }
 
-        private fun handleMemoryCandidatesException(
-            e: Throwable,
-            message: String,
-        ) {
-            _error.setValue(StaccatoCreationError.MemoryCandidates(message))
+        private fun handleMemoryCandidatesException(exceptionState: ExceptionState) {
+            _error.setValue(StaccatoCreationError.MemoryCandidates(exceptionState.message))
         }
 
-        private fun handleCreateException(
-            e: Throwable,
-            message: String,
-        ) {
+        private fun handleCreateException(state: ExceptionState) {
             _isPosting.value = false
-            _error.setValue(StaccatoCreationError.StaccatoCreation(message))
+            _error.setValue(StaccatoCreationError.StaccatoCreation(state.message))
         }
 
         companion object {
