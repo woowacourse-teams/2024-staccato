@@ -11,10 +11,6 @@
             type="com.on.staccato.domain.model.MemberProfile" />
 
         <variable
-            name="viewModel"
-            type="com.on.staccato.presentation.main.viewmodel.MapsViewModel" />
-
-        <variable
             name="handler"
             type="com.on.staccato.presentation.main.MainHandler" />
     </data>
