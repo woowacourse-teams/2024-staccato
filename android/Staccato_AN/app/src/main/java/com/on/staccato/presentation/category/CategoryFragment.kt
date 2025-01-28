@@ -26,7 +26,7 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MemoryFragment :
+class CategoryFragment :
     BindingFragment<FragmentMemoryBinding>(R.layout.fragment_memory),
     ToolbarHandler,
     CategoryHandler,
