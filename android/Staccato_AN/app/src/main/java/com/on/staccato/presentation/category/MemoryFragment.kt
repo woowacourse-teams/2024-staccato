@@ -109,9 +109,9 @@ class MemoryFragment :
     }
 
     private fun observeMemory() {
-        viewModel.category.observe(viewLifecycleOwner) { memory ->
-            matesAdapter.updateMates(memory.mates)
-            staccatosAdapter.updateStaccatos(memory.staccatos)
+        viewModel.category.observe(viewLifecycleOwner) { category ->
+            matesAdapter.updateMates(category.mates)
+            staccatosAdapter.updateStaccatos(category.staccatos)
         }
     }
 
