@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.on.staccato.databinding.ItemStaccatosBinding
-import com.on.staccato.presentation.category.MemoryHandler
+import com.on.staccato.presentation.category.CategoryHandler
 import com.on.staccato.presentation.category.model.CategoryStaccatoUiModel
 
-class StaccatosAdapter(private val handler: MemoryHandler) : ListAdapter<CategoryStaccatoUiModel, StaccatoViewHolder>(diffUtil) {
+class StaccatosAdapter(private val handler: CategoryHandler) : ListAdapter<CategoryStaccatoUiModel, StaccatoViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

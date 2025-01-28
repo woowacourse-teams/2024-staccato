@@ -29,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MemoryFragment :
     BindingFragment<FragmentMemoryBinding>(R.layout.fragment_memory),
     ToolbarHandler,
-    MemoryHandler,
+    CategoryHandler,
     DialogHandler {
     private val memoryId by lazy {
         arguments?.getLong(MEMORY_ID_KEY) ?: throw IllegalArgumentException()

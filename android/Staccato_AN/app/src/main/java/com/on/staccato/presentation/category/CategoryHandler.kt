@@ -1,6 +1,6 @@
 package com.on.staccato.presentation.category
 
-interface MemoryHandler {
+interface CategoryHandler {
     fun onStaccatoClicked(staccatoId: Long)
 
     fun onStaccatoCreationClicked()

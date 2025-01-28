@@ -14,7 +14,7 @@
 
         <variable
             name="memoryHandler"
-            type="com.on.staccato.presentation.category.MemoryHandler" />
+            type="com.on.staccato.presentation.category.CategoryHandler" />
 
         <variable
             name="toolbarHandler"
