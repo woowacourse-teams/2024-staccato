@@ -32,7 +32,7 @@ class MemoryFragment :
     CategoryHandler,
     DialogHandler {
     private val categoryId by lazy {
-        arguments?.getLong(MEMORY_ID_KEY) ?: throw IllegalArgumentException()
+        arguments?.getLong(CATEGORY_ID_KEY) ?: throw IllegalArgumentException()
     }
     private val viewModel: CategoryViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
@@ -157,7 +157,7 @@ class MemoryFragment :
     }
 
     companion object {
-        const val MEMORY_ID_KEY = "categoryId"
+        const val CATEGORY_ID_KEY = "categoryId"
         const val MEMORY_TITLE_KEY = "categoryTitle"
     }
 }

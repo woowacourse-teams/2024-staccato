@@ -15,7 +15,7 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMemoryUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
-import com.on.staccato.presentation.category.MemoryFragment.Companion.MEMORY_ID_KEY
+import com.on.staccato.presentation.category.MemoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.getSnackBarWithAction
@@ -28,7 +28,7 @@ class MemoryUpdateActivity :
     MemoryUpdateHandler,
     OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_update
-    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_MEMORY_ID) }
+    private val memoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_MEMORY_ID) }
     private val viewModel: MemoryUpdateViewModel by viewModels()
 
     private val photoAttachFragment = PhotoAttachFragment()
@@ -113,7 +113,7 @@ class MemoryUpdateActivity :
 
     private fun navigateToMemory(isUpdateSuccess: Boolean) {
         if (isUpdateSuccess) {
-            val intent = Intent().putExtra(MEMORY_ID_KEY, memoryId)
+            val intent = Intent().putExtra(CATEGORY_ID_KEY, memoryId)
             setResult(RESULT_OK, intent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -181,7 +181,7 @@ class MemoryUpdateActivity :
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, MemoryUpdateActivity::class.java).apply {
-                putExtra(MEMORY_ID_KEY, memoryId)
+                putExtra(CATEGORY_ID_KEY, memoryId)
                 activityLauncher.launch(this)
             }
         }

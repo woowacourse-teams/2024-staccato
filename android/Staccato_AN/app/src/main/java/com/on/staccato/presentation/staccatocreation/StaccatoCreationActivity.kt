@@ -30,7 +30,7 @@ import com.on.staccato.presentation.common.LocationPermissionManager
 import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
-import com.on.staccato.presentation.category.MemoryFragment.Companion.MEMORY_ID_KEY
+import com.on.staccato.presentation.category.MemoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
@@ -73,7 +73,7 @@ class StaccatoCreationActivity :
     private lateinit var photoAttachAdapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
 
-    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, DEFAULT_CATEGORY_ID) }
+    private val memoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID) }
     private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
 
     private val locationPermissionManager =
@@ -342,7 +342,7 @@ class StaccatoCreationActivity :
             val resultIntent =
                 Intent()
                     .putExtra(STACCATO_ID_KEY, createdStaccatoId)
-                    .putExtra(MEMORY_ID_KEY, memoryId)
+                    .putExtra(CATEGORY_ID_KEY, memoryId)
                     .putExtra(MEMORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
@@ -461,7 +461,7 @@ class StaccatoCreationActivity :
             memoryTitle: String = DEFAULT_CATEGORY_TITLE,
         ) {
             Intent(context, StaccatoCreationActivity::class.java).apply {
-                putExtra(MEMORY_ID_KEY, memoryId)
+                putExtra(CATEGORY_ID_KEY, memoryId)
                 putExtra(MEMORY_TITLE_KEY, memoryTitle)
                 activityLauncher.launch(this)
             }
