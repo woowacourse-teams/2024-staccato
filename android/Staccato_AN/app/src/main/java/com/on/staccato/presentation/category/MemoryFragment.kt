@@ -57,11 +57,11 @@ class MemoryFragment :
     }
 
     override fun onUpdateClicked() {
-        val memoryUpdateLauncher = (activity as MainActivity).memoryUpdateLauncher
+        val categoryUpdateLauncher = (activity as MainActivity).memoryUpdateLauncher
         MemoryUpdateActivity.startWithResultLauncher(
             categoryId,
             requireActivity(),
-            memoryUpdateLauncher,
+            categoryUpdateLauncher,
         )
     }
 
