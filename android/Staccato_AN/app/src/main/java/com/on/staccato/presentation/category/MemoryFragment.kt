@@ -49,7 +49,7 @@ class MemoryFragment :
         initToolbar()
         initMatesAdapter()
         initStaccatosAdapter()
-        observeMemory()
+        observeCategory()
         observeIsDeleteSuccess()
         showErrorToast()
         showExceptionSnackBar()
@@ -108,7 +108,7 @@ class MemoryFragment :
         }
     }
 
-    private fun observeMemory() {
+    private fun observeCategory() {
         viewModel.category.observe(viewLifecycleOwner) { category ->
             matesAdapter.updateMates(category.mates)
             staccatosAdapter.updateStaccatos(category.staccatos)
