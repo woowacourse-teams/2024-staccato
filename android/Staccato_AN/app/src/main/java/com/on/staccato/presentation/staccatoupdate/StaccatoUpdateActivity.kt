@@ -31,7 +31,7 @@ import com.on.staccato.presentation.common.LocationPermissionManager.Companion.l
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.category.MemoryFragment.Companion.CATEGORY_ID_KEY
-import com.on.staccato.presentation.category.MemoryFragment.Companion.MEMORY_TITLE_KEY
+import com.on.staccato.presentation.category.MemoryFragment.Companion.CATEGORY_TITLE_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.CurrentLocationHandler
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
@@ -72,7 +72,7 @@ class StaccatoUpdateActivity :
     private lateinit var itemTouchHelper: ItemTouchHelper
     private val staccatoId by lazy { intent.getLongExtra(STACCATO_ID_KEY, 0L) }
     private val memoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, 0L) }
-    private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
+    private val memoryTitle by lazy { intent.getStringExtra(CATEGORY_TITLE_KEY) ?: "" }
 
     private val autocompleteFragment by lazy {
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
@@ -327,7 +327,7 @@ class StaccatoUpdateActivity :
                 Intent()
                     .putExtra(STACCATO_ID_KEY, staccatoId)
                     .putExtra(CATEGORY_ID_KEY, memoryId)
-                    .putExtra(MEMORY_TITLE_KEY, memoryTitle)
+                    .putExtra(CATEGORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, intent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -450,7 +450,7 @@ class StaccatoUpdateActivity :
             Intent(context, StaccatoUpdateActivity::class.java).apply {
                 putExtra(STACCATO_ID_KEY, staccatoId)
                 putExtra(CATEGORY_ID_KEY, memoryId)
-                putExtra(MEMORY_TITLE_KEY, memoryTitle)
+                putExtra(CATEGORY_TITLE_KEY, memoryTitle)
                 activityLauncher.launch(this)
             }
         }

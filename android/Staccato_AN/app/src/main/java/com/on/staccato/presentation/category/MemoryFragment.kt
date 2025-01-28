@@ -158,6 +158,6 @@ class MemoryFragment :
 
     companion object {
         const val CATEGORY_ID_KEY = "categoryId"
-        const val MEMORY_TITLE_KEY = "categoryTitle"
+        const val CATEGORY_TITLE_KEY = "categoryTitle"
     }
 }
