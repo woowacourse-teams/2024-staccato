@@ -31,7 +31,7 @@ class MemoryFragment :
     ToolbarHandler,
     CategoryHandler,
     DialogHandler {
-    private val memoryId by lazy {
+    private val categoryId by lazy {
         arguments?.getLong(MEMORY_ID_KEY) ?: throw IllegalArgumentException()
     }
     private val viewModel: CategoryViewModel by viewModels()
@@ -53,13 +53,13 @@ class MemoryFragment :
         observeIsDeleteSuccess()
         showErrorToast()
         showExceptionSnackBar()
-        viewModel.loadCategory(memoryId)
+        viewModel.loadCategory(categoryId)
     }
 
     override fun onUpdateClicked() {
         val memoryUpdateLauncher = (activity as MainActivity).memoryUpdateLauncher
         MemoryUpdateActivity.startWithResultLauncher(
-            memoryId,
+            categoryId,
             requireActivity(),
             memoryUpdateLauncher,
         )
@@ -80,7 +80,7 @@ class MemoryFragment :
     }
 
     override fun onConfirmClicked() {
-        viewModel.deleteCategory(memoryId)
+        viewModel.deleteCategory(categoryId)
     }
 
     override fun onStaccatoCreationClicked() {
@@ -89,7 +89,7 @@ class MemoryFragment :
             StaccatoCreationActivity.startWithResultLauncher(
                 requireContext(),
                 staccatoCreationLauncher,
-                memoryId,
+                categoryId,
                 it.title,
             )
         }
@@ -153,7 +153,7 @@ class MemoryFragment :
     }
 
     private fun onRetryAction() {
-        viewModel.loadCategory(memoryId)
+        viewModel.loadCategory(categoryId)
     }
 
     companion object {
