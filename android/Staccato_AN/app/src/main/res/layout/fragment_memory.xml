@@ -30,7 +30,7 @@
         tools:context=".presentation.category.CategoryFragment">
 
         <include
-            android:id="@+id/include_memory_toolbar"
+            android:id="@+id/include_category_toolbar"
             layout="@layout/toolbar_detail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
             bind:toolbarHandler="@{toolbarHandler}" />
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/sv_memory"
+            android:id="@+id/sv_category"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:overScrollMode="never"
@@ -46,14 +46,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/include_memory_toolbar">
+            app:layout_constraintTop_toBottomOf="@id/include_category_toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/iv_memory_thumbnail"
+                    android:id="@+id/iv_category_thumbnail"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:contentDescription="@string/all_memory_thumbnail_photo_description"
@@ -71,40 +71,40 @@
                     android:layout_height="0dp"
                     android:background="@drawable/memory_gradient"
                     android:visibility="@{viewModel.category.categoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
-                    app:layout_constraintEnd_toEndOf="@id/iv_memory_thumbnail"
-                    app:layout_constraintStart_toStartOf="@id/iv_memory_thumbnail"
-                    app:layout_constraintTop_toTopOf="@id/iv_memory_thumbnail" />
+                    app:layout_constraintBottom_toBottomOf="@id/iv_category_thumbnail"
+                    app:layout_constraintEnd_toEndOf="@id/iv_category_thumbnail"
+                    app:layout_constraintStart_toStartOf="@id/iv_category_thumbnail"
+                    app:layout_constraintTop_toTopOf="@id/iv_category_thumbnail" />
 
                 <TextView
-                    android:id="@+id/tv_memory_title"
+                    android:id="@+id/tv_category_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:text="@{viewModel.category.title}"
                     android:textAppearance="@style/Typography.Title1"
                     android:textColor="@color/absolute_white"
-                    app:layout_constraintBottom_toTopOf="@id/tv_memory_period"
+                    app:layout_constraintBottom_toTopOf="@id/tv_category_period"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_goneMarginBottom="8dp"
                     tools:text="아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 아주 긴 추억 제목" />
 
                 <TextView
-                    android:id="@+id/tv_memory_period"
+                    android:id="@+id/tv_category_period"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:textAppearance="@style/Typography.Body4"
                     android:textColor="@color/absolute_white"
-                    app:layout_constraintBottom_toBottomOf="@id/iv_memory_thumbnail"
-                    app:layout_constraintStart_toStartOf="@id/tv_memory_title"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_category_thumbnail"
+                    app:layout_constraintStart_toStartOf="@id/tv_category_title"
                     bind:memoryEndAt="@{viewModel.category.endAt}"
                     bind:memoryStartAt="@{viewModel.category.startAt}"
                     tools:text="2023년 7월 1일 ~ 7월 5일" />
 
                 <TextView
-                    android:id="@+id/tv_memory_description"
+                    android:id="@+id/tv_category_description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
@@ -112,30 +112,30 @@
                     android:visibility="@{viewModel.category.description == null ? View.GONE : View.VISIBLE }"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_memory_thumbnail"
+                    app:layout_constraintTop_toBottomOf="@id/iv_category_thumbnail"
                     tools:text="(추억 소개) Lorem Ipsum is simply dummy text of the printing and typesetting industry. " />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_memory_second"
+                    android:id="@+id/divider_category_second"
                     style="@style/DividerStyle"
                     android:layout_marginTop="16dp"
                     android:visibility="@{viewModel.category.description == null ? View.GONE : View.VISIBLE }"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_description" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_description" />
 
                 <TextView
-                    android:id="@+id/tv_memory_mates"
+                    android:id="@+id/tv_category_mates"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/memory_mates"
                     android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_memory_second" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_category_second" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_memory_mates"
+                    android:id="@+id/rv_category_mates"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -146,40 +146,40 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_mates"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_mates"
                     tools:listitem="@layout/item_mates" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_memory_third"
+                    android:id="@+id/divider_category_third"
                     style="@style/DividerStyle"
                     android:layout_marginTop="16dp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rv_memory_mates" />
+                    app:layout_constraintTop_toBottomOf="@id/rv_category_mates" />
 
                 <TextView
-                    android:id="@+id/tv_memory_staccatos"
+                    android:id="@+id/tv_category_staccatos"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/memory_staccatos"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_memory_third" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_category_third" />
 
                 <FrameLayout
-                    android:id="@+id/frame_memory_add_staccatos"
+                    android:id="@+id/frame_category_add_staccatos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:onClick="@{() -> categoryHandler.onStaccatoCreationClicked()}"
                     android:paddingVertical="12dp"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_memory_staccatos"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_category_staccatos"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_memory_staccatos">
+                    app:layout_constraintTop_toTopOf="@id/tv_category_staccatos">
 
                     <Button
-                        android:id="@+id/btn_memory_add_staccatos"
+                        android:id="@+id/btn_category_add_staccatos"
                         style="@style/BoundedIconButtonStyle"
                         android:contentDescription="@string/memory_staccato_creation_btn_description"
                         android:text="@string/staccato_add"
@@ -188,7 +188,7 @@
                 </FrameLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_memory_staccatos"
+                    android:id="@+id/rv_category_staccatos"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="12dp"
@@ -200,12 +200,12 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/frame_memory_add_staccatos"
+                    app:layout_constraintTop_toBottomOf="@id/frame_category_add_staccatos"
                     app:spanCount="@integer/staccato_span_count"
                     tools:listitem="@layout/item_staccatos" />
 
                 <ImageView
-                    android:id="@+id/iv_memory_empty"
+                    android:id="@+id/iv_category_empty"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
                     android:layout_marginTop="90dp"
@@ -215,10 +215,10 @@
                     android:visibility="@{viewModel.category.staccatos.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_memory_staccatos" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_staccatos" />
 
                 <TextView
-                    android:id="@+id/tv_memory_empty"
+                    android:id="@+id/tv_category_empty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -228,7 +228,7 @@
                     android:visibility="@{viewModel.category.staccatos.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_memory_empty"
+                    app:layout_constraintTop_toBottomOf="@id/iv_category_empty"
                     tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

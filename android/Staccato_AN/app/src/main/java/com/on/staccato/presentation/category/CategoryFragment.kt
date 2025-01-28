@@ -99,11 +99,11 @@ class CategoryFragment :
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.toolbarHandler = this
-        binding.memoryHandler = this
+        binding.categoryHandler = this
     }
 
     private fun initToolbar() {
-        binding.includeMemoryToolbar.toolbarDetail.setNavigationOnClickListener {
+        binding.includeCategoryToolbar.toolbarDetail.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }
@@ -127,12 +127,12 @@ class CategoryFragment :
 
     private fun initMatesAdapter() {
         matesAdapter = MatesAdapter()
-        binding.rvMemoryMates.adapter = matesAdapter
+        binding.rvCategoryMates.adapter = matesAdapter
     }
 
     private fun initStaccatosAdapter() {
         staccatosAdapter = StaccatosAdapter(handler = this)
-        binding.rvMemoryStaccatos.adapter = staccatosAdapter
+        binding.rvCategoryStaccatos.adapter = staccatosAdapter
     }
 
     private fun showErrorToast() {
