@@ -157,7 +157,7 @@ class MemoryFragment :
     }
 
     companion object {
-        const val MEMORY_ID_KEY = "memoryId"
-        const val MEMORY_TITLE_KEY = "memoryTitle"
+        const val MEMORY_ID_KEY = "categoryId"
+        const val MEMORY_TITLE_KEY = "categoryTitle"
     }
 }
