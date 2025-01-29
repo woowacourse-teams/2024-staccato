@@ -32,7 +32,7 @@ import javax.inject.Inject
 private typealias ThumbnailUri = Uri
 
 @HiltViewModel
-class MemoryUpdateViewModel
+class CategoryUpdateViewModel
     @Inject
     constructor(
         private val categoryRepository: CategoryRepository,

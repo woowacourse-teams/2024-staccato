@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel" />
+            type="com.on.staccato.presentation.memoryupdate.viewmodel.CategoryUpdateViewModel" />
 
         <variable
             name="handler"

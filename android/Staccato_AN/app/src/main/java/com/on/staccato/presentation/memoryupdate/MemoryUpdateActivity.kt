@@ -16,7 +16,7 @@ import com.on.staccato.databinding.ActivityMemoryUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
-import com.on.staccato.presentation.memoryupdate.viewmodel.MemoryUpdateViewModel
+import com.on.staccato.presentation.memoryupdate.viewmodel.CategoryUpdateViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
@@ -29,7 +29,7 @@ class MemoryUpdateActivity :
     OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_update
     private val memoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_MEMORY_ID) }
-    private val viewModel: MemoryUpdateViewModel by viewModels()
+    private val viewModel: CategoryUpdateViewModel by viewModels()
 
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
