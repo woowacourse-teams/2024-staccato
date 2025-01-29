@@ -96,7 +96,7 @@ class MemoryUpdateViewModel
             }
         }
 
-        fun setMemoryPeriod(
+        fun setCategoryPeriod(
             startAt: Long,
             endAt: Long,
         ) {

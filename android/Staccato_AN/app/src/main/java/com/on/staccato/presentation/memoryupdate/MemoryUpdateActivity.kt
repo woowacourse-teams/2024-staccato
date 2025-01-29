@@ -101,7 +101,7 @@ class MemoryUpdateActivity :
         dateRangePicker.addOnPositiveButtonClickListener { selection ->
             val startDate: Long = selection.first
             val endDate: Long = selection.second
-            viewModel.setMemoryPeriod(startDate, endDate)
+            viewModel.setCategoryPeriod(startDate, endDate)
         }
     }
 
