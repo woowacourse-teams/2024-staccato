@@ -151,6 +151,6 @@ class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-        const val TAG = "MemorySelectionModalBottomSheet"
+        const val TAG = "VisitedAtSelectionModalBottomSheet"
     }
 }
