@@ -28,8 +28,8 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
         items.addAll(newItems)
     }
 
-    fun updateKeyMemory(selectedMemory: CategoryCandidate) {
-        keyCategory = selectedMemory
+    fun updateKeyMemory(selectedCategory: CategoryCandidate) {
+        keyCategory = selectedCategory
     }
 
     override fun onCreateView(
