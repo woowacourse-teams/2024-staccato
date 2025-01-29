@@ -89,7 +89,7 @@ class MemoryCreationViewModel
             _endDate.value = convertLongToLocalDate(endAt)
         }
 
-        fun createMemory() {
+        fun createCategory() {
             _isPosting.value = true
             viewModelScope.launch {
                 val memory: NewCategory = makeNewMemory()

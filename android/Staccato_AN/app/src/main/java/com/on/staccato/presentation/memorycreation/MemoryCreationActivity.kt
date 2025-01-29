@@ -52,7 +52,7 @@ class MemoryCreationActivity :
 
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        viewModel.createMemory()
+        viewModel.createCategory()
     }
 
     override fun onPhotoAttachClicked() {
@@ -141,7 +141,7 @@ class MemoryCreationActivity :
     }
 
     private fun reCreateMemory() {
-        viewModel.createMemory()
+        viewModel.createCategory()
     }
 
     private fun showExceptionSnackBar(
