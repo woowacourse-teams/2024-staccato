@@ -34,7 +34,7 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragment
+import com.on.staccato.presentation.staccatocreation.dialog.CategorySelectionFragment
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
@@ -56,7 +56,7 @@ class StaccatoCreationActivity :
     private val viewModel: StaccatoCreationViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
     private val memorySelectionFragment by lazy {
-        MemorySelectionFragment()
+        CategorySelectionFragment()
     }
     private val visitedAtSelectionFragment by lazy {
         VisitedAtSelectionFragment()
@@ -144,7 +144,7 @@ class StaccatoCreationActivity :
         if (!memorySelectionFragment.isAdded) {
             memorySelectionFragment.show(
                 fragmentManager,
-                MemorySelectionFragment.TAG,
+                CategorySelectionFragment.TAG,
             )
         }
     }

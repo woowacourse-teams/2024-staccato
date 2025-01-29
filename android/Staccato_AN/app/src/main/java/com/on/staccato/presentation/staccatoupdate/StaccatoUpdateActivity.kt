@@ -37,7 +37,7 @@ import com.on.staccato.presentation.staccatocreation.CurrentLocationHandler
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragment
+import com.on.staccato.presentation.staccatocreation.dialog.CategorySelectionFragment
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
@@ -59,7 +59,7 @@ class StaccatoUpdateActivity :
     private val viewModel: StaccatoUpdateViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
     private val memorySelectionFragment by lazy {
-        MemorySelectionFragment()
+        CategorySelectionFragment()
     }
     private val visitedAtSelectionFragment by lazy {
         VisitedAtSelectionFragment()
@@ -117,7 +117,7 @@ class StaccatoUpdateActivity :
         if (!memorySelectionFragment.isAdded) {
             memorySelectionFragment.show(
                 fragmentManager,
-                MemorySelectionFragment.TAG,
+                CategorySelectionFragment.TAG,
             )
         }
     }

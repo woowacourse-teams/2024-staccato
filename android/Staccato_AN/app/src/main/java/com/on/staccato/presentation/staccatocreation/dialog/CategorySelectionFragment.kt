@@ -11,7 +11,7 @@ import com.on.staccato.domain.model.CategoryCandidate
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MemorySelectionFragment : BottomSheetDialogFragment() {
+class CategorySelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentMemorySelectionBinding? = null
     private val binding get() = _binding!!
     private lateinit var handler: CategorySelectionHandler
