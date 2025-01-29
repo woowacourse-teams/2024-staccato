@@ -148,14 +148,14 @@ class MemoryUpdateActivity :
 
     private fun handleMemoryUpdateFail(error: CategoryUpdateError.CategoryUpdate) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(error.message) { reUpdateMemory() }
+        showExceptionSnackBar(error.message) { reupdateCategory() }
     }
 
     private fun reCreateThumbnailUrl(uri: Uri) {
         viewModel.createThumbnailUrl(this, uri)
     }
 
-    private fun reUpdateMemory() {
+    private fun reupdateCategory() {
         viewModel.updateCategory()
     }
 
