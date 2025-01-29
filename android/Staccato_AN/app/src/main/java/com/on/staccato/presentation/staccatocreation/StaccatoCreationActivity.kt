@@ -319,7 +319,7 @@ class StaccatoCreationActivity :
                 viewModel.initMemoryAndVisitedAt(memoryId, LocalDateTime.now())
             }
         }
-        viewModel.selectableMemories.observe(this) {
+        viewModel.selectableCategories.observe(this) {
             it?.let {
                 memorySelectionFragment.setItems(it.categoryCandidates)
             }
