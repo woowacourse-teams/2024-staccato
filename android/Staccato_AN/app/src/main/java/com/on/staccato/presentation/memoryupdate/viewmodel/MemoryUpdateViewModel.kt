@@ -80,7 +80,7 @@ class MemoryUpdateViewModel
                 val result = categoryRepository.getCategory(categoryId)
                 result
                     .onSuccess(::initializeMemory)
-                    .onServerError(::handleInitializeMemoryError)
+                    .onServerError(::handleInitializeCategoryError)
                     .onException(::handleInitializeCategoryException)
             }
         }
@@ -212,7 +212,7 @@ class MemoryUpdateViewModel
             }
         }
 
-        private fun handleInitializeMemoryError(
+        private fun handleInitializeCategoryError(
             status: Status,
             message: String,
         ) {
