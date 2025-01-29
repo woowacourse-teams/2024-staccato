@@ -28,7 +28,7 @@ class MemoryUpdateActivity :
     CategoryUpdateHandler,
     OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_update
-    private val categoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_MEMORY_ID) }
+    private val categoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID) }
     private val viewModel: CategoryUpdateViewModel by viewModels()
 
     private val photoAttachFragment = PhotoAttachFragment()
@@ -173,7 +173,7 @@ class MemoryUpdateActivity :
     }
 
     companion object {
-        private const val DEFAULT_MEMORY_ID = 0L
+        private const val DEFAULT_CATEGORY_ID = 0L
 
         fun startWithResultLauncher(
             categoryId: Long,
