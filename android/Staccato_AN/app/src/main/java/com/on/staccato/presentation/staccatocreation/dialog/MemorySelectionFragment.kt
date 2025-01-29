@@ -19,7 +19,7 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
     private val items = mutableListOf<CategoryCandidate>()
     private lateinit var keyCategory: CategoryCandidate
 
-    fun setOnMemorySelected(newHandler: CategorySelectionHandler) {
+    fun setOnCategorySelected(newHandler: CategorySelectionHandler) {
         handler = newHandler
     }
 

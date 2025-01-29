@@ -257,7 +257,7 @@ class StaccatoCreationActivity :
     }
 
     private fun initMemorySelectionFragment() {
-        memorySelectionFragment.setOnMemorySelected { selectedMemory ->
+        memorySelectionFragment.setOnCategorySelected { selectedMemory ->
             viewModel.selectMemory(selectedMemory)
         }
     }
