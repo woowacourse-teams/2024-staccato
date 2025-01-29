@@ -184,9 +184,9 @@ class StaccatoCreationViewModel
         }
 
         fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
-            val filteredMemories = categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: CategoryCandidates.emptyCategoryCandidates
-            _selectableCategories.value = filteredMemories
-            _selectedCategory.value = filteredMemories.findByIdOrFirst(selectedCategory.value?.categoryId)
+            val filteredCategories = categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: CategoryCandidates.emptyCategoryCandidates
+            _selectableCategories.value = filteredCategories
+            _selectedCategory.value = filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
         }
 
         private fun updateCategorySelectionBy(categoryId: Long) {
