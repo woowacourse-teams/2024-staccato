@@ -96,7 +96,7 @@ class MemoryCreationViewModel
                 val result: ResponseResult<CategoryCreationResponse> =
                     categoryRepository.createCategory(category)
                 result
-                    .onSuccess(::setCreatedMemoryId)
+                    .onSuccess(::setCreatedCategoryId)
                     .onServerError(::handleCreateServerError)
                     .onException(::handleCreateException)
             }
@@ -146,7 +146,7 @@ class MemoryCreationViewModel
             _isPhotoPosting.value = false
         }
 
-        private fun setCreatedMemoryId(categoryCreationResponse: CategoryCreationResponse) {
+        private fun setCreatedCategoryId(categoryCreationResponse: CategoryCreationResponse) {
             _createdCategoryId.value = categoryCreationResponse.categoryId
         }
 
