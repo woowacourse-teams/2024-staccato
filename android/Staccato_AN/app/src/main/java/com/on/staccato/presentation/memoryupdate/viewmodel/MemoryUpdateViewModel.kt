@@ -87,8 +87,8 @@ class MemoryUpdateViewModel
 
         fun updateMemory() {
             viewModelScope.launch {
-                val newMemory: NewCategory = makeNewCategory()
-                val result: ResponseResult<Unit> = categoryRepository.updateCategory(categoryId, newMemory)
+                val newCategory: NewCategory = makeNewCategory()
+                val result: ResponseResult<Unit> = categoryRepository.updateCategory(categoryId, newCategory)
                 result
                     .onSuccess { updateSuccessStatus() }
                     .onServerError(::handleUpdateError)
