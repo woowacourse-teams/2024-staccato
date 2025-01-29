@@ -40,7 +40,7 @@ class MemoryUpdateActivity :
         initBinding()
         navigateToCategory()
         fetchMemory()
-        updateMemoryPeriod()
+        updateCategoryPeriod()
         observeIsUpdateSuccess()
         showErrorToast()
         handleError()
@@ -97,7 +97,7 @@ class MemoryUpdateActivity :
         viewModel.fetchCategory(categoryId)
     }
 
-    private fun updateMemoryPeriod() {
+    private fun updateCategoryPeriod() {
         dateRangePicker.addOnPositiveButtonClickListener { selection ->
             val startDate: Long = selection.first
             val endDate: Long = selection.second
