@@ -116,8 +116,8 @@ class StaccatoCreationViewModel
             _selectedVisitedAt.value = visitedAt
         }
 
-        fun selectMemory(memory: CategoryCandidate) {
-            _selectedCategory.value = memory
+        fun selectMemory(category: CategoryCandidate) {
+            _selectedCategory.value = category
         }
 
         fun selectNewPlace(
