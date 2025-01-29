@@ -102,9 +102,9 @@ class MemoryCreationActivity :
     }
 
     private fun observeCreatedMemoryId() {
-        viewModel.createdCategoryId.observe(this) { memoryId ->
+        viewModel.createdCategoryId.observe(this) { categoryId ->
             val resultIntent = Intent()
-            resultIntent.putExtra(CATEGORY_ID_KEY, memoryId)
+            resultIntent.putExtra(CATEGORY_ID_KEY, categoryId)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
