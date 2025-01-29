@@ -77,7 +77,7 @@ class StaccatoCreationViewModelTest {
 
             // when
             val currentLocalDate = middleDateOf2024.atStartOfDay()
-            viewModel.initMemoryAndVisitedAt(0L, currentLocalDate)
+            viewModel.initCategoryAndVisitedAt(0L, currentLocalDate)
 
             // then
             val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
@@ -101,7 +101,7 @@ class StaccatoCreationViewModelTest {
 
             // when
             val currentVisitedAt = middleDateOf2024.atStartOfDay()
-            viewModel.initMemoryAndVisitedAt(TARGET_MEMORY_ID, currentVisitedAt)
+            viewModel.initCategoryAndVisitedAt(TARGET_MEMORY_ID, currentVisitedAt)
 
             // then
             val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
@@ -124,7 +124,7 @@ class StaccatoCreationViewModelTest {
             viewModel.fetchMemoryCandidates()
 
             val oldLocalDate = startDateOf2024.atStartOfDay()
-            viewModel.initMemoryAndVisitedAt(TARGET_MEMORY_ID, oldLocalDate)
+            viewModel.initCategoryAndVisitedAt(TARGET_MEMORY_ID, oldLocalDate)
 
             // when
             val newLocalDate = endDateOf2023.atStartOfDay()

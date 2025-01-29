@@ -166,7 +166,7 @@ class StaccatoCreationViewModel
             }
         }
 
-        fun initMemoryAndVisitedAt(
+        fun initCategoryAndVisitedAt(
             categoryId: Long,
             currentDateTime: LocalDateTime,
         ) {

@@ -316,7 +316,7 @@ class StaccatoCreationActivity :
                 if (memoryId == DEFAULT_CATEGORY_ID) {
                     visitedAtSelectionFragment.initCalendarByPeriod()
                 }
-                viewModel.initMemoryAndVisitedAt(memoryId, LocalDateTime.now())
+                viewModel.initCategoryAndVisitedAt(memoryId, LocalDateTime.now())
             }
         }
         viewModel.selectableCategories.observe(this) {
