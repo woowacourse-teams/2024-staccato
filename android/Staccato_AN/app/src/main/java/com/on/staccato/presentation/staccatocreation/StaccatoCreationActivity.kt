@@ -55,7 +55,7 @@ class StaccatoCreationActivity :
     override val layoutResourceId = R.layout.activity_staccato_creation
     private val viewModel: StaccatoCreationViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
-    private val memorySelectionFragment by lazy {
+    private val categorySelectionFragment by lazy {
         CategorySelectionFragment()
     }
     private val visitedAtSelectionFragment by lazy {
@@ -73,8 +73,8 @@ class StaccatoCreationActivity :
     private lateinit var photoAttachAdapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
 
-    private val memoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID) }
-    private val memoryTitle by lazy { intent.getStringExtra(CATEGORY_TITLE_KEY) ?: "" }
+    private val categoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID) }
+    private val categoryTitle by lazy { intent.getStringExtra(CATEGORY_TITLE_KEY) ?: "" }
 
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
@@ -141,8 +141,8 @@ class StaccatoCreationActivity :
     }
 
     override fun onCategorySelectionClicked() {
-        if (!memorySelectionFragment.isAdded) {
-            memorySelectionFragment.show(
+        if (!categorySelectionFragment.isAdded) {
+            categorySelectionFragment.show(
                 fragmentManager,
                 CategorySelectionFragment.TAG,
             )
@@ -257,7 +257,7 @@ class StaccatoCreationActivity :
     }
 
     private fun initCategorySelectionFragment() {
-        memorySelectionFragment.setOnCategorySelected { selectedMemory ->
+        categorySelectionFragment.setOnCategorySelected { selectedMemory ->
             viewModel.selectCategory(selectedMemory)
         }
     }
@@ -303,7 +303,7 @@ class StaccatoCreationActivity :
         viewModel.selectedVisitedAt.observe(this) {
             it?.let {
                 visitedAtSelectionFragment.updateSelectedVisitedAt(it)
-                if (memoryId == DEFAULT_CATEGORY_ID) {
+                if (categoryId == DEFAULT_CATEGORY_ID) {
                     viewModel.updateCategorySelectionBy(it)
                 }
             }
@@ -313,21 +313,21 @@ class StaccatoCreationActivity :
     private fun observeCategoryData() {
         viewModel.categoryCandidates.observe(this) {
             it?.let {
-                if (memoryId == DEFAULT_CATEGORY_ID) {
+                if (categoryId == DEFAULT_CATEGORY_ID) {
                     visitedAtSelectionFragment.initCalendarByPeriod()
                 }
-                viewModel.initCategoryAndVisitedAt(memoryId, LocalDateTime.now())
+                viewModel.initCategoryAndVisitedAt(categoryId, LocalDateTime.now())
             }
         }
         viewModel.selectableCategories.observe(this) {
             it?.let {
-                memorySelectionFragment.setItems(it.categoryCandidates)
+                categorySelectionFragment.setItems(it.categoryCandidates)
             }
         }
         viewModel.selectedCategory.observe(this) {
             it?.let {
-                memorySelectionFragment.updateKeyCategory(it)
-                if (memoryId != DEFAULT_CATEGORY_ID) {
+                categorySelectionFragment.updateKeyCategory(it)
+                if (categoryId != DEFAULT_CATEGORY_ID) {
                     visitedAtSelectionFragment.initCalendarByPeriod(
                         it.startAt,
                         it.endAt,
@@ -342,8 +342,8 @@ class StaccatoCreationActivity :
             val resultIntent =
                 Intent()
                     .putExtra(STACCATO_ID_KEY, createdStaccatoId)
-                    .putExtra(CATEGORY_ID_KEY, memoryId)
-                    .putExtra(CATEGORY_TITLE_KEY, memoryTitle)
+                    .putExtra(CATEGORY_ID_KEY, categoryId)
+                    .putExtra(CATEGORY_TITLE_KEY, categoryTitle)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
