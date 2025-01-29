@@ -50,7 +50,7 @@ class CategorySelectionFragment : BottomSheetDialogFragment() {
     }
 
     private fun initNumberPicker() {
-        binding.pickerMemorySelection.apply {
+        binding.pickerCategorySelection.apply {
             displayedValues = null
             minValue = 0
             maxValue = (items.size - 1).coerceAtLeast(0)
@@ -68,8 +68,8 @@ class CategorySelectionFragment : BottomSheetDialogFragment() {
     }
 
     private fun initConfirmButton() {
-        binding.btnMemorySelectionConfirm.setOnClickListener {
-            handler.onConfirmClicked(items[binding.pickerMemorySelection.value])
+        binding.btnCategorySelectionConfirm.setOnClickListener {
+            handler.onConfirmClicked(items[binding.pickerCategorySelection.value])
             dismiss()
         }
     }

@@ -13,14 +13,14 @@
         android:padding="24dp">
 
         <TextView
-            android:id="@+id/tv_memory_selection_title"
+            android:id="@+id/tv_category_selection_title"
             style="@style/SubTitleStyle"
             android:text="@string/staccato_creation_memory_selection"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <NumberPicker
-            android:id="@+id/picker_memory_selection"
+            android:id="@+id/picker_category_selection"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
@@ -29,15 +29,15 @@
             android:theme="@style/ThemeOverlay.NumberPicker"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title" />
+            app:layout_constraintTop_toBottomOf="@id/tv_category_selection_title" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_memory_selection_confirm"
+            android:id="@+id/btn_category_selection_confirm"
             style="@style/ButtonStyle.Confirm"
             android:text="@string/all_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/picker_memory_selection" />
+            app:layout_constraintTop_toBottomOf="@id/picker_category_selection" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
