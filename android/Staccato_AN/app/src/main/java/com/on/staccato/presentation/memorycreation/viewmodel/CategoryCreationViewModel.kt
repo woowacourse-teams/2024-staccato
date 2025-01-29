@@ -20,7 +20,7 @@ import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
-import com.on.staccato.presentation.memorycreation.MemoryCreationError
+import com.on.staccato.presentation.memorycreation.CategoryCreationError
 import com.on.staccato.presentation.memorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -63,8 +63,8 @@ class CategoryCreationViewModel
         private val _errorMessage = MutableLiveData<String>()
         val errorMessage: LiveData<String> get() = _errorMessage
 
-        private val _error = MutableSingleLiveData<MemoryCreationError>()
-        val error: SingleLiveData<MemoryCreationError> get() = _error
+        private val _error = MutableSingleLiveData<CategoryCreationError>()
+        val error: SingleLiveData<CategoryCreationError> get() = _error
 
         private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
 
@@ -180,7 +180,7 @@ class CategoryCreationViewModel
             uri: Uri,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(MemoryCreationError.Thumbnail(message, uri))
+                _error.setValue(CategoryCreationError.Thumbnail(message, uri))
             }
         }
 
@@ -197,7 +197,7 @@ class CategoryCreationViewModel
             message: String,
         ) {
             _isPosting.value = false
-            _error.setValue(MemoryCreationError.CategoryCreation(message))
+            _error.setValue(CategoryCreationError.CategoryCreation(message))
         }
 
         companion object {
