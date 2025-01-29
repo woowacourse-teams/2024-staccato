@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memorycreation
+package com.on.staccato.presentation.categorycreation
 
 interface CategoryCreationHandler {
     fun onPeriodSelectionClicked()

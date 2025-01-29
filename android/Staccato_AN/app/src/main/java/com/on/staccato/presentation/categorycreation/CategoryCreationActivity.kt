@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memorycreation
+package com.on.staccato.presentation.categorycreation
 
 import android.content.Context
 import android.content.Intent
@@ -16,7 +16,7 @@ import com.on.staccato.databinding.ActivityCategoryCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
-import com.on.staccato.presentation.memorycreation.viewmodel.CategoryCreationViewModel
+import com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast

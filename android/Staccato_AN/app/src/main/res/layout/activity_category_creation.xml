@@ -10,18 +10,18 @@
 
         <variable
             name="viewModel"
-            type="com.on.staccato.presentation.memorycreation.viewmodel.CategoryCreationViewModel" />
+            type="com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel" />
 
         <variable
             name="handler"
-            type="com.on.staccato.presentation.memorycreation.CategoryCreationHandler" />
+            type="com.on.staccato.presentation.categorycreation.CategoryCreationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".presentation.memorycreation.CategoryCreationActivity">
+        tools:context=".presentation.categorycreation.CategoryCreationActivity">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_category_creation"

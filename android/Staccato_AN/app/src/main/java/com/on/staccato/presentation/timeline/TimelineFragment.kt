@@ -15,7 +15,7 @@ import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
-import com.on.staccato.presentation.memorycreation.CategoryCreationActivity
+import com.on.staccato.presentation.categorycreation.CategoryCreationActivity
 import com.on.staccato.presentation.timeline.adapter.TimelineAdapter
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel

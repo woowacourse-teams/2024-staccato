@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memorycreation.viewmodel
+package com.on.staccato.presentation.categorycreation.viewmodel
 
 import android.content.Context
 import android.net.Uri
@@ -19,9 +19,9 @@ import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLocalDate
-import com.on.staccato.presentation.memorycreation.CategoryCreationError
-import com.on.staccato.presentation.memorycreation.ThumbnailUiModel
+import com.on.staccato.presentation.categorycreation.DateConverter.convertLongToLocalDate
+import com.on.staccato.presentation.categorycreation.CategoryCreationError
+import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
