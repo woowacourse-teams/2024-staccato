@@ -8,7 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
-import com.on.staccato.databinding.FragmentMemoryBinding
+import com.on.staccato.databinding.FragmentCategoryBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.DialogHandler
@@ -27,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CategoryFragment :
-    BindingFragment<FragmentMemoryBinding>(R.layout.fragment_memory),
+    BindingFragment<FragmentCategoryBinding>(R.layout.fragment_category),
     ToolbarHandler,
     CategoryHandler,
     DialogHandler {
