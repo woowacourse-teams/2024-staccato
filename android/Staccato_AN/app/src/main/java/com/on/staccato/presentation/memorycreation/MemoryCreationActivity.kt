@@ -38,7 +38,7 @@ class MemoryCreationActivity :
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
         navigateToMap()
-        updateMemoryPeriod()
+        updateCategoryPeriod()
         observeCreatedCategoryId()
         showErrorToast()
         handleError()
@@ -93,7 +93,7 @@ class MemoryCreationActivity :
         }
     }
 
-    private fun updateMemoryPeriod() {
+    private fun updateCategoryPeriod() {
         dateRangePicker.addOnPositiveButtonClickListener { selection ->
             val startDate: Long = selection.first
             val endDate: Long = selection.second
