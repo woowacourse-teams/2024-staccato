@@ -171,7 +171,7 @@ class StaccatoCreationViewModel
             currentDateTime: LocalDateTime,
         ) {
             if (memoryId == DEFAULT_CATEGORY_ID) {
-                updateMemorySelectionBy(currentDateTime)
+                updateCategorySelectionBy(currentDateTime)
                 setCurrentDateTimeAs(currentDateTime)
             } else {
                 updateCategorySelectionBy(memoryId)
@@ -183,7 +183,7 @@ class StaccatoCreationViewModel
             _selectedVisitedAt.value = visitedAt
         }
 
-        fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
+        fun updateCategorySelectionBy(visitedAt: LocalDateTime) {
             val filteredCategories = categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: CategoryCandidates.emptyCategoryCandidates
             _selectableCategories.value = filteredCategories
             _selectedCategory.value = filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)

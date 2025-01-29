@@ -128,7 +128,7 @@ class StaccatoCreationViewModelTest {
 
             // when
             val newLocalDate = endDateOf2023.atStartOfDay()
-            viewModel.updateMemorySelectionBy(newLocalDate)
+            viewModel.updateCategorySelectionBy(newLocalDate)
 
             // then
             val expectedSelectableMemories = CategoryCandidates.from(memoryCandidateWithId1)

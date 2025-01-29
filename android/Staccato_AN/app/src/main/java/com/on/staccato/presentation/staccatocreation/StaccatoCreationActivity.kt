@@ -304,7 +304,7 @@ class StaccatoCreationActivity :
             it?.let {
                 visitedAtSelectionFragment.updateSelectedVisitedAt(it)
                 if (memoryId == DEFAULT_CATEGORY_ID) {
-                    viewModel.updateMemorySelectionBy(it)
+                    viewModel.updateCategorySelectionBy(it)
                 }
             }
         }
