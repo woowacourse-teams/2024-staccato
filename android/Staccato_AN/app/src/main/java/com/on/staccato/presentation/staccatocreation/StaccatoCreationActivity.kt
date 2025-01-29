@@ -429,10 +429,10 @@ class StaccatoCreationActivity :
 
     private fun handleStaccatoCreateFail(error: StaccatoCreationError.StaccatoCreation) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(error.message) { reCreateStaccato() }
+        showExceptionSnackBar(error.message) { recreateStaccato() }
     }
 
-    private fun reCreateStaccato() {
+    private fun recreateStaccato() {
         viewModel.createStaccato()
     }
 
