@@ -81,7 +81,7 @@ class MemoryCreationViewModel
             _thumbnail.value = thumbnail.value?.clear()
         }
 
-        fun setMemoryPeriod(
+        fun setCategoryPeriod(
             startAt: Long,
             endAt: Long,
         ) {
