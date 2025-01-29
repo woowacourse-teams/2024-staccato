@@ -416,13 +416,13 @@ class StaccatoCreationActivity :
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
-                is StaccatoCreationError.CategoryCandidates -> handleMemoryCandidatesFail(error)
+                is StaccatoCreationError.CategoryCandidates -> handleCategoryCandidatesFail(error)
                 is StaccatoCreationError.StaccatoCreation -> handleStaccatoCreateFail(error)
             }
         }
     }
 
-    private fun handleMemoryCandidatesFail(error: StaccatoCreationError.CategoryCandidates) {
+    private fun handleCategoryCandidatesFail(error: StaccatoCreationError.CategoryCandidates) {
         finish()
         showToast(error.message)
     }
