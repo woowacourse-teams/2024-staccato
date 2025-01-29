@@ -67,8 +67,8 @@ class MainActivity :
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
 
-    val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
-    val categoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
+    val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
+    val categoryUpdateLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
     val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
     val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
 
@@ -326,7 +326,7 @@ class MainActivity :
         navController = navHostFragment.navController
     }
 
-    private fun handleMemoryResult() =
+    private fun handleCategoryResult() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
