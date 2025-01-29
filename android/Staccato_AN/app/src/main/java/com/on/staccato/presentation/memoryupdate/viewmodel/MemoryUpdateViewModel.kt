@@ -81,7 +81,7 @@ class MemoryUpdateViewModel
                 result
                     .onSuccess(::initializeMemory)
                     .onServerError(::handleInitializeMemoryError)
-                    .onException(::handleInitializeMemoryException)
+                    .onException(::handleInitializeCategoryException)
             }
         }
 
@@ -219,7 +219,7 @@ class MemoryUpdateViewModel
             _errorMessage.value = message
         }
 
-        private fun handleInitializeMemoryException(
+        private fun handleInitializeCategoryException(
             e: Throwable,
             message: String,
         ) {
