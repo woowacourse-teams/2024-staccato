@@ -35,7 +35,7 @@ private typealias ThumbnailUri = Uri
 class MemoryCreationViewModel
     @Inject
     constructor(
-        private val memoryRepository: CategoryRepository,
+        private val categoryRepository: CategoryRepository,
         private val imageRepository: ImageRepository,
     ) : ViewModel() {
         val title = ObservableField<String>()
@@ -94,7 +94,7 @@ class MemoryCreationViewModel
             viewModelScope.launch {
                 val memory: NewCategory = makeNewMemory()
                 val result: ResponseResult<CategoryCreationResponse> =
-                    memoryRepository.createCategory(memory)
+                    categoryRepository.createCategory(memory)
                 result
                     .onSuccess(::setCreatedMemoryId)
                     .onServerError(::handleCreateServerError)
