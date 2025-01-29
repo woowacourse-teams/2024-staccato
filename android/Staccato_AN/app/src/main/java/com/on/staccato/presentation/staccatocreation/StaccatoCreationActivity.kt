@@ -450,7 +450,7 @@ class StaccatoCreationActivity :
     }
 
     companion object {
-        const val MEMORY_TITLE_KEY = "memoryTitle"
+        const val MEMORY_TITLE_KEY = "categoryTitle"
         const val DEFAULT_CATEGORY_ID = 0L
         private const val DEFAULT_CATEGORY_TITLE = ""
 
