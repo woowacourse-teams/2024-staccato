@@ -21,7 +21,7 @@ import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.categorycreation.DateConverter.convertLongToLocalDate
 import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
-import com.on.staccato.presentation.memoryupdate.MemoryUpdateError
+import com.on.staccato.presentation.memoryupdate.CategoryUpdateError
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -69,8 +69,8 @@ class CategoryUpdateViewModel
         private val _errorMessage = MutableLiveData<String>()
         val errorMessage: LiveData<String> get() = _errorMessage
 
-        private val _error = MutableSingleLiveData<MemoryUpdateError>()
-        val error: SingleLiveData<MemoryUpdateError> get() = _error
+        private val _error = MutableSingleLiveData<CategoryUpdateError>()
+        val error: SingleLiveData<CategoryUpdateError> get() = _error
 
         private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
 
@@ -208,7 +208,7 @@ class CategoryUpdateViewModel
             uri: Uri,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(MemoryUpdateError.Thumbnail(message, uri))
+                _error.setValue(CategoryUpdateError.Thumbnail(message, uri))
             }
         }
 
@@ -223,7 +223,7 @@ class CategoryUpdateViewModel
             e: Throwable,
             message: String,
         ) {
-            _error.setValue(MemoryUpdateError.MemoryInitialization(message))
+            _error.setValue(CategoryUpdateError.CategoryInitialization(message))
         }
 
         private fun handleUpdateError(
@@ -239,7 +239,7 @@ class CategoryUpdateViewModel
             message: String,
         ) {
             _isPosting.value = false
-            _error.setValue(MemoryUpdateError.MemoryUpdate(message))
+            _error.setValue(CategoryUpdateError.CategoryUpdate(message))
         }
 
         companion object {

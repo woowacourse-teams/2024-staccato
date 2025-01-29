@@ -130,23 +130,23 @@ class MemoryUpdateActivity :
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
-                is MemoryUpdateError.MemoryInitialization -> handleInitializeFail(error)
-                is MemoryUpdateError.Thumbnail -> handleCreatePhotoUrlFail(error)
-                is MemoryUpdateError.MemoryUpdate -> handleMemoryUpdateFail(error)
+                is CategoryUpdateError.CategoryInitialization -> handleInitializeFail(error)
+                is CategoryUpdateError.Thumbnail -> handleCreatePhotoUrlFail(error)
+                is CategoryUpdateError.CategoryUpdate -> handleMemoryUpdateFail(error)
             }
         }
     }
 
-    private fun handleInitializeFail(error: MemoryUpdateError.MemoryInitialization) {
+    private fun handleInitializeFail(error: CategoryUpdateError.CategoryInitialization) {
         finish()
         showToast(error.message)
     }
 
-    private fun handleCreatePhotoUrlFail(error: MemoryUpdateError.Thumbnail) {
+    private fun handleCreatePhotoUrlFail(error: CategoryUpdateError.Thumbnail) {
         showExceptionSnackBar(error.message) { reCreateThumbnailUrl(error.uri) }
     }
 
-    private fun handleMemoryUpdateFail(error: MemoryUpdateError.MemoryUpdate) {
+    private fun handleMemoryUpdateFail(error: CategoryUpdateError.CategoryUpdate) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
         showExceptionSnackBar(error.message) { reUpdateMemory() }
     }
