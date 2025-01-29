@@ -457,12 +457,12 @@ class StaccatoCreationActivity :
         fun startWithResultLauncher(
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
-            memoryId: Long = DEFAULT_CATEGORY_ID,
-            memoryTitle: String = DEFAULT_CATEGORY_TITLE,
+            categoryId: Long = DEFAULT_CATEGORY_ID,
+            categoryTitle: String = DEFAULT_CATEGORY_TITLE,
         ) {
             Intent(context, StaccatoCreationActivity::class.java).apply {
-                putExtra(CATEGORY_ID_KEY, memoryId)
-                putExtra(CATEGORY_TITLE_KEY, memoryTitle)
+                putExtra(CATEGORY_ID_KEY, categoryId)
+                putExtra(CATEGORY_TITLE_KEY, categoryTitle)
                 activityLauncher.launch(this)
             }
         }
