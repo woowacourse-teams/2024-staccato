@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
-import com.on.staccato.databinding.ActivityMemoryUpdateBinding
+import com.on.staccato.databinding.ActivityCategoryUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
@@ -24,10 +24,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CategoryUpdateActivity :
-    BindingActivity<ActivityMemoryUpdateBinding>(),
+    BindingActivity<ActivityCategoryUpdateBinding>(),
     CategoryUpdateHandler,
     OnUrisSelectedListener {
-    override val layoutResourceId = R.layout.activity_memory_update
+    override val layoutResourceId = R.layout.activity_category_update
     private val categoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID) }
     private val viewModel: CategoryUpdateViewModel by viewModels()
 
