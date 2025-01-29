@@ -75,7 +75,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".presentation.memoryupdate.MemoryUpdateActivity"
+            android:name=".presentation.memoryupdate.CategoryUpdateActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 

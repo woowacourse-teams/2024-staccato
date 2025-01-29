@@ -18,7 +18,7 @@ import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.category.adapter.MatesAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
-import com.on.staccato.presentation.memoryupdate.MemoryUpdateActivity
+import com.on.staccato.presentation.memoryupdate.CategoryUpdateActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showSnackBarWithAction
@@ -58,7 +58,7 @@ class CategoryFragment :
 
     override fun onUpdateClicked() {
         val categoryUpdateLauncher = (activity as MainActivity).categoryUpdateLauncher
-        MemoryUpdateActivity.startWithResultLauncher(
+        CategoryUpdateActivity.startWithResultLauncher(
             categoryId,
             requireActivity(),
             categoryUpdateLauncher,

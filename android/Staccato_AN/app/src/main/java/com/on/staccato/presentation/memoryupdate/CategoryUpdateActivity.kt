@@ -23,7 +23,7 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MemoryUpdateActivity :
+class CategoryUpdateActivity :
     BindingActivity<ActivityMemoryUpdateBinding>(),
     CategoryUpdateHandler,
     OnUrisSelectedListener {
@@ -180,7 +180,7 @@ class MemoryUpdateActivity :
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
-            Intent(context, MemoryUpdateActivity::class.java).apply {
+            Intent(context, CategoryUpdateActivity::class.java).apply {
                 putExtra(CATEGORY_ID_KEY, categoryId)
                 activityLauncher.launch(this)
             }
