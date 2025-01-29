@@ -79,7 +79,7 @@ class MemoryUpdateViewModel
             viewModelScope.launch {
                 val result = categoryRepository.getCategory(categoryId)
                 result
-                    .onSuccess(::initializeMemory)
+                    .onSuccess(::initializeCategory)
                     .onServerError(::handleInitializeCategoryError)
                     .onException(::handleInitializeCategoryException)
             }
@@ -117,7 +117,7 @@ class MemoryUpdateViewModel
             _thumbnail.value = thumbnail.value?.clear()
         }
 
-        private fun initializeMemory(category: Category) {
+        private fun initializeCategory(category: Category) {
             _thumbnail.value = _thumbnail.value?.updateUrl(category.categoryThumbnailUrl)
             title.set(category.categoryTitle)
             description.set(category.description)
