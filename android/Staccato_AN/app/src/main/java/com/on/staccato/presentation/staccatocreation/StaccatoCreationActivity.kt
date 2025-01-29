@@ -91,7 +91,7 @@ class StaccatoCreationActivity :
         initAdapter()
         initItemTouchHelper()
         initToolbar()
-        initMemorySelectionFragment()
+        initCategorySelectionFragment()
         initVisitedAtSelectionFragment()
         observeViewModelData()
         initGooglePlaceSearch()
@@ -256,7 +256,7 @@ class StaccatoCreationActivity :
         }
     }
 
-    private fun initMemorySelectionFragment() {
+    private fun initCategorySelectionFragment() {
         memorySelectionFragment.setOnCategorySelected { selectedMemory ->
             viewModel.selectCategory(selectedMemory)
         }
