@@ -88,7 +88,7 @@ class CategoryCreationActivity :
     }
 
     private fun navigateToMap() {
-        binding.toolbarMemoryCreation.setNavigationOnClickListener {
+        binding.toolbarCategoryCreation.setNavigationOnClickListener {
             finish()
         }
     }
