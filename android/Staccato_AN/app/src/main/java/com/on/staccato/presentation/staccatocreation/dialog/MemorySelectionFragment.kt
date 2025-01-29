@@ -80,6 +80,6 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-        const val TAG = "MemorySelectionModalBottomSheet"
+        const val TAG = "CategorySelectionModalBottomSheet"
     }
 }
