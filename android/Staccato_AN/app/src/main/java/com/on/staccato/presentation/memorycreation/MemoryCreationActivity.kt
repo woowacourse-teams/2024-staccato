@@ -133,14 +133,14 @@ class MemoryCreationActivity :
 
     private fun handleCreateException(error: CategoryCreationError.CategoryCreation) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(error.message) { reCreateMemory() }
+        showExceptionSnackBar(error.message) { recreateCategory() }
     }
 
     private fun reCreateThumbnailUrl(uri: Uri) {
         viewModel.createThumbnailUrl(this, uri)
     }
 
-    private fun reCreateMemory() {
+    private fun recreateCategory() {
         viewModel.createCategory()
     }
 
