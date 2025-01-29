@@ -289,7 +289,7 @@ class StaccatoCreationViewModel
             e: Throwable,
             message: String,
         ) {
-            _error.setValue(StaccatoCreationError.MemoryCandidates(message))
+            _error.setValue(StaccatoCreationError.CategoryCandidates(message))
         }
 
         private fun handleCreateException(
