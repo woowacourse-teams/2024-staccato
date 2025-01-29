@@ -35,7 +35,7 @@ private typealias ThumbnailUri = Uri
 class MemoryUpdateViewModel
     @Inject
     constructor(
-        private val memoryRepository: CategoryRepository,
+        private val categoryRepository: CategoryRepository,
         private val imageRepository: ImageRepository,
     ) : ViewModel() {
         private val _memory = MutableLiveData<NewCategory>()
@@ -77,7 +77,7 @@ class MemoryUpdateViewModel
         fun fetchMemory(id: Long) {
             memoryId = id
             viewModelScope.launch {
-                val result = memoryRepository.getCategory(memoryId)
+                val result = categoryRepository.getCategory(memoryId)
                 result
                     .onSuccess(::initializeMemory)
                     .onServerError(::handleInitializeMemoryError)
@@ -88,7 +88,7 @@ class MemoryUpdateViewModel
         fun updateMemory() {
             viewModelScope.launch {
                 val newMemory: NewCategory = makeNewMemory()
-                val result: ResponseResult<Unit> = memoryRepository.updateCategory(memoryId, newMemory)
+                val result: ResponseResult<Unit> = categoryRepository.updateCategory(memoryId, newMemory)
                 result
                     .onSuccess { updateSuccessStatus() }
                     .onServerError(::handleUpdateError)
