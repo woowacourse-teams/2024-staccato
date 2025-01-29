@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memoryupdate
+package com.on.staccato.presentation.categoryupdate
 
 import android.net.Uri
 

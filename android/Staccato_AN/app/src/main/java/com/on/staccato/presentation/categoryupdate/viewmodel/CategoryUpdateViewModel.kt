@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memoryupdate.viewmodel
+package com.on.staccato.presentation.categoryupdate.viewmodel
 
 import android.content.Context
 import android.net.Uri
@@ -21,7 +21,7 @@ import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.categorycreation.DateConverter.convertLongToLocalDate
 import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
-import com.on.staccato.presentation.memoryupdate.CategoryUpdateError
+import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
