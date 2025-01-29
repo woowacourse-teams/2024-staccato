@@ -54,7 +54,7 @@ class MemoryUpdateActivity :
 
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        viewModel.updateMemory()
+        viewModel.updateCategory()
     }
 
     override fun onPhotoAttachClicked() {
@@ -156,7 +156,7 @@ class MemoryUpdateActivity :
     }
 
     private fun reUpdateMemory() {
-        viewModel.updateMemory()
+        viewModel.updateCategory()
     }
 
     private fun showExceptionSnackBar(

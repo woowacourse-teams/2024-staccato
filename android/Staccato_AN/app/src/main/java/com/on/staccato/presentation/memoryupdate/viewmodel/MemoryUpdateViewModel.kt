@@ -85,7 +85,7 @@ class MemoryUpdateViewModel
             }
         }
 
-        fun updateMemory() {
+        fun updateCategory() {
             viewModelScope.launch {
                 val newCategory: NewCategory = makeNewCategory()
                 val result: ResponseResult<Unit> = categoryRepository.updateCategory(categoryId, newCategory)
