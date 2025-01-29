@@ -74,7 +74,7 @@ class StaccatoCreationActivity :
     private lateinit var itemTouchHelper: ItemTouchHelper
 
     private val memoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID) }
-    private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
+    private val memoryTitle by lazy { intent.getStringExtra(CATEGORY_TITLE_KEY) ?: "" }
 
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
@@ -343,7 +343,7 @@ class StaccatoCreationActivity :
                 Intent()
                     .putExtra(STACCATO_ID_KEY, createdStaccatoId)
                     .putExtra(CATEGORY_ID_KEY, memoryId)
-                    .putExtra(MEMORY_TITLE_KEY, memoryTitle)
+                    .putExtra(CATEGORY_TITLE_KEY, memoryTitle)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -450,7 +450,7 @@ class StaccatoCreationActivity :
     }
 
     companion object {
-        const val MEMORY_TITLE_KEY = "categoryTitle"
+        const val CATEGORY_TITLE_KEY = "categoryTitle"
         const val DEFAULT_CATEGORY_ID = 0L
         private const val DEFAULT_CATEGORY_TITLE = ""
 
@@ -462,7 +462,7 @@ class StaccatoCreationActivity :
         ) {
             Intent(context, StaccatoCreationActivity::class.java).apply {
                 putExtra(CATEGORY_ID_KEY, memoryId)
-                putExtra(MEMORY_TITLE_KEY, memoryTitle)
+                putExtra(CATEGORY_TITLE_KEY, memoryTitle)
                 activityLauncher.launch(this)
             }
         }
