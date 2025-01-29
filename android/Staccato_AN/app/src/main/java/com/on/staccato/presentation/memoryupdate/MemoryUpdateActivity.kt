@@ -132,7 +132,7 @@ class MemoryUpdateActivity :
             when (error) {
                 is CategoryUpdateError.CategoryInitialization -> handleInitializeFail(error)
                 is CategoryUpdateError.Thumbnail -> handleCreatePhotoUrlFail(error)
-                is CategoryUpdateError.CategoryUpdate -> handleMemoryUpdateFail(error)
+                is CategoryUpdateError.CategoryUpdate -> handleCategoryUpdateFail(error)
             }
         }
     }
@@ -146,7 +146,7 @@ class MemoryUpdateActivity :
         showExceptionSnackBar(error.message) { recreateThumbnailUrl(error.uri) }
     }
 
-    private fun handleMemoryUpdateFail(error: CategoryUpdateError.CategoryUpdate) {
+    private fun handleCategoryUpdateFail(error: CategoryUpdateError.CategoryUpdate) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
         showExceptionSnackBar(error.message) { reupdateCategory() }
     }
