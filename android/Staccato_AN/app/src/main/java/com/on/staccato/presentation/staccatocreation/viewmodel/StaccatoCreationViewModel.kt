@@ -174,7 +174,7 @@ class StaccatoCreationViewModel
                 updateMemorySelectionBy(currentDateTime)
                 setCurrentDateTimeAs(currentDateTime)
             } else {
-                updateMemorySelectionBy(memoryId)
+                updateCategorySelectionBy(memoryId)
                 setClosestDateTimeAs(currentDateTime)
             }
         }
@@ -189,7 +189,7 @@ class StaccatoCreationViewModel
             _selectedCategory.value = filteredMemories.findByIdOrFirst(selectedCategory.value?.categoryId)
         }
 
-        private fun updateMemorySelectionBy(categoryId: Long) {
+        private fun updateCategorySelectionBy(categoryId: Long) {
             val selectedCategory = categoryCandidates.value?.findBy(categoryId) ?: throw IllegalArgumentException()
             _selectableCategories.value = CategoryCandidates.from(selectedCategory)
             _selectedCategory.value = selectedCategory
