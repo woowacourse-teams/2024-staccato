@@ -155,7 +155,7 @@ class StaccatoCreationViewModel
             _isCurrentLocationLoading.postValue(newValue)
         }
 
-        fun fetchMemoryCandidates() {
+        fun fetchCategoryCandidates() {
             viewModelScope.launch {
                 timelineRepository.getCategoryCandidates()
                     .onSuccess {

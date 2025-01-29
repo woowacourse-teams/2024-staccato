@@ -84,7 +84,7 @@ class StaccatoCreationActivity :
     private var currentSnackBar: Snackbar? = null
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        viewModel.fetchMemoryCandidates()
+        viewModel.fetchCategoryCandidates()
         setupPermissionRequestLauncher()
         setupFusedLocationProviderClient()
         initBinding()
