@@ -57,7 +57,7 @@ class CategoryFragment :
     }
 
     override fun onUpdateClicked() {
-        val categoryUpdateLauncher = (activity as MainActivity).memoryUpdateLauncher
+        val categoryUpdateLauncher = (activity as MainActivity).categoryUpdateLauncher
         MemoryUpdateActivity.startWithResultLauncher(
             categoryId,
             requireActivity(),
