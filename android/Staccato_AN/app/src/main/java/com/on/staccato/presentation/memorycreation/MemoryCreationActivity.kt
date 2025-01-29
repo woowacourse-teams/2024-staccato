@@ -102,7 +102,7 @@ class MemoryCreationActivity :
     }
 
     private fun observeCreatedMemoryId() {
-        viewModel.createdMemoryId.observe(this) { memoryId ->
+        viewModel.createdCategoryId.observe(this) { memoryId ->
             val resultIntent = Intent()
             resultIntent.putExtra(CATEGORY_ID_KEY, memoryId)
             setResult(RESULT_OK, resultIntent)
