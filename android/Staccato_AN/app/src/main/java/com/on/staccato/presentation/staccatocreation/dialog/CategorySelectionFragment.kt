@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.on.staccato.databinding.FragmentMemorySelectionBinding
+import com.on.staccato.databinding.FragmentCategorySelectionBinding
 import com.on.staccato.domain.model.CategoryCandidate
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CategorySelectionFragment : BottomSheetDialogFragment() {
-    private var _binding: FragmentMemorySelectionBinding? = null
+    private var _binding: FragmentCategorySelectionBinding? = null
     private val binding get() = _binding!!
     private lateinit var handler: CategorySelectionHandler
 
@@ -37,7 +37,7 @@ class CategorySelectionFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentMemorySelectionBinding.inflate(inflater, container, false)
+        _binding = FragmentCategorySelectionBinding.inflate(inflater, container, false)
         return binding.root
     }
 
