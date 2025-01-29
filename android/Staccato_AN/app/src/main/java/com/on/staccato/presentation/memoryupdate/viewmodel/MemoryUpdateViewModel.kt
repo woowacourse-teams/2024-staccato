@@ -64,7 +64,7 @@ class MemoryUpdateViewModel
 
         val isPeriodActive = MutableLiveData<Boolean>()
 
-        private var memoryId: Long = 0L
+        private var categoryId: Long = 0L
 
         private val _errorMessage = MutableLiveData<String>()
         val errorMessage: LiveData<String> get() = _errorMessage
@@ -75,9 +75,9 @@ class MemoryUpdateViewModel
         private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
 
         fun fetchMemory(id: Long) {
-            memoryId = id
+            categoryId = id
             viewModelScope.launch {
-                val result = categoryRepository.getCategory(memoryId)
+                val result = categoryRepository.getCategory(categoryId)
                 result
                     .onSuccess(::initializeMemory)
                     .onServerError(::handleInitializeMemoryError)
@@ -88,7 +88,7 @@ class MemoryUpdateViewModel
         fun updateMemory() {
             viewModelScope.launch {
                 val newMemory: NewCategory = makeNewMemory()
-                val result: ResponseResult<Unit> = categoryRepository.updateCategory(memoryId, newMemory)
+                val result: ResponseResult<Unit> = categoryRepository.updateCategory(categoryId, newMemory)
                 result
                     .onSuccess { updateSuccessStatus() }
                     .onServerError(::handleUpdateError)
