@@ -92,9 +92,9 @@ class MemoryCreationViewModel
         fun createCategory() {
             _isPosting.value = true
             viewModelScope.launch {
-                val memory: NewCategory = makeNewMemory()
+                val category: NewCategory = makeNewMemory()
                 val result: ResponseResult<CategoryCreationResponse> =
-                    categoryRepository.createCategory(memory)
+                    categoryRepository.createCategory(category)
                 result
                     .onSuccess(::setCreatedMemoryId)
                     .onServerError(::handleCreateServerError)
