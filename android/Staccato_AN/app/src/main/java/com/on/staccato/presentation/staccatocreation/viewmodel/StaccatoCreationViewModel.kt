@@ -161,7 +161,7 @@ class StaccatoCreationViewModel
                     .onSuccess {
                         _categoryCandidates.value = it
                     }
-                    .onException(::handleMemoryCandidatesException)
+                    .onException(::handleCategoryCandidatesException)
                     .onServerError(::handleServerError)
             }
         }
@@ -285,7 +285,7 @@ class StaccatoCreationViewModel
             _warningMessage.postValue(errorMessage)
         }
 
-        private fun handleMemoryCandidatesException(
+        private fun handleCategoryCandidatesException(
             e: Throwable,
             message: String,
         ) {
