@@ -4,8 +4,8 @@ import java.time.LocalDateTime
 
 data class StaccatoDetailUiModel(
     val id: Long,
-    val memoryId: Long,
-    val memoryTitle: String,
+    val categoryId: Long,
+    val categoryTitle: String,
     val staccatoTitle: String,
     val placeName: String,
     val latitude: Double,
