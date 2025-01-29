@@ -87,7 +87,7 @@ class MemoryUpdateViewModel
 
         fun updateMemory() {
             viewModelScope.launch {
-                val newMemory: NewCategory = makeNewMemory()
+                val newMemory: NewCategory = makeNewCategory()
                 val result: ResponseResult<Unit> = categoryRepository.updateCategory(categoryId, newMemory)
                 result
                     .onSuccess { updateSuccessStatus() }
@@ -130,7 +130,7 @@ class MemoryUpdateViewModel
             isPeriodActive.value = memory.startAt != null && memory.endAt != null
         }
 
-        private fun makeNewMemory() =
+        private fun makeNewCategory() =
             NewCategory(
                 categoryThumbnailUrl = _thumbnail.value?.url,
                 categoryTitle = title.get() ?: throw IllegalArgumentException(),
