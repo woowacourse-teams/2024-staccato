@@ -176,12 +176,12 @@ class MemoryUpdateActivity :
         private const val DEFAULT_MEMORY_ID = 0L
 
         fun startWithResultLauncher(
-            memoryId: Long,
+            categoryId: Long,
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, MemoryUpdateActivity::class.java).apply {
-                putExtra(CATEGORY_ID_KEY, memoryId)
+                putExtra(CATEGORY_ID_KEY, categoryId)
                 activityLauncher.launch(this)
             }
         }
