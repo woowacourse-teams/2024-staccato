@@ -167,14 +167,14 @@ class StaccatoCreationViewModel
         }
 
         fun initMemoryAndVisitedAt(
-            memoryId: Long,
+            categoryId: Long,
             currentDateTime: LocalDateTime,
         ) {
-            if (memoryId == DEFAULT_CATEGORY_ID) {
+            if (categoryId == DEFAULT_CATEGORY_ID) {
                 updateCategorySelectionBy(currentDateTime)
                 setCurrentDateTimeAs(currentDateTime)
             } else {
-                updateCategorySelectionBy(memoryId)
+                updateCategorySelectionBy(categoryId)
                 setClosestDateTimeAs(currentDateTime)
             }
         }
