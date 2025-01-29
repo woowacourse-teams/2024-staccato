@@ -48,8 +48,8 @@ class MemoryCreationViewModel
         private val _endDate = MutableLiveData<LocalDate?>(null)
         val endDate: LiveData<LocalDate?> get() = _endDate
 
-        private val _createdMemoryId = MutableLiveData<Long>()
-        val createdMemoryId: LiveData<Long> get() = _createdMemoryId
+        private val _createdCategoryId = MutableLiveData<Long>()
+        val createdMemoryId: LiveData<Long> get() = _createdCategoryId
 
         private val _thumbnail = MutableLiveData<ThumbnailUiModel>(ThumbnailUiModel())
         val thumbnail: LiveData<ThumbnailUiModel> get() = _thumbnail
@@ -147,7 +147,7 @@ class MemoryCreationViewModel
         }
 
         private fun setCreatedMemoryId(memoryCreationResponse: CategoryCreationResponse) {
-            _createdMemoryId.value = memoryCreationResponse.categoryId
+            _createdCategoryId.value = memoryCreationResponse.categoryId
         }
 
         private fun makeNewMemory() =
