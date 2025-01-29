@@ -1,6 +1,6 @@
 package com.on.staccato.presentation.memorycreation
 
-interface MemoryCreationHandler {
+interface CategoryCreationHandler {
     fun onPeriodSelectionClicked()
 
     fun onSaveClicked()

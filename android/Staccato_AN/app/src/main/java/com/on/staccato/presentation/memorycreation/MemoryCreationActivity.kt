@@ -25,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MemoryCreationActivity :
     BindingActivity<ActivityMemoryCreationBinding>(),
-    MemoryCreationHandler,
+    CategoryCreationHandler,
     OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_creation
     private val viewModel: CategoryCreationViewModel by viewModels()
