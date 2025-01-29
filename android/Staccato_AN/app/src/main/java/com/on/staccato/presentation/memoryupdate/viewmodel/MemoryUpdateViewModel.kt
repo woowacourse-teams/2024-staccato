@@ -117,13 +117,13 @@ class MemoryUpdateViewModel
             _thumbnail.value = thumbnail.value?.clear()
         }
 
-        private fun initializeMemory(memory: Category) {
-            _thumbnail.value = _thumbnail.value?.updateUrl(memory.categoryThumbnailUrl)
-            title.set(memory.categoryTitle)
-            description.set(memory.description)
-            _startDate.value = memory.startAt
-            _endDate.value = memory.endAt
-            checkCategoryHasPeriod(memory)
+        private fun initializeMemory(category: Category) {
+            _thumbnail.value = _thumbnail.value?.updateUrl(category.categoryThumbnailUrl)
+            title.set(category.categoryTitle)
+            description.set(category.description)
+            _startDate.value = category.startAt
+            _endDate.value = category.endAt
+            checkCategoryHasPeriod(category)
         }
 
         private fun checkCategoryHasPeriod(category: Category) {
