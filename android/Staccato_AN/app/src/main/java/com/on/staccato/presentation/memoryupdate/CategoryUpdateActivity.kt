@@ -88,7 +88,7 @@ class CategoryUpdateActivity :
     }
 
     private fun navigateToCategory() {
-        binding.toolbarMemoryUpdate.setNavigationOnClickListener {
+        binding.toolbarCategoryUpdate.setNavigationOnClickListener {
             finish()
         }
     }
