@@ -140,7 +140,7 @@ class StaccatoCreationActivity :
         viewModel.updateSelectedImageUris(arrayOf(*uris))
     }
 
-    override fun onMemorySelectionClicked() {
+    override fun onCategorySelectionClicked() {
         if (!memorySelectionFragment.isAdded) {
             memorySelectionFragment.show(
                 fragmentManager,
