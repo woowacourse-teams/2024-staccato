@@ -67,7 +67,7 @@ class MainActivity :
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
 
-    val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
+    val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
     val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()

@@ -46,7 +46,7 @@ class TimelineFragment :
     }
 
     override fun onMemoryCreationClicked() {
-        val memoryCreationLauncher = (activity as MainActivity).memoryCreationLauncher
+        val memoryCreationLauncher = (activity as MainActivity).categoryCreationLauncher
         MemoryCreationActivity.startWithResultLauncher(
             requireActivity(),
             memoryCreationLauncher,
