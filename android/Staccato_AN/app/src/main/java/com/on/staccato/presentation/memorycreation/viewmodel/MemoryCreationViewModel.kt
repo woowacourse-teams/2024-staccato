@@ -146,8 +146,8 @@ class MemoryCreationViewModel
             _isPhotoPosting.value = false
         }
 
-        private fun setCreatedMemoryId(memoryCreationResponse: CategoryCreationResponse) {
-            _createdCategoryId.value = memoryCreationResponse.categoryId
+        private fun setCreatedMemoryId(categoryCreationResponse: CategoryCreationResponse) {
+            _createdCategoryId.value = categoryCreationResponse.categoryId
         }
 
         private fun makeNewMemory() =
