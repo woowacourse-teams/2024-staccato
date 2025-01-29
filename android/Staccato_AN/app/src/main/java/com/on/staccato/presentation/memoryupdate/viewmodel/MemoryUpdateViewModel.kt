@@ -39,7 +39,7 @@ class MemoryUpdateViewModel
         private val imageRepository: ImageRepository,
     ) : ViewModel() {
         private val _category = MutableLiveData<NewCategory>()
-        val memory: LiveData<NewCategory> get() = _category
+        val category: LiveData<NewCategory> get() = _category
 
         private val _thumbnail = MutableLiveData<ThumbnailUiModel>(ThumbnailUiModel())
         val thumbnail: LiveData<ThumbnailUiModel> get() = _thumbnail
