@@ -39,7 +39,7 @@ class MemoryUpdateActivity :
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
         navigateToCategory()
-        fetchMemory()
+        fetchCategory()
         updateCategoryPeriod()
         observeIsUpdateSuccess()
         showErrorToast()
@@ -93,7 +93,7 @@ class MemoryUpdateActivity :
         }
     }
 
-    private fun fetchMemory() {
+    private fun fetchCategory() {
         viewModel.fetchCategory(categoryId)
     }
 
