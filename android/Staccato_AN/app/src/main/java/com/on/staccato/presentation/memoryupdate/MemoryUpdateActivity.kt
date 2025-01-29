@@ -143,7 +143,7 @@ class MemoryUpdateActivity :
     }
 
     private fun handleCreatePhotoUrlFail(error: CategoryUpdateError.Thumbnail) {
-        showExceptionSnackBar(error.message) { reCreateThumbnailUrl(error.uri) }
+        showExceptionSnackBar(error.message) { recreateThumbnailUrl(error.uri) }
     }
 
     private fun handleMemoryUpdateFail(error: CategoryUpdateError.CategoryUpdate) {
@@ -151,7 +151,7 @@ class MemoryUpdateActivity :
         showExceptionSnackBar(error.message) { reupdateCategory() }
     }
 
-    private fun reCreateThumbnailUrl(uri: Uri) {
+    private fun recreateThumbnailUrl(uri: Uri) {
         viewModel.createThumbnailUrl(this, uri)
     }
 
