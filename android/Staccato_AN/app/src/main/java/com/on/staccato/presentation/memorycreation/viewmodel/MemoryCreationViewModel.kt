@@ -92,7 +92,7 @@ class MemoryCreationViewModel
         fun createCategory() {
             _isPosting.value = true
             viewModelScope.launch {
-                val category: NewCategory = makeNewMemory()
+                val category: NewCategory = makeNewCategory()
                 val result: ResponseResult<CategoryCreationResponse> =
                     categoryRepository.createCategory(category)
                 result
@@ -150,7 +150,7 @@ class MemoryCreationViewModel
             _createdCategoryId.value = categoryCreationResponse.categoryId
         }
 
-        private fun makeNewMemory() =
+        private fun makeNewCategory() =
             NewCategory(
                 categoryThumbnailUrl = _thumbnail.value?.url,
                 categoryTitle = title.get() ?: throw IllegalArgumentException(),
