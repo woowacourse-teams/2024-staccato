@@ -14,12 +14,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class MemorySelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentMemorySelectionBinding? = null
     private val binding get() = _binding!!
-    private lateinit var handler: MemorySelectionHandler
+    private lateinit var handler: CategorySelectionHandler
 
     private val items = mutableListOf<CategoryCandidate>()
     private lateinit var keyMemory: CategoryCandidate
 
-    fun setOnMemorySelected(newHandler: MemorySelectionHandler) {
+    fun setOnMemorySelected(newHandler: CategorySelectionHandler) {
         handler = newHandler
     }
 
