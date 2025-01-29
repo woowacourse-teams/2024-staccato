@@ -28,7 +28,7 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
         items.addAll(newItems)
     }
 
-    fun updateKeyMemory(selectedCategory: CategoryCandidate) {
+    fun updateKeyCategory(selectedCategory: CategoryCandidate) {
         keyCategory = selectedCategory
     }
 

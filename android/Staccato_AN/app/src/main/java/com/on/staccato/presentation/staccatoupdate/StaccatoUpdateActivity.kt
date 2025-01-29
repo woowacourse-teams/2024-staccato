@@ -310,7 +310,7 @@ class StaccatoUpdateActivity :
         }
         viewModel.selectedMemory.observe(this) {
             it?.let {
-                memorySelectionFragment.updateKeyMemory(it)
+                memorySelectionFragment.updateKeyCategory(it)
             }
         }
     }

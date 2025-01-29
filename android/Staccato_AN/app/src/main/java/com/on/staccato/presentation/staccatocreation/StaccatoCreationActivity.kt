@@ -326,7 +326,7 @@ class StaccatoCreationActivity :
         }
         viewModel.selectedMemory.observe(this) {
             it?.let {
-                memorySelectionFragment.updateKeyMemory(it)
+                memorySelectionFragment.updateKeyCategory(it)
                 if (memoryId != DEFAULT_CATEGORY_ID) {
                     visitedAtSelectionFragment.initCalendarByPeriod(
                         it.startAt,
