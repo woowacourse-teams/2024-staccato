@@ -197,7 +197,7 @@ class CategoryCreationViewModel
             message: String,
         ) {
             _isPosting.value = false
-            _error.setValue(MemoryCreationError.MemoryCreation(message))
+            _error.setValue(MemoryCreationError.CategoryCreation(message))
         }
 
         companion object {
