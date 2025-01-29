@@ -28,7 +28,7 @@ class MemoryUpdateActivity :
     CategoryUpdateHandler,
     OnUrisSelectedListener {
     override val layoutResourceId = R.layout.activity_memory_update
-    private val memoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_MEMORY_ID) }
+    private val categoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_MEMORY_ID) }
     private val viewModel: CategoryUpdateViewModel by viewModels()
 
     private val photoAttachFragment = PhotoAttachFragment()
@@ -94,7 +94,7 @@ class MemoryUpdateActivity :
     }
 
     private fun fetchMemory() {
-        viewModel.fetchCategory(memoryId)
+        viewModel.fetchCategory(categoryId)
     }
 
     private fun updateMemoryPeriod() {
@@ -113,7 +113,7 @@ class MemoryUpdateActivity :
 
     private fun navigateToMemory(isUpdateSuccess: Boolean) {
         if (isUpdateSuccess) {
-            val intent = Intent().putExtra(CATEGORY_ID_KEY, memoryId)
+            val intent = Intent().putExtra(CATEGORY_ID_KEY, categoryId)
             setResult(RESULT_OK, intent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
