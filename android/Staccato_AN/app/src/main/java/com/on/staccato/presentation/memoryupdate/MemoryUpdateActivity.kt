@@ -94,7 +94,7 @@ class MemoryUpdateActivity :
     }
 
     private fun fetchMemory() {
-        viewModel.fetchMemory(memoryId)
+        viewModel.fetchCategory(memoryId)
     }
 
     private fun updateMemoryPeriod() {

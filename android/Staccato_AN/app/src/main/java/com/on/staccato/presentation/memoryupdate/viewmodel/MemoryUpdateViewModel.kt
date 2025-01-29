@@ -74,7 +74,7 @@ class MemoryUpdateViewModel
 
         private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
 
-        fun fetchMemory(id: Long) {
+        fun fetchCategory(id: Long) {
             categoryId = id
             viewModelScope.launch {
                 val result = categoryRepository.getCategory(categoryId)
