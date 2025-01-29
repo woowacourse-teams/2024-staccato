@@ -272,7 +272,7 @@ class StaccatoCreationActivity :
         observePhotoData()
         observePlaceData()
         observeVisitedAtData()
-        observeMemoryData()
+        observeCategoryData()
         observeCreatedStaccatoId()
     }
 
@@ -310,7 +310,7 @@ class StaccatoCreationActivity :
         }
     }
 
-    private fun observeMemoryData() {
+    private fun observeCategoryData() {
         viewModel.categoryCandidates.observe(this) {
             it?.let {
                 if (memoryId == DEFAULT_CATEGORY_ID) {
