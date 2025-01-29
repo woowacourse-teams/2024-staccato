@@ -189,8 +189,8 @@ class StaccatoCreationViewModel
             _selectedCategory.value = filteredMemories.findByIdOrFirst(selectedCategory.value?.categoryId)
         }
 
-        private fun updateMemorySelectionBy(memoryId: Long) {
-            val selectedCategory = categoryCandidates.value?.findBy(memoryId) ?: throw IllegalArgumentException()
+        private fun updateMemorySelectionBy(categoryId: Long) {
+            val selectedCategory = categoryCandidates.value?.findBy(categoryId) ?: throw IllegalArgumentException()
             _selectableCategories.value = CategoryCandidates.from(selectedCategory)
             _selectedCategory.value = selectedCategory
         }
