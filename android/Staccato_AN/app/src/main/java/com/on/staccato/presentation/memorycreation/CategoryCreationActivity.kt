@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
-import com.on.staccato.databinding.ActivityMemoryCreationBinding
+import com.on.staccato.databinding.ActivityCategoryCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
@@ -24,10 +24,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CategoryCreationActivity :
-    BindingActivity<ActivityMemoryCreationBinding>(),
+    BindingActivity<ActivityCategoryCreationBinding>(),
     CategoryCreationHandler,
     OnUrisSelectedListener {
-    override val layoutResourceId = R.layout.activity_memory_creation
+    override val layoutResourceId = R.layout.activity_category_creation
     private val viewModel: CategoryCreationViewModel by viewModels()
 
     private val photoAttachFragment = PhotoAttachFragment()
