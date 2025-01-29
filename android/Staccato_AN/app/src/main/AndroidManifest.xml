@@ -85,7 +85,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".presentation.memorycreation.MemoryCreationActivity"
+            android:name=".presentation.memorycreation.CategoryCreationActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 

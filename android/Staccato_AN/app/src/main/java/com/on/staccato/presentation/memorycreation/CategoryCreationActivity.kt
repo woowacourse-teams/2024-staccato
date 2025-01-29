@@ -23,7 +23,7 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MemoryCreationActivity :
+class CategoryCreationActivity :
     BindingActivity<ActivityMemoryCreationBinding>(),
     CategoryCreationHandler,
     OnUrisSelectedListener {
@@ -162,7 +162,7 @@ class MemoryCreationActivity :
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
-            Intent(context, MemoryCreationActivity::class.java).apply {
+            Intent(context, CategoryCreationActivity::class.java).apply {
                 activityLauncher.launch(this)
             }
         }
