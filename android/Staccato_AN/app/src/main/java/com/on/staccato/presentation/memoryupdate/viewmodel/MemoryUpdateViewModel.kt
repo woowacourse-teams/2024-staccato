@@ -126,8 +126,8 @@ class MemoryUpdateViewModel
             checkMemoryHasPeriod(memory)
         }
 
-        private fun checkMemoryHasPeriod(memory: Category) {
-            isPeriodActive.value = memory.startAt != null && memory.endAt != null
+        private fun checkMemoryHasPeriod(category: Category) {
+            isPeriodActive.value = category.startAt != null && category.endAt != null
         }
 
         private fun makeNewCategory() =
