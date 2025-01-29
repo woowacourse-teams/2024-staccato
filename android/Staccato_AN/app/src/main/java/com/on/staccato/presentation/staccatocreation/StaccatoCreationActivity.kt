@@ -311,7 +311,7 @@ class StaccatoCreationActivity :
     }
 
     private fun observeMemoryData() {
-        viewModel.memoryCandidates.observe(this) {
+        viewModel.categoryCandidates.observe(this) {
             it?.let {
                 if (memoryId == DEFAULT_CATEGORY_ID) {
                     visitedAtSelectionFragment.initCalendarByPeriod()

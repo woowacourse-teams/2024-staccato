@@ -68,8 +68,8 @@ class StaccatoCreationViewModel
         private val _selectableCategories = MutableLiveData<CategoryCandidates>()
         val selectableCategories: LiveData<CategoryCandidates> get() = _selectableCategories
 
-        private val _memoryCandidates = MutableLiveData<CategoryCandidates>()
-        val memoryCandidates: LiveData<CategoryCandidates> get() = _memoryCandidates
+        private val _categoryCandidates = MutableLiveData<CategoryCandidates>()
+        val categoryCandidates: LiveData<CategoryCandidates> get() = _categoryCandidates
 
         private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
@@ -159,7 +159,7 @@ class StaccatoCreationViewModel
             viewModelScope.launch {
                 timelineRepository.getCategoryCandidates()
                     .onSuccess {
-                        _memoryCandidates.value = it
+                        _categoryCandidates.value = it
                     }
                     .onException(::handleMemoryCandidatesException)
                     .onServerError(::handleServerError)
@@ -184,13 +184,13 @@ class StaccatoCreationViewModel
         }
 
         fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
-            val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: CategoryCandidates.emptyCategoryCandidates
+            val filteredMemories = categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: CategoryCandidates.emptyCategoryCandidates
             _selectableCategories.value = filteredMemories
             _selectedCategory.value = filteredMemories.findByIdOrFirst(selectedCategory.value?.categoryId)
         }
 
         private fun updateMemorySelectionBy(memoryId: Long) {
-            val selectedMemory = memoryCandidates.value?.findBy(memoryId) ?: throw IllegalArgumentException()
+            val selectedMemory = categoryCandidates.value?.findBy(memoryId) ?: throw IllegalArgumentException()
             _selectableCategories.value = CategoryCandidates.from(selectedMemory)
             _selectedCategory.value = selectedMemory
         }

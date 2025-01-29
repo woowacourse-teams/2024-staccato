@@ -64,7 +64,7 @@ class StaccatoCreationViewModelTest {
             advanceUntilIdle()
 
             // then
-            val actualMemoryCandidates = viewModel.memoryCandidates.getOrAwaitValue()
+            val actualMemoryCandidates = viewModel.categoryCandidates.getOrAwaitValue()
             assertEquals(dummyMemoryCandidates, actualMemoryCandidates)
         }
 
