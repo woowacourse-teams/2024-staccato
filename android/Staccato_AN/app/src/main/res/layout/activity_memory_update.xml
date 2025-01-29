@@ -14,7 +14,7 @@
 
         <variable
             name="handler"
-            type="com.on.staccato.presentation.memoryupdate.MemoryUpdateHandler" />
+            type="com.on.staccato.presentation.memoryupdate.CategoryUpdateHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

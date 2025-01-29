@@ -1,6 +1,6 @@
 package com.on.staccato.presentation.memoryupdate
 
-interface MemoryUpdateHandler {
+interface CategoryUpdateHandler {
     fun onPeriodSelectionClicked()
 
     fun onSaveClicked()
