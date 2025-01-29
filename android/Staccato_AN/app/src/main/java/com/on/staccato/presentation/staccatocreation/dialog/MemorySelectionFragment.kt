@@ -17,7 +17,7 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
     private lateinit var handler: CategorySelectionHandler
 
     private val items = mutableListOf<CategoryCandidate>()
-    private lateinit var keyMemory: CategoryCandidate
+    private lateinit var keyCategory: CategoryCandidate
 
     fun setOnMemorySelected(newHandler: CategorySelectionHandler) {
         handler = newHandler
@@ -29,7 +29,7 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
     }
 
     fun updateKeyMemory(selectedMemory: CategoryCandidate) {
-        keyMemory = selectedMemory
+        keyCategory = selectedMemory
     }
 
     override fun onCreateView(
@@ -56,7 +56,7 @@ class MemorySelectionFragment : BottomSheetDialogFragment() {
             maxValue = (items.size - 1).coerceAtLeast(0)
             displayedValues = items.map { it.categoryTitle }.toTypedArray()
             wrapSelectorWheel = false
-            setPickerValue(items, keyMemory)
+            setPickerValue(items, keyCategory)
         }
     }
 
