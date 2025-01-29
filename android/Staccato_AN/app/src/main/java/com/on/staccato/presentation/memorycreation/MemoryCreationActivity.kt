@@ -39,7 +39,7 @@ class MemoryCreationActivity :
         initBinding()
         navigateToMap()
         updateMemoryPeriod()
-        observeCreatedMemoryId()
+        observeCreatedCategoryId()
         showErrorToast()
         handleError()
     }
@@ -101,7 +101,7 @@ class MemoryCreationActivity :
         }
     }
 
-    private fun observeCreatedMemoryId() {
+    private fun observeCreatedCategoryId() {
         viewModel.createdCategoryId.observe(this) { categoryId ->
             val resultIntent = Intent()
             resultIntent.putExtra(CATEGORY_ID_KEY, categoryId)
