@@ -82,7 +82,7 @@ class StaccatoCreationViewModelTest {
             // then
             val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
             val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
-            val actualSelectedMemory = viewModel.selectedMemory.getOrAwaitValue()
+            val actualSelectedMemory = viewModel.selectedCategory.getOrAwaitValue()
 
             val selectableMemories = dummyMemoryCandidates.filterBy(middleDateOf2024)
             val selectedMemory = selectableMemories.findByIdOrFirst(null)
@@ -106,7 +106,7 @@ class StaccatoCreationViewModelTest {
             // then
             val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
             val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
-            val actualSelectedMemory = viewModel.selectedMemory.getOrAwaitValue()
+            val actualSelectedMemory = viewModel.selectedCategory.getOrAwaitValue()
 
             val closestVisitedAt = targetMemoryCandidate.getClosestDateTime(currentVisitedAt)
             val fixedSelectableMemories = CategoryCandidates.from(targetMemoryCandidate)
@@ -135,7 +135,7 @@ class StaccatoCreationViewModelTest {
             val expectedSelectedMemory = memoryCandidateWithId1
 
             val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
-            val actualSelectedMemory = viewModel.selectedMemory.getOrAwaitValue()
+            val actualSelectedMemory = viewModel.selectedCategory.getOrAwaitValue()
 
             assertEquals(expectedSelectableMemories, actualSelectableMemories)
             assertEquals(expectedSelectedMemory, actualSelectedMemory)

@@ -62,8 +62,8 @@ class StaccatoCreationViewModel
         private val _longitude = MutableLiveData<Double?>()
         private val longitude: LiveData<Double?> get() = _longitude
 
-        private val _selectedMemory = MutableLiveData<CategoryCandidate>()
-        val selectedMemory: LiveData<CategoryCandidate> get() = _selectedMemory
+        private val _selectedCategory = MutableLiveData<CategoryCandidate>()
+        val selectedCategory: LiveData<CategoryCandidate> get() = _selectedCategory
 
         private val _selectableMemories = MutableLiveData<CategoryCandidates>()
         val selectableMemories: LiveData<CategoryCandidates> get() = _selectableMemories
@@ -117,7 +117,7 @@ class StaccatoCreationViewModel
         }
 
         fun selectMemory(memory: CategoryCandidate) {
-            _selectedMemory.value = memory
+            _selectedCategory.value = memory
         }
 
         fun selectNewPlace(
@@ -186,17 +186,17 @@ class StaccatoCreationViewModel
         fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
             val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: CategoryCandidates.emptyCategoryCandidates
             _selectableMemories.value = filteredMemories
-            _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.categoryId)
+            _selectedCategory.value = filteredMemories.findByIdOrFirst(selectedCategory.value?.categoryId)
         }
 
         private fun updateMemorySelectionBy(memoryId: Long) {
             val selectedMemory = memoryCandidates.value?.findBy(memoryId) ?: throw IllegalArgumentException()
             _selectableMemories.value = CategoryCandidates.from(selectedMemory)
-            _selectedMemory.value = selectedMemory
+            _selectedCategory.value = selectedMemory
         }
 
         private fun setClosestDateTimeAs(visitedAt: LocalDateTime) {
-            _selectedVisitedAt.value = selectedMemory.value?.getClosestDateTime(visitedAt)
+            _selectedVisitedAt.value = selectedCategory.value?.getClosestDateTime(visitedAt)
         }
 
         fun setIsPlaceSearchClicked(value: Boolean) {
@@ -227,7 +227,7 @@ class StaccatoCreationViewModel
             viewModelScope.launch {
                 _isPosting.value = true
                 staccatoRepository.createStaccato(
-                    categoryId = selectedMemory.value!!.categoryId,
+                    categoryId = selectedCategory.value!!.categoryId,
                     staccatoTitle = staccatoTitle.get() ?: return@launch,
                     placeName = placeName.value ?: return@launch,
                     latitude = latitude.value ?: return@launch,

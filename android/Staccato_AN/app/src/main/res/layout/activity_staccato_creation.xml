@@ -249,12 +249,12 @@
                     style="@style/BackgroundedTextStyle"
                     android:layout_marginTop="8dp"
                     android:onClick="@{() -> staccatoCreationHandler.onCategorySelectionClicked()}"
-                    android:text="@{viewModel.selectedMemory.categoryTitle}"
+                    android:text="@{viewModel.selectedCategory.categoryTitle}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title"
                     bind:memoryCandidates="@{viewModel.memoryCandidates}"
-                    bind:selectedMemory="@{viewModel.selectedMemory}" />
+                    bind:selectedMemory="@{viewModel.selectedCategory}" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_staccato_create_done"
@@ -269,7 +269,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_memory_selection"
                     bind:staccatoAddress="@{viewModel.placeName}"
-                    bind:staccatoMemory="@{viewModel.selectedMemory}"
+                    bind:staccatoMemory="@{viewModel.selectedCategory}"
                     bind:staccatoPhotos="@{viewModel.currentPhotos}"
                     bind:staccatoTitle="@{viewModel.staccatoTitle}"
                     bind:staccatoVisitedAt="@{viewModel.selectedVisitedAt}" />
