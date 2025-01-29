@@ -127,7 +127,7 @@ class MemoryCreationViewModel
             context: Context,
             uri: Uri,
         ): Job {
-            val thumbnailFile = convertMemoryUriToFile(context, uri, name = MEMORY_FILE_NAME)
+            val thumbnailFile = convertMemoryUriToFile(context, uri, name = CATEGORY_FILE_NAME)
             return viewModelScope.launch {
                 val result: ResponseResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)
@@ -201,6 +201,6 @@ class MemoryCreationViewModel
         }
 
         companion object {
-            private const val MEMORY_FILE_NAME = "imageFile"
+            private const val CATEGORY_FILE_NAME = "imageFile"
         }
     }
