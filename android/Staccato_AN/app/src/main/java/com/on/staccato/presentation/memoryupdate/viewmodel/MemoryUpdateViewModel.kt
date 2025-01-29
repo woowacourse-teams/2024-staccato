@@ -123,10 +123,10 @@ class MemoryUpdateViewModel
             description.set(memory.description)
             _startDate.value = memory.startAt
             _endDate.value = memory.endAt
-            checkMemoryHasPeriod(memory)
+            checkCategoryHasPeriod(memory)
         }
 
-        private fun checkMemoryHasPeriod(category: Category) {
+        private fun checkCategoryHasPeriod(category: Category) {
             isPeriodActive.value = category.startAt != null && category.endAt != null
         }
 
