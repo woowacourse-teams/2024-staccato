@@ -38,7 +38,7 @@ class MemoryUpdateActivity :
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
-        navigateToMemory()
+        navigateToCategory()
         fetchMemory()
         updateMemoryPeriod()
         observeIsUpdateSuccess()
@@ -87,7 +87,7 @@ class MemoryUpdateActivity :
         binding.handler = this
     }
 
-    private fun navigateToMemory() {
+    private fun navigateToCategory() {
         binding.toolbarMemoryUpdate.setNavigationOnClickListener {
             finish()
         }
@@ -107,11 +107,11 @@ class MemoryUpdateActivity :
 
     private fun observeIsUpdateSuccess() {
         viewModel.isUpdateSuccess.observe(this) { isUpdateSuccess ->
-            navigateToMemory(isUpdateSuccess)
+            navigateToCategory(isUpdateSuccess)
         }
     }
 
-    private fun navigateToMemory(isUpdateSuccess: Boolean) {
+    private fun navigateToCategory(isUpdateSuccess: Boolean) {
         if (isUpdateSuccess) {
             val intent = Intent().putExtra(CATEGORY_ID_KEY, categoryId)
             setResult(RESULT_OK, intent)
