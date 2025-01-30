@@ -58,7 +58,7 @@ class StaccatoUpdateActivity :
     override val layoutResourceId = R.layout.activity_staccato_update
     private val viewModel: StaccatoUpdateViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
-    private val memorySelectionFragment by lazy {
+    private val categorySelectionFragment by lazy {
         CategorySelectionFragment()
     }
     private val visitedAtSelectionFragment by lazy {
@@ -71,8 +71,8 @@ class StaccatoUpdateActivity :
     private lateinit var photoAttachAdapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
     private val staccatoId by lazy { intent.getLongExtra(STACCATO_ID_KEY, 0L) }
-    private val memoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, 0L) }
-    private val memoryTitle by lazy { intent.getStringExtra(CATEGORY_TITLE_KEY) ?: "" }
+    private val categoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, 0L) }
+    private val categoryTitle by lazy { intent.getStringExtra(CATEGORY_TITLE_KEY) ?: "" }
 
     private val autocompleteFragment by lazy {
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
@@ -114,8 +114,8 @@ class StaccatoUpdateActivity :
     }
 
     override fun onCategorySelectionClicked() {
-        if (!memorySelectionFragment.isAdded) {
-            memorySelectionFragment.show(
+        if (!categorySelectionFragment.isAdded) {
+            categorySelectionFragment.show(
                 fragmentManager,
                 CategorySelectionFragment.TAG,
             )
@@ -251,7 +251,7 @@ class StaccatoUpdateActivity :
     }
 
     private fun initMemorySelectionFragment() {
-        memorySelectionFragment.setOnCategorySelected { selectedMemory ->
+        categorySelectionFragment.setOnCategorySelected { selectedMemory ->
             viewModel.selectCategory(selectedMemory)
         }
     }
@@ -305,12 +305,12 @@ class StaccatoUpdateActivity :
     private fun observeMemoryData() {
         viewModel.selectableCategories.observe(this) {
             it?.let {
-                memorySelectionFragment.setItems(it.categoryCandidates)
+                categorySelectionFragment.setItems(it.categoryCandidates)
             }
         }
         viewModel.selectedCategory.observe(this) {
             it?.let {
-                memorySelectionFragment.updateKeyCategory(it)
+                categorySelectionFragment.updateKeyCategory(it)
             }
         }
     }
@@ -326,8 +326,8 @@ class StaccatoUpdateActivity :
             val intent =
                 Intent()
                     .putExtra(STACCATO_ID_KEY, staccatoId)
-                    .putExtra(CATEGORY_ID_KEY, memoryId)
-                    .putExtra(CATEGORY_TITLE_KEY, memoryTitle)
+                    .putExtra(CATEGORY_ID_KEY, categoryId)
+                    .putExtra(CATEGORY_TITLE_KEY, categoryTitle)
             setResult(RESULT_OK, intent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
