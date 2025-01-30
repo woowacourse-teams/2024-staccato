@@ -72,15 +72,15 @@ class StaccatoUpdateViewModelTest {
             assertEquals(targetStaccato.address, actualAddress)
 
             // 추억 선택을 위한 데이터 검사
-            val actualMemoryCandidates = viewModel.categoryCandidates.getOrAwaitValue()
-            val actualSelectableMemories = viewModel.selectableCategories.getOrAwaitValue()
-            val expectedSelectableMemories =
+            val actualCategoryCandidates = viewModel.categoryCandidates.getOrAwaitValue()
+            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
+            val expectedSelectableCategories =
                 dummyCategoryCandidates.filterBy(targetStaccato.visitedAt.toLocalDate())
-            val actualSelectedMemory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
 
-            assertEquals(dummyCategoryCandidates, actualMemoryCandidates)
-            assertEquals(expectedSelectableMemories, actualSelectableMemories)
-            assertEquals(targetCategoryCandidate, actualSelectedMemory)
+            assertEquals(dummyCategoryCandidates, actualCategoryCandidates)
+            assertEquals(expectedSelectableCategories, actualSelectableCategories)
+            assertEquals(targetCategoryCandidate, actualSelectedCategory)
 
             // 일시 선택을 위한 데이터 검사
             val actualSelectedVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
@@ -101,14 +101,14 @@ class StaccatoUpdateViewModelTest {
             viewModel.updateCategorySelectionBy(newLocalDate)
 
             // then : 바뀐 날짜 기준으로 유효한 값을 업데이트한다
-            val expectedSelectableMemories = CategoryCandidates.from(categoryCandidateWithId1)
-            val actualSelectedMemories = viewModel.selectableCategories.getOrAwaitValue()
+            val expectedSelectableCategories = CategoryCandidates.from(categoryCandidateWithId1)
+            val actualSelectedCategories = viewModel.selectableCategories.getOrAwaitValue()
 
-            val expectedSelectableMemory = categoryCandidateWithId1
-            val actualSelectedMemory = viewModel.selectedCategory.getOrAwaitValue()
+            val expectedSelectableCategory = categoryCandidateWithId1
+            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
 
-            assertEquals(expectedSelectableMemories, actualSelectedMemories)
-            assertEquals(expectedSelectableMemory, actualSelectedMemory)
+            assertEquals(expectedSelectableCategories, actualSelectedCategories)
+            assertEquals(expectedSelectableCategory, actualSelectedCategory)
         }
 
     private fun givenTargetStaccatoWithRepositorySetup(): Staccato {
