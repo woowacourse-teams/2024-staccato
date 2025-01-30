@@ -226,7 +226,7 @@ class StaccatoUpdateViewModel
                         _currentPhotos.value = createPhotosByUrls(staccato.staccatoImageUrls)
                         initializePlaceBy(staccato)
                         selectVisitedAt(staccato.visitedAt)
-                        initMemory(staccato)
+                        initCategory(staccato)
                     }.onException(::handleInitializeException)
                     .onServerError(::handleServerError)
             }
@@ -242,7 +242,7 @@ class StaccatoUpdateViewModel
             )
         }
 
-        private fun initMemory(staccato: Staccato) {
+        private fun initCategory(staccato: Staccato) {
             _selectedCategory.value =
                 CategoryCandidate(
                     staccato.categoryId,
