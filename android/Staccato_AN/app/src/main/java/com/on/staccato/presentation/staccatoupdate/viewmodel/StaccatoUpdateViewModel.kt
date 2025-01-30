@@ -182,7 +182,7 @@ class StaccatoUpdateViewModel
             }
         }
 
-        fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
+        fun updateCategorySelectionBy(visitedAt: LocalDateTime) {
             val filteredCategories = categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
             _selectableCategories.value = filteredCategories
             _selectedCategory.value = filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)

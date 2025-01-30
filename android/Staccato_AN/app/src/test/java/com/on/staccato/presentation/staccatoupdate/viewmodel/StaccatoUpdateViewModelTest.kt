@@ -98,7 +98,7 @@ class StaccatoUpdateViewModelTest {
 
             // when : 현재 선택된 카테고리 범위 밖의 날짜로 바뀌면
             val newLocalDate = endDateOf2023.atStartOfDay() // 수정 후 방문 날짜
-            viewModel.updateMemorySelectionBy(newLocalDate)
+            viewModel.updateCategorySelectionBy(newLocalDate)
 
             // then : 바뀐 날짜 기준으로 유효한 값을 업데이트한다
             val expectedSelectableMemories = CategoryCandidates.from(memoryCandidateWithId1)

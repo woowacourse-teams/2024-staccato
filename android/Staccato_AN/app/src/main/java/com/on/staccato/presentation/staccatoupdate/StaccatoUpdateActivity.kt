@@ -297,7 +297,7 @@ class StaccatoUpdateActivity :
         viewModel.selectedVisitedAt.observe(this) {
             it?.let {
                 visitedAtSelectionFragment.initCalendarByVisitedAt(it)
-                viewModel.updateMemorySelectionBy(it)
+                viewModel.updateCategorySelectionBy(it)
             }
         }
     }
