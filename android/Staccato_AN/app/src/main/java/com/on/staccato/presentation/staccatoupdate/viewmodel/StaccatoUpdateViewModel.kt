@@ -114,8 +114,8 @@ class StaccatoUpdateViewModel
             }
         }
 
-        fun selectMemory(memory: CategoryCandidate) {
-            _selectedCategory.value = memory
+        fun selectMemory(category: CategoryCandidate) {
+            _selectedCategory.value = category
         }
 
         fun selectVisitedAt(visitedAt: LocalDateTime) {
