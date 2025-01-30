@@ -71,8 +71,8 @@ class StaccatoFragment :
         val staccatoUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
         StaccatoUpdateActivity.startWithResultLauncher(
             staccatoId = staccatoId,
-            memoryId = categoryId,
-            memoryTitle = categoryTitle,
+            categoryId = categoryId,
+            categoryTitle = categoryTitle,
             context = requireContext(),
             activityLauncher = staccatoUpdateLauncher,
         )
