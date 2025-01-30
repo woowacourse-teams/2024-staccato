@@ -42,7 +42,7 @@ class TimelineFragment :
 
     override fun onCategoryClicked(categoryId: Long) {
         val bundle: Bundle = bundleOf(CATEGORY_ID_KEY to categoryId)
-        navigateToMemory(bundle)
+        navigateToCategory(bundle)
     }
 
     override fun onCategoryCreationClicked() {
@@ -66,7 +66,7 @@ class TimelineFragment :
         binding.handler = this
     }
 
-    private fun navigateToMemory(bundle: Bundle) {
+    private fun navigateToCategory(bundle: Bundle) {
         findNavController().navigate(R.id.action_timelineFragment_to_memoryFragment, bundle)
     }
 
