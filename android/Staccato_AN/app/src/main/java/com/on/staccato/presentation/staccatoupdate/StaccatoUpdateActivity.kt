@@ -303,12 +303,12 @@ class StaccatoUpdateActivity :
     }
 
     private fun observeMemoryData() {
-        viewModel.selectableMemories.observe(this) {
+        viewModel.selectableCategories.observe(this) {
             it?.let {
                 memorySelectionFragment.setItems(it.categoryCandidates)
             }
         }
-        viewModel.selectedMemory.observe(this) {
+        viewModel.selectedCategory.observe(this) {
             it?.let {
                 memorySelectionFragment.updateKeyCategory(it)
             }

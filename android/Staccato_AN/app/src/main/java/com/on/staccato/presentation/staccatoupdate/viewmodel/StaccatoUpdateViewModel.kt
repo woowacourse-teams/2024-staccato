@@ -67,8 +67,8 @@ class StaccatoUpdateViewModel
         private val _longitude = MutableLiveData<Double?>()
         private val longitude: LiveData<Double?> get() = _longitude
 
-        private val _memoryCandidates = MutableLiveData<CategoryCandidates>()
-        val memoryCandidates: LiveData<CategoryCandidates> get() = _memoryCandidates
+        private val _categoryCandidates = MutableLiveData<CategoryCandidates>()
+        val categoryCandidates: LiveData<CategoryCandidates> get() = _categoryCandidates
 
         private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
@@ -76,11 +76,11 @@ class StaccatoUpdateViewModel
         private val _isCurrentLocationLoading = MutableLiveData(false)
         val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
 
-        private val _selectedMemory = MutableLiveData<CategoryCandidate>()
-        val selectedMemory: LiveData<CategoryCandidate> get() = _selectedMemory
+        private val _selectedCategory = MutableLiveData<CategoryCandidate>()
+        val selectedCategory: LiveData<CategoryCandidate> get() = _selectedCategory
 
-        private val _selectableMemories = MutableLiveData<CategoryCandidates>()
-        val selectableMemories: LiveData<CategoryCandidates> get() = _selectableMemories
+        private val _selectableCategories = MutableLiveData<CategoryCandidates>()
+        val selectableCategories: LiveData<CategoryCandidates> get() = _selectableCategories
 
         private val _isUpdateCompleted = MutableLiveData(false)
         val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
@@ -115,7 +115,7 @@ class StaccatoUpdateViewModel
         }
 
         fun selectMemory(memory: CategoryCandidate) {
-            _selectedMemory.value = memory
+            _selectedCategory.value = memory
         }
 
         fun selectVisitedAt(visitedAt: LocalDateTime) {
@@ -183,9 +183,9 @@ class StaccatoUpdateViewModel
         }
 
         fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
-            val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
-            _selectableMemories.value = filteredMemories
-            _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.categoryId)
+            val filteredMemories = categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
+            _selectableCategories.value = filteredMemories
+            _selectedCategory.value = filteredMemories.findByIdOrFirst(selectedCategory.value?.categoryId)
         }
 
         fun updateStaccato(staccatoId: Long) {
@@ -196,7 +196,7 @@ class StaccatoUpdateViewModel
                 val latitudeValue = latitude.value ?: return@launch handleException()
                 val longitudeValue = longitude.value ?: return@launch handleException()
                 val visitedAtValue = selectedVisitedAt.value ?: return@launch handleException()
-                val memoryIdValue = selectedMemory.value?.categoryId ?: return@launch handleException()
+                val memoryIdValue = selectedCategory.value?.categoryId ?: return@launch handleException()
                 val staccatoImageUrlsValue =
                     currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                         ?: emptyList()
@@ -243,22 +243,22 @@ class StaccatoUpdateViewModel
         }
 
         private fun initMemory(staccato: Staccato) {
-            _selectedMemory.value =
+            _selectedCategory.value =
                 CategoryCandidate(
                     staccato.categoryId,
                     staccato.categoryTitle,
                     staccato.startAt,
                     staccato.endAt,
                 )
-            _selectableMemories.value =
-                memoryCandidates.value?.filterBy(staccato.visitedAt.toLocalDate())
+            _selectableCategories.value =
+                categoryCandidates.value?.filterBy(staccato.visitedAt.toLocalDate())
         }
 
         private fun fetchMemoryCandidates() {
             viewModelScope.launch {
                 timelineRepository.getCategoryCandidates()
                     .onSuccess { memoryCandidates ->
-                        _memoryCandidates.value = memoryCandidates
+                        _categoryCandidates.value = memoryCandidates
                     }.onException(::handleMemoryCandidatesException)
                     .onServerError(::handleServerError)
             }
