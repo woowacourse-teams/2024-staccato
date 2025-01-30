@@ -48,8 +48,8 @@ public class StaccatoDtoMapper {
 
     public static StaccatoDetailResponse toStaccatoDetailResponse(MomentDetailResponse momentDetailResponse) {
         return new StaccatoDetailResponse(
-                momentDetailResponse.memoryId(),
                 momentDetailResponse.momentId(),
+                momentDetailResponse.memoryId(),
                 momentDetailResponse.memoryTitle(),
                 momentDetailResponse.startAt(),
                 momentDetailResponse.endAt(),
