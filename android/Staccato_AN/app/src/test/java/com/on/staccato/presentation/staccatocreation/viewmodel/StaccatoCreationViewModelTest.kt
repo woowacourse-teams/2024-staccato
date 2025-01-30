@@ -53,7 +53,7 @@ class StaccatoCreationViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        givenMemoryCandidatesReturnsSuccessWithDummyData()
+        givenCategoryCandidatesReturnsSuccessWithDummyData()
     }
 
     @Test
@@ -64,8 +64,8 @@ class StaccatoCreationViewModelTest {
             advanceUntilIdle()
 
             // then
-            val actualMemoryCandidates = viewModel.categoryCandidates.getOrAwaitValue()
-            assertEquals(dummyCategoryCandidates, actualMemoryCandidates)
+            val actualCategoryCandidates = viewModel.categoryCandidates.getOrAwaitValue()
+            assertEquals(dummyCategoryCandidates, actualCategoryCandidates)
         }
 
     @Test
@@ -81,15 +81,15 @@ class StaccatoCreationViewModelTest {
 
             // then
             val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
-            val actualSelectableMemories = viewModel.selectableCategories.getOrAwaitValue()
-            val actualSelectedMemory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
+            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
 
-            val selectableMemories = dummyCategoryCandidates.filterBy(middleDateOf2024)
-            val selectedMemory = selectableMemories.findByIdOrFirst(null)
+            val selectableCategories = dummyCategoryCandidates.filterBy(middleDateOf2024)
+            val selectedCategory = selectableCategories.findByIdOrFirst(null)
 
             assertEquals(currentLocalDate, actualVisitedAt)
-            assertEquals(selectableMemories, actualSelectableMemories)
-            assertEquals(selectedMemory, actualSelectedMemory)
+            assertEquals(selectableCategories, actualSelectableCategories)
+            assertEquals(selectedCategory, actualSelectedCategory)
         }
 
     @Test
@@ -105,20 +105,20 @@ class StaccatoCreationViewModelTest {
 
             // then
             val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
-            val actualSelectableMemories = viewModel.selectableCategories.getOrAwaitValue()
-            val actualSelectedMemory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
+            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
 
             val closestVisitedAt = targetCategoryCandidate.getClosestDateTime(currentVisitedAt)
-            val fixedSelectableMemories = CategoryCandidates.from(targetCategoryCandidate)
-            val fixedSelectedMemory = targetCategoryCandidate
+            val fixedSelectableCategories = CategoryCandidates.from(targetCategoryCandidate)
+            val fixedSelectedCategory = targetCategoryCandidate
 
             assertEquals(closestVisitedAt, actualVisitedAt)
-            assertEquals(fixedSelectableMemories, actualSelectableMemories)
-            assertEquals(fixedSelectedMemory, actualSelectedMemory)
+            assertEquals(fixedSelectableCategories, actualSelectableCategories)
+            assertEquals(fixedSelectedCategory, actualSelectedCategory)
         }
 
     @Test
-    fun `카테고리 ID가 0L일 때는 일시가 바뀌면 memoryCandidate도 바뀐다`() =
+    fun `카테고리 ID가 0L일 때는 일시가 바뀌면 categoryCandidate도 바뀐다`() =
         runTest {
             // given
             viewModel.fetchCategoryCandidates()
@@ -131,17 +131,17 @@ class StaccatoCreationViewModelTest {
             viewModel.updateCategorySelectionBy(newLocalDate)
 
             // then
-            val expectedSelectableMemories = CategoryCandidates.from(categoryCandidateWithId1)
-            val expectedSelectedMemory = categoryCandidateWithId1
+            val expectedSelectableCategories = CategoryCandidates.from(categoryCandidateWithId1)
+            val expectedSelectedCategory = categoryCandidateWithId1
 
-            val actualSelectableMemories = viewModel.selectableCategories.getOrAwaitValue()
-            val actualSelectedMemory = viewModel.selectedCategory.getOrAwaitValue()
+            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
+            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
 
-            assertEquals(expectedSelectableMemories, actualSelectableMemories)
-            assertEquals(expectedSelectedMemory, actualSelectedMemory)
+            assertEquals(expectedSelectableCategories, actualSelectableCategories)
+            assertEquals(expectedSelectedCategory, actualSelectedCategory)
         }
 
-    private fun givenMemoryCandidatesReturnsSuccessWithDummyData() {
+    private fun givenCategoryCandidatesReturnsSuccessWithDummyData() {
         coEvery { timelineRepository.getCategoryCandidates() } returns
             ResponseResult.Success(
                 dummyCategoryCandidates,
