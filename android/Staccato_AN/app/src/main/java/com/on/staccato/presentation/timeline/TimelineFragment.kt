@@ -40,8 +40,8 @@ class TimelineFragment :
         setUpObserving()
     }
 
-    override fun onCategoryClicked(memoryId: Long) {
-        val bundle: Bundle = bundleOf(CATEGORY_ID_KEY to memoryId)
+    override fun onCategoryClicked(categoryId: Long) {
+        val bundle: Bundle = bundleOf(CATEGORY_ID_KEY to categoryId)
         navigateToMemory(bundle)
     }
 
