@@ -120,7 +120,7 @@ class CategoryFragment :
             if (isDeleteSuccess) {
                 sharedViewModel.setTimelineHasUpdated()
                 findNavController().popBackStack()
-                showToast(getString(R.string.memory_delete_complete))
+                showToast(getString(R.string.category_delete_complete))
             }
         }
     }

@@ -29,8 +29,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:subtitle="@string/memory_creation_toolbar_subtitle"
-            app:title="@string/memory_creation_toolbar_title" />
+            app:subtitle="@string/category_creation_toolbar_subtitle"
+            app:title="@string/category_creation_toolbar_title" />
 
         <ScrollView
             android:id="@+id/sv_category_creation"
@@ -51,7 +51,7 @@
                     style="@style/PhotoAttachBoxStyle"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="24dp"
-                    android:contentDescription="@string/all_memory_thumbnail_photo_description"
+                    android:contentDescription="@string/all_category_thumbnail_photo_description"
                     android:onClick="@{() -> handler.onPhotoAttachClicked()}"
                     android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -112,7 +112,7 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="36dp"
-                    android:text="@string/memory_creation_title"
+                    android:text="@string/category_creation_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_category_creation_photo_attach" />
 
@@ -133,7 +133,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         style="@style/TextInputEditTextStyle.Title"
-                        android:hint="@string/memory_creation_title_hint"
+                        android:hint="@string/category_creation_title_hint"
                         android:maxLength="30"
                         android:text="@={viewModel.title}" />
 
@@ -144,7 +144,7 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="25dp"
-                    android:text="@string/memory_creation_description"
+                    android:text="@string/category_creation_description"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_category_creation_title" />
 
@@ -158,7 +158,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         style="@style/TextInputEditTextStyle.Description"
-                        android:hint="@string/memory_creation_description_hint"
+                        android:hint="@string/category_creation_description_hint"
                         android:maxLength="500"
                         android:text="@={viewModel.description}" />
 
@@ -169,7 +169,7 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="25dp"
-                    android:text="@string/memory_creation_period_setting"
+                    android:text="@string/category_creation_period_setting"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_category_creation_description" />
 
@@ -195,7 +195,7 @@
                     style="@style/HintTextStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="5dp"
-                    android:text="@string/memory_creation_period_descripton"
+                    android:text="@string/category_creation_period_description"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_category_creation_period_title" />
 

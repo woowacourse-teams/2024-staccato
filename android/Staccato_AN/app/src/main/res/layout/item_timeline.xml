@@ -29,7 +29,7 @@
             android:id="@+id/iv_timeline_folder"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:contentDescription="@string/timeline_memory_icon_description"
+            android:contentDescription="@string/timeline_category_icon_description"
             android:src="@drawable/icon_folder"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -75,7 +75,7 @@
             android:id="@+id/iv_timeline_category_thumbnail"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:contentDescription="@string/all_memory_thumbnail_photo_description"
+            android:contentDescription="@string/all_category_thumbnail_photo_description"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="10:7"

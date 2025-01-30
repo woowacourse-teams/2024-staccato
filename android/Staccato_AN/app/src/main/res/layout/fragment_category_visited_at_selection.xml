@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/tv_select_category_title"
             style="@style/SubTitleStyle"
-            android:text="@string/staccato_creation_no_memory_in_this_date"
+            android:text="@string/staccato_creation_no_category_in_this_date"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="50dp"
             android:gravity="center"
-            android:text="@string/staccato_creation_no_memory"
+            android:text="@string/staccato_creation_no_category"
             app:layout_constraintBottom_toTopOf="@id/btn_category_visited_at_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

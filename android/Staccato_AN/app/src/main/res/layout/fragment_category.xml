@@ -56,7 +56,7 @@
                     android:id="@+id/iv_category_thumbnail"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:contentDescription="@string/all_memory_thumbnail_photo_description"
+                    android:contentDescription="@string/all_category_thumbnail_photo_description"
                     android:scaleType="centerCrop"
                     app:layout_constraintDimensionRatio="3:2"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -129,7 +129,7 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/memory_mates"
+                    android:text="@string/category_mates"
                     android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_category_second" />
@@ -163,7 +163,7 @@
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/memory_staccatos"
+                    android:text="@string/category_staccatos"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_category_third" />
 
@@ -181,7 +181,7 @@
                     <Button
                         android:id="@+id/btn_category_add_staccatos"
                         style="@style/BoundedIconButtonStyle"
-                        android:contentDescription="@string/memory_staccato_creation_btn_description"
+                        android:contentDescription="@string/category_staccato_creation_btn_description"
                         android:text="@string/staccato_add"
                         app:icon="@drawable/icon_edit" />
 
@@ -223,7 +223,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:paddingBottom="100dp"
-                    android:text="@string/memory_staccato_empty"
+                    android:text="@string/category_staccato_empty"
                     android:textAppearance="@style/Typography.Body2.Not.Resizable"
                     android:visibility="@{viewModel.category.staccatos.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -18,13 +18,13 @@ fun TextView.setSelectedMemory(
 ) {
     when {
         (memoryCandidates?.categoryCandidates?.isEmpty() == true) -> {
-            text = resources.getString(R.string.staccato_creation_no_memory)
+            text = resources.getString(R.string.staccato_creation_no_category)
             setTextColor(resources.getColor(R.color.gray3, null))
             isClickable = false
             isFocusable = false
         }
         (selectedMemory == null) -> {
-            text = resources.getString(R.string.staccato_creation_no_memory_in_this_date)
+            text = resources.getString(R.string.staccato_creation_no_category_in_this_date)
             setTextColor(resources.getColor(R.color.gray3, null))
             isClickable = false
             isFocusable = false
@@ -54,11 +54,11 @@ fun TextView.setMemoryPeriod(
     endDate: LocalDate?,
 ) {
     if (startDate == null || endDate == null) {
-        text = resources.getString(R.string.memory_creation_period_hint)
+        text = resources.getString(R.string.category_creation_period_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
     } else {
         text =
-            resources.getString(R.string.memory_creation_selected_period)
+            resources.getString(R.string.category_creation_selected_period)
                 .format(startDate, endDate)
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
@@ -83,7 +83,7 @@ fun TextView.formatLocalDateToDatePeriod(
     startAt: LocalDate?,
     endAt: LocalDate?,
 ) {
-    val periodFormatString = resources.getString(R.string.memory_period_dot)
+    val periodFormatString = resources.getString(R.string.category_period_dot)
     text =
         if (startAt != null && endAt != null) {
             visibility = View.VISIBLE
@@ -108,7 +108,7 @@ fun TextView.formatLocalDateToDatePeriodInMemory(
     startAt: LocalDate?,
     endAt: LocalDate?,
 ) {
-    val periodFormatString = resources.getString(R.string.memory_period_dot)
+    val periodFormatString = resources.getString(R.string.category_period_dot)
     text =
         if (startAt != null && endAt != null) {
             visibility = View.VISIBLE

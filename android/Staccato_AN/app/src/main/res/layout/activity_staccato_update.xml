@@ -236,7 +236,7 @@
                     android:id="@+id/tv_staccato_update_category_selection_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="40dp"
-                    android:text="@string/staccato_creation_memory_selection"
+                    android:text="@string/staccato_creation_category_selection"
                     app:layout_constraintStart_toStartOf="@id/tv_visited_at_selection_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_visited_at" />
 
