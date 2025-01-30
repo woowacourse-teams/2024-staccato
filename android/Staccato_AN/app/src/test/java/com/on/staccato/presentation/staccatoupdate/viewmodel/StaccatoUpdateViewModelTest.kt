@@ -54,7 +54,7 @@ class StaccatoUpdateViewModelTest {
     }
 
     @Test
-    fun `수정하려는 스타카토, 추억 후보를 불러온 뒤 뷰모델의 스타카토, 일시 및 추억 관련 데이터를 초기화 한다`() =
+    fun `수정하려는 스타카토, 카테고리 후보를 불러온 뒤 뷰모델의 스타카토, 일시 및 카테고리 관련 데이터를 초기화 한다`() =
         runTest {
             // given : 뷰모델 메서드 반환값 지정
             val targetStaccato = givenTargetStaccatoWithRepositorySetup()
@@ -71,7 +71,7 @@ class StaccatoUpdateViewModelTest {
             assertEquals(targetStaccato.placeName, actualPlaceName)
             assertEquals(targetStaccato.address, actualAddress)
 
-            // 추억 선택을 위한 데이터 검사
+            // 카테고리 선택을 위한 데이터 검사
             val actualCategoryCandidates = viewModel.categoryCandidates.getOrAwaitValue()
             val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
             val expectedSelectableCategories =
