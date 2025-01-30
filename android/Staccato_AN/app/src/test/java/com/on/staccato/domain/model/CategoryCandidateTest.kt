@@ -16,7 +16,7 @@ class CategoryCandidateTest {
     fun `타겟 날짜가 기간 내면 true를 반환`(targetLocalDate: LocalDate) {
         // given
         val category =
-            makeTestMemoryCandidate(
+            makeTestCategoryCandidate(
                 startAt = startDateOf2024,
                 endAt = endDateOf2024,
             )
@@ -30,7 +30,7 @@ class CategoryCandidateTest {
     fun `타겟 날짜가 기간보다 과거라면 false를 반환`() {
         // given
         val category =
-            makeTestMemoryCandidate(
+            makeTestCategoryCandidate(
                 startAt = startDateOf2024,
                 endAt = endDateOf2024,
             )
@@ -45,7 +45,7 @@ class CategoryCandidateTest {
     fun `타겟 날짜가 기간보다 미래라면 false를 반환`() {
         // given
         val category =
-            makeTestMemoryCandidate(
+            makeTestCategoryCandidate(
                 startAt = startDateOf2024,
                 endAt = endDateOf2024,
             )
@@ -61,7 +61,7 @@ class CategoryCandidateTest {
     fun `기간 없는 카테고리는 모든 날짜에 true를 반환`(date: LocalDate) {
         // given
         val categoryWithoutPeriod =
-            makeTestMemoryCandidate(
+            makeTestCategoryCandidate(
                 startAt = null,
                 endAt = null,
             )
@@ -75,7 +75,7 @@ class CategoryCandidateTest {
     fun `타겟 일시가 기간 범위 내면 그대로 반환`() {
         // given
         val category =
-            makeTestMemoryCandidate(memoryId = 2L, startAt = startDateOf2024, endAt = endDateOf2024)
+            makeTestCategoryCandidate(categoryId = 2L, startAt = startDateOf2024, endAt = endDateOf2024)
         val targetLocalDateTime = middleDateOf2024.atTime(13, 30)
         // when
         val actual = category.getClosestDateTime(targetLocalDateTime)
@@ -87,7 +87,7 @@ class CategoryCandidateTest {
     fun `타겟 일시가 기간보다 과거라면 시작일의 정오를 반환`() {
         // given
         val category =
-            makeTestMemoryCandidate(memoryId = 2L, startAt = startDateOf2024, endAt = endDateOf2024)
+            makeTestCategoryCandidate(categoryId = 2L, startAt = startDateOf2024, endAt = endDateOf2024)
         val targetLocalDateTime = endDateOf2023.atTime(13, 30)
         // when
         val actual = category.getClosestDateTime(targetLocalDateTime)
@@ -100,7 +100,7 @@ class CategoryCandidateTest {
     fun `타겟 일시가 기간보다 미래라면 종료일의 정오를 반환`() {
         // given
         val category =
-            makeTestMemoryCandidate(memoryId = 2L, startAt = startDateOf2024, endAt = endDateOf2024)
+            makeTestCategoryCandidate(categoryId = 2L, startAt = startDateOf2024, endAt = endDateOf2024)
         val targetLocalDateTime = startDateOf2025.atTime(13, 30)
         // when
         val actual = category.getClosestDateTime(targetLocalDateTime)

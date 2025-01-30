@@ -15,7 +15,7 @@ class CategoryCandidatesTest {
     @Parameters(method = "parameters")
     fun `날짜를 포함하는 카테고리들을 필터링 하여 반환`(date: LocalDate) {
         // given
-        val categoryCandidates = dummyMemoryCandidates
+        val categoryCandidates = dummyCategoryCandidates
 
         // when
         val filteredCandidates = categoryCandidates.filterBy(date)
@@ -29,7 +29,7 @@ class CategoryCandidatesTest {
     @Parameters(method = "existentCategoryIds")
     fun `findBy는 아이디가 일치하는 카테고리를 찾아 반환`(categoryId: Long) {
         // given
-        val categoryCandidates = dummyMemoryCandidates
+        val categoryCandidates = dummyCategoryCandidates
 
         // when
         val actual = categoryCandidates.findBy(categoryId)
@@ -42,7 +42,7 @@ class CategoryCandidatesTest {
     @Parameters(method = "nonExistentCategoryIds")
     fun `findBy는 일치하는 아이디가 없으면 null을 반환`(categoryId: Long) {
         // given
-        val categoryCandidates = dummyMemoryCandidates
+        val categoryCandidates = dummyCategoryCandidates
 
         // when
         val actual = categoryCandidates.findBy(categoryId)
@@ -55,7 +55,7 @@ class CategoryCandidatesTest {
     @Parameters(method = "existentCategoryIds")
     fun `findByIdOrFirst는 아이디가 일치하는 카테고리를 찾아 반환`(categoryId: Long) {
         // given
-        val categoryCandidates = dummyMemoryCandidates
+        val categoryCandidates = dummyCategoryCandidates
 
         // when
         val actual = categoryCandidates.findByIdOrFirst(categoryId)
@@ -68,11 +68,11 @@ class CategoryCandidatesTest {
     @Parameters(method = "nonExistentCategoryIds")
     fun `findByIdOrFirst는일치하는 아이디가 없으면 첫번째 카테고리를 반환`(categoryId: Long) {
         // given
-        val categoryCandidates = dummyMemoryCandidates
+        val categoryCandidates = dummyCategoryCandidates
 
         // when
         val actual = categoryCandidates.findByIdOrFirst(categoryId)
-        val expected = memoryCandidateWithId1
+        val expected = categoryCandidateWithId1
 
         // then
         assertEquals(expected, actual)

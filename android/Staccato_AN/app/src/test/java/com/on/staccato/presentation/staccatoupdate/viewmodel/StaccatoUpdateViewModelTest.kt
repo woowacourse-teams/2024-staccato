@@ -6,12 +6,12 @@ import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.TARGET_STACCATO_ID
-import com.on.staccato.domain.model.dummyMemoryCandidates
+import com.on.staccato.domain.model.dummyCategoryCandidates
 import com.on.staccato.domain.model.endDateOf2023
 import com.on.staccato.domain.model.endDateOf2024
 import com.on.staccato.domain.model.makeTestStaccato
-import com.on.staccato.domain.model.memoryCandidateWithId1
-import com.on.staccato.domain.model.targetMemoryCandidate
+import com.on.staccato.domain.model.categoryCandidateWithId1
+import com.on.staccato.domain.model.targetCategoryCandidate
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.MainDispatcherRule
@@ -75,12 +75,12 @@ class StaccatoUpdateViewModelTest {
             val actualMemoryCandidates = viewModel.categoryCandidates.getOrAwaitValue()
             val actualSelectableMemories = viewModel.selectableCategories.getOrAwaitValue()
             val expectedSelectableMemories =
-                dummyMemoryCandidates.filterBy(targetStaccato.visitedAt.toLocalDate())
+                dummyCategoryCandidates.filterBy(targetStaccato.visitedAt.toLocalDate())
             val actualSelectedMemory = viewModel.selectedCategory.getOrAwaitValue()
 
-            assertEquals(dummyMemoryCandidates, actualMemoryCandidates)
+            assertEquals(dummyCategoryCandidates, actualMemoryCandidates)
             assertEquals(expectedSelectableMemories, actualSelectableMemories)
-            assertEquals(targetMemoryCandidate, actualSelectedMemory)
+            assertEquals(targetCategoryCandidate, actualSelectedMemory)
 
             // 일시 선택을 위한 데이터 검사
             val actualSelectedVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
@@ -101,10 +101,10 @@ class StaccatoUpdateViewModelTest {
             viewModel.updateCategorySelectionBy(newLocalDate)
 
             // then : 바뀐 날짜 기준으로 유효한 값을 업데이트한다
-            val expectedSelectableMemories = CategoryCandidates.from(memoryCandidateWithId1)
+            val expectedSelectableMemories = CategoryCandidates.from(categoryCandidateWithId1)
             val actualSelectedMemories = viewModel.selectableCategories.getOrAwaitValue()
 
-            val expectedSelectableMemory = memoryCandidateWithId1
+            val expectedSelectableMemory = categoryCandidateWithId1
             val actualSelectedMemory = viewModel.selectedCategory.getOrAwaitValue()
 
             assertEquals(expectedSelectableMemories, actualSelectedMemories)
@@ -115,7 +115,7 @@ class StaccatoUpdateViewModelTest {
         val targetStaccato =
             makeTestStaccato(
                 staccatoId = TARGET_STACCATO_ID,
-                memoryCandidate = targetMemoryCandidate,
+                categoryCandidate = targetCategoryCandidate,
                 visitedAt = endDateOf2024.atTime(12, 0),
             )
         setupRepositoriesWithDummyData(targetStaccato)
@@ -125,7 +125,7 @@ class StaccatoUpdateViewModelTest {
     private fun setupRepositoriesWithDummyData(targetStaccato: Staccato) {
         coEvery { timelineRepository.getCategoryCandidates() } returns
             ResponseResult.Success(
-                dummyMemoryCandidates,
+                dummyCategoryCandidates,
             )
         coEvery { staccatoRepository.getStaccato(TARGET_STACCATO_ID) } returns
             ResponseResult.Success(targetStaccato)

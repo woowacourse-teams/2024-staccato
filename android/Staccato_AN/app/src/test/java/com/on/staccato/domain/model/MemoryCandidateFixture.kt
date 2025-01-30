@@ -9,43 +9,43 @@ internal val middleDateOf2024 = LocalDate.of(2024, 7, 1)
 internal val endDateOf2024 = LocalDate.of(2024, 12, 31)
 internal val startDateOf2025 = LocalDate.of(2025, 1, 1)
 
-internal const val TARGET_MEMORY_ID = 4L
+internal const val TARGET_CATEGORY_ID = 4L
 
-internal val memoryCandidateWithId1 =
-    makeTestMemoryCandidate(
-        memoryId = 1L,
+internal val categoryCandidateWithId1 =
+    makeTestCategoryCandidate(
+        categoryId = 1L,
         startAt = endDateOf2023,
         endAt = startDateOf2024,
     )
 
-internal val targetMemoryCandidate =
-    makeTestMemoryCandidate(
-        memoryId = TARGET_MEMORY_ID,
+internal val targetCategoryCandidate =
+    makeTestCategoryCandidate(
+        categoryId = TARGET_CATEGORY_ID,
         startAt = endDateOf2024,
         endAt = startDateOf2025,
     )
 
-val dummyMemoryCandidates =
+val dummyCategoryCandidates =
     CategoryCandidates(
         categoryCandidates =
             listOf(
-                memoryCandidateWithId1,
-                makeTestMemoryCandidate(memoryId = 2L, startAt = startDateOf2024, endAt = middleDateOf2024),
-                makeTestMemoryCandidate(memoryId = 3L, startAt = middleDateOf2024, endAt = endDateOf2024),
-                targetMemoryCandidate,
+                categoryCandidateWithId1,
+                makeTestCategoryCandidate(categoryId = 2L, startAt = startDateOf2024, endAt = middleDateOf2024),
+                makeTestCategoryCandidate(categoryId = 3L, startAt = middleDateOf2024, endAt = endDateOf2024),
+                targetCategoryCandidate,
             ),
     )
 
 internal const val TARGET_STACCATO_ID = 4L
 
-internal fun makeTestMemoryCandidate(
-    memoryId: Long = 1L,
-    memoryTitle: String = "임시 카테고리",
+internal fun makeTestCategoryCandidate(
+    categoryId: Long = 1L,
+    categoryTitle: String = "임시 카테고리",
     startAt: LocalDate? = null,
     endAt: LocalDate? = null,
 ) = CategoryCandidate(
-    categoryId = memoryId,
-    categoryTitle = memoryTitle,
+    categoryId = categoryId,
+    categoryTitle = categoryTitle,
     startAt = startAt,
     endAt = endAt,
 )
@@ -59,7 +59,7 @@ internal fun makeTestStaccato(
     longitude: Double = 1.1,
     staccatoImageUrls: List<String> = emptyList(),
     visitedAt: LocalDateTime,
-    memoryCandidate: CategoryCandidate,
+    categoryCandidate: CategoryCandidate,
     feeling: Feeling = Feeling.EXCITED,
 ) = Staccato(
     staccatoId = staccatoId,
@@ -69,10 +69,10 @@ internal fun makeTestStaccato(
     latitude = latitude,
     longitude = longitude,
     staccatoImageUrls = staccatoImageUrls,
-    categoryId = memoryCandidate.categoryId,
-    categoryTitle = memoryCandidate.categoryTitle,
+    categoryId = categoryCandidate.categoryId,
+    categoryTitle = categoryCandidate.categoryTitle,
     visitedAt = visitedAt,
-    startAt = memoryCandidate.startAt,
-    endAt = memoryCandidate.endAt,
+    startAt = categoryCandidate.startAt,
+    endAt = categoryCandidate.endAt,
     feeling = feeling,
 )
