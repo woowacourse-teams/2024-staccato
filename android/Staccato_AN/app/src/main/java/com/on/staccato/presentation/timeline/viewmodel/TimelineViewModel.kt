@@ -92,8 +92,8 @@ class TimelineViewModel
         }
 
         private fun sortByOldest() {
-            val memoriesSortedByOldest = originalTimeline.sortedWith(compareBy(nullsLast()) { it.startAt })
-            _timeline.value = memoriesSortedByOldest
+            val categoriesSortedByOldest = originalTimeline.sortedWith(compareBy(nullsLast()) { it.startAt })
+            _timeline.value = categoriesSortedByOldest
         }
 
         private fun filterWithPeriod() {
