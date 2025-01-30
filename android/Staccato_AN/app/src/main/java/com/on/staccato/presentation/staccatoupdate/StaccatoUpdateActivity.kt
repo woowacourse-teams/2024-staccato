@@ -400,14 +400,14 @@ class StaccatoUpdateActivity :
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
-                is StaccatoUpdateError.CategoryCandidates -> handleMemoryCandidatesFail(error)
+                is StaccatoUpdateError.CategoryCandidates -> handleCategoryCandidatesFail(error)
                 is StaccatoUpdateError.StaccatoInitialize -> handleInitializeFail(error)
                 is StaccatoUpdateError.StaccatoUpdate -> handleStaccatoUpdateFail(error)
             }
         }
     }
 
-    private fun handleMemoryCandidatesFail(error: StaccatoUpdateError.CategoryCandidates) {
+    private fun handleCategoryCandidatesFail(error: StaccatoUpdateError.CategoryCandidates) {
         finish()
         showToast(error.message)
     }
