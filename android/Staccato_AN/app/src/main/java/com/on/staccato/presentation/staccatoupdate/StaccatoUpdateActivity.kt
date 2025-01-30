@@ -266,7 +266,7 @@ class StaccatoUpdateActivity :
         observePhotoData()
         observePlaceData()
         observeVisitedAtData()
-        observeMemoryData()
+        observeCategoryData()
         observeIsUpdateComplete()
     }
 
@@ -302,7 +302,7 @@ class StaccatoUpdateActivity :
         }
     }
 
-    private fun observeMemoryData() {
+    private fun observeCategoryData() {
         viewModel.selectableCategories.observe(this) {
             it?.let {
                 categorySelectionFragment.setItems(it.categoryCandidates)
