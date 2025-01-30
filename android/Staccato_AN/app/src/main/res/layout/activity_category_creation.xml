@@ -225,9 +225,9 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_category_creation_period_selection"
                     bind:isPeriodActive="@{viewModel.isPeriodActive}"
                     bind:isPhotoUploading="@{viewModel.isPhotoPosting}"
-                    bind:memoryEndDate="@{viewModel.endDate}"
-                    bind:memoryStartDate="@{viewModel.startDate}"
-                    bind:memoryTitle="@{viewModel.title}" />
+                    bind:categoryEndDate="@{viewModel.endDate}"
+                    bind:categoryStartDate="@{viewModel.startDate}"
+                    bind:categoryTitle="@{viewModel.title}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

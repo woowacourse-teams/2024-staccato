@@ -269,7 +269,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_staccato_creation_category_selection"
                     bind:staccatoAddress="@{viewModel.placeName}"
-                    bind:staccatoMemory="@{viewModel.selectedCategory}"
+                    bind:staccatoCategory="@{viewModel.selectedCategory}"
                     bind:staccatoPhotos="@{viewModel.currentPhotos}"
                     bind:staccatoTitle="@{viewModel.staccatoTitle}"
                     bind:staccatoVisitedAt="@{viewModel.selectedVisitedAt}" />
