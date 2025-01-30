@@ -144,7 +144,7 @@ class StaccatoUpdateActivity :
         setupFusedLocationProviderClient()
         initBinding()
         initToolbar()
-        initMemorySelectionFragment()
+        initCategorySelectionFragment()
         initVisitedAtSelectionFragment()
         initAdapter()
         initItemTouchHelper()
@@ -250,7 +250,7 @@ class StaccatoUpdateActivity :
         }
     }
 
-    private fun initMemorySelectionFragment() {
+    private fun initCategorySelectionFragment() {
         categorySelectionFragment.setOnCategorySelected { selectedCategory ->
             viewModel.selectCategory(selectedCategory)
         }
