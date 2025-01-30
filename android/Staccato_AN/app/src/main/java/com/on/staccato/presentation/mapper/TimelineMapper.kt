@@ -5,8 +5,8 @@ import com.on.staccato.domain.model.Timeline
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 
 fun Timeline.toTimelineUiModel(): List<TimelineUiModel> {
-    return categories.map { memory ->
-        memory.toTimelineUiModel()
+    return categories.map { category ->
+        category.toTimelineUiModel()
     }
 }
 
