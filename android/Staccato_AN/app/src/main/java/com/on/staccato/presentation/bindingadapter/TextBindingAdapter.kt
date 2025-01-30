@@ -11,26 +11,26 @@ import com.on.staccato.presentation.common.getFormattedLocalDateTime
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@BindingAdapter(value = ["selectedMemory", "memoryCandidates"])
-fun TextView.setSelectedMemory(
-    selectedMemory: CategoryCandidate?,
-    memoryCandidates: CategoryCandidates?,
+@BindingAdapter(value = ["selectedCategory", "categoryCandidates"])
+fun TextView.setSelectedCategory(
+    selectedCategory: CategoryCandidate?,
+    categoryCandidates: CategoryCandidates?,
 ) {
     when {
-        (memoryCandidates?.categoryCandidates?.isEmpty() == true) -> {
+        (categoryCandidates?.categoryCandidates?.isEmpty() == true) -> {
             text = resources.getString(R.string.staccato_creation_no_category)
             setTextColor(resources.getColor(R.color.gray3, null))
             isClickable = false
             isFocusable = false
         }
-        (selectedMemory == null) -> {
+        (selectedCategory == null) -> {
             text = resources.getString(R.string.staccato_creation_no_category_in_this_date)
             setTextColor(resources.getColor(R.color.gray3, null))
             isClickable = false
             isFocusable = false
         }
         else -> {
-            text = selectedMemory.categoryTitle
+            text = selectedCategory.categoryTitle
             isClickable = true
             isFocusable = true
             setTextColor(resources.getColor(R.color.staccato_black, null))
@@ -49,7 +49,7 @@ fun TextView.setDateTimeWithAmPm(dateTime: LocalDateTime?) {
 @BindingAdapter(
     value = ["startDate", "endDate"],
 )
-fun TextView.setMemoryPeriod(
+fun TextView.setCategoryPeriod(
     startDate: LocalDate?,
     endDate: LocalDate?,
 ) {
@@ -64,9 +64,9 @@ fun TextView.setMemoryPeriod(
     }
 }
 
-@BindingAdapter("isMemoryCandidatesEmpty")
-fun TextView.setIsMemoryCandidatesEmptyVisibility(memoryCandidates: CategoryCandidates?) {
-    isGone = !memoryCandidates?.categoryCandidates.isNullOrEmpty()
+@BindingAdapter("isCategoryCandidatesEmpty")
+fun TextView.setIsCategoryCandidatesEmptyVisibility(categoryCandidates: CategoryCandidates?) {
+    isGone = !categoryCandidates?.categoryCandidates.isNullOrEmpty()
 }
 
 @BindingAdapter("visitedAtHistory")
@@ -102,9 +102,9 @@ fun TextView.formatLocalDateToDatePeriod(
 }
 
 @BindingAdapter(
-    value = ["memoryStartAt", "memoryEndAt"],
+    value = ["categoryStartAt", "categoryEndAt"],
 )
-fun TextView.formatLocalDateToDatePeriodInMemory(
+fun TextView.formatLocalDateToDatePeriodInCategory(
     startAt: LocalDate?,
     endAt: LocalDate?,
 ) {

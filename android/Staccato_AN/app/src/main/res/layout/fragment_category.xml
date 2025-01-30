@@ -99,8 +99,8 @@
                     android:textColor="@color/absolute_white"
                     app:layout_constraintBottom_toBottomOf="@id/iv_category_thumbnail"
                     app:layout_constraintStart_toStartOf="@id/tv_category_title"
-                    bind:memoryEndAt="@{viewModel.category.endAt}"
-                    bind:memoryStartAt="@{viewModel.category.startAt}"
+                    bind:categoryEndAt="@{viewModel.category.endAt}"
+                    bind:categoryStartAt="@{viewModel.category.startAt}"
                     tools:text="2023년 7월 1일 ~ 7월 5일" />
 
                 <TextView

@@ -39,7 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_select_category_title"
-            bind:isMemoryCandidatesEmpty="@{categoryCandidates}" />
+            bind:isCategoryCandidatesEmpty="@{categoryCandidates}" />
 
         <NumberPicker
             android:id="@+id/picker_category"
