@@ -14,7 +14,7 @@ data class StaccatoResponse(
     @SerialName("placeName") val placeName: String,
     @SerialName("latitude") val latitude: Double,
     @SerialName("longitude") val longitude: Double,
-    @SerialName("staccatoImageUrls") val momentImageUrls: List<String>,
+    @SerialName("staccatoImageUrls") val staccatoImageUrls: List<String>,
     @SerialName("address") val address: String,
     @SerialName("visitedAt") val visitedAt: String,
     @SerialName("feeling") val feeling: String,
