@@ -75,7 +75,7 @@ class CategoryFragment :
                 bundleOf(
                     STACCATO_ID_KEY to staccatoId,
                 )
-            findNavController().navigate(R.id.action_memoryFragment_to_staccatoFragment, bundle)
+            findNavController().navigate(R.id.action_categoryFragment_to_staccatoFragment, bundle)
         }
     }
 

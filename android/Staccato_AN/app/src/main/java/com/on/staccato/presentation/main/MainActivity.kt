@@ -332,7 +332,7 @@ class MainActivity :
                 result.data?.let {
                     sharedViewModel.setTimelineHasUpdated()
                     val bundle: Bundle = makeBundle(it, CATEGORY_ID_KEY)
-                    navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
+                    navigateTo(R.id.categoryFragment, R.id.timelineFragment, bundle, false)
                 }
             }
         }

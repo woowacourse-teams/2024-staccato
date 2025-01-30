@@ -67,7 +67,7 @@ class TimelineFragment :
     }
 
     private fun navigateToCategory(bundle: Bundle) {
-        findNavController().navigate(R.id.action_timelineFragment_to_memoryFragment, bundle)
+        findNavController().navigate(R.id.action_timelineFragment_to_categoryFragment, bundle)
     }
 
     private fun setUpAdapter() {
