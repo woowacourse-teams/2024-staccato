@@ -13,5 +13,5 @@ data class CategoryResponse(
     @SerialName("endAt") val endAt: String? = null,
     @SerialName("description") val description: String? = null,
     @SerialName("mates") val mates: List<MemberDto>,
-    @SerialName("moments") val staccatos: List<CategoryStaccatoDto>,
+    @SerialName("staccatos") val staccatos: List<CategoryStaccatoDto>,
 )
