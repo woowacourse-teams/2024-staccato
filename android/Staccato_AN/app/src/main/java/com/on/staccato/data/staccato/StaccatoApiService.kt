@@ -20,7 +20,7 @@ interface StaccatoApiService {
 
     @GET(STACCATO_PATH_WITH_ID)
     suspend fun getStaccato(
-        @Path(value = STACCATO_ID) momentId: Long,
+        @Path(value = STACCATO_ID) staccatoId: Long,
     ): Response<StaccatoResponse>
 
     @POST(STACCATOS_PATH)
@@ -30,18 +30,18 @@ interface StaccatoApiService {
 
     @PUT(STACCATO_PATH_WITH_ID)
     suspend fun putStaccato(
-        @Path(value = STACCATO_ID) momentId: Long,
+        @Path(value = STACCATO_ID) staccatoId: Long,
         @Body staccatoUpdateRequest: StaccatoUpdateRequest,
     ): Response<Unit>
 
     @DELETE(STACCATO_PATH_WITH_ID)
     suspend fun deleteStaccato(
-        @Path(value = STACCATO_ID) momentId: Long,
+        @Path(value = STACCATO_ID) staccatoId: Long,
     ): Response<Unit>
 
     @POST(FEELING_PATH)
     suspend fun postFeeling(
-        @Path(value = STACCATO_ID) momentId: Long,
+        @Path(value = STACCATO_ID) staccatoId: Long,
         @Body feelingRequest: FeelingRequest,
     ): Response<Unit>
 
