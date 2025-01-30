@@ -251,7 +251,7 @@
                     android:id="@+id/tv_memory_selection"
                     style="@style/BackgroundedTextStyle"
                     android:layout_marginTop="8dp"
-                    android:onClick="@{() -> staccatoUpdateHandler.onMemorySelectionClicked()}"
+                    android:onClick="@{() -> staccatoUpdateHandler.onCategorySelectionClicked()}"
                     android:text="@{viewModel.selectedMemory.categoryTitle}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
