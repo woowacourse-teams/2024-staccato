@@ -123,7 +123,7 @@ class StaccatoUpdateViewModel
         }
 
         fun fetchTargetData(staccatoId: Long) {
-            fetchMemoryCandidates()
+            fetchCategoryCandidates()
             fetchStaccatoBy(staccatoId)
         }
 
@@ -254,7 +254,7 @@ class StaccatoUpdateViewModel
                 categoryCandidates.value?.filterBy(staccato.visitedAt.toLocalDate())
         }
 
-        private fun fetchMemoryCandidates() {
+        private fun fetchCategoryCandidates() {
             viewModelScope.launch {
                 timelineRepository.getCategoryCandidates()
                     .onSuccess { memoryCandidates ->
