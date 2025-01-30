@@ -257,8 +257,8 @@ class StaccatoUpdateViewModel
         private fun fetchCategoryCandidates() {
             viewModelScope.launch {
                 timelineRepository.getCategoryCandidates()
-                    .onSuccess { memoryCandidates ->
-                        _categoryCandidates.value = memoryCandidates
+                    .onSuccess { categoryCandidates ->
+                        _categoryCandidates.value = categoryCandidates
                     }.onException(::handleCategoryCandidatesException)
                     .onServerError(::handleServerError)
             }
