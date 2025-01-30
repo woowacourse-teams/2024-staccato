@@ -57,7 +57,7 @@ fun View.setTimelineEmptyViewVisible(
 @BindingAdapter(
     value = ["visibilityByTimeline", "visibilityByLoading"],
 )
-fun ViewGroup.setMemoryAddButtonVisible(
+fun ViewGroup.setCategoryAddButtonVisible(
     timeLine: List<TimelineUiModel>? = null,
     isTimelineLoading: Boolean,
 ) {
