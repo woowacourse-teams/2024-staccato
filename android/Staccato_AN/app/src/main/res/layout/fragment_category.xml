@@ -63,13 +63,13 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     bind:coilImageUrl="@{viewModel.category.categoryThumbnailUrl}"
-                    bind:coilPlaceHolder="@{@drawable/memory_gradient}"
+                    bind:coilPlaceHolder="@{@drawable/category_gradient}"
                     tools:src="@drawable/shape_place_holder_rectangle" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:background="@drawable/memory_gradient"
+                    android:background="@drawable/category_gradient"
                     android:visibility="@{viewModel.category.categoryThumbnailUrl == null ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@id/iv_category_thumbnail"
                     app:layout_constraintEnd_toEndOf="@id/iv_category_thumbnail"
