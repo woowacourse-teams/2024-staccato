@@ -9,7 +9,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-private const val CATEGORY_FILE_CHILD_NAME = "memory"
+private const val CATEGORY_FILE_CHILD_NAME = "category"
 
 fun convertMemoryUriToFile(
     context: Context,
