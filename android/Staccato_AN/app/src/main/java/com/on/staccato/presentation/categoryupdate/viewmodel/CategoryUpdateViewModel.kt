@@ -22,7 +22,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.categorycreation.DateConverter.convertLongToLocalDate
 import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
-import com.on.staccato.presentation.util.convertMemoryUriToFile
+import com.on.staccato.presentation.util.convertCategoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -177,7 +177,7 @@ class CategoryUpdateViewModel
             context: Context,
             uri: Uri,
         ): Job {
-            val thumbnailFile = convertMemoryUriToFile(context, uri, name = CATEGORY_FILE_NAME)
+            val thumbnailFile = convertCategoryUriToFile(context, uri, name = CATEGORY_FILE_NAME)
             return viewModelScope.launch {
                 val result: ResponseResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)

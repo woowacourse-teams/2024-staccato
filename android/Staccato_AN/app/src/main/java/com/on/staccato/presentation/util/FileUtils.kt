@@ -11,7 +11,7 @@ import java.io.File
 
 private const val CATEGORY_FILE_CHILD_NAME = "category"
 
-fun convertMemoryUriToFile(
+fun convertCategoryUriToFile(
     context: Context,
     uri: Uri,
     name: String,
