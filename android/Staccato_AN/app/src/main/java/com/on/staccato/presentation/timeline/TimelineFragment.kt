@@ -46,10 +46,10 @@ class TimelineFragment :
     }
 
     override fun onCategoryCreationClicked() {
-        val memoryCreationLauncher = (activity as MainActivity).categoryCreationLauncher
+        val categoryCreationLauncher = (activity as MainActivity).categoryCreationLauncher
         CategoryCreationActivity.startWithResultLauncher(
             requireActivity(),
-            memoryCreationLauncher,
+            categoryCreationLauncher,
         )
     }
 
