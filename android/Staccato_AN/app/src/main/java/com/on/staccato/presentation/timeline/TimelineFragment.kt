@@ -40,12 +40,12 @@ class TimelineFragment :
         setUpObserving()
     }
 
-    override fun onMemoryClicked(memoryId: Long) {
+    override fun onCategoryClicked(memoryId: Long) {
         val bundle: Bundle = bundleOf(CATEGORY_ID_KEY to memoryId)
         navigateToMemory(bundle)
     }
 
-    override fun onMemoryCreationClicked() {
+    override fun onCategoryCreationClicked() {
         val memoryCreationLauncher = (activity as MainActivity).categoryCreationLauncher
         CategoryCreationActivity.startWithResultLauncher(
             requireActivity(),
