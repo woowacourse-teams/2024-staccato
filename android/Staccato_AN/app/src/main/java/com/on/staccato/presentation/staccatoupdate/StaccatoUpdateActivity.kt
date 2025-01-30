@@ -251,8 +251,8 @@ class StaccatoUpdateActivity :
     }
 
     private fun initMemorySelectionFragment() {
-        categorySelectionFragment.setOnCategorySelected { selectedMemory ->
-            viewModel.selectCategory(selectedMemory)
+        categorySelectionFragment.setOnCategorySelected { selectedCategory ->
+            viewModel.selectCategory(selectedCategory)
         }
     }
 
