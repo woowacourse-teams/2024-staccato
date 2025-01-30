@@ -259,7 +259,7 @@ class StaccatoUpdateViewModel
                 timelineRepository.getCategoryCandidates()
                     .onSuccess { memoryCandidates ->
                         _categoryCandidates.value = memoryCandidates
-                    }.onException(::handleMemoryCandidatesException)
+                    }.onException(::handleCategoryCandidatesException)
                     .onServerError(::handleServerError)
             }
         }
@@ -320,7 +320,7 @@ class StaccatoUpdateViewModel
             _warningMessage.setValue(errorMessage)
         }
 
-        private fun handleMemoryCandidatesException(
+        private fun handleCategoryCandidatesException(
             e: Throwable,
             message: String,
         ) {
