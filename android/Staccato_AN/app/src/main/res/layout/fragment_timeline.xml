@@ -35,20 +35,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <FrameLayout
-            android:id="@+id/frame_timeline_add_memory"
+            android:id="@+id/frame_timeline_add_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:onClick="@{() -> handler.onCategoryCreationClicked()}"
             android:paddingVertical="10dp"
             app:layout_constraintBottom_toBottomOf="@id/tv_timeline_my_timeline"
-            app:layout_constraintEnd_toStartOf="@id/frame_timeline_sort_memories"
+            app:layout_constraintEnd_toStartOf="@id/frame_timeline_sort_categories"
             app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline"
             bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
             bind:visibilityByTimeline="@{viewModel.timeline}">
 
             <Button
-                android:id="@+id/btn_timeline_add_memory"
+                android:id="@+id/btn_timeline_add_category"
                 style="@style/BoundedIconButtonStyle"
                 android:contentDescription="@string/timeline_memory_creation_btn_description"
                 android:text="@string/timeline_add_memory"
@@ -57,7 +57,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/frame_timeline_sort_memories"
+            android:id="@+id/frame_timeline_sort_categories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -68,7 +68,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline">
 
             <Button
-                android:id="@+id/btn_timeline_sort_memories"
+                android:id="@+id/btn_timeline_sort_categories"
                 style="@style/BoundedIconButtonStyle"
                 android:contentDescription="@string/timeline_sort_memories_btn_description"
                 android:text="@string/timeline_sort"
@@ -99,7 +99,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/frame_timeline_add_memory"
+            app:layout_constraintTop_toBottomOf="@id/frame_timeline_add_category"
             tools:visibility="visible" />
 
         <ImageView
@@ -133,7 +133,7 @@
             tools:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_timeline_create_memory"
+            android:id="@+id/btn_timeline_create_category"
             style="@style/ButtonStyle.Save.Active"
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="20dp"
