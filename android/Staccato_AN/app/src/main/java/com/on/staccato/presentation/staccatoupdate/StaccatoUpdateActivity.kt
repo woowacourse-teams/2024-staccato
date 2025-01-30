@@ -252,7 +252,7 @@ class StaccatoUpdateActivity :
 
     private fun initMemorySelectionFragment() {
         memorySelectionFragment.setOnCategorySelected { selectedMemory ->
-            viewModel.selectMemory(selectedMemory)
+            viewModel.selectCategory(selectedMemory)
         }
     }
 

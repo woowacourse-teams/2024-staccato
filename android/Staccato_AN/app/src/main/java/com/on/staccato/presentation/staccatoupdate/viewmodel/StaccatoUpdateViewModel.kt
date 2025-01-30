@@ -114,7 +114,7 @@ class StaccatoUpdateViewModel
             }
         }
 
-        fun selectMemory(category: CategoryCandidate) {
+        fun selectCategory(category: CategoryCandidate) {
             _selectedCategory.value = category
         }
 
