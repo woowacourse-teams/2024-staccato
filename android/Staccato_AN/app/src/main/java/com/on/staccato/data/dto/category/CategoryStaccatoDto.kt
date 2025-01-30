@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CategoryStaccatoDto(
-    @SerialName("momentId") val staccatoId: Long,
+    @SerialName("staccatoId") val staccatoId: Long,
     @SerialName("staccatoTitle") val staccatoTitle: String,
-    @SerialName("momentImageUrl") val staccatoImageUrl: String? = null,
+    @SerialName("staccatoImageUrl") val staccatoImageUrl: String? = null,
     @SerialName("visitedAt") val visitedAt: String,
 )
