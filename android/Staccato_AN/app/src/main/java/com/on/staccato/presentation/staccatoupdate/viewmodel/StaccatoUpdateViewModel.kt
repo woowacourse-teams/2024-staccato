@@ -28,7 +28,7 @@ import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel.Companion.FAIL_IMAGE_UPLOAD_MESSAGE
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateError
-import com.on.staccato.presentation.util.convertExcretaFile
+import com.on.staccato.presentation.util.convertStaccatoUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
@@ -269,7 +269,7 @@ class StaccatoUpdateViewModel
             photo: AttachedPhotoUiModel,
         ) = viewModelScope.async(buildCoroutineExceptionHandler()) {
             val multiPartBody =
-                convertExcretaFile(
+                convertStaccatoUriToFile(
                     context,
                     photo.uri,
                     StaccatoCreationViewModel.FORM_DATA_NAME,

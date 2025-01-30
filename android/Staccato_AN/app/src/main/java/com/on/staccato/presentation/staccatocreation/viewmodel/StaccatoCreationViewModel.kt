@@ -24,7 +24,7 @@ import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity.Co
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationError
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
-import com.on.staccato.presentation.util.convertExcretaFile
+import com.on.staccato.presentation.util.convertStaccatoUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
@@ -245,7 +245,7 @@ class StaccatoCreationViewModel
             context: Context,
             photo: AttachedPhotoUiModel,
         ) = viewModelScope.launch(buildCoroutineExceptionHandler()) {
-            val multiPartBody = convertExcretaFile(context, photo.uri, FORM_DATA_NAME)
+            val multiPartBody = convertStaccatoUriToFile(context, photo.uri, FORM_DATA_NAME)
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
