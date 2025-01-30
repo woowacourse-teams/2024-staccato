@@ -119,7 +119,7 @@ class StaccatoDefaultRepository
                                 longitude = longitude,
                                 visitedAt = visitedAt.toString(),
                                 categoryId = categoryId,
-                                momentImageUrls = staccatoImageUrls,
+                                staccatoImageUrls = staccatoImageUrls,
                             ),
                     )
             ) {
