@@ -196,7 +196,7 @@ class StaccatoUpdateViewModel
                 val latitudeValue = latitude.value ?: return@launch handleException()
                 val longitudeValue = longitude.value ?: return@launch handleException()
                 val visitedAtValue = selectedVisitedAt.value ?: return@launch handleException()
-                val memoryIdValue = selectedCategory.value?.categoryId ?: return@launch handleException()
+                val categoryIdValue = selectedCategory.value?.categoryId ?: return@launch handleException()
                 val staccatoImageUrlsValue =
                     currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                         ?: emptyList()
@@ -209,7 +209,7 @@ class StaccatoUpdateViewModel
                     latitude = latitudeValue,
                     longitude = longitudeValue,
                     visitedAt = visitedAtValue,
-                    categoryId = memoryIdValue,
+                    categoryId = categoryIdValue,
                     staccatoImageUrls = staccatoImageUrlsValue,
                 ).onSuccess {
                     _isUpdateCompleted.postValue(true)
