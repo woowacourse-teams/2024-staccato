@@ -69,8 +69,8 @@ public class MomentService {
         validateMemoryOwner(targetMemory, member);
 
         Moment newMoment = momentRequest.toMoment(targetMemory);
-        MomentImages oringMomentImages = moment.getMomentImages();
-        List<Long> removalImageIds = oringMomentImages.findRemovalImageIds(newMoment.getMomentImages());
+        MomentImages originMomentImages = moment.getMomentImages();
+        List<Long> removalImageIds = originMomentImages.findRemovalImageIds(newMoment.getMomentImages());
         momentImageRepository.deleteAllByIdInBulk(removalImageIds);
 
         moment.update(newMoment);
