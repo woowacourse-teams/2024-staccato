@@ -14,6 +14,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreRemove;
+import jakarta.persistence.PreUpdate;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import com.staccato.memory.domain.Memory;
@@ -94,5 +97,12 @@ public class Moment extends BaseEntity {
 
     public void changeFeeling(Feeling feeling) {
         this.feeling = feeling;
+    }
+
+    @PrePersist
+    @PreUpdate
+    @PreRemove
+    public void touchForWrite() {
+        memory.setUpdatedAt(LocalDateTime.now());
     }
 }

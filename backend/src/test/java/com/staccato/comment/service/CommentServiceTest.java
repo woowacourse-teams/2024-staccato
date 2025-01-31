@@ -45,7 +45,7 @@ class CommentServiceTest extends ServiceSliceTest {
     void createComment() {
         // given
         Member member = memberRepository.save(MemberFixture.create("nickname"));
-        Memory memory = memoryRepository.save(MemoryFixture.create(member));
+        Memory memory = memoryRepository.save(MemoryFixture.createWithMember(member));
         Moment moment = momentRepository.save(MomentFixture.create(memory));
         CommentRequest commentRequest = new CommentRequest(moment.getId(), "content");
 
@@ -75,7 +75,7 @@ class CommentServiceTest extends ServiceSliceTest {
         // given
         Member momentOwner = memberRepository.save(MemberFixture.create("momentOwner"));
         Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
-        Memory memory = memoryRepository.save(MemoryFixture.create(momentOwner));
+        Memory memory = memoryRepository.save(MemoryFixture.createWithMember(momentOwner));
         momentRepository.save(MomentFixture.create(memory));
         CommentRequest commentRequest = CommentRequestFixture.create();
 
@@ -90,7 +90,7 @@ class CommentServiceTest extends ServiceSliceTest {
     void readAllByMomentId() {
         // given
         Member member = memberRepository.save(MemberFixture.create("nickname"));
-        Memory memory = memoryRepository.save(MemoryFixture.create(member));
+        Memory memory = memoryRepository.save(MemoryFixture.createWithMember(member));
         Moment moment = momentRepository.save(MomentFixture.create(memory));
         Moment anotherMoment = momentRepository.save(MomentFixture.create(memory));
         CommentRequest commentRequest1 = CommentRequestFixture.create(moment.getId());
@@ -114,7 +114,7 @@ class CommentServiceTest extends ServiceSliceTest {
         // given
         Member momentOwner = memberRepository.save(MemberFixture.create("momentOwner"));
         Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
-        Memory memory = memoryRepository.save(MemoryFixture.create(momentOwner));
+        Memory memory = memoryRepository.save(MemoryFixture.createWithMember(momentOwner));
         Moment moment = momentRepository.save(MomentFixture.create(memory));
         commentRepository.save(CommentFixture.create(moment, momentOwner));
 
@@ -129,7 +129,7 @@ class CommentServiceTest extends ServiceSliceTest {
     void updateComment() {
         // given
         Member member = memberRepository.save(MemberFixture.create("nickname"));
-        Memory memory = memoryRepository.save(MemoryFixture.create(member));
+        Memory memory = memoryRepository.save(MemoryFixture.createWithMember(member));
         Moment moment = momentRepository.save(MomentFixture.create(memory));
         Comment comment = commentRepository.save(CommentFixture.create(moment, member));
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
@@ -161,7 +161,7 @@ class CommentServiceTest extends ServiceSliceTest {
         // given
         Member momentOwner = memberRepository.save(MemberFixture.create("momentOwner"));
         Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
-        Memory memory = memoryRepository.save(MemoryFixture.create(momentOwner));
+        Memory memory = memoryRepository.save(MemoryFixture.createWithMember(momentOwner));
         Moment moment = momentRepository.save(MomentFixture.create(memory));
         Comment comment = commentRepository.save(CommentFixture.create(moment, momentOwner));
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
@@ -177,7 +177,7 @@ class CommentServiceTest extends ServiceSliceTest {
     void deleteComment() {
         // given
         Member member = memberRepository.save(MemberFixture.create("nickname"));
-        Memory memory = memoryRepository.save(MemoryFixture.create(member));
+        Memory memory = memoryRepository.save(MemoryFixture.createWithMember(member));
         Moment moment = momentRepository.save(MomentFixture.create(memory));
         Comment comment = commentRepository.save(CommentFixture.create(moment, member));
 
@@ -194,7 +194,7 @@ class CommentServiceTest extends ServiceSliceTest {
         // given
         Member commentOwner = memberRepository.save(MemberFixture.create("commentOwner"));
         Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
-        Memory memory = memoryRepository.save(MemoryFixture.create(commentOwner));
+        Memory memory = memoryRepository.save(MemoryFixture.createWithMember(commentOwner));
         Moment moment = momentRepository.save(MomentFixture.create(memory));
         Comment comment = commentRepository.save(CommentFixture.create(moment, commentOwner));
 
