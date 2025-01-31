@@ -2,11 +2,12 @@ package com.on.staccato.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.on.staccato.data.mypage.MyPageLocalDataSource
 import com.on.staccato.domain.model.MemberProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class UserInfoPreferencesManager(context: Context) {
+class UserInfoPreferencesManager(context: Context) : MyPageLocalDataSource {
     private val mUserInfoPrefs: SharedPreferences =
         context.getSharedPreferences(USER_INFO_PREF_NAME, Context.MODE_PRIVATE)
 
@@ -16,7 +17,7 @@ class UserInfoPreferencesManager(context: Context) {
         }
     }
 
-    suspend fun getMemberProfile(): MemberProfile =
+    override suspend fun getMemberProfile(): MemberProfile =
         MemberProfile(
             profileImageUrl = getProfileImageUrl() ?: EMPTY_STRING,
             nickname = getNickname() ?: EMPTY_STRING,
@@ -47,25 +48,25 @@ class UserInfoPreferencesManager(context: Context) {
         }
     }
 
-    suspend fun setMemberProfile(memberProfile: MemberProfile) {
-        setProfileImageUrl(memberProfile.profileImageUrl ?: "")
-        setNickname(memberProfile.nickname)
-        setRecoveryCode(memberProfile.uuidCode)
+    override suspend fun updateMemberProfile(memberProfile: MemberProfile) {
+        updateProfileImageUrl(memberProfile.profileImageUrl)
+        updateNickname(memberProfile.nickname)
+        updateRecoveryCode(memberProfile.uuidCode)
     }
 
-    suspend fun setProfileImageUrl(url: String) {
+    override suspend fun updateProfileImageUrl(url: String?) {
         withContext(Dispatchers.IO) {
-            mUserInfoPrefs.edit().putString(PROFILE_IMAGE_URL_KEY_NAME, url).apply()
+            mUserInfoPrefs.edit().putString(PROFILE_IMAGE_URL_KEY_NAME, url ?: EMPTY_STRING).apply()
         }
     }
 
-    private suspend fun setNickname(nickname: String) {
+    private suspend fun updateNickname(nickname: String) {
         withContext(Dispatchers.IO) {
             mUserInfoPrefs.edit().putString(NICKNAME_KEY_NAME, nickname).apply()
         }
     }
 
-    private suspend fun setRecoveryCode(code: String) {
+    private suspend fun updateRecoveryCode(code: String) {
         withContext(Dispatchers.IO) {
             mUserInfoPrefs.edit().putString(RECOVERY_CODE_KEY_NAME, code).apply()
         }
