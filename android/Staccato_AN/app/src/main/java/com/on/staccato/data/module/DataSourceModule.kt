@@ -1,11 +1,13 @@
 package com.on.staccato.data.module
 
+import com.on.staccato.data.UserInfoPreferencesManager
 import com.on.staccato.data.comment.CommentDataSource
 import com.on.staccato.data.comment.CommentRemoteDataSource
 import com.on.staccato.data.login.LoginDataSource
 import com.on.staccato.data.login.LoginRemoteDataSource
 import com.on.staccato.data.memory.MemoryDataSource
 import com.on.staccato.data.memory.MemoryRemoteDataSource
+import com.on.staccato.data.mypage.MyPageLocalDataSource
 import com.on.staccato.data.mypage.MyPageRemoteDataSource
 import com.on.staccato.data.mypage.MyPageRemoteDataSourceImpl
 import com.on.staccato.data.staccato.StaccatoDataSource
@@ -34,6 +36,9 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindTimelineDataSource(timelineRemoteDataSource: TimelineRemoteDataSource): TimelineDataSource
+
+    @Binds
+    abstract fun bindMyPageLocalDataSource(myPageLocalDataSource: UserInfoPreferencesManager): MyPageLocalDataSource
 
     @Binds
     abstract fun bindMyPageRemoteDataSource(myPageRemoteDataSource: MyPageRemoteDataSourceImpl): MyPageRemoteDataSource
