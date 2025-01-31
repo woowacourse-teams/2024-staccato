@@ -53,15 +53,16 @@
             android:id="@+id/iv_mypage_profile_image_change_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="50dp"
+            android:padding="18dp"
             android:contentDescription="@string/mypage_update_profile_image_description"
             android:onClick="@{()->menuHandler.onProfileImageChangeClicked()}"
             android:src="@drawable/icon_edit_circle"
-            app:layout_constraintBottom_toBottomOf="@id/iv_mypage_profile_image"
-            app:layout_constraintEnd_toEndOf="@id/iv_mypage_profile_image" />
+            app:layout_constraintTop_toTopOf="@id/iv_mypage_profile_image"
+            app:layout_constraintStart_toStartOf="@id/iv_mypage_profile_image" />
 
-        <TextView
+        <TextView대
             android:id="@+id/tv_mypage_profile_nickname"
             style="@style/Typography.Body1"
             android:layout_width="wrap_content"
