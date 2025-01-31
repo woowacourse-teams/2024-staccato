@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/icon_member_with_border"
+                android:background="@drawable/icon_member"
                 android:gravity="center"
                 android:padding="0.5dp"
                 app:layout_constraintStart_toStartOf="parent"
