@@ -22,8 +22,7 @@ import javax.inject.Inject
 class MyPageViewModel
     @Inject
     constructor(private val repository: MyPageRepository) :
-    ViewModel(),
-        MemberProfileHandler {
+    ViewModel(), MemberProfileHandler {
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile>
             get() = _memberProfile
@@ -56,8 +55,15 @@ class MyPageViewModel
             }
         }
 
-        fun setMemberProfile(memberProfile: MemberProfile) {
-            _memberProfile.value = memberProfile
+        fun fetchMemberProfile() {
+            viewModelScope.launch {
+                repository.getMemberProfile()
+                    .onServerError(::handleError)
+                    .onException(::handleException)
+                    .onSuccess {
+                        _memberProfile.value = it
+                    }
+            }
         }
 
         private fun handleError(errorMessage: String) {

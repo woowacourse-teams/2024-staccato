@@ -49,7 +49,7 @@ class SharedViewModel
             }
         }
 
-        fun setMemberProfile(memberProfile: MemberProfile) {
+        private fun setMemberProfile(memberProfile: MemberProfile) {
             _memberProfile.value = memberProfile
         }
 

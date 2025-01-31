@@ -11,12 +11,8 @@ import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.lifecycleScope
 import com.on.staccato.R
-import com.on.staccato.StaccatoApplication.Companion.userInfoPrefsManager
-import com.on.staccato.data.UserInfoPreferencesManager.Companion.EMPTY_STRING
 import com.on.staccato.databinding.ActivityMypageBinding
-import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
@@ -28,9 +24,6 @@ import com.on.staccato.presentation.webview.WebViewActivity
 import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_TOOLBAR_TITLE
 import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_URL
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MyPageActivity :
@@ -105,23 +98,11 @@ class MyPageActivity :
     }
 
     private fun loadMemberProfile() {
-        lifecycleScope.launch {
-            val cachedMemberProfile = getCachedMemberProfile(this)
-            myPageViewModel.setMemberProfile(cachedMemberProfile)
-        }
-    }
-
-    private suspend fun getCachedMemberProfile(scope: CoroutineScope): MemberProfile {
-        return scope.async {
-            userInfoPrefsManager.getMemberProfile()
-        }.await()
+        myPageViewModel.fetchMemberProfile()
     }
 
     private fun observeMemberProfile() {
-        myPageViewModel.memberProfile.observe(this) { memberProfile ->
-            lifecycleScope.launch {
-                userInfoPrefsManager.updateProfileImageUrl(memberProfile.profileImageUrl ?: EMPTY_STRING)
-            }
+        myPageViewModel.memberProfile.observe(this) {
             setResult(RESULT_OK)
         }
     }
