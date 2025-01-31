@@ -75,6 +75,6 @@ public class MomentImages {
 
     private boolean contains(MomentImage momentImage) {
         return this.images.stream()
-                .anyMatch(image -> image.getImageUrl().equals(momentImage.getImageUrl()));
+                .anyMatch(image -> image.isSame(momentImage));
     }
 }
