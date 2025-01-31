@@ -49,18 +49,6 @@ class SharedViewModel
             }
         }
 
-        private fun setMemberProfile(memberProfile: MemberProfile) {
-            _memberProfile.value = memberProfile
-        }
-
-        private fun handleServerError(errorMessage: String) {
-            _errorMessage.postValue(errorMessage)
-        }
-
-        private fun handleException(exceptionState: ExceptionState) {
-            _errorMessage.postValue(exceptionState.message)
-        }
-
         fun setTimelineHasUpdated() {
             _isTimelineUpdated.setValue(true)
         }
@@ -75,5 +63,17 @@ class SharedViewModel
 
         fun updateIsSettingClicked(isSettingClicked: Boolean) {
             _isSettingClicked.value = isSettingClicked
+        }
+
+        private fun setMemberProfile(memberProfile: MemberProfile) {
+            _memberProfile.value = memberProfile
+        }
+
+        private fun handleServerError(errorMessage: String) {
+            _errorMessage.postValue(errorMessage)
+        }
+
+        private fun handleException(exceptionState: ExceptionState) {
+            _errorMessage.postValue(exceptionState.message)
         }
     }
