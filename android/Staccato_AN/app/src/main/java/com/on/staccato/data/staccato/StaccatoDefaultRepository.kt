@@ -3,7 +3,6 @@ package com.on.staccato.data.staccato
 import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.mapper.toFeelingRequest
-import com.on.staccato.data.dto.staccato.FeelingRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
 import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
