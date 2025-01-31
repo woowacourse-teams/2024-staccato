@@ -5,10 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ApiResponseHandler.onException
-import com.on.staccato.data.ApiResponseHandler.onServerError
-import com.on.staccato.data.ApiResponseHandler.onSuccess
-import com.on.staccato.data.dto.Status
+import com.on.staccato.data.onException
+import com.on.staccato.data.onServerError
+import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.Timeline
 import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -16,6 +15,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toTimelineUiModel
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -104,17 +104,11 @@ class TimelineViewModel
             _timeline.value = originalTimeline.filter { it.startAt == null }
         }
 
-        private fun handleServerError(
-            status: Status,
-            errorMessage: String,
-        ) {
+        private fun handleServerError(errorMessage: String) {
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(
-            e: Throwable,
-            errorMessage: String,
-        ) {
-            _exceptionMessage.postValue(errorMessage)
+        private fun handleException(state: ExceptionState) {
+            _exceptionMessage.postValue(state.message)
         }
     }

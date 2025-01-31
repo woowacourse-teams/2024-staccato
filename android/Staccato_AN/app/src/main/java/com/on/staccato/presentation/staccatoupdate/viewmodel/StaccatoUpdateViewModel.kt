@@ -8,10 +8,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ApiResponseHandler.onException
-import com.on.staccato.data.ApiResponseHandler.onServerError
-import com.on.staccato.data.ApiResponseHandler.onSuccess
-import com.on.staccato.data.dto.Status
+import com.on.staccato.data.onException
+import com.on.staccato.data.onServerError
+import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.CategoryCandidates.Companion.emptyCategoryCandidates
@@ -28,6 +27,7 @@ import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel.Companion.FAIL_IMAGE_UPLOAD_MESSAGE
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateError
+import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.convertStaccatoUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -277,8 +277,8 @@ class StaccatoUpdateViewModel
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
-                }.onException { e, message ->
-                    if (this.isActive) handleUpdatePhotoException(e, message)
+                }.onException { state ->
+                    if (this.isActive) handleUpdatePhotoException(state)
                 }
                 .onServerError(::handleServerError)
         }
@@ -297,53 +297,30 @@ class StaccatoUpdateViewModel
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
         }
 
-        private fun handleServerError(
-            status: Status,
-            message: String,
-        ) {
+        private fun handleServerError(message: String) {
             _isPosting.value = false
             _warningMessage.setValue(message)
         }
 
-        private fun handleUpdatePhotoException(
-            e: Throwable = IllegalArgumentException(),
-            errorMessage: String = IMAGE_UPLOAD_ERROR_MESSAGE,
-        ) {
-            _warningMessage.setValue(errorMessage)
+        private fun handleUpdatePhotoException(exceptionState: ExceptionState = ExceptionState.ImageUploadError) {
+            _warningMessage.setValue(exceptionState.message)
         }
 
-        private fun handleException(
-            e: Throwable = IllegalArgumentException(),
-            errorMessage: String = REQUIRED_VALUES_ERROR_MESSAGE,
-        ) {
+        private fun handleException(state: ExceptionState = ExceptionState.RequiredValuesMissing) {
             _isPosting.value = false
-            _warningMessage.setValue(errorMessage)
+            _warningMessage.setValue(state.message)
         }
 
-        private fun handleCategoryCandidatesException(
-            e: Throwable,
-            message: String,
-        ) {
-            _error.setValue(StaccatoUpdateError.CategoryCandidates(message))
+        private fun handleCategoryCandidatesException(exceptionState: ExceptionState) {
+            _error.setValue(StaccatoUpdateError.CategoryCandidates(exceptionState.message))
         }
 
-        private fun handleInitializeException(
-            e: Throwable,
-            message: String,
-        ) {
-            _error.setValue(StaccatoUpdateError.StaccatoInitialize(message))
+        private fun handleInitializeException(state: ExceptionState) {
+            _error.setValue(StaccatoUpdateError.StaccatoInitialize(state.message))
         }
 
-        private fun handleUpdateException(
-            e: Throwable = IllegalArgumentException(),
-            message: String = REQUIRED_VALUES_ERROR_MESSAGE,
-        ) {
+        private fun handleUpdateException(state: ExceptionState = ExceptionState.RequiredValuesMissing) {
             _isPosting.value = false
-            _error.setValue(StaccatoUpdateError.StaccatoUpdate(message))
-        }
-
-        companion object {
-            private const val IMAGE_UPLOAD_ERROR_MESSAGE = "이미지 업로드에 실패했습니다."
-            private const val REQUIRED_VALUES_ERROR_MESSAGE = "필수 값을 모두 입력해 주세요."
+            _error.setValue(StaccatoUpdateError.StaccatoUpdate(state.message))
         }
     }

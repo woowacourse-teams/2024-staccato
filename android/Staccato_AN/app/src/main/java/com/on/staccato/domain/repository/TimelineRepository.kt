@@ -1,11 +1,11 @@
 package com.on.staccato.domain.repository
 
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ApiResult
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.Timeline
 
 interface TimelineRepository {
-    suspend fun getTimeline(): ResponseResult<Timeline>
+    suspend fun getTimeline(): ApiResult<Timeline>
 
-    suspend fun getCategoryCandidates(): ResponseResult<CategoryCandidates>
+    suspend fun getCategoryCandidates(): ApiResult<CategoryCandidates>
 }

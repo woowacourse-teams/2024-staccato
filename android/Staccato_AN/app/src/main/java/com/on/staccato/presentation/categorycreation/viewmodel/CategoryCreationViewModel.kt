@@ -7,13 +7,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ApiResponseHandler.onException
-import com.on.staccato.data.ApiResponseHandler.onServerError
-import com.on.staccato.data.ApiResponseHandler.onSuccess
-import com.on.staccato.data.ResponseResult
-import com.on.staccato.data.dto.Status
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.dto.category.CategoryCreationResponse
+import com.on.staccato.data.onException
+import com.on.staccato.data.onServerError
+import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.CategoryRepository
@@ -22,6 +21,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.categorycreation.DateConverter.convertLongToLocalDate
 import com.on.staccato.presentation.categorycreation.CategoryCreationError
 import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.convertCategoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -93,7 +93,7 @@ class CategoryCreationViewModel
             _isPosting.value = true
             viewModelScope.launch {
                 val category: NewCategory = makeNewCategory()
-                val result: ResponseResult<CategoryCreationResponse> =
+                val result: ApiResult<CategoryCreationResponse> =
                     categoryRepository.createCategory(category)
                 result
                     .onSuccess(::setCreatedCategoryId)
@@ -129,13 +129,13 @@ class CategoryCreationViewModel
         ): Job {
             val thumbnailFile = convertCategoryUriToFile(context, uri, name = CATEGORY_FILE_NAME)
             return viewModelScope.launch {
-                val result: ResponseResult<ImageResponse> =
+                val result: ApiResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)
                 result
                     .onSuccess(::setThumbnailUrl)
                     .onServerError(::handlePhotoError)
-                    .onException { e, message ->
-                        handlePhotoException(e, message, uri)
+                    .onException { state ->
+                        handlePhotoException(state, uri)
                     }
             }
         }
@@ -167,37 +167,27 @@ class CategoryCreationViewModel
             }
         }
 
-        private fun handlePhotoError(
-            status: Status,
-            message: String,
-        ) {
+        private fun handlePhotoError(message: String) {
             _errorMessage.postValue(message)
         }
 
         private fun handlePhotoException(
-            e: Throwable,
-            message: String,
+            state: ExceptionState,
             uri: Uri,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(CategoryCreationError.Thumbnail(message, uri))
+                _error.setValue(CategoryCreationError.Thumbnail(state.message, uri))
             }
         }
 
-        private fun handleCreateServerError(
-            status: Status,
-            message: String,
-        ) {
+        private fun handleCreateServerError(message: String) {
             _isPosting.value = false
             _errorMessage.postValue(message)
         }
 
-        private fun handleCreateException(
-            e: Throwable,
-            message: String,
-        ) {
+        private fun handleCreateException(state: ExceptionState) {
             _isPosting.value = false
-            _error.setValue(CategoryCreationError.CategoryCreation(message))
+            _error.setValue(CategoryCreationError.CategoryCreation(state.message))
         }
 
         companion object {

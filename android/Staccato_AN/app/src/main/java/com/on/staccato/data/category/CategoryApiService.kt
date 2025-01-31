@@ -1,10 +1,10 @@
 package com.on.staccato.data.category
 
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.category.CategoriesResponse
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.dto.category.CategoryRequest
 import com.on.staccato.data.dto.category.CategoryResponse
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -17,28 +17,28 @@ interface CategoryApiService {
     @GET(CATEGORY_PATH_WITH_ID)
     suspend fun getCategory(
         @Path(CATEGORY_ID) categoryId: Long,
-    ): Response<CategoryResponse>
+    ): ApiResult<CategoryResponse>
 
     @GET(CATEGORY_PATH_WITH_CANDIDATES)
     suspend fun getCategories(
         @Query(CURRENT_DATE) currentDate: String?,
-    ): Response<CategoriesResponse>
+    ): ApiResult<CategoriesResponse>
 
     @POST(CATEGORIES_PATH)
     suspend fun postCategory(
         @Body categoryRequest: CategoryRequest,
-    ): Response<CategoryCreationResponse>
+    ): ApiResult<CategoryCreationResponse>
 
     @PUT(CATEGORY_PATH_WITH_ID)
     suspend fun putCategory(
         @Path(CATEGORY_ID) categoryId: Long,
         @Body categoryRequest: CategoryRequest,
-    ): Response<Unit>
+    ): ApiResult<Unit>
 
     @DELETE(CATEGORY_PATH_WITH_ID)
     suspend fun deleteCategory(
         @Path(CATEGORY_ID) categoryId: Long,
-    ): Response<Unit>
+    ): ApiResult<Unit>
 
     companion object {
         const val CATEGORIES_PATH = "/categories"

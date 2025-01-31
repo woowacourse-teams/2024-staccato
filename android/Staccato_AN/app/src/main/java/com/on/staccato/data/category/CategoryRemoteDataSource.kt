@@ -1,11 +1,10 @@
 package com.on.staccato.data.category
 
-import com.on.staccato.data.ApiResponseHandler.handleApiResponse
-import com.on.staccato.data.ResponseResult
-import com.on.staccato.data.dto.mapper.toDto
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.category.CategoriesResponse
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.dto.category.CategoryResponse
+import com.on.staccato.data.dto.mapper.toDto
 import com.on.staccato.domain.model.NewCategory
 import javax.inject.Inject
 
@@ -14,29 +13,32 @@ class CategoryRemoteDataSource
     constructor(
         private val categoryApiService: CategoryApiService,
     ) : CategoryDataSource {
-        override suspend fun getCategory(categoryId: Long): ResponseResult<CategoryResponse> =
-            handleApiResponse { categoryApiService.getCategory(categoryId) }
+        override suspend fun getCategory(categoryId: Long): ApiResult<CategoryResponse> =
+            categoryApiService.getCategory(
+                categoryId,
+            )
 
-        override suspend fun getCategories(currentDate: String?): ResponseResult<CategoriesResponse> =
-            handleApiResponse { categoryApiService.getCategories(currentDate) }
+        override suspend fun getCategories(currentDate: String?): ApiResult<CategoriesResponse> =
+            categoryApiService.getCategories(
+                currentDate,
+            )
 
-        override suspend fun createCategory(newCategory: NewCategory): ResponseResult<CategoryCreationResponse> =
-            handleApiResponse {
-                categoryApiService.postCategory(newCategory.toDto())
-            }
+        override suspend fun createCategory(newCategory: NewCategory): ApiResult<CategoryCreationResponse> =
+            categoryApiService.postCategory(
+                newCategory.toDto(),
+            )
 
         override suspend fun updateCategory(
             categoryId: Long,
             newCategory: NewCategory,
-        ): ResponseResult<Unit> =
-            handleApiResponse {
-                categoryApiService.putCategory(categoryId, newCategory.toDto())
-            }
+        ): ApiResult<Unit> =
+            categoryApiService.putCategory(
+                categoryId,
+                newCategory.toDto(),
+            )
 
-        override suspend fun deleteCategory(categoryId: Long): ResponseResult<Unit> =
-            handleApiResponse {
-                categoryApiService.deleteCategory(
-                    categoryId,
-                )
-            }
+        override suspend fun deleteCategory(categoryId: Long): ApiResult<Unit> =
+            categoryApiService.deleteCategory(
+                categoryId,
+            )
     }

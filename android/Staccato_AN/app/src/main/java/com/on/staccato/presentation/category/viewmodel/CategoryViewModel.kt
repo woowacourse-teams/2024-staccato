@@ -4,17 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ApiResponseHandler.onException
-import com.on.staccato.data.ApiResponseHandler.onServerError
-import com.on.staccato.data.ApiResponseHandler.onSuccess
-import com.on.staccato.data.ResponseResult
-import com.on.staccato.data.dto.Status
+import com.on.staccato.data.ApiResult
+import com.on.staccato.data.onException
+import com.on.staccato.data.onServerError
+import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,7 +39,7 @@ class CategoryViewModel
 
         fun loadCategory(categoryId: Long) {
             viewModelScope.launch {
-                val result: ResponseResult<Category> = categoryRepository.getCategory(categoryId)
+                val result: ApiResult<Category> = categoryRepository.getCategory(categoryId)
                 result
                     .onSuccess(::setCategory)
                     .onServerError(::handleServerError)
@@ -49,7 +49,7 @@ class CategoryViewModel
 
         fun deleteCategory(categoryId: Long) {
             viewModelScope.launch {
-                val result: ResponseResult<Unit> = categoryRepository.deleteCategory(categoryId)
+                val result: ApiResult<Unit> = categoryRepository.deleteCategory(categoryId)
                 result.onSuccess { updateIsDeleteSuccess() }
                     .onServerError(::handleServerError)
                     .onException(::handelException)
@@ -64,17 +64,11 @@ class CategoryViewModel
             _isDeleteSuccess.setValue(true)
         }
 
-        private fun handleServerError(
-            status: Status,
-            message: String,
-        ) {
+        private fun handleServerError(message: String) {
             _errorMessage.postValue(message)
         }
 
-        private fun handelException(
-            e: Throwable,
-            message: String,
-        ) {
-            _exceptionMessage.postValue(message)
+        private fun handelException(state: ExceptionState) {
+            _exceptionMessage.postValue(state.message)
         }
     }
