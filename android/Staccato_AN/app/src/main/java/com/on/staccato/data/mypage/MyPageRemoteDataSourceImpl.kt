@@ -13,6 +13,6 @@ class MyPageRemoteDataSourceImpl
     ) : MyPageRemoteDataSource {
         override suspend fun loadMemberProfile(): ApiResult<MemberProfileResponse> = myPageApiService.getMemberProfile()
 
-        override suspend fun setProfileImageUrl(profileImageFile: MultipartBody.Part): ApiResult<ProfileImageResponse> =
+        override suspend fun updateProfileImage(profileImageFile: MultipartBody.Part): ApiResult<ProfileImageResponse> =
             myPageApiService.postProfileImageChange(profileImageFile)
     }

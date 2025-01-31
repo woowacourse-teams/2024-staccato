@@ -8,5 +8,5 @@ import okhttp3.MultipartBody
 interface MyPageRemoteDataSource {
     suspend fun loadMemberProfile(): ApiResult<MemberProfileResponse>
 
-    suspend fun setProfileImageUrl(profileImageFile: MultipartBody.Part): ApiResult<ProfileImageResponse>
+    suspend fun updateProfileImage(profileImageFile: MultipartBody.Part): ApiResult<ProfileImageResponse>
 }
