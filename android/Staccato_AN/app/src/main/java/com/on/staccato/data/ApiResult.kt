@@ -2,19 +2,19 @@ package com.on.staccato.data
 
 import com.on.staccato.data.dto.Status
 
-sealed interface ApiResult<T : Any>
+sealed interface ApiResult<T>
 
-class Success<T : Any>(val data: T) : ApiResult<T>
+class Success<T>(val data: T) : ApiResult<T>
 
-class ServerError<T : Any>(val status: Status, val message: String) : ApiResult<T>
+class ServerError<T>(val status: Status, val message: String) : ApiResult<T>
 
-sealed class Exception<T : Any> : ApiResult<T> {
-    class NetworkError<T : Any> : Exception<T>()
+sealed class Exception<T> : ApiResult<T> {
+    class NetworkError<T> : Exception<T>()
 
-    class UnknownError<T : Any> : Exception<T>()
+    class UnknownError<T> : Exception<T>()
 }
 
-inline fun <T : Any, R : Any> ApiResult<T>.handle(convert: (T) -> R): ApiResult<R> =
+inline fun <T, R> ApiResult<T>.handle(convert: (T) -> R): ApiResult<R> =
     when (this) {
         is Exception.NetworkError -> Exception.NetworkError()
         is Exception.UnknownError -> Exception.UnknownError()
