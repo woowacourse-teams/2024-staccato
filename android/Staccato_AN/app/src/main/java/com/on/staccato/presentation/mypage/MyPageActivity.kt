@@ -38,6 +38,15 @@ class MyPageActivity :
         getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
     }
 
+    override fun initStartView(savedInstanceState: Bundle?) {
+        initToolbar()
+        initBindings()
+        loadMemberProfile()
+        observeMemberProfile()
+        observeCopyingUuidCode()
+        observeErrorMessage()
+    }
+
     override fun onProfileImageChangeClicked() {
         if (!photoAttachFragment.isAdded) {
             photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
@@ -47,15 +56,6 @@ class MyPageActivity :
     override fun onUrisSelected(vararg uris: Uri) {
         val imageFile = convertMemoryUriToFile(this, uris.first(), IMAGE_FORM_DATA_NAME)
         myPageViewModel.changeProfileImage(imageFile)
-    }
-
-    override fun initStartView(savedInstanceState: Bundle?) {
-        initToolbar()
-        initBindings()
-        loadMemberProfile()
-        observeMemberProfile()
-        observeCopyingUuidCode()
-        observeErrorMessage()
     }
 
     override fun onPrivacyPolicyClicked() {
