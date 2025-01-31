@@ -72,11 +72,11 @@ fun TextView.setIsMemoryCandidatesEmptyVisibility(memoryCandidates: MemoryCandid
 @BindingAdapter("timelineNickname")
 fun TextView.formatTimelineNickname(nickname: String?) {
     text = nickname?.let {
-        resources.getString(R.string.timeline_nickname_memories).format(formatNickname(it))
+        resources.getString(R.string.timeline_nickname_memories).formatNickname(it)
     } ?: EMPTY_TEXT
 }
 
-fun formatNickname(nickname: String) = nickname.takeIf { it.length <= 10 } ?: ("${nickname.take(10)}...")
+fun String.formatNickname(nickname: String) = format(nickname.takeIf { it.length <= 10 } ?: ("${nickname.take(10)}..."))
 
 @BindingAdapter("visitedAtHistory")
 fun TextView.formatVisitedAtHistory(visitedAt: LocalDateTime?) {
