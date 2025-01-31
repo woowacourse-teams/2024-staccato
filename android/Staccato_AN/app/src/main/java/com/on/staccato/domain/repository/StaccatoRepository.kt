@@ -2,6 +2,7 @@ package com.on.staccato.domain.repository
 
 import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
+import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.StaccatoLocation
 import java.time.LocalDateTime
@@ -38,6 +39,6 @@ interface StaccatoRepository {
 
     suspend fun updateFeeling(
         staccatoId: Long,
-        feeling: String,
+        feeling: Feeling,
     ): ApiResult<Unit>
 }
