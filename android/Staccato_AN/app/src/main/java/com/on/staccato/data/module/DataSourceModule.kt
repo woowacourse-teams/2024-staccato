@@ -6,6 +6,8 @@ import com.on.staccato.data.login.LoginDataSource
 import com.on.staccato.data.login.LoginRemoteDataSource
 import com.on.staccato.data.memory.MemoryDataSource
 import com.on.staccato.data.memory.MemoryRemoteDataSource
+import com.on.staccato.data.mypage.MyPageRemoteDataSource
+import com.on.staccato.data.mypage.MyPageRemoteDataSourceImpl
 import com.on.staccato.data.staccato.StaccatoDataSource
 import com.on.staccato.data.staccato.StaccatoRemoteDataSource
 import com.on.staccato.data.timeline.TimelineDataSource
@@ -32,4 +34,7 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindTimelineDataSource(timelineRemoteDataSource: TimelineRemoteDataSource): TimelineDataSource
+
+    @Binds
+    abstract fun bindMyPageRemoteDataSource(myPageRemoteDataSource: MyPageRemoteDataSourceImpl): MyPageRemoteDataSource
 }
