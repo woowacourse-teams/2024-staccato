@@ -50,13 +50,9 @@ class MyPageViewModel
                 repository.changeProfileImage(multipart)
                     .onSuccess {
                         _memberProfile.value =
-                            memberProfile.value?.copy(profileImageUrl = it.profileImageUrl)
-                    }.onException { e, message ->
-                        handleException(e, ERROR_FAIL_TO_CHANGE_PROFILE_IMAGE)
-                    }
-                    .onServerError { status, message ->
-                        handleError(status, ERROR_FAIL_TO_CHANGE_PROFILE_IMAGE)
-                    }
+                            memberProfile.value?.copy(profileImageUrl = it)
+                    }.onException(::handleException)
+                    .onServerError(::handleError)
             }
         }
 
@@ -74,6 +70,5 @@ class MyPageViewModel
 
         companion object {
             private const val ERROR_NO_MEMBER_PROFILE = "프로필 정보를 조회할 수 없습니다.\n잠시 후에 다시 시도해주세요."
-            private const val ERROR_FAIL_TO_CHANGE_PROFILE_IMAGE = "프로필 사진을 변경할 수 없습니다."
         }
     }
