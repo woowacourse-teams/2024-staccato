@@ -19,26 +19,26 @@ class UserInfoPreferencesManager(context: Context) : MyPageLocalDataSource {
 
     override suspend fun getMemberProfile(): MemberProfile =
         MemberProfile(
-            profileImageUrl = getProfileImageUrl() ?: EMPTY_STRING,
-            nickname = getNickname() ?: EMPTY_STRING,
-            uuidCode = getRecoveryCode() ?: EMPTY_STRING,
+            profileImageUrl = getProfileImageUrl(),
+            nickname = getNickname(),
+            uuidCode = getRecoveryCode(),
         )
 
     private suspend fun getProfileImageUrl(): String? {
         return withContext(Dispatchers.IO) {
-            userInfoPrefs.getString(PROFILE_IMAGE_URL_KEY_NAME, EMPTY_STRING)
+            userInfoPrefs.getString(PROFILE_IMAGE_URL_KEY_NAME, null)
         }
     }
 
-    private suspend fun getNickname(): String? {
+    private suspend fun getNickname(): String {
         return withContext(Dispatchers.IO) {
-            userInfoPrefs.getString(NICKNAME_KEY_NAME, null)
+            userInfoPrefs.getString(NICKNAME_KEY_NAME, null) ?: EMPTY_STRING
         }
     }
 
-    private suspend fun getRecoveryCode(): String? {
+    private suspend fun getRecoveryCode(): String {
         return withContext(Dispatchers.IO) {
-            userInfoPrefs.getString(RECOVERY_CODE_KEY_NAME, EMPTY_STRING)
+            userInfoPrefs.getString(RECOVERY_CODE_KEY_NAME, null) ?: EMPTY_STRING
         }
     }
 
