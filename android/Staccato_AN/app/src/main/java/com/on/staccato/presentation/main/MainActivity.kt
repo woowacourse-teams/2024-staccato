@@ -220,7 +220,7 @@ class MainActivity :
     private fun observeMemberProfile() {
         sharedViewModel.memberProfile.observe(this) { memberProfile ->
             lifecycleScope.launch {
-                userInfoPrefsManager.setMemberProfile(memberProfile)
+                userInfoPrefsManager.updateMemberProfile(memberProfile)
             }
             binding.memberProfile = memberProfile
         }

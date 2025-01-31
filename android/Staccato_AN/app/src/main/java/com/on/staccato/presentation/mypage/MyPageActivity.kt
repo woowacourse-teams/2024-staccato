@@ -120,7 +120,7 @@ class MyPageActivity :
     private fun observeMemberProfile() {
         myPageViewModel.memberProfile.observe(this) { memberProfile ->
             lifecycleScope.launch {
-                userInfoPrefsManager.setProfileImageUrl(memberProfile.profileImageUrl ?: EMPTY_STRING)
+                userInfoPrefsManager.updateProfileImageUrl(memberProfile.profileImageUrl ?: EMPTY_STRING)
             }
             setResult(RESULT_OK)
         }
