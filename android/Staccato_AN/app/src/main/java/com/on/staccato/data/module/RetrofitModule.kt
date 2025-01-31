@@ -1,11 +1,11 @@
 package com.on.staccato.data.module
 
 import com.on.staccato.StaccatoApplication.Companion.retrofit
+import com.on.staccato.data.category.CategoryApiService
 import com.on.staccato.data.comment.CommentApiService
 import com.on.staccato.data.image.ImageApiService
 import com.on.staccato.data.login.LoginApiService
 import com.on.staccato.data.member.MemberApiService
-import com.on.staccato.data.category.CategoryApiService
 import com.on.staccato.data.mypage.MyPageApiService
 import com.on.staccato.data.staccato.StaccatoApiService
 import com.on.staccato.data.timeline.TimeLineApiService

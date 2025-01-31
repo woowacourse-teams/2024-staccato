@@ -1,11 +1,11 @@
 package com.on.staccato.data.module
 
+import com.on.staccato.data.category.CategoryDataSource
+import com.on.staccato.data.category.CategoryRemoteDataSource
 import com.on.staccato.data.comment.CommentDataSource
 import com.on.staccato.data.comment.CommentRemoteDataSource
 import com.on.staccato.data.login.LoginDataSource
 import com.on.staccato.data.login.LoginRemoteDataSource
-import com.on.staccato.data.category.CategoryDataSource
-import com.on.staccato.data.category.CategoryRemoteDataSource
 import com.on.staccato.data.staccato.StaccatoDataSource
 import com.on.staccato.data.staccato.StaccatoRemoteDataSource
 import com.on.staccato.data.timeline.TimelineDataSource

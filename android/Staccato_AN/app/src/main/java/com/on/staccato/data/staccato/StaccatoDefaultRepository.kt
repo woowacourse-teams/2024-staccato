@@ -38,17 +38,17 @@ class StaccatoDefaultRepository
             staccatoImageUrls: List<String>,
         ): ApiResult<StaccatoCreationResponse> =
             remoteDataSource.createStaccato(
-                        StaccatoCreationRequest(
-                            categoryId = categoryId,
-                            staccatoTitle = staccatoTitle,
-                            placeName = placeName,
-                            latitude = latitude,
-                            longitude = longitude,
-                            address = address,
-                            visitedAt = visitedAt.toString(),
-                            staccatoImageUrls = staccatoImageUrls,
-                        ),
-                    ).handle { it }
+                StaccatoCreationRequest(
+                    categoryId = categoryId,
+                    staccatoTitle = staccatoTitle,
+                    placeName = placeName,
+                    latitude = latitude,
+                    longitude = longitude,
+                    address = address,
+                    visitedAt = visitedAt.toString(),
+                    staccatoImageUrls = staccatoImageUrls,
+                ),
+            ).handle { it }
 
         override suspend fun updateStaccato(
             staccatoId: Long,

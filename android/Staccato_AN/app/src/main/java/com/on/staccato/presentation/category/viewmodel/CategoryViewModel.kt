@@ -10,10 +10,10 @@ import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.repository.CategoryRepository
+import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
-import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

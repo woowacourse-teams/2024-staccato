@@ -5,9 +5,9 @@ import com.on.staccato.data.Success
 import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.TARGET_CATEGORY_ID
+import com.on.staccato.domain.model.categoryCandidateWithId1
 import com.on.staccato.domain.model.dummyCategoryCandidates
 import com.on.staccato.domain.model.endDateOf2023
-import com.on.staccato.domain.model.categoryCandidateWithId1
 import com.on.staccato.domain.model.middleDateOf2024
 import com.on.staccato.domain.model.startDateOf2024
 import com.on.staccato.domain.model.targetCategoryCandidate

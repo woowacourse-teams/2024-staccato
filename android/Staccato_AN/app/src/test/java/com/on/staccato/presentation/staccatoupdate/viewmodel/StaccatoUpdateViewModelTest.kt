@@ -6,11 +6,11 @@ import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.TARGET_STACCATO_ID
+import com.on.staccato.domain.model.categoryCandidateWithId1
 import com.on.staccato.domain.model.dummyCategoryCandidates
 import com.on.staccato.domain.model.endDateOf2023
 import com.on.staccato.domain.model.endDateOf2024
 import com.on.staccato.domain.model.makeTestStaccato
-import com.on.staccato.domain.model.categoryCandidateWithId1
 import com.on.staccato.domain.model.targetCategoryCandidate
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository

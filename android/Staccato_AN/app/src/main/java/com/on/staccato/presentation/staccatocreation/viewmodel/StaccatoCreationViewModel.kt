@@ -184,7 +184,9 @@ class StaccatoCreationViewModel
         }
 
         fun updateCategorySelectionBy(visitedAt: LocalDateTime) {
-            val filteredCategories = categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: CategoryCandidates.emptyCategoryCandidates
+            val filteredCategories =
+                categoryCandidates.value?.filterBy(visitedAt.toLocalDate())
+                    ?: CategoryCandidates.emptyCategoryCandidates
             _selectableCategories.value = filteredCategories
             _selectedCategory.value = filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
         }
