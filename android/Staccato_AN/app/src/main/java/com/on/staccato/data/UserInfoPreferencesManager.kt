@@ -8,12 +8,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class UserInfoPreferencesManager(context: Context) : MyPageLocalDataSource {
-    private val mUserInfoPrefs: SharedPreferences =
+    private val userInfoPrefs: SharedPreferences =
         context.getSharedPreferences(USER_INFO_PREF_NAME, Context.MODE_PRIVATE)
 
     suspend fun getToken(): String? {
         return withContext(Dispatchers.IO) {
-            mUserInfoPrefs.getString(TOKEN_KEY_NAME, EMPTY_STRING)
+            userInfoPrefs.getString(TOKEN_KEY_NAME, EMPTY_STRING)
         }
     }
 
@@ -26,25 +26,25 @@ class UserInfoPreferencesManager(context: Context) : MyPageLocalDataSource {
 
     private suspend fun getProfileImageUrl(): String? {
         return withContext(Dispatchers.IO) {
-            mUserInfoPrefs.getString(PROFILE_IMAGE_URL_KEY_NAME, EMPTY_STRING)
+            userInfoPrefs.getString(PROFILE_IMAGE_URL_KEY_NAME, EMPTY_STRING)
         }
     }
 
     private suspend fun getNickname(): String? {
         return withContext(Dispatchers.IO) {
-            mUserInfoPrefs.getString(NICKNAME_KEY_NAME, null)
+            userInfoPrefs.getString(NICKNAME_KEY_NAME, null)
         }
     }
 
     private suspend fun getRecoveryCode(): String? {
         return withContext(Dispatchers.IO) {
-            mUserInfoPrefs.getString(RECOVERY_CODE_KEY_NAME, EMPTY_STRING)
+            userInfoPrefs.getString(RECOVERY_CODE_KEY_NAME, EMPTY_STRING)
         }
     }
 
     suspend fun setToken(newToken: String) {
         withContext(Dispatchers.IO) {
-            mUserInfoPrefs.edit().putString(TOKEN_KEY_NAME, newToken).apply()
+            userInfoPrefs.edit().putString(TOKEN_KEY_NAME, newToken).apply()
         }
     }
 
@@ -56,19 +56,19 @@ class UserInfoPreferencesManager(context: Context) : MyPageLocalDataSource {
 
     override suspend fun updateProfileImageUrl(url: String?) {
         withContext(Dispatchers.IO) {
-            mUserInfoPrefs.edit().putString(PROFILE_IMAGE_URL_KEY_NAME, url ?: EMPTY_STRING).apply()
+            userInfoPrefs.edit().putString(PROFILE_IMAGE_URL_KEY_NAME, url ?: EMPTY_STRING).apply()
         }
     }
 
     private suspend fun updateNickname(nickname: String) {
         withContext(Dispatchers.IO) {
-            mUserInfoPrefs.edit().putString(NICKNAME_KEY_NAME, nickname).apply()
+            userInfoPrefs.edit().putString(NICKNAME_KEY_NAME, nickname).apply()
         }
     }
 
     private suspend fun updateRecoveryCode(code: String) {
         withContext(Dispatchers.IO) {
-            mUserInfoPrefs.edit().putString(RECOVERY_CODE_KEY_NAME, code).apply()
+            userInfoPrefs.edit().putString(RECOVERY_CODE_KEY_NAME, code).apply()
         }
     }
 
