@@ -85,7 +85,7 @@ public class CommentControllerV2Test extends ControllerTest {
     @DisplayName("올바르지 않은 형식으로 정보를 입력하면, 댓글을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidCommentRequestProvider")
-    void createCommentFail(CommentRequestV2 CommentRequestV2, String expectedMessage) throws Exception {
+    void createCommentFail(CommentRequestV2 commentRequestV2, String expectedMessage) throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
@@ -93,7 +93,7 @@ public class CommentControllerV2Test extends ControllerTest {
         // when & then
         mockMvc.perform(post("/comments/v2")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(CommentRequestV2))
+                        .content(objectMapper.writeValueAsString(commentRequestV2))
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
@@ -101,7 +101,7 @@ public class CommentControllerV2Test extends ControllerTest {
 
     @DisplayName("댓글을 조회했을 때 응답 직렬화에 성공한다.")
     @Test
-    void readCommentsBystaccatoId() throws Exception {
+    void readCommentsByStaccatoId() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         CommentResponse commentResponse = new CommentResponse(1L, 1L, "member", "image.jpg", "내용");
@@ -132,7 +132,7 @@ public class CommentControllerV2Test extends ControllerTest {
 
     @DisplayName("스타카토 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
     @Test
-    void readCommentsBystaccatoIdFail() throws Exception {
+    void readCommentsByStaccatoIdFail() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
