@@ -31,7 +31,7 @@ public class CommentControllerV2Test extends ControllerTest {
     private static final int MAX_CONTENT_LENGTH = 500;
     private static final long MIN_STACCATO_ID = 1L;
 
-    static Stream<Arguments> invalidCommentCreateRequestProvider() {
+    static Stream<Arguments> invalidCommentRequestProvider() {
         return Stream.of(
                 Arguments.of(
                         new CommentRequestV2(null, "예시 댓글 내용"),
@@ -65,7 +65,7 @@ public class CommentControllerV2Test extends ControllerTest {
     void createComment() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
-        String CommentCreateRequest = """
+        String commentRequest = """
                 {
                     "staccatoId": 1,
                     "content": "content"
@@ -76,7 +76,7 @@ public class CommentControllerV2Test extends ControllerTest {
         // when & then
         mockMvc.perform(post("/comments/v2")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(CommentCreateRequest)
+                        .content(commentRequest)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/comments/1"));
@@ -84,7 +84,7 @@ public class CommentControllerV2Test extends ControllerTest {
 
     @DisplayName("올바르지 않은 형식으로 정보를 입력하면, 댓글을 생성할 수 없다.")
     @ParameterizedTest
-    @MethodSource("invalidCommentCreateRequestProvider")
+    @MethodSource("invalidCommentRequestProvider")
     void createCommentFail(CommentRequestV2 CommentRequestV2, String expectedMessage) throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
