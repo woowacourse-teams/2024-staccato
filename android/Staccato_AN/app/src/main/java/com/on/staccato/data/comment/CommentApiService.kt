@@ -35,8 +35,8 @@ interface CommentApiService {
     ): ApiResult<Unit>
 
     companion object {
-        private const val COMMENTS_URI = "/comments"
-        private const val STACCATO_ID = "momentId"
+        private const val COMMENTS_URI = "/comments/v2"
+        private const val STACCATO_ID = "staccatoId"
         private const val COMMENT_ID = "commentId"
         private const val COMMENTS_URI_WITH_COMMENT_ID = "$COMMENTS_URI/{$COMMENT_ID}"
     }
