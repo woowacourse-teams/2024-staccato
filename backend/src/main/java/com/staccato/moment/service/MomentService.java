@@ -12,6 +12,7 @@ import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.MomentImage;
 import com.staccato.moment.domain.MomentImages;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
@@ -70,10 +71,17 @@ public class MomentService {
 
         Moment newMoment = momentRequest.toMoment(targetMemory);
         MomentImages originMomentImages = moment.getMomentImages();
-        List<Long> removalImageIds = originMomentImages.findRemovalImageIds(newMoment.getMomentImages());
-        momentImageRepository.deleteAllByIdInBulk(removalImageIds);
+        List<MomentImage> images = originMomentImages.findImagesNotPresentIn(newMoment.getMomentImages());
+        removeImages(images);
 
         moment.update(newMoment);
+    }
+
+    private void removeImages(List<MomentImage> images) {
+        List<Long> ids = images.stream()
+                .map(MomentImage::getId)
+                .toList();
+        momentImageRepository.deleteAllByIdInBulk(ids);
     }
 
     private Memory getMemoryById(long memoryId) {

@@ -42,6 +42,12 @@ public class MomentImages {
         return !images.isEmpty();
     }
 
+    public List<MomentImage> findImagesNotPresentIn(MomentImages targetMomentImages) {
+        return images.stream()
+                .filter(image -> !targetMomentImages.contains(image))
+                .toList();
+    }
+
     protected void update(MomentImages newMomentImages, Moment moment) {
         removeExistImages(newMomentImages);
         saveNewImages(newMomentImages, moment);
@@ -58,19 +64,6 @@ public class MomentImages {
             this.images.add(image);
             image.belongTo(moment);
         });
-    }
-
-    public List<Long> findRemovalImageIds(MomentImages newMomentImages) {
-        List<MomentImage> momentImages = findImagesNotPresentIn(newMomentImages);
-        return momentImages.stream()
-                .map(MomentImage::getId)
-                .toList();
-    }
-
-    private List<MomentImage> findImagesNotPresentIn(MomentImages targetMomentImages) {
-        return images.stream()
-                .filter(image -> !targetMomentImages.contains(image))
-                .toList();
     }
 
     private boolean contains(MomentImage momentImage) {
