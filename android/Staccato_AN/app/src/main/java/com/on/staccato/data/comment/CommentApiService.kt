@@ -13,12 +13,12 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CommentApiService {
-    @GET(COMMENTS_URI)
+    @GET(COMMENTS_URI_V2)
     suspend fun getComments(
         @Query(STACCATO_ID) staccatoId: Long,
     ): ApiResult<CommentsResponse>
 
-    @POST(COMMENTS_URI)
+    @POST(COMMENTS_URI_V2)
     suspend fun postComment(
         @Body commentRequest: CommentRequest,
     ): ApiResult<Unit>
@@ -35,7 +35,8 @@ interface CommentApiService {
     ): ApiResult<Unit>
 
     companion object {
-        private const val COMMENTS_URI = "/comments/v2"
+        private const val COMMENTS_URI = "/comments"
+        private const val COMMENTS_URI_V2 = "$COMMENTS_URI/v2"
         private const val STACCATO_ID = "staccatoId"
         private const val COMMENT_ID = "commentId"
         private const val COMMENTS_URI_WITH_COMMENT_ID = "$COMMENTS_URI/{$COMMENT_ID}"
