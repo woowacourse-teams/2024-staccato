@@ -62,7 +62,7 @@
             app:layout_constraintTop_toTopOf="@id/iv_mypage_profile_image"
             app:layout_constraintStart_toStartOf="@id/iv_mypage_profile_image" />
 
-        <TextView대
+        <TextView
             android:id="@+id/tv_mypage_profile_nickname"
             style="@style/Typography.Body1"
             android:layout_width="wrap_content"
