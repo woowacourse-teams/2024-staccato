@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,5 +34,9 @@ public class MomentImage {
 
     protected void belongTo(Moment moment) {
         this.moment = moment;
+    }
+
+    protected boolean isSame(MomentImage momentImage) {
+        return imageUrl.equals(momentImage.imageUrl);
     }
 }

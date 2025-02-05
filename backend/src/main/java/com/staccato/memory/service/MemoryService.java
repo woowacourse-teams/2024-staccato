@@ -137,9 +137,9 @@ public class MemoryService {
                 .stream()
                 .map(Moment::getId)
                 .toList();
-        momentImageRepository.deleteAllByMomentIdInBatch(momentIds);
-        commentRepository.deleteAllByMomentIdInBatch(momentIds);
-        momentRepository.deleteAllByMemoryIdInBatch(memoryId);
-        memoryMemberRepository.deleteAllByMemoryIdInBatch(memoryId);
+        momentImageRepository.deleteAllByMomentIdInBulk(momentIds);
+        commentRepository.deleteAllByMomentIdInBulk(momentIds);
+        momentRepository.deleteAllByMemoryIdInBulk(memoryId);
+        memoryMemberRepository.deleteAllByMemoryIdInBulk(memoryId);
     }
 }
