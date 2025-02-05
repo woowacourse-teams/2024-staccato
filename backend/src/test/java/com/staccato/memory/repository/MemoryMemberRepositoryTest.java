@@ -81,7 +81,7 @@ class MemoryMemberRepositoryTest extends RepositoryTest {
 
     @DisplayName("특정 추억의 id를 가지고 있는 모든 MemoryMember를 삭제한다.")
     @Test
-    void deleteAllByMemoryIdInBatch() {
+    void deleteAllByMemoryIdInBulk() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         Member member2 = memberRepository.save(MemberFixture.create("hotea"));
@@ -90,7 +90,7 @@ class MemoryMemberRepositoryTest extends RepositoryTest {
         MemoryMember memoryMember2 = memoryMemberRepository.save(new MemoryMember(member2, memory));
 
         // when
-        memoryMemberRepository.deleteAllByMemoryIdInBatch(memory.getId());
+        memoryMemberRepository.deleteAllByMemoryIdInBulk(memory.getId());
         entityManager.flush();
         entityManager.clear();
 
