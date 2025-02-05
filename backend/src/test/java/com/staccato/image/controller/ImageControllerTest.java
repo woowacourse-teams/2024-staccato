@@ -2,16 +2,10 @@ package com.staccato.image.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MockMvc;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.staccato.auth.service.AuthService;
-import com.staccato.image.service.ImageService;
+import com.staccato.ControllerTest;
 import com.staccato.image.service.dto.ImageUrlResponse;
 import com.staccato.member.domain.Member;
 
@@ -22,17 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = ImageController.class)
-public class ImageControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private ImageService imageService;
-    @MockBean
-    private AuthService authService;
-
+public class ImageControllerTest extends ControllerTest {
     @DisplayName("사진을 한 장 업로드하고 S3 url을 가져올 수 있다.")
     @Test
     void uploadFileTest() throws Exception {

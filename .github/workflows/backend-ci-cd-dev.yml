@@ -1,9 +1,7 @@
 name: Backend CI/CD dev
 
 on:
-  push:
-    paths: [ 'backend/**', '.github/**' ]
-    branches: [ "develop-be", "develop" ]
+  workflow_dispatch:
 
 jobs:
   ci:

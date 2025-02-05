@@ -8,11 +8,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ApiResponseHandler.onException
-import com.on.staccato.data.ApiResponseHandler.onServerError
-import com.on.staccato.data.ApiResponseHandler.onSuccess
-import com.on.staccato.data.dto.Status
 import com.on.staccato.data.image.ImageDefaultRepository
+import com.on.staccato.data.onException
+import com.on.staccato.data.onServerError
+import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.MemoryCandidate
 import com.on.staccato.domain.model.MemoryCandidates
 import com.on.staccato.domain.repository.StaccatoRepository
@@ -20,16 +19,17 @@ import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationError
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.convertExcretaFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -64,6 +64,9 @@ class StaccatoCreationViewModel
 
         private val _selectedMemory = MutableLiveData<MemoryCandidate>()
         val selectedMemory: LiveData<MemoryCandidate> get() = _selectedMemory
+
+        private val _selectableMemories = MutableLiveData<MemoryCandidates>()
+        val selectableMemories: LiveData<MemoryCandidates> get() = _selectableMemories
 
         private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
         val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
@@ -152,53 +155,52 @@ class StaccatoCreationViewModel
             _isCurrentLocationLoading.postValue(newValue)
         }
 
-        fun fetchMemoryCandidates(memoryId: Long) {
+        fun fetchMemoryCandidates() {
             viewModelScope.launch {
                 timelineRepository.getMemoryCandidates()
-                    .onSuccess { memoryCandidates ->
-                        _memoryCandidates.value = memoryCandidates
-                        if (memoryCandidates.memoryCandidate.isNotEmpty()) {
-                            initSelectedMemoryAndVisitedAt(memoryId, memoryCandidates.memoryCandidate)
-                        }
-                    }.onException(::handleMemoryCandidatesException)
+                    .onSuccess {
+                        _memoryCandidates.value = it
+                    }
+                    .onException(::handleMemoryCandidatesException)
                     .onServerError(::handleServerError)
             }
         }
 
+        fun initMemoryAndVisitedAt(
+            memoryId: Long,
+            currentDateTime: LocalDateTime,
+        ) {
+            if (memoryId == DEFAULT_CATEGORY_ID) {
+                updateMemorySelectionBy(currentDateTime)
+                setCurrentDateTimeAs(currentDateTime)
+            } else {
+                updateMemorySelectionBy(memoryId)
+                setClosestDateTimeAs(currentDateTime)
+            }
+        }
+
+        private fun setCurrentDateTimeAs(visitedAt: LocalDateTime) {
+            _selectedVisitedAt.value = visitedAt
+        }
+
+        fun updateMemorySelectionBy(visitedAt: LocalDateTime) {
+            val filteredMemories = memoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: MemoryCandidates.emptyMemoryCandidates
+            _selectableMemories.value = filteredMemories
+            _selectedMemory.value = filteredMemories.findByIdOrFirst(selectedMemory.value?.memoryId)
+        }
+
+        private fun updateMemorySelectionBy(memoryId: Long) {
+            val selectedMemory = memoryCandidates.value?.findBy(memoryId) ?: throw IllegalArgumentException()
+            _selectableMemories.value = MemoryCandidates.from(selectedMemory)
+            _selectedMemory.value = selectedMemory
+        }
+
+        private fun setClosestDateTimeAs(visitedAt: LocalDateTime) {
+            _selectedVisitedAt.value = selectedMemory.value?.getClosestDateTime(visitedAt)
+        }
+
         fun setIsPlaceSearchClicked(value: Boolean) {
             _isPlaceSearchClicked.value = value
-        }
-
-        private fun initSelectedMemoryAndVisitedAt(
-            memoryId: Long,
-            memoryCandidates: List<MemoryCandidate>,
-        ) {
-            val targetMemory =
-                if (memoryId == 0L) {
-                    memoryCandidates.first()
-                } else {
-                    memoryCandidates.first { memoryId == it.memoryId }
-                }
-            _selectedMemory.value = targetMemory
-            _selectedVisitedAt.value = getClosestDateTime(targetMemory.startAt, targetMemory.endAt)
-        }
-
-        private fun getClosestDateTime(
-            startAt: LocalDate?,
-            endAt: LocalDate?,
-        ): LocalDateTime {
-            val now = LocalDateTime.now()
-
-            if (startAt == null || endAt == null) return now
-
-            val startDateTime = startAt.atStartOfDay()
-            val endDateTime = endAt.atStartOfDay()
-
-            return when {
-                now.isBefore(startDateTime) -> startDateTime // 현재 시간이 startAt 이전일 때 startAt 반환
-                now.isAfter(endDateTime) -> endDateTime // 현재 시간이 endAt 이후일 때 endAt 반환
-                else -> now // 현재 시간이 범위 내에 있을 때 now 반환
-            }
         }
 
         fun updateSelectedImageUris(newUris: Array<Uri>) {
@@ -247,8 +249,8 @@ class StaccatoCreationViewModel
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
-                }.onException { e, message ->
-                    if (this.isActive) handleException(e, message)
+                }.onException { state ->
+                    if (this.isActive) handleException(state)
                 }
                 .onServerError(::handleServerError)
         }
@@ -267,35 +269,23 @@ class StaccatoCreationViewModel
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
         }
 
-        private fun handleServerError(
-            status: Status,
-            errorMessage: String,
-        ) {
+        private fun handleServerError(errorMessage: String) {
             _isPosting.value = false
             _warningMessage.postValue(errorMessage)
         }
 
-        private fun handleException(
-            e: Throwable,
-            errorMessage: String,
-        ) {
+        private fun handleException(exceptionState: ExceptionState) {
             _isPosting.value = false
-            _warningMessage.postValue(errorMessage)
+            _warningMessage.postValue(exceptionState.message)
         }
 
-        private fun handleMemoryCandidatesException(
-            e: Throwable,
-            message: String,
-        ) {
-            _error.setValue(StaccatoCreationError.MemoryCandidates(message))
+        private fun handleMemoryCandidatesException(exceptionState: ExceptionState) {
+            _error.setValue(StaccatoCreationError.MemoryCandidates(exceptionState.message))
         }
 
-        private fun handleCreateException(
-            e: Throwable,
-            message: String,
-        ) {
+        private fun handleCreateException(state: ExceptionState) {
             _isPosting.value = false
-            _error.setValue(StaccatoCreationError.StaccatoCreation(message))
+            _error.setValue(StaccatoCreationError.StaccatoCreation(state.message))
         }
 
         companion object {
