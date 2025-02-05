@@ -92,7 +92,7 @@ class MyPageActivity :
 
     private fun initBindings() {
         binding.lifecycleOwner = this
-        binding.menuHandler = this
+        binding.myPageHandler = this
         binding.viewModel = myPageViewModel
         binding.memberProfileHandler = myPageViewModel
     }

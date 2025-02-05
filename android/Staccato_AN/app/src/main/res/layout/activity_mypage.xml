@@ -15,7 +15,7 @@
             type="com.on.staccato.presentation.mypage.MemberProfileHandler" />
 
         <variable
-            name="menuHandler"
+            name="myPageHandler"
             type="com.on.staccato.presentation.mypage.MyPageHandler" />
     </data>
 
@@ -57,7 +57,7 @@
             android:layout_marginTop="50dp"
             android:padding="18dp"
             android:contentDescription="@string/mypage_update_profile_image_description"
-            android:onClick="@{()->menuHandler.onProfileImageChangeClicked()}"
+            android:onClick="@{()->myPageHandler.onProfileImageChangeClicked()}"
             android:src="@drawable/icon_edit_circle"
             app:layout_constraintTop_toTopOf="@id/iv_mypage_profile_image"
             app:layout_constraintStart_toStartOf="@id/iv_mypage_profile_image" />
@@ -112,7 +112,7 @@
             android:id="@+id/btn_mypage_menu_privacy_policy"
             style="@style/ButtonStyle.MyPage"
             android:layout_marginTop="10dp"
-            android:onClick="@{() -> menuHandler.onPrivacyPolicyClicked()}"
+            android:onClick="@{() -> myPageHandler.onPrivacyPolicyClicked()}"
             android:text="@string/mypage_privacy_policy"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -130,7 +130,7 @@
             android:id="@+id/btn_mypage_menu_feedback"
             style="@style/ButtonStyle.MyPage"
             android:layout_marginTop="10dp"
-            android:onClick="@{() -> menuHandler.onFeedbackClicked()}"
+            android:onClick="@{() -> myPageHandler.onFeedbackClicked()}"
             android:text="@string/mypage_feedback"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -160,7 +160,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:onClick="@{() -> menuHandler.onInstagramClicked()}"
+            android:onClick="@{() -> myPageHandler.onInstagramClicked()}"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="@id/tv_mypage_app_version"
             app:layout_constraintEnd_toEndOf="parent"
