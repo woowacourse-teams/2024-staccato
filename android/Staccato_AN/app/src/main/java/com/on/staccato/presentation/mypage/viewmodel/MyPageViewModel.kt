@@ -15,14 +15,14 @@ import com.on.staccato.presentation.mypage.MemberProfileHandler
 import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel
     @Inject
     constructor(private val repository: MyPageRepository) :
-    ViewModel(),
-        MemberProfileHandler {
+    ViewModel(), MemberProfileHandler {
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile>
             get() = _memberProfile
@@ -44,17 +44,26 @@ class MyPageViewModel
             }
         }
 
-        fun fetchMemberProfile() {
+        fun changeProfileImage(multipart: MultipartBody.Part) {
             viewModelScope.launch {
-                val result = repository.getMemberProfile()
-                result.onException(::handleException)
+                repository.changeProfileImage(multipart)
+                    .onSuccess {
+                        _memberProfile.value =
+                            memberProfile.value?.copy(profileImageUrl = it)
+                    }.onException(::handleException)
                     .onServerError(::handleError)
-                    .onSuccess(::setMemberProfile)
             }
         }
 
-        private fun setMemberProfile(memberProfile: MemberProfile) {
-            _memberProfile.value = memberProfile
+        fun fetchMemberProfile() {
+            viewModelScope.launch {
+                repository.getMemberProfile()
+                    .onServerError(::handleError)
+                    .onException(::handleException)
+                    .onSuccess {
+                        _memberProfile.value = it
+                    }
+            }
         }
 
         private fun handleError(errorMessage: String) {

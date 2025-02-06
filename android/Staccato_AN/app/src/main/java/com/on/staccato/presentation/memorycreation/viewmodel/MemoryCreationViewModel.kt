@@ -22,6 +22,7 @@ import com.on.staccato.presentation.memorycreation.DateConverter.convertLongToLo
 import com.on.staccato.presentation.memorycreation.MemoryCreationError
 import com.on.staccato.presentation.memorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertMemoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -127,7 +128,7 @@ class MemoryCreationViewModel
             context: Context,
             uri: Uri,
         ): Job {
-            val thumbnailFile = convertMemoryUriToFile(context, uri, name = MEMORY_FILE_NAME)
+            val thumbnailFile = convertMemoryUriToFile(context, uri, IMAGE_FORM_DATA_NAME)
             return viewModelScope.launch {
                 val result: ApiResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)
@@ -188,9 +189,5 @@ class MemoryCreationViewModel
         private fun handleCreateException(state: ExceptionState) {
             _isPosting.value = false
             _error.setValue(MemoryCreationError.MemoryCreation(state.message))
-        }
-
-        companion object {
-            private const val MEMORY_FILE_NAME = "imageFile"
         }
     }

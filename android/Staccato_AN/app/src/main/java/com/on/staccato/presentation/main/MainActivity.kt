@@ -67,6 +67,7 @@ class MainActivity :
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
 
+    private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
     val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
     val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
@@ -77,6 +78,8 @@ class MainActivity :
         setupPermissionRequestLauncher()
         setupGoogleMap()
         setupFusedLocationProviderClient()
+        loadMemberProfile()
+        observeMemberProfile()
         observeCurrentLocation()
         observeStaccatoLocations()
         observeStaccatoId()
@@ -114,8 +117,7 @@ class MainActivity :
     }
 
     override fun onMyPageClicked() {
-        val intent = Intent(this, MyPageActivity::class.java)
-        startActivity(intent)
+        MyPageActivity.startWithResultLauncher(this, myPageLauncher)
     }
 
     private fun setupPermissionRequestLauncher() {
@@ -190,6 +192,16 @@ class MainActivity :
 
     private fun setupFusedLocationProviderClient() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+    }
+
+    private fun loadMemberProfile() {
+        sharedViewModel.fetchMemberProfile()
+    }
+
+    private fun observeMemberProfile() {
+        sharedViewModel.memberProfile.observe(this) { memberProfile ->
+            binding.memberProfile = memberProfile
+        }
     }
 
     private fun observeCurrentLocation() {
@@ -344,6 +356,13 @@ class MainActivity :
                     val bundle: Bundle = makeBundle(it, STACCATO_ID_KEY)
                     navigateTo(R.id.staccatoFragment, R.id.staccatoFragment, bundle, true)
                 }
+            }
+        }
+
+    private fun handleMyPageResult() =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                loadMemberProfile()
             }
         }
 
