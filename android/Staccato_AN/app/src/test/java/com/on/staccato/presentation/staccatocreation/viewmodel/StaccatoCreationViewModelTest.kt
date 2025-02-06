@@ -3,14 +3,14 @@ package com.on.staccato.presentation.staccatocreation.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.on.staccato.data.Success
 import com.on.staccato.data.image.ImageDefaultRepository
-import com.on.staccato.domain.model.MemoryCandidates
-import com.on.staccato.domain.model.TARGET_MEMORY_ID
-import com.on.staccato.domain.model.dummyMemoryCandidates
+import com.on.staccato.domain.model.CategoryCandidates
+import com.on.staccato.domain.model.TARGET_CATEGORY_ID
+import com.on.staccato.domain.model.categoryCandidateWithId1
+import com.on.staccato.domain.model.dummyCategoryCandidates
 import com.on.staccato.domain.model.endDateOf2023
-import com.on.staccato.domain.model.memoryCandidateWithId1
 import com.on.staccato.domain.model.middleDateOf2024
 import com.on.staccato.domain.model.startDateOf2024
-import com.on.staccato.domain.model.targetMemoryCandidate
+import com.on.staccato.domain.model.targetCategoryCandidate
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.MainDispatcherRule
@@ -53,98 +53,98 @@ class StaccatoCreationViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        givenMemoryCandidatesReturnsSuccessWithDummyData()
+        givenCategoryCandidatesReturnsSuccessWithDummyData()
     }
 
     @Test
     fun `viewModel 초기화 시 카테고리 후보를 불러온다`() =
         runTest {
             // when
-            viewModel.fetchMemoryCandidates()
+            viewModel.fetchCategoryCandidates()
             advanceUntilIdle()
 
             // then
-            val actualMemoryCandidates = viewModel.memoryCandidates.getOrAwaitValue()
-            assertEquals(dummyMemoryCandidates, actualMemoryCandidates)
+            val actualCategoryCandidates = viewModel.categoryCandidates.getOrAwaitValue()
+            assertEquals(dummyCategoryCandidates, actualCategoryCandidates)
         }
 
     @Test
     fun `카테고리 ID가 0L일 때는 현재 날짜에서 선택 가능한 카테고리 후보 중 첫번째를 선택한다`() =
         runTest {
             // given
-            viewModel.fetchMemoryCandidates()
+            viewModel.fetchCategoryCandidates()
             advanceUntilIdle()
 
             // when
             val currentLocalDate = middleDateOf2024.atStartOfDay()
-            viewModel.initMemoryAndVisitedAt(0L, currentLocalDate)
+            viewModel.initCategoryAndVisitedAt(0L, currentLocalDate)
 
             // then
             val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
-            val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
-            val actualSelectedMemory = viewModel.selectedMemory.getOrAwaitValue()
+            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
+            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
 
-            val selectableMemories = dummyMemoryCandidates.filterBy(middleDateOf2024)
-            val selectedMemory = selectableMemories.findByIdOrFirst(null)
+            val selectableCategories = dummyCategoryCandidates.filterBy(middleDateOf2024)
+            val selectedCategory = selectableCategories.findByIdOrFirst(null)
 
             assertEquals(currentLocalDate, actualVisitedAt)
-            assertEquals(selectableMemories, actualSelectableMemories)
-            assertEquals(selectedMemory, actualSelectedMemory)
+            assertEquals(selectableCategories, actualSelectableCategories)
+            assertEquals(selectedCategory, actualSelectedCategory)
         }
 
     @Test
     fun `카테고리 ID가 0L이 아닐 때는 id로 카테고리를 선택하고, 현재와 가장 가까운 일시를 선택한다`() =
         runTest {
             // given
-            viewModel.fetchMemoryCandidates()
+            viewModel.fetchCategoryCandidates()
             advanceUntilIdle()
 
             // when
             val currentVisitedAt = middleDateOf2024.atStartOfDay()
-            viewModel.initMemoryAndVisitedAt(TARGET_MEMORY_ID, currentVisitedAt)
+            viewModel.initCategoryAndVisitedAt(TARGET_CATEGORY_ID, currentVisitedAt)
 
             // then
             val actualVisitedAt = viewModel.selectedVisitedAt.getOrAwaitValue()
-            val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
-            val actualSelectedMemory = viewModel.selectedMemory.getOrAwaitValue()
+            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
+            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
 
-            val closestVisitedAt = targetMemoryCandidate.getClosestDateTime(currentVisitedAt)
-            val fixedSelectableMemories = MemoryCandidates.from(targetMemoryCandidate)
-            val fixedSelectedMemory = targetMemoryCandidate
+            val closestVisitedAt = targetCategoryCandidate.getClosestDateTime(currentVisitedAt)
+            val fixedSelectableCategories = CategoryCandidates.from(targetCategoryCandidate)
+            val fixedSelectedCategory = targetCategoryCandidate
 
             assertEquals(closestVisitedAt, actualVisitedAt)
-            assertEquals(fixedSelectableMemories, actualSelectableMemories)
-            assertEquals(fixedSelectedMemory, actualSelectedMemory)
+            assertEquals(fixedSelectableCategories, actualSelectableCategories)
+            assertEquals(fixedSelectedCategory, actualSelectedCategory)
         }
 
     @Test
-    fun `카테고리 ID가 0L일 때는 일시가 바뀌면 memoryCandidate도 바뀐다`() =
+    fun `카테고리 ID가 0L일 때는 일시가 바뀌면 categoryCandidate도 바뀐다`() =
         runTest {
             // given
-            viewModel.fetchMemoryCandidates()
+            viewModel.fetchCategoryCandidates()
 
             val oldLocalDate = startDateOf2024.atStartOfDay()
-            viewModel.initMemoryAndVisitedAt(TARGET_MEMORY_ID, oldLocalDate)
+            viewModel.initCategoryAndVisitedAt(TARGET_CATEGORY_ID, oldLocalDate)
 
             // when
             val newLocalDate = endDateOf2023.atStartOfDay()
-            viewModel.updateMemorySelectionBy(newLocalDate)
+            viewModel.updateCategorySelectionBy(newLocalDate)
 
             // then
-            val expectedSelectableMemories = MemoryCandidates.from(memoryCandidateWithId1)
-            val expectedSelectedMemory = memoryCandidateWithId1
+            val expectedSelectableCategories = CategoryCandidates.from(categoryCandidateWithId1)
+            val expectedSelectedCategory = categoryCandidateWithId1
 
-            val actualSelectableMemories = viewModel.selectableMemories.getOrAwaitValue()
-            val actualSelectedMemory = viewModel.selectedMemory.getOrAwaitValue()
+            val actualSelectableCategories = viewModel.selectableCategories.getOrAwaitValue()
+            val actualSelectedCategory = viewModel.selectedCategory.getOrAwaitValue()
 
-            assertEquals(expectedSelectableMemories, actualSelectableMemories)
-            assertEquals(expectedSelectedMemory, actualSelectedMemory)
+            assertEquals(expectedSelectableCategories, actualSelectableCategories)
+            assertEquals(expectedSelectedCategory, actualSelectedCategory)
         }
 
-    private fun givenMemoryCandidatesReturnsSuccessWithDummyData() {
-        coEvery { timelineRepository.getMemoryCandidates() } returns
+    private fun givenCategoryCandidatesReturnsSuccessWithDummyData() {
+        coEvery { timelineRepository.getCategoryCandidates() } returns
             Success(
-                dummyMemoryCandidates,
+                dummyCategoryCandidates,
             )
     }
 }

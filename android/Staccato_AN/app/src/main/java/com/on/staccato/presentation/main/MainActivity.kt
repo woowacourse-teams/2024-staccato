@@ -35,12 +35,12 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.common.LocationPermissionManager
 import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.main.model.MarkerUiModel
 import com.on.staccato.presentation.main.viewmodel.MapsViewModel
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
-import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
@@ -67,11 +67,11 @@ class MainActivity :
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
 
-    private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
-    val memoryCreationLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
-    val memoryUpdateLauncher: ActivityResultLauncher<Intent> = handleMemoryResult()
+    val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
+    val categoryUpdateLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
     val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
     val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
+    private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
 
     override fun initStartView(savedInstanceState: Bundle?) {
         binding.handler = this
@@ -338,13 +338,13 @@ class MainActivity :
         navController = navHostFragment.navController
     }
 
-    private fun handleMemoryResult() =
+    private fun handleCategoryResult() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
                     sharedViewModel.setTimelineHasUpdated()
-                    val bundle: Bundle = makeBundle(it, MEMORY_ID_KEY)
-                    navigateTo(R.id.memoryFragment, R.id.timelineFragment, bundle, false)
+                    val bundle: Bundle = makeBundle(it, CATEGORY_ID_KEY)
+                    navigateTo(R.id.categoryFragment, R.id.timelineFragment, bundle, false)
                 }
             }
         }

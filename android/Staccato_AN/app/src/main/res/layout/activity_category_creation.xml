@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel" />
+
+        <variable
+            name="handler"
+            type="com.on.staccato.presentation.categorycreation.CategoryCreationHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".presentation.categorycreation.CategoryCreationActivity">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_category_creation"
+            style="@style/NavigationToolbarStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:subtitle="@string/category_creation_toolbar_subtitle"
+            app:title="@string/category_creation_toolbar_title" />
+
+        <ScrollView
+            android:id="@+id/sv_category_creation"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_category_creation"
+            bind:scrollToBottom="@{viewModel.isPeriodActive}">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_category_creation_photo_attach"
+                    style="@style/PhotoAttachBoxStyle"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="24dp"
+                    android:contentDescription="@string/all_category_thumbnail_photo_description"
+                    android:onClick="@{() -> handler.onPhotoAttachClicked()}"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_max="500dp"
+                    bind:coilRoundedCornerImageUri="@{viewModel.thumbnail.uri}"
+                    bind:coilRoundedCornerImageUrl="@{viewModel.thumbnail.url}"
+                    bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
+                    bind:coilRoundingRadius="@{12f}" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/all_delete_image"
+                    android:onClick="@{() -> handler.onImageDeletionClicked()}"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="@{viewModel.thumbnail.url == null ? View.GONE : View.VISIBLE }"
+                    app:layout_constraintEnd_toEndOf="@id/iv_category_creation_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_category_creation_photo_attach"
+                    tools:visibility="visible" />
+
+                <include
+                    android:id="@+id/include_category_creation_photo_attach"
+                    layout="@layout/layout_photo_attach"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_category_creation_photo_attach"
+                    app:layout_constraintEnd_toEndOf="@id/iv_category_creation_photo_attach"
+                    app:layout_constraintStart_toStartOf="@id/iv_category_creation_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_category_creation_photo_attach"
+                    bind:visibilityByEmptyThumbnail="@{viewModel.thumbnail}" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@color/white_80"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_category_creation_photo_attach"
+                    app:layout_constraintEnd_toEndOf="@id/iv_category_creation_photo_attach"
+                    app:layout_constraintStart_toStartOf="@id/iv_category_creation_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_category_creation_photo_attach"
+                    bind:loadingVisibilityByThumbnail="@{viewModel.thumbnail}"
+                    tools:visibility="visible" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    style="@style/LottieStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_category_creation_photo_attach"
+                    app:layout_constraintEnd_toEndOf="@id/iv_category_creation_photo_attach"
+                    app:layout_constraintStart_toStartOf="@id/iv_category_creation_photo_attach"
+                    app:layout_constraintTop_toTopOf="@id/iv_category_creation_photo_attach"
+                    bind:loadingVisibilityByThumbnail="@{viewModel.thumbnail}"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_category_creation_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="36dp"
+                    android:text="@string/category_creation_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_category_creation_photo_attach" />
+
+                <TextView
+                    android:id="@+id/tv_category_creation_required_mark_first"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_category_creation_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_category_creation_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_category_creation_title" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_category_creation_title"
+                    style="@style/TextInputLayoutStyle"
+                    app:counterMaxLength="30"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_creation_title">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/TextInputEditTextStyle.Title"
+                        android:hint="@string/category_creation_title_hint"
+                        android:maxLength="30"
+                        android:text="@={viewModel.title}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/tv_category_creation_description"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="25dp"
+                    android:text="@string/category_creation_description"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_category_creation_title" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_category_creation_description"
+                    style="@style/TextInputLayoutStyle"
+                    app:counterMaxLength="500"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_creation_description">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/TextInputEditTextStyle.Description"
+                        android:hint="@string/category_creation_description_hint"
+                        android:maxLength="500"
+                        android:text="@={viewModel.description}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/tv_category_creation_period_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="25dp"
+                    android:text="@string/category_creation_period_setting"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_category_creation_description" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switch_category_creation_period_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@android:color/transparent"
+                    android:checked="@={viewModel.isPeriodActive}"
+                    android:thumb="@drawable/shape_switch_thumb_oval"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_category_creation_period_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_category_creation_period_title"
+                    app:switchMinWidth="48dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/shape_switch_track_50dp"
+                    app:trackTint="@drawable/selector_switch_track_colors"
+                    app:trackTintMode="src_in" />
+
+                <TextView
+                    android:id="@+id/tv_category_creation_period_description"
+                    style="@style/HintTextStyle"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/category_creation_period_description"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_creation_period_title" />
+
+                <TextView
+                    android:id="@+id/tv_category_creation_period_selection"
+                    style="@style/BackgroundedTextStyle"
+                    android:layout_marginTop="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="@{() -> handler.onPeriodSelectionClicked()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_creation_period_description"
+                    bind:endDate="@{viewModel.endDate}"
+                    bind:startDate="@{viewModel.startDate}"
+                    bind:visibleOrGone="@{viewModel.isPeriodActive}" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_category_creation_save"
+                    style="@style/ButtonStyle.Save"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="24dp"
+                    android:onClick="@{() -> handler.onSaveClicked()}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_creation_period_selection"
+                    bind:isPeriodActive="@{viewModel.isPeriodActive}"
+                    bind:isPhotoUploading="@{viewModel.isPhotoPosting}"
+                    bind:categoryEndDate="@{viewModel.endDate}"
+                    bind:categoryStartDate="@{viewModel.startDate}"
+                    bind:categoryTitle="@{viewModel.title}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <include
+            isPosting="@{viewModel.isPosting}"
+            layout="@layout/layout_loading" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

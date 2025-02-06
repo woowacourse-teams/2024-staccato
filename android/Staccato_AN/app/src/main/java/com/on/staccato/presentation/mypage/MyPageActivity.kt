@@ -18,7 +18,7 @@ import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
-import com.on.staccato.presentation.util.convertMemoryUriToFile
+import com.on.staccato.presentation.util.convertCategoryUriToFile
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.webview.WebViewActivity
 import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_TOOLBAR_TITLE
@@ -54,7 +54,7 @@ class MyPageActivity :
     }
 
     override fun onUrisSelected(vararg uris: Uri) {
-        val imageFile = convertMemoryUriToFile(this, uris.first(), IMAGE_FORM_DATA_NAME)
+        val imageFile = convertCategoryUriToFile(this, uris.first(), IMAGE_FORM_DATA_NAME)
         myPageViewModel.changeProfileImage(imageFile)
     }
 
