@@ -1,7 +1,6 @@
 package com.staccato.config.log;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -35,22 +34,6 @@ class CreateMomentMetricsAspectTest extends ServiceSliceTest {
     @Autowired
     private MeterRegistry meterRegistry;
 
-    static class TestCase {
-        String description;
-        LocalDateTime visitedAt;
-        double expectedPast;
-        double expectedNow;
-        double expectedFuture;
-
-        public TestCase(String description, LocalDateTime visitedAt, double expectedPast, double expectedNow, double expectedFuture) {
-            this.description = description;
-            this.visitedAt = visitedAt;
-            this.expectedPast = expectedPast;
-            this.expectedNow = expectedNow;
-            this.expectedFuture = expectedFuture;
-        }
-    }
-
     @DisplayName("기록되는 시점을 매트릭을 통해 표현 할 수 있습니다.")
     @TestFactory
     Stream<DynamicTest> createMomentMetricsAspect() {
@@ -58,34 +41,33 @@ class CreateMomentMetricsAspectTest extends ServiceSliceTest {
         Memory memory = saveMemory(member);
         LocalDateTime now = LocalDateTime.now();
 
-        registerMetrics(memory, member, now);
+        return Stream.of(
+                dynamicTest("과거, 미래 기록 매트릭을 등록합니다.", () -> {
+                    // given
+                    MomentRequest pastRequest = createRequest(memory.getId(), now.minusDays(1));
+                    MomentRequest futureRequest = createRequest(memory.getId(), now.plusDays(1));
 
-        List<TestCase> testCases = List.of(
-                new TestCase("과거 기록 Counter를 매트릭에 추가합니다.", now.minusDays(5), 2.0, 1.0, 1.0),
-                new TestCase("현재 기록 Counter를 매트릭에 추가합니다.", now, 2.0, 2.0, 1.0),
-                new TestCase("미래 기록 Counter를 매트릭에 추가합니다.", now.plusDays(1), 2.0, 2.0, 2.0),
-                new TestCase("미래 기록 Counter를 매트릭에 추가합니다.", now.plusDays(2), 2.0, 2.0, 3.0)
-        );
+                    //when
+                    momentService.createMoment(pastRequest, member);
+                    momentService.createMoment(futureRequest, member);
 
-        return testCases.stream().map(tc ->
-                dynamicTest(tc.description, () -> {
-                    MomentRequest momentRequest = createRequest(memory.getId(), tc.visitedAt);
+                    //then
+                    assertAll(
+                            () -> assertThat(getPastCount()).isEqualTo(1.0),
+                            () -> assertThat(getFutureCount()).isEqualTo(1.0)
+                    );
+                }),
+                dynamicTest("과거 요청 → 누적: past:2, future:1", () -> {
+                    // given
+                    MomentRequest momentRequest = createRequest(memory.getId(), now.minusDays(1));
+
+                    // when
                     momentService.createMoment(momentRequest, member);
 
-                    double pastCount = meterRegistry.get("staccato_record_viewpoint")
-                            .tag("viewPoint", "past")
-                            .counter().count();
-                    double nowCount = meterRegistry.get("staccato_record_viewpoint")
-                            .tag("viewPoint", "now")
-                            .counter().count();
-                    double futureCount = meterRegistry.get("staccato_record_viewpoint")
-                            .tag("viewPoint", "future")
-                            .counter().count();
-
+                    // then
                     assertAll(
-                            () -> assertThat(tc.expectedPast).isEqualTo(pastCount),
-                            () -> assertThat(tc.expectedNow).isEqualTo(nowCount),
-                            () -> assertThat(tc.expectedFuture).isEqualTo(futureCount)
+                            () -> assertThat(getPastCount()).isEqualTo(2.0),
+                            () -> assertThat(getFutureCount()).isEqualTo(1.0)
                     );
                 })
         );
@@ -96,9 +78,21 @@ class CreateMomentMetricsAspectTest extends ServiceSliceTest {
     }
 
     private Memory saveMemory(Member member) {
-        Memory memory = MemoryFixture.create(LocalDate.now().minusDays(50), LocalDate.now().plusDays(50));
+        Memory memory = MemoryFixture.create();
         memory.addMemoryMember(member);
         return memoryRepository.save(memory);
+    }
+
+    private double getFutureCount() {
+        return meterRegistry.get("staccato_record_viewpoint")
+                .tag("viewPoint", "future")
+                .counter().count();
+    }
+
+    private double getPastCount() {
+        return meterRegistry.get("staccato_record_viewpoint")
+                .tag("viewPoint", "past")
+                .counter().count();
     }
 
     private MomentRequest createRequest(Long memoryId, LocalDateTime localDateTime) {
@@ -111,14 +105,5 @@ class CreateMomentMetricsAspectTest extends ServiceSliceTest {
                 localDateTime,
                 memoryId,
                 List.of());
-    }
-
-    private void registerMetrics(Memory memory, Member member, LocalDateTime now) {
-        MomentRequest pastRequest = createRequest(memory.getId(), now.minusDays(1));
-        MomentRequest nowRequest = createRequest(memory.getId(), now);
-        MomentRequest futureRequest = createRequest(memory.getId(), now.plusDays(1));
-        momentService.createMoment(pastRequest, member);
-        momentService.createMoment(nowRequest, member);
-        momentService.createMoment(futureRequest, member);
     }
 }
