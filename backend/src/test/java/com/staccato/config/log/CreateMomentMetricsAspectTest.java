@@ -51,13 +51,6 @@ class CreateMomentMetricsAspectTest extends ServiceSliceTest {
         }
     }
 
-    /**
-     * 동적 테스트 시나리오
-     * 1. 첫 번째 호출: 과거 요청 → 누적: past:1, now:0, future:0
-     * 2. 두 번째 호출: 현재 요청 → 누적: past:1, now:1, future:0
-     * 3. 세 번째 호출: 미래 요청 → 누적: past:1, now:1, future:1
-     * 4. 네 번째 호출: 미래 요청 → 누적: past:1, now:1, future:2
-     */
     @DisplayName("기록되는 시점을 매트릭을 통해 표현 할 수 있습니다.")
     @TestFactory
     Stream<DynamicTest> createMomentMetricsAspect() {
