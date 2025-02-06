@@ -2,16 +2,23 @@ package com.on.staccato.presentation.mypage
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
+import androidx.fragment.app.FragmentManager
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMypageBinding
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
+import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
+import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
+import com.on.staccato.presentation.util.convertCategoryUriToFile
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.webview.WebViewActivity
 import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_TOOLBAR_TITLE
@@ -21,9 +28,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MyPageActivity :
     BindingActivity<ActivityMypageBinding>(),
-    MyPageMenuHandler {
+    MyPageHandler,
+    OnUrisSelectedListener {
     override val layoutResourceId: Int = R.layout.activity_mypage
     private val myPageViewModel: MyPageViewModel by viewModels()
+    private val photoAttachFragment by lazy { PhotoAttachFragment() }
+    private val fragmentManager: FragmentManager = supportFragmentManager
     private val clipboardManager: ClipboardManager by lazy {
         getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
     }
@@ -32,8 +42,20 @@ class MyPageActivity :
         initToolbar()
         initBindings()
         loadMemberProfile()
+        observeMemberProfile()
         observeCopyingUuidCode()
         observeErrorMessage()
+    }
+
+    override fun onProfileImageChangeClicked() {
+        if (!photoAttachFragment.isAdded) {
+            photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+        }
+    }
+
+    override fun onUrisSelected(vararg uris: Uri) {
+        val imageFile = convertCategoryUriToFile(this, uris.first(), IMAGE_FORM_DATA_NAME)
+        myPageViewModel.changeProfileImage(imageFile)
     }
 
     override fun onPrivacyPolicyClicked() {
@@ -70,13 +92,19 @@ class MyPageActivity :
 
     private fun initBindings() {
         binding.lifecycleOwner = this
-        binding.menuHandler = this
+        binding.myPageHandler = this
         binding.viewModel = myPageViewModel
         binding.memberProfileHandler = myPageViewModel
     }
 
     private fun loadMemberProfile() {
         myPageViewModel.fetchMemberProfile()
+    }
+
+    private fun observeMemberProfile() {
+        myPageViewModel.memberProfile.observe(this) {
+            setResult(RESULT_OK)
+        }
     }
 
     private fun observeCopyingUuidCode() {
@@ -112,5 +140,14 @@ class MyPageActivity :
             "https://forms.gle/fuxgta7HxDNY5KvSA"
         private const val STACCATO_INSTAGRAM_URL =
             "https://www.instagram.com/staccato_team/profilecard/?igsh=Y241bHoybnZmZjA5"
+
+        fun startWithResultLauncher(
+            context: Context,
+            activityLauncher: ActivityResultLauncher<Intent>,
+        ) {
+            Intent(context, MyPageActivity::class.java).apply {
+                activityLauncher.launch(this)
+            }
+        }
     }
 }

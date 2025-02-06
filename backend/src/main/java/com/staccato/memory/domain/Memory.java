@@ -103,4 +103,8 @@ public class Memory extends BaseEntity {
     public boolean isNotSameTitle(String title) {
         return !this.title.equals(title);
     }
+
+    public boolean hasTerm() {
+        return term.isExist();
+    }
 }

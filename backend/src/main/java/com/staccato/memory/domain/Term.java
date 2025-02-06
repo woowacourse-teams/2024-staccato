@@ -4,12 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-
 import com.staccato.exception.StaccatoException;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,22 +35,26 @@ public class Term {
     }
 
     private boolean isOnlyOneDatePresent(LocalDate startAt, LocalDate endAt) {
-        return (Objects.nonNull(startAt) && Objects.isNull(endAt)) || (Objects.isNull(startAt) && Objects.nonNull(endAt));
+        return isExist(startAt, endAt) || (Objects.isNull(startAt) && Objects.nonNull(endAt));
+    }
+
+    private boolean isExist(LocalDate startAt, LocalDate endAt) {
+        return Objects.nonNull(startAt) && Objects.isNull(endAt);
     }
 
     private boolean isInvalidTerm(LocalDate startAt, LocalDate endAt) {
-        return isExist(startAt, endAt) && endAt.isBefore(startAt);
+        return Objects.nonNull(startAt) && Objects.nonNull(endAt) && endAt.isBefore(startAt);
     }
 
     public boolean doesNotContain(LocalDateTime date) {
-        if (isExist(startAt, endAt)) {
+        if (isExist()) {
             ChronoLocalDate targetDate = ChronoLocalDate.from(date);
             return (startAt.isAfter(targetDate) || endAt.isBefore(targetDate));
         }
         return false;
     }
 
-    private boolean isExist(LocalDate startAt, LocalDate endAt) {
+    public boolean isExist() {
         return Objects.nonNull(startAt) && Objects.nonNull(endAt);
     }
 }

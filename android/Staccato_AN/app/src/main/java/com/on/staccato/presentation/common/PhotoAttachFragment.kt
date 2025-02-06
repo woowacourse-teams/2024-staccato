@@ -106,7 +106,7 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
         if (context is OnUrisSelectedListener) {
             uriSelectedListener = context
         } else {
-            throw RuntimeException()
+            throw IllegalStateException("Activity or Fragment must implement OnUrisSelectedListener")
         }
     }
 

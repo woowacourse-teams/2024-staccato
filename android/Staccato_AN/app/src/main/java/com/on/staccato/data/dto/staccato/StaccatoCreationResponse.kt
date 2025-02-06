@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StaccatoCreationResponse(
-    @SerialName("momentId") val staccatoId: Long,
+    @SerialName("staccatoId") val staccatoId: Long,
 )
