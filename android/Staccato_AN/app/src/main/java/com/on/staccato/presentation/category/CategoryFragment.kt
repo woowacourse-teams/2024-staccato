@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memory
+package com.on.staccato.presentation.category
 
 import android.os.Bundle
 import android.view.View
@@ -8,17 +8,17 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
-import com.on.staccato.databinding.FragmentMemoryBinding
+import com.on.staccato.databinding.FragmentCategoryBinding
 import com.on.staccato.presentation.base.BindingFragment
+import com.on.staccato.presentation.category.adapter.MatesAdapter
+import com.on.staccato.presentation.category.adapter.StaccatosAdapter
+import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
+import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.DialogHandler
 import com.on.staccato.presentation.common.ToolbarHandler
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
-import com.on.staccato.presentation.memory.adapter.MatesAdapter
-import com.on.staccato.presentation.memory.adapter.StaccatosAdapter
-import com.on.staccato.presentation.memory.viewmodel.MemoryViewModel
-import com.on.staccato.presentation.memoryupdate.MemoryUpdateActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showSnackBarWithAction
@@ -26,15 +26,15 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MemoryFragment :
-    BindingFragment<FragmentMemoryBinding>(R.layout.fragment_memory),
+class CategoryFragment :
+    BindingFragment<FragmentCategoryBinding>(R.layout.fragment_category),
     ToolbarHandler,
-    MemoryHandler,
+    CategoryHandler,
     DialogHandler {
-    private val memoryId by lazy {
-        arguments?.getLong(MEMORY_ID_KEY) ?: throw IllegalArgumentException()
+    private val categoryId by lazy {
+        arguments?.getLong(CATEGORY_ID_KEY) ?: throw IllegalArgumentException()
     }
-    private val viewModel: MemoryViewModel by viewModels()
+    private val viewModel: CategoryViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
 
@@ -49,19 +49,19 @@ class MemoryFragment :
         initToolbar()
         initMatesAdapter()
         initStaccatosAdapter()
-        observeMemory()
+        observeCategory()
         observeIsDeleteSuccess()
         showErrorToast()
         showExceptionSnackBar()
-        viewModel.loadMemory(memoryId)
+        viewModel.loadCategory(categoryId)
     }
 
     override fun onUpdateClicked() {
-        val memoryUpdateLauncher = (activity as MainActivity).memoryUpdateLauncher
-        MemoryUpdateActivity.startWithResultLauncher(
-            memoryId,
+        val categoryUpdateLauncher = (activity as MainActivity).categoryUpdateLauncher
+        CategoryUpdateActivity.startWithResultLauncher(
+            categoryId,
             requireActivity(),
-            memoryUpdateLauncher,
+            categoryUpdateLauncher,
         )
     }
 
@@ -70,27 +70,27 @@ class MemoryFragment :
     }
 
     override fun onStaccatoClicked(staccatoId: Long) {
-        viewModel.memory.value?.let {
+        viewModel.category.value?.let {
             val bundle =
                 bundleOf(
                     STACCATO_ID_KEY to staccatoId,
                 )
-            findNavController().navigate(R.id.action_memoryFragment_to_staccatoFragment, bundle)
+            findNavController().navigate(R.id.action_categoryFragment_to_staccatoFragment, bundle)
         }
     }
 
     override fun onConfirmClicked() {
-        viewModel.deleteMemory(memoryId)
+        viewModel.deleteCategory(categoryId)
     }
 
     override fun onStaccatoCreationClicked() {
-        viewModel.memory.value?.let {
+        viewModel.category.value?.let {
             val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
             StaccatoCreationActivity.startWithResultLauncher(
-                memoryId,
-                it.title,
                 requireContext(),
                 staccatoCreationLauncher,
+                categoryId,
+                it.title,
             )
         }
     }
@@ -99,19 +99,19 @@ class MemoryFragment :
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.toolbarHandler = this
-        binding.memoryHandler = this
+        binding.categoryHandler = this
     }
 
     private fun initToolbar() {
-        binding.includeMemoryToolbar.toolbarDetail.setNavigationOnClickListener {
+        binding.includeCategoryToolbar.toolbarDetail.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }
 
-    private fun observeMemory() {
-        viewModel.memory.observe(viewLifecycleOwner) { memory ->
-            matesAdapter.updateMates(memory.mates)
-            staccatosAdapter.updateStaccatos(memory.staccatos)
+    private fun observeCategory() {
+        viewModel.category.observe(viewLifecycleOwner) { category ->
+            matesAdapter.updateMates(category.mates)
+            staccatosAdapter.updateStaccatos(category.staccatos)
         }
     }
 
@@ -120,19 +120,19 @@ class MemoryFragment :
             if (isDeleteSuccess) {
                 sharedViewModel.setTimelineHasUpdated()
                 findNavController().popBackStack()
-                showToast(getString(R.string.memory_delete_complete))
+                showToast(getString(R.string.category_delete_complete))
             }
         }
     }
 
     private fun initMatesAdapter() {
         matesAdapter = MatesAdapter()
-        binding.rvMemoryMates.adapter = matesAdapter
+        binding.rvCategoryMates.adapter = matesAdapter
     }
 
     private fun initStaccatosAdapter() {
         staccatosAdapter = StaccatosAdapter(handler = this)
-        binding.rvMemoryStaccatos.adapter = staccatosAdapter
+        binding.rvCategoryStaccatos.adapter = staccatosAdapter
     }
 
     private fun showErrorToast() {
@@ -153,11 +153,11 @@ class MemoryFragment :
     }
 
     private fun onRetryAction() {
-        viewModel.loadMemory(memoryId)
+        viewModel.loadCategory(categoryId)
     }
 
     companion object {
-        const val MEMORY_ID_KEY = "memoryId"
-        const val MEMORY_TITLE_KEY = "memoryTitle"
+        const val CATEGORY_ID_KEY = "categoryId"
+        const val CATEGORY_TITLE_KEY = "categoryTitle"
     }
 }

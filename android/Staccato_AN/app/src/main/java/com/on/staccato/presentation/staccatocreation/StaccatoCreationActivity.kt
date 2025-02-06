@@ -15,7 +15,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -25,18 +24,17 @@ import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityStaccatoCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.LocationPermissionManager
 import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
-import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
-import com.on.staccato.presentation.staccatocreation.adapter.ItemDragListener
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragment
+import com.on.staccato.presentation.staccatocreation.dialog.CategorySelectionFragment
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
@@ -45,7 +43,6 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
@@ -58,8 +55,8 @@ class StaccatoCreationActivity :
     override val layoutResourceId = R.layout.activity_staccato_creation
     private val viewModel: StaccatoCreationViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
-    private val memorySelectionFragment by lazy {
-        MemorySelectionFragment()
+    private val categorySelectionFragment by lazy {
+        CategorySelectionFragment()
     }
     private val visitedAtSelectionFragment by lazy {
         VisitedAtSelectionFragment()
@@ -76,8 +73,8 @@ class StaccatoCreationActivity :
     private lateinit var photoAttachAdapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
 
-    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
-    private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
+    private val categoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID) }
+    private val categoryTitle by lazy { intent.getStringExtra(CATEGORY_TITLE_KEY) ?: "" }
 
     private val locationPermissionManager =
         LocationPermissionManager(context = this, activity = this)
@@ -87,14 +84,14 @@ class StaccatoCreationActivity :
     private var currentSnackBar: Snackbar? = null
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        viewModel.fetchMemoryCandidates(memoryId)
+        viewModel.fetchCategoryCandidates()
         setupPermissionRequestLauncher()
         setupFusedLocationProviderClient()
         initBinding()
         initAdapter()
         initItemTouchHelper()
         initToolbar()
-        initMemorySelectionFragment()
+        initCategorySelectionFragment()
         initVisitedAtSelectionFragment()
         observeViewModelData()
         initGooglePlaceSearch()
@@ -143,17 +140,20 @@ class StaccatoCreationActivity :
         viewModel.updateSelectedImageUris(arrayOf(*uris))
     }
 
-    override fun onMemorySelectionClicked() {
-        if (!memorySelectionFragment.isAdded) {
-            memorySelectionFragment.show(
+    override fun onCategorySelectionClicked() {
+        if (!categorySelectionFragment.isAdded) {
+            categorySelectionFragment.show(
                 fragmentManager,
-                MemorySelectionFragment.TAG,
+                CategorySelectionFragment.TAG,
             )
         }
     }
 
     override fun onVisitedAtSelectionClicked() {
         if (!visitedAtSelectionFragment.isAdded) {
+            viewModel.selectedVisitedAt.value?.let {
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+            }
             visitedAtSelectionFragment.show(
                 fragmentManager,
                 VisitedAtSelectionFragment.TAG,
@@ -241,18 +241,7 @@ class StaccatoCreationActivity :
 
     private fun initAdapter() {
         photoAttachAdapter =
-            PhotoAttachAdapter(
-                object : ItemDragListener {
-                    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
-                        itemTouchHelper.startDrag(viewHolder)
-                    }
-
-                    override fun onStopDrag(list: List<AttachedPhotoUiModel>) {
-                        viewModel.setUrisWithNewOrder(list)
-                    }
-                },
-                viewModel,
-            )
+            PhotoAttachAdapter(viewModel) { viewModel.setUrisWithNewOrder(it) }
         binding.rvPhotoAttach.adapter = photoAttachAdapter
     }
 
@@ -267,13 +256,9 @@ class StaccatoCreationActivity :
         }
     }
 
-    private fun initMemorySelectionFragment() {
-        memorySelectionFragment.setOnMemorySelected { selectedMemory ->
-            val startAt = selectedMemory.startAt ?: LocalDate.now()
-            val initializedDateTime =
-                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
-            viewModel.selectedVisitedAt(initializedDateTime)
-            viewModel.selectMemory(selectedMemory)
+    private fun initCategorySelectionFragment() {
+        categorySelectionFragment.setOnCategorySelected { selectedCategory ->
+            viewModel.selectCategory(selectedCategory)
         }
     }
 
@@ -284,9 +269,14 @@ class StaccatoCreationActivity :
     }
 
     private fun observeViewModelData() {
-        viewModel.placeName.observe(this) {
-            autocompleteFragment.setText(it)
-        }
+        observePhotoData()
+        observePlaceData()
+        observeVisitedAtData()
+        observeCategoryData()
+        observeCreatedStaccatoId()
+    }
+
+    private fun observePhotoData() {
         viewModel.isAddPhotoClicked.observe(this) {
             if (!photoAttachFragment.isAdded && it) {
                 photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
@@ -300,27 +290,59 @@ class StaccatoCreationActivity :
                 listOf(AttachedPhotoUiModel.addPhotoButton).plus(photos.attachedPhotos),
             )
         }
-        viewModel.memoryCandidates.observe(this) {
-            memorySelectionFragment.setItems(it.memoryCandidate)
+    }
+
+    private fun observePlaceData() {
+        viewModel.placeName.observe(this) {
+            autocompleteFragment.setText(it)
         }
-        viewModel.selectedMemory.observe(this) { selectedMemory ->
-            val startAt = selectedMemory.startAt ?: LocalDate.now()
-            val initializedDateTime =
-                LocalDateTime.of(startAt.year, startAt.month, startAt.dayOfMonth, 0, 0, 0)
-            memorySelectionFragment.updateKeyMemory(selectedMemory)
-            visitedAtSelectionFragment.initDateCandidates(selectedMemory, initializedDateTime)
-        }
-        viewModel.selectedVisitedAt.observe(this) { selectedVisitedAt ->
-            if (selectedVisitedAt != null) {
-                visitedAtSelectionFragment.initKeyWithSelectedValues(selectedVisitedAt)
+    }
+
+    private fun observeVisitedAtData() {
+        viewModel.selectedVisitedAt.observe(this) {
+            it?.let {
+                visitedAtSelectionFragment.updateSelectedVisitedAt(it)
+                if (categoryId == DEFAULT_CATEGORY_ID) {
+                    viewModel.updateCategorySelectionBy(it)
+                }
             }
         }
+    }
+
+    private fun observeCategoryData() {
+        viewModel.categoryCandidates.observe(this) {
+            it?.let {
+                if (categoryId == DEFAULT_CATEGORY_ID) {
+                    visitedAtSelectionFragment.initCalendarByPeriod()
+                }
+                viewModel.initCategoryAndVisitedAt(categoryId, LocalDateTime.now())
+            }
+        }
+        viewModel.selectableCategories.observe(this) {
+            it?.let {
+                categorySelectionFragment.setItems(it.categoryCandidates)
+            }
+        }
+        viewModel.selectedCategory.observe(this) {
+            it?.let {
+                categorySelectionFragment.updateKeyCategory(it)
+                if (categoryId != DEFAULT_CATEGORY_ID) {
+                    visitedAtSelectionFragment.initCalendarByPeriod(
+                        it.startAt,
+                        it.endAt,
+                    )
+                }
+            }
+        }
+    }
+
+    private fun observeCreatedStaccatoId() {
         viewModel.createdStaccatoId.observe(this) { createdStaccatoId ->
             val resultIntent =
                 Intent()
                     .putExtra(STACCATO_ID_KEY, createdStaccatoId)
-                    .putExtra(MEMORY_ID_KEY, memoryId)
-                    .putExtra(MEMORY_TITLE_KEY, memoryTitle)
+                    .putExtra(CATEGORY_ID_KEY, categoryId)
+                    .putExtra(CATEGORY_TITLE_KEY, categoryTitle)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -393,23 +415,23 @@ class StaccatoCreationActivity :
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
-                is StaccatoCreationError.MemoryCandidates -> handleMemoryCandidatesFail(error)
+                is StaccatoCreationError.CategoryCandidates -> handleCategoryCandidatesFail(error)
                 is StaccatoCreationError.StaccatoCreation -> handleStaccatoCreateFail(error)
             }
         }
     }
 
-    private fun handleMemoryCandidatesFail(error: StaccatoCreationError.MemoryCandidates) {
+    private fun handleCategoryCandidatesFail(error: StaccatoCreationError.CategoryCandidates) {
         finish()
         showToast(error.message)
     }
 
     private fun handleStaccatoCreateFail(error: StaccatoCreationError.StaccatoCreation) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(error.message) { reCreateStaccato() }
+        showExceptionSnackBar(error.message) { recreateStaccato() }
     }
 
-    private fun reCreateStaccato() {
+    private fun recreateStaccato() {
         viewModel.createStaccato()
     }
 
@@ -427,17 +449,19 @@ class StaccatoCreationActivity :
     }
 
     companion object {
-        const val MEMORY_TITLE_KEY = "memoryTitle"
+        const val CATEGORY_TITLE_KEY = "categoryTitle"
+        const val DEFAULT_CATEGORY_ID = 0L
+        private const val DEFAULT_CATEGORY_TITLE = ""
 
         fun startWithResultLauncher(
-            memoryId: Long,
-            memoryTitle: String,
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
+            categoryId: Long = DEFAULT_CATEGORY_ID,
+            categoryTitle: String = DEFAULT_CATEGORY_TITLE,
         ) {
             Intent(context, StaccatoCreationActivity::class.java).apply {
-                putExtra(MEMORY_ID_KEY, memoryId)
-                putExtra(MEMORY_TITLE_KEY, memoryTitle)
+                putExtra(CATEGORY_ID_KEY, categoryId)
+                putExtra(CATEGORY_TITLE_KEY, categoryTitle)
                 activityLauncher.launch(this)
             }
         }

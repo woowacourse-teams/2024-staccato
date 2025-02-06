@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.memorycreation
+package com.on.staccato.presentation.categorycreation
 
 import android.content.Context
 import android.content.Intent
@@ -12,23 +12,23 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
-import com.on.staccato.databinding.ActivityMemoryCreationBinding
+import com.on.staccato.databinding.ActivityCategoryCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
+import com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel
 import com.on.staccato.presentation.common.PhotoAttachFragment
-import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.on.staccato.presentation.memorycreation.viewmodel.MemoryCreationViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MemoryCreationActivity :
-    BindingActivity<ActivityMemoryCreationBinding>(),
-    MemoryCreationHandler,
+class CategoryCreationActivity :
+    BindingActivity<ActivityCategoryCreationBinding>(),
+    CategoryCreationHandler,
     OnUrisSelectedListener {
-    override val layoutResourceId = R.layout.activity_memory_creation
-    private val viewModel: MemoryCreationViewModel by viewModels()
+    override val layoutResourceId = R.layout.activity_category_creation
+    private val viewModel: CategoryCreationViewModel by viewModels()
 
     private val photoAttachFragment = PhotoAttachFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
@@ -38,8 +38,8 @@ class MemoryCreationActivity :
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
         navigateToMap()
-        updateMemoryPeriod()
-        observeCreatedMemoryId()
+        updateCategoryPeriod()
+        observeCreatedCategoryId()
         showErrorToast()
         handleError()
     }
@@ -52,7 +52,7 @@ class MemoryCreationActivity :
 
     override fun onSaveClicked() {
         window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        viewModel.createMemory()
+        viewModel.createCategory()
     }
 
     override fun onPhotoAttachClicked() {
@@ -90,23 +90,23 @@ class MemoryCreationActivity :
     }
 
     private fun navigateToMap() {
-        binding.toolbarMemoryCreation.setNavigationOnClickListener {
+        binding.toolbarCategoryCreation.setNavigationOnClickListener {
             finish()
         }
     }
 
-    private fun updateMemoryPeriod() {
+    private fun updateCategoryPeriod() {
         dateRangePicker.addOnPositiveButtonClickListener { selection ->
             val startDate: Long = selection.first
             val endDate: Long = selection.second
-            viewModel.setMemoryPeriod(startDate, endDate)
+            viewModel.setCategoryPeriod(startDate, endDate)
         }
     }
 
-    private fun observeCreatedMemoryId() {
-        viewModel.createdMemoryId.observe(this) { memoryId ->
+    private fun observeCreatedCategoryId() {
+        viewModel.createdCategoryId.observe(this) { categoryId ->
             val resultIntent = Intent()
-            resultIntent.putExtra(MEMORY_ID_KEY, memoryId)
+            resultIntent.putExtra(CATEGORY_ID_KEY, categoryId)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -123,27 +123,27 @@ class MemoryCreationActivity :
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
-                is MemoryCreationError.Thumbnail -> handleCreatePhotoUrlFail(error)
-                is MemoryCreationError.MemoryCreation -> handleCreateException(error)
+                is CategoryCreationError.Thumbnail -> handleCreatePhotoUrlFail(error)
+                is CategoryCreationError.CategoryCreation -> handleCreateException(error)
             }
         }
     }
 
-    private fun handleCreatePhotoUrlFail(error: MemoryCreationError.Thumbnail) {
+    private fun handleCreatePhotoUrlFail(error: CategoryCreationError.Thumbnail) {
         showExceptionSnackBar(error.message) { reCreateThumbnailUrl(error.uri) }
     }
 
-    private fun handleCreateException(error: MemoryCreationError.MemoryCreation) {
+    private fun handleCreateException(error: CategoryCreationError.CategoryCreation) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(error.message) { reCreateMemory() }
+        showExceptionSnackBar(error.message) { recreateCategory() }
     }
 
     private fun reCreateThumbnailUrl(uri: Uri) {
         viewModel.createThumbnailUrl(this, uri)
     }
 
-    private fun reCreateMemory() {
-        viewModel.createMemory()
+    private fun recreateCategory() {
+        viewModel.createCategory()
     }
 
     private fun showExceptionSnackBar(
@@ -164,7 +164,7 @@ class MemoryCreationActivity :
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
-            Intent(context, MemoryCreationActivity::class.java).apply {
+            Intent(context, CategoryCreationActivity::class.java).apply {
                 activityLauncher.launch(this)
             }
         }

@@ -1,9 +1,9 @@
 package com.on.staccato.data.comment
 
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.comment.CommentRequest
 import com.on.staccato.data.dto.comment.CommentUpdateRequest
 import com.on.staccato.data.dto.comment.CommentsResponse
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -13,31 +13,32 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CommentApiService {
-    @GET(COMMENTS_URI)
+    @GET(COMMENTS_PATH_V2)
     suspend fun getComments(
         @Query(STACCATO_ID) staccatoId: Long,
-    ): Response<CommentsResponse>
+    ): ApiResult<CommentsResponse>
 
-    @POST(COMMENTS_URI)
+    @POST(COMMENTS_PATH_V2)
     suspend fun postComment(
         @Body commentRequest: CommentRequest,
-    ): Response<Unit>
+    ): ApiResult<Unit>
 
-    @PUT(COMMENTS_URI_WITH_COMMENT_ID)
+    @PUT(COMMENTS_PATH_WITH_COMMENT_ID)
     suspend fun putComment(
         @Path(COMMENT_ID) commentId: Long,
         @Body commentUpdateRequest: CommentUpdateRequest,
-    ): Response<Unit>
+    ): ApiResult<Unit>
 
-    @DELETE(COMMENTS_URI_WITH_COMMENT_ID)
+    @DELETE(COMMENTS_PATH_WITH_COMMENT_ID)
     suspend fun deleteComment(
         @Path(COMMENT_ID) commentId: Long,
-    ): Response<Unit>
+    ): ApiResult<Unit>
 
     companion object {
-        private const val COMMENTS_URI = "/comments"
-        private const val STACCATO_ID = "momentId"
+        private const val COMMENTS_PATH = "/comments"
+        private const val COMMENTS_PATH_V2 = "$COMMENTS_PATH/v2"
+        private const val STACCATO_ID = "staccatoId"
         private const val COMMENT_ID = "commentId"
-        private const val COMMENTS_URI_WITH_COMMENT_ID = "$COMMENTS_URI/v2/{$COMMENT_ID}"
+        private const val COMMENTS_PATH_WITH_COMMENT_ID = "$COMMENTS_PATH/{$COMMENT_ID}"
     }
 }
