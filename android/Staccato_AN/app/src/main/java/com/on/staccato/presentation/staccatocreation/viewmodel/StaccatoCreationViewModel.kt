@@ -24,6 +24,7 @@ import com.on.staccato.presentation.staccatocreation.StaccatoCreationError
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertStaccatoUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -247,7 +248,7 @@ class StaccatoCreationViewModel
             context: Context,
             photo: AttachedPhotoUiModel,
         ) = viewModelScope.launch(buildCoroutineExceptionHandler()) {
-            val multiPartBody = convertStaccatoUriToFile(context, photo.uri, FORM_DATA_NAME)
+            val multiPartBody = convertStaccatoUriToFile(context, photo.uri, IMAGE_FORM_DATA_NAME)
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
@@ -294,6 +295,5 @@ class StaccatoCreationViewModel
             const val MAX_PHOTO_NUMBER = 5
             const val MAX_PHOTO_NUMBER_MESSAGE = "사진은 최대 ${MAX_PHOTO_NUMBER}장만 첨부할 수 있어요!"
             const val FAIL_IMAGE_UPLOAD_MESSAGE = "이미지 업로드에 실패했습니다."
-            const val FORM_DATA_NAME = "imageFile"
         }
     }

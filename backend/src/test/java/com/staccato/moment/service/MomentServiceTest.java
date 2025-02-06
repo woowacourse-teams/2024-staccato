@@ -1,5 +1,6 @@
 package com.staccato.moment.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +23,7 @@ import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.MomentImage;
 import com.staccato.moment.domain.MomentImages;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
@@ -77,7 +79,8 @@ class MomentServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(momentRepository.findById(momentId)).isNotEmpty(),
-                () -> assertThat(momentImageRepository.findFirstByMomentId(momentId)).isNotEmpty()
+                () -> assertThat(momentImageRepository.findAll().size()).isEqualTo(1),
+                () -> assertThat(momentImageRepository.findAll().get(0).getMoment().getId()).isEqualTo(momentId)
         );
     }
 
@@ -177,12 +180,19 @@ class MomentServiceTest extends ServiceSliceTest {
         Moment moment = saveMomentWithImages(memory);
 
         // when
-        MomentRequest momentRequest = MomentRequestFixture.create(memory2.getId());
+        MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory2.getId(), List.of("https://existExample.com.jpg", "https://newExample.com.jpg"));
         momentService.updateMomentById(moment.getId(), momentRequest, member);
 
         // then
         Moment foundedMoment = momentRepository.findById(moment.getId()).get();
-        assertThat(foundedMoment.getMemory().getId()).isEqualTo(memory2.getId());
+        List<MomentImage> images = momentImageRepository.findAll();
+        assertAll(
+                () -> assertThat(foundedMoment.getTitle()).isEqualTo("newStaccatoTitle"),
+                () -> assertThat(foundedMoment.getMemory().getId()).isEqualTo(memory2.getId()),
+                () -> assertThat(images.size()).isEqualTo(2),
+                () -> assertThat(images.get(0).getImageUrl()).isEqualTo("https://existExample.com.jpg"),
+                () -> assertThat(images.get(1).getImageUrl()).isEqualTo("https://newExample.com.jpg")
+        );
     }
 
     @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")

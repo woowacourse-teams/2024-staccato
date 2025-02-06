@@ -100,6 +100,10 @@ class TimelineFragment :
                 timelineViewModel.loadTimeline()
             }
         }
+
+        sharedViewModel.memberProfile.observe(viewLifecycleOwner) { memberProfile ->
+            binding.nickname = memberProfile.nickname
+        }
     }
 
     private fun View.inflateCreationMenu(): PopupMenu {

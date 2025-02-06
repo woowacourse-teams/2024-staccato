@@ -9,6 +9,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
+const val IMAGE_FORM_DATA_NAME = "imageFile"
 private const val CATEGORY_FILE_CHILD_NAME = "category"
 private const val STACCATO_FILE_CHILD_NAME = "staccato"
 

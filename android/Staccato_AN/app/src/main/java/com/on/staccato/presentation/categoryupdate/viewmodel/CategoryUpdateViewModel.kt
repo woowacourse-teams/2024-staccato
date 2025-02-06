@@ -22,6 +22,7 @@ import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertCategoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -177,7 +178,7 @@ class CategoryUpdateViewModel
             context: Context,
             uri: Uri,
         ): Job {
-            val thumbnailFile = convertCategoryUriToFile(context, uri, name = CATEGORY_FILE_NAME)
+            val thumbnailFile = convertCategoryUriToFile(context, uri, IMAGE_FORM_DATA_NAME)
             return viewModelScope.launch {
                 val result: ApiResult<ImageResponse> =
                     imageRepository.convertImageFileToUrl(thumbnailFile)
@@ -224,9 +225,5 @@ class CategoryUpdateViewModel
         private fun handleUpdateException(state: ExceptionState) {
             _isPosting.value = false
             _error.setValue(CategoryUpdateError.CategoryUpdate(state.message))
-        }
-
-        companion object {
-            private const val CATEGORY_FILE_NAME = "imageFile"
         }
     }

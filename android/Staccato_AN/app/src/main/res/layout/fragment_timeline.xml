@@ -9,6 +9,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="nickname"
+            type="java.lang.String" />
+
+        <variable
             name="viewModel"
             type="com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel" />
 
@@ -25,14 +29,16 @@
 
         <TextView
             android:id="@+id/tv_timeline_my_timeline"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="12dp"
-            android:text="@string/timeline_my_timeline"
             android:textAppearance="@style/Typography.Title1"
+            app:layout_constraintEnd_toStartOf="@id/frame_timeline_add_category"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            bind:timelineNickname="@{nickname}"
+            tools:text="WWWWWWWWWWW...의 추억"/>
 
         <FrameLayout
             android:id="@+id/frame_timeline_add_category"

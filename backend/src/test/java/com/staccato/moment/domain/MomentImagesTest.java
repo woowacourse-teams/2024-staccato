@@ -69,4 +69,25 @@ class MomentImagesTest {
                 () -> assertThat(images.size()).isEqualTo(2)
         );
     }
+
+    @DisplayName("포함되지 않는 사진들을 선별할 수 있다.")
+    @Test
+    void findImagesNotPresentIn() {
+        // given
+        MomentImages existingImages = new MomentImages(List.of("picture1", "picture3"));
+        MomentImages newImages = new MomentImages(List.of("picture1", "picture4"));
+
+        // when
+        List<MomentImage> remainingExistingImages = existingImages.findImagesNotPresentIn(newImages);
+        List<MomentImage> remainingNewImages = newImages.findImagesNotPresentIn(existingImages);
+
+        // then
+        assertAll(
+
+                () -> assertThat(remainingExistingImages.size()).isEqualTo(1),
+                () -> assertThat(remainingNewImages.size()).isEqualTo(1),
+                () -> assertThat(remainingExistingImages.get(0).getImageUrl()).isEqualTo("picture3"),
+                () -> assertThat(remainingNewImages.get(0).getImageUrl()).isEqualTo("picture4")
+        );
+    }
 }

@@ -39,7 +39,7 @@
     <string name="main_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
 
     // fragment_timeline
-    <string name="timeline_my_timeline">나의 추억들</string>
+    <string name="timeline_nickname_memories">%s의 추억들</string>
     <string name="timeline_order">최근 생성 순</string>
     <string name="timeline_empty">아직 카테고리가 없네요!\n스타카토를 담을 카테고리를 만들어보세요.</string>
     <string name="timeline_add_category">추가</string>

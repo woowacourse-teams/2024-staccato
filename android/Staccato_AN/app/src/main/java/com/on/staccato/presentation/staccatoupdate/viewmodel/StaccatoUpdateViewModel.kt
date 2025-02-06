@@ -28,6 +28,7 @@ import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationV
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel.Companion.FAIL_IMAGE_UPLOAD_MESSAGE
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateError
 import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertStaccatoUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -272,7 +273,7 @@ class StaccatoUpdateViewModel
                 convertStaccatoUriToFile(
                     context,
                     photo.uri,
-                    StaccatoCreationViewModel.FORM_DATA_NAME,
+                    IMAGE_FORM_DATA_NAME,
                 )
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
