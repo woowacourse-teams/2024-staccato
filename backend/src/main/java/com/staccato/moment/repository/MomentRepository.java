@@ -18,5 +18,5 @@ public interface MomentRepository extends JpaRepository<Moment, Long> {
 
     @Modifying
     @Query("DELETE FROM Moment m WHERE m.memory.id = :memoryId")
-    void deleteAllByMemoryIdInBatch(@Param("memoryId") Long memoryId);
+    void deleteAllByMemoryIdInBulk(@Param("memoryId") Long memoryId);
 }
