@@ -6,4 +6,8 @@ data class MemberProfile(
     val uuidCode: String,
 ) {
     fun isValid() = uuidCode.isNotEmpty() && nickname.isNotEmpty()
+
+    companion object {
+        const val EMPTY_STRING = ""
+    }
 }

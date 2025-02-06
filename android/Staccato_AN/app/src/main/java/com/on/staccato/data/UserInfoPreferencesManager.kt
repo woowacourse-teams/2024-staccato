@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.on.staccato.data.mypage.MyPageLocalDataSource
 import com.on.staccato.domain.model.MemberProfile
+import com.on.staccato.domain.model.MemberProfile.Companion.EMPTY_STRING
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -78,6 +79,5 @@ class UserInfoPreferencesManager(context: Context) : MyPageLocalDataSource {
         private const val PROFILE_IMAGE_URL_KEY_NAME = "com.on.staccato.profile"
         private const val NICKNAME_KEY_NAME = "com.on.staccato.nickname"
         private const val RECOVERY_CODE_KEY_NAME = "com.on.staccato.recovery"
-        const val EMPTY_STRING = ""
     }
 }
