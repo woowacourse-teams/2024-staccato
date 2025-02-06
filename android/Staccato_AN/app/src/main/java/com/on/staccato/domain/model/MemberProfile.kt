@@ -4,4 +4,10 @@ data class MemberProfile(
     val profileImageUrl: String? = null,
     val nickname: String,
     val uuidCode: String,
-)
+) {
+    fun isValid() = uuidCode.isNotEmpty() && nickname.isNotEmpty()
+
+    companion object {
+        const val EMPTY_STRING = ""
+    }
+}

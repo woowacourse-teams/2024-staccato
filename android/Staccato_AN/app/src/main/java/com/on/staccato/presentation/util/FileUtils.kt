@@ -10,6 +10,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 private const val MEMORY_FILE_CHILD_NAME = "memory"
+const val IMAGE_FORM_DATA_NAME = "imageFile"
 
 fun convertMemoryUriToFile(
     context: Context,
