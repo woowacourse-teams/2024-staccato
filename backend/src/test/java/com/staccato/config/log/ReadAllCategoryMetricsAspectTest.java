@@ -3,7 +3,7 @@ package com.staccato.config.log;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import com.staccato.ServiceSliceTest;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -14,8 +14,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
-public class ReadAllCategoryMetricsAspectTest {
+public class ReadAllCategoryMetricsAspectTest extends ServiceSliceTest {
 
     @Autowired
     private MemoryService memoryService;
