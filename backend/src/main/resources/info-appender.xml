@@ -1,6 +1,6 @@
 <included>
     <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/info/info-${BY_DATE}.log</file>
+        <file>./logs/info/info.log</file>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>

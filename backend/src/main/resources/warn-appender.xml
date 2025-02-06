@@ -1,6 +1,6 @@
 <included>
     <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/warn/warn-${BY_DATE}.log</file>
+        <file>./logs/warn/warn.log</file>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>

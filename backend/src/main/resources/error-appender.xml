@@ -1,6 +1,6 @@
 <included>
     <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/error/error-${BY_DATE}.log</file>
+        <file>./logs/error/error.log</file>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
