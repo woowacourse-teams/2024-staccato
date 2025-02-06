@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import com.staccato.member.domain.Member;
 import com.staccato.moment.service.MomentService;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import io.micrometer.core.instrument.Counter;
@@ -19,12 +20,12 @@ public class CreateMomentMetricsAspect {
 
     private final MeterRegistry meterRegistry;
 
-    @Pointcut("execution(public * com.staccato.moment.service.MomentService.createMoment(..)) && args(momentRequest)")
-    public void createMomentPointcut(MomentRequest momentRequest) {
+    @Pointcut("execution(public * com.staccato.moment.service.MomentService.createMoment(..)) && args(momentRequest, member)")
+    public void createMomentPointcut(MomentRequest momentRequest, Member member) {
     }
 
-    @AfterReturning(pointcut = "createMomentPointcut(momentRequest)")
-    public void afterSuccessfulCreateMoment(MomentRequest momentRequest) {
+    @AfterReturning(pointcut = "createMomentPointcut(momentRequest, member)", returning = "result")
+    public void afterSuccessfulCreateMoment(MomentRequest momentRequest, Member member, Object result) {
         LocalDate visitedAt = momentRequest.visitedAt().toLocalDate();
         LocalDate now = LocalDate.now();
         if (isPastDate(visitedAt, now)) {
