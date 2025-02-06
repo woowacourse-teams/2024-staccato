@@ -57,33 +57,48 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".presentation.recovery.RecoveryActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
+
         <activity
-            android:name=".presentation.visitupdate.VisitUpdateActivity"
-            android:exported="false" />
+            android:name=".presentation.staccatoupdate.StaccatoUpdateActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <activity
-            android:name=".presentation.memoryupdate.MemoryUpdateActivity"
-            android:exported="false" />
+            android:name=".presentation.categoryupdate.CategoryUpdateActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <activity
-            android:name=".presentation.momentcreation.MomentCreationActivity"
-            android:exported="false" />
+            android:name=".presentation.staccatocreation.StaccatoCreationActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <activity
-            android:name=".presentation.memorycreation.MemoryCreationActivity"
-            android:exported="false" />
+            android:name=".presentation.categorycreation.CategoryCreationActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".presentation.mypage.MyPageActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".presentation.webview.WebViewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

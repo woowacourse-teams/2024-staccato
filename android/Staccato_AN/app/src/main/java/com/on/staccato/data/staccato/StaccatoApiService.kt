@@ -20,7 +20,7 @@ interface StaccatoApiService {
 
     @GET(STACCATO_PATH_WITH_ID)
     suspend fun getStaccato(
-        @Path(value = "momentId") momentId: Long,
+        @Path(value = STACCATO_ID) staccatoId: Long,
     ): ApiResult<StaccatoResponse>
 
     @POST(STACCATOS_PATH)
@@ -30,25 +30,25 @@ interface StaccatoApiService {
 
     @PUT(STACCATO_PATH_WITH_ID)
     suspend fun putStaccato(
-        @Path(value = "momentId") momentId: Long,
+        @Path(value = STACCATO_ID) staccatoId: Long,
         @Body staccatoUpdateRequest: StaccatoUpdateRequest,
     ): ApiResult<Unit>
 
     @DELETE(STACCATO_PATH_WITH_ID)
     suspend fun deleteStaccato(
-        @Path(value = "momentId") momentId: Long,
+        @Path(value = STACCATO_ID) staccatoId: Long,
     ): ApiResult<Unit>
 
     @POST(FEELING_PATH)
     suspend fun postFeeling(
-        @Path(value = "momentId") momentId: Long,
+        @Path(value = STACCATO_ID) staccatoId: Long,
         @Body feelingRequest: FeelingRequest,
     ): ApiResult<Unit>
 
     companion object {
-        private const val STACCATOS_PATH = "/moments"
-        private const val STACCATO_ID = "/{momentId}"
-        private const val STACCATO_PATH_WITH_ID = "$STACCATOS_PATH$STACCATO_ID"
+        private const val STACCATOS_PATH = "/staccatos"
+        private const val STACCATO_ID = "staccatoId"
+        private const val STACCATO_PATH_WITH_ID = "$STACCATOS_PATH/{$STACCATO_ID}"
         private const val FEELING_PATH = "$STACCATO_PATH_WITH_ID/feeling"
     }
 }

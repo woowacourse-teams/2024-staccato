@@ -65,14 +65,14 @@ class StaccatoFragment :
     }
 
     override fun onUpdateClicked(
-        memoryId: Long,
-        memoryTitle: String,
+        categoryId: Long,
+        categoryTitle: String,
     ) {
         val staccatoUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
         StaccatoUpdateActivity.startWithResultLauncher(
             staccatoId = staccatoId,
-            memoryId = memoryId,
-            memoryTitle = memoryTitle,
+            categoryId = categoryId,
+            categoryTitle = categoryTitle,
             context = requireContext(),
             activityLauncher = staccatoUpdateLauncher,
         )

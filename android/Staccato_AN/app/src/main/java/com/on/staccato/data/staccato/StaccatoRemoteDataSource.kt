@@ -18,7 +18,7 @@ class StaccatoRemoteDataSource
 
         override suspend fun fetchStaccato(staccatoId: Long): ApiResult<StaccatoResponse> =
             staccatoApiService.getStaccato(
-                momentId = staccatoId,
+                staccatoId = staccatoId,
             )
 
         override suspend fun createStaccato(staccatoCreationRequest: StaccatoCreationRequest): ApiResult<StaccatoCreationResponse> =
@@ -31,8 +31,8 @@ class StaccatoRemoteDataSource
             staccatoUpdateRequest: StaccatoUpdateRequest,
         ): ApiResult<Unit> =
             staccatoApiService.putStaccato(
-                momentId = staccatoId,
-                staccatoUpdateRequest,
+                staccatoId = staccatoId,
+                staccatoUpdateRequest = staccatoUpdateRequest,
             )
 
         override suspend fun deleteStaccato(staccatoId: Long): ApiResult<Unit> = staccatoApiService.deleteStaccato(staccatoId)
@@ -42,7 +42,7 @@ class StaccatoRemoteDataSource
             feelingRequest: FeelingRequest,
         ): ApiResult<Unit> =
             staccatoApiService.postFeeling(
-                momentId = staccatoId,
+                staccatoId = staccatoId,
                 feelingRequest = feelingRequest,
             )
     }

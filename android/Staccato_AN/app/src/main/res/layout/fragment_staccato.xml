@@ -48,7 +48,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_detail_update"
                 style="@style/ToolbarMenuStyle"
-                android:onClick="@{() -> toolbarHandler.onUpdateClicked(staccatoViewModel.staccatoDetail.memoryId, staccatoViewModel.staccatoDetail.memoryTitle)}"
+                android:onClick="@{() -> toolbarHandler.onUpdateClicked(staccatoViewModel.staccatoDetail.categoryId, staccatoViewModel.staccatoDetail.categoryTitle)}"
                 android:text="@string/all_update" />
 
         </com.google.android.material.appbar.MaterialToolbar>

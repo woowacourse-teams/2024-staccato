@@ -1,7 +1,7 @@
 package com.on.staccato.presentation.staccatocreation
 
 interface StaccatoCreationHandler {
-    fun onMemorySelectionClicked()
+    fun onCategorySelectionClicked()
 
     fun onVisitedAtSelectionClicked()
 

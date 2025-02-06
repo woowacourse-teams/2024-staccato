@@ -2,6 +2,7 @@ package com.on.staccato.domain.repository
 
 import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
+import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.StaccatoLocation
 import java.time.LocalDateTime
@@ -12,7 +13,7 @@ interface StaccatoRepository {
     suspend fun getStaccato(staccatoId: Long): ApiResult<Staccato>
 
     suspend fun createStaccato(
-        memoryId: Long,
+        categoryId: Long,
         staccatoTitle: String,
         placeName: String,
         latitude: Double,
@@ -30,7 +31,7 @@ interface StaccatoRepository {
         latitude: Double,
         longitude: Double,
         visitedAt: LocalDateTime,
-        memoryId: Long,
+        categoryId: Long,
         staccatoImageUrls: List<String>,
     ): ApiResult<Unit>
 
@@ -38,6 +39,6 @@ interface StaccatoRepository {
 
     suspend fun updateFeeling(
         staccatoId: Long,
-        feeling: String,
+        feeling: Feeling,
     ): ApiResult<Unit>
 }

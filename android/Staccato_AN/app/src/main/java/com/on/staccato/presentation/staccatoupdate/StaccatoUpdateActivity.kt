@@ -24,20 +24,20 @@ import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityStaccatoUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
+import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
+import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_TITLE_KEY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.LocationPermissionManager
 import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
-import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_ID_KEY
-import com.on.staccato.presentation.memory.MemoryFragment.Companion.MEMORY_TITLE_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.CurrentLocationHandler
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.staccatocreation.dialog.MemorySelectionFragment
+import com.on.staccato.presentation.staccatocreation.dialog.CategorySelectionFragment
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
@@ -58,8 +58,8 @@ class StaccatoUpdateActivity :
     override val layoutResourceId = R.layout.activity_staccato_update
     private val viewModel: StaccatoUpdateViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
-    private val memorySelectionFragment by lazy {
-        MemorySelectionFragment()
+    private val categorySelectionFragment by lazy {
+        CategorySelectionFragment()
     }
     private val visitedAtSelectionFragment by lazy {
         VisitedAtSelectionFragment()
@@ -71,8 +71,8 @@ class StaccatoUpdateActivity :
     private lateinit var photoAttachAdapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
     private val staccatoId by lazy { intent.getLongExtra(STACCATO_ID_KEY, 0L) }
-    private val memoryId by lazy { intent.getLongExtra(MEMORY_ID_KEY, 0L) }
-    private val memoryTitle by lazy { intent.getStringExtra(MEMORY_TITLE_KEY) ?: "" }
+    private val categoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, 0L) }
+    private val categoryTitle by lazy { intent.getStringExtra(CATEGORY_TITLE_KEY) ?: "" }
 
     private val autocompleteFragment by lazy {
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
@@ -113,11 +113,11 @@ class StaccatoUpdateActivity :
         viewModel.updateSelectedImageUris(arrayOf(*uris))
     }
 
-    override fun onMemorySelectionClicked() {
-        if (!memorySelectionFragment.isAdded) {
-            memorySelectionFragment.show(
+    override fun onCategorySelectionClicked() {
+        if (!categorySelectionFragment.isAdded) {
+            categorySelectionFragment.show(
                 fragmentManager,
-                MemorySelectionFragment.TAG,
+                CategorySelectionFragment.TAG,
             )
         }
     }
@@ -144,7 +144,7 @@ class StaccatoUpdateActivity :
         setupFusedLocationProviderClient()
         initBinding()
         initToolbar()
-        initMemorySelectionFragment()
+        initCategorySelectionFragment()
         initVisitedAtSelectionFragment()
         initAdapter()
         initItemTouchHelper()
@@ -250,9 +250,9 @@ class StaccatoUpdateActivity :
         }
     }
 
-    private fun initMemorySelectionFragment() {
-        memorySelectionFragment.setOnMemorySelected { selectedMemory ->
-            viewModel.selectMemory(selectedMemory)
+    private fun initCategorySelectionFragment() {
+        categorySelectionFragment.setOnCategorySelected { selectedCategory ->
+            viewModel.selectCategory(selectedCategory)
         }
     }
 
@@ -266,7 +266,7 @@ class StaccatoUpdateActivity :
         observePhotoData()
         observePlaceData()
         observeVisitedAtData()
-        observeMemoryData()
+        observeCategoryData()
         observeIsUpdateComplete()
     }
 
@@ -297,20 +297,20 @@ class StaccatoUpdateActivity :
         viewModel.selectedVisitedAt.observe(this) {
             it?.let {
                 visitedAtSelectionFragment.initCalendarByVisitedAt(it)
-                viewModel.updateMemorySelectionBy(it)
+                viewModel.updateCategorySelectionBy(it)
             }
         }
     }
 
-    private fun observeMemoryData() {
-        viewModel.selectableMemories.observe(this) {
+    private fun observeCategoryData() {
+        viewModel.selectableCategories.observe(this) {
             it?.let {
-                memorySelectionFragment.setItems(it.memoryCandidate)
+                categorySelectionFragment.setItems(it.categoryCandidates)
             }
         }
-        viewModel.selectedMemory.observe(this) {
+        viewModel.selectedCategory.observe(this) {
             it?.let {
-                memorySelectionFragment.updateKeyMemory(it)
+                categorySelectionFragment.updateKeyCategory(it)
             }
         }
     }
@@ -326,8 +326,8 @@ class StaccatoUpdateActivity :
             val intent =
                 Intent()
                     .putExtra(STACCATO_ID_KEY, staccatoId)
-                    .putExtra(MEMORY_ID_KEY, memoryId)
-                    .putExtra(MEMORY_TITLE_KEY, memoryTitle)
+                    .putExtra(CATEGORY_ID_KEY, categoryId)
+                    .putExtra(CATEGORY_TITLE_KEY, categoryTitle)
             setResult(RESULT_OK, intent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -400,14 +400,14 @@ class StaccatoUpdateActivity :
     private fun handleError() {
         viewModel.error.observe(this) { error ->
             when (error) {
-                is StaccatoUpdateError.MemoryCandidates -> handleMemoryCandidatesFail(error)
+                is StaccatoUpdateError.CategoryCandidates -> handleCategoryCandidatesFail(error)
                 is StaccatoUpdateError.StaccatoInitialize -> handleInitializeFail(error)
                 is StaccatoUpdateError.StaccatoUpdate -> handleStaccatoUpdateFail(error)
             }
         }
     }
 
-    private fun handleMemoryCandidatesFail(error: StaccatoUpdateError.MemoryCandidates) {
+    private fun handleCategoryCandidatesFail(error: StaccatoUpdateError.CategoryCandidates) {
         finish()
         showToast(error.message)
     }
@@ -442,15 +442,15 @@ class StaccatoUpdateActivity :
     companion object {
         fun startWithResultLauncher(
             staccatoId: Long,
-            memoryId: Long,
-            memoryTitle: String,
+            categoryId: Long,
+            categoryTitle: String,
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
         ) {
             Intent(context, StaccatoUpdateActivity::class.java).apply {
                 putExtra(STACCATO_ID_KEY, staccatoId)
-                putExtra(MEMORY_ID_KEY, memoryId)
-                putExtra(MEMORY_TITLE_KEY, memoryTitle)
+                putExtra(CATEGORY_ID_KEY, categoryId)
+                putExtra(CATEGORY_TITLE_KEY, categoryTitle)
                 activityLauncher.launch(this)
             }
         }
