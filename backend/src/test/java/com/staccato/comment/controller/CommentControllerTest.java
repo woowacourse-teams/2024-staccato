@@ -167,12 +167,6 @@ public class CommentControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
-
-        mockMvc.perform(put("/comments/v2/{commentId}", 1)
-                        .content(commentUpdateRequest)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isOk());
     }
 
     @DisplayName("댓글 식별자가 양수가 아닐 경우 댓글 수정에 실패한다.")
@@ -219,11 +213,6 @@ public class CommentControllerTest extends ControllerTest {
 
         // when & then
         mockMvc.perform(delete("/comments/{commentId}", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isOk());
-
-        mockMvc.perform(delete("/comments/v2/{commentId}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
