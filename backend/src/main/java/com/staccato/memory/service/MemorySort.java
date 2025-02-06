@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import com.staccato.memory.domain.Memory;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Getter
 public enum MemorySort {
     UPDATED("UPDATED", memoryList ->
             memoryList.stream()
