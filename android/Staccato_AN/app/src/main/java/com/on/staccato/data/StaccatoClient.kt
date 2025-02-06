@@ -27,23 +27,19 @@ object StaccatoClient {
 
     private val jsonBuilder = Json { coerceInputValues = true }
 
-    private val provideRetrofit =
+    fun initialize(): Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(provideHttpClient)
             .addConverterFactory(
                 jsonBuilder.asConverterFactory("application/json".toMediaType()),
             )
+            .addCallAdapterFactory(ApiResultCallAdapterFactory.create())
             .build()
 
-    fun getErrorResponse(errorBody: ResponseBody): ErrorResponse {
-        return provideRetrofit.responseBodyConverter<ErrorResponse>(
+    fun Retrofit.getErrorResponse(errorBody: ResponseBody): ErrorResponse =
+        responseBodyConverter<ErrorResponse>(
             ErrorResponse::class.java,
             ErrorResponse::class.java.annotations,
         ).convert(errorBody) ?: throw IllegalArgumentException("errorBody를 변환할 수 없습니다.")
-    }
-
-    fun <T> create(service: Class<T>): T {
-        return provideRetrofit.create(service)
-    }
 }

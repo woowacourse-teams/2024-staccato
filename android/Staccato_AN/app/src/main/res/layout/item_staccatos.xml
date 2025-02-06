@@ -8,11 +8,11 @@
 
         <variable
             name="handler"
-            type="com.on.staccato.presentation.memory.MemoryHandler" />
+            type="com.on.staccato.presentation.category.CategoryHandler" />
 
         <variable
             name="staccato"
-            type="com.on.staccato.presentation.memory.model.MemoryStaccatoUiModel" />
+            type="com.on.staccato.presentation.category.model.CategoryStaccatoUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

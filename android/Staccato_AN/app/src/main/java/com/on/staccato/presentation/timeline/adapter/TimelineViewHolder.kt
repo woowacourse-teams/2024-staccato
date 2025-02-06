@@ -10,7 +10,7 @@ class TimelineViewHolder(
     private val eventHandler: TimelineHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: TimelineUiModel) {
-        binding.memory = item
+        binding.category = item
         binding.eventHandler = eventHandler
     }
 }

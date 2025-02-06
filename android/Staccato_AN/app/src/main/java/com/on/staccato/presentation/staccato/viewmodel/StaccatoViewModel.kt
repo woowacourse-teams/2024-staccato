@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ApiResponseHandler.onException
-import com.on.staccato.data.ApiResponseHandler.onServerError
-import com.on.staccato.data.ApiResponseHandler.onSuccess
-import com.on.staccato.data.dto.Status
+import com.on.staccato.data.onException
+import com.on.staccato.data.onServerError
+import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -15,6 +14,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toStaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.comments.CommentUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -67,17 +67,11 @@ class StaccatoViewModel
             }
         }
 
-        private fun handleServerError(
-            status: Status,
-            errorMessage: String,
-        ) {
+        private fun handleServerError(errorMessage: String) {
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(
-            e: Throwable,
-            message: String,
-        ) {
-            _exceptionMessage.postValue(message)
+        private fun handleException(state: ExceptionState) {
+            _exceptionMessage.postValue(state.message)
         }
     }

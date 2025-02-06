@@ -3,14 +3,13 @@ package com.on.staccato.presentation.login.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.StaccatoApplication
-import com.on.staccato.data.ApiResponseHandler.onException
-import com.on.staccato.data.ApiResponseHandler.onServerError
-import com.on.staccato.data.ApiResponseHandler.onSuccess
-import com.on.staccato.data.dto.Status
+import com.on.staccato.data.onException
+import com.on.staccato.data.onServerError
+import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.repository.LoginRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,30 +34,21 @@ class LoginViewModel
             val nickname = nickname.value ?: ""
             viewModelScope.launch {
                 repository.loginWithNickname(nickname)
-                    .onSuccess(::saveUserToken)
+                    .onSuccess { updateIsLoginSuccess() }
                     .onServerError(::handleError)
                     .onException(::handleException)
             }
         }
 
-        private fun saveUserToken(newToken: String) {
-            viewModelScope.launch {
-                StaccatoApplication.userInfoPrefsManager.setToken(newToken)
-                _isLoginSuccess.postValue(true)
-            }
+        private fun updateIsLoginSuccess() {
+            _isLoginSuccess.postValue(true)
         }
 
-        private fun handleError(
-            status: Status,
-            errorMessage: String,
-        ) {
+        private fun handleError(errorMessage: String) {
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(
-            e: Throwable,
-            errorMessage: String,
-        ) {
-            _errorMessage.postValue(errorMessage)
+        private fun handleException(state: ExceptionState) {
+            _errorMessage.postValue(state.message)
         }
     }

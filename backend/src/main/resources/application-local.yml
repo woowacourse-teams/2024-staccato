@@ -39,18 +39,20 @@ security:
     token: ${ADMIN_TOKEN}
 cloud:
   aws:
+    access-key: accessKey
+    secret-access-key: secretAccessKey
     s3:
-      bucket: techcourse-project-2024
-      endpoint: https://techcourse-project-2024.s3.ap-northeast-2.amazonaws.com
+      bucket: bucket
+      endpoint: endpoint
     cloudfront:
-      endpoint: https://d25aribbn0gp8k.cloudfront.net
+      endpoint: endpoint
     region:
-      static: ap-northeast-2
+      static: static
     stack:
       auto: false
 image:
   folder:
-    name: image/
+    name: local/
 
 management:
   server:

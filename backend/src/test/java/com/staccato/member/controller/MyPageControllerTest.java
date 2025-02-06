@@ -2,23 +2,14 @@ package com.staccato.member.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.staccato.auth.service.AuthService;
-import com.staccato.fixture.Member.MemberFixture;
-import com.staccato.image.service.ImageService;
+import com.staccato.ControllerTest;
 import com.staccato.image.service.dto.ImageUrlResponse;
 import com.staccato.member.domain.Member;
-import com.staccato.member.service.MemberService;
 import com.staccato.member.service.dto.response.MemberProfileImageResponse;
-import com.staccato.member.service.dto.response.MemberProfileResponse;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -28,19 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = MyPageController.class)
-class MyPageControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private MemberService memberService;
-    @MockBean
-    private ImageService imageService;
-    @MockBean
-    private AuthService authService;
-
+class MyPageControllerTest extends ControllerTest {
     @DisplayName("사용자의 프로필 사진을 변경한다.")
     @Test
     void changeProfile() throws Exception {
@@ -70,7 +49,8 @@ class MyPageControllerTest {
     @Test
     void readMyPage() throws Exception {
         // given
-        Member member = Member.builder().nickname("staccato").imageUrl("image.jpg").code("550e8400-e29b-41d4-a716-446655440000").build();
+        Member member = Member.builder().nickname("staccato").imageUrl("image.jpg")
+                .code("550e8400-e29b-41d4-a716-446655440000").build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         String expectedResponse = """
                 {

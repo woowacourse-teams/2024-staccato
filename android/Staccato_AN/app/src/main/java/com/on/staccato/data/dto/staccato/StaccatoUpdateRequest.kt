@@ -11,6 +11,6 @@ data class StaccatoUpdateRequest(
     @SerialName("latitude") val latitude: Double,
     @SerialName("longitude") val longitude: Double,
     @SerialName("visitedAt") val visitedAt: String,
-    @SerialName("memoryId") val memoryId: Long,
-    @SerialName("momentImageUrls") val momentImageUrls: List<String>,
+    @SerialName("categoryId") val categoryId: Long,
+    @SerialName("staccatoImageUrls") val staccatoImageUrls: List<String>,
 )

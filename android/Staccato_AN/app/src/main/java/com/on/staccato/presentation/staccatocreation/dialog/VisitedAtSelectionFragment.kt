@@ -7,51 +7,18 @@ import android.view.ViewGroup
 import android.widget.NumberPicker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.on.staccato.databinding.FragmentVisitedAtSelectionBinding
-import com.on.staccato.domain.model.MemoryCandidate
-import com.on.staccato.domain.model.MemoryCandidate.Companion.buildNumberPickerDates
+import com.on.staccato.domain.model.YearCalendar
+import com.on.staccato.domain.model.YearCalendar.Companion.hours
+import java.time.LocalDate
 import java.time.LocalDateTime
-import kotlin.properties.Delegates
 
 class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentVisitedAtSelectionBinding? = null
     private val binding get() = _binding!!
 
-    private val hours = (0 until 24).toList()
-
-    private lateinit var yearCandidates: Map<Int, Map<Int, List<Int>>>
-    private lateinit var monthCandidates: Map<Int, List<Int>>
-
-    private var years = listOf<Int>()
-    private var months = listOf<Int>()
-    private var days = listOf<Int>()
-
-    private var keyYear by Delegates.notNull<Int>()
-    private var keyMonth by Delegates.notNull<Int>()
-    private var keyDay by Delegates.notNull<Int>()
-    private var keyHour by Delegates.notNull<Int>()
+    private lateinit var yearCalendar: YearCalendar
 
     private lateinit var handler: VisitedAtSelectionHandler
-
-    fun setOnVisitedAtSelected(newHandler: VisitedAtSelectionHandler) {
-        handler = newHandler
-    }
-
-    fun initDateCandidates(
-        selectedMemory: MemoryCandidate,
-        selectedVisitedAt: LocalDateTime,
-    ) {
-        yearCandidates = buildNumberPickerDates(selectedMemory.startAt, selectedMemory.endAt)
-        initKeyWithSelectedValues(selectedVisitedAt)
-        years = yearCandidates.keys.toList()
-        setMonthsBy(keyYear)
-    }
-
-    fun initKeyWithSelectedValues(selectedVisitedAt: LocalDateTime) {
-        keyYear = selectedVisitedAt.year
-        keyMonth = selectedVisitedAt.monthValue
-        keyDay = selectedVisitedAt.dayOfMonth
-        keyHour = selectedVisitedAt.hour
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,18 +33,43 @@ class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        binding.years = years
+        binding.years = yearCalendar.getAvailableYears()
         setupPickers()
         setupPickerListeners()
         initConfirmButton()
         initPickerPosition()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    fun setOnVisitedAtSelected(newHandler: VisitedAtSelectionHandler) {
+        handler = newHandler
+    }
+
+    fun initCalendarByVisitedAt(visitedAt: LocalDateTime) {
+        yearCalendar = YearCalendar.from(visitedAt.toLocalDate())
+        updateSelectedVisitedAt(visitedAt)
+    }
+
+    fun updateSelectedVisitedAt(visitedAt: LocalDateTime) {
+        yearCalendar.initSelectedDateTime(visitedAt)
+    }
+
+    fun initCalendarByPeriod(
+        startAt: LocalDate? = null,
+        endAt: LocalDate? = null,
+    ) {
+        yearCalendar = YearCalendar.of(startAt, endAt)
+    }
+
     private fun initPickerPosition() {
-        binding.pickerYear.setPickerValue(yearCandidates.keys.toList(), keyYear)
-        binding.pickerMonth.setPickerValue(monthCandidates.keys.toList(), keyMonth)
-        binding.pickerDay.setPickerValue(days, keyDay)
-        binding.pickerHours.setPickerValue(hours, keyHour)
+        binding.pickerYear.setPickerValue(yearCalendar.getAvailableYears(), yearCalendar.selectedYear)
+        binding.pickerMonth.setPickerValue(yearCalendar.getAvailableMonths(), yearCalendar.selectedMonth)
+        binding.pickerDay.setPickerValue(yearCalendar.getAvailableDates(), yearCalendar.selectedDate)
+        binding.pickerHours.setPickerValue(hours, yearCalendar.selectedHour)
     }
 
     private fun NumberPicker.setPickerValue(
@@ -87,38 +79,11 @@ class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
         this.value = targetList.indexOf(targetKey).takeIf { it >= 0 } ?: 0
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    private fun setMonthsBy(year: Int) {
-        monthCandidates = yearCandidates[year] ?: throw IllegalArgumentException()
-        months = monthCandidates.keys.toList()
-        setDaysBy(keyMonth)
-    }
-
-    private fun setDaysBy(month: Int) {
-        days = monthCandidates[month] ?: throw IllegalArgumentException()
-    }
-
-    private fun resetMonthsBy(year: Int) {
-        monthCandidates = yearCandidates[year] ?: throw IllegalArgumentException()
-        months = monthCandidates.keys.toList()
-        keyMonth = months.first()
-        resetDaysBy(keyMonth)
-    }
-
-    private fun resetDaysBy(month: Int) {
-        days = monthCandidates[month] ?: throw IllegalArgumentException()
-        keyDay = days.first()
-    }
-
     private fun setupPickers() {
-        binding.pickerYear.updatePickerValues(years, keyYear)
-        binding.pickerMonth.updatePickerValues(months, keyMonth)
-        binding.pickerDay.updatePickerValues(days, keyDay)
-        binding.pickerHours.updatePickerValues(hours, keyHour)
+        binding.pickerYear.updatePickerValues(yearCalendar.getAvailableYears(), yearCalendar.selectedYear)
+        binding.pickerMonth.updatePickerValues(yearCalendar.getAvailableMonths(), yearCalendar.selectedMonth)
+        binding.pickerDay.updatePickerValues(yearCalendar.getAvailableDates(), yearCalendar.selectedDate)
+        binding.pickerHours.updatePickerValues(hours, yearCalendar.selectedHour)
     }
 
     private fun setupPickerListeners() {
@@ -130,37 +95,42 @@ class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
 
     private fun setYearPickerListener() {
         binding.pickerYear.setOnValueChangedListener { _, _, newItemPosition ->
-            keyYear = years[newItemPosition]
-            resetMonthsBy(keyYear)
-            binding.pickerMonth.updatePickerValues(months, keyMonth)
-            binding.pickerDay.updatePickerValues(days, keyDay)
+            yearCalendar.changeSelectedYear(yearCalendar.getAvailableYears()[newItemPosition])
+            binding.pickerMonth.updatePickerValues(yearCalendar.getAvailableMonths(), yearCalendar.selectedMonth)
+            binding.pickerDay.updatePickerValues(yearCalendar.getAvailableDates(), yearCalendar.selectedDate)
         }
     }
 
     private fun setMonthPickerListener() {
         binding.pickerMonth.setOnValueChangedListener { _, _, newItemPosition ->
-            keyMonth = months[newItemPosition]
-            resetDaysBy(keyMonth)
-            binding.pickerDay.updatePickerValues(days, keyDay)
+            yearCalendar.changeSelectedMonth(yearCalendar.getAvailableMonths()[newItemPosition])
+            binding.pickerDay.updatePickerValues(yearCalendar.getAvailableDates(), yearCalendar.selectedDate)
         }
     }
 
     private fun setDayPickerListener() {
         binding.pickerDay.setOnValueChangedListener { _, _, newItemPosition ->
-            keyDay = days[newItemPosition]
+            yearCalendar.changeSelectedDate(yearCalendar.getAvailableDates()[newItemPosition])
         }
     }
 
     private fun setHourPickerListener() {
         binding.pickerHours.setOnValueChangedListener { _, _, newItemPosition ->
-            keyHour = hours[newItemPosition]
+            yearCalendar.changeSelectedHour(hours[newItemPosition])
         }
     }
 
     private fun initConfirmButton() {
         binding.btnVisitedAtConfirm.setOnClickListener {
             handler.onConfirmClicked(
-                LocalDateTime.of(keyYear, keyMonth, keyDay, keyHour, 0, 0),
+                LocalDateTime.of(
+                    yearCalendar.selectedYear,
+                    yearCalendar.selectedMonth,
+                    yearCalendar.selectedDate,
+                    yearCalendar.selectedHour,
+                    0,
+                    0,
+                ),
             )
             dismiss()
         }
@@ -181,6 +151,6 @@ class VisitedAtSelectionFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-        const val TAG = "MemorySelectionModalBottomSheet"
+        const val TAG = "VisitedAtSelectionModalBottomSheet"
     }
 }

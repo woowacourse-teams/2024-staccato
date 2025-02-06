@@ -1,19 +1,16 @@
 package com.staccato.memory.controller.docs;
 
 import java.time.LocalDate;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-
 import org.springframework.http.ResponseEntity;
-
 import com.staccato.member.domain.Member;
+import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.request.MemoryRequest;
 import com.staccato.memory.service.dto.response.MemoryDetailResponse;
 import com.staccato.memory.service.dto.response.MemoryIdResponse;
 import com.staccato.memory.service.dto.response.MemoryNameResponses;
 import com.staccato.memory.service.dto.response.MemoryResponses;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,7 +45,10 @@ public interface MemoryControllerDocs {
 
     @Operation(summary = "추억 목록 조회", description = "사용자의 모든 추억 목록을 조회합니다.")
     @ApiResponse(description = "추억 목록 조회 성공", responseCode = "200")
-    ResponseEntity<MemoryResponses> readAllMemories(@Parameter(hidden = true) Member member);
+    ResponseEntity<MemoryResponses> readAllMemories(
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "정렬 기준은 생략하거나 유효하지 않은 값에 대해서는 최근 수정 순(UPDATED)이 기본 정렬로 적용됩니다. 필터링 조건은 생략하거나 유효하지 않은 값이 들어오면 적용되지 않습니다.") MemoryReadRequest memoryReadRequest
+    );
 
     @Operation(summary = "특정 날짜를 포함하는 사용자의 모든 추억 목록 조회", description = "특정 날짜를 포함하는 사용자의 모든 추억 목록을 조회합니다.")
     @ApiResponses(value = {

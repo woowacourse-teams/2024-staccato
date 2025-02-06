@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -20,6 +21,7 @@ plugins {
     alias(libs.plugins.firebaseCrashlytics)
     alias(libs.plugins.mapsplatformSecretsGradlePlugin)
     alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.androidJunit5)
 }
 
 android {
@@ -30,10 +32,12 @@ android {
         applicationId = "com.on.staccato"
         minSdk = 26
         targetSdk = 34
-        versionCode = 5
-        versionName = "1.2.0"
+        versionCode = 8
+        versionName = "1.3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments["runnerBuilder"] =
+            "de.mannodermaus.junit5.AndroidJUnit5Builder"
 
         buildConfigField("String", "TOKEN", "${localProperties["token"]}")
     }
@@ -98,8 +102,16 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
+    testImplementation(libs.androidx.arch.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // JUnit5
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.vintage.engine)
+
+    // AssertJ
+    testImplementation(libs.assertj.core)
 
     // Glide
     implementation(libs.glide)
@@ -117,6 +129,7 @@ dependencies {
 
     // OkHttp
     implementation(libs.okhttp.logging.interceptor)
+    testImplementation(libs.okhttp.mockwebserver)
 
     // Lifecycle
     implementation(libs.lifecycle.viewmodel)
@@ -139,9 +152,15 @@ dependencies {
     // Fragment
     implementation(libs.androidx.fragment.ktx)
 
+    // Coroutines Test
+    testImplementation(libs.kotlinx.coroutines.test)
+
     // Mockk
-    testImplementation(libs.mockk.android)
+    testImplementation(libs.junitparams)
+    testImplementation(libs.mockk)
     testImplementation(libs.mockk.agent)
+    androidTestImplementation(libs.mockk.agent)
+    androidTestImplementation(libs.mockk.android)
 
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
@@ -180,4 +199,11 @@ secrets {
 
     ignoreList.add("keyToIgnore")
     ignoreList.add("sdk.*")
+}
+
+tasks.withType<Test> {
+    testLogging {
+        events("started", "passed", "skipped", "failed", "standardError", "standardOut")
+        exceptionFormat = TestExceptionFormat.FULL
+    }
 }
