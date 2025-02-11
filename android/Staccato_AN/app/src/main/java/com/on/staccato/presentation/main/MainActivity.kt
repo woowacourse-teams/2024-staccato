@@ -1,7 +1,6 @@
 package com.on.staccato.presentation.main
 
 import android.content.Intent
-import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -14,60 +13,33 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
-import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
-import com.on.staccato.presentation.common.location.LocationManager
-import com.on.staccato.presentation.common.location.LocationPermissionManager
-import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
-import com.on.staccato.presentation.main.model.MarkerUiModel
-import com.on.staccato.presentation.main.viewmodel.MapsViewModel
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity :
     BindingActivity<ActivityMainBinding>(),
-    OnMapReadyCallback,
     MainHandler {
     override val layoutResourceId: Int
         get() = R.layout.activity_main
 
-    private lateinit var googleMap: GoogleMap
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
-    private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
 
     private val sharedViewModel: SharedViewModel by viewModels()
-    private val mapsViewModel: MapsViewModel by viewModels()
-
-    @Inject
-    lateinit var locationManager: LocationManager
-
-    @Inject
-    lateinit var locationPermissionManager: LocationPermissionManager
 
     val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
     val categoryUpdateLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
@@ -77,32 +49,13 @@ class MainActivity :
 
     override fun initStartView(savedInstanceState: Bundle?) {
         binding.handler = this
-        setupPermissionRequestLauncher()
-        setupGoogleMap()
         loadMemberProfile()
         observeMemberProfile()
-        observeCurrentLocation()
-        observeStaccatoLocations()
         observeStaccatoId()
-        observeDeletedStaccato()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
         setUpBottomSheetStateListener()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (this::googleMap.isInitialized) checkLocationSetting()
-        mapsViewModel.loadStaccatos()
-    }
-
-    override fun onMapReady(map: GoogleMap) {
-        googleMap = map
-        setMapStyle(map)
-        moveDefaultLocation()
-        checkLocationSetting()
-        onMarkerClicked(map)
     }
 
     override fun onStop() {
@@ -121,73 +74,6 @@ class MainActivity :
         MyPageActivity.startWithResultLauncher(this, myPageLauncher)
     }
 
-    private fun setupPermissionRequestLauncher() {
-        permissionRequestLauncher =
-            locationPermissionManager.requestPermissionLauncher(
-                activity = this,
-                view = binding.root,
-                actionWhenHavePermission = ::enableMyLocation,
-            )
-    }
-
-    private fun setupGoogleMap() {
-        val map: SupportMapFragment? =
-            supportFragmentManager.findFragmentById(R.id.fragment_container_view_map) as? SupportMapFragment
-        map?.getMapAsync(this)
-    }
-
-    private fun checkLocationSetting() {
-        locationManager.checkLocationSetting(activity = this, actionWhenGPSIsOn = ::enableMyLocation)
-    }
-
-    private fun setMapStyle(map: GoogleMap) {
-        map.setMapStyle(
-            MapStyleOptions.loadRawResourceStyle(this, R.raw.google_map_style),
-        )
-    }
-
-    private fun moveDefaultLocation() {
-        val defaultLocation =
-            LatLng(SEOUL_STATION_LATITUDE, SEOUL_STATION_LONGITUDE)
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM))
-    }
-
-    private fun enableMyLocation() {
-        val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
-        val shouldShowRequestLocationPermissionsRationale =
-            locationPermissionManager.shouldShowRequestLocationPermissionsRationale(activity = this)
-
-        when {
-            isLocationPermissionGranted -> {
-                googleMap.isMyLocationEnabled = true
-                val currentLocation: Task<Location> = locationManager.getCurrentLocation()
-                mapsViewModel.setCurrentLocation(currentLocation)
-            }
-
-            shouldShowRequestLocationPermissionsRationale -> {
-                observeIsPermissionCancelClicked {
-                    locationPermissionManager.showLocationRequestRationaleDialog(
-                        supportFragmentManager,
-                    )
-                }
-            }
-
-            else -> {
-                observeIsPermissionCancelClicked {
-                    permissionRequestLauncher.launch(
-                        locationPermissions,
-                    )
-                }
-            }
-        }
-    }
-
-    private fun observeIsPermissionCancelClicked(requestLocationPermissions: () -> Unit) {
-        sharedViewModel.isPermissionCancelClicked.observe(this) { isCancel ->
-            if (!isCancel) requestLocationPermissions()
-        }
-    }
-
     private fun loadMemberProfile() {
         sharedViewModel.fetchMemberProfile()
     }
@@ -198,92 +84,13 @@ class MainActivity :
         }
     }
 
-    private fun observeCurrentLocation() {
-        mapsViewModel.currentLocation.observe(this) { currentLocation ->
-            moveCurrentLocation(currentLocation)
-        }
-    }
-
-    private fun moveCurrentLocation(currentLocation: Task<Location>) {
-        currentLocation.addOnSuccessListener { location ->
-            moveCamera(location)
-        }
-    }
-
-    private fun moveCamera(location: Location?) {
-        if (location != null) observeMapIsHalf(location)
-    }
-
-    private fun observeMapIsHalf(location: Location) {
-        val currentLocation = LatLng(location.latitude, location.longitude)
-        mapsViewModel.isHalf.observe(this) { isHalf ->
-            if (isHalf) {
-                val mapPaddingBottom = (binding.root.height / 1.8).toInt()
-                setMapPadding(currentLocation, mapPaddingBottom)
-            } else {
-                setMapPadding(currentLocation)
-            }
-        }
-    }
-
-    private fun setMapPadding(
-        currentLocation: LatLng,
-        mapPaddingBottom: Int = DEFAULT_MAP_PADDING,
-    ) {
-        googleMap.setPadding(
-            DEFAULT_MAP_PADDING,
-            DEFAULT_MAP_PADDING,
-            DEFAULT_MAP_PADDING,
-            mapPaddingBottom,
-        )
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
-    }
-
-    private fun observeStaccatoLocations() {
-        mapsViewModel.staccatoLocations.observe(this) { staccatoLocations ->
-            if (this::googleMap.isInitialized) {
-                googleMap.clear()
-                addMarkers(staccatoLocations)
-            }
-        }
-    }
-
-    private fun addMarkers(staccatoLocations: List<StaccatoLocation>) {
-        val markers: MutableList<MarkerUiModel> = mutableListOf()
-        staccatoLocations.forEach { staccatoLocation ->
-            val latLng = LatLng(staccatoLocation.latitude, staccatoLocation.longitude)
-            val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
-            val marker: Marker =
-                googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_pin_3x)))
-                    ?: return
-            val markerId: String = marker.id
-            markers.add(MarkerUiModel(staccatoLocation.staccatoId, markerId))
-        }
-        mapsViewModel.setMarkers(markers)
-    }
-
-    private fun onMarkerClicked(googleMap: GoogleMap) {
-        googleMap.setOnMarkerClickListener { marker ->
-            mapsViewModel.findStaccatoId(marker.id)
-            false
-        }
-    }
-
     private fun observeStaccatoId() {
-        mapsViewModel.staccatoId.observe(this) { staccatoId ->
+        sharedViewModel.staccatoId.observe(this) { staccatoId ->
             navigateToStaccato(staccatoId)
             supportFragmentManager.setFragmentResult(
                 BOTTOM_SHEET_STATE_REQUEST_KEY,
                 bundleOf(BOTTOM_SHEET_NEW_STATE to STATE_EXPANDED),
             )
-        }
-    }
-
-    private fun observeDeletedStaccato() {
-        sharedViewModel.isStaccatosUpdated.observe(this) { isDeleted ->
-            if (isDeleted) {
-                mapsViewModel.loadStaccatos()
-            }
         }
     }
 
@@ -407,13 +214,13 @@ class MainActivity :
                             }
 
                             STATE_HALF_EXPANDED -> {
-                                mapsViewModel.setIsHalf(isHalf = true)
+                                sharedViewModel.setIsHalf(isHalf = true)
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
                                 changeSkipCollapsed()
                             }
 
                             STATE_COLLAPSED -> {
-                                mapsViewModel.setIsHalf(isHalf = false)
+                                sharedViewModel.setIsHalf(isHalf = false)
                             }
 
                             else -> {
@@ -471,10 +278,6 @@ class MainActivity :
     }
 
     companion object {
-        private const val DEFAULT_MAP_PADDING = 0
-        private const val DEFAULT_ZOOM = 15f
-        private const val SEOUL_STATION_LATITUDE = 37.554677038139815
-        private const val SEOUL_STATION_LONGITUDE = 126.97061201084968
         private const val BOTTOM_SHEET_STATE_REQUEST_KEY = "requestKey"
         private const val BOTTOM_SHEET_NEW_STATE = "newState"
     }

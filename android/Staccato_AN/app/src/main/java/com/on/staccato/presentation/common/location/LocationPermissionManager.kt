@@ -1,6 +1,7 @@
 package com.on.staccato.presentation.common.location
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.view.View
@@ -25,10 +26,10 @@ class LocationPermissionManager
         lateinit var locationManager: LocationManager
 
         fun requestPermissionLauncher(
-            activity: AppCompatActivity,
+            activity: Activity,
             view: View,
             actionWhenHavePermission: () -> Unit,
-        ) = activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        ) = (activity as AppCompatActivity).registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             permissions.forEach { (_, isGranted) ->
                 if (isGranted) {
                     view.showSnackBar(context.resources.getString(R.string.maps_location_permission_granted_message))
@@ -55,7 +56,7 @@ class LocationPermissionManager
             return isGrantedCoarseLocation && isGrantedFineLocation
         }
 
-        fun shouldShowRequestLocationPermissionsRationale(activity: AppCompatActivity): Boolean {
+        fun shouldShowRequestLocationPermissionsRationale(activity: Activity): Boolean {
             val shouldRequestCoarseLocation =
                 ActivityCompat.shouldShowRequestPermissionRationale(
                     activity,

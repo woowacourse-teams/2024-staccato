@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.main.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -40,6 +41,12 @@ class SharedViewModel
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
 
+        private val _isHalf = MutableLiveData(true)
+        val isHalf: LiveData<Boolean> get() = _isHalf
+
+        private val _staccatoId = MutableLiveData<Long>()
+        val staccatoId: LiveData<Long> get() = _staccatoId
+
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = myPageRepository.getMemberProfile()
@@ -55,6 +62,7 @@ class SharedViewModel
 
         fun setStaccatosHasUpdated() {
             _isStaccatosUpdated.setValue(true)
+            Log.d("hye", "sharedViewModel ${_isStaccatosUpdated.getValue()}")
         }
 
         fun updateIsPermissionCancelClicked() {
@@ -63,6 +71,14 @@ class SharedViewModel
 
         fun updateIsSettingClicked(isSettingClicked: Boolean) {
             _isSettingClicked.value = isSettingClicked
+        }
+
+        fun setIsHalf(isHalf: Boolean) {
+            _isHalf.value = isHalf
+        }
+
+        fun updateStaccatoId(id: Long) {
+            _staccatoId.value = id
         }
 
         private fun setMemberProfile(memberProfile: MemberProfile) {
