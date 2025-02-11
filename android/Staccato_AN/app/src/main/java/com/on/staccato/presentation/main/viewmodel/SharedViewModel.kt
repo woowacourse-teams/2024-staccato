@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.main.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +8,7 @@ import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.MemberProfile
+import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
@@ -47,6 +47,9 @@ class SharedViewModel
         private val _staccatoId = MutableLiveData<Long>()
         val staccatoId: LiveData<Long> get() = _staccatoId
 
+        private val _staccatoLocation = MutableLiveData<StaccatoLocation>()
+        val staccatoLocation: LiveData<StaccatoLocation> get() = _staccatoLocation
+
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = myPageRepository.getMemberProfile()
@@ -62,7 +65,6 @@ class SharedViewModel
 
         fun setStaccatosHasUpdated() {
             _isStaccatosUpdated.setValue(true)
-            Log.d("hye", "sharedViewModel ${_isStaccatosUpdated.getValue()}")
         }
 
         fun updateIsPermissionCancelClicked() {
@@ -79,6 +81,14 @@ class SharedViewModel
 
         fun updateStaccatoId(id: Long) {
             _staccatoId.value = id
+        }
+
+        fun updateStaccatoLocation(
+            staccatoId: Long,
+            latitude: Double,
+            longitude: Double,
+        ) {
+            _staccatoLocation.value = StaccatoLocation(staccatoId, latitude, longitude)
         }
 
         private fun setMemberProfile(memberProfile: MemberProfile) {

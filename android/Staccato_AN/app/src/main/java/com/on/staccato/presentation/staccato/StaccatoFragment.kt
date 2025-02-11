@@ -121,6 +121,7 @@ class StaccatoFragment :
     private fun observeStaccatoDetail() {
         staccatoViewModel.staccatoDetail.observe(viewLifecycleOwner) { staccatoDetail ->
             pagePhotoAdapter.submitList(staccatoDetail.staccatoImageUrls)
+            sharedViewModel.updateStaccatoLocation(staccatoId, staccatoDetail.latitude, staccatoDetail.longitude)
         }
     }
 

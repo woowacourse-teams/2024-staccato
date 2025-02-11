@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -30,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MapsFragment : Fragment() {
+class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     @Inject
     lateinit var locationManager: LocationManager
 
@@ -49,6 +50,7 @@ class MapsFragment : Fragment() {
             googleMap.moveDefaultLocation()
             checkLocationSetting()
             googleMap.onMarkerClicked()
+            googleMap.setOnMyLocationButtonClickListener(this)
         }
 
     override fun onCreateView(
@@ -66,10 +68,10 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupMap()
         setupPermissionRequestLauncher(view)
-        observeCurrentLocation()
         observeStaccatoId()
         observeStaccatoLocations()
         observeDeletedStaccato()
+        observeLocation()
     }
 
     override fun onResume() {
@@ -81,6 +83,11 @@ class MapsFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         sharedViewModel.updateIsSettingClicked(false)
+    }
+
+    override fun onMyLocationButtonClick(): Boolean {
+        getMyLocation()
+        return false
     }
 
     private fun setupMap() {
@@ -126,8 +133,7 @@ class MapsFragment : Fragment() {
         when {
             isLocationPermissionGranted -> {
                 map.isMyLocationEnabled = true
-                val currentLocation: Task<Location> = locationManager.getCurrentLocation()
-                mapsViewModel.setCurrentLocation(currentLocation)
+                getMyLocation()
             }
 
             shouldShowRequestLocationPermissionsRationale -> {
@@ -148,30 +154,41 @@ class MapsFragment : Fragment() {
         }
     }
 
+    private fun getMyLocation() {
+        val currentLocation: Task<Location> = locationManager.getCurrentLocation()
+        currentLocation.addOnSuccessListener {
+            mapsViewModel.setCurrentLocation(it.latitude, it.longitude)
+        }
+    }
+
     private fun observeIsPermissionCancelClicked(requestLocationPermissions: () -> Unit) {
         sharedViewModel.isPermissionCancelClicked.observe(viewLifecycleOwner) { isCancel ->
             if (!isCancel) requestLocationPermissions()
         }
     }
 
+    private fun observeLocation() {
+        observeCurrentLocation()
+        observeStaccatoLocation()
+    }
+
+    private fun observeStaccatoLocation() {
+        sharedViewModel.staccatoLocation.observe(viewLifecycleOwner) {
+            mapsViewModel.setCurrentLocation(it.latitude, it.longitude)
+        }
+    }
+
     private fun observeCurrentLocation() {
-        mapsViewModel.currentLocation.observe(viewLifecycleOwner) { currentLocation ->
-            moveCurrentLocation(currentLocation)
+        mapsViewModel.currentLocation.observe(viewLifecycleOwner) { location ->
+            moveCamera(location.latitude, location.longitude)
         }
     }
 
-    private fun moveCurrentLocation(currentLocation: Task<Location>) {
-        currentLocation.addOnSuccessListener { location ->
-            moveCamera(location)
-        }
-    }
-
-    private fun moveCamera(location: Location?) {
-        if (location != null) observeMapIsHalf(location)
-    }
-
-    private fun observeMapIsHalf(location: Location) {
-        val currentLocation = LatLng(location.latitude, location.longitude)
+    private fun moveCamera(
+        latitude: Double,
+        longitude: Double,
+    ) {
+        val currentLocation = LatLng(latitude, longitude)
         sharedViewModel.isHalf.observe(viewLifecycleOwner) { isHalf ->
             if (isHalf) {
                 val mapPaddingBottom = (requireView().height / 1.8).toInt()

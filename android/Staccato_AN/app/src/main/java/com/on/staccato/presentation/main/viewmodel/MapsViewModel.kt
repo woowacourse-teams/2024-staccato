@@ -1,11 +1,9 @@
 package com.on.staccato.presentation.main.viewmodel
 
-import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.tasks.Task
 import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
@@ -14,6 +12,7 @@ import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.main.model.MarkerUiModel
+import com.on.staccato.presentation.map.LocationUiModel
 import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -40,11 +39,14 @@ class MapsViewModel
         private val _isHalf = MutableLiveData(true)
         val isHalf: LiveData<Boolean> get() = _isHalf
 
-        private val _currentLocation = MutableLiveData<Task<Location>>()
-        val currentLocation: LiveData<Task<Location>> get() = _currentLocation
+        private val _currentLocation = MutableLiveData<LocationUiModel>()
+        val currentLocation: LiveData<LocationUiModel> get() = _currentLocation
 
-        fun setCurrentLocation(currentLocation: Task<Location>) {
-            _currentLocation.value = currentLocation
+        fun setCurrentLocation(
+            latitude: Double,
+            longitude: Double,
+        ) {
+            _currentLocation.value = LocationUiModel(latitude, longitude)
         }
 
         fun setIsHalf(isHalf: Boolean) {
