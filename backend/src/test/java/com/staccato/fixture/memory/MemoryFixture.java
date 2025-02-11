@@ -5,6 +5,14 @@ import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
 
 public class MemoryFixture {
+    public static Memory create() {
+        return Memory.builder()
+                .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
+                .title("title")
+                .description("친구들과 함께한 여름 휴가 추억")
+                .build();
+    }
+
     public static Memory create(String title) {
         return Memory.builder()
                 .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")

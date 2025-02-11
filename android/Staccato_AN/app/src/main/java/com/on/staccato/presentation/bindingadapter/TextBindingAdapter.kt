@@ -5,32 +5,32 @@ import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.databinding.BindingAdapter
 import com.on.staccato.R
-import com.on.staccato.domain.model.MemoryCandidate
-import com.on.staccato.domain.model.MemoryCandidates
+import com.on.staccato.domain.model.CategoryCandidate
+import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@BindingAdapter(value = ["selectedMemory", "memoryCandidates"])
-fun TextView.setSelectedMemory(
-    selectedMemory: MemoryCandidate?,
-    memoryCandidates: MemoryCandidates?,
+@BindingAdapter(value = ["selectedCategory", "categoryCandidates"])
+fun TextView.setSelectedCategory(
+    selectedCategory: CategoryCandidate?,
+    categoryCandidates: CategoryCandidates?,
 ) {
     when {
-        (memoryCandidates?.memoryCandidate?.isEmpty() == true) -> {
-            text = resources.getString(R.string.staccato_creation_no_memory)
+        (categoryCandidates?.categoryCandidates?.isEmpty() == true) -> {
+            text = resources.getString(R.string.staccato_creation_no_category)
             setTextColor(resources.getColor(R.color.gray3, null))
             isClickable = false
             isFocusable = false
         }
-        (selectedMemory == null) -> {
-            text = resources.getString(R.string.staccato_creation_no_memory_in_this_date)
+        (selectedCategory == null) -> {
+            text = resources.getString(R.string.staccato_creation_no_category_in_this_date)
             setTextColor(resources.getColor(R.color.gray3, null))
             isClickable = false
             isFocusable = false
         }
         else -> {
-            text = selectedMemory.memoryTitle
+            text = selectedCategory.categoryTitle
             isClickable = true
             isFocusable = true
             setTextColor(resources.getColor(R.color.staccato_black, null))
@@ -49,25 +49,34 @@ fun TextView.setDateTimeWithAmPm(dateTime: LocalDateTime?) {
 @BindingAdapter(
     value = ["startDate", "endDate"],
 )
-fun TextView.setMemoryPeriod(
+fun TextView.setCategoryPeriod(
     startDate: LocalDate?,
     endDate: LocalDate?,
 ) {
     if (startDate == null || endDate == null) {
-        text = resources.getString(R.string.memory_creation_period_hint)
+        text = resources.getString(R.string.category_creation_period_hint)
         setTextColor(resources.getColor(R.color.gray3, null))
     } else {
         text =
-            resources.getString(R.string.memory_creation_selected_period)
+            resources.getString(R.string.category_creation_selected_period)
                 .format(startDate, endDate)
         setTextColor(resources.getColor(R.color.staccato_black, null))
     }
 }
 
-@BindingAdapter("isMemoryCandidatesEmpty")
-fun TextView.setIsMemoryCandidatesEmptyVisibility(memoryCandidates: MemoryCandidates?) {
-    isGone = !memoryCandidates?.memoryCandidate.isNullOrEmpty()
+@BindingAdapter("isCategoryCandidatesEmpty")
+fun TextView.setIsCategoryCandidatesEmptyVisibility(categoryCandidates: CategoryCandidates?) {
+    isGone = !categoryCandidates?.categoryCandidates.isNullOrEmpty()
 }
+
+@BindingAdapter("timelineNickname")
+fun TextView.formatTimelineNickname(nickname: String?) {
+    text = nickname?.let {
+        resources.getString(R.string.timeline_nickname_memories).formatNickname(it)
+    } ?: EMPTY_TEXT
+}
+
+fun String.formatNickname(nickname: String) = format(nickname.takeIf { it.length <= 10 } ?: ("${nickname.take(10)}..."))
 
 @BindingAdapter("visitedAtHistory")
 fun TextView.formatVisitedAtHistory(visitedAt: LocalDateTime?) {
@@ -83,7 +92,7 @@ fun TextView.formatLocalDateToDatePeriod(
     startAt: LocalDate?,
     endAt: LocalDate?,
 ) {
-    val periodFormatString = resources.getString(R.string.memory_period_dot)
+    val periodFormatString = resources.getString(R.string.category_period_dot)
     text =
         if (startAt != null && endAt != null) {
             visibility = View.VISIBLE
@@ -102,13 +111,13 @@ fun TextView.formatLocalDateToDatePeriod(
 }
 
 @BindingAdapter(
-    value = ["memoryStartAt", "memoryEndAt"],
+    value = ["categoryStartAt", "categoryEndAt"],
 )
-fun TextView.formatLocalDateToDatePeriodInMemory(
+fun TextView.formatLocalDateToDatePeriodInCategory(
     startAt: LocalDate?,
     endAt: LocalDate?,
 ) {
-    val periodFormatString = resources.getString(R.string.memory_period_dot)
+    val periodFormatString = resources.getString(R.string.category_period_dot)
     text =
         if (startAt != null && endAt != null) {
             visibility = View.VISIBLE

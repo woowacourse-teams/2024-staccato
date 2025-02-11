@@ -1,34 +1,34 @@
 package com.on.staccato.data.dto.mapper
 
-import com.on.staccato.data.dto.timeline.TimelineMemoryDto
+import com.on.staccato.data.dto.timeline.TimelineCategoryDto
 import com.on.staccato.data.dto.timeline.TimelineResponse
-import com.on.staccato.domain.model.Memory
-import com.on.staccato.domain.model.MemoryCandidate
-import com.on.staccato.domain.model.MemoryCandidates
+import com.on.staccato.domain.model.Category
+import com.on.staccato.domain.model.CategoryCandidate
+import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.Timeline
 import java.time.LocalDate
 
 fun TimelineResponse.toDomain(): Timeline {
-    val memories =
-        memories.map { timelineMemoryDto ->
-            timelineMemoryDto.toDomain()
+    val categories =
+        categories.map { timelineCategoryDto ->
+            timelineCategoryDto.toDomain()
         }
-    return Timeline(memories)
+    return Timeline(categories)
 }
 
-fun TimelineResponse.toMemoryCandidates(): MemoryCandidates {
-    val memories: List<MemoryCandidate> =
-        memories.map { timelineMemoryDto ->
-            timelineMemoryDto.toMemoryCandidate()
+fun TimelineResponse.toCategoryCandidates(): CategoryCandidates {
+    val categories: List<CategoryCandidate> =
+        categories.map { timelineCategoryDto ->
+            timelineCategoryDto.toCategoryCandidate()
         }
-    return MemoryCandidates(memories)
+    return CategoryCandidates(categories)
 }
 
-fun TimelineMemoryDto.toDomain(): Memory {
-    return Memory(
-        memoryId = memoryId,
-        memoryThumbnailUrl = memoryThumbnailUrl,
-        memoryTitle = memoryTitle,
+fun TimelineCategoryDto.toDomain(): Category {
+    return Category(
+        categoryId = categoryId,
+        categoryThumbnailUrl = categoryThumbnailUrl,
+        categoryTitle = categoryTitle,
         startAt = startAt?.let { LocalDate.parse(it) },
         endAt = endAt?.let { LocalDate.parse(it) },
         description = description,
@@ -37,10 +37,10 @@ fun TimelineMemoryDto.toDomain(): Memory {
     )
 }
 
-fun TimelineMemoryDto.toMemoryCandidate(): MemoryCandidate {
-    return MemoryCandidate(
-        memoryId = memoryId,
-        memoryTitle = memoryTitle,
+fun TimelineCategoryDto.toCategoryCandidate(): CategoryCandidate {
+    return CategoryCandidate(
+        categoryId = categoryId,
+        categoryTitle = categoryTitle,
         startAt = startAt?.let { LocalDate.parse(it) },
         endAt = endAt?.let { LocalDate.parse(it) },
     )

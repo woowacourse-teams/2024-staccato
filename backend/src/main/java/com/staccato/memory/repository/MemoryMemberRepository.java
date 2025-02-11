@@ -25,5 +25,5 @@ public interface MemoryMemberRepository extends JpaRepository<MemoryMember, Long
 
     @Modifying
     @Query("DELETE FROM MemoryMember mm WHERE mm.memory.id = :memoryId")
-    void deleteAllByMemoryIdInBatch(@Param("memoryId") Long memoryId);
+    void deleteAllByMemoryIdInBulk(@Param("memoryId") Long memoryId);
 }

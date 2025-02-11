@@ -4,9 +4,9 @@ import com.on.staccato.data.ApiResult
 import com.on.staccato.data.Exception
 import com.on.staccato.data.ServerError
 import com.on.staccato.data.Success
+import com.on.staccato.domain.model.Category
+import com.on.staccato.domain.model.CategoryStaccato
 import com.on.staccato.domain.model.Member
-import com.on.staccato.domain.model.Memory
-import com.on.staccato.domain.model.MemoryStaccato
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -66,12 +66,12 @@ class InlineStudyTest {
     }
 }
 
-fun createFakeMemory(): Success<Memory> {
+fun createFakeMemory(): Success<Category> {
     return Success(
-        Memory(
-            memoryId = 1L,
-            memoryThumbnailUrl = "https://example.com/fake-thumbnail.jpg",
-            memoryTitle = "Fake Memory Title",
+        Category(
+            categoryId = 1L,
+            categoryThumbnailUrl = "https://example.com/fake-thumbnail.jpg",
+            categoryTitle = "Fake Memory Title",
             startAt = LocalDate.of(2025, 1, 1),
             endAt = LocalDate.of(2025, 12, 31),
             description = "This is a fake memory description used for testing.",
@@ -82,7 +82,7 @@ fun createFakeMemory(): Success<Memory> {
                 ),
             staccatos =
                 (1..20).map { id ->
-                    MemoryStaccato(
+                    CategoryStaccato(
                         staccatoId = id.toLong(),
                         staccatoTitle = "Staccato Title $id",
                         staccatoImageUrl = "https://example.com/image$id-1.jpg",

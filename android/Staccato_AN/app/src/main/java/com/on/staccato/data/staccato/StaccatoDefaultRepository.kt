@@ -2,11 +2,12 @@ package com.on.staccato.data.staccato
 
 import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.mapper.toDomain
-import com.on.staccato.data.dto.staccato.FeelingRequest
+import com.on.staccato.data.dto.mapper.toFeelingRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
 import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
 import com.on.staccato.data.handle
+import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.domain.repository.StaccatoRepository
@@ -28,7 +29,7 @@ class StaccatoDefaultRepository
             remoteDataSource.fetchStaccato(staccatoId).handle { staccatoResponse -> staccatoResponse.toDomain() }
 
         override suspend fun createStaccato(
-            memoryId: Long,
+            categoryId: Long,
             staccatoTitle: String,
             placeName: String,
             latitude: Double,
@@ -39,7 +40,7 @@ class StaccatoDefaultRepository
         ): ApiResult<StaccatoCreationResponse> =
             remoteDataSource.createStaccato(
                 StaccatoCreationRequest(
-                    memoryId = memoryId,
+                    categoryId = categoryId,
                     staccatoTitle = staccatoTitle,
                     placeName = placeName,
                     latitude = latitude,
@@ -58,7 +59,7 @@ class StaccatoDefaultRepository
             latitude: Double,
             longitude: Double,
             visitedAt: LocalDateTime,
-            memoryId: Long,
+            categoryId: Long,
             staccatoImageUrls: List<String>,
         ): ApiResult<Unit> =
             remoteDataSource.updateStaccato(
@@ -71,8 +72,8 @@ class StaccatoDefaultRepository
                         latitude = latitude,
                         longitude = longitude,
                         visitedAt = visitedAt.toString(),
-                        memoryId = memoryId,
-                        momentImageUrls = staccatoImageUrls,
+                        categoryId = categoryId,
+                        staccatoImageUrls = staccatoImageUrls,
                     ),
             ).handle()
 
@@ -80,10 +81,10 @@ class StaccatoDefaultRepository
 
         override suspend fun updateFeeling(
             staccatoId: Long,
-            feeling: String,
+            feeling: Feeling,
         ): ApiResult<Unit> =
             remoteDataSource.updateFeeling(
                 staccatoId = staccatoId,
-                feelingRequest = FeelingRequest(feeling),
+                feelingRequest = feeling.toFeelingRequest(),
             ).handle()
     }

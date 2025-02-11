@@ -12,6 +12,8 @@ import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.MomentImage;
+import com.staccato.moment.domain.MomentImages;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
@@ -43,11 +45,6 @@ public class MomentService {
         return new MomentIdResponse(moment.getId());
     }
 
-    private Memory getMemoryById(long memoryId) {
-        return memoryRepository.findById(memoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
-    }
-
     public MomentLocationResponses readAllMoment(Member member) {
         return new MomentLocationResponses(momentRepository.findAllByMemory_MemoryMembers_Member(member)
                 .stream()
@@ -72,21 +69,32 @@ public class MomentService {
         Memory targetMemory = getMemoryById(momentRequest.memoryId());
         validateMemoryOwner(targetMemory, member);
 
-        Moment updatedMoment = momentRequest.toMoment(targetMemory);
-        moment.update(updatedMoment);
+        Moment newMoment = momentRequest.toMoment(targetMemory);
+        MomentImages originMomentImages = moment.getMomentImages();
+        List<MomentImage> images = originMomentImages.findImagesNotPresentIn(newMoment.getMomentImages());
+        removeImages(images);
+
+        moment.update(newMoment);
     }
 
-    private Moment getMomentById(long momentId) {
-        return momentRepository.findById(momentId)
-                .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
+    private void removeImages(List<MomentImage> images) {
+        List<Long> ids = images.stream()
+                .map(MomentImage::getId)
+                .toList();
+        momentImageRepository.deleteAllByIdInBulk(ids);
+    }
+
+    private Memory getMemoryById(long memoryId) {
+        return memoryRepository.findById(memoryId)
+                .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
     }
 
     @Transactional
     public void deleteMomentById(long momentId, Member member) {
         momentRepository.findById(momentId).ifPresent(moment -> {
             validateMemoryOwner(moment.getMemory(), member);
-            commentRepository.deleteAllByMomentIdInBatch(List.of(momentId));
-            momentImageRepository.deleteAllByMomentIdInBatch(List.of(momentId));
+            commentRepository.deleteAllByMomentIdInBulk(List.of(momentId));
+            momentImageRepository.deleteAllByMomentIdInBulk(List.of(momentId));
             momentRepository.deleteById(momentId);
         });
     }
@@ -97,6 +105,11 @@ public class MomentService {
         validateMemoryOwner(moment.getMemory(), member);
         Feeling feeling = feelingRequest.toFeeling();
         moment.changeFeeling(feeling);
+    }
+
+    private Moment getMomentById(long momentId) {
+        return momentRepository.findById(momentId)
+                .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 
     private void validateMemoryOwner(Memory memory, Member member) {
