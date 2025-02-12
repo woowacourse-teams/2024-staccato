@@ -98,6 +98,7 @@ public class StaccatoController implements StaccatoControllerDocs {
         return ResponseEntity.ok().build();
     }
 
+    // API Endpoint /{staccatoId}/share 로 변경 예정
     @GetMapping("/share")
     public ResponseEntity<StaccatoShareResponse> shareStaccatoById() {
         return ResponseEntity.ok().body(new StaccatoShareResponse());
