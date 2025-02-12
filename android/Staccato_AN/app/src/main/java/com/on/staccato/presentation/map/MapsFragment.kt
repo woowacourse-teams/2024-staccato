@@ -25,8 +25,8 @@ import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.common.location.LocationManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.main.model.MarkerUiModel
-import com.on.staccato.presentation.main.viewmodel.MapsViewModel
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
+import com.on.staccato.presentation.map.viewmodel.MapsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
