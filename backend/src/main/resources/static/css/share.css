@@ -219,6 +219,10 @@ body {
     min-width: fit-content;
 }
 
+.comment-box p {
+    white-space: pre-wrap;
+}
+
 .comment-right .comment-box {
     margin-left: auto;
 }
