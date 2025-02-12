@@ -160,7 +160,7 @@ body {
 .comments-list {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* 코멘트 간 간격 */
+    gap: 1.5rem;
     padding: 1rem 1.5rem 1rem 1.5rem;
 }
 
