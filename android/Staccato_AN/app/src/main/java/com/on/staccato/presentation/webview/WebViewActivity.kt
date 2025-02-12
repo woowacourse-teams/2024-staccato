@@ -1,8 +1,11 @@
 package com.on.staccato.presentation.webview
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.result.ActivityResultLauncher
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityWebviewBinding
 import com.on.staccato.presentation.base.BindingActivity
@@ -53,5 +56,16 @@ class WebViewActivity :
         const val EXTRA_TOOLBAR_TITLE = "toolbar_title"
         const val EXTRA_URL = "url"
         private const val DEFAULT_WEBVIEW_TEXT_SIZE = 100
+
+        fun launch(
+            context: Context,
+            url: String,
+            toolbarTitle: String,
+        ) {
+            val intent = Intent(context, WebViewActivity::class.java)
+                .putExtra(EXTRA_URL, url)
+                .putExtra(EXTRA_TOOLBAR_TITLE, toolbarTitle)
+            context.startActivity(intent)
+        }
     }
 }

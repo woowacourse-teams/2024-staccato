@@ -59,11 +59,7 @@ class MyPageActivity :
     }
 
     override fun onPrivacyPolicyClicked() {
-        val intent =
-            Intent(this, WebViewActivity::class.java)
-                .putExtra(EXTRA_URL, PRIVACY_POLICY_URL)
-                .putExtra(EXTRA_TOOLBAR_TITLE, getString(R.string.mypage_privacy_policy))
-        startActivity(intent)
+        WebViewActivity.launch(this, PRIVACY_POLICY_URL, getString(R.string.mypage_privacy_policy))
     }
 
     override fun onFeedbackClicked() {
