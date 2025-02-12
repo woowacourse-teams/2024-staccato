@@ -222,15 +222,15 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun addMarkers(staccatoLocations: List<StaccatoLocation>) {
-        val markers: MutableList<MarkerUiModel> = mutableListOf()
-        staccatoLocations.forEach { staccatoLocation ->
-            val latLng = LatLng(staccatoLocation.latitude, staccatoLocation.longitude)
-            val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
-            val marker: Marker =
-                map.addMarker(markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_pin_3x)))
-                    ?: return
-            markers.add(MarkerUiModel(staccatoLocation.staccatoId, marker.id))
-        }
+        val markers =
+            staccatoLocations.map { staccatoLocation ->
+                val latLng = LatLng(staccatoLocation.latitude, staccatoLocation.longitude)
+                val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
+                val marker: Marker =
+                    map.addMarker(markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_pin_3x)))
+                        ?: return
+                MarkerUiModel(staccatoLocation.staccatoId, marker.id)
+            }
         mapsViewModel.setMarkers(markers)
     }
 
