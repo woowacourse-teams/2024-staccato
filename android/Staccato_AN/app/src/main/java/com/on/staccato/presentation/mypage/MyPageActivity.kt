@@ -21,8 +21,6 @@ import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertCategoryUriToFile
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.webview.WebViewActivity
-import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_TOOLBAR_TITLE
-import com.on.staccato.presentation.webview.WebViewActivity.Companion.EXTRA_URL
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.activity.result.ActivityResultLauncher
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityWebviewBinding
 import com.on.staccato.presentation.base.BindingActivity
@@ -62,9 +61,10 @@ class WebViewActivity :
             url: String,
             toolbarTitle: String,
         ) {
-            val intent = Intent(context, WebViewActivity::class.java)
-                .putExtra(EXTRA_URL, url)
-                .putExtra(EXTRA_TOOLBAR_TITLE, toolbarTitle)
+            val intent =
+                Intent(context, WebViewActivity::class.java)
+                    .putExtra(EXTRA_URL, url)
+                    .putExtra(EXTRA_TOOLBAR_TITLE, toolbarTitle)
             context.startActivity(intent)
         }
     }
