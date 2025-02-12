@@ -1,5 +1,5 @@
 // JSON 데이터 가져오기 및 처리
-fetch('/share')
+fetch('/staccatos/share')
     .then(response => response.json())
     .then(data => {
         const {
