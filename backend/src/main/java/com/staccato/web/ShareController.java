@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ShareController {
 
-    @GetMapping("/share-page")
+    @GetMapping("/share")
     public String share(Model model) {
         return "share";
     }
