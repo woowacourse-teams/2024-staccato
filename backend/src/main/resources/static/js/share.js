@@ -56,11 +56,11 @@ fetch('/share')
 
         // 고정된 경로 템플릿 정의
         const emojiPaths = {
-            happy: "/images/share/happy",
-            angry: "/images/share/angry",
-            sad: "/images/share/sad",
-            scared: "/images/share/scared",
-            excited: "/images/share/excited"
+            happy: "https://image.staccato.kr/web/share/happy",
+            angry: "https://image.staccato.kr/web/share/angry",
+            sad: "https://image.staccato.kr/web/share/sad",
+            scared: "https://image.staccato.kr/web/share/scared",
+            excited: "https://image.staccato.kr/web/share/excited"
         };
 
         // Feeling 섹션 업데이트
