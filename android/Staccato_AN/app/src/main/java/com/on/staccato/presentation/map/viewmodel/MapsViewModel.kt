@@ -11,8 +11,8 @@ import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.main.model.MarkerUiModel
 import com.on.staccato.presentation.map.model.LocationUiModel
+import com.on.staccato.presentation.map.model.MarkerUiModel
 import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
