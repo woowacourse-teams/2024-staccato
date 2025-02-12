@@ -5,6 +5,14 @@ import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
 
 public class MemoryFixture {
+    public static Memory create() {
+        return Memory.builder()
+                .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
+                .title("title")
+                .description("친구들과 함께한 여름 휴가 추억")
+                .build();
+    }
+
     public static Memory create(String title) {
         return Memory.builder()
                 .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
@@ -13,19 +21,6 @@ public class MemoryFixture {
                 .startAt(LocalDate.of(2024, 7, 1))
                 .endAt(LocalDate.of(2024, 7, 10))
                 .build();
-    }
-
-    public static Memory create(Member member) {
-        Memory memory = Memory.builder()
-                .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
-                .title("2024 여름 휴가")
-                .description("친구들과 함께한 여름 휴가 추억")
-                .startAt(LocalDate.of(2024, 7, 1))
-                .endAt(LocalDate.of(2024, 7, 10))
-                .build();
-        memory.addMemoryMember(member);
-
-        return memory;
     }
 
     public static Memory create(LocalDate startAt, LocalDate endAt) {
@@ -38,8 +33,31 @@ public class MemoryFixture {
                 .build();
     }
 
+    public static Memory createWithMember(Member member) {
+        Memory memory = Memory.builder()
+                .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
+                .title("2024 여름 휴가")
+                .description("친구들과 함께한 여름 휴가 추억")
+                .startAt(LocalDate.of(2024, 7, 1))
+                .endAt(LocalDate.of(2024, 7, 10))
+                .build();
+        memory.addMemoryMember(member);
 
-    public static Memory create(LocalDate startAt, LocalDate endAt, Member member) {
+        return memory;
+    }
+
+    public static Memory createWithMember(String title, Member member) {
+        Memory memory = Memory.builder()
+                .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
+                .title(title)
+                .description("친구들과 함께한 여름 휴가 추억")
+                .build();
+        memory.addMemoryMember(member);
+
+        return memory;
+    }
+
+    public static Memory createWithMember(LocalDate startAt, LocalDate endAt, Member member) {
         Memory memory = Memory.builder()
                 .thumbnailUrl("https://example.com/memorys/geumohrm.jpg")
                 .title("2024 여름 휴가")
@@ -48,6 +66,7 @@ public class MemoryFixture {
                 .endAt(endAt)
                 .build();
         memory.addMemoryMember(member);
+
         return memory;
     }
 }

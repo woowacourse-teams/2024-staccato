@@ -1,18 +1,19 @@
 package com.on.staccato.domain.repository
 
-import com.on.staccato.data.ResponseResult
+import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
+import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.StaccatoLocation
 import java.time.LocalDateTime
 
 interface StaccatoRepository {
-    suspend fun getStaccatos(): ResponseResult<List<StaccatoLocation>>
+    suspend fun getStaccatos(): ApiResult<List<StaccatoLocation>>
 
-    suspend fun getStaccato(staccatoId: Long): ResponseResult<Staccato>
+    suspend fun getStaccato(staccatoId: Long): ApiResult<Staccato>
 
     suspend fun createStaccato(
-        memoryId: Long,
+        categoryId: Long,
         staccatoTitle: String,
         placeName: String,
         latitude: Double,
@@ -20,7 +21,7 @@ interface StaccatoRepository {
         address: String,
         visitedAt: LocalDateTime,
         staccatoImageUrls: List<String>,
-    ): ResponseResult<StaccatoCreationResponse>
+    ): ApiResult<StaccatoCreationResponse>
 
     suspend fun updateStaccato(
         staccatoId: Long,
@@ -30,14 +31,14 @@ interface StaccatoRepository {
         latitude: Double,
         longitude: Double,
         visitedAt: LocalDateTime,
-        memoryId: Long,
+        categoryId: Long,
         staccatoImageUrls: List<String>,
-    ): ResponseResult<Unit>
+    ): ApiResult<Unit>
 
-    suspend fun deleteStaccato(staccatoId: Long): ResponseResult<Unit>
+    suspend fun deleteStaccato(staccatoId: Long): ApiResult<Unit>
 
     suspend fun updateFeeling(
         staccatoId: Long,
-        feeling: String,
-    ): ResponseResult<Unit>
+        feeling: Feeling,
+    ): ApiResult<Unit>
 }

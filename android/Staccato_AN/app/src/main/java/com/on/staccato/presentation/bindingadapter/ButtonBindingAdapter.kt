@@ -5,7 +5,7 @@ import android.widget.ImageButton
 import androidx.databinding.BindingAdapter
 import com.google.android.material.button.MaterialButton
 import com.on.staccato.R
-import com.on.staccato.domain.model.MemoryCandidate
+import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -23,19 +23,19 @@ fun Button.setLoginButtonEnabled(nickName: String?) {
 }
 
 @BindingAdapter(
-    value = ["staccatoTitle", "staccatoAddress", "staccatoVisitedAt", "staccatoPhotos", "staccatoMemory"],
+    value = ["staccatoTitle", "staccatoAddress", "staccatoVisitedAt", "staccatoPhotos", "staccatoCategory"],
 )
 fun Button.setStaccatoSaveButtonEnabled(
     staccatoTitle: String?,
     staccatoAddress: String?,
     staccatoVisitedAt: LocalDateTime?,
     staccatoPhotos: AttachedPhotosUiModel?,
-    staccatoMemory: MemoryCandidate?,
+    staccatoCategory: CategoryCandidate?,
 ) {
     isEnabled =
         if (staccatoTitle.isNullOrBlank() ||
             staccatoAddress == null ||
-            staccatoMemory == null ||
+            staccatoCategory == null ||
             staccatoVisitedAt == null ||
             staccatoPhotos?.isLoading() == true
         ) {
@@ -48,19 +48,19 @@ fun Button.setStaccatoSaveButtonEnabled(
 }
 
 @BindingAdapter(
-    value = ["memoryTitle", "memoryStartDate", "memoryEndDate", "isPeriodActive", "isPhotoUploading"],
+    value = ["categoryTitle", "categoryStartDate", "categoryEndDate", "isPeriodActive", "isPhotoUploading"],
 )
-fun Button.setMemorySaveButtonEnabled(
-    memoryTitle: String?,
-    memoryStartDate: LocalDate?,
-    memoryEndDate: LocalDate?,
+fun Button.setCategorySaveButtonEnabled(
+    categoryTitle: String?,
+    categoryStartDate: LocalDate?,
+    categoryEndDate: LocalDate?,
     isPeriodActive: Boolean,
     isPhotoUploading: Boolean?,
 ) {
-    val isPeriodNotExistent = (memoryStartDate == null) || (memoryEndDate == null)
+    val isPeriodNotExistent = (categoryStartDate == null) || (categoryEndDate == null)
     val isPeriodRequirementsInvalid = isPeriodActive && isPeriodNotExistent
     isEnabled =
-        if (memoryTitle.isNullOrBlank() || isPhotoUploading == true || isPeriodRequirementsInvalid) {
+        if (categoryTitle.isNullOrBlank() || isPhotoUploading == true || isPeriodRequirementsInvalid) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {

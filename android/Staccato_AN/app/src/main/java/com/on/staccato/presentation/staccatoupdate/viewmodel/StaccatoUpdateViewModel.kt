@@ -8,12 +8,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ApiResponseHandler.onException
-import com.on.staccato.data.ApiResponseHandler.onServerError
-import com.on.staccato.data.ApiResponseHandler.onSuccess
-import com.on.staccato.data.dto.Status
-import com.on.staccato.domain.model.MemoryCandidate
-import com.on.staccato.domain.model.MemoryCandidates
+import com.on.staccato.data.onException
+import com.on.staccato.data.onServerError
+import com.on.staccato.data.onSuccess
+import com.on.staccato.domain.model.CategoryCandidate
+import com.on.staccato.domain.model.CategoryCandidates
+import com.on.staccato.domain.model.CategoryCandidates.Companion.emptyCategoryCandidates
+import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
@@ -26,7 +27,9 @@ import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel.Companion.FAIL_IMAGE_UPLOAD_MESSAGE
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateError
-import com.on.staccato.presentation.util.convertExcretaFile
+import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
+import com.on.staccato.presentation.util.convertStaccatoUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
@@ -65,8 +68,8 @@ class StaccatoUpdateViewModel
         private val _longitude = MutableLiveData<Double?>()
         private val longitude: LiveData<Double?> get() = _longitude
 
-        private val _memoryCandidates = MutableLiveData<MemoryCandidates>()
-        val memoryCandidates: LiveData<MemoryCandidates> get() = _memoryCandidates
+        private val _categoryCandidates = MutableLiveData<CategoryCandidates>()
+        val categoryCandidates: LiveData<CategoryCandidates> get() = _categoryCandidates
 
         private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
@@ -74,10 +77,11 @@ class StaccatoUpdateViewModel
         private val _isCurrentLocationLoading = MutableLiveData(false)
         val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
 
-        private var targetMemoryId: Long = 0
+        private val _selectedCategory = MutableLiveData<CategoryCandidate>()
+        val selectedCategory: LiveData<CategoryCandidate> get() = _selectedCategory
 
-        private val _selectedMemory = MutableLiveData<MemoryCandidate>()
-        val selectedMemory: LiveData<MemoryCandidate> get() = _selectedMemory
+        private val _selectableCategories = MutableLiveData<CategoryCandidates>()
+        val selectableCategories: LiveData<CategoryCandidates> get() = _selectableCategories
 
         private val _isUpdateCompleted = MutableLiveData(false)
         val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
@@ -111,21 +115,16 @@ class StaccatoUpdateViewModel
             }
         }
 
-        fun selectMemory(memory: MemoryCandidate) {
-            _selectedMemory.value = memory
+        fun selectCategory(category: CategoryCandidate) {
+            _selectedCategory.value = category
         }
 
-        fun selectedVisitedAt(visitedAt: LocalDateTime) {
+        fun selectVisitedAt(visitedAt: LocalDateTime) {
             _selectedVisitedAt.value = visitedAt
         }
 
-        fun fetchTargetData(
-            staccatoId: Long,
-            memoryId: Long,
-            memoryTitle: String,
-        ) {
-            targetMemoryId = memoryId
-            fetchMemoryCandidates()
+        fun fetchTargetData(staccatoId: Long) {
+            fetchCategoryCandidates()
             fetchStaccatoBy(staccatoId)
         }
 
@@ -184,6 +183,12 @@ class StaccatoUpdateViewModel
             }
         }
 
+        fun updateCategorySelectionBy(visitedAt: LocalDateTime) {
+            val filteredCategories = categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
+            _selectableCategories.value = filteredCategories
+            _selectedCategory.value = filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
+        }
+
         fun updateStaccato(staccatoId: Long) {
             viewModelScope.launch {
                 val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleException()
@@ -192,7 +197,7 @@ class StaccatoUpdateViewModel
                 val latitudeValue = latitude.value ?: return@launch handleException()
                 val longitudeValue = longitude.value ?: return@launch handleException()
                 val visitedAtValue = selectedVisitedAt.value ?: return@launch handleException()
-                val memoryIdValue = selectedMemory.value?.memoryId ?: return@launch handleException()
+                val categoryIdValue = selectedCategory.value?.categoryId ?: return@launch handleException()
                 val staccatoImageUrlsValue =
                     currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                         ?: emptyList()
@@ -205,7 +210,7 @@ class StaccatoUpdateViewModel
                     latitude = latitudeValue,
                     longitude = longitudeValue,
                     visitedAt = visitedAtValue,
-                    memoryId = memoryIdValue,
+                    categoryId = categoryIdValue,
                     staccatoImageUrls = staccatoImageUrlsValue,
                 ).onSuccess {
                     _isUpdateCompleted.postValue(true)
@@ -219,30 +224,43 @@ class StaccatoUpdateViewModel
                 staccatoRepository.getStaccato(staccatoId = staccatoId)
                     .onSuccess { staccato ->
                         staccatoTitle.set(staccato.staccatoTitle)
-                        _address.value = staccato.address
-                        _latitude.value = staccato.latitude
-                        _longitude.value = staccato.longitude
-                        _selectedVisitedAt.value = staccato.visitedAt
-                        _placeName.value = staccato.placeName
                         _currentPhotos.value = createPhotosByUrls(staccato.staccatoImageUrls)
-                        _selectedMemory.value =
-                            MemoryCandidate(
-                                staccato.memoryId,
-                                staccato.memoryTitle,
-                                staccato.startAt,
-                                staccato.endAt,
-                            )
+                        initializePlaceBy(staccato)
+                        selectVisitedAt(staccato.visitedAt)
+                        initCategory(staccato)
                     }.onException(::handleInitializeException)
                     .onServerError(::handleServerError)
             }
         }
 
-        private fun fetchMemoryCandidates() {
+        private fun initializePlaceBy(staccato: Staccato) {
+            selectNewPlace(
+                placeId = "필요 없는 파라미터",
+                name = staccato.placeName,
+                address = staccato.address,
+                longitude = staccato.longitude,
+                latitude = staccato.latitude,
+            )
+        }
+
+        private fun initCategory(staccato: Staccato) {
+            _selectedCategory.value =
+                CategoryCandidate(
+                    staccato.categoryId,
+                    staccato.categoryTitle,
+                    staccato.startAt,
+                    staccato.endAt,
+                )
+            _selectableCategories.value =
+                categoryCandidates.value?.filterBy(staccato.visitedAt.toLocalDate())
+        }
+
+        private fun fetchCategoryCandidates() {
             viewModelScope.launch {
-                timelineRepository.getMemoryCandidates()
-                    .onSuccess { memoryCandidates ->
-                        _memoryCandidates.value = memoryCandidates
-                    }.onException(::handleMemoryCandidatesException)
+                timelineRepository.getCategoryCandidates()
+                    .onSuccess { categoryCandidates ->
+                        _categoryCandidates.value = categoryCandidates
+                    }.onException(::handleCategoryCandidatesException)
                     .onServerError(::handleServerError)
             }
         }
@@ -252,16 +270,16 @@ class StaccatoUpdateViewModel
             photo: AttachedPhotoUiModel,
         ) = viewModelScope.async(buildCoroutineExceptionHandler()) {
             val multiPartBody =
-                convertExcretaFile(
+                convertStaccatoUriToFile(
                     context,
                     photo.uri,
-                    StaccatoCreationViewModel.FORM_DATA_NAME,
+                    IMAGE_FORM_DATA_NAME,
                 )
             imageRepository.convertImageFileToUrl(multiPartBody)
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
-                }.onException { e, message ->
-                    if (this.isActive) handleUpdatePhotoException(e, message)
+                }.onException { state ->
+                    if (this.isActive) handleUpdatePhotoException(state)
                 }
                 .onServerError(::handleServerError)
         }
@@ -280,53 +298,30 @@ class StaccatoUpdateViewModel
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
         }
 
-        private fun handleServerError(
-            status: Status,
-            message: String,
-        ) {
+        private fun handleServerError(message: String) {
             _isPosting.value = false
             _warningMessage.setValue(message)
         }
 
-        private fun handleUpdatePhotoException(
-            e: Throwable = IllegalArgumentException(),
-            errorMessage: String = IMAGE_UPLOAD_ERROR_MESSAGE,
-        ) {
-            _warningMessage.setValue(errorMessage)
+        private fun handleUpdatePhotoException(exceptionState: ExceptionState = ExceptionState.ImageUploadError) {
+            _warningMessage.setValue(exceptionState.message)
         }
 
-        private fun handleException(
-            e: Throwable = IllegalArgumentException(),
-            errorMessage: String = REQUIRED_VALUES_ERROR_MESSAGE,
-        ) {
+        private fun handleException(state: ExceptionState = ExceptionState.RequiredValuesMissing) {
             _isPosting.value = false
-            _warningMessage.setValue(errorMessage)
+            _warningMessage.setValue(state.message)
         }
 
-        private fun handleMemoryCandidatesException(
-            e: Throwable,
-            message: String,
-        ) {
-            _error.setValue(StaccatoUpdateError.MemoryCandidates(message))
+        private fun handleCategoryCandidatesException(exceptionState: ExceptionState) {
+            _error.setValue(StaccatoUpdateError.CategoryCandidates(exceptionState.message))
         }
 
-        private fun handleInitializeException(
-            e: Throwable,
-            message: String,
-        ) {
-            _error.setValue(StaccatoUpdateError.StaccatoInitialize(message))
+        private fun handleInitializeException(state: ExceptionState) {
+            _error.setValue(StaccatoUpdateError.StaccatoInitialize(state.message))
         }
 
-        private fun handleUpdateException(
-            e: Throwable = IllegalArgumentException(),
-            message: String = REQUIRED_VALUES_ERROR_MESSAGE,
-        ) {
+        private fun handleUpdateException(state: ExceptionState = ExceptionState.RequiredValuesMissing) {
             _isPosting.value = false
-            _error.setValue(StaccatoUpdateError.StaccatoUpdate(message))
-        }
-
-        companion object {
-            private const val IMAGE_UPLOAD_ERROR_MESSAGE = "이미지 업로드에 실패했습니다."
-            private const val REQUIRED_VALUES_ERROR_MESSAGE = "필수 값을 모두 입력해 주세요."
+            _error.setValue(StaccatoUpdateError.StaccatoUpdate(state.message))
         }
     }

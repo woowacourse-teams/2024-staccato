@@ -8,7 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import com.staccato.RepositoryTest;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.fixture.moment.MomentFixture;
@@ -24,8 +24,7 @@ import com.staccato.moment.domain.MomentImages;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@DataJpaTest
-class MomentRepositoryTest {
+class MomentRepositoryTest extends RepositoryTest {
     @Autowired
     private MomentRepository momentRepository;
     @Autowired
@@ -70,7 +69,7 @@ class MomentRepositoryTest {
 
     @DisplayName("특정 추억의 id를 가진 모든 스타카토를 삭제한다.")
     @Test
-    void deleteAllByMemoryIdInBatch() {
+    void deleteAllByMemoryIdInBulk() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
@@ -81,7 +80,7 @@ class MomentRepositoryTest {
         Moment moment2 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 1, 22, 21)));
 
         // when
-        momentRepository.deleteAllByMemoryIdInBatch(memory.getId());
+        momentRepository.deleteAllByMemoryIdInBulk(memory.getId());
         entityManager.flush();
         entityManager.clear();
 
