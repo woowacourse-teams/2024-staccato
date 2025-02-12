@@ -27,8 +27,7 @@ class MapsViewModel
         private val _staccatoLocations = MutableLiveData<List<StaccatoLocation>>()
         val staccatoLocations: LiveData<List<StaccatoLocation>> get() = _staccatoLocations
 
-        private val _markers = MutableLiveData<List<MarkerUiModel>>()
-        val markers: LiveData<List<MarkerUiModel>> get() = _markers
+        private var markers = listOf<MarkerUiModel>()
 
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
@@ -46,12 +45,11 @@ class MapsViewModel
             _currentLocation.value = LocationUiModel(latitude, longitude)
         }
 
-        fun setMarkers(markers: List<MarkerUiModel>) {
-            _markers.value = markers
+        fun setMarkers(markerUiModels: List<MarkerUiModel>) {
+            markers = markerUiModels
         }
 
         fun findStaccatoId(markerId: String?) {
-            val markers = _markers.value ?: throw IllegalArgumentException()
             _staccatoId.value = markers.first { it.markerId == markerId }.staccatoId
         }
 
