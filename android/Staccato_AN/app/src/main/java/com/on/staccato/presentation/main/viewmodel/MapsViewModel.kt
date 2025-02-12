@@ -36,9 +36,6 @@ class MapsViewModel
         private val _staccatoId = MutableLiveData<Long>()
         val staccatoId: LiveData<Long> get() = _staccatoId
 
-        private val _isHalf = MutableLiveData(true)
-        val isHalf: LiveData<Boolean> get() = _isHalf
-
         private val _currentLocation = MutableLiveData<LocationUiModel>()
         val currentLocation: LiveData<LocationUiModel> get() = _currentLocation
 
@@ -47,10 +44,6 @@ class MapsViewModel
             longitude: Double,
         ) {
             _currentLocation.value = LocationUiModel(latitude, longitude)
-        }
-
-        fun setIsHalf(isHalf: Boolean) {
-            _isHalf.value = isHalf
         }
 
         fun setMarkers(markers: List<MarkerUiModel>) {
