@@ -215,6 +215,12 @@ body {
     font-size: 0.9rem;
     color: #555;
     line-height: 1.4;
+    max-width: fit-content;
+    min-width: fit-content;
+}
+
+.comment-right .comment-box {
+    margin-left: auto;
 }
 
 .profile-picture {
@@ -229,6 +235,7 @@ body {
     flex-direction: row-reverse;
     align-items: flex-start;
     gap: 1rem;
+    justify-content: flex-start;
 }
 
 .comment-right .content-wrapper {
@@ -236,6 +243,7 @@ body {
     flex-direction: row;
     align-items: flex-start;
     gap: 1rem;
+    justify-content: flex-end;
 }
 
 .comment-box .content {
