@@ -1,14 +1,18 @@
 package com.staccato.web;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ShareController {
+public class PageController {
+
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
 
     @GetMapping("/share")
-    public String share(Model model) {
+    public String share() {
         return "share";
     }
 }
