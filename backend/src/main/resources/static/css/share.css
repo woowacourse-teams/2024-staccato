@@ -38,7 +38,7 @@ body {
     width: 100%;
     max-width: 600px;
     aspect-ratio: 1 / 1;
-    overflow: hidden; /* 넘치는 이미지를 숨김 */
+    overflow: hidden;
     position: relative;
     display: flex;
     justify-content: center;
@@ -48,8 +48,8 @@ body {
 .image-slider img {
     width: 100%;
     height: 600px;
-    object-fit: cover; /* 이미지가 잘리더라도 비율 유지 */
-    object-position: center; /* 이미지 중앙 기준으로 잘리도록 설정 */
+    object-fit: cover;
+    object-position: center;
     display: block;
 }
 
@@ -166,9 +166,9 @@ body {
 
 .content-wrapper {
     display: flex;
-    justify-content: space-between; /* 텍스트와 프로필 사진 간 간격 유지 */
-    align-items: flex-start; /* 텍스트와 프로필 사진 위쪽 정렬 */
-    gap: 1rem; /* 텍스트와 프로필 사진 간 간격 */
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
     width: 90%;
     margin-right: auto;
 }
@@ -185,9 +185,9 @@ body {
 
 .text-section {
     display: flex;
-    flex-direction: column; /* 닉네임과 박스를 세로 배치 */
-    gap: 0.5rem; /* 닉네임과 박스 간 간격 */
-    flex-grow: 1; /* 텍스트 섹션이 남은 공간을 차지 */
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
     justify-content: space-between;
 }
 
@@ -203,7 +203,7 @@ body {
 
 .nickname {
     font-size: 1rem;
-    color: #333; /* 닉네임 색상 */
+    color: #333;
     margin: 0;
 }
 
@@ -231,7 +231,7 @@ body {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    object-fit: cover; /* 이미지 비율 유지 */
+    object-fit: cover;
 }
 
 .comment-left .content-wrapper {
@@ -280,5 +280,5 @@ body {
 }
 
 .google-play-link {
-    text-decoration: none; /* 링크 밑줄 제거 */
+    text-decoration: none;
 }
