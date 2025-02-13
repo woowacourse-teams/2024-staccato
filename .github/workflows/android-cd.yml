@@ -71,16 +71,18 @@ jobs:
         run: ./gradlew bundleRelease
 
       - name: Upload Release APK in artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
           path: android/Staccato_AN/app/build/outputs/apk/release/app-release.apk
+          overwrite: 'true'
 
       - name: Upload Release AAB in artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-release.aab
           path: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
+          overwrite: 'true'
 
       - name: Deploy AAB On Google Play Console
         uses: r0adkll/upload-google-play@v1
