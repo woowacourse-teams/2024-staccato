@@ -20,7 +20,6 @@ data class Param<T : Any>(val key: String, val value: T) {
         const val PARAM_STACCATO_FRAGMENT = "스타카토 조회"
 
         const val KEY_EXCEPTION = "예외"
-
         const val KEY_EXCEPTION_MESSAGE = "예외 메시지"
 
         fun <T : Any> of(

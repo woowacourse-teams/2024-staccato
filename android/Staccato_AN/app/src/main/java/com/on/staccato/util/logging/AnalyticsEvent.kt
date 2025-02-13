@@ -1,7 +1,5 @@
 package com.on.staccato.util.logging
 
-import com.google.firebase.analytics.FirebaseAnalytics
-
 data class AnalyticsEvent<T : Any>(
     val name: String,
     val params: List<Param<T>> = emptyList(),
@@ -13,8 +11,7 @@ data class AnalyticsEvent<T : Any>(
         const val NAME_CAMERA_OR_GALLERY = "camera_or_gallery"
         const val NAME_FRAGMENT_PAGE = "fragment_page"
         const val NAME_NETWORK_ERROR = "network_error"
-
-        const val ITEM_NAME = FirebaseAnalytics.Param.ITEM_NAME
+        const val NAME_ANDROID_ERROR = "android_error"
 
         fun <T : Any> of(
             name: String,
