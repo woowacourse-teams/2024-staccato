@@ -64,18 +64,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
-
       - name: Build Release AAB
         run: ./gradlew bundleRelease
-
-      - name: Upload Release APK in artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release.apk
-          path: android/Staccato_AN/app/build/outputs/apk/release/app-release.apk
-          overwrite: 'true'
 
       - name: Upload Release AAB in artifact
         uses: actions/upload-artifact@v4
@@ -90,5 +80,5 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
           packageName: com.on.staccato
           releaseFiles: android/Staccato_AN/app/build/outputs/bundle/release/app-release.aab
-          track: product
+          track: production
           whatsNewDirectory: android/Staccato_AN/deploy/whatsnew
