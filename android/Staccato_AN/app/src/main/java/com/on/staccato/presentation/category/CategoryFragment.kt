@@ -23,7 +23,11 @@ import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
+import com.on.staccato.util.logging.AnalyticsEvent
+import com.on.staccato.util.logging.LoggingManager
+import com.on.staccato.util.logging.Param
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategoryFragment :
@@ -37,6 +41,9 @@ class CategoryFragment :
     private val viewModel: CategoryViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
+
+    @Inject
+    lateinit var loggingManager: LoggingManager
 
     private lateinit var matesAdapter: MatesAdapter
     private lateinit var staccatosAdapter: StaccatosAdapter
@@ -84,6 +91,10 @@ class CategoryFragment :
     }
 
     override fun onStaccatoCreationClicked() {
+        loggingManager.logEvent(
+            AnalyticsEvent.NAME_STACCATO_CREATION,
+            Param.of(Param.KEY_IS_CREATED_IN_MAIN, false),
+        )
         viewModel.category.value?.let {
             val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
             StaccatoCreationActivity.startWithResultLauncher(
