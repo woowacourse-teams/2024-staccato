@@ -1,4 +1,4 @@
-package com.on.staccato.data.module
+package com.on.staccato.di.module
 
 import com.on.staccato.data.category.CategoryDefaultRepository
 import com.on.staccato.data.comment.CommentDefaultRepository
