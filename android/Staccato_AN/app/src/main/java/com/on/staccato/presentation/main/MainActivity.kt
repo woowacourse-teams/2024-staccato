@@ -46,8 +46,10 @@ import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_READ
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
+import com.on.staccato.util.logging.Param.Companion.KEY_IS_VIEWED_BY_MARKER
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -282,6 +284,10 @@ class MainActivity :
     private fun onMarkerClicked(googleMap: GoogleMap) {
         googleMap.setOnMarkerClickListener { marker ->
             mapsViewModel.findStaccatoId(marker.id)
+            loggingManager.logEvent(
+                NAME_STACCATO_READ,
+                Param.of(KEY_IS_VIEWED_BY_MARKER, true),
+            )
             false
         }
     }

@@ -24,8 +24,10 @@ import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_READ
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
+import com.on.staccato.util.logging.Param.Companion.KEY_IS_VIEWED_BY_MARKER
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -78,6 +80,10 @@ class CategoryFragment :
 
     override fun onStaccatoClicked(staccatoId: Long) {
         viewModel.category.value?.let {
+            loggingManager.logEvent(
+                NAME_STACCATO_READ,
+                Param.of(KEY_IS_VIEWED_BY_MARKER, false),
+            )
             val bundle =
                 bundleOf(
                     STACCATO_ID_KEY to staccatoId,
