@@ -9,6 +9,7 @@ data class AnalyticsEvent<T : Any>(
         const val NAME_STACCATO_CREATION = "staccato_creation"
         const val NAME_STACCATO_READ = "staccato_read"
         const val NAME_CAMERA_OR_GALLERY = "camera_or_gallery"
+        const val NAME_FRAGMENT_PAGE = "fragment_page"
         const val NAME_NETWORK_ERROR = "network_error"
         const val NAME_ANDROID_ERROR = "android_error"
 
