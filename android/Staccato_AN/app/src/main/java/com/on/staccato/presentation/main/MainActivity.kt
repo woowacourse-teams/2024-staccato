@@ -78,7 +78,7 @@ class MainActivity :
 
     @Inject
     lateinit var loggingManager: LoggingManager
-    private var previousTime: Long = currentTimeMillis()
+    private var previousBottomSheetStateTime: Long = currentTimeMillis()
 
     private val sharedViewModel: SharedViewModel by viewModels()
     private val mapsViewModel: MapsViewModel by viewModels()
@@ -519,8 +519,8 @@ class MainActivity :
 
     private fun calculateTimeDuration(): Double {
         val currentTime = currentTimeMillis()
-        val timeDuration = currentTime - previousTime
-        previousTime = currentTime
+        val timeDuration = currentTime - previousBottomSheetStateTime
+        previousBottomSheetStateTime = currentTime
         return timeDuration / MILLISECONDS_TO_SECONDS
     }
 
