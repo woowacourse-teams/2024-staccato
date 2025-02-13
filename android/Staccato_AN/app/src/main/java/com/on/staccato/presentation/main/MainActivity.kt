@@ -130,7 +130,7 @@ class MainActivity :
     override fun onStaccatoCreationClicked() {
         loggingManager.logEvent(
             NAME_STACCATO_CREATION,
-            Param.of(KEY_IS_CREATED_IN_MAIN, true),
+            Param(KEY_IS_CREATED_IN_MAIN, true),
         )
         StaccatoCreationActivity.startWithResultLauncher(
             context = this,
@@ -295,7 +295,7 @@ class MainActivity :
             mapsViewModel.findStaccatoId(marker.id)
             loggingManager.logEvent(
                 NAME_STACCATO_READ,
-                Param.of(KEY_IS_VIEWED_BY_MARKER, true),
+                Param(KEY_IS_VIEWED_BY_MARKER, true),
             )
             false
         }
@@ -438,8 +438,8 @@ class MainActivity :
                                 changeSkipCollapsed(skipCollapsed = false)
                                 loggingManager.logEvent(
                                     NAME_BOTTOM_SHEET,
-                                    Param.of(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_EXPANDED),
-                                    Param.of(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
+                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_EXPANDED),
+                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
                                 )
                             }
 
@@ -449,8 +449,8 @@ class MainActivity :
                                 changeSkipCollapsed()
                                 loggingManager.logEvent(
                                     NAME_BOTTOM_SHEET,
-                                    Param.of(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_HALF_EXPANDED),
-                                    Param.of(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
+                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_HALF_EXPANDED),
+                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
                                 )
                             }
 
@@ -458,8 +458,8 @@ class MainActivity :
                                 mapsViewModel.setIsHalf(isHalf = false)
                                 loggingManager.logEvent(
                                     NAME_BOTTOM_SHEET,
-                                    Param.of(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_COLLAPSED),
-                                    Param.of(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
+                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_COLLAPSED),
+                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
                                 )
                             }
 

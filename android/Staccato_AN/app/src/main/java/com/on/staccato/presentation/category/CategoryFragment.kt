@@ -83,7 +83,7 @@ class CategoryFragment :
         viewModel.category.value?.let {
             loggingManager.logEvent(
                 NAME_STACCATO_READ,
-                Param.of(KEY_IS_VIEWED_BY_MARKER, false),
+                Param(KEY_IS_VIEWED_BY_MARKER, false),
             )
             val bundle =
                 bundleOf(
@@ -100,7 +100,7 @@ class CategoryFragment :
     override fun onStaccatoCreationClicked() {
         loggingManager.logEvent(
             NAME_STACCATO_CREATION,
-            Param.of(KEY_IS_CREATED_IN_MAIN, false),
+            Param(KEY_IS_CREATED_IN_MAIN, false),
         )
         viewModel.category.value?.let {
             val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher

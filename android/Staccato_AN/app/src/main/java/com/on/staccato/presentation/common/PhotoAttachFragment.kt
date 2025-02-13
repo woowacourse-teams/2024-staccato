@@ -192,8 +192,8 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
         } catch (e: ActivityNotFoundException) {
             loggingManager.logEvent(
                 NAME_ANDROID_ERROR,
-                Param.of(KEY_EXCEPTION, e),
-                Param.of(KEY_EXCEPTION_MESSAGE, e.message ?: ""),
+                Param(KEY_EXCEPTION, e),
+                Param(KEY_EXCEPTION_MESSAGE, e.message ?: ""),
             )
             showCameraErrorSnackBar()
         }
