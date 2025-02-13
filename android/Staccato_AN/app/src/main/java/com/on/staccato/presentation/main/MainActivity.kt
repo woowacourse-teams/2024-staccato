@@ -439,7 +439,7 @@ class MainActivity :
                                 loggingManager.logEvent(
                                     NAME_BOTTOM_SHEET,
                                     Param.of(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_EXPANDED),
-                                    Param.of(KEY_BOTTOM_SHEET_DURATION, calculateTimeDuration()),
+                                    Param.of(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
                                 )
                             }
 
@@ -450,7 +450,7 @@ class MainActivity :
                                 loggingManager.logEvent(
                                     NAME_BOTTOM_SHEET,
                                     Param.of(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_HALF_EXPANDED),
-                                    Param.of(KEY_BOTTOM_SHEET_DURATION, calculateTimeDuration()),
+                                    Param.of(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
                                 )
                             }
 
@@ -459,7 +459,7 @@ class MainActivity :
                                 loggingManager.logEvent(
                                     NAME_BOTTOM_SHEET,
                                     Param.of(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_COLLAPSED),
-                                    Param.of(KEY_BOTTOM_SHEET_DURATION, calculateTimeDuration()),
+                                    Param.of(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
                                 )
                             }
 
@@ -517,7 +517,7 @@ class MainActivity :
         )
     }
 
-    private fun calculateTimeDuration(): Double {
+    private fun calculateBottomSheetTimeDuration(): Double {
         val currentTime = currentTimeMillis()
         val timeDuration = currentTime - previousBottomSheetStateTime
         previousBottomSheetStateTime = currentTime
