@@ -29,10 +29,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentPhotoAttachBinding
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
+import com.on.staccato.util.logging.AnalyticsEvent
+import com.on.staccato.util.logging.LoggingManager
+import com.on.staccato.util.logging.Param
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
@@ -47,6 +51,9 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     private var multipleAbleOption: Boolean = false
     private var currentImageUri: Uri? = null
     private var attachableImageCount: Int = INVALID_ATTACHABLE_IMAGE_COUNT
+
+    @Inject
+    lateinit var loggingManager: LoggingManager
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -79,6 +86,10 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     }
 
     override fun onCameraClicked() {
+        loggingManager.logEvent(
+            AnalyticsEvent.NAME_CAMERA_OR_GALLERY,
+            Param(Param.KEY_IS_GALLERY, false),
+        )
         checkPermissionsAndLaunch(
             permissions = CAMERA_REQUIRED_PERMISSIONS,
             requestPermissionLauncherOnNotGranted = requestCameraPermissionLauncher,
@@ -87,6 +98,10 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
     }
 
     override fun onGalleryClicked() {
+        loggingManager.logEvent(
+            AnalyticsEvent.NAME_CAMERA_OR_GALLERY,
+            Param(Param.KEY_IS_GALLERY, true),
+        )
         checkPermissionsAndLaunch(
             permissions = arrayOf(GALLERY_REQUIRED_PERMISSION),
             requestPermissionLauncherOnNotGranted = requestGalleryPermissionLauncher,
