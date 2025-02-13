@@ -3,7 +3,6 @@ package com.staccato.config.log;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -34,18 +33,18 @@ class CreateMomentMetricsAspectTest extends ServiceSliceTest {
     @Autowired
     private MeterRegistry meterRegistry;
 
-    @DisplayName("기록되는 시점을 매트릭을 통해 표현 할 수 있습니다.")
+    @DisplayName("기록 상의 날짜를 현재를 기준으로 과거 혹은 미래 인지 매트릭을 통해 표현 할 수 있습니다.")
     @TestFactory
-    Stream<DynamicTest> createMomentMetricsAspect() {
+    List<DynamicTest> createMomentMetricsAspect() {
         Member member = saveMember();
         Memory memory = saveMemory(member);
         LocalDateTime now = LocalDateTime.now();
 
-        return Stream.of(
-                dynamicTest("과거, 미래 기록 매트릭을 등록합니다.", () -> {
+        return List.of(
+                dynamicTest("기록 상의 날짜가 과거인 기록과 미래인 기록을 매트릭에 등록합니다.", () -> {
                     // given
-                    MomentRequest pastRequest = createRequest(memory.getId(), now.minusDays(1));
-                    MomentRequest futureRequest = createRequest(memory.getId(), now.plusDays(1));
+                    MomentRequest pastRequest = createRequest(memory.getId(), now.minusDays(2));
+                    MomentRequest futureRequest = createRequest(memory.getId(), now.plusDays(2));
 
                     //when
                     momentService.createMoment(pastRequest, member);
@@ -57,9 +56,9 @@ class CreateMomentMetricsAspectTest extends ServiceSliceTest {
                             () -> assertThat(getFutureCount()).isEqualTo(1.0)
                     );
                 }),
-                dynamicTest("과거 요청 → 누적: past:2, future:1", () -> {
+                dynamicTest("기록 상의 날짜가 과거인 기록 작성 요청 → 누적: past:2.0, future:1.0", () -> {
                     // given
-                    MomentRequest momentRequest = createRequest(memory.getId(), now.minusDays(1));
+                    MomentRequest momentRequest = createRequest(memory.getId(), now.minusDays(3));
 
                     // when
                     momentService.createMoment(momentRequest, member);
