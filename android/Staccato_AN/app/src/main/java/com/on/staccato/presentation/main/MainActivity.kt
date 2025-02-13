@@ -45,10 +45,11 @@ import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showToast
-import com.on.staccato.util.logging.AnalyticsEvent
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_CREATION
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_READ
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
+import com.on.staccato.util.logging.Param.Companion.KEY_IS_CREATED_IN_MAIN
 import com.on.staccato.util.logging.Param.Companion.KEY_IS_VIEWED_BY_MARKER
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -120,8 +121,8 @@ class MainActivity :
 
     override fun onStaccatoCreationClicked() {
         loggingManager.logEvent(
-            AnalyticsEvent.NAME_STACCATO_CREATION,
-            Param.of(Param.KEY_IS_CREATED_IN_MAIN, true),
+            NAME_STACCATO_CREATION,
+            Param.of(KEY_IS_CREATED_IN_MAIN, true),
         )
         StaccatoCreationActivity.startWithResultLauncher(
             context = this,

@@ -29,9 +29,13 @@ import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentPhotoAttachBinding
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
-import com.on.staccato.util.logging.AnalyticsEvent
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_ANDROID_ERROR
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_CAMERA_OR_GALLERY
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
+import com.on.staccato.util.logging.Param.Companion.KEY_EXCEPTION
+import com.on.staccato.util.logging.Param.Companion.KEY_EXCEPTION_MESSAGE
+import com.on.staccato.util.logging.Param.Companion.KEY_IS_GALLERY
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -87,8 +91,8 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
 
     override fun onCameraClicked() {
         loggingManager.logEvent(
-            AnalyticsEvent.NAME_CAMERA_OR_GALLERY,
-            Param(Param.KEY_IS_GALLERY, false),
+            NAME_CAMERA_OR_GALLERY,
+            Param(KEY_IS_GALLERY, false),
         )
         checkPermissionsAndLaunch(
             permissions = CAMERA_REQUIRED_PERMISSIONS,
@@ -99,8 +103,8 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
 
     override fun onGalleryClicked() {
         loggingManager.logEvent(
-            AnalyticsEvent.NAME_CAMERA_OR_GALLERY,
-            Param(Param.KEY_IS_GALLERY, true),
+            NAME_CAMERA_OR_GALLERY,
+            Param(KEY_IS_GALLERY, true),
         )
         checkPermissionsAndLaunch(
             permissions = arrayOf(GALLERY_REQUIRED_PERMISSION),
@@ -187,9 +191,9 @@ class PhotoAttachFragment : BottomSheetDialogFragment(), PhotoAttachHandler {
             }
         } catch (e: ActivityNotFoundException) {
             loggingManager.logEvent(
-                AnalyticsEvent.NAME_ANDROID_ERROR,
-                Param.of(Param.KEY_EXCEPTION, e),
-                Param.of(Param.KEY_EXCEPTION_MESSAGE, e.message ?: ""),
+                NAME_ANDROID_ERROR,
+                Param.of(KEY_EXCEPTION, e),
+                Param.of(KEY_EXCEPTION_MESSAGE, e.message ?: ""),
             )
             showCameraErrorSnackBar()
         }
