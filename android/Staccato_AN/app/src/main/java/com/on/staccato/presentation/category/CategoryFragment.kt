@@ -23,12 +23,15 @@ import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_FRAGMENT_PAGE
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_CREATION
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_READ
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
+import com.on.staccato.util.logging.Param.Companion.KEY_FRAGMENT_NAME
 import com.on.staccato.util.logging.Param.Companion.KEY_IS_CREATED_IN_MAIN
 import com.on.staccato.util.logging.Param.Companion.KEY_IS_VIEWED_BY_MARKER
+import com.on.staccato.util.logging.Param.Companion.PARAM_CATEGORY_FRAGMENT
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -64,6 +67,7 @@ class CategoryFragment :
         showErrorToast()
         showExceptionSnackBar()
         viewModel.loadCategory(categoryId)
+        logAccess()
     }
 
     override fun onUpdateClicked() {
@@ -172,6 +176,13 @@ class CategoryFragment :
 
     private fun onRetryAction() {
         viewModel.loadCategory(categoryId)
+    }
+
+    private fun logAccess() {
+        loggingManager.logEvent(
+            NAME_FRAGMENT_PAGE,
+            Param(KEY_FRAGMENT_NAME, PARAM_CATEGORY_FRAGMENT),
+        )
     }
 
     companion object {
