@@ -3,7 +3,6 @@ package com.on.staccato.presentation.main
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
@@ -46,20 +45,21 @@ import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showToast
-import com.on.staccato.util.logging.AnalyticsEvent
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_BOTTOM_SHEET
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_CREATION
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_READ
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
 import com.on.staccato.util.logging.Param.Companion.KEY_BOTTOM_SHEET_DURATION
 import com.on.staccato.util.logging.Param.Companion.KEY_BOTTOM_SHEET_STATE
+import com.on.staccato.util.logging.Param.Companion.KEY_IS_CREATED_IN_MAIN
+import com.on.staccato.util.logging.Param.Companion.KEY_IS_VIEWED_BY_MARKER
 import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_COLLAPSED
 import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_EXPANDED
 import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_HALF_EXPANDED
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.System.currentTimeMillis
 import javax.inject.Inject
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 
 @AndroidEntryPoint
 class MainActivity :
@@ -129,8 +129,8 @@ class MainActivity :
 
     override fun onStaccatoCreationClicked() {
         loggingManager.logEvent(
-            AnalyticsEvent.NAME_STACCATO_CREATION,
-            Param.of(Param.KEY_IS_CREATED_IN_MAIN, true),
+            NAME_STACCATO_CREATION,
+            Param.of(KEY_IS_CREATED_IN_MAIN, true),
         )
         StaccatoCreationActivity.startWithResultLauncher(
             context = this,
@@ -293,6 +293,10 @@ class MainActivity :
     private fun onMarkerClicked(googleMap: GoogleMap) {
         googleMap.setOnMarkerClickListener { marker ->
             mapsViewModel.findStaccatoId(marker.id)
+            loggingManager.logEvent(
+                NAME_STACCATO_READ,
+                Param.of(KEY_IS_VIEWED_BY_MARKER, true),
+            )
             false
         }
     }
