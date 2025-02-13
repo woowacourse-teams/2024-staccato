@@ -205,6 +205,7 @@ class MainActivity :
                     ) {
                         when (newState) {
                             STATE_EXPANDED -> {
+                                sharedViewModel.setIsHalf(isHalf = false)
                                 binding.viewMainDragBar.visibility =
                                     View.INVISIBLE
                                 binding.constraintMainBottomSheet.setBackgroundResource(

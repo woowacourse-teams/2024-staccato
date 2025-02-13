@@ -2,6 +2,7 @@ package com.on.staccato.presentation.map
 
 import android.location.Location
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +42,9 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private lateinit var map: GoogleMap
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
 
+    private lateinit var display: DisplayMetrics
+    private val yPixel: Float by lazy { display.heightPixels / 10 * 2.5f }
+
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private val mapsViewModel: MapsViewModel by viewModels()
     private val callback =
@@ -51,6 +55,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             checkLocationSetting()
             googleMap.onMarkerClicked()
             googleMap.setOnMyLocationButtonClickListener(this)
+            googleMap.setMapPadding()
         }
 
     override fun onCreateView(
@@ -66,6 +71,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        display = view.resources.displayMetrics
         setupMap()
         setupPermissionRequestLauncher(view)
         observeStaccatoId()
@@ -189,27 +195,22 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         longitude: Double,
     ) {
         val currentLocation = LatLng(latitude, longitude)
-        sharedViewModel.isHalf.observe(viewLifecycleOwner) { isHalf ->
-            if (isHalf) {
-                val mapPaddingBottom = (requireView().height / 1.8).toInt()
-                setMapPadding(currentLocation, mapPaddingBottom)
-            } else {
-                setMapPadding(currentLocation)
-            }
-        }
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
     }
 
-    private fun setMapPadding(
-        currentLocation: LatLng,
-        mapPaddingBottom: Int = DEFAULT_MAP_PADDING,
-    ) {
-        map.setPadding(
-            DEFAULT_MAP_PADDING,
-            DEFAULT_MAP_PADDING,
-            DEFAULT_MAP_PADDING,
-            mapPaddingBottom,
-        )
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
+    private fun GoogleMap.setMapPadding() {
+        sharedViewModel.isHalf.observe(viewLifecycleOwner) { isHalf ->
+            val mapPaddingBottom = if (isHalf) (requireView().height / 1.8).toInt() else DEFAULT_MAP_PADDING
+            val yPixel = if (isHalf) yPixel else -yPixel
+
+            setPadding(
+                DEFAULT_MAP_PADDING,
+                DEFAULT_MAP_PADDING,
+                DEFAULT_MAP_PADDING,
+                mapPaddingBottom,
+            )
+            animateCamera(CameraUpdateFactory.scrollBy(0f, yPixel))
+        }
     }
 
     private fun observeStaccatoLocations() {
