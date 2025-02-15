@@ -1,4 +1,4 @@
-package com.on.staccato.data.module
+package com.on.staccato.di.module
 
 import android.content.Context
 import com.on.staccato.data.UserInfoPreferencesManager

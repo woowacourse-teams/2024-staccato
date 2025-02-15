@@ -25,11 +25,18 @@ import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
+import com.on.staccato.util.logging.AnalyticsEvent
+import com.on.staccato.util.logging.LoggingManager
+import com.on.staccato.util.logging.Param
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class StaccatoFragment :
     BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato), StaccatoToolbarHandler {
+    @Inject
+    lateinit var loggingManager: LoggingManager
+
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private val commentsViewModel: StaccatoCommentsViewModel by viewModels()
@@ -58,6 +65,7 @@ class StaccatoFragment :
         setStaccatoFeelingFragment(savedInstanceState)
         showErrorToast()
         showExceptionSnackBar()
+        logAccess()
     }
 
     override fun onDeleteClicked() {
@@ -229,6 +237,13 @@ class StaccatoFragment :
     private fun onRetryAction() {
         loadStaccato()
         loadComments()
+    }
+
+    private fun logAccess() {
+        loggingManager.logEvent(
+            AnalyticsEvent.NAME_FRAGMENT_PAGE,
+            Param(Param.KEY_FRAGMENT_NAME, Param.PARAM_STACCATO_FRAGMENT),
+        )
     }
 
     companion object {

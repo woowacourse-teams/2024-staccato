@@ -21,12 +21,21 @@ import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_FRAGMENT_PAGE
+import com.on.staccato.util.logging.LoggingManager
+import com.on.staccato.util.logging.Param
+import com.on.staccato.util.logging.Param.Companion.KEY_FRAGMENT_NAME
+import com.on.staccato.util.logging.Param.Companion.PARAM_CATEGORY_LIST
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TimelineFragment :
     BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
     TimelineHandler {
+    @Inject
+    lateinit var loggingManager: LoggingManager
+
     private val timelineViewModel: TimelineViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private lateinit var adapter: TimelineAdapter
@@ -38,6 +47,7 @@ class TimelineFragment :
         setupBinding()
         setUpAdapter()
         setUpObserving()
+        logAccess()
     }
 
     override fun onCategoryClicked(categoryId: Long) {
@@ -129,5 +139,12 @@ class TimelineFragment :
 
     private fun onRetryAction() {
         timelineViewModel.loadTimeline()
+    }
+
+    private fun logAccess() {
+        loggingManager.logEvent(
+            NAME_FRAGMENT_PAGE,
+            Param(KEY_FRAGMENT_NAME, PARAM_CATEGORY_LIST),
+        )
     }
 }

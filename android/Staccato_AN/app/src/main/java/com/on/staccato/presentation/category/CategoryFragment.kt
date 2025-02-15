@@ -23,7 +23,17 @@ import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_FRAGMENT_PAGE
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_CREATION
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_READ
+import com.on.staccato.util.logging.LoggingManager
+import com.on.staccato.util.logging.Param
+import com.on.staccato.util.logging.Param.Companion.KEY_FRAGMENT_NAME
+import com.on.staccato.util.logging.Param.Companion.KEY_IS_CREATED_IN_MAIN
+import com.on.staccato.util.logging.Param.Companion.KEY_IS_VIEWED_BY_MARKER
+import com.on.staccato.util.logging.Param.Companion.PARAM_CATEGORY_FRAGMENT
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategoryFragment :
@@ -37,6 +47,9 @@ class CategoryFragment :
     private val viewModel: CategoryViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
+
+    @Inject
+    lateinit var loggingManager: LoggingManager
 
     private lateinit var matesAdapter: MatesAdapter
     private lateinit var staccatosAdapter: StaccatosAdapter
@@ -54,6 +67,7 @@ class CategoryFragment :
         showErrorToast()
         showExceptionSnackBar()
         viewModel.loadCategory(categoryId)
+        logAccess()
     }
 
     override fun onUpdateClicked() {
@@ -71,6 +85,10 @@ class CategoryFragment :
 
     override fun onStaccatoClicked(staccatoId: Long) {
         viewModel.category.value?.let {
+            loggingManager.logEvent(
+                NAME_STACCATO_READ,
+                Param(KEY_IS_VIEWED_BY_MARKER, false),
+            )
             val bundle =
                 bundleOf(
                     STACCATO_ID_KEY to staccatoId,
@@ -84,6 +102,10 @@ class CategoryFragment :
     }
 
     override fun onStaccatoCreationClicked() {
+        loggingManager.logEvent(
+            NAME_STACCATO_CREATION,
+            Param(KEY_IS_CREATED_IN_MAIN, false),
+        )
         viewModel.category.value?.let {
             val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
             StaccatoCreationActivity.startWithResultLauncher(
@@ -154,6 +176,13 @@ class CategoryFragment :
 
     private fun onRetryAction() {
         viewModel.loadCategory(categoryId)
+    }
+
+    private fun logAccess() {
+        loggingManager.logEvent(
+            NAME_FRAGMENT_PAGE,
+            Param(KEY_FRAGMENT_NAME, PARAM_CATEGORY_FRAGMENT),
+        )
     }
 
     companion object {
