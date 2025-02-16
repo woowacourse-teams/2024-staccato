@@ -26,7 +26,19 @@ import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showToast
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_BOTTOM_SHEET
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_CREATION
+import com.on.staccato.util.logging.LoggingManager
+import com.on.staccato.util.logging.Param
+import com.on.staccato.util.logging.Param.Companion.KEY_BOTTOM_SHEET_DURATION
+import com.on.staccato.util.logging.Param.Companion.KEY_BOTTOM_SHEET_STATE
+import com.on.staccato.util.logging.Param.Companion.KEY_IS_CREATED_IN_MAIN
+import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_COLLAPSED
+import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_EXPANDED
+import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_HALF_EXPANDED
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.System.currentTimeMillis
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity :
@@ -38,6 +50,10 @@ class MainActivity :
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+
+    @Inject
+    lateinit var loggingManager: LoggingManager
+    private var previousBottomSheetStateTime: Long = currentTimeMillis()
 
     private val sharedViewModel: SharedViewModel by viewModels()
 
@@ -64,6 +80,10 @@ class MainActivity :
     }
 
     override fun onStaccatoCreationClicked() {
+        loggingManager.logEvent(
+            NAME_STACCATO_CREATION,
+            Param(KEY_IS_CREATED_IN_MAIN, true),
+        )
         StaccatoCreationActivity.startWithResultLauncher(
             context = this,
             activityLauncher = staccatoCreationLauncher,
@@ -212,16 +232,31 @@ class MainActivity :
                                     R.drawable.shape_bottom_sheet_square,
                                 )
                                 changeSkipCollapsed(skipCollapsed = false)
+                                loggingManager.logEvent(
+                                    NAME_BOTTOM_SHEET,
+                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_EXPANDED),
+                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
+                                )
                             }
 
                             STATE_HALF_EXPANDED -> {
                                 sharedViewModel.setIsHalf(isHalf = true)
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
                                 changeSkipCollapsed()
+                                loggingManager.logEvent(
+                                    NAME_BOTTOM_SHEET,
+                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_HALF_EXPANDED),
+                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
+                                )
                             }
 
                             STATE_COLLAPSED -> {
                                 sharedViewModel.setIsHalf(isHalf = false)
+                                loggingManager.logEvent(
+                                    NAME_BOTTOM_SHEET,
+                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_COLLAPSED),
+                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
+                                )
                             }
 
                             else -> {
@@ -278,8 +313,16 @@ class MainActivity :
         )
     }
 
+    private fun calculateBottomSheetTimeDuration(): Double {
+        val currentTime = currentTimeMillis()
+        val timeDuration = currentTime - previousBottomSheetStateTime
+        previousBottomSheetStateTime = currentTime
+        return timeDuration / MILLISECONDS_TO_SECONDS
+    }
+
     companion object {
         private const val BOTTOM_SHEET_STATE_REQUEST_KEY = "requestKey"
         private const val BOTTOM_SHEET_NEW_STATE = "newState"
+        private const val MILLISECONDS_TO_SECONDS = 1000.0
     }
 }

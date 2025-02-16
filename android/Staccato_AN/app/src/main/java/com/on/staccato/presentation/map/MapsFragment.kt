@@ -28,6 +28,9 @@ import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.model.MarkerUiModel
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
+import com.on.staccato.util.logging.AnalyticsEvent
+import com.on.staccato.util.logging.LoggingManager
+import com.on.staccato.util.logging.Param
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -38,6 +41,9 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     @Inject
     lateinit var locationPermissionManager: LocationPermissionManager
+
+    @Inject
+    lateinit var loggingManager: LoggingManager
 
     private lateinit var map: GoogleMap
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
@@ -238,6 +244,10 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private fun GoogleMap.onMarkerClicked() {
         setOnMarkerClickListener { marker ->
             mapsViewModel.findStaccatoId(marker.id)
+            loggingManager.logEvent(
+                AnalyticsEvent.NAME_STACCATO_READ,
+                Param(Param.KEY_IS_VIEWED_BY_MARKER, true),
+            )
             false
         }
     }
