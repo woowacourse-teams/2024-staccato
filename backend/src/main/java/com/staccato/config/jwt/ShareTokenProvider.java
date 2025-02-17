@@ -18,7 +18,7 @@ public class ShareTokenProvider extends AbstractTokenProvider {
 
     @Override
     public String create(Object payload) {
-        int staccatoId = (int) payload;
+        long staccatoId = (long) payload;
         return Jwts.builder()
                 .claim(PROPERTY_NAME, staccatoId)
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
@@ -26,8 +26,8 @@ public class ShareTokenProvider extends AbstractTokenProvider {
                 .compact();
     }
 
-    public int extractStaccatoId(String token) {
+    public long extractStaccatoId(String token) {
         Claims claims = getPayload(token);
-        return claims.get(PROPERTY_NAME, Integer.class);
+        return claims.get(PROPERTY_NAME, Long.class);
     }
 }
