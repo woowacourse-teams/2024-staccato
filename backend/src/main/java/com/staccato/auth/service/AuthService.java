@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
-import com.staccato.config.auth.TokenProvider;
+import com.staccato.config.jwt.MemberTokenProvider;
 import com.staccato.config.log.LogForm;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.StaccatoException;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthService {
     private final MemberRepository memberRepository;
     private final MemoryRepository memoryRepository;
-    private final TokenProvider tokenProvider;
+    private final MemberTokenProvider tokenProvider;
 
     @Transactional
     public LoginResponse login(LoginRequest loginRequest) {

@@ -1,4 +1,4 @@
-package com.staccato.config.auth;
+package com.staccato.config.jwt;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
 import com.staccato.exception.UnauthorizedException;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.member.domain.Member;
@@ -21,11 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-public class TokenProviderTest {
+public class MemberTokenProviderTest {
     @MockBean
     private TokenProperties tokenProperties;
     @Autowired
-    private TokenProvider tokenProvider;
+    private MemberTokenProvider tokenProvider;
     @Autowired
     private MemberRepository memberRepository;
 
