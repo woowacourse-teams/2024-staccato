@@ -29,4 +29,14 @@ public abstract class AbstractTokenProvider {
             throw new UnauthorizedException();
         }
     }
+
+    public void validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(tokenProperties.secretKey().getBytes())
+                    .parseClaimsJws(token);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new UnauthorizedException();
+        }
+    }
 }
