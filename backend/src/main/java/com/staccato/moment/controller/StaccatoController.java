@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.staccato.config.auth.LoginMember;
@@ -32,6 +33,7 @@ import com.staccato.moment.service.dto.response.StaccatoDetailResponse;
 import com.staccato.moment.service.dto.response.StaccatoIdResponse;
 import com.staccato.moment.service.dto.response.StaccatoLocationResponses;
 import com.staccato.moment.service.dto.response.StaccatoShareLinkResponse;
+import com.staccato.moment.service.dto.response.StaccatoSharedResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -106,5 +108,11 @@ public class StaccatoController implements StaccatoControllerDocs {
     ) {
         StaccatoShareLinkResponse staccatoShareLinkResponse = staccatoService.createStaccatoShareLink(staccatoId);
         return ResponseEntity.ok().body(staccatoShareLinkResponse);
+    }
+
+    @GetMapping("/shared")
+    public ResponseEntity<StaccatoSharedResponse> readSharedStaccatoByToken(@RequestParam(name = "sharedToken") String token) {
+        StaccatoSharedResponse staccatoSharedResponse = staccatoService.readSharedStaccatoByToken(token);
+        return ResponseEntity.ok().body(staccatoSharedResponse);
     }
 }
