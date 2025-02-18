@@ -9,15 +9,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record StaccatoShareResponse(
         @Schema(example = "폭포")
         String userName,
-        @Schema(example = "2025-12-31T17:00:00.000Z")
-        String expiredAt,
         @ArraySchema(arraySchema = @Schema(example = "[" +
                 "\"https://image.staccato.kr/dev/squirrel.png\"," +
                 "\"https://image.staccato.kr/dev/squirrel.png\"," +
                 "\"https://image.staccato.kr/dev/squirrel.png\"," +
                 "\"https://image.staccato.kr/dev/squirrel.png\"," +
                 "\"https://image.staccato.kr/dev/%E1%84%80%E1%85%B5%E1%84%87%E1%85%AE%E1%84%82%E1%85%B5%E1%84%83%E1%85%B3%E1%86%AF.jpeg\"]"))
-        List<String> momentImageUrls,
+        List<String> staccatoImageUrls,
         @Schema(example = "귀여운 스타카토 키링")
         String staccatoTitle,
         @Schema(example = "한국 루터회관 8층")
@@ -47,7 +45,6 @@ public record StaccatoShareResponse(
     public StaccatoShareResponse() {
         this(
                 "폭포",
-                "2025-12-31T17:00:00.000Z",
                 List.of(
                         "https://image.staccato.kr/dev/squirrel.png",
                         "https://image.staccato.kr/dev/squirrel.png",
