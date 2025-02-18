@@ -32,6 +32,7 @@ import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.moment.MomentDetailResponseFixture;
 import com.staccato.fixture.moment.MomentLocationResponsesFixture;
+import com.staccato.fixture.staccato.StaccatoSharedResponseFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
@@ -373,6 +374,47 @@ class StaccatoControllerTest extends ControllerTest {
 
         // when & then
         mockMvc.perform(get("/staccatos/{staccatoId}/share", staccatoId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("토큰으로 스타카토의 정보를 불러온다.")
+    @Test
+    void readSharedStaccatoByToken() throws Exception {
+        // given
+        String token = "sample-token";
+        when(staccatoService.readSharedStaccatoByToken(token)).thenReturn(StaccatoSharedResponseFixture.create());
+        String expectedResponse = """
+                {
+                    "userName": "폭포",
+                    "staccatoImageUrls": [
+                        "https://image.staccato.kr/dev/squirrel.png",
+                        "https://image.staccato.kr/dev/squirrel.png",
+                        "https://image.staccato.kr/dev/squirrel.png"
+                    ],
+                    "staccatoTitle": "귀여운 스타카토 키링",
+                    "placeName": "한국 루터회관 8층",
+                    "address": "대한민국 서울특별시 송파구 올림픽로35다길 42 한국루터회관 8층",
+                    "visitedAt": "2024-09-29T17:00:00.000Z",
+                    "feeling": "scared",
+                    "comments": [
+                        {
+                            "nickname": "폭포",
+                            "content": "댓글 샘플",
+                            "memberImageUrl": "image.jpg"
+                        },
+                        {
+                            "nickname": "폭포2",
+                            "content": "댓글 샘플2",
+                            "memberImageUrl": "image2.jpg"
+                        }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/staccatos/shared")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));

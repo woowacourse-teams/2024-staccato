@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "스타카토를 공유했을 때 응답 형식입니다.")
-public record StaccatoShareResponse(
+public record StaccatoSharedResponse(
         @Schema(example = "폭포")
         String userName,
         @ArraySchema(arraySchema = @Schema(example = "[" +
@@ -26,8 +26,6 @@ public record StaccatoShareResponse(
         String visitedAt,
         @Schema(example = "scared")
         String feeling,
-        // 기존에 있는 CommentResponses DTO 사용 예정. 데이터 구성 방식이 실제와 많이 달라서,
-        // 잘 되는지만 테스트하기 위해 임시로 CommentShareResponse DTO 만들어서 구현. 나중에 삭제 예정
         List<CommentShareResponse> comments
 ) {
     public static final String FIRST_COMMENT_CONTENT = "나랏말싸미 듕귁에 달아 문자와로 서로 사맛디 아니할쎄\n" +
@@ -42,7 +40,7 @@ public record StaccatoShareResponse(
             "모든 사람들로 하여금 쉽게 익혀서 날마다 쓰는 게 편하게 하고자 할 따름이니라.";
     public static final String THIRD_COMMENT_CONTENT = "짧은 코멘트 테스트";
 
-    public StaccatoShareResponse() {
+    public StaccatoSharedResponse() {
         this(
                 "폭포",
                 List.of(
