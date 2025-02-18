@@ -362,7 +362,7 @@ class StaccatoControllerTest extends ControllerTest {
     void createStaccatoShareLink() throws Exception {
         // given
         long staccatoId = 1L;
-        StaccatoShareLinkResponse response = new StaccatoShareLinkResponse(staccatoId, "sample-token");
+        StaccatoShareLinkResponse response = new StaccatoShareLinkResponse(staccatoId, "https://staccato.kr/staccato?token=sample-token");
         when(staccatoService.createStaccatoShareLink(staccatoId)).thenReturn(response);
         String expectedResponse = """
                 {
@@ -375,6 +375,6 @@ class StaccatoControllerTest extends ControllerTest {
         mockMvc.perform(get("/staccatos/{staccatoId}/share", staccatoId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
+                .andExpect(content().json(expectedResponse));
     }
 }
