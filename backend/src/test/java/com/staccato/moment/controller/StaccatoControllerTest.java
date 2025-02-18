@@ -39,6 +39,7 @@ import com.staccato.moment.service.dto.request.StaccatoRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
+import com.staccato.moment.service.dto.response.StaccatoShareLinkResponse;
 
 class StaccatoControllerTest extends ControllerTest {
     static Stream<Arguments> invalidStaccatoRequestProvider() {
@@ -361,7 +362,8 @@ class StaccatoControllerTest extends ControllerTest {
     void createStaccatoShareLink() throws Exception {
         // given
         long staccatoId = 1L;
-        when(shareTokenProvider.create(staccatoId)).thenReturn("sample-token");
+        StaccatoShareLinkResponse response = new StaccatoShareLinkResponse(staccatoId, "sample-token");
+        when(staccatoService.createStaccatoShareLink(staccatoId)).thenReturn(response);
         String expectedResponse = """
                 {
                     "staccatoId": 1,
