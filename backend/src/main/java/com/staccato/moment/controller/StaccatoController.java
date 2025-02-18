@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.controller.docs.MomentControllerDocs;
 import com.staccato.moment.controller.docs.StaccatoControllerDocs;
 import com.staccato.moment.service.MomentService;
+import com.staccato.moment.service.StaccatoService;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.StaccatoRequest;
@@ -31,7 +31,7 @@ import com.staccato.moment.service.dto.response.MomentLocationResponses;
 import com.staccato.moment.service.dto.response.StaccatoDetailResponse;
 import com.staccato.moment.service.dto.response.StaccatoIdResponse;
 import com.staccato.moment.service.dto.response.StaccatoLocationResponses;
-import com.staccato.moment.service.dto.response.StaccatoShareResponse;
+import com.staccato.moment.service.dto.response.StaccatoShareLinkResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +42,7 @@ import lombok.RequiredArgsConstructor;
 @Validated
 public class StaccatoController implements StaccatoControllerDocs {
     private final MomentService momentService;
+    private final StaccatoService staccatoService;
 
     @PostMapping
     public ResponseEntity<StaccatoIdResponse> createStaccato(
@@ -98,9 +99,12 @@ public class StaccatoController implements StaccatoControllerDocs {
         return ResponseEntity.ok().build();
     }
 
-    // 변경 예정
-    @GetMapping("/share")
-    public ResponseEntity<StaccatoShareResponse> shareStaccatoById() {
-        return ResponseEntity.ok().body(new StaccatoShareResponse());
+    @GetMapping("/{staccatoId}/share")
+    public ResponseEntity<StaccatoShareLinkResponse> shareStaccato(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId
+    ) {
+        StaccatoShareLinkResponse shareLink = staccatoService.createStaccatoShareLink(staccatoId);
+        return ResponseEntity.ok().body(shareLink);
     }
 }
