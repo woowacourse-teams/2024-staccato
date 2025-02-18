@@ -2,6 +2,7 @@ package com.staccato.moment.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,8 @@ import com.staccato.config.jwt.ShareTokenProvider;
 import io.jsonwebtoken.Claims;
 
 class StaccatoServiceTest extends ServiceSliceTest {
+    private static final Long STACCATO_ID = 1L;
+
     @Autowired
     private StaccatoService staccatoService;
     @Autowired
@@ -22,7 +25,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     @Test
     void createValidShareLink() {
         // given & when
-        String shareLink = staccatoService.createStaccatoShareLink();
+        String shareLink = staccatoService.createStaccatoShareLink(STACCATO_ID);
 
         // then
         assertThat(shareLink).startsWith("https://staccato.kr/staccatos?token=");
@@ -32,29 +35,30 @@ class StaccatoServiceTest extends ServiceSliceTest {
     @Test
     void shouldContainTokenInShareLink() {
         // given & when
-        String shareLink = staccatoService.createStaccatoShareLink();
+        String shareLink = staccatoService.createStaccatoShareLink(STACCATO_ID);
         String token = shareLink.split("token=")[1];
 
         // then
         assertThat(token).isNotNull();
     }
 
-    @DisplayName("토큰은 스타카토 id를 포함하고 있다.")
+    @DisplayName("토큰은 올바른 스타카토 id를 포함하고 있다.")
     @Test
     void shouldContainStaccatoIdInToken() {
         // given
-        String shareLink = staccatoService.createStaccatoShareLink();
+        String shareLink = staccatoService.createStaccatoShareLink(STACCATO_ID);
         String token = shareLink.split("token=")[1];
 
         // when & then
         assertThatCode(() -> shareTokenProvider.extractStaccatoId(token))
-                .doesNotThrowAnyException();
+                        .doesNotThrowAnyException();
+        assertThat(shareTokenProvider.extractStaccatoId(token)).isEqualTo(STACCATO_ID);
     }
 
     @DisplayName("토큰은 만료 기한을 포함하고 있다.")
     void shouldContainExpirationInToken() {
         // give
-        String shareLink = staccatoService.createStaccatoShareLink();
+        String shareLink = staccatoService.createStaccatoShareLink(STACCATO_ID);
         String token = shareLink.split("token=")[1];
 
         // when
@@ -67,7 +71,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     @DisplayName("토큰이 유효하다.")
     void validateToken() {
         // given
-        String shareLink = staccatoService.createStaccatoShareLink();
+        String shareLink = staccatoService.createStaccatoShareLink(STACCATO_ID);
         String token = shareLink.split("token=")[1];
 
         // when & then
