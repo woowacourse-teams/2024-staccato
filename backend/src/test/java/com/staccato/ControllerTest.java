@@ -7,6 +7,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.comment.service.CommentService;
+import com.staccato.config.jwt.ShareTokenProvider;
 import com.staccato.image.service.ImageService;
 import com.staccato.member.service.MemberService;
 import com.staccato.memory.service.MemoryService;
@@ -30,4 +31,6 @@ public abstract class ControllerTest {
     protected AuthService authService;
     @MockBean
     protected CommentService commentService;
+    @MockBean
+    protected ShareTokenProvider shareTokenProvider;
 }

@@ -23,23 +23,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.ControllerTest;
-import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.moment.MomentDetailResponseFixture;
 import com.staccato.fixture.moment.MomentLocationResponsesFixture;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.service.MomentService;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.StaccatoRequest;
@@ -361,5 +354,25 @@ class StaccatoControllerTest extends ControllerTest {
                         .content(objectMapper.writeValueAsString(feelingRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("스타카토 링크 생성에 성공한다.")
+    @Test
+    void createStaccatoShareLink() throws Exception {
+        // given
+        long staccatoId = 1L;
+        when(shareTokenProvider.create(staccatoId)).thenReturn("sample-token");
+        String expectedResponse = """
+                {
+                    "staccatoId": 1,
+                    "shareLink": "https://staccato.kr/staccato?token=sample-token"
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/staccatos/{staccatoId}/share", staccatoId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 }
