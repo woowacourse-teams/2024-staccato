@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.staccato.config.jwt.ShareTokenProvider;
 import com.staccato.config.log.annotation.Trace;
+import com.staccato.moment.service.dto.response.StaccatoShareLinkResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,9 +18,10 @@ public class StaccatoService {
 
     private final ShareTokenProvider shareTokenProvider;
 
-    public String createStaccatoShareLink(Long staccatoId) {
+    public StaccatoShareLinkResponse createStaccatoShareLink(Long staccatoId) {
         String token = shareTokenProvider.create(staccatoId);
+        String shareLink = SHARE_LINK_PREFIX + token;
 
-        return SHARE_LINK_PREFIX + token;
+        return new StaccatoShareLinkResponse(staccatoId, shareLink);
     }
 }
