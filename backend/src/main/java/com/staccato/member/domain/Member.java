@@ -48,9 +48,10 @@ public class Member extends BaseEntity {
         this.code = code;
     }
 
-    public static Member create(String nickname) {
+    public static Member create(String nickname, String imageUrl) {
         return Member.builder()
                 .nickname(nickname)
+                .imageUrl(imageUrl)
                 .code(UUID.randomUUID().toString())
                 .build();
     }

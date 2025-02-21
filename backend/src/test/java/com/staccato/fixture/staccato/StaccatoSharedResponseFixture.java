@@ -9,20 +9,19 @@ public class StaccatoSharedResponseFixture {
     public static StaccatoSharedResponse create() {
         return new StaccatoSharedResponse(
                 1,
-                "폭포",
+                "staccato",
                 List.of(
-                        "https://image.staccato.kr/dev/squirrel.png",
-                        "https://image.staccato.kr/dev/squirrel.png",
-                        "https://image.staccato.kr/dev/squirrel.png"
+                        "https://oldExample.com.jpg",
+                        "https://existExample.com.jpg"
                 ),
-                "귀여운 스타카토 키링",
-                "한국 루터회관 8층",
-                "대한민국 서울특별시 송파구 올림픽로35다길 42 한국루터회관 8층",
-                "2024-09-29T17:00:00.000Z",
-                "scared",
+                "staccatoTitle",
+                "placeName",
+                "address",
+                "2024-07-01T10:00:00.000Z",
+                "nothing",
                 List.of(
-                        new CommentShareResponse("폭포", "댓글 샘플", "image.jpg"),
-                        new CommentShareResponse("폭포2", "댓글 샘플2", "image2.jpg")
+                        new CommentShareResponse("staccato", "댓글 샘플", "image.jpg"),
+                        new CommentShareResponse("staccato2", "댓글 샘플2", "image2.jpg")
                 )
         );
     }

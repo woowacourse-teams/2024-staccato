@@ -388,25 +388,24 @@ class StaccatoControllerTest extends ControllerTest {
         String expectedResponse = """
                 {
                     "staccatoId": 1,
-                    "userName": "폭포",
+                    "userName": "staccato",
                     "staccatoImageUrls": [
-                        "https://image.staccato.kr/dev/squirrel.png",
-                        "https://image.staccato.kr/dev/squirrel.png",
-                        "https://image.staccato.kr/dev/squirrel.png"
+                        "https://oldExample.com.jpg",
+                        "https://existExample.com.jpg"
                     ],
-                    "staccatoTitle": "귀여운 스타카토 키링",
-                    "placeName": "한국 루터회관 8층",
-                    "address": "대한민국 서울특별시 송파구 올림픽로35다길 42 한국루터회관 8층",
-                    "visitedAt": "2024-09-29T17:00:00.000Z",
-                    "feeling": "scared",
+                    "staccatoTitle": "staccatoTitle",
+                    "placeName": "placeName",
+                    "address": "address",
+                    "visitedAt": "2024-07-01T10:00:00.000Z",
+                    "feeling": "nothing",
                     "comments": [
                         {
-                            "nickname": "폭포",
+                            "nickname": "staccato",
                             "content": "댓글 샘플",
                             "memberImageUrl": "image.jpg"
                         },
                         {
-                            "nickname": "폭포2",
+                            "nickname": "staccato2",
                             "content": "댓글 샘플2",
                             "memberImageUrl": "image2.jpg"
                         }

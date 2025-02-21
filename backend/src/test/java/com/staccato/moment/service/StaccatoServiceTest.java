@@ -20,6 +20,7 @@ import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.jwt.ShareTokenProvider;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.exception.UnauthorizedException;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.memory.MemoryFixture;
@@ -40,6 +41,7 @@ import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
 import com.staccato.moment.service.dto.response.StaccatoShareLinkResponse;
+import com.staccato.moment.service.dto.response.StaccatoSharedResponse;
 
 import io.jsonwebtoken.Claims;
 
@@ -370,8 +372,55 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .doesNotThrowAnyException();
     }
 
+    @DisplayName("토큰에서 스타카토 id를 추출해서, 해당 스타카토 조회를 성공한다.")
+    @Test
+    void readSharedStaccatoByToken() {
+        // given
+        Member member1 = saveMemberWithNicknameAndImageUrl("staccato", "image.jpg");
+        Member member2 = saveMemberWithNicknameAndImageUrl("staccato2", "image2.jpg");
+        Memory memory = saveMemory(member1);
+        Moment moment = saveMomentWithImages(memory);
+        saveComment(moment, member1, "댓글 샘플");
+        saveComment(moment, member2, "댓글 샘플2");
+
+        String token = shareTokenProvider.create(STACCATO_ID);
+
+        // when
+        StaccatoSharedResponse response = staccatoService.readSharedStaccatoByToken(token);
+
+        // then
+        assertThat(response.staccatoId()).isEqualTo(STACCATO_ID);
+    }
+
+    @DisplayName("잘못된 토큰이면, 예외가 발생한다.")
+    @Test
+    void failReadSharedStaccatoIfTokenInvalid() {
+        // given
+        String invalidToken = "invalid.token.value";
+
+        // when & then
+        assertThatThrownBy(() -> staccatoService.readSharedStaccatoByToken(invalidToken))
+                .isInstanceOf(UnauthorizedException.class);
+    }
+
+    @DisplayName("해당하는 스타카토가 없으면, 예외가 발생한다.")
+    @Test
+    void failReadSharedStaccatoIfStaccatoNotExist() {
+        // given
+        Long invalidStaccatoId = 0L;
+        String token = shareTokenProvider.create(invalidStaccatoId);
+
+        // when & then
+        assertThatThrownBy(() -> staccatoService.readSharedStaccatoByToken(token))
+                .isInstanceOf(StaccatoException.class);
+    }
+
     private Member saveMember() {
         return memberRepository.save(MemberFixture.create());
+    }
+
+    private Member saveMemberWithNicknameAndImageUrl(String nickname, String imageUrl) {
+        return memberRepository.save(MemberFixture.create(nickname, imageUrl));
     }
 
     private Memory saveMemory(Member member) {
@@ -381,7 +430,11 @@ class StaccatoServiceTest extends ServiceSliceTest {
     }
 
     private Moment saveMomentWithImages(Memory memory) {
-        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.of(2024, 7, 1, 10, 0), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
         return momentRepository.save(moment);
+    }
+
+    private void saveComment(Moment moment, Member member, String content) {
+        commentRepository.save(CommentFixture.create(moment, member, content));
     }
 }
