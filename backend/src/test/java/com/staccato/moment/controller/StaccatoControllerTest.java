@@ -387,6 +387,7 @@ class StaccatoControllerTest extends ControllerTest {
         when(staccatoService.readSharedStaccatoByToken(token)).thenReturn(StaccatoSharedResponseFixture.create());
         String expectedResponse = """
                 {
+                    "staccatoId": 1,
                     "userName": "폭포",
                     "staccatoImageUrls": [
                         "https://image.staccato.kr/dev/squirrel.png",

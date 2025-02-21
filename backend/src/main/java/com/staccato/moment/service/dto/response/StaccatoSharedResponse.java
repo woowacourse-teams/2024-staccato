@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "스타카토를 공유했을 때 응답 형식입니다.")
 public record StaccatoSharedResponse(
+        @Schema(example = "1")
+        long staccatoId,
         @Schema(example = "폭포")
         String userName,
         @ArraySchema(arraySchema = @Schema(example = "[" +
@@ -42,6 +44,7 @@ public record StaccatoSharedResponse(
 
     public StaccatoSharedResponse() {
         this(
+                1L,
                 "폭포",
                 List.of(
                         "https://image.staccato.kr/dev/squirrel.png",

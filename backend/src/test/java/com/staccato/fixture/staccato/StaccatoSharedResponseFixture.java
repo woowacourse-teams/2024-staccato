@@ -8,6 +8,7 @@ import com.staccato.moment.service.dto.response.StaccatoSharedResponse;
 public class StaccatoSharedResponseFixture {
     public static StaccatoSharedResponse create() {
         return new StaccatoSharedResponse(
+                1,
                 "폭포",
                 List.of(
                         "https://image.staccato.kr/dev/squirrel.png",
