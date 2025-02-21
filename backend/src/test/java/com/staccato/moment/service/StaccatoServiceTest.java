@@ -345,6 +345,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     }
 
     @DisplayName("토큰은 만료 기한을 포함하고 있다.")
+    @Test
     void shouldContainExpirationInToken() {
         // give
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(STACCATO_ID);
@@ -358,6 +359,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     }
 
     @DisplayName("토큰이 유효하다.")
+    @Test
     void validateToken() {
         // given
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(STACCATO_ID);
