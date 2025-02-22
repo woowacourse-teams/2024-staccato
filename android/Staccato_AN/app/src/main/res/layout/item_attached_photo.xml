@@ -33,14 +33,13 @@
             app:layout_constraintStart_toStartOf="parent"
             bind:coilRoundedCornerImageUri="@{attachedPhoto.uri}"
             bind:coilRoundedCornerImageUrl="@{attachedPhoto.imageUrl}"
-            bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            bind:coilRoundingRadius="@{12f}"
-            tools:src="@drawable/shape_all_gray2_4dp" />
+            bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray1_5dp}"
+            bind:coilRoundingRadiusDp="@{5f}" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/white_80"
+            android:background="@drawable/shape_attached_photo_5dp"
             app:layout_constraintBottom_toBottomOf="@id/iv_attached_photo"
             app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
             app:layout_constraintStart_toStartOf="@id/iv_attached_photo"

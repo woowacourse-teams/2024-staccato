@@ -50,7 +50,7 @@
                     android:id="@+id/iv_category_update_photo_attach"
                     style="@style/PhotoAttachBoxStyle"
                     android:layout_marginHorizontal="20dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="24dp"
                     android:contentDescription="@string/all_category_thumbnail_photo_description"
                     android:onClick="@{() -> handler.onPhotoAttachClicked()}"
                     android:scaleType="centerCrop"
@@ -61,7 +61,7 @@
                     bind:coilRoundedCornerImageUri="@{viewModel.thumbnail.uri}"
                     bind:coilRoundedCornerImageUrl="@{viewModel.thumbnail.url}"
                     bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray1_8dp}"
-                    bind:coilRoundingRadius="@{12f}" />
+                    bind:coilRoundingRadiusDp="@{8f}" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -91,7 +91,8 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:background="@color/white_80"
+                    android:background="@drawable/shape_attached_photo_8dp"
+                    android:radius="8dp"
                     app:layout_constraintBottom_toBottomOf="@id/iv_category_update_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_category_update_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_category_update_photo_attach"

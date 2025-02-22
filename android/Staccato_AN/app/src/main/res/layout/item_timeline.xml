@@ -84,7 +84,7 @@
             app:layout_constraintWidth_percent="0.35"
             bind:coilRoundedCornerImageUrl="@{category.categoryThumbnailUrl}"
             bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            bind:coilRoundingRadius="@{12f}"
+            bind:coilRoundingRadiusDp="@{4f}"
             bind:visibleOrGone="@{category.categoryThumbnailUrl != null}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
