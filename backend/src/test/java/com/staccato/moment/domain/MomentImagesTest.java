@@ -50,14 +50,14 @@ class MomentImagesTest {
                 .hasMessage("사진은 5장을 초과할 수 없습니다.");
     }
 
-    @DisplayName("사진들을 추가할 때 기존 사진이 포함되지 않은 경우 삭제 후 추가한다.")
+    @DisplayName("사진들의 순서를 변경할 때 기존 사진이 포함되지 않은 경우 삭제 후 추가한다.")
     @Test
     void update() {
         // given
         Memory memory = Memory.builder().title("Sample Memory").startAt(LocalDate.now().minusDays(1))
                 .endAt(LocalDate.now().plusDays(1)).build();
-        MomentImages existingImages = new MomentImages(List.of("picture1", "picture3"));
-        MomentImages updatedImages = new MomentImages(List.of("picture1", "picture4"));
+        MomentImages existingImages = new MomentImages(List.of("picture1", "picture3", "picture2"));
+        MomentImages updatedImages = new MomentImages(List.of("picture1", "picture4", "picture3"));
 
         // when
         existingImages.update(updatedImages, MomentFixture.create(memory, LocalDateTime.now()));
@@ -65,29 +65,8 @@ class MomentImagesTest {
         // then
         List<String> images = existingImages.getImages().stream().map(MomentImage::getImageUrl).toList();
         assertAll(
-                () -> assertThat(images).containsAll(List.of("picture1", "picture4")),
-                () -> assertThat(images.size()).isEqualTo(2)
-        );
-    }
-
-    @DisplayName("포함되지 않는 사진들을 선별할 수 있다.")
-    @Test
-    void findImagesNotPresentIn() {
-        // given
-        MomentImages existingImages = new MomentImages(List.of("picture1", "picture3"));
-        MomentImages newImages = new MomentImages(List.of("picture1", "picture4"));
-
-        // when
-        List<MomentImage> remainingExistingImages = existingImages.findImagesNotPresentIn(newImages);
-        List<MomentImage> remainingNewImages = newImages.findImagesNotPresentIn(existingImages);
-
-        // then
-        assertAll(
-
-                () -> assertThat(remainingExistingImages.size()).isEqualTo(1),
-                () -> assertThat(remainingNewImages.size()).isEqualTo(1),
-                () -> assertThat(remainingExistingImages.get(0).getImageUrl()).isEqualTo("picture3"),
-                () -> assertThat(remainingNewImages.get(0).getImageUrl()).isEqualTo("picture4")
+                () -> assertThat(images).containsExactlyElementsOf(List.of("picture1", "picture4", "picture3")),
+                () -> assertThat(images.size()).isEqualTo(3)
         );
     }
 }

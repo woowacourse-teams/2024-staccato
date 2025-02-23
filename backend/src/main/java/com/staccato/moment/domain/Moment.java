@@ -3,6 +3,7 @@ package com.staccato.moment.domain;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -99,5 +100,9 @@ public class Moment extends BaseEntity {
     @PreRemove
     public void touchForWrite() {
         memory.setUpdatedAt(LocalDateTime.now());
+    }
+
+    public List<MomentImage> existingImages() {
+        return momentImages.getImages();
     }
 }

@@ -42,32 +42,8 @@ public class MomentImages {
         return !images.isEmpty();
     }
 
-    public List<MomentImage> findImagesNotPresentIn(MomentImages targetMomentImages) {
-        return images.stream()
-                .filter(image -> !targetMomentImages.contains(image))
-                .toList();
-    }
-
     protected void update(MomentImages newMomentImages, Moment moment) {
-        removeExistImages(newMomentImages);
-        saveNewImages(newMomentImages, moment);
-    }
-
-    private void removeExistImages(MomentImages newMomentImages) {
-        List<MomentImage> momentImages = findImagesNotPresentIn(newMomentImages);
-        images.removeAll(momentImages);
-    }
-
-    private void saveNewImages(MomentImages newMomentImages, Moment moment) {
-        List<MomentImage> momentImages = newMomentImages.findImagesNotPresentIn(this);
-        momentImages.forEach(image -> {
-            this.images.add(image);
-            image.belongTo(moment);
-        });
-    }
-
-    private boolean contains(MomentImage momentImage) {
-        return this.images.stream()
-                .anyMatch(image -> image.isSame(momentImage));
+        images.clear();
+        addAll(newMomentImages, moment);
     }
 }
