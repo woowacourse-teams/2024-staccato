@@ -168,9 +168,7 @@
                 <TextView
                     android:id="@+id/tv_place_address"
                     style="@style/BoundedTextStyle"
-                    android:layout_width="0dp"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/shape_all_gray1_4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_address_title"

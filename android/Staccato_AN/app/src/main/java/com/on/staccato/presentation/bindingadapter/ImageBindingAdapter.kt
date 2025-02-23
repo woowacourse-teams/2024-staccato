@@ -1,7 +1,9 @@
 package com.on.staccato.presentation.bindingadapter
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.util.TypedValue
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import coil.load
@@ -40,35 +42,43 @@ fun ImageView.loadCoilCircleImage(
 }
 
 @BindingAdapter(
-    value = ["coilRoundedCornerImageUrl", "coilRoundedCornerPlaceHolder", "coilRoundingRadius"],
+    value = ["coilRoundedCornerImageUrl", "coilRoundedCornerPlaceHolder", "coilRoundingRadiusDp"],
 )
 fun ImageView.setCoilRoundedCornerImage(
     url: String?,
     placeHolder: Drawable? = null,
-    roundingRadius: Float,
+    radiusDp: Float,
 ) {
     load(url) {
         placeholder(placeHolder)
-        transformations(RoundedCornersTransformation(roundingRadius))
+        transformations(RoundedCornersTransformation(radiusDp.dpToPx(context)))
         error(placeHolder)
     }
 }
 
 @BindingAdapter(
-    value = ["coilRoundedCornerImageUrl", "coilRoundedCornerImageUri", "coilRoundedCornerPlaceHolder", "coilRoundingRadius"],
+    value = ["coilRoundedCornerImageUrl", "coilRoundedCornerImageUri", "coilRoundedCornerPlaceHolder", "coilRoundingRadiusDp"],
 )
 fun ImageView.setCoilRoundedCornerImageWithUri(
     url: String?,
     uri: Uri?,
     placeHolder: Drawable? = null,
-    roundingRadius: Float,
+    radiusDp: Float,
 ) {
     val image = uri ?: url
     load(image) {
         placeholder(placeHolder)
-        transformations(RoundedCornersTransformation(roundingRadius))
+        transformations(RoundedCornersTransformation(radiusDp.dpToPx(context)))
         error(placeHolder)
     }
+}
+
+private fun Float.dpToPx(context: Context): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this,
+        context.resources.displayMetrics,
+    )
 }
 
 @BindingAdapter(

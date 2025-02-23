@@ -33,14 +33,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:coilRoundedCornerImageUrl="@{staccato.staccatoImageUrl}"
-            bind:coilRoundedCornerPlaceHolder="@{@drawable/staccato_gradient}"
-            bind:coilRoundingRadius="@{16f}"
+            bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            bind:coilRoundingRadiusDp="@{4f}"
             tools:src="@drawable/shape_all_gray2_4dp" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@drawable/staccato_gradient"
+            android:background="@drawable/shape_gradient_4dp"
             app:layout_constraintBottom_toBottomOf="@id/iv_staccatos"
             app:layout_constraintEnd_toEndOf="@id/iv_staccatos"
             app:layout_constraintStart_toStartOf="@id/iv_staccatos"
