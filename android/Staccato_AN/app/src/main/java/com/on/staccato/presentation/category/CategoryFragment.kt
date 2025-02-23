@@ -12,6 +12,7 @@ import com.on.staccato.databinding.FragmentCategoryBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.adapter.MatesAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
+import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity
 import com.on.staccato.presentation.common.DeleteDialogFragment
@@ -101,20 +102,18 @@ class CategoryFragment :
         viewModel.deleteCategory(categoryId)
     }
 
-    override fun onStaccatoCreationClicked() {
+    override fun onStaccatoCreationClicked(category: CategoryUiModel) {
         loggingManager.logEvent(
             NAME_STACCATO_CREATION,
             Param(KEY_IS_CREATED_IN_MAIN, false),
         )
-        viewModel.category.value?.let {
-            val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
-            StaccatoCreationActivity.startWithResultLauncher(
-                requireContext(),
-                staccatoCreationLauncher,
-                categoryId,
-                it.title,
-            )
-        }
+        val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
+        StaccatoCreationActivity.startWithResultLauncher(
+            requireContext(),
+            staccatoCreationLauncher,
+            category.id,
+            category.title,
+        )
     }
 
     private fun initBinding() {

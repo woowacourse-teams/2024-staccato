@@ -172,7 +172,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
-                    android:onClick="@{() -> categoryHandler.onStaccatoCreationClicked()}"
+                    android:onClick="@{() -> categoryHandler.onStaccatoCreationClicked(viewModel.category)}"
                     android:paddingVertical="12dp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_category_staccatos"
                     app:layout_constraintEnd_toEndOf="parent"
