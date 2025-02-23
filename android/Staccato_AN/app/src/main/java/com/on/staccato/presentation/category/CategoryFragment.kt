@@ -117,6 +117,7 @@ class CategoryFragment :
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.sharedViewModel = sharedViewModel
         binding.toolbarHandler = this
         binding.categoryHandler = this
     }

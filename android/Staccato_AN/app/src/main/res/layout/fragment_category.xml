@@ -13,6 +13,10 @@
             type="com.on.staccato.presentation.category.viewmodel.CategoryViewModel" />
 
         <variable
+            name="sharedViewModel"
+            type="com.on.staccato.presentation.main.viewmodel.SharedViewModel" />
+
+        <variable
             name="categoryHandler"
             type="com.on.staccato.presentation.category.CategoryHandler" />
 
