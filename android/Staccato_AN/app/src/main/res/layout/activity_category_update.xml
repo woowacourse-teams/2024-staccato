@@ -92,7 +92,6 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@drawable/shape_attached_photo_8dp"
-                    android:radius="8dp"
                     app:layout_constraintBottom_toBottomOf="@id/iv_category_update_photo_attach"
                     app:layout_constraintEnd_toEndOf="@id/iv_category_update_photo_attach"
                     app:layout_constraintStart_toStartOf="@id/iv_category_update_photo_attach"
