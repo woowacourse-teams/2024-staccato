@@ -121,7 +121,7 @@
     <style name="BoundedTextStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/shape_all_gray1_border_4dp</item>
+        <item name="android:background">@drawable/shape_all_stroke_gray1_4dp</item>
         <item name="android:layout_marginHorizontal">24dp</item>
         <item name="android:paddingHorizontal">16dp</item>
         <item name="android:paddingVertical">12.5dp</item>
