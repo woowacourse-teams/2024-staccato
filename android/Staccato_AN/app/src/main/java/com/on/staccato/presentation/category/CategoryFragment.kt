@@ -85,17 +85,15 @@ class CategoryFragment :
     }
 
     override fun onStaccatoClicked(staccatoId: Long) {
-        viewModel.category.value?.let {
-            loggingManager.logEvent(
-                NAME_STACCATO_READ,
-                Param(KEY_IS_VIEWED_BY_MARKER, false),
+        loggingManager.logEvent(
+            NAME_STACCATO_READ,
+            Param(KEY_IS_VIEWED_BY_MARKER, false),
+        )
+        val bundle =
+            bundleOf(
+                STACCATO_ID_KEY to staccatoId,
             )
-            val bundle =
-                bundleOf(
-                    STACCATO_ID_KEY to staccatoId,
-                )
-            findNavController().navigate(R.id.action_categoryFragment_to_staccatoFragment, bundle)
-        }
+        findNavController().navigate(R.id.action_categoryFragment_to_staccatoFragment, bundle)
     }
 
     override fun onConfirmClicked() {
