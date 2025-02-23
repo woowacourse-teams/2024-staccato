@@ -19,11 +19,9 @@ class LocationPermissionManager
     @Inject
     constructor(
         @ApplicationContext private val context: Context,
+        private val locationManager: LocationManager,
     ) {
         private val locationDialog = LocationDialogFragment()
-
-        @Inject
-        lateinit var locationManager: LocationManager
 
         fun requestPermissionLauncher(
             activity: Activity,

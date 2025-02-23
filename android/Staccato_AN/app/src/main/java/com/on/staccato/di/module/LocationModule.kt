@@ -7,6 +7,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.Priority
+import com.on.staccato.presentation.common.location.LocationManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,4 +40,11 @@ object LocationModule {
     fun provideFusedLocationProviderClient(
         @ApplicationContext context: Context,
     ): FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+
+    @Singleton
+    @Provides
+    fun provideLocationManager(
+        locationSettingsRequest: LocationSettingsRequest,
+        fusedLocationProviderClient: FusedLocationProviderClient,
+    ): LocationManager = LocationManager(locationSettingsRequest, fusedLocationProviderClient)
 }
