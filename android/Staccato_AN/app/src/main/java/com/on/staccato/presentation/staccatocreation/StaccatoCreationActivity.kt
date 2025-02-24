@@ -30,6 +30,7 @@ import com.on.staccato.presentation.common.location.LocationDialogFragment.Compa
 import com.on.staccato.presentation.common.location.LocationManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
+import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
@@ -222,8 +223,8 @@ class StaccatoCreationActivity :
         }
     }
 
-    private fun observeIsPermissionCancelClicked(requestLocationPermissions: () -> Unit) {
-        if (!isPermissionCanceled) requestLocationPermissions()
+    private fun observeIsPermissionCancelClicked(listener: PermissionCancelListener) {
+        if (!isPermissionCanceled) listener.requestPermission()
     }
 
     private fun initBinding() {

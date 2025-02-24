@@ -25,6 +25,7 @@ import com.on.staccato.R
 import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.common.location.LocationManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
+import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.model.MarkerUiModel
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
@@ -149,7 +150,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             }
 
             shouldShowRequestLocationPermissionsRationale -> {
-                observeIsPermissionCancelClicked {
+                observeIsPermissionCanceled {
                     locationPermissionManager.showLocationRequestRationaleDialog(
                         childFragmentManager,
                     )
@@ -157,7 +158,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             }
 
             else -> {
-                observeIsPermissionCancelClicked {
+                observeIsPermissionCanceled {
                     permissionRequestLauncher.launch(
                         LocationPermissionManager.locationPermissions,
                     )
@@ -173,9 +174,9 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         }
     }
 
-    private fun observeIsPermissionCancelClicked(requestLocationPermissions: () -> Unit) {
-        sharedViewModel.isPermissionCanceled.observe(viewLifecycleOwner) { isCancel ->
-            if (!isCancel) requestLocationPermissions()
+    private fun observeIsPermissionCanceled(listener: PermissionCancelListener) {
+        sharedViewModel.isPermissionCanceled.observe(viewLifecycleOwner) { isCanceled ->
+            if (!isCanceled) listener.requestPermission()
         }
     }
 
