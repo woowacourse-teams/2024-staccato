@@ -30,7 +30,6 @@ import com.on.staccato.presentation.common.location.LocationDialogFragment.Compa
 import com.on.staccato.presentation.common.location.LocationManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
-import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
@@ -55,7 +54,6 @@ class StaccatoCreationActivity :
     BindingActivity<ActivityStaccatoCreationBinding>() {
     override val layoutResourceId = R.layout.activity_staccato_creation
     private val viewModel: StaccatoCreationViewModel by viewModels()
-    private val sharedViewModel: SharedViewModel by viewModels()
     private val categorySelectionFragment by lazy {
         CategorySelectionFragment()
     }
@@ -225,9 +223,7 @@ class StaccatoCreationActivity :
     }
 
     private fun observeIsPermissionCancelClicked(requestLocationPermissions: () -> Unit) {
-        sharedViewModel.isPermissionCancelClicked.observe(this) { isCancel ->
-            if (!isCancel) requestLocationPermissions()
-        }
+        if (!isPermissionCanceled) requestLocationPermissions()
     }
 
     private fun initBinding() {
