@@ -127,7 +127,7 @@ class CategoryFragment :
     }
 
     private fun observeIsPermissionCanceled() {
-        sharedViewModel.isPermissionCancelClicked.observe(viewLifecycleOwner) {
+        sharedViewModel.isPermissionCanceled.observe(viewLifecycleOwner) {
             binding.isPermissionCanceled = it
         }
     }

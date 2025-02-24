@@ -174,7 +174,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun observeIsPermissionCancelClicked(requestLocationPermissions: () -> Unit) {
-        sharedViewModel.isPermissionCancelClicked.observe(viewLifecycleOwner) { isCancel ->
+        sharedViewModel.isPermissionCanceled.observe(viewLifecycleOwner) { isCancel ->
             if (!isCancel) requestLocationPermissions()
         }
     }

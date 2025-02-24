@@ -48,7 +48,7 @@ class LocationDialogFragment : DialogFragment(), LocationDialogHandler {
     }
 
     override fun onCancelClicked() {
-        sharedViewModel.updateIsPermissionCancelClicked()
+        sharedViewModel.updateIsPermissionCanceled()
         dismiss()
     }
 

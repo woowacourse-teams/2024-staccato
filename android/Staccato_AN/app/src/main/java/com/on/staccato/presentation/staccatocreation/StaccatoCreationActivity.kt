@@ -450,14 +450,14 @@ class StaccatoCreationActivity :
         fun startWithResultLauncher(
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
-            isPermissionCancelClicked: Boolean,
+            isPermissionCanceled: Boolean,
             categoryId: Long = DEFAULT_CATEGORY_ID,
             categoryTitle: String = DEFAULT_CATEGORY_TITLE,
         ) {
             Intent(context, StaccatoCreationActivity::class.java).apply {
                 putExtra(CATEGORY_ID_KEY, categoryId)
                 putExtra(CATEGORY_TITLE_KEY, categoryTitle)
-                putExtra(PERMISSION_CANCEL_KEY, isPermissionCancelClicked)
+                putExtra(PERMISSION_CANCEL_KEY, isPermissionCanceled)
                 activityLauncher.launch(this)
             }
         }
