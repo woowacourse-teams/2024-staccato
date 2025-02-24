@@ -13,8 +13,8 @@
             type="com.on.staccato.presentation.category.viewmodel.CategoryViewModel" />
 
         <variable
-            name="sharedViewModel"
-            type="com.on.staccato.presentation.main.viewmodel.SharedViewModel" />
+            name="isPermissionCanceled"
+            type="Boolean" />
 
         <variable
             name="categoryHandler"
@@ -176,7 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
-                    android:onClick="@{() -> categoryHandler.onStaccatoCreationClicked(viewModel.category, sharedViewModel.isPermissionCancelClicked)}"
+                    android:onClick="@{() -> categoryHandler.onStaccatoCreationClicked(viewModel.category, isPermissionCanceled)}"
                     android:paddingVertical="12dp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_category_staccatos"
                     app:layout_constraintEnd_toEndOf="parent"

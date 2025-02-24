@@ -121,9 +121,15 @@ class CategoryFragment :
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.sharedViewModel = sharedViewModel
         binding.toolbarHandler = this
         binding.categoryHandler = this
+        observeIsPermissionCanceled()
+    }
+
+    private fun observeIsPermissionCanceled() {
+        sharedViewModel.isPermissionCancelClicked.observe(viewLifecycleOwner) {
+            binding.isPermissionCanceled = it
+        }
     }
 
     private fun initToolbar() {
