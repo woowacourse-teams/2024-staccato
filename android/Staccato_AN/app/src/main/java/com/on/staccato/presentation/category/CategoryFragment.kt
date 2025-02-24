@@ -100,7 +100,10 @@ class CategoryFragment :
         viewModel.deleteCategory(categoryId)
     }
 
-    override fun onStaccatoCreationClicked(category: CategoryUiModel) {
+    override fun onStaccatoCreationClicked(
+        category: CategoryUiModel,
+        isPermissionCanceled: Boolean,
+    ) {
         loggingManager.logEvent(
             NAME_STACCATO_CREATION,
             Param(KEY_IS_CREATED_IN_MAIN, false),
@@ -109,6 +112,7 @@ class CategoryFragment :
         StaccatoCreationActivity.startWithResultLauncher(
             requireContext(),
             staccatoCreationLauncher,
+            isPermissionCanceled,
             category.id,
             category.title,
         )

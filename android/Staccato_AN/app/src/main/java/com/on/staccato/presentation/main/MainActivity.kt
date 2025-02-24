@@ -79,7 +79,7 @@ class MainActivity :
         sharedViewModel.updateIsSettingClicked(false)
     }
 
-    override fun onStaccatoCreationClicked() {
+    override fun onStaccatoCreationClicked(isPermissionCanceled: Boolean) {
         loggingManager.logEvent(
             NAME_STACCATO_CREATION,
             Param(KEY_IS_CREATED_IN_MAIN, true),
@@ -87,6 +87,7 @@ class MainActivity :
         StaccatoCreationActivity.startWithResultLauncher(
             context = this,
             activityLauncher = staccatoCreationLauncher,
+            isPermissionCanceled,
         )
     }
 

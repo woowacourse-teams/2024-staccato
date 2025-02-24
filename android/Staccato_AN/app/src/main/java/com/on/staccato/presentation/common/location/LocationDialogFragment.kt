@@ -67,5 +67,6 @@ class LocationDialogFragment : DialogFragment(), LocationDialogHandler {
     companion object {
         const val TAG = "LocationDialogFragment"
         const val PACKAGE_SCHEME = "package"
+        const val PERMISSION_CANCEL_KEY = "isPermissionCanceled"
     }
 }

@@ -13,6 +13,10 @@
         <variable
             name="handler"
             type="com.on.staccato.presentation.main.MainHandler" />
+        
+        <variable
+            name="isPermissionCanceled"
+            type="Boolean" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -45,7 +49,7 @@
                 android:clickable="true"
                 android:contentDescription="@string/main_staccato_creation_btn_description"
                 android:focusable="true"
-                android:onClick="@{() -> handler.onStaccatoCreationClicked()}"
+                android:onClick="@{() -> handler.onStaccatoCreationClicked(isPermissionCanceled)}"
                 android:paddingTop="10dp"
                 android:src="@drawable/icon_floating_button"
                 app:layout_constraintBottom_toBottomOf="parent"

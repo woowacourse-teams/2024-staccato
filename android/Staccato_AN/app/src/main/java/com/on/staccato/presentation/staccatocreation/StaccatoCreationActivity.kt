@@ -22,9 +22,11 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityStaccatoCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
+import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_TITLE_KEY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.PERMISSION_CANCEL_KEY
 import com.on.staccato.presentation.common.location.LocationManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
@@ -74,6 +76,7 @@ class StaccatoCreationActivity :
 
     private val categoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID) }
     private val categoryTitle by lazy { intent.getStringExtra(CATEGORY_TITLE_KEY) ?: "" }
+    private val isPermissionCanceled by lazy { intent.getBooleanExtra(PERMISSION_CANCEL_KEY, false) }
 
     @Inject
     lateinit var locationManager: LocationManager
@@ -445,19 +448,20 @@ class StaccatoCreationActivity :
     }
 
     companion object {
-        const val CATEGORY_TITLE_KEY = "categoryTitle"
         const val DEFAULT_CATEGORY_ID = 0L
         private const val DEFAULT_CATEGORY_TITLE = ""
 
         fun startWithResultLauncher(
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
+            isPermissionCancelClicked: Boolean,
             categoryId: Long = DEFAULT_CATEGORY_ID,
             categoryTitle: String = DEFAULT_CATEGORY_TITLE,
         ) {
             Intent(context, StaccatoCreationActivity::class.java).apply {
                 putExtra(CATEGORY_ID_KEY, categoryId)
                 putExtra(CATEGORY_TITLE_KEY, categoryTitle)
+                putExtra(PERMISSION_CANCEL_KEY, isPermissionCancelClicked)
                 activityLauncher.launch(this)
             }
         }
