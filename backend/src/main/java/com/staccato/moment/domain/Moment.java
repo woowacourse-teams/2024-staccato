@@ -83,7 +83,7 @@ public class Moment extends BaseEntity {
         this.memory = newMoment.getMemory();
     }
 
-    public String getThumbnailUrl() {
+    public String thumbnailUrl() {
         return momentImages.getImages().get(0).getImageUrl();
     }
 
