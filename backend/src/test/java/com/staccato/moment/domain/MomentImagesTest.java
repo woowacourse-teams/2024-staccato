@@ -20,6 +20,16 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MomentImagesTest {
+    static Stream<Arguments> provideUpdateData() {
+        return Stream.of(
+                Arguments.of(List.of("picture1", "picture2", "picture3"), List.of()),
+                Arguments.of(List.of("picture1", "picture2", "picture3"), List.of("picture4")),
+                Arguments.of(List.of("picture1", "picture2", "picture3"), List.of("picture3", "picture2")),
+                Arguments.of(List.of("picture1", "picture2", "picture3"), List.of("picture3", "picture1", "picture2")),
+                Arguments.of(List.of("picture1", "picture2", "picture3"), List.of("picture1", "picture2", "picture4", "picture3"))
+        );
+    }
+
     @DisplayName("생성하려는 사진의 갯수가 0장 이상, 5장 이하이면 생성에 성공한다.")
     @ParameterizedTest
     @ValueSource(ints = {0, 5})
@@ -68,15 +78,5 @@ class MomentImagesTest {
 
         // then
         assertThat(images).containsExactlyElementsOf(updatedImageNames);
-    }
-
-    static Stream<Arguments> provideUpdateData() {
-        return Stream.of(
-                Arguments.of(List.of("picture1", "picture2", "picture3"), List.of()),
-                Arguments.of(List.of("picture1", "picture2", "picture3"), List.of("picture4")),
-                Arguments.of(List.of("picture1", "picture2", "picture3"), List.of("picture3", "picture2")),
-                Arguments.of(List.of("picture1", "picture2", "picture3"), List.of("picture3", "picture1", "picture2")),
-                Arguments.of(List.of("picture1", "picture2", "picture3"), List.of("picture1", "picture2", "picture4", "picture3"))
-        );
     }
 }
