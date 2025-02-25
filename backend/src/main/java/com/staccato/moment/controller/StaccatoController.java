@@ -31,6 +31,7 @@ import com.staccato.moment.service.dto.response.MomentLocationResponses;
 import com.staccato.moment.service.dto.response.StaccatoDetailResponse;
 import com.staccato.moment.service.dto.response.StaccatoIdResponse;
 import com.staccato.moment.service.dto.response.StaccatoLocationResponses;
+import com.staccato.moment.service.dto.response.StaccatoShareResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -95,5 +96,11 @@ public class StaccatoController implements StaccatoControllerDocs {
     ) {
         momentService.updateMomentFeelingById(staccatoId, member, feelingRequest);
         return ResponseEntity.ok().build();
+    }
+
+    // 변경 예정
+    @GetMapping("/share")
+    public ResponseEntity<StaccatoShareResponse> shareStaccatoById() {
+        return ResponseEntity.ok().body(new StaccatoShareResponse());
     }
 }
