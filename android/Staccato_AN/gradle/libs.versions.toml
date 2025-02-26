@@ -1,17 +1,19 @@
 [versions]
 agp = "8.3.0"
-assertjCore = "3.27.0"
+assertJCore = "3.27.0"
 converterScalars = "2.9.0"
 dotsindicator = "5.0"
 hiltAndroid = "2.51.1"
-junitJupiter = "5.10.2"
 archTestingVersion = "2.2.0"
-junitparams = "1.1.0"
 kotlin = "1.9.0"
 ktlint = "12.1.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
-junitVersion = "1.2.1"
+junitparams = "1.1.0"
+junit5 = "5.10.2"
+junit5AndroidTest="1.3.0"
+androidxJunitVersion = "1.2.1"
+androidxTestRunner = "1.4.0"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 lottie = "5.0.2"
@@ -43,24 +45,27 @@ mapsplatformSecretsGradlePlugin = "2.0.1"
 playServicesMaps = "19.0.0"
 viewpager2 = "1.1.0"
 camerax = "1.1.0-beta01"
-androidJunit5 = "1.10.0.0"
+androidJUnit5 = "1.10.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
-assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertjCore" }
+assertj-core = { module = "org.assertj:assertj-core", name = "assertj-core", version.ref = "assertJCore" }
 converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "converterScalars" }
 dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junitparams = { module = "pl.pragmatists:JUnitParams",version.ref = "junitparams" }
+junit5 = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit5" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
+junit5-android-test-core = { group = "de.mannodermaus.junit5", name = "android-test-core", version.ref = "junit5AndroidTest" }
+junit5-android-test-runner = { group = "de.mannodermaus.junit5", name = "android-test-runner", version.ref = "junit5AndroidTest" }
 androidx-arch-core = { group = "androidx.arch.core", name = "core-testing", version.ref = "archTestingVersion" }
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "junitJupiter" }
+junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "junit5" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -108,4 +113,4 @@ googleServices = { id = "com.google.gms.google-services", version.ref = "googleS
 firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 mapsplatformSecretsGradlePlugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "mapsplatformSecretsGradlePlugin" }
 hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
-androidJunit5 = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunit5" }
+androidJUnit5 = { id = "de.mannodermaus.android-junit5", version.ref = "androidJUnit5" }

@@ -21,7 +21,7 @@ plugins {
     alias(libs.plugins.firebaseCrashlytics)
     alias(libs.plugins.mapsplatformSecretsGradlePlugin)
     alias(libs.plugins.hiltAndroid)
-    alias(libs.plugins.androidJunit5)
+    alias(libs.plugins.androidJUnit5)
 }
 
 android {
@@ -95,23 +95,39 @@ android {
 }
 
 dependencies {
-
+    // Android Setup
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // JUnit4
     testImplementation(libs.junit)
-    testImplementation(libs.androidx.arch.core)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.junitparams)
 
     // JUnit5
-    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit5)
     testRuntimeOnly(libs.junit.vintage.engine)
 
     // AssertJ
     testImplementation(libs.assertj.core)
+
+    // Android Espresso
+    androidTestImplementation(libs.androidx.espresso.core)
+
+    // Android LiveData Test
+    testImplementation(libs.androidx.arch.core)
+
+    // Android Test Runner
+    androidTestImplementation(libs.androidx.test.runner)
+
+    // Android JUnit4
+    androidTestImplementation(libs.androidx.junit)
+
+    // Android JUnit5
+    androidTestImplementation(libs.junit5.android.test.core)
+    androidTestRuntimeOnly(libs.junit5.android.test.runner)
 
     // Glide
     implementation(libs.glide)
@@ -156,7 +172,6 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 
     // Mockk
-    testImplementation(libs.junitparams)
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.agent)
     androidTestImplementation(libs.mockk.agent)
