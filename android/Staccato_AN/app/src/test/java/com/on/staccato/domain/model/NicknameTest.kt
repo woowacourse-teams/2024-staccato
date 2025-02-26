@@ -5,43 +5,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-@JvmInline
-value class Nickname(val nickname: String) {
-    companion object {
-        private const val MIN_LENGTH = 1
-        private const val MAX_LENGTH = 20
-        private const val FORMAT_REGEX_PATTERN = "(?=.*[a-zA-Z가-힣._\\d])[a-zA-Z가-힣._\\d ]{1,20}"
-        private val formatRegex = FORMAT_REGEX_PATTERN.toRegex()
-
-        fun validate(nickname: String): NicknameState {
-            return when {
-                nickname.isBlank() -> NicknameState.Empty
-                nickname.length !in MIN_LENGTH..MAX_LENGTH ->
-                    NicknameState.InvalidLength(
-                        MIN_LENGTH,
-                        MAX_LENGTH,
-                    )
-
-                nickname.matches(formatRegex) -> NicknameState.Valid(nickname)
-                else -> NicknameState.InvalidFormat
-            }
-        }
-    }
-}
-
-sealed interface NicknameState {
-    data object Empty : NicknameState
-
-    data class Valid(val nickname: String) : NicknameState
-
-    data object InvalidFormat : NicknameState
-
-    data class InvalidLength(
-        val min: Int,
-        val max: Int,
-    ) : NicknameState
-}
-
 class NicknameTest {
     @ParameterizedTest
     @ValueSource(
