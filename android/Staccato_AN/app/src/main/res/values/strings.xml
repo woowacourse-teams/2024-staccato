@@ -135,6 +135,7 @@
     // activity_login
     <string name="login_start">시작하기</string>
     <string name="login_nickname_hint">닉네임을 입력해 주세요</string>
+    <string name="login_nickname_error_message_format">닉네임에는 한글, 영어, 마침표(.), 밑줄(_)만 사용할 수 있어요.</string>
     <string name="login_recovery_click_here_if_need_recovery"><u>이전 기록을 불러오려면 여기를 눌러주세요</u></string>
     <string name="login_staccato_logo_description">스타카토 로고</string>
 
