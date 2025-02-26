@@ -10,7 +10,9 @@
 
     <color name="staccato_black">#FF222222</color>
     <color name="staccato_blue">#FF6C7BFF</color>
-    <color name="staccato_blue_30">#4D6C7BFF</color>>
+    <color name="staccato_blue_30">#4D6C7BFF</color>
+
+    <color name="sub1">#FFFB5D67</color>
 
     <color name="gray1">#FFF4F4F4</color>
     <color name="gray2">#FFD2D2D2</color>
