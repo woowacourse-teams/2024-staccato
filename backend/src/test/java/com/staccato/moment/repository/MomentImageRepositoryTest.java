@@ -36,9 +36,9 @@ class MomentImageRepositoryTest extends RepositoryTest {
         // given
         Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
         Moment moment1 = momentRepository.save(MomentFixture
-                .createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), new MomentImages(List.of("url1", "url2"))));
+                .createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2")));
         Moment moment2 = momentRepository.save(MomentFixture
-                .createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), new MomentImages(List.of("url1", "url2"))));
+                .createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2")));
 
         // when
         momentImageRepository.deleteAllByMomentIdInBulk(List.of(moment1.getId(), moment2.getId()));
@@ -59,8 +59,7 @@ class MomentImageRepositoryTest extends RepositoryTest {
     void deleteAllByIdInBulk() {
         // given
         Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        MomentImages momentImages = new MomentImages(List.of("url1", "url2", "url3"));
-        Moment moment = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), momentImages));
+        Moment moment = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2", "url3")));
 
         List<Long> imageIds = moment.getMomentImages()
                 .getImages()

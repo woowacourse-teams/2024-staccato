@@ -41,7 +41,7 @@ public record CategoryDetailResponse(
         memory.getTerm().getStartAt(),
         memory.getTerm().getEndAt(),
         toMemberResponses(memory),
-        toMomentResponses(moments)
+        toStaccatoResponses(moments)
     );
   }
 
@@ -49,7 +49,7 @@ public record CategoryDetailResponse(
     return memory.getMates().stream().map(MemberResponse::new).toList();
   }
 
-  private static List<StaccatoResponse> toMomentResponses(List<Moment> moments) {
+  private static List<StaccatoResponse> toStaccatoResponses(List<Moment> moments) {
     return moments.stream().map(StaccatoResponse::new).toList();
   }
 }

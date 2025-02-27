@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import com.staccato.memory.service.MemoryFilter;
-import com.staccato.memory.service.MemorySort;
+import com.staccato.memory.service.CategoryFilter;
+import com.staccato.memory.service.CategorySort;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -18,11 +18,11 @@ public record CategoryReadRequest(
 ) {
     private static final String DELIMITER = ",";
 
-    public List<MemoryFilter> getFilters() {
+    public List<CategoryFilter> getFilters() {
         List<String> filters = parseFilters().stream()
                 .map(String::trim)
                 .toList();
-        return MemoryFilter.findAllByName(filters);
+        return CategoryFilter.findAllByName(filters);
     }
 
     private List<String> parseFilters() {
@@ -32,7 +32,7 @@ public record CategoryReadRequest(
         return Arrays.stream(filters.split(DELIMITER)).toList();
     }
 
-    public MemorySort getSort() {
-        return MemorySort.findByName(sort);
+    public CategorySort getSort() {
+        return CategorySort.findByName(sort);
     }
 }

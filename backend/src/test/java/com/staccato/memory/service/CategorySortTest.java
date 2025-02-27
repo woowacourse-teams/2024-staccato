@@ -20,7 +20,7 @@ import com.staccato.memory.repository.MemoryRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class MemorySortTest extends ServiceSliceTest {
+public class CategorySortTest extends ServiceSliceTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -36,9 +36,9 @@ public class MemorySortTest extends ServiceSliceTest {
             "newest, NEWEST",
             "oldest, OLDEST"
     })
-    void findByNameWithValidSort(String name, MemorySort sort) {
+    void findByNameWithValidSort(String name, CategorySort sort) {
         // when
-        MemorySort result = MemorySort.findByName(name);
+        CategorySort result = CategorySort.findByName(name);
 
         // then
         assertThat(result).isEqualTo(sort);
@@ -50,10 +50,10 @@ public class MemorySortTest extends ServiceSliceTest {
     @ValueSource(strings = {"invalid"})
     void findByNameWithInvalidOrNull(String name) {
         // when
-        MemorySort result = MemorySort.findByName(name);
+        CategorySort result = CategorySort.findByName(name);
 
         // then
-        assertThat(result).isEqualTo(MemorySort.UPDATED);
+        assertThat(result).isEqualTo(CategorySort.UPDATED);
     }
 
     @DisplayName("수정 시간 기준 내림차순으로 추억 목록을 조회된다.")
@@ -66,7 +66,7 @@ public class MemorySortTest extends ServiceSliceTest {
         memories.add(memoryRepository.save(MemoryFixture.createWithMember("second", member)));
 
         // when
-        List<Memory> result = MemorySort.UPDATED.apply(memories);
+        List<Memory> result = CategorySort.UPDATED.apply(memories);
 
         // then
         assertAll(
@@ -85,7 +85,7 @@ public class MemorySortTest extends ServiceSliceTest {
         memories.add(memoryRepository.save(MemoryFixture.createWithMember("second", member)));
 
         // when
-        List<Memory> result = MemorySort.NEWEST.apply(memories);
+        List<Memory> result = CategorySort.NEWEST.apply(memories);
 
         // then
         assertAll(
@@ -104,7 +104,7 @@ public class MemorySortTest extends ServiceSliceTest {
         memories.add(memoryRepository.save(MemoryFixture.createWithMember("second", member)));
 
         // when
-        List<Memory> result = MemorySort.OLDEST.apply(memories);
+        List<Memory> result = CategorySort.OLDEST.apply(memories);
 
         // then
         assertAll(

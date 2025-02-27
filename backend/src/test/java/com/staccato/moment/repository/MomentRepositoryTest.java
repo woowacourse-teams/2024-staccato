@@ -101,8 +101,8 @@ class MomentRepositoryTest extends RepositoryTest {
         Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
         memoryMemberRepository.save(new MemoryMember(member, memory));
 
-        Moment moment1 = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), new MomentImages(List.of("image1", "image2"))));
-        Moment moment2 = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2024, 1, 1, 22, 20), new MomentImages(List.of("image1", "image2"))));
+        Moment moment1 = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("image1", "image2")));
+        Moment moment2 = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2024, 1, 1, 22, 20), List.of("image1", "image2")));
         Moment moment3 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 10, 23, 21)));
 
         // when

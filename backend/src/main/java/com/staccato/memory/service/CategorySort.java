@@ -10,19 +10,19 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum MemorySort {
-    UPDATED("UPDATED", memoryList ->
-            memoryList.stream()
+public enum CategorySort {
+    UPDATED("UPDATED", categories ->
+        categories.stream()
                     .sorted(Comparator.comparing(Memory::getUpdatedAt).reversed())
                     .toList()
     ),
-    NEWEST("NEWEST", memoryList ->
-            memoryList.stream()
+    NEWEST("NEWEST", categories ->
+        categories.stream()
                     .sorted(Comparator.comparing(Memory::getCreatedAt).reversed())
                     .toList()
     ),
-    OLDEST("OLDEST", memoryList ->
-            memoryList.stream()
+    OLDEST("OLDEST", categories ->
+            categories.stream()
                     .sorted(Comparator.comparing(Memory::getCreatedAt))
                     .toList()
     );
@@ -34,7 +34,7 @@ public enum MemorySort {
         return operation.apply(memories);
     }
 
-    public static MemorySort findByName(String name) {
+    public static CategorySort findByName(String name) {
         return Stream.of(values())
                 .filter(sort -> sort.isSame(name))
                 .findFirst()

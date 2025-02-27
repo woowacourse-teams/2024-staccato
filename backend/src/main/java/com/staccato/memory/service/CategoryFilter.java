@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum MemoryFilter {
-    TERM("term", memoryList ->
-            memoryList.stream()
+public enum CategoryFilter {
+    TERM("term", categories ->
+        categories.stream()
                     .filter(Memory::hasTerm)
                     .collect(Collectors.toList())
     );
@@ -25,16 +25,16 @@ public enum MemoryFilter {
         return operation.apply(memories);
     }
 
-    public static List<MemoryFilter> findAllByName(List<String> filters) {
+    public static List<CategoryFilter> findAllByName(List<String> filters) {
         return filters.stream()
-                .map(name -> MemoryFilter.findByName(name.trim()))
+                .map(name -> CategoryFilter.findByName(name.trim()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .distinct()
                 .toList();
     }
 
-    private static Optional<MemoryFilter> findByName(String name) {
+    private static Optional<CategoryFilter> findByName(String name) {
         return Stream.of(values())
                 .filter(value -> value.isSame(name))
                 .findFirst();

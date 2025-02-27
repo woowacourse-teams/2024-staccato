@@ -17,7 +17,7 @@ import com.staccato.memory.repository.MemoryRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class MemoryFilterTest extends ServiceSliceTest {
+class CategoryFilterTest extends ServiceSliceTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -27,12 +27,12 @@ class MemoryFilterTest extends ServiceSliceTest {
     @Test
     void findByNameWithValidFilter() {
         // when
-        List<MemoryFilter> result = MemoryFilter.findAllByName(List.of("term"));
+        List<CategoryFilter> result = CategoryFilter.findAllByName(List.of("term"));
 
         // then
         assertAll(
                 () -> assertThat(result).hasSize(1),
-                () -> assertThat(result.get(0)).isEqualTo(MemoryFilter.TERM)
+                () -> assertThat(result.get(0)).isEqualTo(CategoryFilter.TERM)
         );
     }
 
@@ -40,12 +40,12 @@ class MemoryFilterTest extends ServiceSliceTest {
     @Test
     void findAllByNameIfOnlyValid() {
         // when
-        List<MemoryFilter> result = MemoryFilter.findAllByName(List.of("invalid", "term"));
+        List<CategoryFilter> result = CategoryFilter.findAllByName(List.of("invalid", "term"));
 
         // then
         assertAll(
                 () -> assertThat(result).hasSize(1),
-                () -> assertThat(result.get(0)).isEqualTo(MemoryFilter.TERM)
+                () -> assertThat(result.get(0)).isEqualTo(CategoryFilter.TERM)
         );
     }
 
@@ -53,12 +53,12 @@ class MemoryFilterTest extends ServiceSliceTest {
     @Test
     void findAllByNameDistinct() {
         // when
-        List<MemoryFilter> result = MemoryFilter.findAllByName(List.of("TERM", "term"));
+        List<CategoryFilter> result = CategoryFilter.findAllByName(List.of("TERM", "term"));
 
         // then
         assertAll(
                 () -> assertThat(result).hasSize(1),
-                () -> assertThat(result.get(0)).isEqualTo(MemoryFilter.TERM)
+                () -> assertThat(result.get(0)).isEqualTo(CategoryFilter.TERM)
         );
     }
 
@@ -66,7 +66,7 @@ class MemoryFilterTest extends ServiceSliceTest {
     @Test
     void findByNameWithInvalid() {
         // when
-        List<MemoryFilter> result = MemoryFilter.findAllByName(List.of("invalid"));
+        List<CategoryFilter> result = CategoryFilter.findAllByName(List.of("invalid"));
 
         // then
         assertThat(result).isEmpty();
@@ -85,7 +85,7 @@ class MemoryFilterTest extends ServiceSliceTest {
         memories.add(memory2);
 
         // when
-        List<Memory> result = MemoryFilter.TERM.apply(memories);
+        List<Memory> result = CategoryFilter.TERM.apply(memories);
 
         // then
         assertAll(

@@ -13,8 +13,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.staccato.memory.service.dto.request.CategoryReadRequest;
+import com.staccato.memory.service.dto.response.CategoryDetailResponse;
+import com.staccato.memory.service.dto.response.CategoryIdResponse;
+import com.staccato.memory.service.dto.response.CategoryNameResponses;
+import com.staccato.memory.service.dto.response.CategoryResponses;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.MomentImages;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -24,35 +31,20 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.ControllerTest;
-import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.memory.MemoryFixture;
-import com.staccato.fixture.memory.MemoryNameResponsesFixture;
-import com.staccato.fixture.memory.MemoryRequestFixture;
-import com.staccato.fixture.memory.MemoryResponsesFixture;
+import com.staccato.fixture.memory.CategoryNameResponsesFixture;
+import com.staccato.fixture.memory.CategoryResponsesFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.domain.Memory;
-import com.staccato.memory.service.MemoryService;
 import com.staccato.memory.service.dto.request.CategoryRequest;
-import com.staccato.memory.service.dto.request.MemoryReadRequest;
-import com.staccato.memory.service.dto.request.MemoryRequest;
-import com.staccato.memory.service.dto.response.MemoryDetailResponse;
-import com.staccato.memory.service.dto.response.MemoryIdResponse;
-import com.staccato.memory.service.dto.response.MemoryNameResponses;
-import com.staccato.memory.service.dto.response.MemoryResponses;
-import com.staccato.memory.service.dto.response.MomentResponse;
 
 class CategoryControllerTest extends ControllerTest {
 
@@ -99,7 +91,7 @@ class CategoryControllerTest extends ControllerTest {
                     "endAt": "2023-07-10"
                 }
                 """;
-        when(memoryService.createMemory(any(), any())).thenReturn(new MemoryIdResponse(1));
+        when(categoryService.createCategory(any(), any())).thenReturn(new CategoryIdResponse(1));
         String expectedResponse = """
                 {
                     "categoryId" : 1
@@ -128,7 +120,7 @@ class CategoryControllerTest extends ControllerTest {
                     "description": "친구들과 함께한 여름 휴가 여행"
                 }
                 """;
-        when(memoryService.createMemory(any(), any())).thenReturn(new MemoryIdResponse(1));
+        when(categoryService.createCategory(any(), any())).thenReturn(new CategoryIdResponse(1));
         String expectedResponse = """
                 {
                     "categoryId" : 1
@@ -151,7 +143,7 @@ class CategoryControllerTest extends ControllerTest {
     void createCategoryWithoutOption(CategoryRequest categoryRequest) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        when(memoryService.createMemory(any(), any())).thenReturn(new MemoryIdResponse(1));
+        when(categoryService.createCategory(any(), any())).thenReturn(new CategoryIdResponse(1));
 
         // when & then
         mockMvc.perform(post("/categories")
@@ -186,8 +178,8 @@ class CategoryControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
-        MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
-        when(memoryService.readAllMemories(any(Member.class), any(MemoryReadRequest.class))).thenReturn(memoryResponses);
+        CategoryResponses categoryResponses = CategoryResponsesFixture.create(memory);
+        when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
                 {
                     "categories": [
@@ -209,14 +201,34 @@ class CategoryControllerTest extends ControllerTest {
                 .andExpect(content().json(expectedResponse));
     }
 
+    @DisplayName("유효하지 않은 필터링 조건은 무시하고, 모든 카테고리 목록을 조회한다.")
+    @Test
+    void readAllCategoryIgnoringInvalidFilter() throws Exception {
+        // given
+        Member member = MemberFixture.create();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        Memory memory = MemoryFixture.createWithMember(member);
+        Memory memory2 = MemoryFixture.createWithMember(LocalDate.of(2023, 8, 1), LocalDate.of(2023, 8, 10), member);
+        CategoryResponses categoryResponses = CategoryResponsesFixture.create(memory, memory2);
+
+        when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
+
+        // when & then
+        mockMvc.perform(get("/categories")
+                .header(HttpHeaders.AUTHORIZATION, "token")
+                .param("filters", "invalid"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.categories.size()").value(2));
+    }
+
     @DisplayName("사용자가 기간이 없는 카테고리를 포함한 목록을 조회하는 응답 직렬화에 성공한다.")
     @Test
     void readAllCategoryWithoutTerm() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
-        MemoryResponses memoryResponses = MemoryResponsesFixture.create(memory);
-        when(memoryService.readAllMemories(any(Member.class), any(MemoryReadRequest.class))).thenReturn(memoryResponses);
+        CategoryResponses categoryResponses = CategoryResponsesFixture.create(memory);
+        when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
                 {
                     "categories": [
@@ -242,8 +254,8 @@ class CategoryControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
-        MemoryNameResponses memoryNameResponses = MemoryNameResponsesFixture.create(memory);
-        when(memoryService.readAllMemoriesByDate(any(Member.class), any())).thenReturn(memoryNameResponses);
+        CategoryNameResponses categoryNameResponses = CategoryNameResponsesFixture.create(memory);
+        when(categoryService.readAllCategoriesByDate(any(Member.class), any())).thenReturn(categoryNameResponses);
         String expectedResponse = """
                 {
                     "categories": [
@@ -286,9 +298,9 @@ class CategoryControllerTest extends ControllerTest {
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
-        Moment moment = MomentFixture.create(memory);
-        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(moment));
-        when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
+        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(memory, List.of(moment));
+        when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
                     "categoryId": null,
@@ -329,9 +341,9 @@ class CategoryControllerTest extends ControllerTest {
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.createWithMember(null, null, MemberFixture.create());
-        Moment moment = MomentFixture.create(memory);
-        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(moment));
-        when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
+        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(memory, List.of(moment));
+        when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
                     "categoryId": null,

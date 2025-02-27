@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
-import com.staccato.memory.service.MemoryFilter;
-import com.staccato.memory.service.MemorySort;
+import com.staccato.memory.service.CategoryFilter;
+import com.staccato.memory.service.CategorySort;
 
 class CategoryReadRequestTest {
     @DisplayName("필터가 주어졌을 때 올바른 필터 목록을 반환한다")
@@ -20,10 +20,10 @@ class CategoryReadRequestTest {
         CategoryReadRequest request = new CategoryReadRequest("TERM, term", "NEWEST");
 
         // when
-        List<MemoryFilter> filters = request.getFilters();
+        List<CategoryFilter> filters = request.getFilters();
 
         // then
-        assertThat(filters).hasSize(1).containsOnly(MemoryFilter.TERM);
+        assertThat(filters).hasSize(1).containsOnly(CategoryFilter.TERM);
     }
 
     @DisplayName("필터가 주어지지 않았을 때 빈 필터 목록을 반환한다")
@@ -34,7 +34,7 @@ class CategoryReadRequestTest {
         CategoryReadRequest request = new CategoryReadRequest(filters, "NEWEST");
 
         // when
-        List<MemoryFilter> result = request.getFilters();
+        List<CategoryFilter> result = request.getFilters();
 
         // then
         assertThat(result).isEmpty();
@@ -48,9 +48,9 @@ class CategoryReadRequestTest {
         CategoryReadRequest request = new CategoryReadRequest(null, sort);
 
         // when
-        MemorySort result = request.getSort();
+        CategorySort result = request.getSort();
 
         // then
-        assertThat(result).isEqualTo(MemorySort.UPDATED);
+        assertThat(result).isEqualTo(CategorySort.UPDATED);
     }
 }

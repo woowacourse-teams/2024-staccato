@@ -10,12 +10,10 @@ import org.springframework.http.ResponseEntity;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.service.dto.request.CategoryReadRequest;
 import com.staccato.memory.service.dto.request.CategoryRequest;
-import com.staccato.memory.service.dto.request.MemoryReadRequest;
 import com.staccato.memory.service.dto.response.CategoryDetailResponse;
 import com.staccato.memory.service.dto.response.CategoryIdResponse;
 import com.staccato.memory.service.dto.response.CategoryNameResponses;
 import com.staccato.memory.service.dto.response.CategoryResponses;
-import com.staccato.memory.service.dto.response.MemoryResponses;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

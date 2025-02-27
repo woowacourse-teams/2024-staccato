@@ -37,16 +37,16 @@ public class MomentFixture {
                 .build();
     }
 
-    public static Moment createWithImages(Memory memory, LocalDateTime visitedAt, MomentImages momentImages) {
+    public static Moment createWithImages(Memory memory, LocalDateTime visitedAt, List<String> momentImages) {
         return Moment.builder()
-                .visitedAt(visitedAt)
-                .title("staccatoTitle")
-                .latitude(latitude)
-                .longitude(longitude)
-                .placeName("placeName")
-                .address("address")
-                .memory(memory)
-                .momentImages(momentImages)
-                .build();
+            .visitedAt(visitedAt)
+            .title("staccatoTitle")
+            .latitude(latitude)
+            .longitude(longitude)
+            .placeName("placeName")
+            .address("address")
+            .memory(memory)
+            .momentImages(new MomentImages(momentImages))
+            .build();
     }
 }

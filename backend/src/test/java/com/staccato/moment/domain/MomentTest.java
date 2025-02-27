@@ -125,7 +125,7 @@ class MomentTest {
         // given
         Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
         String thumbnail = "1.png";
-        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages(List.of(thumbnail, "2.png")));
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), List.of(thumbnail, "2.png"));
 
         // when
         String result = moment.thumbnailUrl();
@@ -139,7 +139,7 @@ class MomentTest {
     void noThumbnail(){
         // given
         Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
-        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages());
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), List.of());
 
         // when
         String result = moment.thumbnailUrl();

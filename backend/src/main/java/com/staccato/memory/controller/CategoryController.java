@@ -20,17 +20,13 @@ import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 import com.staccato.memory.controller.docs.CategoryControllerDocs;
-import com.staccato.memory.service.MemoryService;
+import com.staccato.memory.service.CategoryService;
 import com.staccato.memory.service.dto.request.CategoryReadRequest;
 import com.staccato.memory.service.dto.request.CategoryRequest;
 import com.staccato.memory.service.dto.response.CategoryDetailResponse;
 import com.staccato.memory.service.dto.response.CategoryIdResponse;
 import com.staccato.memory.service.dto.response.CategoryNameResponses;
 import com.staccato.memory.service.dto.response.CategoryResponses;
-import com.staccato.memory.service.dto.response.MemoryDetailResponse;
-import com.staccato.memory.service.dto.response.MemoryIdResponse;
-import com.staccato.memory.service.dto.response.MemoryNameResponses;
-import com.staccato.memory.service.dto.response.MemoryResponses;
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -39,16 +35,16 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/categories")
 @RequiredArgsConstructor
 public class CategoryController implements CategoryControllerDocs {
-    private final MemoryService memoryService;
+    private final CategoryService categoryService;
 
     @PostMapping
     public ResponseEntity<CategoryIdResponse> createCategory(
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member
     ) {
-        MemoryIdResponse memoryIdResponse = memoryService.createMemory(CategoryDtoMapper.toMemoryRequest(categoryRequest), member);
-        return ResponseEntity.created(URI.create("/categories/" + memoryIdResponse.memoryId()))
-                .body(CategoryDtoMapper.toCategoryIdResponse(memoryIdResponse));
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest, member);
+        return ResponseEntity.created(URI.create("/categories/" + categoryIdResponse.categoryId()))
+                .body(categoryIdResponse);
     }
 
     @GetMapping
@@ -56,8 +52,8 @@ public class CategoryController implements CategoryControllerDocs {
             @LoginMember Member member,
             @ModelAttribute("CategoryReadRequest") CategoryReadRequest categoryReadRequest
     ) {
-        MemoryResponses memoryResponses = memoryService.readAllMemories(member, CategoryDtoMapper.toMemoryReadRequest(categoryReadRequest));
-        return ResponseEntity.ok(CategoryDtoMapper.toCategoryResponses(memoryResponses));
+        CategoryResponses categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
+        return ResponseEntity.ok(categoryResponses);
     }
 
     @GetMapping("/candidates")
@@ -65,16 +61,16 @@ public class CategoryController implements CategoryControllerDocs {
             @LoginMember Member member,
             @RequestParam(value = "currentDate") LocalDate currentDate
     ) {
-        MemoryNameResponses memoryNameResponses = memoryService.readAllMemoriesByDate(member, currentDate);
-        return ResponseEntity.ok(CategoryDtoMapper.toCategoryNameResponses(memoryNameResponses));
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDate(member, currentDate);
+        return ResponseEntity.ok(categoryNameResponses);
     }
 
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryDetailResponse> readCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
-        MemoryDetailResponse memoryDetailResponse = memoryService.readMemoryById(categoryId, member);
-        return ResponseEntity.ok(CategoryDtoMapper.toCategoryDetailResponse(memoryDetailResponse));
+        CategoryDetailResponse categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
+        return ResponseEntity.ok(categoryDetailResponse);
     }
 
     @PutMapping(path = "/{categoryId}")
@@ -82,7 +78,7 @@ public class CategoryController implements CategoryControllerDocs {
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member) {
-        memoryService.updateMemory(CategoryDtoMapper.toMemoryRequest(categoryRequest), categoryId, member);
+        categoryService.updateCategory(categoryRequest, categoryId, member);
         return ResponseEntity.ok().build();
     }
 
@@ -90,7 +86,7 @@ public class CategoryController implements CategoryControllerDocs {
     public ResponseEntity<Void> deleteCategory(
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @LoginMember Member member) {
-        memoryService.deleteMemory(categoryId, member);
+        categoryService.deleteCategory(categoryId, member);
         return ResponseEntity.ok().build();
     }
 }
