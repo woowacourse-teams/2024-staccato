@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.map
 
-import android.location.Location
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -20,7 +19,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.Task
 import com.on.staccato.R
 import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.common.location.LocationManager
@@ -99,7 +97,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     override fun onMyLocationButtonClick(): Boolean {
-        getMyLocation()
+        mapsViewModel.getCurrentLocation()
         return false
     }
 
@@ -146,7 +144,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         when {
             isLocationPermissionGranted -> {
                 map.isMyLocationEnabled = true
-                getMyLocation()
+                mapsViewModel.getCurrentLocation()
             }
 
             shouldShowRequestLocationPermissionsRationale -> {
@@ -164,13 +162,6 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
                     )
                 }
             }
-        }
-    }
-
-    private fun getMyLocation() {
-        val currentLocation: Task<Location> = locationManager.getCurrentLocation()
-        currentLocation.addOnSuccessListener {
-            mapsViewModel.setCurrentLocation(it.latitude, it.longitude)
         }
     }
 

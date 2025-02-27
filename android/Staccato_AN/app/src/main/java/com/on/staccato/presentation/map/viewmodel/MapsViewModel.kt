@@ -8,6 +8,7 @@ import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.StaccatoLocation
+import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
@@ -23,6 +24,7 @@ class MapsViewModel
     @Inject
     constructor(
         private val staccatoRepository: StaccatoRepository,
+        private val locationRepository: LocationRepository,
     ) : ViewModel() {
         private val _staccatoLocations = MutableLiveData<List<StaccatoLocation>>()
         val staccatoLocations: LiveData<List<StaccatoLocation>> get() = _staccatoLocations
@@ -37,6 +39,13 @@ class MapsViewModel
 
         private val _currentLocation = MutableLiveData<LocationUiModel>()
         val currentLocation: LiveData<LocationUiModel> get() = _currentLocation
+
+        fun getCurrentLocation() {
+            val currentLocation = locationRepository.getCurrentLocation()
+            currentLocation.addOnSuccessListener {
+                _currentLocation.value = LocationUiModel(it.latitude, it.longitude)
+            }
+        }
 
         fun setCurrentLocation(
             latitude: Double,
