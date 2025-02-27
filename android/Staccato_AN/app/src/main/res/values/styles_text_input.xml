@@ -7,10 +7,29 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">8dp</item>
+        <item name="boxBackgroundColor">@color/gray1</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
         <item name="counterEnabled">true</item>
         <item name="counterTextAppearance">@style/Typography.Body4.Not.Resizable</item>
         <item name="counterTextColor">@color/gray3</item>
         <item name="hintEnabled">false</item>
+    </style>
+
+    <style name="TextInputLayoutStyle.Validation" parent="TextInputLayoutStyle">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxStrokeErrorColor">@color/sub1</item>
+        <item name="errorEnabled">true</item>
+        <item name="errorIconDrawable">@null</item>
+        <item name="errorTextAppearance">@style/Typography.Body4.Not.Resizable</item>
+        <item name="errorTextColor">@color/sub1</item>
+        <item name="helperTextEnabled">true</item>
+        <item name="helperTextTextAppearance">@style/Typography.Body4.Not.Resizable</item>
+        <item name="helperTextTextColor">@color/staccato_blue</item>
     </style>
 
     <!--  TextInputEditText styles  -->
@@ -18,7 +37,6 @@
     <style name="TextInputEditTextStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
         <item name="android:paddingHorizontal">16dp</item>
         <item name="android:paddingVertical">12.5dp</item>
         <item name="android:textAppearance">@style/Typography.Body1.Not.Resizable</item>
