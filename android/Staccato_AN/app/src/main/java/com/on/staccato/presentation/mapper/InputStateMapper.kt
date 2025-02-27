@@ -13,9 +13,10 @@ fun NicknameState.handleNicknameInputState(context: Context): InputState {
 
         NicknameState.BlankFirst -> InputState.Invalid(context.getString(R.string.login_nickname_error_message_blank_first))
 
-        is NicknameState.InvalidLength -> InputState.Invalid(
-            context.getString(R.string.login_nickname_error_message_length).format(min, max)
-        )
+        is NicknameState.InvalidLength ->
+            InputState.Invalid(
+                context.getString(R.string.login_nickname_error_message_length).format(min, max),
+            )
 
         is NicknameState.Valid -> InputState.Valid(context.getString(R.string.login_nickname_valid_message))
     }
