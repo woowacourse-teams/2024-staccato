@@ -6,19 +6,32 @@ import androidx.databinding.BindingAdapter
 import com.google.android.material.button.MaterialButton
 import com.on.staccato.R
 import com.on.staccato.domain.model.CategoryCandidate
+import com.on.staccato.domain.model.NicknameState
+import com.on.staccato.presentation.common.InputState
+import com.on.staccato.presentation.mapper.handleNicknameInputState
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 @BindingAdapter("loginButtonEnabled")
-fun Button.setLoginButtonEnabled(nickName: String?) {
+fun Button.setLoginButtonEnabled(nicknameState: NicknameState) {
+    val inputState = nicknameState.handleNicknameInputState(context)
     isEnabled =
-        if (nickName.isNullOrBlank()) {
-            setTextColor(resources.getColor(R.color.gray4, null))
-            false
-        } else {
-            setTextColor(resources.getColor(R.color.white, null))
-            true
+        when (inputState) {
+            is InputState.Empty -> {
+                setTextColor(resources.getColor(R.color.gray4, null))
+                false
+            }
+
+            is InputState.Invalid -> {
+                setTextColor(resources.getColor(R.color.gray4, null))
+                false
+            }
+
+            is InputState.Valid -> {
+                setTextColor(resources.getColor(R.color.white, null))
+                true
+            }
         }
 }
 
