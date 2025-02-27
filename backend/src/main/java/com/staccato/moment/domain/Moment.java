@@ -1,5 +1,6 @@
 package com.staccato.moment.domain;
 
+import com.staccato.category.domain.Category;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -20,7 +21,6 @@ import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
-import com.staccato.memory.domain.Memory;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,8 +45,8 @@ public class Moment extends BaseEntity {
     @Embedded
     private Spot spot;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memory_id", nullable = false)
-    private Memory memory;
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
     @Embedded
     private MomentImages momentImages = new MomentImages();
 
@@ -59,18 +59,18 @@ public class Moment extends BaseEntity {
             @NonNull BigDecimal latitude,
             @NonNull BigDecimal longitude,
             @NonNull MomentImages momentImages,
-            @NonNull Memory memory
+            @NonNull Category category
     ) {
-        validateIsWithinMemoryDuration(visitedAt, memory);
+        validateIsWithinCategoryTerm(visitedAt, category);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
         this.title = title.trim();
         this.spot = new Spot(placeName, address, latitude, longitude);
         this.momentImages.addAll(momentImages, this);
-        this.memory = memory;
+        this.category = category;
     }
 
-    private void validateIsWithinMemoryDuration(LocalDateTime visitedAt, Memory memory) {
-        if (memory.isWithoutDuration(visitedAt)) {
+    private void validateIsWithinCategoryTerm(LocalDateTime visitedAt, Category category) {
+        if (category.isWithoutDuration(visitedAt)) {
             throw new StaccatoException("추억에 포함되지 않는 날짜입니다.");
         }
     }
@@ -80,7 +80,7 @@ public class Moment extends BaseEntity {
         this.title = newMoment.getTitle();
         this.spot = newMoment.getSpot();
         this.momentImages.update(newMoment.momentImages, this);
-        this.memory = newMoment.getMemory();
+        this.category = newMoment.getCategory();
     }
 
     public String thumbnailUrl() {
@@ -102,7 +102,7 @@ public class Moment extends BaseEntity {
     @PreUpdate
     @PreRemove
     public void touchForWrite() {
-        memory.setUpdatedAt(LocalDateTime.now());
+        category.setUpdatedAt(LocalDateTime.now());
     }
 
     public List<MomentImage> existingImages() {

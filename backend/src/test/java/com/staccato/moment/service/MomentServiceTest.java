@@ -1,5 +1,6 @@
 package com.staccato.moment.service;
 
+import com.staccato.category.domain.Category;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,17 +15,15 @@ import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
-import com.staccato.fixture.memory.MemoryFixture;
+import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.fixture.moment.MomentRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.memory.domain.Memory;
-import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImage;
-import com.staccato.moment.domain.MomentImages;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
@@ -46,7 +45,7 @@ class MomentServiceTest extends ServiceSliceTest {
     @Autowired
     private MomentImageRepository momentImageRepository;
     @Autowired
-    private MemoryRepository memoryRepository;
+    private CategoryRepository categoryRepository;
     @Autowired
     private MemberRepository memberRepository;
 
@@ -55,8 +54,8 @@ class MomentServiceTest extends ServiceSliceTest {
     void createMoment() {
         // given
         Member member = saveMember();
-        Memory memory = saveMemory(member);
-        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
+        Category category = saveCategory(member);
+        MomentRequest momentRequest = MomentRequestFixture.create(category.getId());
 
         // when
         long momentId = momentService.createMoment(momentRequest, member).momentId();
@@ -70,8 +69,8 @@ class MomentServiceTest extends ServiceSliceTest {
     void createMomentWithMomentImages() {
         // given
         Member member = saveMember();
-        Memory memory = saveMemory(member);
-        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId(), List.of("image.jpg"));
+        Category category = saveCategory(member);
+        MomentRequest momentRequest = MomentRequestFixture.create(category.getId(), List.of("image.jpg"));
 
         // when
         long momentId = momentService.createMoment(momentRequest, member).momentId();
@@ -90,8 +89,8 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        Memory memory = saveMemory(member);
-        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
+        Category category = saveCategory(member);
+        MomentRequest momentRequest = MomentRequestFixture.create(category.getId());
 
         // when & then
         assertThatThrownBy(() -> momentService.createMoment(momentRequest, otherMember))
@@ -117,9 +116,9 @@ class MomentServiceTest extends ServiceSliceTest {
     void readAllMoment() {
         // given
         Member member = saveMember();
-        Memory memory = saveMemory(member);
-        saveMomentWithImages(memory);
-        saveMomentWithImages(memory);
+        Category category = saveCategory(member);
+        saveMomentWithImages(category);
+        saveMomentWithImages(category);
 
         // when
         MomentLocationResponses actual = momentService.readAllMoment(member);
@@ -133,8 +132,8 @@ class MomentServiceTest extends ServiceSliceTest {
     void readMomentById() {
         // given
         Member member = saveMember();
-        Memory memory = saveMemory(member);
-        Moment moment = saveMomentWithImages(memory);
+        Category category = saveCategory(member);
+        Moment moment = saveMomentWithImages(category);
 
         // when
         MomentDetailResponse actual = momentService.readMomentById(moment.getId(), member);
@@ -149,8 +148,8 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        Memory memory = saveMemory(member);
-        Moment moment = saveMomentWithImages(memory);
+        Category category = saveCategory(member);
+        Moment moment = saveMomentWithImages(category);
 
         // when & then
         assertThatThrownBy(() -> momentService.readMomentById(moment.getId(), otherMember))
@@ -175,12 +174,12 @@ class MomentServiceTest extends ServiceSliceTest {
     void updateMomentById() {
         // given
         Member member = saveMember();
-        Memory memory = saveMemory(member);
-        Memory memory2 = saveMemory(member);
-        Moment moment = saveMomentWithImages(memory);
+        Category category = saveCategory(member);
+        Category category2 = saveCategory(member);
+        Moment moment = saveMomentWithImages(category);
 
         // when
-        MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), memory2.getId(), List.of("https://existExample.com.jpg", "https://newExample.com.jpg"));
+        MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), category2.getId(), List.of("https://existExample.com.jpg", "https://newExample.com.jpg"));
         momentService.updateMomentById(moment.getId(), momentRequest, member);
 
         // then
@@ -188,7 +187,7 @@ class MomentServiceTest extends ServiceSliceTest {
         List<MomentImage> images = momentImageRepository.findAll();
         assertAll(
                 () -> assertThat(foundedMoment.getTitle()).isEqualTo("newStaccatoTitle"),
-                () -> assertThat(foundedMoment.getMemory().getId()).isEqualTo(memory2.getId()),
+                () -> assertThat(foundedMoment.getCategory().getId()).isEqualTo(category2.getId()),
                 () -> assertThat(images.size()).isEqualTo(2),
                 () -> assertThat(images.get(0).getImageUrl()).isEqualTo("https://existExample.com.jpg"),
                 () -> assertThat(images.get(1).getImageUrl()).isEqualTo("https://newExample.com.jpg")
@@ -201,9 +200,9 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        Memory memory = saveMemory(member);
-        Moment moment = saveMomentWithImages(memory);
-        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
+        Category category = saveCategory(member);
+        Moment moment = saveMomentWithImages(category);
+        MomentRequest momentRequest = MomentRequestFixture.create(category.getId());
 
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentRequest, otherMember))
@@ -211,16 +210,16 @@ class MomentServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("본인 것이 아닌 추억에 속하도록 스타카토를 수정하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 카테고리에 속하도록 스타카토를 수정하려고 하면 예외가 발생한다.")
     @Test
-    void failToUpdateMomentToOtherMemory() {
+    void failToUpdateMomentToOtherCategory() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        Memory memory = saveMemory(member);
-        Memory otherMemory = saveMemory(otherMember);
-        Moment moment = saveMomentWithImages(memory);
-        MomentRequest momentRequest = MomentRequestFixture.create(otherMemory.getId());
+        Category category = saveCategory(member);
+        Category otherCategory = saveCategory(otherMember);
+        Moment moment = saveMomentWithImages(category);
+        MomentRequest momentRequest = MomentRequestFixture.create(otherCategory.getId());
 
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentRequest, member))
@@ -233,8 +232,8 @@ class MomentServiceTest extends ServiceSliceTest {
     void failToUpdateNotExistMoment() {
         // given
         Member member = saveMember();
-        Memory memory = saveMemory(member);
-        MomentRequest momentRequest = MomentRequestFixture.create(memory.getId());
+        Category category = saveCategory(member);
+        MomentRequest momentRequest = MomentRequestFixture.create(category.getId());
 
         // when & then
         assertThatThrownBy(() -> momentService.updateMomentById(1L, momentRequest, member))
@@ -247,8 +246,8 @@ class MomentServiceTest extends ServiceSliceTest {
     void deleteMomentById() {
         // given
         Member member = saveMember();
-        Memory memory = saveMemory(member);
-        Moment moment = saveMomentWithImages(memory);
+        Category category = saveCategory(member);
+        Moment moment = saveMomentWithImages(category);
         Comment comment = commentRepository.save(CommentFixture.create(moment, member));
 
         // when
@@ -269,8 +268,8 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
-        Memory memory = saveMemory(member);
-        Moment moment = saveMomentWithImages(memory);
+        Category category = saveCategory(member);
+        Moment moment = saveMomentWithImages(category);
 
         // when & then
         assertThatThrownBy(() -> momentService.deleteMomentById(moment.getId(), otherMember))
@@ -283,8 +282,8 @@ class MomentServiceTest extends ServiceSliceTest {
     void updateMomentFeelingById() {
         // given
         Member member = saveMember();
-        Memory memory = saveMemory(member);
-        Moment moment = saveMomentWithImages(memory);
+        Category category = saveCategory(member);
+        Moment moment = saveMomentWithImages(category);
         FeelingRequest feelingRequest = new FeelingRequest("happy");
 
         // when
@@ -301,14 +300,14 @@ class MomentServiceTest extends ServiceSliceTest {
         return memberRepository.save(MemberFixture.create());
     }
 
-    private Memory saveMemory(Member member) {
-        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
-        memory.addMemoryMember(member);
-        return memoryRepository.save(memory);
+    private Category saveCategory(Member member) {
+        Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        category.addCategoryMember(member);
+        return categoryRepository.save(category);
     }
 
-    private Moment saveMomentWithImages(Memory memory) {
-        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"));
+    private Moment saveMomentWithImages(Category category) {
+        Moment moment = MomentFixture.createWithImages(category, LocalDateTime.now(), List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"));
         return momentRepository.save(moment);
     }
 }

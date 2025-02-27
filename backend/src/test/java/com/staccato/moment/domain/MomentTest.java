@@ -1,5 +1,6 @@
 package com.staccato.moment.domain;
 
+import com.staccato.category.domain.Category;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,12 +17,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.Member.MemberFixture;
-import com.staccato.fixture.memory.MemoryFixture;
+import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.memory.domain.Memory;
-import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.moment.repository.MomentRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +33,7 @@ class MomentTest {
     @Test
     void createMoment() {
         // given
-        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
         LocalDateTime visitedAt = LocalDateTime.now().plusDays(1);
 
         // when & then
@@ -44,7 +44,7 @@ class MomentTest {
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)
                 .address("address")
-                .memory(memory)
+                .category(category)
                 .momentImages(new MomentImages(List.of()))
                 .build())
                 .doesNotThrowAnyException();
@@ -54,7 +54,7 @@ class MomentTest {
     @Test
     void createMomentInUndefinedDuration() {
         // given
-        Memory memory = MemoryFixture.create(null, null);
+        Category category = CategoryFixture.create(null, null);
         LocalDateTime visitedAt = LocalDateTime.now().plusDays(1);
 
         // when & then
@@ -65,7 +65,7 @@ class MomentTest {
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)
                 .address("address")
-                .memory(memory)
+                .category(category)
                 .momentImages(new MomentImages(List.of()))
                 .build())
                 .doesNotThrowAnyException();
@@ -75,7 +75,7 @@ class MomentTest {
     @Test
     void trimPlaceName() {
         // given
-        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
         LocalDateTime visitedAt = LocalDateTime.now().plusDays(1);
         String title = " staccatoTitle ";
         String expectedTitle = "staccatoTitle";
@@ -88,7 +88,7 @@ class MomentTest {
                 .longitude(BigDecimal.ONE)
                 .placeName("placeName")
                 .address("address")
-                .memory(memory)
+                .category(category)
                 .momentImages(new MomentImages(List.of()))
                 .build();
 
@@ -101,7 +101,7 @@ class MomentTest {
     @ParameterizedTest
     void failCreateMoment(long plusDays) {
         // given
-        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
         LocalDateTime visitedAt = LocalDateTime.now().plusDays(plusDays);
 
         // when & then
@@ -112,7 +112,7 @@ class MomentTest {
                 .latitude(BigDecimal.ONE)
                 .longitude(BigDecimal.ONE)
                 .address("address")
-                .memory(memory)
+                .category(category)
                 .momentImages(new MomentImages(List.of()))
                 .build())
                 .isInstanceOf(StaccatoException.class)
@@ -123,9 +123,10 @@ class MomentTest {
     @Test
     void thumbnail(){
         // given
-        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
         String thumbnail = "1.png";
-        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), List.of(thumbnail, "2.png"));
+        Moment moment = MomentFixture.createWithImages(
+            category, LocalDateTime.now(), List.of(thumbnail, "2.png"));
 
         // when
         String result = moment.thumbnailUrl();
@@ -138,8 +139,8 @@ class MomentTest {
     @Test
     void noThumbnail(){
         // given
-        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
-        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), List.of());
+        Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        Moment moment = MomentFixture.createWithImages(category, LocalDateTime.now(), List.of());
 
         // when
         String result = moment.thumbnailUrl();
@@ -155,63 +156,63 @@ class MomentTest {
         @Autowired
         private MemberRepository memberRepository;
         @Autowired
-        private MemoryRepository memoryRepository;
+        private CategoryRepository categoryRepository;
         @Autowired
         private MomentRepository momentRepository;
         @PersistenceContext
         private EntityManager entityManager;
 
-        @DisplayName("Moment 생성 시 Memory의 updatedAt이 갱신된다.")
+        @DisplayName("Moment 생성 시 Category의 updatedAt이 갱신된다.")
         @Test
-        void updateMemoryUpdatedDateWhenMomentCreated() {
+        void updateCategoryUpdatedDateWhenMomentCreated() {
             // given
             Member member = memberRepository.save(MemberFixture.create());
-            Memory memory = memoryRepository.save(MemoryFixture.createWithMember(member));
-            LocalDateTime beforeCreate = memory.getUpdatedAt();
+            Category category = categoryRepository.save(CategoryFixture.createWithMember(member));
+            LocalDateTime beforeCreate = category.getUpdatedAt();
 
             // when
-            momentRepository.save(MomentFixture.create(memory));
+            momentRepository.save(MomentFixture.create(category));
             entityManager.flush();
-            entityManager.refresh(memory);
-            LocalDateTime afterCreate = memory.getUpdatedAt();
+            entityManager.refresh(category);
+            LocalDateTime afterCreate = category.getUpdatedAt();
 
             // then
             assertThat(afterCreate).isAfter(beforeCreate);
         }
 
-        @DisplayName("Moment 수정 시 Memory의 updatedAt이 갱신된다.")
+        @DisplayName("Moment 수정 시 Category의 updatedAt이 갱신된다.")
         @Test
-        void updateMemoryUpdatedDateWhenMomentUpdated() {
+        void updateCategoryUpdatedDateWhenMomentUpdated() {
             // given
             Member member = memberRepository.save(MemberFixture.create());
-            Memory memory = memoryRepository.save(MemoryFixture.createWithMember(member));
-            Moment moment = momentRepository.save(MomentFixture.create(memory));
-            LocalDateTime beforeUpdate = memory.getUpdatedAt();
+            Category category = categoryRepository.save(CategoryFixture.createWithMember(member));
+            Moment moment = momentRepository.save(MomentFixture.create(category));
+            LocalDateTime beforeUpdate = category.getUpdatedAt();
 
             // when
             moment.changeFeeling(Feeling.ANGRY);
             entityManager.flush();
-            entityManager.refresh(memory);
-            LocalDateTime afterUpdate = memory.getUpdatedAt();
+            entityManager.refresh(category);
+            LocalDateTime afterUpdate = category.getUpdatedAt();
 
             // then
             assertThat(afterUpdate).isAfter(beforeUpdate);
         }
 
-        @DisplayName("Moment 삭제 시 Memory의 updatedAt이 갱신된다.")
+        @DisplayName("Moment 삭제 시 Category의 updatedAt이 갱신된다.")
         @Test
-        void updateMemoryUpdatedDateWhenMomentDeleted() {
+        void updateCategoryUpdatedDateWhenMomentDeleted() {
             // given
             Member member = memberRepository.save(MemberFixture.create());
-            Memory memory = memoryRepository.save(MemoryFixture.createWithMember(member));
-            Moment moment = momentRepository.save(MomentFixture.create(memory));
-            LocalDateTime beforeDelete = memory.getUpdatedAt();
+            Category category = categoryRepository.save(CategoryFixture.createWithMember(member));
+            Moment moment = momentRepository.save(MomentFixture.create(category));
+            LocalDateTime beforeDelete = category.getUpdatedAt();
 
             // when
             momentRepository.delete(moment);
             entityManager.flush();
-            entityManager.refresh(memory);
-            LocalDateTime afterDelete = memory.getUpdatedAt();
+            entityManager.refresh(category);
+            LocalDateTime afterDelete = category.getUpdatedAt();
 
             // then
             assertThat(afterDelete).isAfter(beforeDelete);

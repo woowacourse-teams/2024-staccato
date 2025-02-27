@@ -1,5 +1,7 @@
 package com.staccato.moment.repository;
 
+import com.staccato.category.domain.Category;
+import com.staccato.category.repository.CategoryMemberRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,16 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
 import com.staccato.fixture.Member.MemberFixture;
-import com.staccato.fixture.memory.MemoryFixture;
+import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.memory.domain.Memory;
-import com.staccato.memory.domain.MemoryMember;
-import com.staccato.memory.repository.MemoryMemberRepository;
-import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.category.domain.CategoryMember;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.moment.domain.Moment;
-import com.staccato.moment.domain.MomentImages;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -30,33 +29,39 @@ class MomentRepositoryTest extends RepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
-    private MemoryRepository memoryRepository;
+    private CategoryRepository categoryRepository;
     @Autowired
-    private MemoryMemberRepository memoryMemberRepository;
+    private CategoryMemberRepository categoryMemberRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
     @DisplayName("사용자의 모든 스타카토를 조회한다.")
     @Test
-    void findAllByMemory_MemoryMembers_Member() {
+    void findAllByCategory_CategoryMembers_Member() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         Member anotherMember = memberRepository.save(MemberFixture.create("anotherMember"));
-        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Memory memory2 = memoryRepository.save(MemoryFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)));
-        Memory anotherMemberMemory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2024, 5, 1), LocalDate.of(2024, 6, 10)));
-        memoryMemberRepository.save(new MemoryMember(member, memory));
-        memoryMemberRepository.save(new MemoryMember(member, memory2));
-        memoryMemberRepository.save(new MemoryMember(anotherMember, anotherMemberMemory));
+        Category category = categoryRepository.save(
+            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Category category2 = categoryRepository.save(
+            CategoryFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)));
+        Category anotherMemberCategory = categoryRepository.save(
+            CategoryFixture.create(LocalDate.of(2024, 5, 1), LocalDate.of(2024, 6, 10)));
+        categoryMemberRepository.save(new CategoryMember(member, category));
+        categoryMemberRepository.save(new CategoryMember(member, category2));
+        categoryMemberRepository.save(new CategoryMember(anotherMember, anotherMemberCategory));
 
-        Moment moment = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2023, 12, 31, 22, 20)));
-        Moment moment1 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 1, 22, 20)));
-        Moment moment2 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 1, 22, 21)));
-        Moment anotherMoment = momentRepository.save(MomentFixture.create(anotherMemberMemory, LocalDateTime.of(2024, 5, 1, 22, 21)));
+        Moment moment = momentRepository.save(MomentFixture.create(
+            category, LocalDateTime.of(2023, 12, 31, 22, 20)));
+        Moment moment1 = momentRepository.save(MomentFixture.create(
+            category, LocalDateTime.of(2024, 1, 1, 22, 20)));
+        Moment moment2 = momentRepository.save(MomentFixture.create(
+            category, LocalDateTime.of(2024, 1, 1, 22, 21)));
+        Moment anotherMoment = momentRepository.save(MomentFixture.create(anotherMemberCategory, LocalDateTime.of(2024, 5, 1, 22, 21)));
 
         // when
-        List<Moment> memberResult = momentRepository.findAllByMemory_MemoryMembers_Member(member);
-        List<Moment> anotherMemberResult = momentRepository.findAllByMemory_MemoryMembers_Member(anotherMember);
+        List<Moment> memberResult = momentRepository.findAllByCategory_CategoryMembers_Member(member);
+        List<Moment> anotherMemberResult = momentRepository.findAllByCategory_CategoryMembers_Member(anotherMember);
 
         // then
         assertAll(
@@ -69,18 +74,22 @@ class MomentRepositoryTest extends RepositoryTest {
 
     @DisplayName("특정 추억의 id를 가진 모든 스타카토를 삭제한다.")
     @Test
-    void deleteAllByMemoryIdInBulk() {
+    void deleteAllByCategoryIdInBulk() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        memoryMemberRepository.save(new MemoryMember(member, memory));
+        Category category = categoryRepository.save(
+            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        categoryMemberRepository.save(new CategoryMember(member, category));
 
-        Moment moment = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2023, 12, 31, 22, 20)));
-        Moment moment1 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 1, 22, 20)));
-        Moment moment2 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 1, 22, 21)));
+        Moment moment = momentRepository.save(MomentFixture.create(
+            category, LocalDateTime.of(2023, 12, 31, 22, 20)));
+        Moment moment1 = momentRepository.save(MomentFixture.create(
+            category, LocalDateTime.of(2024, 1, 1, 22, 20)));
+        Moment moment2 = momentRepository.save(MomentFixture.create(
+            category, LocalDateTime.of(2024, 1, 1, 22, 21)));
 
         // when
-        momentRepository.deleteAllByMemoryIdInBulk(memory.getId());
+        momentRepository.deleteAllByCategoryIdInBulk(category.getId());
         entityManager.flush();
         entityManager.clear();
 
@@ -89,24 +98,26 @@ class MomentRepositoryTest extends RepositoryTest {
                 () -> assertThat(momentRepository.findById(moment.getId()).isEmpty()).isTrue(),
                 () -> assertThat(momentRepository.findById(moment1.getId()).isEmpty()).isTrue(),
                 () -> assertThat(momentRepository.findById(moment2.getId()).isEmpty()).isTrue(),
-                () -> assertThat(momentRepository.findAllByMemoryId(memory.getId())).isEqualTo(List.of())
+                () -> assertThat(momentRepository.findAllByCategoryId(category.getId())).isEqualTo(List.of())
         );
     }
 
     @DisplayName("사용자의 특정 추억에 해당하는 모든 스타카토를 최신순으로 조회한다.")
     @Test
-    void findAllByMemoryIdOrderByVisitedAt() {
+    void findAllByCategoryIdOrderByVisitedAt() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        memoryMemberRepository.save(new MemoryMember(member, memory));
+        Category category = categoryRepository.save(
+            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        categoryMemberRepository.save(new CategoryMember(member, category));
 
-        Moment moment1 = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("image1", "image2")));
-        Moment moment2 = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2024, 1, 1, 22, 20), List.of("image1", "image2")));
-        Moment moment3 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 10, 23, 21)));
+        Moment moment1 = momentRepository.save(MomentFixture.createWithImages(category, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("image1", "image2")));
+        Moment moment2 = momentRepository.save(MomentFixture.createWithImages(category, LocalDateTime.of(2024, 1, 1, 22, 20), List.of("image1", "image2")));
+        Moment moment3 = momentRepository.save(MomentFixture.create(
+            category, LocalDateTime.of(2024, 1, 10, 23, 21)));
 
         // when
-        List<Moment> moments = momentRepository.findAllByMemoryIdOrdered(memory.getId());
+        List<Moment> moments = momentRepository.findAllByCategoryIdOrdered(category.getId());
 
         // then
         assertAll(
@@ -117,17 +128,20 @@ class MomentRepositoryTest extends RepositoryTest {
 
     @DisplayName("사용자의 스타카토 방문 날짜가 동일하다면, 생성날짜 기준 최신순으로 조회한다.")
     @Test
-    void findAllByMemoryIdOrderByCreatedAt() {
+    void findAllByCategoryIdOrderByCreatedAt() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        memoryMemberRepository.save(new MemoryMember(member, memory));
+        Category category = categoryRepository.save(
+            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        categoryMemberRepository.save(new CategoryMember(member, category));
 
-        Moment moment1 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 10, 23, 21)));
-        Moment moment2 = momentRepository.save(MomentFixture.create(memory, LocalDateTime.of(2024, 1, 10, 23, 21)));
+        Moment moment1 = momentRepository.save(MomentFixture.create(
+            category, LocalDateTime.of(2024, 1, 10, 23, 21)));
+        Moment moment2 = momentRepository.save(MomentFixture.create(
+            category, LocalDateTime.of(2024, 1, 10, 23, 21)));
 
         // when
-        List<Moment> moments = momentRepository.findAllByMemoryIdOrdered(memory.getId());
+        List<Moment> moments = momentRepository.findAllByCategoryIdOrdered(category.getId());
 
         // then
         assertAll(

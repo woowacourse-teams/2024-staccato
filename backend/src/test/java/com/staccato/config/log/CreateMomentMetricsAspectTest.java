@@ -9,11 +9,11 @@ import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
 import com.staccato.fixture.Member.MemberFixture;
-import com.staccato.fixture.memory.MemoryFixture;
+import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.memory.domain.Memory;
-import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.category.domain.Category;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.moment.service.MomentService;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 class CreateMomentMetricsAspectTest extends ServiceSliceTest {
 
     @Autowired
-    private MemoryRepository memoryRepository;
+    private CategoryRepository categoryRepository;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -37,14 +37,14 @@ class CreateMomentMetricsAspectTest extends ServiceSliceTest {
     @TestFactory
     List<DynamicTest> createMomentMetricsAspect() {
         Member member = saveMember();
-        Memory memory = saveMemory(member);
+        Category category = saveMemory(member);
         LocalDateTime now = LocalDateTime.now();
 
         return List.of(
                 dynamicTest("기록 상의 날짜가 과거인 기록과 미래인 기록을 매트릭에 등록합니다.", () -> {
                     // given
-                    MomentRequest pastRequest = createRequest(memory.getId(), now.minusDays(2));
-                    MomentRequest futureRequest = createRequest(memory.getId(), now.plusDays(2));
+                    MomentRequest pastRequest = createRequest(category.getId(), now.minusDays(2));
+                    MomentRequest futureRequest = createRequest(category.getId(), now.plusDays(2));
 
                     //when
                     momentService.createMoment(pastRequest, member);
@@ -58,7 +58,7 @@ class CreateMomentMetricsAspectTest extends ServiceSliceTest {
                 }),
                 dynamicTest("기록 상의 날짜가 과거인 기록 작성 요청 → 누적: past:2.0, future:1.0", () -> {
                     // given
-                    MomentRequest momentRequest = createRequest(memory.getId(), now.minusDays(3));
+                    MomentRequest momentRequest = createRequest(category.getId(), now.minusDays(3));
 
                     // when
                     momentService.createMoment(momentRequest, member);
@@ -76,10 +76,10 @@ class CreateMomentMetricsAspectTest extends ServiceSliceTest {
         return memberRepository.save(MemberFixture.create());
     }
 
-    private Memory saveMemory(Member member) {
-        Memory memory = MemoryFixture.create();
-        memory.addMemoryMember(member);
-        return memoryRepository.save(memory);
+    private Category saveMemory(Member member) {
+        Category category = CategoryFixture.create();
+        category.addCategoryMember(member);
+        return categoryRepository.save(category);
     }
 
     private double getFutureCount() {

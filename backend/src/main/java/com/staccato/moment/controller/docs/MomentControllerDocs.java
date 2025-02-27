@@ -26,7 +26,7 @@ public interface MomentControllerDocs {
                                         
                     (1) 필수 값(사진을 제외한 모든 값)이 누락되었을 때
                                         
-                    (2) 존재하지 않는 memoryId일 때
+                    (2) 존재하지 않는 categoryId일 때
                                         
                     (3) 올바르지 않은 날짜 형식일 때
                                         
@@ -73,7 +73,7 @@ public interface MomentControllerDocs {
                                         
                     (3) 필수 값(사진을 제외한 모든 값)이 누락되었을 때
                                         
-                    (4) 존재하지 않는 memoryId일 때
+                    (4) 존재하지 않는 categoryId일 때
                                         
                     (5) 올바르지 않은 날짜 형식일 때
                                         

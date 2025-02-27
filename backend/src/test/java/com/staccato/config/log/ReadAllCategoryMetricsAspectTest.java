@@ -1,6 +1,6 @@
 package com.staccato.config.log;
 
-import com.staccato.memory.service.dto.request.CategoryReadRequest;
+import com.staccato.category.service.dto.request.CategoryReadRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import com.staccato.ServiceSliceTest;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.memory.service.CategoryService;
+import com.staccato.category.service.CategoryService;
 import io.micrometer.core.instrument.MeterRegistry;
 
 import static org.assertj.core.api.Assertions.assertThat;

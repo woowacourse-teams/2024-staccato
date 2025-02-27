@@ -1,5 +1,6 @@
 package com.staccato.moment.domain;
 
+import com.staccato.category.domain.Category;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.moment.MomentFixture;
-import com.staccato.memory.domain.Memory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -67,13 +67,13 @@ class MomentImagesTest {
     @ParameterizedTest
     void update(List<String> existingImageNames, List<String> updatedImageNames) {
         // given
-        Memory memory = Memory.builder().title("Sample Memory").startAt(LocalDate.now().minusDays(1))
+        Category category = Category.builder().title("Sample categories").startAt(LocalDate.now().minusDays(1))
                 .endAt(LocalDate.now().plusDays(1)).build();
         MomentImages existingImages = new MomentImages(existingImageNames);
         MomentImages updatedImages = new MomentImages(updatedImageNames);
 
         // when
-        existingImages.update(updatedImages, MomentFixture.create(memory, LocalDateTime.now()));
+        existingImages.update(updatedImages, MomentFixture.create(category, LocalDateTime.now()));
         List<String> images = existingImages.getImages().stream().map(MomentImage::getImageUrl).toList();
 
         // then

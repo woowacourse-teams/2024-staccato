@@ -15,7 +15,7 @@ import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.memory.domain.Memory;
+import com.staccato.category.domain.Category;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
 
@@ -32,7 +32,7 @@ public class CommentService {
     @Transactional
     public long createComment(CommentRequest commentRequest, Member member) {
         Moment moment = getMoment(commentRequest.momentId());
-        validateOwner(moment.getMemory(), member);
+        validateOwner(moment.getCategory(), member);
         Comment comment = commentRequest.toComment(moment, member);
 
         return commentRepository.save(comment).getId();
@@ -40,7 +40,7 @@ public class CommentService {
 
     public CommentResponses readAllCommentsByMomentId(Member member, Long momentId) {
         Moment moment = getMoment(momentId);
-        validateOwner(moment.getMemory(), member);
+        validateOwner(moment.getCategory(), member);
         List<Comment> comments = commentRepository.findAllByMomentId(momentId);
         sortByCreatedAtAscending(comments);
 
@@ -64,8 +64,8 @@ public class CommentService {
                 .orElseThrow(() -> new StaccatoException("요청하신 댓글을 찾을 수 없어요."));
     }
 
-    private void validateOwner(Memory memory, Member member) {
-        if (memory.isNotOwnedBy(member)) {
+    private void validateOwner(Category category, Member member) {
+        if (category.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
     }

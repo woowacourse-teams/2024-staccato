@@ -1,5 +1,6 @@
 package com.staccato.moment.service;
 
+import com.staccato.category.domain.Category;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,8 +9,7 @@ import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.memory.domain.Memory;
-import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImage;
@@ -29,15 +29,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MomentService {
     private final MomentRepository momentRepository;
-    private final MemoryRepository memoryRepository;
+    private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
     private final MomentImageRepository momentImageRepository;
 
     @Transactional
     public MomentIdResponse createMoment(MomentRequest momentRequest, Member member) {
-        Memory memory = getMemoryById(momentRequest.memoryId());
-        validateMemoryOwner(memory, member);
-        Moment moment = momentRequest.toMoment(memory);
+        Category category = getMemoryById(momentRequest.memoryId());
+        validateMemoryOwner(category, member);
+        Moment moment = momentRequest.toMoment(category);
 
         momentRepository.save(moment);
 
@@ -45,14 +45,14 @@ public class MomentService {
     }
 
     public MomentLocationResponses readAllMoment(Member member) {
-        return new MomentLocationResponses(momentRepository.findAllByMemory_MemoryMembers_Member(member)
+        return new MomentLocationResponses(momentRepository.findAllByCategory_CategoryMembers_Member(member)
                 .stream()
                 .map(MomentLocationResponse::new).toList());
     }
 
     public MomentDetailResponse readMomentById(long momentId, Member member) {
         Moment moment = getMomentById(momentId);
-        validateMemoryOwner(moment.getMemory(), member);
+        validateMemoryOwner(moment.getCategory(), member);
         return new MomentDetailResponse(moment);
     }
 
@@ -63,12 +63,12 @@ public class MomentService {
             Member member
     ) {
         Moment moment = getMomentById(momentId);
-        validateMemoryOwner(moment.getMemory(), member);
+        validateMemoryOwner(moment.getCategory(), member);
 
-        Memory targetMemory = getMemoryById(momentRequest.memoryId());
-        validateMemoryOwner(targetMemory, member);
+        Category targetCategory = getMemoryById(momentRequest.memoryId());
+        validateMemoryOwner(targetCategory, member);
 
-        Moment newMoment = momentRequest.toMoment(targetMemory);
+        Moment newMoment = momentRequest.toMoment(targetCategory);
         List<MomentImage> existingImages = moment.existingImages();
         removeExistingImages(existingImages);
         moment.update(newMoment);
@@ -81,15 +81,15 @@ public class MomentService {
         momentImageRepository.deleteAllByIdInBulk(ids);
     }
 
-    private Memory getMemoryById(long memoryId) {
-        return memoryRepository.findById(memoryId)
+    private Category getMemoryById(long memoryId) {
+        return categoryRepository.findById(memoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
     }
 
     @Transactional
     public void deleteMomentById(long momentId, Member member) {
         momentRepository.findById(momentId).ifPresent(moment -> {
-            validateMemoryOwner(moment.getMemory(), member);
+            validateMemoryOwner(moment.getCategory(), member);
             commentRepository.deleteAllByMomentIdInBulk(List.of(momentId));
             momentImageRepository.deleteAllByMomentIdInBulk(List.of(momentId));
             momentRepository.deleteById(momentId);
@@ -99,7 +99,7 @@ public class MomentService {
     @Transactional
     public void updateMomentFeelingById(long momentId, Member member, FeelingRequest feelingRequest) {
         Moment moment = getMomentById(momentId);
-        validateMemoryOwner(moment.getMemory(), member);
+        validateMemoryOwner(moment.getCategory(), member);
         Feeling feeling = feelingRequest.toFeeling();
         moment.changeFeeling(feeling);
     }
@@ -109,8 +109,8 @@ public class MomentService {
                 .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 
-    private void validateMemoryOwner(Memory memory, Member member) {
-        if (memory.isNotOwnedBy(member)) {
+    private void validateMemoryOwner(Category category, Member member) {
+        if (category.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
     }

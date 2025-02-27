@@ -1,5 +1,6 @@
 package com.staccato.comment.repository;
 
+import com.staccato.category.domain.Category;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -9,12 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
-import com.staccato.fixture.memory.MemoryFixture;
+import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.memory.domain.Memory;
-import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
 
@@ -26,7 +26,7 @@ class CommentRepositoryTest extends RepositoryTest {
     @Autowired
     private MomentRepository momentRepository;
     @Autowired
-    private MemoryRepository memoryRepository;
+    private CategoryRepository categoryRepository;
     @Autowired
     private CommentRepository commentRepository;
     @PersistenceContext
@@ -37,10 +37,10 @@ class CommentRepositoryTest extends RepositoryTest {
     void deleteAllByMomentIdInBulk() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Memory memory = memoryRepository.save(MemoryFixture.create(null, null));
-        Moment moment1 = MomentFixture.create(memory);
+        Category category = categoryRepository.save(CategoryFixture.create(null, null));
+        Moment moment1 = MomentFixture.create(category);
         CommentFixture.create(moment1, member);
-        Moment moment2 = MomentFixture.create(memory);
+        Moment moment2 = MomentFixture.create(category);
         CommentFixture.create(moment2, member);
         momentRepository.save(moment1);
         momentRepository.save(moment2);

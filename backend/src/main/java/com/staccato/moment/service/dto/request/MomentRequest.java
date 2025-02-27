@@ -12,7 +12,7 @@ import jakarta.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.staccato.memory.domain.Memory;
+import com.staccato.category.domain.Category;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImages;
 
@@ -56,7 +56,7 @@ public record MomentRequest(
         }
     }
 
-    public Moment toMoment(Memory memory) {
+    public Moment toMoment(Category category) {
         return Moment.builder()
                 .visitedAt(visitedAt)
                 .title(staccatoTitle)
@@ -64,7 +64,7 @@ public record MomentRequest(
                 .latitude(latitude)
                 .longitude(longitude)
                 .address(address)
-                .memory(memory)
+                .category(category)
                 .momentImages(new MomentImages(momentImageUrls))
                 .build();
     }

@@ -1,5 +1,6 @@
 package com.staccato.moment.repository;
 
+import com.staccato.category.domain.Category;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,13 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
-import com.staccato.fixture.memory.MemoryFixture;
+import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.moment.MomentFixture;
-import com.staccato.memory.domain.Memory;
-import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.domain.MomentImage;
-import com.staccato.moment.domain.MomentImages;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -24,7 +23,7 @@ class MomentImageRepositoryTest extends RepositoryTest {
     @Autowired
     private MomentRepository momentRepository;
     @Autowired
-    private MemoryRepository memoryRepository;
+    private CategoryRepository categoryRepository;
     @Autowired
     private MomentImageRepository momentImageRepository;
     @PersistenceContext
@@ -34,11 +33,14 @@ class MomentImageRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByMomentIdInBulk() {
         // given
-        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Category category = categoryRepository.save(
+            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
         Moment moment1 = momentRepository.save(MomentFixture
-                .createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2")));
+                .createWithImages(
+                    category, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2")));
         Moment moment2 = momentRepository.save(MomentFixture
-                .createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2")));
+                .createWithImages(
+                    category, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2")));
 
         // when
         momentImageRepository.deleteAllByMomentIdInBulk(List.of(moment1.getId(), moment2.getId()));
@@ -58,8 +60,10 @@ class MomentImageRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByIdInBulk() {
         // given
-        Memory memory = memoryRepository.save(MemoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Moment moment = momentRepository.save(MomentFixture.createWithImages(memory, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2", "url3")));
+        Category category = categoryRepository.save(
+            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Moment moment = momentRepository.save(MomentFixture.createWithImages(
+            category, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2", "url3")));
 
         List<Long> imageIds = moment.getMomentImages()
                 .getImages()

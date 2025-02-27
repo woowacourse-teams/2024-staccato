@@ -1,14 +1,14 @@
 package com.staccato.config.log;
 
-import com.staccato.memory.service.dto.request.CategoryReadRequest;
+import com.staccato.category.service.dto.request.CategoryReadRequest;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import com.staccato.member.domain.Member;
-import com.staccato.memory.service.CategoryFilter;
-import com.staccato.memory.service.CategoryService;
-import com.staccato.memory.service.CategorySort;
+import com.staccato.category.service.CategoryFilter;
+import com.staccato.category.service.CategoryService;
+import com.staccato.category.service.CategorySort;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class ReadAllCategoryMetricsAspect {
 
     private final MeterRegistry meterRegistry;
 
-    @Pointcut("execution(public * com.staccato.memory.service.CategoryService.readAllCategories(..)) && args(member, categoryReadRequest)")
+    @Pointcut("execution(public * com.staccato.category.service.CategoryService.readAllCategories(..)) && args(member, categoryReadRequest)")
     public void createCategoryPointcut(Member member, CategoryReadRequest categoryReadRequest) {
     }
 

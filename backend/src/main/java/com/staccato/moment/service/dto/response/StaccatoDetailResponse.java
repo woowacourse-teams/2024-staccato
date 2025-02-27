@@ -46,10 +46,10 @@ public record StaccatoDetailResponse(
     public StaccatoDetailResponse(Moment moment) {
         this(
                 moment.getId(),
-                moment.getMemory().getId(),
-                moment.getMemory().getTitle(),
-                moment.getMemory().getTerm().getStartAt(),
-                moment.getMemory().getTerm().getEndAt(),
+                moment.getCategory().getId(),
+                moment.getCategory().getTitle(),
+                moment.getCategory().getTerm().getStartAt(),
+                moment.getCategory().getTerm().getEndAt(),
                 moment.getTitle(),
                 moment.getMomentImages().getImages().stream().map(MomentImage::getImageUrl).toList(),
                 moment.getVisitedAt(),
