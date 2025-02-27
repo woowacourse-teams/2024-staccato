@@ -11,4 +11,6 @@ sealed interface NicknameState {
         val min: Int,
         val max: Int,
     ) : NicknameState
+
+    data object BlankFirst : NicknameState
 }

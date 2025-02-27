@@ -10,12 +10,15 @@ value class Nickname(val nickname: String) {
 
         fun validate(nickname: String): NicknameState {
             return when {
-                nickname.isBlank() -> NicknameState.Empty
+                nickname.isEmpty() -> NicknameState.Empty
+
                 nickname.length !in MIN_LENGTH..MAX_LENGTH ->
                     NicknameState.InvalidLength(
                         MIN_LENGTH,
                         MAX_LENGTH,
                     )
+
+                nickname.first().isWhitespace() -> NicknameState.BlankFirst
 
                 nickname.matches(formatRegex) -> NicknameState.Valid(nickname)
                 else -> NicknameState.InvalidFormat
