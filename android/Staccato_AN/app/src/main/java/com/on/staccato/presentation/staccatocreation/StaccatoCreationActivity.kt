@@ -15,7 +15,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
@@ -196,11 +195,7 @@ class StaccatoCreationActivity :
 
         when {
             isLocationPermissionGranted -> {
-                viewModel.setCurrentLocationLoading(true)
-                val currentLocation: Task<Location> = locationManager.getCurrentLocation()
-                currentLocation.addOnSuccessListener { location ->
-                    fetchAddress(location)
-                }
+                viewModel.getCurrentLocation()
             }
 
             isCurrentLocationCallClicked -> {
@@ -269,6 +264,7 @@ class StaccatoCreationActivity :
         observeVisitedAtData()
         observeCategoryData()
         observeCreatedStaccatoId()
+        observeCurrentLocation()
     }
 
     private fun observePhotoData() {
@@ -345,6 +341,12 @@ class StaccatoCreationActivity :
         }
     }
 
+    private fun observeCurrentLocation() {
+        viewModel.currentLocation.observe(this) {
+            fetchAddress(it)
+        }
+    }
+
     private fun fetchAddress(location: Location) {
         lifecycleScope.launch {
             val defaultDelayJob =
@@ -357,7 +359,7 @@ class StaccatoCreationActivity :
                 }
             getCurrentLocationJob.join()
             defaultDelayJob.join()
-            viewModel.setPlaceByCurrentAddress(address, location)
+            viewModel.setPlaceByCurrentAddress(address)
         }
     }
 
