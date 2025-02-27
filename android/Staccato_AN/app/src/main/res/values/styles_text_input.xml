@@ -20,7 +20,13 @@
         <item name="hintEnabled">false</item>
     </style>
 
-    <style name="TextInputLayoutStyle.Validation" parent="TextInputLayoutStyle">
+    <style name="TextInputLayoutStyle.ClearText" parent="TextInputLayoutStyle">
+        <item name="endIconDrawable">@drawable/icon_delete_small</item>
+        <item name="endIconMode">clear_text</item>
+        <item name="endIconTint">@color/gray3</item>
+    </style>
+
+    <style name="TextInputLayoutStyle.Validation" parent="TextInputLayoutStyle.ClearText">
         <item name="boxBackgroundMode">outline</item>
         <item name="boxStrokeErrorColor">@color/sub1</item>
         <item name="errorEnabled">true</item>
