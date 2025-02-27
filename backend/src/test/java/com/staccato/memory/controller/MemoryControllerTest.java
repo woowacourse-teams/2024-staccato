@@ -1,5 +1,6 @@
 package com.staccato.memory.controller;
 
+import com.staccato.moment.domain.Moment;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
@@ -295,8 +296,8 @@ class MemoryControllerTest extends ControllerTest {
         long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
-        MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
-        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
+        Moment moment = MomentFixture.create(memory);
+        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(moment));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
         String expectedResponse = """
                 {
@@ -338,8 +339,8 @@ class MemoryControllerTest extends ControllerTest {
         long memoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.createWithMember(null, null, MemberFixture.create());
-        MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
-        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
+        Moment moment = MomentFixture.create(memory);
+        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(moment));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
         String expectedResponse = """
                 {

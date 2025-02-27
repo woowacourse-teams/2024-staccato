@@ -77,21 +77,8 @@ public class MemoryService {
     public MemoryDetailResponse readMemoryById(long memoryId, Member member) {
         Memory memory = getMemoryById(memoryId);
         validateOwner(memory, member);
-        List<MomentResponse> momentResponses = getMomentResponses(momentRepository.findAllByMemoryIdOrdered(memoryId));
-        return new MemoryDetailResponse(memory, momentResponses);
-    }
-
-    private List<MomentResponse> getMomentResponses(List<Moment> moments) {
-        return moments.stream()
-                .map(moment -> new MomentResponse(moment, getMomentThumbnail(moment)))
-                .toList();
-    }
-
-    private String getMomentThumbnail(Moment moment) {
-        if (moment.hasImage()) {
-            return moment.thumbnailUrl();
-        }
-        return null;
+        List<Moment> moments = momentRepository.findAllByMemoryIdOrdered(memoryId);
+        return new MemoryDetailResponse(memory, moments);
     }
 
     @Transactional

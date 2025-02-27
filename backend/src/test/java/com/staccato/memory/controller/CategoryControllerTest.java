@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.staccato.moment.domain.Moment;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
@@ -285,8 +286,8 @@ class CategoryControllerTest extends ControllerTest {
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.createWithMember(MemberFixture.create());
-        MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
-        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
+        Moment moment = MomentFixture.create(memory);
+        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(moment));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
         String expectedResponse = """
                 {
@@ -328,8 +329,8 @@ class CategoryControllerTest extends ControllerTest {
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Memory memory = MemoryFixture.createWithMember(null, null, MemberFixture.create());
-        MomentResponse momentResponse = new MomentResponse(MomentFixture.create(memory), "image.jpg");
-        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(momentResponse));
+        Moment moment = MomentFixture.create(memory);
+        MemoryDetailResponse memoryDetailResponse = new MemoryDetailResponse(memory, List.of(moment));
         when(memoryService.readMemoryById(anyLong(), any(Member.class))).thenReturn(memoryDetailResponse);
         String expectedResponse = """
                 {

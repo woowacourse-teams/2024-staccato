@@ -84,10 +84,13 @@ public class Moment extends BaseEntity {
     }
 
     public String thumbnailUrl() {
-        return momentImages.getImages().get(0).getImageUrl();
+        if (hasImage()) {
+            return momentImages.getImages().get(0).getImageUrl();
+        }
+        return null;
     }
 
-    public boolean hasImage() {
+    private boolean hasImage() {
         return momentImages.isNotEmpty();
     }
 

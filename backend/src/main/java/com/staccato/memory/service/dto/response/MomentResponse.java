@@ -19,7 +19,7 @@ public record MomentResponse(
         @Schema(example = "2024-07-27T11:58:20")
         LocalDateTime visitedAt
 ) {
-    public MomentResponse(Moment moment, String momentImageUrl) {
-        this(moment.getId(), moment.getTitle(), momentImageUrl, moment.getVisitedAt());
+    public MomentResponse(Moment moment) {
+        this(moment.getId(), moment.getTitle(), moment.thumbnailUrl(), moment.getVisitedAt());
     }
 }

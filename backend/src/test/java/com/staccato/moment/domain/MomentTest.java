@@ -119,6 +119,35 @@ class MomentTest {
                 .hasMessageContaining("추억에 포함되지 않는 날짜입니다.");
     }
 
+    @DisplayName("이미지가 있을 경우 첫번째 사진을 썸네일로 반환한다.")
+    @Test
+    void thumbnail(){
+        // given
+        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        String thumbnail = "1.png";
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages(List.of(thumbnail, "2.png")));
+
+        // when
+        String result = moment.thumbnailUrl();
+
+        // then
+        assertThat(result).isEqualTo(thumbnail);
+    }
+
+    @DisplayName("이미지가 없을 경우 null을 썸네일로 반환한다.")
+    @Test
+    void noThumbnail(){
+        // given
+        Memory memory = MemoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages());
+
+        // when
+        String result = moment.thumbnailUrl();
+
+        // then
+        assertThat(result).isNull();
+    }
+
     @Nested
     @Transactional
     @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
