@@ -15,7 +15,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
@@ -184,11 +183,7 @@ class StaccatoUpdateActivity :
 
         when {
             isLocationPermissionGranted -> {
-                viewModel.setCurrentLocationLoading(true)
-                val currentLocation: Task<Location> = locationManager.getCurrentLocation()
-                currentLocation.addOnSuccessListener { location ->
-                    fetchAddress(location)
-                }
+                viewModel.getCurrentLocation()
             }
 
             shouldShowRequestLocationPermissionsRationale -> {
@@ -208,13 +203,7 @@ class StaccatoUpdateActivity :
             val checkSelfLocationPermission =
                 locationPermissionManager.checkSelfLocationPermission()
 
-            if (isSettingClicked && checkSelfLocationPermission) {
-                val currentLocation: Task<Location> =
-                    locationManager.getCurrentLocation()
-                currentLocation.addOnSuccessListener { location ->
-                    fetchAddress(location)
-                }
-            }
+            if (isSettingClicked && checkSelfLocationPermission) viewModel.getCurrentLocation()
         }
     }
 
@@ -260,6 +249,7 @@ class StaccatoUpdateActivity :
         observeVisitedAtData()
         observeCategoryData()
         observeIsUpdateComplete()
+        observeCurrentLocation()
     }
 
     private fun observePhotoData() {
@@ -313,6 +303,12 @@ class StaccatoUpdateActivity :
         }
     }
 
+    private fun observeCurrentLocation() {
+        viewModel.currentLocation.observe(this) {
+            fetchAddress(it)
+        }
+    }
+
     private fun handleUpdateComplete(isUpdateCompleted: Boolean) {
         if (isUpdateCompleted) {
             val intent =
@@ -338,7 +334,7 @@ class StaccatoUpdateActivity :
                 }
             getCurrentLocationJob.join()
             defaultDelayJob.join()
-            viewModel.setPlaceByCurrentAddress(address, location)
+            viewModel.setPlaceByCurrentAddress(address)
         }
     }
 
