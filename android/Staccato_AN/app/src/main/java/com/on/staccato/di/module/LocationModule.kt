@@ -43,8 +43,5 @@ object LocationModule {
 
     @Singleton
     @Provides
-    fun provideLocationManager(
-        locationSettingsRequest: LocationSettingsRequest,
-        fusedLocationProviderClient: FusedLocationProviderClient,
-    ): LocationManager = LocationManager(locationSettingsRequest, fusedLocationProviderClient)
+    fun provideLocationManager(locationSettingsRequest: LocationSettingsRequest): LocationManager = LocationManager(locationSettingsRequest)
 }
