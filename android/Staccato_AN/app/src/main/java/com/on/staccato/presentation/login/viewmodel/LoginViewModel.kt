@@ -1,11 +1,15 @@
 package com.on.staccato.presentation.login.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
+import com.on.staccato.domain.model.Nickname
+import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.domain.repository.LoginRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
@@ -21,6 +25,8 @@ class LoginViewModel
         private val repository: LoginRepository,
     ) : ViewModel() {
         val nickname = MutableLiveData("")
+
+        val nicknameState: LiveData<NicknameState> = nickname.map { Nickname.validate(it) }
 
         private val _isLoginSuccess = MutableSingleLiveData(false)
         val isLoginSuccess: SingleLiveData<Boolean>
