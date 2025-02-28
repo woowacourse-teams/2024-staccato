@@ -67,4 +67,21 @@
         <item name="android:minHeight">100dp</item>
     </style>
 
+    <style name="TextInputEditTextStyle.Comment" parent="TextInputEditTextStyle.MultiLine">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:paddingEnd">48dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
+        <item name="android:backgroundTint">@null</item>
+        <item name="android:hint">@string/staccato_enter_log</item>
+        <item name="android:imeOptions">actionNone</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:maxLength">500</item>
+        <item name="android:maxLines">10</item>
+        <item name="android:textAppearance">@style/Typography.Body3</item>
+    </style>
+
 </resources>
