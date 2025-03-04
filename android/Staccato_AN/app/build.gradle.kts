@@ -121,6 +121,7 @@ dependencies {
 
     // Android Test Runner
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
 
     // Android JUnit4
     androidTestImplementation(libs.androidx.junit)
