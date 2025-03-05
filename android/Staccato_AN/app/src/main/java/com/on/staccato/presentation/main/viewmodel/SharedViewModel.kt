@@ -50,6 +50,8 @@ class SharedViewModel
         private val _staccatoLocation = MutableLiveData<StaccatoLocation>()
         val staccatoLocation: LiveData<StaccatoLocation> get() = _staccatoLocation
 
+        private val isDragging = MutableLiveData<Boolean>(false)
+
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = myPageRepository.getMemberProfile()
@@ -76,7 +78,8 @@ class SharedViewModel
         }
 
         fun setIsHalf(isHalf: Boolean) {
-            _isHalf.value = isHalf
+            val isDifferent = isHalf != _isHalf.value
+            if (isDifferent && isDragging.value == false) _isHalf.value = isHalf
         }
 
         fun updateStaccatoId(id: Long) {
@@ -89,6 +92,10 @@ class SharedViewModel
             longitude: Double,
         ) {
             _staccatoLocation.value = StaccatoLocation(staccatoId, latitude, longitude)
+        }
+
+        fun updateIsDragging(state: Boolean) {
+            isDragging.value = state
         }
 
         private fun setMemberProfile(memberProfile: MemberProfile) {

@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.main
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -15,6 +16,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_DRAGGING
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
 import com.on.staccato.R
@@ -63,6 +65,9 @@ class MainActivity :
     val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
     private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
 
+    private var isDragging = false
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun initStartView(savedInstanceState: Bundle?) {
         binding.handler = this
         loadMemberProfile()
@@ -226,7 +231,7 @@ class MainActivity :
                     ) {
                         when (newState) {
                             STATE_EXPANDED -> {
-                                sharedViewModel.setIsHalf(isHalf = false)
+                                sharedViewModel.setIsHalf(false)
                                 binding.viewMainDragBar.visibility =
                                     View.INVISIBLE
                                 binding.constraintMainBottomSheet.setBackgroundResource(
@@ -241,7 +246,7 @@ class MainActivity :
                             }
 
                             STATE_HALF_EXPANDED -> {
-                                sharedViewModel.setIsHalf(isHalf = true)
+                                sharedViewModel.setIsHalf(true)
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
                                 changeSkipCollapsed()
                                 loggingManager.logEvent(
@@ -252,7 +257,7 @@ class MainActivity :
                             }
 
                             STATE_COLLAPSED -> {
-                                sharedViewModel.setIsHalf(isHalf = false)
+                                sharedViewModel.setIsHalf(false)
                                 loggingManager.logEvent(
                                     NAME_BOTTOM_SHEET,
                                     Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_COLLAPSED),
@@ -274,6 +279,7 @@ class MainActivity :
                         view: View,
                         slideOffset: Float,
                     ) {
+                        sharedViewModel.updateIsDragging(state == STATE_DRAGGING)
                         if (slideOffset < 0.05) {
                             changeSkipCollapsed(isHideable = false)
                             state = STATE_COLLAPSED
