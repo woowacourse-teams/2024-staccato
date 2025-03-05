@@ -37,21 +37,21 @@ class MapsViewModel
         private val _staccatoId = MutableLiveData<Long>()
         val staccatoId: LiveData<Long> get() = _staccatoId
 
-        private val _currentLocation = MutableLiveData<LocationUiModel>()
-        val currentLocation: LiveData<LocationUiModel> get() = _currentLocation
+        private val _focusLocation = MutableLiveData<LocationUiModel>()
+        val focusLocation: LiveData<LocationUiModel> get() = _focusLocation
 
         fun getCurrentLocation() {
             val currentLocation = locationRepository.getCurrentLocation()
             currentLocation.addOnSuccessListener {
-                _currentLocation.value = LocationUiModel(it.latitude, it.longitude)
+                _focusLocation.value = LocationUiModel(it.latitude, it.longitude)
             }
         }
 
-        fun setCurrentLocation(
+        fun updateFocusLocation(
             latitude: Double,
             longitude: Double,
         ) {
-            _currentLocation.value = LocationUiModel(latitude, longitude)
+            _focusLocation.value = LocationUiModel(latitude, longitude)
         }
 
         fun setMarkers(markerUiModels: List<MarkerUiModel>) {

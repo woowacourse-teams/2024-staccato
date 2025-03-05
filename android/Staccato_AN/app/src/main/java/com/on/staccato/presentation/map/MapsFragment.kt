@@ -172,18 +172,18 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun observeLocation() {
-        observeCurrentLocation()
+        observeFocusLocation()
         observeStaccatoLocation()
     }
 
     private fun observeStaccatoLocation() {
         sharedViewModel.staccatoLocation.observe(viewLifecycleOwner) {
-            mapsViewModel.setCurrentLocation(it.latitude, it.longitude)
+            mapsViewModel.updateFocusLocation(it.latitude, it.longitude)
         }
     }
 
-    private fun observeCurrentLocation() {
-        mapsViewModel.currentLocation.observe(viewLifecycleOwner) { location ->
+    private fun observeFocusLocation() {
+        mapsViewModel.focusLocation.observe(viewLifecycleOwner) { location ->
             moveCamera(location.latitude, location.longitude)
         }
     }
