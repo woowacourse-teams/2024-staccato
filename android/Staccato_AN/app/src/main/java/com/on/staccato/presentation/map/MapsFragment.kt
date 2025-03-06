@@ -75,18 +75,19 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     ) {
         super.onViewCreated(view, savedInstanceState)
         display = view.resources.displayMetrics
+        mapsViewModel.loadStaccatos()
         setupMap()
         setupPermissionRequestLauncher(view)
         observeStaccatoId()
         observeMarkerOptions()
         observeDeletedStaccato()
         observeLocation()
+        observeIsTimelineUpdated()
     }
 
     override fun onResume() {
         super.onResume()
         if (this::map.isInitialized) checkLocationSetting()
-        mapsViewModel.loadStaccatos()
     }
 
     override fun onStop() {
@@ -247,6 +248,12 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private fun observeDeletedStaccato() {
         sharedViewModel.isStaccatosUpdated.observe(viewLifecycleOwner) { isDeleted ->
             if (isDeleted) mapsViewModel.loadStaccatos()
+        }
+    }
+
+    private fun observeIsTimelineUpdated() {
+        sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) {
+            if (it) mapsViewModel.loadStaccatos()
         }
     }
 
