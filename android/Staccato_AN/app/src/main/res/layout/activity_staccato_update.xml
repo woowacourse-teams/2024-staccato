@@ -10,11 +10,19 @@
 
         <variable
             name="viewModel"
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
             type="com.on.staccato.presentation.staccatoupdate.viewmodel.StaccatoUpdateViewModel" />
 
         <variable
             name="staccatoUpdateHandler"
             type="com.on.staccato.presentation.staccatoupdate.StaccatoUpdateHandler" />
+========
+            type="com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel" />
+
+        <variable
+            name="staccatoCreationHandler"
+            type="com.on.staccato.presentation.staccatocreation.StaccatoCreationHandler" />
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
 
         <variable
             name="currentLocationHandler"
@@ -27,13 +35,22 @@
         android:background="@color/white">
 
         <com.google.android.material.appbar.MaterialToolbar
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
             android:id="@+id/toolbar_staccato_update"
+========
+            android:id="@+id/toolbar_staccato_creation"
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
             style="@style/NavigationToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
             app:subtitle="@string/staccato_update_toolbar_subtitle"
             app:title="@string/staccato_update_toolbar_title" />
+========
+            app:subtitle="@string/staccato_creation_toolbar_subtitle"
+            app:title="@string/staccato_creation_toolbar_title" />
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
@@ -42,7 +59,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
             app:layout_constraintTop_toBottomOf="@id/toolbar_staccato_update">
+========
+            app:layout_constraintTop_toBottomOf="@id/toolbar_staccato_creation">
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -89,13 +110,20 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="24dp"
                     android:text="@string/staccato_creation_photo_drag_hint"
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
                     android:visibility="@{viewModel.currentPhotos.size &lt; 2 ? View.GONE : View.VISIBLE}"
+========
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_photo_attach"
                     bind:photoDragHintVisibility="@{viewModel.currentPhotos.size}" />
 
                 <TextView
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
                     android:id="@+id/tv_staccato_update_place_name_title"
+========
+                    android:id="@+id/tv_staccato_creation_place_name_title"
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="45dp"
@@ -104,6 +132,7 @@
                     app:layout_constraintTop_toBottomOf="@id/rv_photo_attach" />
 
                 <TextView
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
                     android:id="@+id/tv_staccato_update_required_mark_first"
                     style="@style/RequiredMarkStyle"
                     app:layout_constraintBottom_toBottomOf="@id/tv_staccato_update_place_name_title"
@@ -112,11 +141,25 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_staccato_update_title"
+========
+                    android:id="@+id/tv_staccato_creation_required_mark_first"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_staccato_creation_place_name_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_staccato_creation_place_name_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_staccato_creation_place_name_title" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_staccato_creation_title"
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
                     style="@style/TextInputLayoutStyle"
                     app:counterMaxLength="30"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
                     app:layout_constraintTop_toBottomOf="@id/tv_staccato_update_place_name_title">
+========
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_creation_place_name_title">
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
 
                     <com.google.android.material.textfield.TextInputEditText
                         style="@style/TextInputEditTextStyle.Title"
@@ -133,8 +176,13 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/staccato_creation_place"
                     android:textAppearance="@style/Typography.Title2"
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
                     app:layout_constraintStart_toStartOf="@id/tv_staccato_update_place_name_title"
                     app:layout_constraintTop_toBottomOf="@id/text_input_staccato_update_title" />
+========
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_creation_place_name_title"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_staccato_creation_title" />
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
 
                 <TextView
                     android:id="@+id/tv_staccato_creation_required_mark_second"
@@ -151,7 +199,7 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_all_gray1_8dp"
-                    android:textAppearance="@style/Typography.Body1"
+                    android:textAppearance="@style/Typography.Body1.Not.Resizable"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_name_title" />
@@ -162,7 +210,11 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/staccato_creation_address"
                     android:textAppearance="@style/Typography.Title3"
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
                     app:layout_constraintStart_toStartOf="@id/tv_staccato_update_place_name_title"
+========
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_creation_place_name_title"
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
                     app:layout_constraintTop_toBottomOf="@id/autocomplete_fragment" />
 
                 <TextView
@@ -187,7 +239,7 @@
                         android:id="@+id/btn_current_location"
                         style="@style/CurrentLocationStyle"
                         android:layout_marginTop="10dp"
-                        android:onClick="@{()->currentLocationHandler.onCurrentLocationClicked()}"
+                        android:onClick="@{() -> currentLocationHandler.onCurrentLocationClicked()}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -209,21 +261,61 @@
                     android:id="@+id/tv_visited_at_selection_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginTop="40dp"
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
                     android:text="@string/all_visited_at"
+========
+                    android:text="@string/staccato_creation_memory_selection"
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
                     app:layout_constraintStart_toStartOf="@id/constraint_current_location"
                     app:layout_constraintTop_toBottomOf="@id/constraint_current_location" />
 
                 <TextView
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
                     android:id="@+id/tv_staccato_creation_required_mark_fourth"
                     style="@style/RequiredMarkStyle"
                     app:layout_constraintBottom_toBottomOf="@id/tv_visited_at_selection_title"
                     app:layout_constraintStart_toEndOf="@id/tv_visited_at_selection_title"
                     app:layout_constraintTop_toTopOf="@id/tv_visited_at_selection_title" />
+========
+                    android:id="@+id/tv_staccato_creation_required_mark_third"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_memory_selection_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_memory_selection_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_memory_selection_title" />
+
+                <TextView
+                    android:id="@+id/tv_memory_selection"
+                    style="@style/BackgroundedTextStyle"
+                    android:layout_marginTop="8dp"
+                    android:onClick="@{() -> staccatoCreationHandler.onMemorySelectionClicked()}"
+                    android:text="@{viewModel.selectedMemory.memoryTitle}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_selection_title"
+                    bind:memoryCandidates="@{viewModel.memoryCandidates}"
+                    bind:selectedMemory="@{viewModel.selectedMemory}" />
+
+                <TextView
+                    android:id="@+id/tv_select_memory_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginTop="40dp"
+                    android:text="@string/all_visited_at"
+                    app:layout_constraintStart_toStartOf="@id/tv_memory_selection_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_memory_selection" />
+
+                <TextView
+                    android:id="@+id/tv_staccato_creation_required_mark_fourth"
+                    style="@style/RequiredMarkStyle"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_memory_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_select_memory_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_select_memory_title" />
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
 
                 <TextView
                     android:id="@+id/tv_visited_at"
                     style="@style/BackgroundedTextStyle"
                     android:layout_marginTop="8dp"
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
                     android:onClick="@{() -> staccatoUpdateHandler.onVisitedAtSelectionClicked()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -259,18 +351,39 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_staccato_update_done"
+========
+                    android:onClick="@{() -> staccatoCreationHandler.onVisitedAtSelectionClicked()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_select_memory_title"
+                    bind:dateTimeWithAmPm="@{viewModel.selectedVisitedAt}"
+                    bind:memoryCandidates="@{viewModel.memoryCandidates}" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_staccato_create_done"
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
                     style="@style/ButtonStyle.Save.Active"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="24dp"
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
                     android:onClick="@{() -> staccatoUpdateHandler.onUpdateDoneClicked()}"
+========
+                    android:onClick="@{() -> staccatoCreationHandler.onCreateDoneClicked()}"
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
                     android:text="@string/all_save"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+<<<<<<<< HEAD:android/Staccato_AN/app/src/main/res/layout/activity_staccato_update.xml
                     app:layout_constraintTop_toBottomOf="@id/tv_staccato_update_category_selection"
                     bind:staccatoAddress="@{viewModel.address}"
                     bind:staccatoCategory="@{viewModel.selectedCategory}"
+========
+                    app:layout_constraintTop_toBottomOf="@id/tv_visited_at"
+                    bind:staccatoAddress="@{viewModel.placeName}"
+                    bind:staccatoMemory="@{viewModel.selectedMemory}"
+>>>>>>>> main-tmp:android/Staccato_AN/app/src/main/res/layout/activity_staccato_creation.xml
                     bind:staccatoPhotos="@{viewModel.currentPhotos}"
                     bind:staccatoTitle="@{viewModel.staccatoTitle}"
                     bind:staccatoVisitedAt="@{viewModel.selectedVisitedAt}" />
