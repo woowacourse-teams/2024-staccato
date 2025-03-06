@@ -125,6 +125,7 @@ dependencies {
 
     // Android JUnit4
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.junitparams)
 
     // Android JUnit5
     androidTestImplementation(libs.junit5.android.test.core)
