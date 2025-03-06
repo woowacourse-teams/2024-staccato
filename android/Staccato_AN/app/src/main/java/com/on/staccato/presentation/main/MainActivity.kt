@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.main
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -65,9 +64,6 @@ class MainActivity :
     val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
     private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
 
-    private var isDragging = false
-
-    @SuppressLint("ClickableViewAccessibility")
     override fun initStartView(savedInstanceState: Bundle?) {
         binding.handler = this
         loadMemberProfile()
