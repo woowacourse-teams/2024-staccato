@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.Task
 import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
@@ -16,6 +17,7 @@ import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.CategoryCandidates.Companion.emptyCategoryCandidates
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.repository.ImageRepository
+import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
@@ -46,6 +48,7 @@ class StaccatoUpdateViewModel
         private val timelineRepository: TimelineRepository,
         private val staccatoRepository: StaccatoRepository,
         private val imageRepository: ImageRepository,
+        private val locationRepository: LocationRepository,
     ) : AttachedPhotoHandler, ViewModel() {
         val staccatoTitle = ObservableField<String>()
 
@@ -61,6 +64,9 @@ class StaccatoUpdateViewModel
 
         private val _pendingPhotos = MutableSingleLiveData<List<AttachedPhotoUiModel>>()
         val pendingPhotos: SingleLiveData<List<AttachedPhotoUiModel>> get() = _pendingPhotos
+
+        private val _currentLocation = MutableLiveData<Location>()
+        val currentLocation: LiveData<Location> get() = _currentLocation
 
         private val _latitude = MutableLiveData<Double?>()
         private val latitude: LiveData<Double?> get() = _latitude
@@ -115,6 +121,14 @@ class StaccatoUpdateViewModel
             }
         }
 
+        fun getCurrentLocation() {
+            _isCurrentLocationLoading.postValue(true)
+            val currentLocation: Task<Location> = locationRepository.getCurrentLocation()
+            currentLocation.addOnSuccessListener {
+                _currentLocation.value = it
+            }
+        }
+
         fun selectCategory(category: CategoryCandidate) {
             _selectedCategory.value = category
         }
@@ -148,19 +162,14 @@ class StaccatoUpdateViewModel
             _latitude.value = null
         }
 
-        fun setPlaceByCurrentAddress(
-            address: String?,
-            location: Location,
-        ) {
-            setCurrentLocationLoading(false)
+        fun setPlaceByCurrentAddress(address: String?) {
+            _isCurrentLocationLoading.postValue(false)
             _placeName.postValue(address)
             _address.postValue(address)
-            _latitude.postValue(location.latitude)
-            _longitude.postValue(location.longitude)
-        }
-
-        fun setCurrentLocationLoading(newValue: Boolean) {
-            _isCurrentLocationLoading.postValue(newValue)
+            _currentLocation.value?.let {
+                _latitude.postValue(it.latitude)
+                _longitude.postValue(it.longitude)
+            }
         }
 
         fun updateSelectedImageUris(newUris: Array<Uri>) {

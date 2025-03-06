@@ -5,6 +5,8 @@ import com.on.staccato.data.category.CategoryDataSource
 import com.on.staccato.data.category.CategoryRemoteDataSource
 import com.on.staccato.data.comment.CommentDataSource
 import com.on.staccato.data.comment.CommentRemoteDataSource
+import com.on.staccato.data.location.LocationDataSource
+import com.on.staccato.data.location.LocationLocalDataSource
 import com.on.staccato.data.login.LoginDataSource
 import com.on.staccato.data.login.LoginRemoteDataSource
 import com.on.staccato.data.mypage.MyPageLocalDataSource
@@ -42,4 +44,7 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindMyPageRemoteDataSource(myPageRemoteDataSource: MyPageRemoteDataSourceImpl): MyPageRemoteDataSource
+
+    @Binds
+    abstract fun bindLocationLocalDataSource(locationLocalDataSource: LocationLocalDataSource): LocationDataSource
 }
