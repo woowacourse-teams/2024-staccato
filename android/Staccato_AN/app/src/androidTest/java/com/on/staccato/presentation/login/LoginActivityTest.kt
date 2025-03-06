@@ -48,11 +48,11 @@ class LoginActivityTest {
                 matches(
                     allOf(
                         hasDescendant(
-                            withText(R.string.login_nickname_error_message_blank_first)
+                            withText(R.string.login_nickname_error_message_blank_first),
                         ),
                         isDisplayed(),
-                    )
-                )
+                    ),
+                ),
             )
     }
 
@@ -68,11 +68,11 @@ class LoginActivityTest {
                 matches(
                     allOf(
                         hasDescendant(
-                            withText(R.string.login_nickname_error_message_format)
+                            withText(R.string.login_nickname_error_message_format),
                         ),
                         isDisplayed(),
-                    )
-                )
+                    ),
+                ),
             )
     }
 
@@ -88,11 +88,11 @@ class LoginActivityTest {
                 matches(
                     allOf(
                         hasDescendant(
-                            withText(R.string.login_nickname_valid_message)
+                            withText(R.string.login_nickname_valid_message),
                         ),
                         isDisplayed(),
-                    )
-                )
+                    ),
+                ),
             )
     }
 
