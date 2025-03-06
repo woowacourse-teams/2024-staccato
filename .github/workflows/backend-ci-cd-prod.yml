@@ -25,6 +25,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -52,10 +62,6 @@ jobs:
   cd:
     needs: ci
     runs-on: [ self-hosted, prod ]
-
-    strategy:
-      matrix:
-        runner: [ prod-a, prod-b ]
 
     steps:
       - name: execute deploy.sh

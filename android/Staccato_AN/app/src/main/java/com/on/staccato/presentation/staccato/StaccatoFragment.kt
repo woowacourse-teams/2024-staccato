@@ -25,11 +25,18 @@ import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
+import com.on.staccato.util.logging.AnalyticsEvent
+import com.on.staccato.util.logging.LoggingManager
+import com.on.staccato.util.logging.Param
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class StaccatoFragment :
     BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato), StaccatoToolbarHandler {
+    @Inject
+    lateinit var loggingManager: LoggingManager
+
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private val commentsViewModel: StaccatoCommentsViewModel by viewModels()
@@ -39,7 +46,9 @@ class StaccatoFragment :
         DeleteDialogFragment {
             staccatoViewModel.deleteStaccato(staccatoId)
         }
-    private val staccatoId by lazy { arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID }
+    private val staccatoId by lazy {
+        arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID
+    }
 
     override fun onViewCreated(
         view: View,
@@ -56,6 +65,7 @@ class StaccatoFragment :
         setStaccatoFeelingFragment(savedInstanceState)
         showErrorToast()
         showExceptionSnackBar()
+        logAccess()
     }
 
     override fun onDeleteClicked() {
@@ -63,14 +73,14 @@ class StaccatoFragment :
     }
 
     override fun onUpdateClicked(
-        memoryId: Long,
-        memoryTitle: String,
+        categoryId: Long,
+        categoryTitle: String,
     ) {
         val staccatoUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
         StaccatoUpdateActivity.startWithResultLauncher(
             staccatoId = staccatoId,
-            memoryId = memoryId,
-            memoryTitle = memoryTitle,
+            categoryId = categoryId,
+            categoryTitle = categoryTitle,
             context = requireContext(),
             activityLauncher = staccatoUpdateLauncher,
         )
@@ -229,8 +239,15 @@ class StaccatoFragment :
         loadComments()
     }
 
+    private fun logAccess() {
+        loggingManager.logEvent(
+            AnalyticsEvent.NAME_FRAGMENT_PAGE,
+            Param(Param.KEY_FRAGMENT_NAME, Param.PARAM_STACCATO_FRAGMENT),
+        )
+    }
+
     companion object {
         const val STACCATO_ID_KEY = "staccatoId"
-        const val DEFAULT_STACCATO_ID = -1L
+        const val DEFAULT_STACCATO_ID = 0L
     }
 }

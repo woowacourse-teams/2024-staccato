@@ -16,14 +16,13 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
-    private static final String TEAM_FOLDER_NAME = "staccato/";
     private final S3ObjectClient s3ObjectClient;
     @Value("${image.folder.name}")
     private String imageFolderName;
 
     public ImageUrlResponse uploadImage(MultipartFile image) {
         String imageExtension = getImageExtension(image);
-        String key = TEAM_FOLDER_NAME + imageFolderName + UUID.randomUUID() + imageExtension;
+        String key = imageFolderName + UUID.randomUUID() + imageExtension;
         String contentType = ImageExtension.getContentType(imageExtension);
         byte[] imageBytes = getImageBytes(image);
 

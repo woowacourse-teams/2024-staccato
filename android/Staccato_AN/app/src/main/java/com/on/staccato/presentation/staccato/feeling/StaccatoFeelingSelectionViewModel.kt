@@ -61,7 +61,7 @@ class StaccatoFeelingSelectionViewModel
 
         private fun requestChangingFeeling(newFeeling: Feeling) {
             viewModelScope.launch {
-                staccatoRepository.updateFeeling(staccatoId, newFeeling.value)
+                staccatoRepository.updateFeeling(staccatoId, newFeeling)
             }
         }
     }

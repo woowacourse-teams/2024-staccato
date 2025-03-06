@@ -1,20 +1,20 @@
 package com.on.staccato.presentation.mapper
 
-import com.on.staccato.domain.model.Memory
+import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.Timeline
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 
 fun Timeline.toTimelineUiModel(): List<TimelineUiModel> {
-    return memories.map { memory ->
-        memory.toTimelineUiModel()
+    return categories.map { category ->
+        category.toTimelineUiModel()
     }
 }
 
-fun Memory.toTimelineUiModel(): TimelineUiModel {
+fun Category.toTimelineUiModel(): TimelineUiModel {
     return TimelineUiModel(
-        memoryId = memoryId,
-        memoryTitle = memoryTitle,
-        memoryThumbnailUrl = memoryThumbnailUrl,
+        categoryId = categoryId,
+        categoryTitle = categoryTitle,
+        categoryThumbnailUrl = categoryThumbnailUrl,
         startAt = startAt,
         endAt = endAt,
     )

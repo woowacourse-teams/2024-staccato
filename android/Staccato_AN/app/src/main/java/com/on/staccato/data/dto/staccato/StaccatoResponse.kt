@@ -5,16 +5,16 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StaccatoResponse(
-    @SerialName("momentId") val staccatoId: Long,
-    @SerialName("memoryId") val memoryId: Long,
-    @SerialName("memoryTitle") val memoryTitle: String,
+    @SerialName("staccatoId") val staccatoId: Long,
+    @SerialName("categoryId") val categoryId: Long,
+    @SerialName("categoryTitle") val categoryTitle: String,
     @SerialName("startAt") val startAt: String? = null,
     @SerialName("endAt") val endAt: String? = null,
     @SerialName("staccatoTitle") val staccatoTitle: String,
     @SerialName("placeName") val placeName: String,
     @SerialName("latitude") val latitude: Double,
     @SerialName("longitude") val longitude: Double,
-    @SerialName("momentImageUrls") val momentImageUrls: List<String>,
+    @SerialName("staccatoImageUrls") val staccatoImageUrls: List<String>,
     @SerialName("address") val address: String,
     @SerialName("visitedAt") val visitedAt: String,
     @SerialName("feeling") val feeling: String,

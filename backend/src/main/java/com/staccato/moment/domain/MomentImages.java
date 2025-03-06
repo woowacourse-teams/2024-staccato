@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MomentImages {
     private static final int MAX_COUNT = 5;
-    @OneToMany(mappedBy = "moment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "moment", cascade = CascadeType.PERSIST)
     private List<MomentImage> images = new ArrayList<>();
 
     public MomentImages(List<String> addedImages) {
@@ -38,16 +38,12 @@ public class MomentImages {
         });
     }
 
-    protected void update(MomentImages momentImages, Moment moment) {
-        removeExistsImages(new ArrayList<>(images));
-        addAll(momentImages, moment);
-    }
-
-    private void removeExistsImages(List<MomentImage> originalImages) {
-        originalImages.forEach(this.images::remove);
-    }
-
     public boolean isNotEmpty() {
         return !images.isEmpty();
+    }
+
+    protected void update(MomentImages newMomentImages, Moment moment) {
+        images.clear();
+        addAll(newMomentImages, moment);
     }
 }

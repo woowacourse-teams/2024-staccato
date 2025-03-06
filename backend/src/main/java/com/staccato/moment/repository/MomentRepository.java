@@ -9,7 +9,8 @@ import com.staccato.member.domain.Member;
 import com.staccato.moment.domain.Moment;
 
 public interface MomentRepository extends JpaRepository<Moment, Long> {
-    List<Moment> findAllByMemoryIdOrderByVisitedAt(long memoryId);
+    @Query("SELECT m FROM Moment m WHERE m.memory.id = :memoryId order by m.visitedAt desc, m.createdAt desc")
+    List<Moment> findAllByMemoryIdOrdered(long memoryId);
 
     List<Moment> findAllByMemory_MemoryMembers_Member(Member member);
 
@@ -17,5 +18,5 @@ public interface MomentRepository extends JpaRepository<Moment, Long> {
 
     @Modifying
     @Query("DELETE FROM Moment m WHERE m.memory.id = :memoryId")
-    void deleteAllByMemoryIdInBatch(@Param("memoryId") Long memoryId);
+    void deleteAllByMemoryIdInBulk(@Param("memoryId") Long memoryId);
 }

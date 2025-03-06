@@ -10,8 +10,8 @@ import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 
 class PhotoAttachAdapter(
-    private val dragListener: ItemDragListener,
     private val attachedPhotoHandler: AttachedPhotoHandler,
+    private val dragListener: ItemDragListener,
 ) :
     ItemMoveListener, ListAdapter<AttachedPhotoUiModel, PhotoAttachViewHolder>(diffUtil) {
     init {
