@@ -8,10 +8,10 @@ import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.MemberProfile
-import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -47,8 +47,8 @@ class SharedViewModel
         private val _staccatoId = MutableLiveData<Long>()
         val staccatoId: LiveData<Long> get() = _staccatoId
 
-        private val _staccatoLocation = MutableLiveData<StaccatoLocation>()
-        val staccatoLocation: LiveData<StaccatoLocation> get() = _staccatoLocation
+        private val _staccatoLocation = MutableLiveData<LocationUiModel>()
+        val staccatoLocation: LiveData<LocationUiModel> get() = _staccatoLocation
 
         private val isDragging = MutableLiveData<Boolean>(false)
 
@@ -87,11 +87,10 @@ class SharedViewModel
         }
 
         fun updateStaccatoLocation(
-            staccatoId: Long,
             latitude: Double,
             longitude: Double,
         ) {
-            _staccatoLocation.value = StaccatoLocation(staccatoId, latitude, longitude)
+            _staccatoLocation.value = LocationUiModel(latitude, longitude)
         }
 
         fun updateIsDragging(state: Boolean) {
