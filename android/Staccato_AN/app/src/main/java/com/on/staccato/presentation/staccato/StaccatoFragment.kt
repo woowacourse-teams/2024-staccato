@@ -49,11 +49,15 @@ class StaccatoFragment :
     private val staccatoId by lazy {
         arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID
     }
+    private val isStaccatoCreated by lazy {
+        arguments?.getBoolean(CREATED_STACCATO_KEY) ?: false
+    }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
+        if (isStaccatoCreated) sharedViewModel.setStaccatosHasUpdated()
         setUpBinding()
         setNavigationClickListener()
         setUpViewPager()
@@ -250,5 +254,6 @@ class StaccatoFragment :
     companion object {
         const val STACCATO_ID_KEY = "staccatoId"
         const val DEFAULT_STACCATO_ID = 0L
+        const val CREATED_STACCATO_KEY = "isStaccatoCreated"
     }
 }

@@ -30,6 +30,7 @@ import com.on.staccato.presentation.common.location.LocationManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.location.PermissionCancelListener
+import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
@@ -335,6 +336,7 @@ class StaccatoCreationActivity :
                     .putExtra(STACCATO_ID_KEY, createdStaccatoId)
                     .putExtra(CATEGORY_ID_KEY, categoryId)
                     .putExtra(CATEGORY_TITLE_KEY, categoryTitle)
+                    .putExtra(CREATED_STACCATO_KEY, true)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()

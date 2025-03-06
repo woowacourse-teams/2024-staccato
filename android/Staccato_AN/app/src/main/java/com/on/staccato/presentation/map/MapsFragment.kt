@@ -80,7 +80,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         setupPermissionRequestLauncher(view)
         observeStaccatoId()
         observeMarkerOptions()
-        observeDeletedStaccato()
+        observeUpdatedStaccato()
         observeLocation()
         observeIsTimelineUpdated()
     }
@@ -245,9 +245,9 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         }
     }
 
-    private fun observeDeletedStaccato() {
-        sharedViewModel.isStaccatosUpdated.observe(viewLifecycleOwner) { isDeleted ->
-            if (isDeleted) mapsViewModel.loadStaccatos()
+    private fun observeUpdatedStaccato() {
+        sharedViewModel.isStaccatosUpdated.observe(viewLifecycleOwner) { isUpdated ->
+            if (isUpdated) mapsViewModel.loadStaccatos()
         }
     }
 
