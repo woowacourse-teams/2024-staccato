@@ -1,9 +1,11 @@
 name: android-ci-cd-tmp
 
 on:
-  push:
+  pull_request:
     branches:
       - main-tmp
+    types:
+      - closed
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
@@ -15,7 +17,7 @@ env:
 
 jobs:
   android-cd:
-    if: startsWith(github.event.pull_request.head.ref, 'release-an-tmp/')
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-an-tmp/')
 
     name: Run Android CI/CD for release
     runs-on: ubuntu-latest

@@ -1,13 +1,15 @@
 name: backend-ci-cd-tmp
 
 on:
-  push:
+  pull_request:
     branches:
       - main-tmp
+    types:
+      - closed
 
 jobs:
   ci:
-    if: startsWith(github.event.pull_request.head.ref, 'release-be-tmp/')
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-be-tmp/')
 
     runs-on: ubuntu-latest
 
