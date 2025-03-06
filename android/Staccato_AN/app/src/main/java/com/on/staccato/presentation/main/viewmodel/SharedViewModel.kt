@@ -24,8 +24,8 @@ class SharedViewModel
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile> get() = _memberProfile
 
-        private val _isTimelineUpdated = MutableSingleLiveData(false)
-        val isTimelineUpdated: SingleLiveData<Boolean>
+        private val _isTimelineUpdated = MutableLiveData(false)
+        val isTimelineUpdated: LiveData<Boolean>
             get() = _isTimelineUpdated
 
         private val _isStaccatosUpdated = MutableSingleLiveData(false)
@@ -62,7 +62,7 @@ class SharedViewModel
         }
 
         fun setTimelineHasUpdated() {
-            _isTimelineUpdated.setValue(true)
+            _isTimelineUpdated.value = true
         }
 
         fun setStaccatosHasUpdated() {
