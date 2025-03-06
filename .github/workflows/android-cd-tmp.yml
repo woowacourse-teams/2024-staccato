@@ -17,7 +17,7 @@ env:
 
 jobs:
   android-cd:
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-an-tmp/')
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-an-tmp')
 
     name: Run Android CI/CD for release
     runs-on: ubuntu-latest
