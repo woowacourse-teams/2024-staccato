@@ -1,4 +1,4 @@
-name: Android CI/CD for release(generating demo APK)
+name: Android CI/CD for distribution and test
 
 on:
   push:
@@ -15,8 +15,8 @@ env:
   KEY_STORE_PROPERTIES: ${{ secrets.KEY_STORE_PROPERTIES }}
 
 jobs:
-  apk:
-    name: Generate APK
+  build-and-distribute:
+    name: Generate debug APK and distribute to tester
     runs-on: ubuntu-latest
 
     defaults:
@@ -29,7 +29,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: set up JDK 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
@@ -40,11 +40,11 @@ jobs:
         run: |
           touch local.properties
 
-      - name: Set Base Url in local.properties
+      - name: Set base_url in local.properties
         run: |
           echo "base_url=\"$BASE_URL\"" >> local.properties
 
-      - name: Set Develop Base Url in local.properties
+      - name: Set dev_base_url in local.properties
         run: |
           echo "dev_base_url=\"$DEV_BASE_URL\"" >> local.properties
 
@@ -60,7 +60,7 @@ jobs:
         run: |
           echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
 
-      - name: Create KeyStore File and Properties
+      - name: Create keyStore file and properties
         run: |
           mkdir -p ./app/signing
           echo "$UPLOAD_KEY_STORE_JKS" | base64 --decode > ./app/signing/upload_key_store.jks
@@ -69,20 +69,20 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
 
-      - name: Upload Release APK
+      - name: Upload APK to artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release.apk
-          path: android/Staccato_AN/app/build/outputs/apk/release/app-release.apk
+          name: app-debug.apk
+          path: android/Staccato_AN/app/build/outputs/apk/debug/app-debug.apk
           overwrite: 'true'
 
-      - name: Upload Artifact to Firebase App Distribution
+      - name: Upload APK to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: staccato_tester
-          file: android/Staccato_AN/app/build/outputs/apk/release/app-release.apk
+          file: android/Staccato_AN/app/build/outputs/apk/debug/app-debug.apk
