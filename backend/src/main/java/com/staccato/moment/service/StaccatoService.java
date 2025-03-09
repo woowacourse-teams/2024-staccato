@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.jwt.ShareTokenProvider;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
+import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Feeling;
@@ -21,6 +23,7 @@ import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
+import com.staccato.moment.service.dto.response.CommentShareResponse;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponse;
@@ -42,6 +45,7 @@ public class StaccatoService {
     private final CommentRepository commentRepository;
     private final MomentImageRepository momentImageRepository;
     private final ShareTokenProvider shareTokenProvider;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public MomentIdResponse createMoment(MomentRequest momentRequest, Member member) {
@@ -135,6 +139,34 @@ public class StaccatoService {
     }
 
     public StaccatoSharedResponse readSharedStaccatoByToken(String token) {
-        return null;
+        long staccatoId = shareTokenProvider.extractStaccatoId(token);
+
+        Moment moment = momentRepository.findById(staccatoId)
+                .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
+
+        Member member = memberRepository.findByMemoryId(moment.getMemory().getId())
+                .orElseThrow(() -> new StaccatoException("요청하신 멤버를 찾을 수 없어요."));
+
+        List<MomentImage> momentImages = momentImageRepository.findAllByMomentId(staccatoId);
+        List<String> momentImageUrls = momentImages.stream()
+                .map(MomentImage::getImageUrl)
+                .toList();
+
+        List<Comment> comments = commentRepository.findAllByMomentId(staccatoId);
+        List<CommentShareResponse> commentShareResponses = comments.stream()
+                .map(CommentShareResponse::new)
+                .toList();
+
+        return new StaccatoSharedResponse(
+                moment.getId(),
+                member.getNickname().getNickname(),
+                momentImageUrls,
+                moment.getTitle(),
+                moment.getSpot().getPlaceName(),
+                moment.getSpot().getAddress(),
+                moment.getVisitedAt().toString(),
+                moment.getFeeling().name(),
+                commentShareResponses
+        );
     }
 }
