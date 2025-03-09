@@ -430,7 +430,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     }
 
     private Moment saveMomentWithImages(Memory memory) {
-        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.of(2024, 7, 1, 10, 0), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
         return momentRepository.save(moment);
     }
 

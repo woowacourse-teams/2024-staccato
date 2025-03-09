@@ -7,6 +7,10 @@ public class MemberFixture {
         return Member.create("staccato", "");
     }
 
+    public static Member create(String nickname) {
+        return Member.create(nickname, "");
+    }
+
     public static Member create(String nickname, String imageUrl) {
         return Member.create(nickname, imageUrl);
     }
