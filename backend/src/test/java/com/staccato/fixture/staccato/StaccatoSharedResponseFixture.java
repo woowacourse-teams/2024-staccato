@@ -17,7 +17,7 @@ public class StaccatoSharedResponseFixture {
                 "staccatoTitle",
                 "placeName",
                 "address",
-                "2024-07-01T10:00:00.000Z",
+                "2024-07-01T10:00",
                 "nothing",
                 List.of(
                         new CommentShareResponse("staccato", "댓글 샘플", "image.jpg"),

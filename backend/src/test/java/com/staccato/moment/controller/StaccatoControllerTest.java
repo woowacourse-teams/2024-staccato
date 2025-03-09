@@ -396,7 +396,7 @@ class StaccatoControllerTest extends ControllerTest {
                     "staccatoTitle": "staccatoTitle",
                     "placeName": "placeName",
                     "address": "address",
-                    "visitedAt": "2024-07-01T10:00:00.000Z",
+                    "visitedAt": "2024-07-01T10:00",
                     "feeling": "nothing",
                     "comments": [
                         {

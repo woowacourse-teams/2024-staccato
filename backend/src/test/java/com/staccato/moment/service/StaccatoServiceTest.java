@@ -26,6 +26,7 @@ import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.memory.MemoryFixture;
 import com.staccato.fixture.moment.MomentFixture;
 import com.staccato.fixture.moment.MomentRequestFixture;
+import com.staccato.fixture.staccato.StaccatoSharedResponseFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
@@ -378,8 +379,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member1 = saveMemberWithNicknameAndImageUrl("staccato", "image.jpg");
         Member member2 = saveMemberWithNicknameAndImageUrl("staccato2", "image2.jpg");
-        Memory memory = saveMemory(member1);
-        Moment moment = saveMomentWithImages(memory);
+        Memory memory = saveMemoryWithFixedDate(member1);
+        Moment moment = saveMomentWithFixedDateTime(memory);
         saveComment(moment, member1, "댓글 샘플");
         saveComment(moment, member2, "댓글 샘플2");
 
@@ -389,7 +390,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         StaccatoSharedResponse response = staccatoService.readSharedStaccatoByToken(token);
 
         // then
-        assertThat(response.staccatoId()).isEqualTo(STACCATO_ID);
+        assertThat(response).isEqualTo(StaccatoSharedResponseFixture.create());
     }
 
     @DisplayName("잘못된 토큰이면, 예외가 발생한다.")
@@ -431,6 +432,17 @@ class StaccatoServiceTest extends ServiceSliceTest {
 
     private Moment saveMomentWithImages(Memory memory) {
         Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.now(), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
+        return momentRepository.save(moment);
+    }
+
+    private Memory saveMemoryWithFixedDate(Member member) {
+        Memory memory = MemoryFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2));
+        memory.addMemoryMember(member);
+        return memoryRepository.save(memory);
+    }
+
+    private Moment saveMomentWithFixedDateTime(Memory memory) {
+        Moment moment = MomentFixture.createWithImages(memory, LocalDateTime.of(2024, 7, 1, 10, 0), new MomentImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg")));
         return momentRepository.save(moment);
     }
 

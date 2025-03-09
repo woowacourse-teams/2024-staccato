@@ -165,7 +165,7 @@ public class StaccatoService {
                 moment.getSpot().getPlaceName(),
                 moment.getSpot().getAddress(),
                 moment.getVisitedAt().toString(),
-                moment.getFeeling().name(),
+                moment.getFeeling().getValue(),
                 commentShareResponses
         );
     }
