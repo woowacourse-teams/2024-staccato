@@ -3,17 +3,14 @@ package com.staccato.config.jwt;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import java.util.Date;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.staccato.exception.UnauthorizedException;
+import com.staccato.util.StubTokenProvider;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 public class AbstractTokenProviderTest {
     private final static String TEST_SECRET_KEY = "test-secret-key";
@@ -79,27 +76,5 @@ public class AbstractTokenProviderTest {
         // given & when & then
         assertThatThrownBy(() -> tokenProvider.validateToken(INVALID_TOKEN))
                 .isInstanceOf(UnauthorizedException.class);
-    }
-
-    private static class StubTokenProvider extends AbstractTokenProvider {
-        public StubTokenProvider(TokenProperties tokenProperties) {
-            super(tokenProperties);
-        }
-
-        @Override
-        public String create(Object payload) {
-            return Jwts.builder()
-                    .claim(TEST_PROPERTY_NAME, payload)
-                    .signWith(SignatureAlgorithm.HS256, tokenProperties.secretKey().getBytes())
-                    .compact();
-        }
-
-        public String createExpired(Object payload) {
-            return Jwts.builder()
-                    .claim(TEST_PROPERTY_NAME, payload)
-                    .setExpiration(new Date(System.currentTimeMillis() - 1000))
-                    .signWith(SignatureAlgorithm.HS256, tokenProperties.secretKey().getBytes())
-                    .compact();
-        }
     }
 }

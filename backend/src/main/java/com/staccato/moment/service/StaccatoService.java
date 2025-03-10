@@ -136,13 +136,11 @@ public class StaccatoService {
         }
     }
 
-    // StaccatoServiceTest에서 validateToken 테스트 추가 필요!!!
     public StaccatoSharedResponse readSharedStaccatoByToken(String token) {
+        shareTokenProvider.validateToken(token);
         long staccatoId = shareTokenProvider.extractStaccatoId(token);
 
-        Moment moment = momentRepository.findById(staccatoId)
-                .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
-
+        Moment moment = getMomentById(staccatoId);
         Member member = memberRepository.findByMemoryId(moment.getMemory().getId())
                 .orElseThrow(() -> new StaccatoException("요청하신 멤버를 찾을 수 없어요."));
 
@@ -167,5 +165,10 @@ public class StaccatoService {
                 moment.getFeeling().getValue(),
                 commentShareResponses
         );
+    }
+
+    private Moment getMomentById(long momentId) {
+        return momentRepository.findById(momentId)
+                .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 }

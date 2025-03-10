@@ -18,6 +18,7 @@ import com.staccato.ServiceSliceTest;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.jwt.ShareTokenProvider;
+import com.staccato.config.jwt.TokenProperties;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.exception.UnauthorizedException;
@@ -43,11 +44,11 @@ import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
 import com.staccato.moment.service.dto.response.StaccatoShareLinkResponse;
 import com.staccato.moment.service.dto.response.StaccatoSharedResponse;
+import com.staccato.util.StubTokenProvider;
 
 import io.jsonwebtoken.Claims;
 
 class StaccatoServiceTest extends ServiceSliceTest {
-    private static final Long STACCATO_ID = 1L;
 
     @Autowired
     private MomentService momentService;
@@ -433,7 +434,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         saveComment(moment, member1, "댓글 샘플");
         saveComment(moment, member2, "댓글 샘플2");
 
-        String token = shareTokenProvider.create(STACCATO_ID);
+        String token = shareTokenProvider.create(moment.getId());
 
         // when
         StaccatoSharedResponse response = staccatoService.readSharedStaccatoByToken(token);
@@ -442,9 +443,22 @@ class StaccatoServiceTest extends ServiceSliceTest {
         assertThat(response).isEqualTo(StaccatoSharedResponseFixture.create());
     }
 
+    @DisplayName("만료된 토큰이면, 예외가 발생한다.")
+    @Test
+    void failReadSharedStaccatoWhenTokenExpired() {
+        // given
+        TokenProperties tokenProperties = new TokenProperties("test-secret-key");
+        StubTokenProvider stubTokenProvider = new StubTokenProvider(tokenProperties);
+        String expiredToken = stubTokenProvider.createExpired("test-payload");
+
+        // when & then
+        assertThatThrownBy(() -> staccatoService.readSharedStaccatoByToken(expiredToken))
+                .isInstanceOf(UnauthorizedException.class);
+    }
+
     @DisplayName("잘못된 토큰이면, 예외가 발생한다.")
     @Test
-    void failReadSharedStaccatoIfTokenInvalid() {
+    void failReadSharedStaccatoWhenTokenInvalid() {
         // given
         String invalidToken = "invalid.token.value";
 
@@ -455,10 +469,9 @@ class StaccatoServiceTest extends ServiceSliceTest {
 
     @DisplayName("해당하는 스타카토가 없으면, 예외가 발생한다.")
     @Test
-    void failReadSharedStaccatoIfStaccatoNotExist() {
+    void failReadSharedStaccatoWhenStaccatoNotExist() {
         // given
-        Long invalidStaccatoId = 0L;
-        String token = shareTokenProvider.create(invalidStaccatoId);
+        String token = shareTokenProvider.create(1L);
 
         // when & then
         assertThatThrownBy(() -> staccatoService.readSharedStaccatoByToken(token))
