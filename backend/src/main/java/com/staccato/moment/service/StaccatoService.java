@@ -120,9 +120,14 @@ public class StaccatoService {
         moment.changeFeeling(feeling);
     }
 
-    private Moment getMomentById(long momentId) {
-        return momentRepository.findById(momentId)
-                .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
+    public StaccatoShareLinkResponse createStaccatoShareLink(Long staccatoId, Member member) {
+        Moment moment = getMomentById(staccatoId);
+        validateMemoryOwner(moment.getMemory(), member);
+
+        String token = shareTokenProvider.create(staccatoId);
+        String shareLink = SHARE_LINK_PREFIX + token;
+
+        return new StaccatoShareLinkResponse(staccatoId, shareLink);
     }
 
     private void validateMemoryOwner(Memory memory, Member member) {
@@ -131,13 +136,7 @@ public class StaccatoService {
         }
     }
 
-    public StaccatoShareLinkResponse createStaccatoShareLink(Long staccatoId) {
-        String token = shareTokenProvider.create(staccatoId);
-        String shareLink = SHARE_LINK_PREFIX + token;
-
-        return new StaccatoShareLinkResponse(staccatoId, shareLink);
-    }
-
+    // StaccatoServiceTest에서 validateToken 테스트 추가 필요!!!
     public StaccatoSharedResponse readSharedStaccatoByToken(String token) {
         long staccatoId = shareTokenProvider.extractStaccatoId(token);
 

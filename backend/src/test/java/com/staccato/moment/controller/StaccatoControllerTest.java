@@ -364,7 +364,7 @@ class StaccatoControllerTest extends ControllerTest {
         // given
         long staccatoId = 1L;
         StaccatoShareLinkResponse response = new StaccatoShareLinkResponse(staccatoId, "https://staccato.kr/staccato?token=sample-token");
-        when(staccatoService.createStaccatoShareLink(staccatoId)).thenReturn(response);
+        when(staccatoService.createStaccatoShareLink(staccatoId, any())).thenReturn(response);
         String expectedResponse = """
                 {
                     "staccatoId": 1,

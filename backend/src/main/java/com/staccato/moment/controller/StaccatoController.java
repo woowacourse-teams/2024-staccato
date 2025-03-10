@@ -106,7 +106,7 @@ public class StaccatoController implements StaccatoControllerDocs {
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId
     ) {
-        StaccatoShareLinkResponse staccatoShareLinkResponse = staccatoService.createStaccatoShareLink(staccatoId);
+        StaccatoShareLinkResponse staccatoShareLinkResponse = staccatoService.createStaccatoShareLink(staccatoId, member);
         return ResponseEntity.ok().body(staccatoShareLinkResponse);
     }
 

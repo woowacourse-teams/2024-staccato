@@ -316,18 +316,55 @@ class StaccatoServiceTest extends ServiceSliceTest {
     @DisplayName("올바른 형식의 공유 링크를 생성할 수 있다.")
     @Test
     void createValidShareLink() {
-        // given & when
-        StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(STACCATO_ID);
+        // given
+        Member member = saveMember();
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
+
+        // when
+        StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(moment.getId(), member);
 
         // then
         assertThat(response.shareLink()).startsWith("https://staccato.kr/staccatos?token=");
     }
 
+    @DisplayName("존재하지 않는 스타카토의 공유 링크를 생성하려고 하면, 예외가 발생한다.")
+    @Test
+    void failToCreateShareLinkWhenNoStaccato() {
+        // given
+        Member member = saveMember();
+
+        // when & then
+        assertThatThrownBy(() -> staccatoService.createStaccatoShareLink(1L, member))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("요청하신 스타카토를 찾을 수 없어요.");
+    }
+
+    @DisplayName("본인 것이 아닌 스타카토의 공유 링크를 생성하려고 하면, 예외가 발생한다.")
+    @Test
+    void failToCreateShareLinkWhenInvalidMember() {
+        // given
+        Member member = saveMember();
+        Member otherMember = saveMember();
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
+
+        // when & then
+        assertThatThrownBy(() -> staccatoService.createStaccatoShareLink(moment.getId(), otherMember))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
     @DisplayName("공유 링크는 JWT 토큰을 포함하고 있다.")
     @Test
     void shouldContainTokenInShareLink() {
-        // given & when
-        StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(STACCATO_ID);
+        // given
+        Member member = saveMember();
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
+
+        // when
+        StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(moment.getId(), member);
         String token = response.shareLink().split("token=")[1];
 
         // then
@@ -338,20 +375,28 @@ class StaccatoServiceTest extends ServiceSliceTest {
     @Test
     void shouldContainStaccatoIdInToken() {
         // given
-        StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(STACCATO_ID);
+        Member member = saveMember();
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
+
+        StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(moment.getId(), member);
         String token = response.shareLink().split("token=")[1];
 
         // when & then
         assertThatCode(() -> shareTokenProvider.extractStaccatoId(token))
                 .doesNotThrowAnyException();
-        assertThat(shareTokenProvider.extractStaccatoId(token)).isEqualTo(STACCATO_ID);
+        assertThat(shareTokenProvider.extractStaccatoId(token)).isEqualTo(moment.getId());
     }
 
     @DisplayName("토큰은 만료 기한을 포함하고 있다.")
     @Test
     void shouldContainExpirationInToken() {
-        // give
-        StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(STACCATO_ID);
+        // given
+        Member member = saveMember();
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
+
+        StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(moment.getId(), member);
         String token = response.shareLink().split("token=")[1];
 
         // when
@@ -365,7 +410,11 @@ class StaccatoServiceTest extends ServiceSliceTest {
     @Test
     void validateToken() {
         // given
-        StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(STACCATO_ID);
+        Member member = saveMember();
+        Memory memory = saveMemory(member);
+        Moment moment = saveMomentWithImages(memory);
+
+        StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(moment.getId(), member);
         String token = response.shareLink().split("token=")[1];
 
         // when & then
