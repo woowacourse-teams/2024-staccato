@@ -52,7 +52,7 @@ jobs:
 
       - name: Docker Image Build
         run: |
-          sudo docker build --platform linux/arm64 -t staccato/staccato:dev -f Dockerfile.dev .
+          sudo docker build --platform linux/arm64 -t staccato/staccato:dev -f Dockerfile.dev --build-arg JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} .
 
       - name: Docker Hub Push
         run: |
