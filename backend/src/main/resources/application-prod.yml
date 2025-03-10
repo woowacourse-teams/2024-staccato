@@ -9,9 +9,9 @@ spring:
       mode: always
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ENC(VKMyrVpLrR1Mvtdx1zm3EB4gKFgeaqVIc6Wf3s+6Cu9e3w+lGLew5G62xyOyFZ2NeBUOlx11i8Z1aEZUzuPmC2PfdG9uzoTxi2Es3WWeZK3X4pP3h2dlN/crmkR8teISJR3xj/b6Zte5A2iYQ18GUo5QUNRnXbn8)
+    username: ENC(qwQULh2q73p3VZxYNssXO0/Y4IvJzBTU)
+    password: ENC(lIcEbKSmAdanR5azRumgNPVt+6+NFOOd)
     hikari:
       maximum-pool-size: 10
       minimum-idle: 10
@@ -59,6 +59,11 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
@@ -67,21 +72,21 @@ springdoc:
 security:
   jwt:
     token:
-      secret-key: ${SECRET_KEY}
+      secret-key: ENC(gFDkISN4LtWFZS3VqD8DcY/sJ7oQoSwp2IzgnQh3mZ7Uky6epMIDgk9TIZ57xfw8yOwBl5AbDKQae0SRAUJCFptIBAls44ty)
   admin:
     key: ${ADMIN_KEY}
     token: ${ADMIN_TOKEN}
 cloud:
   aws:
-    access-key: ${AWS_ACCESS_KEY}
-    secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+    access-key: ENC(kJlFbJL+MaD3rV9fB+bQglhlbK82rlKvW0+g0hgsFJQ=)
+    secret-access-key: ENC(+hUItwfvS1Y+nU/j/zyf55o9NyB1Ak/60vbpBrNK9WGPfAMw+5XITnb06vMoknI112dFMhYA+Rw=)
     s3:
-      bucket: ${AWS_S3_BUCKET}
-      endpoint: ${AWS_S3_ENDPOINT}
+      bucket: ENC(VW+RubsMNPc33D+R+NU6X81EBrgAZyWh)
+      endpoint: ENC(ZgPOwy0o4ZLHsHWokjoDi1qyYnCSJVHct8zS4JN+RduQNRldP53WlGle0E33w7f7BIJNuARXhbnEOPIVUMv+pw==)
     cloudfront:
-      endpoint: ${AWS_CLOUDFRONT_ENDPOINT}
+      endpoint: ENC(7ZbtWn0aC7ctosFZt3HSzgT1sv3n3AQoVz52ZchiZrtSkq1jtWLNur5+KlRQqZqA)
     region:
-      static: ${AWS_REGION_STATIC}
+      static: ENC(zgXzsvay+o8RHzj5+OsJwW10YuVMruaf)
     stack:
       auto: false
 image:

@@ -9,9 +9,9 @@ spring:
       mode: always
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ENC(Z6HexGUo7PIGVWA2GOFTnKczW8Lz2MD7QIBkNIQLJh2CZf/ctAKg0lHUmfv9pKUHDzd5kUuVsaYNty9uEV3C5e+KyuTq+wLCJ5X1Piq8TaGobJ3hqqCsotKKr+PEi/tUodfxKQgcsBHfVN5fNaGevw8Ed2ryY7BZkaiC9OtN9NE=)
+    username: ENC(qwQULh2q73p3VZxYNssXO0/Y4IvJzBTU)
+    password: ENC(Foce1I2WyNdpbdGLKvSJ7w==)
   jpa:
     database: MYSQL
     show-sql: true
@@ -31,27 +31,32 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
 security:
   jwt:
     token:
-      secret-key: ${SECRET_KEY}
+      secret-key: ENC(rTauTAGby+LR+4Km3UaSJDOq8gCbZzgaMDrO0vpgTHGloohaiWw/XPQK8Cr2/kHfb7xy5Lhc0ctX9LJjdn79aQjgQC7skIeI)
   admin:
     key: ${ADMIN_KEY}
     token: ${ADMIN_TOKEN}
 cloud:
   aws:
-    access-key: ${AWS_ACCESS_KEY}
-    secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+    access-key: ENC(r3b3pCaGN+E5Tbxj1U+epJy28eby+mg2h5Kl8hy6yuY=)
+    secret-access-key: ENC(O6y2eQtc5gZiULBxWKSVfxl2Op6ipKy5Nzv83/irPf+Rx44OW1omEq4Ofa0kdQmFBbi+gfEcsnY=)
     s3:
-      bucket: ${AWS_S3_BUCKET}
-      endpoint: ${AWS_S3_ENDPOINT}
+      bucket: ENC(dj8hl6vZzv6bqbqPpgzcmjjLwpszT8MS)
+      endpoint: ENC(XrPoJGC5B1EkIaMfcLYZQr5ODGQhLXbSD1jPvh5uALXVGGeK8f89Cwe0RIQ65MQXJ0FGOAXIP6q+5P4An4PNLQ==)
     cloudfront:
-      endpoint: ${AWS_CLOUDFRONT_ENDPOINT}
+      endpoint: ENC(tX/4xozGxIJmG5WSYYwE/ik1cDTrKe3Qsl1J7QpRgQD9RMDodMvAw6ATDfh7tgPK)
     region:
-      static: ${AWS_REGION_STATIC}
+      static: ENC(yZpFfqqQH/FT+acjy9oSNta/LV6DIuGn)
     stack:
       auto: false
 image:
@@ -65,8 +70,6 @@ management:
     web:
       exposure:
         include: info, health, metrics, env, beans, threaddump, loggers, prometheus
-
-
 
 server:
   tomcat:
