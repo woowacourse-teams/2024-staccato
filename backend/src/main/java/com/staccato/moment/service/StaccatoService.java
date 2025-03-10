@@ -154,17 +154,7 @@ public class StaccatoService {
                 .map(CommentShareResponse::new)
                 .toList();
 
-        return new StaccatoSharedResponse(
-                moment.getId(),
-                member.getNickname().getNickname(),
-                momentImageUrls,
-                moment.getTitle(),
-                moment.getSpot().getPlaceName(),
-                moment.getSpot().getAddress(),
-                moment.getVisitedAt().toString(),
-                moment.getFeeling().getValue(),
-                commentShareResponses
-        );
+        return new StaccatoSharedResponse(moment, member, momentImageUrls, commentShareResponses);
     }
 
     private Moment getMomentById(long momentId) {
