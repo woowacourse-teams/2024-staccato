@@ -72,10 +72,7 @@ springdoc:
 security:
   jwt:
     token:
-      secret-key: ENC(gFDkISN4LtWFZS3VqD8DcY/sJ7oQoSwp2IzgnQh3mZ7Uky6epMIDgk9TIZ57xfw8yOwBl5AbDKQae0SRAUJCFptIBAls44ty)
-  admin:
-    key: ${ADMIN_KEY}
-    token: ${ADMIN_TOKEN}
+      secret-key: ENC(gFDkISN4LtWFZS3VqD8DcY/sJ7oQoSwp2IzgnQh3mZ7Uky6epMIDgk9TIZ57xfw8yOwBl5AbDKQae0SRAUJCFptIBAls44ty)r
 cloud:
   aws:
     access-key: ENC(kJlFbJL+MaD3rV9fB+bQglhlbK82rlKvW0+g0hgsFJQ=)

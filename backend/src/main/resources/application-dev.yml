@@ -43,9 +43,6 @@ security:
   jwt:
     token:
       secret-key: ENC(rTauTAGby+LR+4Km3UaSJDOq8gCbZzgaMDrO0vpgTHGloohaiWw/XPQK8Cr2/kHfb7xy5Lhc0ctX9LJjdn79aQjgQC7skIeI)
-  admin:
-    key: ${ADMIN_KEY}
-    token: ${ADMIN_TOKEN}
 cloud:
   aws:
     access-key: ENC(r3b3pCaGN+E5Tbxj1U+epJy28eby+mg2h5Kl8hy6yuY=)
