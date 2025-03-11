@@ -1,5 +1,6 @@
 package com.staccato.moment.service.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.staccato.member.domain.Member;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record StaccatoSharedResponse(
         @Schema(example = "1")
         long staccatoId,
+        @Schema(example = "2024-09-30T17:00:00")
+        LocalDateTime expiredAt,
         @Schema(example = "staccato")
         String userName,
         @ArraySchema(arraySchema = @Schema(example = "[" +
@@ -27,21 +30,22 @@ public record StaccatoSharedResponse(
         String placeName,
         @Schema(example = "대한민국 서울특별시 송파구 올림픽로35다길 42 한국루터회관 8층")
         String address,
-        @Schema(example = "2024-09-29T17:00:00.000Z")
-        String visitedAt,
+        @Schema(example = "2024-09-29T17:00:00")
+        LocalDateTime visitedAt,
         @Schema(example = "scared")
         String feeling,
         List<CommentShareResponse> comments
 ) {
-    public StaccatoSharedResponse(Moment moment, Member member, List<String> momentImageUrls, List<CommentShareResponse> commentShareResponses) {
+    public StaccatoSharedResponse(LocalDateTime expiredAt, Moment moment, Member member, List<String> momentImageUrls, List<CommentShareResponse> commentShareResponses) {
         this(
                 moment.getId(),
+                expiredAt,
                 member.getNickname().getNickname(),
                 momentImageUrls,
                 moment.getTitle(),
                 moment.getSpot().getPlaceName(),
                 moment.getSpot().getAddress(),
-                moment.getVisitedAt().toString(),
+                moment.getVisitedAt(),
                 moment.getFeeling().getValue(),
                 commentShareResponses
         );

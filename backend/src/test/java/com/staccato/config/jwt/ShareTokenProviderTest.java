@@ -2,6 +2,8 @@ package com.staccato.config.jwt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,5 +60,14 @@ public class ShareTokenProviderTest {
 
         // then
         assertThat(staccatoId).isEqualTo(STACCATO_ID);
+    }
+
+    @DisplayName("토큰에서 만료 기한을 추출할 수 있다.")
+    @Test
+    void extractExpiredAt() {
+        String token = tokenProvider.create(STACCATO_ID);
+        LocalDateTime expiredAt = tokenProvider.extractExpiredAt(token);
+
+        assertThat(expiredAt).isNotNull();
     }
 }

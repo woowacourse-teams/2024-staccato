@@ -1,10 +1,15 @@
 package com.staccato.config.jwt;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
+import com.staccato.exception.UnauthorizedException;
+
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -29,5 +34,17 @@ public class ShareTokenProvider extends AbstractTokenProvider {
     public long extractStaccatoId(String token) {
         Claims claims = getPayload(token);
         return claims.get(PROPERTY_NAME, Long.class);
+    }
+
+    public LocalDateTime extractExpiredAt(String token) {
+        try {
+            Claims claims = getPayload(token);
+            Date expiredAt = claims.getExpiration();
+            return expiredAt.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+        }  catch (JwtException | IllegalArgumentException e) {
+            throw new UnauthorizedException();
+        }
     }
 }

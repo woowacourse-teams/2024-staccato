@@ -1,5 +1,6 @@
 package com.staccato.fixture.staccato;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.staccato.moment.service.dto.response.CommentShareResponse;
@@ -9,6 +10,7 @@ public class StaccatoSharedResponseFixture {
     public static StaccatoSharedResponse create() {
         return new StaccatoSharedResponse(
                 1,
+                LocalDateTime.of(2024, 7, 2, 10, 0),
                 "staccato",
                 List.of(
                         "https://oldExample.com.jpg",
@@ -17,7 +19,7 @@ public class StaccatoSharedResponseFixture {
                 "staccatoTitle",
                 "placeName",
                 "address",
-                "2024-07-01T10:00",
+                LocalDateTime.of(2024, 7, 1, 10, 0),
                 "nothing",
                 List.of(
                         new CommentShareResponse("staccato", "댓글 샘플", "image.jpg"),

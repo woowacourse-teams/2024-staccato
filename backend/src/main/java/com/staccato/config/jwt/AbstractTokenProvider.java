@@ -1,5 +1,7 @@
 package com.staccato.config.jwt;
 
+import java.util.Date;
+
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 

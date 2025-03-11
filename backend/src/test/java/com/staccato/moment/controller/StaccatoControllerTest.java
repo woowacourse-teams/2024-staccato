@@ -388,6 +388,7 @@ class StaccatoControllerTest extends ControllerTest {
         String expectedResponse = """
                 {
                     "staccatoId": 1,
+                    "expiredAt": "2024-07-02T10:00:00",
                     "userName": "staccato",
                     "staccatoImageUrls": [
                         "https://oldExample.com.jpg",
@@ -396,7 +397,7 @@ class StaccatoControllerTest extends ControllerTest {
                     "staccatoTitle": "staccatoTitle",
                     "placeName": "placeName",
                     "address": "address",
-                    "visitedAt": "2024-07-01T10:00",
+                    "visitedAt": "2024-07-01T10:00:00",
                     "feeling": "nothing",
                     "comments": [
                         {

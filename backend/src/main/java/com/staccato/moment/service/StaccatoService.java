@@ -1,5 +1,6 @@
 package com.staccato.moment.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -139,6 +140,7 @@ public class StaccatoService {
     public StaccatoSharedResponse readSharedStaccatoByToken(String token) {
         shareTokenProvider.validateToken(token);
         long staccatoId = shareTokenProvider.extractStaccatoId(token);
+        LocalDateTime expiredAt = shareTokenProvider.extractExpiredAt(token);
 
         Moment moment = getMomentById(staccatoId);
         Member member = memberRepository.findByMemoryId(moment.getMemory().getId())
@@ -154,7 +156,7 @@ public class StaccatoService {
                 .map(CommentShareResponse::new)
                 .toList();
 
-        return new StaccatoSharedResponse(moment, member, momentImageUrls, commentShareResponses);
+        return new StaccatoSharedResponse(expiredAt, moment, member, momentImageUrls, commentShareResponses);
     }
 
     private Moment getMomentById(long momentId) {
