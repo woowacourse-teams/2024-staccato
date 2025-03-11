@@ -1,6 +1,6 @@
 package com.staccato.config.log;
 
-import com.staccato.moment.service.dto.request.StaccatoRequest;
+import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +15,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
-import com.staccato.moment.service.StaccatoService;
+import com.staccato.staccato.service.StaccatoService;
 import io.micrometer.core.instrument.MeterRegistry;
 
 import static org.assertj.core.api.Assertions.assertThat;

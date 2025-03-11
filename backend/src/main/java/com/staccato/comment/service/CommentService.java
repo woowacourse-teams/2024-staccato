@@ -16,8 +16,8 @@ import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.category.domain.Category;
-import com.staccato.moment.domain.Staccato;
-import com.staccato.moment.repository.StaccatoRepository;
+import com.staccato.staccato.domain.Staccato;
+import com.staccato.staccato.repository.StaccatoRepository;
 
 import lombok.RequiredArgsConstructor;
 

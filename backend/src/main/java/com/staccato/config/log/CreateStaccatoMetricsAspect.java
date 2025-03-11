@@ -1,14 +1,14 @@
 package com.staccato.config.log;
 
 
-import com.staccato.moment.service.dto.request.StaccatoRequest;
+import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import java.time.LocalDate;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.service.StaccatoService;
+import com.staccato.staccato.service.StaccatoService;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class CreateStaccatoMetricsAspect {
 
     private final MeterRegistry meterRegistry;
 
-    @Pointcut("execution(public * com.staccato.moment.service.StaccatoService.createStaccato(..)) && args(staccatoRequest, member)")
+    @Pointcut("execution(public * com.staccato.staccato.service.StaccatoService.createStaccato(..)) && args(staccatoRequest, member)")
     public void createStaccatoPointcut(StaccatoRequest staccatoRequest, Member member) {
     }
 

@@ -1,7 +1,7 @@
 package com.staccato.comment.repository;
 
 import com.staccato.category.domain.Category;
-import com.staccato.moment.domain.Staccato;
+import com.staccato.staccato.domain.Staccato;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -16,7 +16,7 @@ import com.staccato.fixture.moment.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.repository.CategoryRepository;
-import com.staccato.moment.repository.StaccatoRepository;
+import com.staccato.staccato.repository.StaccatoRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -3,7 +3,7 @@ package com.staccato.category.service.dto.response;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.staccato.moment.domain.Staccato;
+import com.staccato.staccato.domain.Staccato;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

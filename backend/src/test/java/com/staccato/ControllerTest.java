@@ -10,7 +10,7 @@ import com.staccato.comment.service.CommentService;
 import com.staccato.image.service.ImageService;
 import com.staccato.member.service.MemberService;
 import com.staccato.category.service.CategoryService;
-import com.staccato.moment.service.StaccatoService;
+import com.staccato.staccato.service.StaccatoService;
 
 @WebMvcTest
 public abstract class ControllerTest {

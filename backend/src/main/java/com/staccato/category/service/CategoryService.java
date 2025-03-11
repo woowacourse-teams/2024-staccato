@@ -8,7 +8,7 @@ import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
-import com.staccato.moment.domain.Staccato;
+import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,8 +21,8 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryRepository;
-import com.staccato.moment.repository.StaccatoImageRepository;
-import com.staccato.moment.repository.StaccatoRepository;
+import com.staccato.staccato.repository.StaccatoImageRepository;
+import com.staccato.staccato.repository.StaccatoRepository;
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -96,7 +96,7 @@ public class CategoryService {
 
     private Category getCategoryById(long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 카테고리 찾을 수 없어요."));
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 
     private void validateCategoryTitle(Category category, Member member) {

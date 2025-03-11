@@ -1,6 +1,6 @@
 package com.staccato.comment.domain;
 
-import com.staccato.moment.domain.Staccato;
+import com.staccato.staccato.domain.Staccato;
 import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

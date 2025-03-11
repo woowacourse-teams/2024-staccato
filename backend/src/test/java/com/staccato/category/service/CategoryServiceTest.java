@@ -31,9 +31,9 @@ import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryRepository;
-import com.staccato.moment.domain.Staccato;
-import com.staccato.moment.repository.StaccatoRepository;
-import com.staccato.moment.service.StaccatoService;
+import com.staccato.staccato.domain.Staccato;
+import com.staccato.staccato.repository.StaccatoRepository;
+import com.staccato.staccato.service.StaccatoService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;

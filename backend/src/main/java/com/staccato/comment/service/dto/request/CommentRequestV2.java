@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 import com.staccato.comment.domain.Comment;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.domain.Staccato;
+import com.staccato.staccato.domain.Staccato;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

@@ -1,7 +1,7 @@
 package com.staccato.category.service.dto.response;
 
 import com.staccato.category.domain.Category;
-import com.staccato.moment.domain.Staccato;
+import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.util.List;
 

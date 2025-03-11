@@ -1,6 +1,6 @@
 package com.staccato.fixture.moment;
 
-import com.staccato.moment.service.dto.response.StaccatoDetailResponse;
+import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
