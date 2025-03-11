@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class StaccatoService {
-    private static final String SHARE_LINK_PREFIX = "https://staccato.kr/staccatos?token=";
+    private static final String SHARE_LINK_PREFIX = "https://staccato.kr/share?token=";
 
     private final MomentRepository momentRepository;
     private final MemoryRepository memoryRepository;

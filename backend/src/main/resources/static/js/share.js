@@ -1,4 +1,4 @@
-fetch('/staccatos/shared')
+fetch('/staccatos/shared?sharedToken=' + token)
     .then(response => response.json())
     .then(data => {
         const {
