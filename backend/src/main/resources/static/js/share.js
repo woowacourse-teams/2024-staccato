@@ -1,4 +1,4 @@
-fetch('/staccatos/share')
+fetch('/staccatos/shared')
     .then(response => response.json())
     .then(data => {
         const {
