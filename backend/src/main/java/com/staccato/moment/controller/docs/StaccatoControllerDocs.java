@@ -8,11 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.staccato.member.domain.Member;
 import com.staccato.moment.service.dto.request.FeelingRequest;
-import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.StaccatoRequest;
-import com.staccato.moment.service.dto.response.MomentDetailResponse;
-import com.staccato.moment.service.dto.response.MomentIdResponse;
-import com.staccato.moment.service.dto.response.MomentLocationResponses;
 import com.staccato.moment.service.dto.response.StaccatoDetailResponse;
 import com.staccato.moment.service.dto.response.StaccatoIdResponse;
 import com.staccato.moment.service.dto.response.StaccatoLocationResponses;

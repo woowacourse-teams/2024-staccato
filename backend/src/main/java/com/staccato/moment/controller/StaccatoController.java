@@ -19,15 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.controller.docs.MomentControllerDocs;
 import com.staccato.moment.controller.docs.StaccatoControllerDocs;
-import com.staccato.moment.service.MomentService;
+import com.staccato.moment.service.StaccatoService;
 import com.staccato.moment.service.dto.request.FeelingRequest;
-import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.StaccatoRequest;
-import com.staccato.moment.service.dto.response.MomentDetailResponse;
-import com.staccato.moment.service.dto.response.MomentIdResponse;
-import com.staccato.moment.service.dto.response.MomentLocationResponses;
 import com.staccato.moment.service.dto.response.StaccatoDetailResponse;
 import com.staccato.moment.service.dto.response.StaccatoIdResponse;
 import com.staccato.moment.service.dto.response.StaccatoLocationResponses;
@@ -40,31 +35,30 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Validated
 public class StaccatoController implements StaccatoControllerDocs {
-    private final MomentService momentService;
+    private final StaccatoService staccatoService;
 
     @PostMapping
     public ResponseEntity<StaccatoIdResponse> createStaccato(
             @LoginMember Member member,
             @Valid @RequestBody StaccatoRequest staccatoRequest
     ) {
-        MomentIdResponse momentIdResponse = momentService.createMoment(StaccatoDtoMapper.toMomentRequest(staccatoRequest), member);
-        StaccatoIdResponse staccatoIdResponse = StaccatoDtoMapper.toStaccatoIdResponse(momentIdResponse);
+        StaccatoIdResponse staccatoIdResponse = staccatoService.createStaccato(staccatoRequest, member);
         return ResponseEntity.created(URI.create("/staccatos/" + staccatoIdResponse.staccatoId()))
                 .body(staccatoIdResponse);
     }
 
     @GetMapping
     public ResponseEntity<StaccatoLocationResponses> readAllStaccato(@LoginMember Member member) {
-        MomentLocationResponses momentLocationResponses = momentService.readAllMoment(member);
-        return ResponseEntity.ok().body(StaccatoDtoMapper.toStaccatoLocationResponses(momentLocationResponses));
+        StaccatoLocationResponses staccatoLocationResponses = staccatoService.readAllStaccato(member);
+        return ResponseEntity.ok().body(staccatoLocationResponses);
     }
 
     @GetMapping("/{staccatoId}")
     public ResponseEntity<StaccatoDetailResponse> readStaccatoById(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId) {
-        MomentDetailResponse momentDetailResponse = momentService.readMomentById(staccatoId, member);
-        return ResponseEntity.ok().body(StaccatoDtoMapper.toStaccatoDetailResponse(momentDetailResponse));
+        StaccatoDetailResponse staccatoDetailResponse = staccatoService.readStaccatoById(staccatoId, member);
+        return ResponseEntity.ok().body(staccatoDetailResponse);
     }
 
     @PutMapping(path = "/{staccatoId}")
@@ -73,8 +67,7 @@ public class StaccatoController implements StaccatoControllerDocs {
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId,
             @Valid @RequestBody StaccatoRequest staccatoRequest
     ) {
-        MomentRequest momentRequest = StaccatoDtoMapper.toMomentRequest(staccatoRequest);
-        momentService.updateMomentById(staccatoId, momentRequest, member);
+        staccatoService.updateStaccatoById(staccatoId, staccatoRequest, member);
         return ResponseEntity.ok().build();
     }
 
@@ -83,7 +76,7 @@ public class StaccatoController implements StaccatoControllerDocs {
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId
     ) {
-        momentService.deleteMomentById(staccatoId, member);
+        staccatoService.deleteStaccatoById(staccatoId, member);
         return ResponseEntity.ok().build();
     }
 
@@ -93,7 +86,7 @@ public class StaccatoController implements StaccatoControllerDocs {
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId,
             @Valid @RequestBody FeelingRequest feelingRequest
     ) {
-        momentService.updateMomentFeelingById(staccatoId, member, feelingRequest);
+        staccatoService.updateStaccatoFeelingById(staccatoId, member, feelingRequest);
         return ResponseEntity.ok().build();
     }
 }

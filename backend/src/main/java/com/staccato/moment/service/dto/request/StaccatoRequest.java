@@ -56,7 +56,7 @@ public record StaccatoRequest(
         }
     }
 
-    public Moment toMoment(Category category) {
+    public Moment toStaccato(Category category) {
         return Moment.builder()
                 .visitedAt(visitedAt)
                 .title(staccatoTitle)

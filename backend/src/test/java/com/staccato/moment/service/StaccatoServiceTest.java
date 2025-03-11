@@ -1,6 +1,9 @@
 package com.staccato.moment.service;
 
 import com.staccato.category.domain.Category;
+import com.staccato.moment.service.dto.request.StaccatoRequest;
+import com.staccato.moment.service.dto.response.StaccatoDetailResponse;
+import com.staccato.moment.service.dto.response.StaccatoLocationResponses;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,7 +20,7 @@ import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.moment.MomentFixture;
-import com.staccato.fixture.moment.MomentRequestFixture;
+import com.staccato.fixture.moment.StaccatoRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.repository.CategoryRepository;
@@ -27,17 +30,14 @@ import com.staccato.moment.domain.MomentImage;
 import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
-import com.staccato.moment.service.dto.request.MomentRequest;
-import com.staccato.moment.service.dto.response.MomentDetailResponse;
-import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class MomentServiceTest extends ServiceSliceTest {
+class StaccatoServiceTest extends ServiceSliceTest {
     @Autowired
-    private MomentService momentService;
+    private StaccatoService staccatoService;
     @Autowired
     private MomentRepository momentRepository;
     @Autowired
@@ -51,14 +51,14 @@ class MomentServiceTest extends ServiceSliceTest {
 
     @DisplayName("사진 없이도 스타카토를 생성할 수 있다.")
     @Test
-    void createMoment() {
+    void createStaccato() {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
-        MomentRequest momentRequest = MomentRequestFixture.create(category.getId());
+        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId());
 
         // when
-        long momentId = momentService.createMoment(momentRequest, member).momentId();
+        long momentId = staccatoService.createStaccato(staccatoRequest, member).staccatoId();
 
         // then
         assertThat(momentRepository.findById(momentId)).isNotEmpty();
@@ -66,14 +66,14 @@ class MomentServiceTest extends ServiceSliceTest {
 
     @DisplayName("스타카토를 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
     @Test
-    void createMomentWithMomentImages() {
+    void createMomentWithStaccatoImages() {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
-        MomentRequest momentRequest = MomentRequestFixture.create(category.getId(), List.of("image.jpg"));
+        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId(), List.of("image.jpg"));
 
         // when
-        long momentId = momentService.createMoment(momentRequest, member).momentId();
+        long momentId = staccatoService.createStaccato(staccatoRequest, member).staccatoId();
 
         // then
         assertAll(
@@ -85,102 +85,102 @@ class MomentServiceTest extends ServiceSliceTest {
 
     @DisplayName("본인 것이 아닌 추억에 스타카토를 생성하려고 하면 예외가 발생한다.")
     @Test
-    void cannotCreateMomentIfNotOwner() {
+    void cannotCreateStaccatoIfNotOwner() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
         Category category = saveCategory(member);
-        MomentRequest momentRequest = MomentRequestFixture.create(category.getId());
+        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId());
 
         // when & then
-        assertThatThrownBy(() -> momentService.createMoment(momentRequest, otherMember))
+        assertThatThrownBy(() -> staccatoService.createStaccato(staccatoRequest, otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
     @DisplayName("존재하지 않는 추억에 스타카토 생성을 시도하면 예외가 발생한다.")
     @Test
-    void failCreateMoment() {
+    void failCreateStaccato() {
         // given
         Member member = saveMember();
-        MomentRequest momentRequest = MomentRequestFixture.create(0L);
+        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(0L);
 
         // when & then
-        assertThatThrownBy(() -> momentService.createMoment(momentRequest, member))
+        assertThatThrownBy(() -> staccatoService.createStaccato(staccatoRequest, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 추억을 찾을 수 없어요.");
     }
 
     @DisplayName("스타카토 목록 조회에 성공한다.")
     @Test
-    void readAllMoment() {
+    void readAllStaccato() {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
-        saveMomentWithImages(category);
-        saveMomentWithImages(category);
+        saveStaccatoWithImages(category);
+        saveStaccatoWithImages(category);
 
         // when
-        MomentLocationResponses actual = momentService.readAllMoment(member);
+        StaccatoLocationResponses actual = staccatoService.readAllStaccato(member);
 
         // then
-        assertThat(actual.momentLocationResponses()).hasSize(2);
+        assertThat(actual.staccatoLocationResponses()).hasSize(2);
     }
 
     @DisplayName("스타카토 조회에 성공한다.")
     @Test
-    void readMomentById() {
+    void readStaccatoById() {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveMomentWithImages(category);
+        Moment moment = saveStaccatoWithImages(category);
 
         // when
-        MomentDetailResponse actual = momentService.readMomentById(moment.getId(), member);
+        StaccatoDetailResponse actual = staccatoService.readStaccatoById(moment.getId(), member);
 
         // then
-        assertThat(actual).isEqualTo(new MomentDetailResponse(moment));
+        assertThat(actual).isEqualTo(new StaccatoDetailResponse(moment));
     }
 
     @DisplayName("본인 것이 아닌 스타카토를 조회하려고 하면 예외가 발생한다.")
     @Test
-    void cannotReadMomentByIdIfNotOwner() {
+    void cannotReadStaccatoByIdIfNotOwner() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveMomentWithImages(category);
+        Moment moment = saveStaccatoWithImages(category);
 
         // when & then
-        assertThatThrownBy(() -> momentService.readMomentById(moment.getId(), otherMember))
+        assertThatThrownBy(() -> staccatoService.readStaccatoById(moment.getId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
     @DisplayName("존재하지 않는 스타카토를 조회하면 예외가 발생한다.")
     @Test
-    void failReadMomentById() {
+    void failReadStaccatoById() {
         // given
         Member member = saveMember();
 
         // when & then
-        assertThatThrownBy(() -> momentService.readMomentById(1L, member))
+        assertThatThrownBy(() -> staccatoService.readStaccatoById(1L, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 스타카토를 찾을 수 없어요.");
     }
 
     @DisplayName("스타카토 수정에 성공한다.")
     @Test
-    void updateMomentById() {
+    void updateStaccatoById() {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
         Category category2 = saveCategory(member);
-        Moment moment = saveMomentWithImages(category);
+        Moment moment = saveStaccatoWithImages(category);
 
         // when
-        MomentRequest momentRequest = new MomentRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), category2.getId(), List.of("https://existExample.com.jpg", "https://newExample.com.jpg"));
-        momentService.updateMomentById(moment.getId(), momentRequest, member);
+        StaccatoRequest staccatoRequest = new StaccatoRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), category2.getId(), List.of("https://existExample.com.jpg", "https://newExample.com.jpg"));
+        staccatoService.updateStaccatoById(moment.getId(), staccatoRequest, member);
 
         // then
         Moment foundedMoment = momentRepository.findById(moment.getId()).get();
@@ -201,11 +201,11 @@ class MomentServiceTest extends ServiceSliceTest {
         Member member = saveMember();
         Member otherMember = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveMomentWithImages(category);
-        MomentRequest momentRequest = MomentRequestFixture.create(category.getId());
+        Moment moment = saveStaccatoWithImages(category);
+        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId());
 
         // when & then
-        assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentRequest, otherMember))
+        assertThatThrownBy(() -> staccatoService.updateStaccatoById(moment.getId(), staccatoRequest, otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -218,11 +218,11 @@ class MomentServiceTest extends ServiceSliceTest {
         Member otherMember = saveMember();
         Category category = saveCategory(member);
         Category otherCategory = saveCategory(otherMember);
-        Moment moment = saveMomentWithImages(category);
-        MomentRequest momentRequest = MomentRequestFixture.create(otherCategory.getId());
+        Moment moment = saveStaccatoWithImages(category);
+        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(otherCategory.getId());
 
         // when & then
-        assertThatThrownBy(() -> momentService.updateMomentById(moment.getId(), momentRequest, member))
+        assertThatThrownBy(() -> staccatoService.updateStaccatoById(moment.getId(), staccatoRequest, member))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -233,25 +233,25 @@ class MomentServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
-        MomentRequest momentRequest = MomentRequestFixture.create(category.getId());
+        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId());
 
         // when & then
-        assertThatThrownBy(() -> momentService.updateMomentById(1L, momentRequest, member))
+        assertThatThrownBy(() -> staccatoService.updateStaccatoById(1L, staccatoRequest, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessageContaining("요청하신 스타카토를 찾을 수 없어요.");
     }
 
     @DisplayName("Moment을 삭제하면 이에 포함된 MomentImage와 MomentLog도 모두 삭제된다.")
     @Test
-    void deleteMomentById() {
+    void deleteStaccatoById() {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveMomentWithImages(category);
+        Moment moment = saveStaccatoWithImages(category);
         Comment comment = commentRepository.save(CommentFixture.create(moment, member));
 
         // when
-        momentService.deleteMomentById(moment.getId(), member);
+        staccatoService.deleteStaccatoById(moment.getId(), member);
 
         // then
         assertAll(
@@ -264,30 +264,30 @@ class MomentServiceTest extends ServiceSliceTest {
 
     @DisplayName("본인 것이 아닌 스타카토를 삭제하려고 하면 예외가 발생한다.")
     @Test
-    void cannotDeleteMomentByIdIfNotOwner() {
+    void cannotDeleteStaccatoByIdIfNotOwner() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveMomentWithImages(category);
+        Moment moment = saveStaccatoWithImages(category);
 
         // when & then
-        assertThatThrownBy(() -> momentService.deleteMomentById(moment.getId(), otherMember))
+        assertThatThrownBy(() -> staccatoService.deleteStaccatoById(moment.getId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
     @DisplayName("스타카토의 기분을 선택할 수 있다.")
     @Test
-    void updateMomentFeelingById() {
+    void updateStaccatoFeelingById() {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveMomentWithImages(category);
+        Moment moment = saveStaccatoWithImages(category);
         FeelingRequest feelingRequest = new FeelingRequest("happy");
 
         // when
-        momentService.updateMomentFeelingById(moment.getId(), member, feelingRequest);
+        staccatoService.updateStaccatoFeelingById(moment.getId(), member, feelingRequest);
 
         // then
         assertAll(
@@ -306,7 +306,7 @@ class MomentServiceTest extends ServiceSliceTest {
         return categoryRepository.save(category);
     }
 
-    private Moment saveMomentWithImages(Category category) {
+    private Moment saveStaccatoWithImages(Category category) {
         Moment moment = MomentFixture.createWithImages(category, LocalDateTime.now(), List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"));
         return momentRepository.save(moment);
     }

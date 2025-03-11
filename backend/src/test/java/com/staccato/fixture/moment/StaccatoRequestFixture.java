@@ -1,26 +1,26 @@
 package com.staccato.fixture.moment;
 
+import com.staccato.moment.service.dto.request.StaccatoRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import com.staccato.moment.service.dto.request.MomentRequest;
 
-public class MomentRequestFixture {
+public class StaccatoRequestFixture {
 
-    public static MomentRequest create(Long memoryId) {
-        return new MomentRequest(
+    public static StaccatoRequest create(Long categoryId) {
+        return new StaccatoRequest(
                 "staccatoTitle",
                 "placeName",
                 "address",
                 BigDecimal.ONE,
                 BigDecimal.ONE,
                 LocalDateTime.now(),
-                memoryId,
+                categoryId,
                 List.of());
     }
 
-    public static MomentRequest create(long memoryId, List<String> momentImages) {
-        return new MomentRequest(
+    public static StaccatoRequest create(long memoryId, List<String> momentImages) {
+        return new StaccatoRequest(
                 "staccatoTitle",
                 "placeName",
                 "address",

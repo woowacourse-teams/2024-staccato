@@ -26,14 +26,14 @@ import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.category.CategoryRequestFixture;
 import com.staccato.fixture.moment.MomentFixture;
-import com.staccato.fixture.moment.MomentRequestFixture;
+import com.staccato.fixture.moment.StaccatoRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.moment.domain.Moment;
 import com.staccato.moment.repository.MomentRepository;
-import com.staccato.moment.service.MomentService;
+import com.staccato.moment.service.StaccatoService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -44,7 +44,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Autowired
     private CategoryService categoryService;
     @Autowired
-    private MomentService momentService;
+    private StaccatoService staccatoService;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -162,7 +162,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
             CategoryRequestFixture.create(null, null, "first"), member);
         categoryService.createCategory(CategoryRequestFixture.create(null, null, "second"), member);
-        momentService.createMoment(MomentRequestFixture.create(categoryIdResponse.categoryId()), member);
+        staccatoService.createStaccato(StaccatoRequestFixture.create(categoryIdResponse.categoryId()), member);
         CategoryReadRequest categoryReadRequest = new CategoryReadRequest("false", null);
 
         // when

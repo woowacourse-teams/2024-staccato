@@ -13,6 +13,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.staccato.moment.service.dto.response.StaccatoDetailResponse;
+import com.staccato.moment.service.dto.response.StaccatoIdResponse;
+import com.staccato.moment.service.dto.response.StaccatoLocationResponses;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,29 +26,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.ControllerTest;
-import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
-import com.staccato.fixture.moment.MomentDetailResponseFixture;
-import com.staccato.fixture.moment.MomentLocationResponsesFixture;
+import com.staccato.fixture.moment.StaccatoDetailResponseFixture;
+import com.staccato.fixture.moment.StaccatoLocationResponsesFixture;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.service.MomentService;
 import com.staccato.moment.service.dto.request.FeelingRequest;
-import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.StaccatoRequest;
-import com.staccato.moment.service.dto.response.MomentDetailResponse;
-import com.staccato.moment.service.dto.response.MomentIdResponse;
-import com.staccato.moment.service.dto.response.MomentLocationResponses;
 
 class StaccatoControllerTest extends ControllerTest {
     static Stream<Arguments> invalidStaccatoRequestProvider() {
@@ -111,7 +103,7 @@ class StaccatoControllerTest extends ControllerTest {
                 }
                 """;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        when(momentService.createMoment(any(MomentRequest.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
+        when(staccatoService.createStaccato(any(StaccatoRequest.class), any(Member.class))).thenReturn(new StaccatoIdResponse(1L));
 
         // when & then
         mockMvc.perform(post("/staccatos")
@@ -139,7 +131,7 @@ class StaccatoControllerTest extends ControllerTest {
                     }
                 """;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        when(momentService.createMoment(any(MomentRequest.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
+        when(staccatoService.createStaccato(any(StaccatoRequest.class), any(Member.class))).thenReturn(new StaccatoIdResponse(1L));
 
         // when & then
         mockMvc.perform(post("/staccatos")
@@ -157,7 +149,7 @@ class StaccatoControllerTest extends ControllerTest {
         // given
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        when(momentService.createMoment(any(MomentRequest.class), any(Member.class))).thenReturn(new MomentIdResponse(1L));
+        when(staccatoService.createStaccato(any(StaccatoRequest.class), any(Member.class))).thenReturn(new StaccatoIdResponse(1L));
 
         // when & then
         mockMvc.perform(post("/staccatos")
@@ -173,8 +165,8 @@ class StaccatoControllerTest extends ControllerTest {
     void readAllStaccato() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        MomentLocationResponses responses = MomentLocationResponsesFixture.create();
-        when(momentService.readAllMoment(any(Member.class))).thenReturn(responses);
+        StaccatoLocationResponses responses = StaccatoLocationResponsesFixture.create();
+        when(staccatoService.readAllStaccato(any(Member.class))).thenReturn(responses);
         String expectedResponse = """
                 {
                     "staccatoLocationResponses": [
@@ -210,8 +202,8 @@ class StaccatoControllerTest extends ControllerTest {
         // given
         long staccatoId = 1L;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        MomentDetailResponse response = MomentDetailResponseFixture.create(staccatoId, LocalDateTime.parse("2021-11-08T11:58:20"));
-        when(momentService.readMomentById(anyLong(), any(Member.class))).thenReturn(response);
+        StaccatoDetailResponse response = StaccatoDetailResponseFixture.create(staccatoId, LocalDateTime.parse("2021-11-08T11:58:20"));
+        when(staccatoService.readStaccatoById(anyLong(), any(Member.class))).thenReturn(response);
         String expectedResponse = """
                     {
                          "staccatoId": 1,

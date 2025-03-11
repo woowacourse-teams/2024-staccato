@@ -1,14 +1,14 @@
 package com.staccato.config.log;
 
 
+import com.staccato.moment.service.dto.request.StaccatoRequest;
 import java.time.LocalDate;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.service.MomentService;
-import com.staccato.moment.service.dto.request.MomentRequest;
+import com.staccato.moment.service.StaccatoService;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
@@ -16,17 +16,17 @@ import lombok.RequiredArgsConstructor;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class CreateMomentMetricsAspect {
+public class CreateStaccatoMetricsAspect {
 
     private final MeterRegistry meterRegistry;
 
-    @Pointcut("execution(public * com.staccato.moment.service.MomentService.createMoment(..)) && args(momentRequest, member)")
-    public void createMomentPointcut(MomentRequest momentRequest, Member member) {
+    @Pointcut("execution(public * com.staccato.moment.service.StaccatoService.createStaccato(..)) && args(staccatoRequest, member)")
+    public void createStaccatoPointcut(StaccatoRequest staccatoRequest, Member member) {
     }
 
-    @AfterReturning(pointcut = "createMomentPointcut(momentRequest, member)", returning = "result")
-    public void afterSuccessfulCreateMoment(MomentRequest momentRequest, Member member, Object result) {
-        LocalDate visitedAt = momentRequest.visitedAt().toLocalDate();
+    @AfterReturning(pointcut = "createStaccatoPointcut(staccatoRequest, member)", returning = "result")
+    public void afterSuccessfulCreateMoment(StaccatoRequest staccatoRequest, Member member, Object result) {
+        LocalDate visitedAt = staccatoRequest.visitedAt().toLocalDate();
         LocalDate now = LocalDate.now();
         if (isPastDate(visitedAt, now)) {
             recordCounter("past");
@@ -49,7 +49,7 @@ public class CreateMomentMetricsAspect {
 
     private void recordCounter(String viewPoint) {
         Counter.builder("staccato_record_viewpoint")
-                .tag("class", MomentService.class.getName())
+                .tag("class", StaccatoService.class.getName())
                 .tag("method", "createMoment")
                 .tag("viewPoint", viewPoint)
                 .description("counts different view points for Staccato Record")

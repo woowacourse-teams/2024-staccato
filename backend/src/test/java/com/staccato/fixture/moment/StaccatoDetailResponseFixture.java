@@ -1,15 +1,15 @@
 package com.staccato.fixture.moment;
 
+import com.staccato.moment.service.dto.response.StaccatoDetailResponse;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import com.staccato.moment.service.dto.response.MomentDetailResponse;
 
-public class MomentDetailResponseFixture {
-    public static MomentDetailResponse create(long momentId, LocalDateTime visitedAt) {
-        return new MomentDetailResponse(
-                momentId,
+public class StaccatoDetailResponseFixture {
+    public static StaccatoDetailResponse create(long staccatoId, LocalDateTime visitedAt) {
+        return new StaccatoDetailResponse(
+                staccatoId,
                 1,
                 "memoryTitle",
                 LocalDate.parse("2024-06-30"),
