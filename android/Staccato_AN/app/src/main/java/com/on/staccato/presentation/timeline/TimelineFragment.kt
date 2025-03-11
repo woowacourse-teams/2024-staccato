@@ -64,7 +64,7 @@ class TimelineFragment :
     }
 
     override fun onSortClicked() {
-        val sortButton = binding.btnTimelineSortCategories
+        val sortButton = binding.linearTimelineSortCategories
         val popup = sortButton.inflateCreationMenu()
         setUpCreationMenu(popup)
         popup.show()

@@ -8,6 +8,8 @@ import com.on.staccato.R
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
+import com.on.staccato.presentation.timeline.model.FilterType
+import com.on.staccato.presentation.timeline.model.SortType
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -72,11 +74,9 @@ fun TextView.setIsCategoryCandidatesEmptyVisibility(categoryCandidates: Category
 @BindingAdapter("timelineNickname")
 fun TextView.formatTimelineNickname(nickname: String?) {
     text = nickname?.let {
-        resources.getString(R.string.timeline_nickname_memories).formatNickname(it)
+        resources.getString(R.string.timeline_nickname_memories).format(it)
     } ?: EMPTY_TEXT
 }
-
-fun String.formatNickname(nickname: String) = format(nickname.takeIf { it.length <= 10 } ?: ("${nickname.take(10)}..."))
 
 @BindingAdapter("visitedAtHistory")
 fun TextView.formatVisitedAtHistory(visitedAt: LocalDateTime?) {
@@ -152,6 +152,32 @@ fun TextView.setPhotoDragHintVisibility(currentPhotoNumbers: Int) {
 @BindingAdapter("selectedAddress")
 fun TextView.setSelectedAddress(address: String?) {
     text = address ?: context.getString(R.string.staccato_creation_empty_address)
+}
+
+@BindingAdapter("categorySort")
+fun TextView.setCategoryFilter(sortType: SortType?) {
+    text =
+        when (sortType) {
+            SortType.UPDATED -> resources.getString(R.string.sort_updated_order)
+            SortType.NEWEST -> resources.getString(R.string.sort_newest_order)
+            SortType.OLDEST -> resources.getString(R.string.sort_oldest_order)
+            else -> resources.getString(R.string.timeline_sort)
+        }
+}
+
+@BindingAdapter("categoryFilter")
+fun TextView.setCategoryFilter(filterType: FilterType?) {
+    when (filterType) {
+        FilterType.TERM -> {
+            text = resources.getString(R.string.timeline_filter_term)
+            setTextColor(resources.getColor(R.color.staccato_blue, null))
+        }
+
+        else -> {
+            text = resources.getString(R.string.timeline_filter_all)
+            setTextColor(resources.getColor(R.color.gray3, null))
+        }
+    }
 }
 
 private const val DRAGGABLE_PHOTO_NUMBER = 2

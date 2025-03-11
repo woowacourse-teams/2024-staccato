@@ -1,6 +1,7 @@
 package com.on.staccato.presentation.bindingadapter
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.TypedValue
@@ -8,11 +9,8 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
-
-@BindingAdapter("selected")
-fun ImageView.setSelected(selected: Boolean) {
-    isSelected = selected
-}
+import com.on.staccato.R
+import com.on.staccato.presentation.timeline.model.FilterType
 
 @BindingAdapter(
     value = ["coilImageUrl", "coilPlaceHolder"],
@@ -98,4 +96,14 @@ fun ImageView.setImageResourceWithId(
             grayResId
         },
     )
+}
+
+@BindingAdapter("categoryFilter")
+fun ImageView.setCategoryFilter(filterType: FilterType?) {
+    val color =
+        when (filterType) {
+            FilterType.TERM -> resources.getColor(R.color.staccato_blue, null)
+            else -> resources.getColor(R.color.gray3, null)
+        }
+    imageTintList = ColorStateList.valueOf(color)
 }
