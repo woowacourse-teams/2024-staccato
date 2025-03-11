@@ -326,7 +326,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(moment.getId(), member);
 
         // then
-        assertThat(response.shareLink()).startsWith("https://staccato.kr/staccatos?token=");
+        assertThat(response.shareLink()).startsWith("https://staccato.kr/share?token=");
     }
 
     @DisplayName("존재하지 않는 스타카토의 공유 링크를 생성하려고 하면, 예외가 발생한다.")
