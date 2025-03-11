@@ -156,5 +156,5 @@ public interface StaccatoControllerDocs {
     })
     ResponseEntity<StaccatoSharedResponse> readSharedStaccatoByToken(
             @Parameter(description = "공유 토큰", example = "sample-token")
-            @RequestParam(name = "sharedToken") String token);
+            @RequestParam(name = "token") String token);
 }

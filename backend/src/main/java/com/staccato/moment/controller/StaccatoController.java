@@ -111,7 +111,7 @@ public class StaccatoController implements StaccatoControllerDocs {
     }
 
     @GetMapping("/shared")
-    public ResponseEntity<StaccatoSharedResponse> readSharedStaccatoByToken(@RequestParam(name = "sharedToken") String token) {
+    public ResponseEntity<StaccatoSharedResponse> readSharedStaccatoByToken(@RequestParam(name = "token") String token) {
         StaccatoSharedResponse staccatoSharedResponse = staccatoService.readSharedStaccatoByToken(token);
         return ResponseEntity.ok().body(staccatoSharedResponse);
     }
