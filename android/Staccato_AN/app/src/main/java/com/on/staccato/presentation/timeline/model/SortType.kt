@@ -6,11 +6,9 @@ import com.on.staccato.R
 enum class SortType(
     @MenuRes val menuId: Int,
 ) {
-    CREATION(R.id.creation_order),
-    LATEST(R.id.latest_order),
+    UPDATED(R.id.updated_order),
+    NEWEST(R.id.newest_order),
     OLDEST(R.id.oldest_order),
-    WITH_PERIOD(R.id.with_period_order),
-    WITHOUT_PERIOD(R.id.without_period_order),
     ;
 
     companion object {
