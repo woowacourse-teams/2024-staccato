@@ -18,18 +18,18 @@ import org.springframework.transaction.annotation.Transactional;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.moment.MomentFixture;
+import com.staccato.fixture.moment.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.repository.CategoryRepository;
-import com.staccato.moment.repository.MomentRepository;
+import com.staccato.moment.repository.StaccatoRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class MomentTest {
-    @DisplayName("추억 날짜 안에 스타카토 날짜가 포함되면 Moment을 생성할 수 있다.")
+class StaccatoTest {
+    @DisplayName("카테고리 날짜 안에 스타카토 날짜가 포함되면 Moment을 생성할 수 있다.")
     @Test
     void createMoment() {
         // given
@@ -37,7 +37,7 @@ class MomentTest {
         LocalDateTime visitedAt = LocalDateTime.now().plusDays(1);
 
         // when & then
-        assertThatCode(() -> Moment.builder()
+        assertThatCode(() -> Staccato.builder()
                 .visitedAt(visitedAt)
                 .title("staccatoTitle")
                 .placeName("placeName")
@@ -45,12 +45,12 @@ class MomentTest {
                 .longitude(BigDecimal.ONE)
                 .address("address")
                 .category(category)
-                .momentImages(new MomentImages(List.of()))
+                .staccatoImages(new StaccatoImages(List.of()))
                 .build())
                 .doesNotThrowAnyException();
     }
 
-    @DisplayName("추억 기간이 없는 경우 스타카토를 날짜 상관없이 생성할 수 있다.")
+    @DisplayName("카테고리 기간이 없는 경우 스타카토를 날짜 상관없이 생성할 수 있다.")
     @Test
     void createMomentInUndefinedDuration() {
         // given
@@ -58,7 +58,7 @@ class MomentTest {
         LocalDateTime visitedAt = LocalDateTime.now().plusDays(1);
 
         // when & then
-        assertThatCode(() -> Moment.builder()
+        assertThatCode(() -> Staccato.builder()
                 .visitedAt(visitedAt)
                 .title("staccatoTitle")
                 .placeName("placeName")
@@ -66,7 +66,7 @@ class MomentTest {
                 .longitude(BigDecimal.ONE)
                 .address("address")
                 .category(category)
-                .momentImages(new MomentImages(List.of()))
+                .staccatoImages(new StaccatoImages(List.of()))
                 .build())
                 .doesNotThrowAnyException();
     }
@@ -81,7 +81,7 @@ class MomentTest {
         String expectedTitle = "staccatoTitle";
 
         // when
-        Moment moment = Moment.builder()
+        Staccato staccato = Staccato.builder()
                 .visitedAt(visitedAt)
                 .title(title)
                 .latitude(BigDecimal.ONE)
@@ -89,23 +89,23 @@ class MomentTest {
                 .placeName("placeName")
                 .address("address")
                 .category(category)
-                .momentImages(new MomentImages(List.of()))
+                .staccatoImages(new StaccatoImages(List.of()))
                 .build();
 
         // then
-        assertThat(moment.getTitle()).isEqualTo(expectedTitle);
+        assertThat(staccato.getTitle()).isEqualTo(expectedTitle);
     }
 
-    @DisplayName("추억 날짜 안에 스타카토 날짜가 포함되지 않으면 예외를 발생시킨다.")
+    @DisplayName("카테고리 날짜 안에 스타카토 날짜가 포함되지 않으면 예외를 발생시킨다.")
     @ValueSource(longs = {-1, 2})
     @ParameterizedTest
-    void failCreateMoment(long plusDays) {
+    void failCreateStaccato(long plusDays) {
         // given
         Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
         LocalDateTime visitedAt = LocalDateTime.now().plusDays(plusDays);
 
         // when & then
-        assertThatThrownBy(() -> Moment.builder()
+        assertThatThrownBy(() -> Staccato.builder()
                 .visitedAt(visitedAt)
                 .title("staccatoTitle")
                 .placeName("placeName")
@@ -113,10 +113,10 @@ class MomentTest {
                 .longitude(BigDecimal.ONE)
                 .address("address")
                 .category(category)
-                .momentImages(new MomentImages(List.of()))
+                .staccatoImages(new StaccatoImages(List.of()))
                 .build())
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("추억에 포함되지 않는 날짜입니다.");
+                .hasMessageContaining("카테고리에 포함되지 않는 날짜입니다.");
     }
 
     @DisplayName("이미지가 있을 경우 첫번째 사진을 썸네일로 반환한다.")
@@ -125,11 +125,11 @@ class MomentTest {
         // given
         Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
         String thumbnail = "1.png";
-        Moment moment = MomentFixture.createWithImages(
+        Staccato staccato = StaccatoFixture.createWithImages(
             category, LocalDateTime.now(), List.of(thumbnail, "2.png"));
 
         // when
-        String result = moment.thumbnailUrl();
+        String result = staccato.thumbnailUrl();
 
         // then
         assertThat(result).isEqualTo(thumbnail);
@@ -140,10 +140,10 @@ class MomentTest {
     void noThumbnail(){
         // given
         Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
-        Moment moment = MomentFixture.createWithImages(category, LocalDateTime.now(), List.of());
+        Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.now(), List.of());
 
         // when
-        String result = moment.thumbnailUrl();
+        String result = staccato.thumbnailUrl();
 
         // then
         assertThat(result).isNull();
@@ -158,7 +158,7 @@ class MomentTest {
         @Autowired
         private CategoryRepository categoryRepository;
         @Autowired
-        private MomentRepository momentRepository;
+        private StaccatoRepository staccatoRepository;
         @PersistenceContext
         private EntityManager entityManager;
 
@@ -171,7 +171,7 @@ class MomentTest {
             LocalDateTime beforeCreate = category.getUpdatedAt();
 
             // when
-            momentRepository.save(MomentFixture.create(category));
+            staccatoRepository.save(StaccatoFixture.create(category));
             entityManager.flush();
             entityManager.refresh(category);
             LocalDateTime afterCreate = category.getUpdatedAt();
@@ -186,11 +186,11 @@ class MomentTest {
             // given
             Member member = memberRepository.save(MemberFixture.create());
             Category category = categoryRepository.save(CategoryFixture.createWithMember(member));
-            Moment moment = momentRepository.save(MomentFixture.create(category));
+            Staccato staccato = staccatoRepository.save(StaccatoFixture.create(category));
             LocalDateTime beforeUpdate = category.getUpdatedAt();
 
             // when
-            moment.changeFeeling(Feeling.ANGRY);
+            staccato.changeFeeling(Feeling.ANGRY);
             entityManager.flush();
             entityManager.refresh(category);
             LocalDateTime afterUpdate = category.getUpdatedAt();
@@ -205,11 +205,11 @@ class MomentTest {
             // given
             Member member = memberRepository.save(MemberFixture.create());
             Category category = categoryRepository.save(CategoryFixture.createWithMember(member));
-            Moment moment = momentRepository.save(MomentFixture.create(category));
+            Staccato staccato = staccatoRepository.save(StaccatoFixture.create(category));
             LocalDateTime beforeDelete = category.getUpdatedAt();
 
             // when
-            momentRepository.delete(moment);
+            staccatoRepository.delete(staccato);
             entityManager.flush();
             entityManager.refresh(category);
             LocalDateTime afterDelete = category.getUpdatedAt();

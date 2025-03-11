@@ -3,7 +3,7 @@ package com.staccato.category.service.dto.response;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.Staccato;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -19,7 +19,7 @@ public record StaccatoResponse(
         @Schema(example = "2024-07-27T11:58:20")
         LocalDateTime visitedAt
 ) {
-    public StaccatoResponse(Moment moment) {
-        this(moment.getId(), moment.getTitle(), moment.thumbnailUrl(), moment.getVisitedAt());
+    public StaccatoResponse(Staccato staccato) {
+        this(staccato.getId(), staccato.getTitle(), staccato.thumbnailUrl(), staccato.getVisitedAt());
     }
 }

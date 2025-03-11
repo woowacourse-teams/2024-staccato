@@ -2,7 +2,7 @@ package com.staccato.moment.service.dto.response;
 
 import java.math.BigDecimal;
 
-import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.Staccato;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -15,7 +15,7 @@ public record StaccatoLocationResponse(
         @Schema(example = "-0.12712788587027796")
         BigDecimal longitude) {
 
-    public StaccatoLocationResponse(Moment moment) {
-        this(moment.getId(), moment.getSpot().getLatitude(), moment.getSpot().getLongitude());
+    public StaccatoLocationResponse(Staccato staccato) {
+        this(staccato.getId(), staccato.getSpot().getLatitude(), staccato.getSpot().getLongitude());
     }
 }

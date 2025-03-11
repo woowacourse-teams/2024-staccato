@@ -1,18 +1,18 @@
 package com.staccato.fixture.moment;
 
+import com.staccato.moment.domain.Staccato;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import com.staccato.category.domain.Category;
-import com.staccato.moment.domain.Moment;
-import com.staccato.moment.domain.MomentImages;
+import com.staccato.moment.domain.StaccatoImages;
 
-public class MomentFixture {
+public class StaccatoFixture {
     private static final BigDecimal latitude = new BigDecimal("37.77490000000000");
     private static final BigDecimal longitude = new BigDecimal("-122.41940000000000");
 
-    public static Moment create(Category category) {
-        return Moment.builder()
+    public static Staccato create(Category category) {
+        return Staccato.builder()
                 .visitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
                 .title("staccatoTitle")
                 .latitude(latitude)
@@ -20,12 +20,12 @@ public class MomentFixture {
                 .address("address")
                 .placeName("placeName")
                 .category(category)
-                .momentImages(new MomentImages(List.of()))
+                .staccatoImages(new StaccatoImages(List.of()))
                 .build();
     }
 
-    public static Moment create(Category category, LocalDateTime visitedAt) {
-        return Moment.builder()
+    public static Staccato create(Category category, LocalDateTime visitedAt) {
+        return Staccato.builder()
                 .visitedAt(visitedAt)
                 .title("staccatoTitle")
                 .latitude(latitude)
@@ -33,12 +33,12 @@ public class MomentFixture {
                 .placeName("placeName")
                 .address("address")
                 .category(category)
-                .momentImages(new MomentImages(List.of()))
+                .staccatoImages(new StaccatoImages(List.of()))
                 .build();
     }
 
-    public static Moment createWithImages(Category category, LocalDateTime visitedAt, List<String> momentImages) {
-        return Moment.builder()
+    public static Staccato createWithImages(Category category, LocalDateTime visitedAt, List<String> staccatoImages) {
+        return Staccato.builder()
             .visitedAt(visitedAt)
             .title("staccatoTitle")
             .latitude(latitude)
@@ -46,7 +46,7 @@ public class MomentFixture {
             .placeName("placeName")
             .address("address")
             .category(category)
-            .momentImages(new MomentImages(momentImages))
+            .staccatoImages(new StaccatoImages(staccatoImages))
             .build();
     }
 }

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 import com.staccato.comment.domain.Comment;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.Staccato;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -22,10 +22,10 @@ public record CommentRequestV2(
         @Size(max = 500, message = "댓글은 공백 포함 500자 이하로 입력해주세요.")
         String content
 ) {
-    public Comment toComment(Moment moment, Member member) {
+    public Comment toComment(Staccato staccato, Member member) {
         return Comment.builder()
                 .content(content)
-                .moment(moment)
+                .staccato(staccato)
                 .member(member)
                 .build();
     }

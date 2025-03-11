@@ -1,7 +1,7 @@
 package com.staccato.category.service.dto.response;
 
 import com.staccato.category.domain.Category;
-import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.Staccato;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public record CategoryDetailResponse(
     List<StaccatoResponse> staccatos
 ) {
 
-  public CategoryDetailResponse(Category category, List<Moment> moments) {
+  public CategoryDetailResponse(Category category, List<Staccato> staccatoes) {
     this(
         category.getId(),
         category.getThumbnailUrl(),
@@ -41,7 +41,7 @@ public record CategoryDetailResponse(
         category.getTerm().getStartAt(),
         category.getTerm().getEndAt(),
         toMemberResponses(category),
-        toStaccatoResponses(moments)
+        toStaccatoResponses(staccatoes)
     );
   }
 
@@ -49,7 +49,7 @@ public record CategoryDetailResponse(
     return category.getMates().stream().map(MemberResponse::new).toList();
   }
 
-  private static List<StaccatoResponse> toStaccatoResponses(List<Moment> moments) {
-    return moments.stream().map(StaccatoResponse::new).toList();
+  private static List<StaccatoResponse> toStaccatoResponses(List<Staccato> staccatoes) {
+    return staccatoes.stream().map(StaccatoResponse::new).toList();
   }
 }

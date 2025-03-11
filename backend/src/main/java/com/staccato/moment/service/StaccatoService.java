@@ -1,6 +1,7 @@
 package com.staccato.moment.service;
 
 import com.staccato.category.domain.Category;
+import com.staccato.moment.domain.Staccato;
 import com.staccato.moment.service.dto.request.StaccatoRequest;
 import com.staccato.moment.service.dto.response.StaccatoDetailResponse;
 import com.staccato.moment.service.dto.response.StaccatoIdResponse;
@@ -16,10 +17,9 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.moment.domain.Feeling;
-import com.staccato.moment.domain.Moment;
-import com.staccato.moment.domain.MomentImage;
-import com.staccato.moment.repository.MomentImageRepository;
-import com.staccato.moment.repository.MomentRepository;
+import com.staccato.moment.domain.StaccatoImage;
+import com.staccato.moment.repository.StaccatoImageRepository;
+import com.staccato.moment.repository.StaccatoRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -28,32 +28,32 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class StaccatoService {
-    private final MomentRepository momentRepository;
+    private final StaccatoRepository staccatoRepository;
     private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
-    private final MomentImageRepository momentImageRepository;
+    private final StaccatoImageRepository staccatoImageRepository;
 
     @Transactional
     public StaccatoIdResponse createStaccato(StaccatoRequest staccatoRequest, Member member) {
         Category category = getCategoryById(staccatoRequest.categoryId());
         validateCategoryOwner(category, member);
-        Moment moment = staccatoRequest.toStaccato(category);
+        Staccato staccato = staccatoRequest.toStaccato(category);
 
-        momentRepository.save(moment);
+        staccatoRepository.save(staccato);
 
-        return new StaccatoIdResponse(moment.getId());
+        return new StaccatoIdResponse(staccato.getId());
     }
 
     public StaccatoLocationResponses readAllStaccato(Member member) {
-        return new StaccatoLocationResponses(momentRepository.findAllByCategory_CategoryMembers_Member(member)
+        return new StaccatoLocationResponses(staccatoRepository.findAllByCategory_CategoryMembers_Member(member)
                 .stream()
                 .map(StaccatoLocationResponse::new).toList());
     }
 
     public StaccatoDetailResponse readStaccatoById(long staccatoId, Member member) {
-        Moment moment = getStaccatoById(staccatoId);
-        validateCategoryOwner(moment.getCategory(), member);
-        return new StaccatoDetailResponse(moment);
+        Staccato staccato = getStaccatoById(staccatoId);
+        validateCategoryOwner(staccato.getCategory(), member);
+        return new StaccatoDetailResponse(staccato);
     }
 
     @Transactional
@@ -62,23 +62,23 @@ public class StaccatoService {
             StaccatoRequest staccatoRequest,
             Member member
     ) {
-        Moment moment = getStaccatoById(momentId);
-        validateCategoryOwner(moment.getCategory(), member);
+        Staccato staccato = getStaccatoById(momentId);
+        validateCategoryOwner(staccato.getCategory(), member);
 
         Category targetCategory = getCategoryById(staccatoRequest.categoryId());
         validateCategoryOwner(targetCategory, member);
 
-        Moment newMoment = staccatoRequest.toStaccato(targetCategory);
-        List<MomentImage> existingImages = moment.existingImages();
+        Staccato newStaccato = staccatoRequest.toStaccato(targetCategory);
+        List<StaccatoImage> existingImages = staccato.existingImages();
         removeExistingImages(existingImages);
-        moment.update(newMoment);
+        staccato.update(newStaccato);
     }
 
-    private void removeExistingImages(List<MomentImage> images) {
+    private void removeExistingImages(List<StaccatoImage> images) {
         List<Long> ids = images.stream()
-                .map(MomentImage::getId)
+                .map(StaccatoImage::getId)
                 .toList();
-        momentImageRepository.deleteAllByIdInBulk(ids);
+        staccatoImageRepository.deleteAllByIdInBulk(ids);
     }
 
     private Category getCategoryById(long categoryId) {
@@ -88,24 +88,24 @@ public class StaccatoService {
 
     @Transactional
     public void deleteStaccatoById(long staccatoId, Member member) {
-        momentRepository.findById(staccatoId).ifPresent(moment -> {
+        staccatoRepository.findById(staccatoId).ifPresent(moment -> {
             validateCategoryOwner(moment.getCategory(), member);
-            commentRepository.deleteAllByMomentIdInBulk(List.of(staccatoId));
-            momentImageRepository.deleteAllByMomentIdInBulk(List.of(staccatoId));
-            momentRepository.deleteById(staccatoId);
+            commentRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
+            staccatoImageRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
+            staccatoRepository.deleteById(staccatoId);
         });
     }
 
     @Transactional
     public void updateStaccatoFeelingById(long staccatoId, Member member, FeelingRequest feelingRequest) {
-        Moment moment = getStaccatoById(staccatoId);
-        validateCategoryOwner(moment.getCategory(), member);
+        Staccato staccato = getStaccatoById(staccatoId);
+        validateCategoryOwner(staccato.getCategory(), member);
         Feeling feeling = feelingRequest.toFeeling();
-        moment.changeFeeling(feeling);
+        staccato.changeFeeling(feeling);
     }
 
-    private Moment getStaccatoById(long staccatoId) {
-        return momentRepository.findById(staccatoId)
+    private Staccato getStaccatoById(long staccatoId) {
+        return staccatoRepository.findById(staccatoId)
                 .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 

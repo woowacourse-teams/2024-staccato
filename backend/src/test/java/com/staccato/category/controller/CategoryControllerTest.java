@@ -19,7 +19,7 @@ import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
-import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,7 +41,7 @@ import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.category.CategoryNameResponsesFixture;
 import com.staccato.fixture.category.CategoryResponsesFixture;
-import com.staccato.fixture.moment.MomentFixture;
+import com.staccato.fixture.moment.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.category.service.dto.request.CategoryRequest;
 
@@ -297,8 +297,9 @@ class CategoryControllerTest extends ControllerTest {
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Category category = CategoryFixture.createWithMember(MemberFixture.create());
-        Moment moment = MomentFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
-        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(moment));
+        Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
+        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
+            staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
@@ -340,8 +341,9 @@ class CategoryControllerTest extends ControllerTest {
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Category category = CategoryFixture.createWithMember(null, null, MemberFixture.create());
-        Moment moment = MomentFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
-        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(moment));
+        Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
+        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
+            staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {

@@ -2,6 +2,7 @@ package com.staccato.moment.repository;
 
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
+import com.staccato.moment.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,19 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.moment.MomentFixture;
+import com.staccato.fixture.moment.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryRepository;
-import com.staccato.moment.domain.Moment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class MomentRepositoryTest extends RepositoryTest {
+class StaccatoRepositoryTest extends RepositoryTest {
     @Autowired
-    private MomentRepository momentRepository;
+    private StaccatoRepository staccatoRepository;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -51,24 +51,26 @@ class MomentRepositoryTest extends RepositoryTest {
         categoryMemberRepository.save(new CategoryMember(member, category2));
         categoryMemberRepository.save(new CategoryMember(anotherMember, anotherMemberCategory));
 
-        Moment moment = momentRepository.save(MomentFixture.create(
+        Staccato staccato = staccatoRepository.save(StaccatoFixture.create(
             category, LocalDateTime.of(2023, 12, 31, 22, 20)));
-        Moment moment1 = momentRepository.save(MomentFixture.create(
+        Staccato staccato1 = staccatoRepository.save(StaccatoFixture.create(
             category, LocalDateTime.of(2024, 1, 1, 22, 20)));
-        Moment moment2 = momentRepository.save(MomentFixture.create(
+        Staccato staccato2 = staccatoRepository.save(StaccatoFixture.create(
             category, LocalDateTime.of(2024, 1, 1, 22, 21)));
-        Moment anotherMoment = momentRepository.save(MomentFixture.create(anotherMemberCategory, LocalDateTime.of(2024, 5, 1, 22, 21)));
+        Staccato anotherStaccato = staccatoRepository.save(
+            StaccatoFixture.create(anotherMemberCategory, LocalDateTime.of(2024, 5, 1, 22, 21)));
 
         // when
-        List<Moment> memberResult = momentRepository.findAllByCategory_CategoryMembers_Member(member);
-        List<Moment> anotherMemberResult = momentRepository.findAllByCategory_CategoryMembers_Member(anotherMember);
+        List<Staccato> memberResult = staccatoRepository.findAllByCategory_CategoryMembers_Member(member);
+        List<Staccato> anotherMemberResult = staccatoRepository.findAllByCategory_CategoryMembers_Member(anotherMember);
 
         // then
         assertAll(
                 () -> assertThat(memberResult.size()).isEqualTo(3),
-                () -> assertThat(memberResult).containsExactlyInAnyOrder(moment, moment1, moment2),
+                () -> assertThat(memberResult).containsExactlyInAnyOrder(staccato, staccato1,
+                    staccato2),
                 () -> assertThat(anotherMemberResult.size()).isEqualTo(1),
-                () -> assertThat(anotherMemberResult).containsExactlyInAnyOrder(anotherMoment)
+                () -> assertThat(anotherMemberResult).containsExactlyInAnyOrder(anotherStaccato)
         );
     }
 
@@ -81,24 +83,24 @@ class MomentRepositoryTest extends RepositoryTest {
             CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
         categoryMemberRepository.save(new CategoryMember(member, category));
 
-        Moment moment = momentRepository.save(MomentFixture.create(
+        Staccato staccato = staccatoRepository.save(StaccatoFixture.create(
             category, LocalDateTime.of(2023, 12, 31, 22, 20)));
-        Moment moment1 = momentRepository.save(MomentFixture.create(
+        Staccato staccato1 = staccatoRepository.save(StaccatoFixture.create(
             category, LocalDateTime.of(2024, 1, 1, 22, 20)));
-        Moment moment2 = momentRepository.save(MomentFixture.create(
+        Staccato staccato2 = staccatoRepository.save(StaccatoFixture.create(
             category, LocalDateTime.of(2024, 1, 1, 22, 21)));
 
         // when
-        momentRepository.deleteAllByCategoryIdInBulk(category.getId());
+        staccatoRepository.deleteAllByCategoryIdInBulk(category.getId());
         entityManager.flush();
         entityManager.clear();
 
         // then
         assertAll(
-                () -> assertThat(momentRepository.findById(moment.getId()).isEmpty()).isTrue(),
-                () -> assertThat(momentRepository.findById(moment1.getId()).isEmpty()).isTrue(),
-                () -> assertThat(momentRepository.findById(moment2.getId()).isEmpty()).isTrue(),
-                () -> assertThat(momentRepository.findAllByCategoryId(category.getId())).isEqualTo(List.of())
+                () -> assertThat(staccatoRepository.findById(staccato.getId()).isEmpty()).isTrue(),
+                () -> assertThat(staccatoRepository.findById(staccato1.getId()).isEmpty()).isTrue(),
+                () -> assertThat(staccatoRepository.findById(staccato2.getId()).isEmpty()).isTrue(),
+                () -> assertThat(staccatoRepository.findAllByCategoryId(category.getId())).isEqualTo(List.of())
         );
     }
 
@@ -111,18 +113,20 @@ class MomentRepositoryTest extends RepositoryTest {
             CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
         categoryMemberRepository.save(new CategoryMember(member, category));
 
-        Moment moment1 = momentRepository.save(MomentFixture.createWithImages(category, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("image1", "image2")));
-        Moment moment2 = momentRepository.save(MomentFixture.createWithImages(category, LocalDateTime.of(2024, 1, 1, 22, 20), List.of("image1", "image2")));
-        Moment moment3 = momentRepository.save(MomentFixture.create(
+        Staccato staccato1 = staccatoRepository.save(
+            StaccatoFixture.createWithImages(category, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("image1", "image2")));
+        Staccato staccato2 = staccatoRepository.save(
+            StaccatoFixture.createWithImages(category, LocalDateTime.of(2024, 1, 1, 22, 20), List.of("image1", "image2")));
+        Staccato staccato3 = staccatoRepository.save(StaccatoFixture.create(
             category, LocalDateTime.of(2024, 1, 10, 23, 21)));
 
         // when
-        List<Moment> moments = momentRepository.findAllByCategoryIdOrdered(category.getId());
+        List<Staccato> staccatoes = staccatoRepository.findAllByCategoryIdOrdered(category.getId());
 
         // then
         assertAll(
-                () -> assertThat(moments.size()).isEqualTo(3),
-                () -> assertThat(moments).containsExactly(moment3, moment2, moment1)
+                () -> assertThat(staccatoes.size()).isEqualTo(3),
+                () -> assertThat(staccatoes).containsExactly(staccato3, staccato2, staccato1)
         );
     }
 
@@ -135,18 +139,18 @@ class MomentRepositoryTest extends RepositoryTest {
             CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
         categoryMemberRepository.save(new CategoryMember(member, category));
 
-        Moment moment1 = momentRepository.save(MomentFixture.create(
+        Staccato staccato1 = staccatoRepository.save(StaccatoFixture.create(
             category, LocalDateTime.of(2024, 1, 10, 23, 21)));
-        Moment moment2 = momentRepository.save(MomentFixture.create(
+        Staccato staccato2 = staccatoRepository.save(StaccatoFixture.create(
             category, LocalDateTime.of(2024, 1, 10, 23, 21)));
 
         // when
-        List<Moment> moments = momentRepository.findAllByCategoryIdOrdered(category.getId());
+        List<Staccato> staccatoes = staccatoRepository.findAllByCategoryIdOrdered(category.getId());
 
         // then
         assertAll(
-                () -> assertThat(moments.size()).isEqualTo(2),
-                () -> assertThat(moments).containsExactly(moment2, moment1)
+                () -> assertThat(staccatoes.size()).isEqualTo(2),
+                () -> assertThat(staccatoes).containsExactly(staccato2, staccato1)
         );
     }
 }

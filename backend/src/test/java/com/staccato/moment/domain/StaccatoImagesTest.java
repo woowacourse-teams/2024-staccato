@@ -13,13 +13,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.moment.MomentFixture;
+import com.staccato.fixture.moment.StaccatoFixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class MomentImagesTest {
+class StaccatoImagesTest {
     static Stream<Arguments> provideUpdateData() {
         return Stream.of(
                 Arguments.of(List.of("picture1", "picture2", "picture3"), List.of()),
@@ -41,14 +41,14 @@ class MomentImagesTest {
         }
 
         // when & then
-        assertThatNoException().isThrownBy(() -> new MomentImages(images));
+        assertThatNoException().isThrownBy(() -> new StaccatoImages(images));
     }
 
     @DisplayName("생성하려는 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
     @Test
     void failAddMomentImages() {
         // given & when & then
-        assertThatThrownBy(() -> new MomentImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
+        assertThatThrownBy(() -> new StaccatoImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("사진은 5장을 초과할 수 없습니다.");
     }
@@ -57,7 +57,7 @@ class MomentImagesTest {
     @Test
     void failUpdateMomentImages() {
         // given & when & then
-        assertThatThrownBy(() -> new MomentImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
+        assertThatThrownBy(() -> new StaccatoImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("사진은 5장을 초과할 수 없습니다.");
     }
@@ -69,12 +69,12 @@ class MomentImagesTest {
         // given
         Category category = Category.builder().title("Sample categories").startAt(LocalDate.now().minusDays(1))
                 .endAt(LocalDate.now().plusDays(1)).build();
-        MomentImages existingImages = new MomentImages(existingImageNames);
-        MomentImages updatedImages = new MomentImages(updatedImageNames);
+        StaccatoImages existingImages = new StaccatoImages(existingImageNames);
+        StaccatoImages updatedImages = new StaccatoImages(updatedImageNames);
 
         // when
-        existingImages.update(updatedImages, MomentFixture.create(category, LocalDateTime.now()));
-        List<String> images = existingImages.getImages().stream().map(MomentImage::getImageUrl).toList();
+        existingImages.update(updatedImages, StaccatoFixture.create(category, LocalDateTime.now()));
+        List<String> images = existingImages.getImages().stream().map(StaccatoImage::getImageUrl).toList();
 
         // then
         assertThat(images).containsExactlyElementsOf(updatedImageNames);

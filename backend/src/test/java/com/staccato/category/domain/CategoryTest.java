@@ -1,5 +1,6 @@
 package com.staccato.category.domain;
 
+import com.staccato.moment.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,9 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.moment.MomentFixture;
+import com.staccato.fixture.moment.StaccatoFixture;
 import com.staccato.member.domain.Nickname;
-import com.staccato.moment.domain.Moment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -47,10 +47,10 @@ class CategoryTest {
         // given
         Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
         Category updatedCategory = CategoryFixture.create(LocalDate.now().plusDays(1), LocalDate.now().plusDays(2));
-        Moment moment = MomentFixture.create(category, LocalDateTime.now());
+        Staccato staccato = StaccatoFixture.create(category, LocalDateTime.now());
 
         // when & then
-        assertThatThrownBy(() -> category.update(updatedCategory, List.of(moment)))
+        assertThatThrownBy(() -> category.update(updatedCategory, List.of(staccato)))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("기간이 이미 존재하는 스타카토를 포함하지 않아요. 다시 설정해주세요.");
     }

@@ -1,5 +1,6 @@
 package com.staccato.moment.service.dto.request;
 
+import com.staccato.moment.domain.Staccato;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,8 +14,7 @@ import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.staccato.category.domain.Category;
-import com.staccato.moment.domain.Moment;
-import com.staccato.moment.domain.MomentImages;
+import com.staccato.moment.domain.StaccatoImages;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -56,8 +56,8 @@ public record StaccatoRequest(
         }
     }
 
-    public Moment toStaccato(Category category) {
-        return Moment.builder()
+    public Staccato toStaccato(Category category) {
+        return Staccato.builder()
                 .visitedAt(visitedAt)
                 .title(staccatoTitle)
                 .placeName(placeName)
@@ -65,7 +65,7 @@ public record StaccatoRequest(
                 .longitude(longitude)
                 .address(address)
                 .category(category)
-                .momentImages(new MomentImages(staccatoImageUrls))
+                .staccatoImages(new StaccatoImages(staccatoImageUrls))
                 .build();
     }
 }

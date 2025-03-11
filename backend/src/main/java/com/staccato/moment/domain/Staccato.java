@@ -30,7 +30,7 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Moment extends BaseEntity {
+public class Staccato extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,50 +48,50 @@ public class Moment extends BaseEntity {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
     @Embedded
-    private MomentImages momentImages = new MomentImages();
+    private StaccatoImages staccatoImages = new StaccatoImages();
 
     @Builder
-    public Moment(
+    public Staccato(
             @NonNull LocalDateTime visitedAt,
             @NonNull String title,
             @NonNull String placeName,
             @NonNull String address,
             @NonNull BigDecimal latitude,
             @NonNull BigDecimal longitude,
-            @NonNull MomentImages momentImages,
+            @NonNull StaccatoImages staccatoImages,
             @NonNull Category category
     ) {
         validateIsWithinCategoryTerm(visitedAt, category);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
         this.title = title.trim();
         this.spot = new Spot(placeName, address, latitude, longitude);
-        this.momentImages.addAll(momentImages, this);
+        this.staccatoImages.addAll(staccatoImages, this);
         this.category = category;
     }
 
     private void validateIsWithinCategoryTerm(LocalDateTime visitedAt, Category category) {
         if (category.isWithoutDuration(visitedAt)) {
-            throw new StaccatoException("추억에 포함되지 않는 날짜입니다.");
+            throw new StaccatoException("카테고리에 포함되지 않는 날짜입니다.");
         }
     }
 
-    public void update(Moment newMoment) {
-        this.visitedAt = newMoment.getVisitedAt();
-        this.title = newMoment.getTitle();
-        this.spot = newMoment.getSpot();
-        this.momentImages.update(newMoment.momentImages, this);
-        this.category = newMoment.getCategory();
+    public void update(Staccato newStaccato) {
+        this.visitedAt = newStaccato.getVisitedAt();
+        this.title = newStaccato.getTitle();
+        this.spot = newStaccato.getSpot();
+        this.staccatoImages.update(newStaccato.staccatoImages, this);
+        this.category = newStaccato.getCategory();
     }
 
     public String thumbnailUrl() {
         if (hasImage()) {
-            return momentImages.getImages().get(0).getImageUrl();
+            return staccatoImages.getImages().get(0).getImageUrl();
         }
         return null;
     }
 
     private boolean hasImage() {
-        return momentImages.isNotEmpty();
+        return staccatoImages.isNotEmpty();
     }
 
     public void changeFeeling(Feeling feeling) {
@@ -105,7 +105,7 @@ public class Moment extends BaseEntity {
         category.setUpdatedAt(LocalDateTime.now());
     }
 
-    public List<MomentImage> existingImages() {
-        return momentImages.getImages();
+    public List<StaccatoImage> existingImages() {
+        return staccatoImages.getImages();
     }
 }

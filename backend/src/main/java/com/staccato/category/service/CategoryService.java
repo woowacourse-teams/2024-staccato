@@ -8,6 +8,7 @@ import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
+import com.staccato.moment.domain.Staccato;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,9 +21,8 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryRepository;
-import com.staccato.moment.domain.Moment;
-import com.staccato.moment.repository.MomentImageRepository;
-import com.staccato.moment.repository.MomentRepository;
+import com.staccato.moment.repository.StaccatoImageRepository;
+import com.staccato.moment.repository.StaccatoRepository;
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -35,8 +35,8 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMemberRepository categoryMemberRepository;
-    private final MomentRepository momentRepository;
-    private final MomentImageRepository momentImageRepository;
+    private final StaccatoRepository staccatoRepository;
+    private final StaccatoImageRepository staccatoImageRepository;
     private final CommentRepository commentRepository;
 
     @Transactional
@@ -78,8 +78,8 @@ public class CategoryService {
     public CategoryDetailResponse readCategoryById(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
         validateOwner(category, member);
-        List<Moment> moments = momentRepository.findAllByCategoryIdOrdered(categoryId);
-        return new CategoryDetailResponse(category, moments);
+        List<Staccato> staccatoes = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
+        return new CategoryDetailResponse(category, staccatoes);
     }
 
     @Transactional
@@ -90,8 +90,8 @@ public class CategoryService {
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
             validateCategoryTitle(updatedCategory, member);
         }
-        List<Moment> moments = momentRepository.findAllByCategoryId(categoryId);
-        originCategory.update(updatedCategory, moments);
+        List<Staccato> staccatoes = staccatoRepository.findAllByCategoryId(categoryId);
+        originCategory.update(updatedCategory, staccatoes);
     }
 
     private Category getCategoryById(long categoryId) {
@@ -121,13 +121,13 @@ public class CategoryService {
     }
 
     private void deleteAllRelatedCategory(long memoryId) {
-        List<Long> momentIds = momentRepository.findAllByCategoryId(memoryId)
+        List<Long> momentIds = staccatoRepository.findAllByCategoryId(memoryId)
                 .stream()
-                .map(Moment::getId)
+                .map(Staccato::getId)
                 .toList();
-        momentImageRepository.deleteAllByMomentIdInBulk(momentIds);
-        commentRepository.deleteAllByMomentIdInBulk(momentIds);
-        momentRepository.deleteAllByCategoryIdInBulk(memoryId);
+        staccatoImageRepository.deleteAllByStaccatoIdInBulk(momentIds);
+        commentRepository.deleteAllByStaccatoIdInBulk(momentIds);
+        staccatoRepository.deleteAllByCategoryIdInBulk(memoryId);
         categoryMemberRepository.deleteAllByCategoryIdInBulk(memoryId);
     }
 }

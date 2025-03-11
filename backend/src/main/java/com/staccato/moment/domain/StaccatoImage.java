@@ -17,26 +17,26 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MomentImage {
+public class StaccatoImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "moment_id", nullable = false)
-    private Moment moment;
+    @JoinColumn(name = "staccato_id", nullable = false)
+    private Staccato staccato;
 
     @Builder
-    public MomentImage(@Nonnull String imageUrl) {
+    public StaccatoImage(@Nonnull String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
-    protected void belongTo(Moment moment) {
-        this.moment = moment;
+    protected void belongTo(Staccato staccato) {
+        this.staccato = staccato;
     }
 
-    protected boolean isSame(MomentImage momentImage) {
-        return imageUrl.equals(momentImage.imageUrl);
+    protected boolean isSame(StaccatoImage staccatoImage) {
+        return imageUrl.equals(staccatoImage.imageUrl);
     }
 }

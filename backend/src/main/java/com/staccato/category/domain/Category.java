@@ -1,5 +1,6 @@
 package com.staccato.category.domain;
 
+import com.staccato.moment.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.domain.Nickname;
-import com.staccato.moment.domain.Moment;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -68,16 +68,16 @@ public class Category extends BaseEntity {
         categoryMembers.add(categoryMember);
     }
 
-    public void update(Category updatedCategory, List<Moment> moments) {
-        validateDuration(updatedCategory, moments);
+    public void update(Category updatedCategory, List<Staccato> staccatoes) {
+        validateDuration(updatedCategory, staccatoes);
         this.thumbnailUrl = updatedCategory.getThumbnailUrl();
         this.title = updatedCategory.getTitle();
         this.description = updatedCategory.getDescription();
         this.term = updatedCategory.getTerm();
     }
 
-    private void validateDuration(Category updatedCategory, List<Moment> moments) {
-        moments.stream()
+    private void validateDuration(Category updatedCategory, List<Staccato> staccatoes) {
+        staccatoes.stream()
                 .filter(moment -> updatedCategory.isWithoutDuration(moment.getVisitedAt()))
                 .findAny()
                 .ifPresent(moment -> {

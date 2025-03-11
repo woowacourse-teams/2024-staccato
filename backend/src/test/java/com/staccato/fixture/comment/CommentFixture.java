@@ -2,21 +2,21 @@ package com.staccato.fixture.comment;
 
 import com.staccato.comment.domain.Comment;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.Staccato;
 
 public class CommentFixture {
-    public static Comment create(Moment moment, Member member) {
+    public static Comment create(Staccato staccato, Member member) {
         return Comment.builder()
                 .content("Sample Moment Log")
-                .moment(moment)
+                .staccato(staccato)
                 .member(member)
                 .build();
     }
 
-    public static Comment create(Moment moment, Member member, String content) {
+    public static Comment create(Staccato staccato, Member member, String content) {
         return Comment.builder()
                 .content(content)
-                .moment(moment)
+                .staccato(staccato)
                 .member(member)
                 .build();
     }

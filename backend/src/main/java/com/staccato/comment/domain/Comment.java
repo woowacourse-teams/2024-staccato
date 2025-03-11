@@ -1,5 +1,6 @@
 package com.staccato.comment.domain;
 
+import com.staccato.moment.domain.Staccato;
 import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,7 +13,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.domain.Moment;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,16 +31,16 @@ public class Comment extends BaseEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "moment_id", nullable = false)
-    private Moment moment;
+    @JoinColumn(name = "staccato_id", nullable = false)
+    private Staccato staccato;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Builder
-    public Comment(@NonNull String content, @NotNull Moment moment, @NonNull Member member) {
+    public Comment(@NonNull String content, @NotNull Staccato staccato, @NonNull Member member) {
         this.content = content;
-        this.moment = moment;
+        this.staccato = staccato;
         this.member = member;
     }
 

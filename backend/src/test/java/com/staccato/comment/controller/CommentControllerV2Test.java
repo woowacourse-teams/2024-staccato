@@ -112,7 +112,7 @@ public class CommentControllerV2Test extends ControllerTest {
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         CommentResponse commentResponse = new CommentResponse(1L, 1L, "member", "image.jpg", "내용");
         CommentResponses commentResponses = new CommentResponses(List.of(commentResponse));
-        when(commentService.readAllCommentsByMomentId(any(), any())).thenReturn(commentResponses);
+        when(commentService.readAllCommentsByStaccatoId(any(), any())).thenReturn(commentResponses);
         String expectedResponse = """
                 {
                     "comments": [

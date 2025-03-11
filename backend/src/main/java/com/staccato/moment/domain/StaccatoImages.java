@@ -13,15 +13,15 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MomentImages {
+public class StaccatoImages {
     private static final int MAX_COUNT = 5;
-    @OneToMany(mappedBy = "moment", cascade = CascadeType.PERSIST)
-    private List<MomentImage> images = new ArrayList<>();
+    @OneToMany(mappedBy = "staccato", cascade = CascadeType.PERSIST)
+    private List<StaccatoImage> images = new ArrayList<>();
 
-    public MomentImages(List<String> addedImages) {
+    public StaccatoImages(List<String> addedImages) {
         validateNumberOfImages(addedImages);
         this.images.addAll(addedImages.stream()
-                .map(MomentImage::new)
+                .map(StaccatoImage::new)
                 .toList());
     }
 
@@ -31,10 +31,10 @@ public class MomentImages {
         }
     }
 
-    protected void addAll(MomentImages newMomentImages, Moment moment) {
-        newMomentImages.images.forEach(image -> {
+    protected void addAll(StaccatoImages newStaccatoImages, Staccato staccato) {
+        newStaccatoImages.images.forEach(image -> {
             this.images.add(image);
-            image.belongTo(moment);
+            image.belongTo(staccato);
         });
     }
 
@@ -42,8 +42,8 @@ public class MomentImages {
         return !images.isEmpty();
     }
 
-    protected void update(MomentImages newMomentImages, Moment moment) {
+    protected void update(StaccatoImages newStaccatoImages, Staccato staccato) {
         images.clear();
-        addAll(newMomentImages, moment);
+        addAll(newStaccatoImages, staccato);
     }
 }

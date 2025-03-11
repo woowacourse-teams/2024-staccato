@@ -1,6 +1,7 @@
 package com.staccato.moment.service;
 
 import com.staccato.category.domain.Category;
+import com.staccato.moment.domain.Staccato;
 import com.staccato.moment.service.dto.request.StaccatoRequest;
 import com.staccato.moment.service.dto.response.StaccatoDetailResponse;
 import com.staccato.moment.service.dto.response.StaccatoLocationResponses;
@@ -19,16 +20,15 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.moment.MomentFixture;
+import com.staccato.fixture.moment.StaccatoFixture;
 import com.staccato.fixture.moment.StaccatoRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.moment.domain.Feeling;
-import com.staccato.moment.domain.Moment;
-import com.staccato.moment.domain.MomentImage;
-import com.staccato.moment.repository.MomentImageRepository;
-import com.staccato.moment.repository.MomentRepository;
+import com.staccato.moment.domain.StaccatoImage;
+import com.staccato.moment.repository.StaccatoImageRepository;
+import com.staccato.moment.repository.StaccatoRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,11 +39,11 @@ class StaccatoServiceTest extends ServiceSliceTest {
     @Autowired
     private StaccatoService staccatoService;
     @Autowired
-    private MomentRepository momentRepository;
+    private StaccatoRepository staccatoRepository;
     @Autowired
     private CommentRepository commentRepository;
     @Autowired
-    private MomentImageRepository momentImageRepository;
+    private StaccatoImageRepository staccatoImageRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -61,7 +61,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         long momentId = staccatoService.createStaccato(staccatoRequest, member).staccatoId();
 
         // then
-        assertThat(momentRepository.findById(momentId)).isNotEmpty();
+        assertThat(staccatoRepository.findById(momentId)).isNotEmpty();
     }
 
     @DisplayName("스타카토를 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
@@ -77,9 +77,9 @@ class StaccatoServiceTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> assertThat(momentRepository.findById(momentId)).isNotEmpty(),
-                () -> assertThat(momentImageRepository.findAll().size()).isEqualTo(1),
-                () -> assertThat(momentImageRepository.findAll().get(0).getMoment().getId()).isEqualTo(momentId)
+                () -> assertThat(staccatoRepository.findById(momentId)).isNotEmpty(),
+                () -> assertThat(staccatoImageRepository.findAll().size()).isEqualTo(1),
+                () -> assertThat(staccatoImageRepository.findAll().get(0).getStaccato().getId()).isEqualTo(momentId)
         );
     }
 
@@ -133,13 +133,13 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveStaccatoWithImages(category);
+        Staccato staccato = saveStaccatoWithImages(category);
 
         // when
-        StaccatoDetailResponse actual = staccatoService.readStaccatoById(moment.getId(), member);
+        StaccatoDetailResponse actual = staccatoService.readStaccatoById(staccato.getId(), member);
 
         // then
-        assertThat(actual).isEqualTo(new StaccatoDetailResponse(moment));
+        assertThat(actual).isEqualTo(new StaccatoDetailResponse(staccato));
     }
 
     @DisplayName("본인 것이 아닌 스타카토를 조회하려고 하면 예외가 발생한다.")
@@ -149,10 +149,10 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Member member = saveMember();
         Member otherMember = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveStaccatoWithImages(category);
+        Staccato staccato = saveStaccatoWithImages(category);
 
         // when & then
-        assertThatThrownBy(() -> staccatoService.readStaccatoById(moment.getId(), otherMember))
+        assertThatThrownBy(() -> staccatoService.readStaccatoById(staccato.getId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -176,18 +176,18 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Member member = saveMember();
         Category category = saveCategory(member);
         Category category2 = saveCategory(member);
-        Moment moment = saveStaccatoWithImages(category);
+        Staccato staccato = saveStaccatoWithImages(category);
 
         // when
         StaccatoRequest staccatoRequest = new StaccatoRequest("newStaccatoTitle", "placeName", "newAddress", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), category2.getId(), List.of("https://existExample.com.jpg", "https://newExample.com.jpg"));
-        staccatoService.updateStaccatoById(moment.getId(), staccatoRequest, member);
+        staccatoService.updateStaccatoById(staccato.getId(), staccatoRequest, member);
 
         // then
-        Moment foundedMoment = momentRepository.findById(moment.getId()).get();
-        List<MomentImage> images = momentImageRepository.findAll();
+        Staccato foundedStaccato = staccatoRepository.findById(staccato.getId()).get();
+        List<StaccatoImage> images = staccatoImageRepository.findAll();
         assertAll(
-                () -> assertThat(foundedMoment.getTitle()).isEqualTo("newStaccatoTitle"),
-                () -> assertThat(foundedMoment.getCategory().getId()).isEqualTo(category2.getId()),
+                () -> assertThat(foundedStaccato.getTitle()).isEqualTo("newStaccatoTitle"),
+                () -> assertThat(foundedStaccato.getCategory().getId()).isEqualTo(category2.getId()),
                 () -> assertThat(images.size()).isEqualTo(2),
                 () -> assertThat(images.get(0).getImageUrl()).isEqualTo("https://existExample.com.jpg"),
                 () -> assertThat(images.get(1).getImageUrl()).isEqualTo("https://newExample.com.jpg")
@@ -201,11 +201,11 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Member member = saveMember();
         Member otherMember = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveStaccatoWithImages(category);
+        Staccato staccato = saveStaccatoWithImages(category);
         StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId());
 
         // when & then
-        assertThatThrownBy(() -> staccatoService.updateStaccatoById(moment.getId(), staccatoRequest, otherMember))
+        assertThatThrownBy(() -> staccatoService.updateStaccatoById(staccato.getId(), staccatoRequest, otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -218,11 +218,11 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Member otherMember = saveMember();
         Category category = saveCategory(member);
         Category otherCategory = saveCategory(otherMember);
-        Moment moment = saveStaccatoWithImages(category);
+        Staccato staccato = saveStaccatoWithImages(category);
         StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(otherCategory.getId());
 
         // when & then
-        assertThatThrownBy(() -> staccatoService.updateStaccatoById(moment.getId(), staccatoRequest, member))
+        assertThatThrownBy(() -> staccatoService.updateStaccatoById(staccato.getId(), staccatoRequest, member))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -247,18 +247,18 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveStaccatoWithImages(category);
-        Comment comment = commentRepository.save(CommentFixture.create(moment, member));
+        Staccato staccato = saveStaccatoWithImages(category);
+        Comment comment = commentRepository.save(CommentFixture.create(staccato, member));
 
         // when
-        staccatoService.deleteStaccatoById(moment.getId(), member);
+        staccatoService.deleteStaccatoById(staccato.getId(), member);
 
         // then
         assertAll(
-                () -> assertThat(momentRepository.findById(moment.getId())).isEmpty(),
+                () -> assertThat(staccatoRepository.findById(staccato.getId())).isEmpty(),
                 () -> assertThat(commentRepository.findById(comment.getId())).isEmpty(),
-                () -> assertThat(momentImageRepository.findById(0L)).isEmpty(),
-                () -> assertThat(momentImageRepository.findById(1L)).isEmpty()
+                () -> assertThat(staccatoImageRepository.findById(0L)).isEmpty(),
+                () -> assertThat(staccatoImageRepository.findById(1L)).isEmpty()
         );
     }
 
@@ -269,10 +269,10 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Member member = saveMember();
         Member otherMember = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveStaccatoWithImages(category);
+        Staccato staccato = saveStaccatoWithImages(category);
 
         // when & then
-        assertThatThrownBy(() -> staccatoService.deleteStaccatoById(moment.getId(), otherMember))
+        assertThatThrownBy(() -> staccatoService.deleteStaccatoById(staccato.getId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -283,16 +283,16 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
-        Moment moment = saveStaccatoWithImages(category);
+        Staccato staccato = saveStaccatoWithImages(category);
         FeelingRequest feelingRequest = new FeelingRequest("happy");
 
         // when
-        staccatoService.updateStaccatoFeelingById(moment.getId(), member, feelingRequest);
+        staccatoService.updateStaccatoFeelingById(staccato.getId(), member, feelingRequest);
 
         // then
         assertAll(
-                () -> assertThat(momentRepository.findById(moment.getId())).isNotEmpty(),
-                () -> assertThat(momentRepository.findById(moment.getId()).get().getFeeling()).isEqualTo(Feeling.HAPPY)
+                () -> assertThat(staccatoRepository.findById(staccato.getId())).isNotEmpty(),
+                () -> assertThat(staccatoRepository.findById(staccato.getId()).get().getFeeling()).isEqualTo(Feeling.HAPPY)
         );
     }
 
@@ -306,8 +306,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
         return categoryRepository.save(category);
     }
 
-    private Moment saveStaccatoWithImages(Category category) {
-        Moment moment = MomentFixture.createWithImages(category, LocalDateTime.now(), List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"));
-        return momentRepository.save(moment);
+    private Staccato saveStaccatoWithImages(Category category) {
+        Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.now(), List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"));
+        return staccatoRepository.save(staccato);
     }
 }

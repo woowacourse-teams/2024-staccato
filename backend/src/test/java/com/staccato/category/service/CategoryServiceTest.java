@@ -25,14 +25,14 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.category.CategoryRequestFixture;
-import com.staccato.fixture.moment.MomentFixture;
+import com.staccato.fixture.moment.StaccatoFixture;
 import com.staccato.fixture.moment.StaccatoRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryRepository;
-import com.staccato.moment.domain.Moment;
-import com.staccato.moment.repository.MomentRepository;
+import com.staccato.moment.domain.Staccato;
+import com.staccato.moment.repository.StaccatoRepository;
 import com.staccato.moment.service.StaccatoService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +52,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
-    private MomentRepository momentRepository;
+    private StaccatoRepository staccatoRepository;
     @Autowired
     private CommentRepository commentRepository;
 
@@ -239,9 +239,9 @@ class CategoryServiceTest extends ServiceSliceTest {
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
             CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
-        Moment firstMoment = saveMoment(LocalDateTime.of(2023, 7, 1, 10, 0), categoryIdResponse.categoryId());
-        Moment secondMoment = saveMoment(LocalDateTime.of(2023, 7, 1, 10, 10), categoryIdResponse.categoryId());
-        Moment lastMoment = saveMoment(LocalDateTime.of(2023, 7, 5, 9, 0), categoryIdResponse.categoryId());
+        Staccato firstStaccato = saveMoment(LocalDateTime.of(2023, 7, 1, 10, 0), categoryIdResponse.categoryId());
+        Staccato secondStaccato = saveMoment(LocalDateTime.of(2023, 7, 1, 10, 10), categoryIdResponse.categoryId());
+        Staccato lastStaccato = saveMoment(LocalDateTime.of(2023, 7, 5, 9, 0), categoryIdResponse.categoryId());
 
         // when
         CategoryDetailResponse categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
@@ -251,7 +251,8 @@ class CategoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
                 () -> assertThat(categoryDetailResponse.staccatos()).hasSize(3),
                 () -> assertThat(categoryDetailResponse.staccatos().stream().map(StaccatoResponse::staccatoId).toList())
-                        .containsExactly(lastMoment.getId(), secondMoment.getId(), firstMoment.getId())
+                        .containsExactly(
+                            lastStaccato.getId(), secondStaccato.getId(), firstStaccato.getId())
         );
     }
 
@@ -394,8 +395,8 @@ class CategoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create());
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
             CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
-        Moment moment = saveMoment(LocalDateTime.of(2023, 7, 2, 10, 10), categoryIdResponse.categoryId());
-        commentRepository.save(CommentFixture.create(moment, member));
+        Staccato staccato = saveMoment(LocalDateTime.of(2023, 7, 2, 10, 10), categoryIdResponse.categoryId());
+        commentRepository.save(CommentFixture.create(staccato, member));
 
         // when
         categoryService.deleteCategory(categoryIdResponse.categoryId(), member);
@@ -404,13 +405,14 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(categoryRepository.findById(categoryIdResponse.categoryId())).isEmpty(),
                 () -> assertThat(categoryMemberRepository.findAll()).isEmpty(),
-                () -> assertThat(momentRepository.findAll()).isEmpty(),
+                () -> assertThat(staccatoRepository.findAll()).isEmpty(),
                 () -> assertThat(commentRepository.findAll()).isEmpty()
         );
     }
 
-    private Moment saveMoment(LocalDateTime visitedAt, long memoryId) {
-        return momentRepository.save(MomentFixture.create(categoryRepository.findById(memoryId).get(), visitedAt));
+    private Staccato saveMoment(LocalDateTime visitedAt, long memoryId) {
+        return staccatoRepository.save(
+            StaccatoFixture.create(categoryRepository.findById(memoryId).get(), visitedAt));
     }
 
     @DisplayName("본인 것이 아닌 추억 상세를 삭제하려고 하면 예외가 발생한다.")

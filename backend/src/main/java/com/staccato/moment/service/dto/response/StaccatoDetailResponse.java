@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.staccato.moment.domain.Moment;
-import com.staccato.moment.domain.MomentImage;
+import com.staccato.moment.domain.Staccato;
+import com.staccato.moment.domain.StaccatoImage;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,21 +43,21 @@ public record StaccatoDetailResponse(
         @Schema(example = "-0.12712788587027796")
         BigDecimal longitude
 ) {
-    public StaccatoDetailResponse(Moment moment) {
+    public StaccatoDetailResponse(Staccato staccato) {
         this(
-                moment.getId(),
-                moment.getCategory().getId(),
-                moment.getCategory().getTitle(),
-                moment.getCategory().getTerm().getStartAt(),
-                moment.getCategory().getTerm().getEndAt(),
-                moment.getTitle(),
-                moment.getMomentImages().getImages().stream().map(MomentImage::getImageUrl).toList(),
-                moment.getVisitedAt(),
-                moment.getFeeling().getValue(),
-                moment.getSpot().getPlaceName(),
-                moment.getSpot().getAddress(),
-                moment.getSpot().getLatitude(),
-                moment.getSpot().getLongitude()
+                staccato.getId(),
+                staccato.getCategory().getId(),
+                staccato.getCategory().getTitle(),
+                staccato.getCategory().getTerm().getStartAt(),
+                staccato.getCategory().getTerm().getEndAt(),
+                staccato.getTitle(),
+                staccato.getStaccatoImages().getImages().stream().map(StaccatoImage::getImageUrl).toList(),
+                staccato.getVisitedAt(),
+                staccato.getFeeling().getValue(),
+                staccato.getSpot().getPlaceName(),
+                staccato.getSpot().getAddress(),
+                staccato.getSpot().getLatitude(),
+                staccato.getSpot().getLongitude()
         );
     }
 }
