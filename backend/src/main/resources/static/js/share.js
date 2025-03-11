@@ -2,9 +2,9 @@ fetch('/staccatos/shared?token=' + token)
     .then(response => response.json())
     .then(data => {
         const {
-            userName,
             expiredAt,
-            momentImageUrls,
+            userName,
+            staccatoImageUrls,
             staccatoTitle,
             placeName,
             address,
@@ -24,10 +24,10 @@ fetch('/staccatos/shared?token=' + token)
 
         const sliderWrapper = document.querySelector('.swiper-wrapper');
         sliderWrapper.innerHTML = '';
-        momentImageUrls.forEach((url) => {
+        staccatoImageUrls.forEach((url) => {
             const slideElement = document.createElement('div');
             slideElement.classList.add('swiper-slide');
-            slideElement.innerHTML = `<img src="${url}" alt="Moment Image">`;
+            slideElement.innerHTML = `<img src="${url}" alt="Staccato Image">`;
             sliderWrapper.appendChild(slideElement);
         });
 
@@ -68,18 +68,27 @@ fetch('/staccatos/shared?token=' + token)
 
         const commentsContainer = document.querySelector('.comments-list');
         commentsContainer.innerHTML = '';
-        comments.forEach((comment) => {
-            const commentElement = document.createElement('div');
-            commentElement.classList.add('comment');
-            commentElement.setAttribute('data-nickname', comment.nickname);
 
-            const commentAlignmentClass = comment.nickname === userName ? 'comment-right' : 'comment-left';
-            const nicknameAlignmentClass = comment.nickname === userName ? 'nickname-right' : 'nickname-left';
-            const contentWrapperAlignmentClass = comment.nickname === userName ? 'margin-right-auto' : 'margin-left-auto';
+        if (comments.length === 0) {
+            commentsContainer.innerHTML = `
+                <div class="empty-comments-container">
+                    <img class="empty-comments-image" src="https://image.staccato.kr/web/share/frame.png" alt="Frame Image">
+                    <p class="empty-comments-text">코멘트가 없어요! 코멘트를 달아보세요.</p>
+                </div>
+            `;
+        } else {
+            comments.forEach((comment) => {
+                const commentElement = document.createElement('div');
+                commentElement.classList.add('comment');
+                commentElement.setAttribute('data-nickname', comment.nickname);
 
-            commentElement.classList.add(commentAlignmentClass);
+                const commentAlignmentClass = comment.nickname === userName ? 'comment-right' : 'comment-left';
+                const nicknameAlignmentClass = comment.nickname === userName ? 'nickname-right' : 'nickname-left';
+                const contentWrapperAlignmentClass = comment.nickname === userName ? 'margin-right-auto' : 'margin-left-auto';
 
-            commentElement.innerHTML = `
+                commentElement.classList.add(commentAlignmentClass);
+
+                commentElement.innerHTML = `
                 <div class="content-wrapper ${contentWrapperAlignmentClass}">
                     <div class="text-section">
                         <div class="nickname-wrapper ${nicknameAlignmentClass}">
@@ -92,8 +101,9 @@ fetch('/staccatos/shared?token=' + token)
                     <img class="profile-picture" src="${comment.memberImageUrl}" alt="User Image">
                 </div>
             `;
-            commentsContainer.appendChild(commentElement);
-        });
+                commentsContainer.appendChild(commentElement);
+            });
+        }
 
         setupWheelScrollPrevention();
     })

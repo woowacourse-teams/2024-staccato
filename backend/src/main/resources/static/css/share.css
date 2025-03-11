@@ -282,3 +282,25 @@ body {
 .google-play-link {
     text-decoration: none;
 }
+
+.empty-comments-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 20px auto;
+    max-width: 400px;
+}
+
+.empty-comments-image {
+    max-width: 250px;
+    opacity: 0.8;
+    margin-bottom: 1rem;
+}
+
+.empty-comments-text {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #666;
+}
