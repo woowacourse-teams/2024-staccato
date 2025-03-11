@@ -13,6 +13,7 @@ import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toTimelineUiModel
+import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.util.ExceptionState
@@ -27,6 +28,14 @@ class TimelineViewModel
     constructor(
         private val timelineRepository: TimelineRepository,
     ) : ViewModel() {
+        private val _sortType = MutableLiveData(SortType.UPDATED)
+        val sortType: LiveData<SortType>
+            get() = _sortType
+
+        private val _filterType = MutableLiveData<FilterType?>(null)
+        val filterType: LiveData<FilterType?>
+            get() = _filterType
+
         private val _timeline = MutableLiveData<List<TimelineUiModel>>(emptyList())
         val timeline: LiveData<List<TimelineUiModel>>
             get() = _timeline
@@ -60,48 +69,29 @@ class TimelineViewModel
         fun loadTimeline() {
             _isTimelineLoading.value = true
             viewModelScope.launch(coroutineExceptionHandler) {
-                timelineRepository.getTimeline()
-                    .onSuccess(::setTimelineUiModels)
+                timelineRepository.getTimeline(
+                    sort = sortType.value?.name,
+                    term = filterType.value?.name,
+                ).onSuccess(::setTimelineUiModels)
                     .onServerError(::handleServerError)
                     .onException(::handleException)
             }
         }
 
         fun sortTimeline(type: SortType) {
-            when (type) {
-                SortType.CREATION -> sortByCreation()
-                SortType.LATEST -> sortByLatest()
-                SortType.OLDEST -> sortByOldest()
-                SortType.WITH_PERIOD -> filterWithPeriod()
-                SortType.WITHOUT_PERIOD -> filterWithoutPeriod()
-            }
+            _sortType.value = type
+            loadTimeline()
+        }
+
+        fun changeFilterState() {
+            _filterType.value = FilterType.next(filterType.value)
+            loadTimeline()
         }
 
         private fun setTimelineUiModels(timeline: Timeline) {
             _timeline.value = timeline.toTimelineUiModel()
             originalTimeline = _timeline.value ?: emptyList()
             _isTimelineLoading.value = false
-        }
-
-        private fun sortByCreation() {
-            _timeline.value = originalTimeline
-        }
-
-        private fun sortByLatest() {
-            _timeline.value = originalTimeline.sortedByDescending { it.startAt }
-        }
-
-        private fun sortByOldest() {
-            val categoriesSortedByOldest = originalTimeline.sortedWith(compareBy(nullsLast()) { it.startAt })
-            _timeline.value = categoriesSortedByOldest
-        }
-
-        private fun filterWithPeriod() {
-            _timeline.value = originalTimeline.filter { it.startAt != null }.sortedByDescending { it.startAt }
-        }
-
-        private fun filterWithoutPeriod() {
-            _timeline.value = originalTimeline.filter { it.startAt == null }
         }
 
         private fun handleServerError(errorMessage: String) {
