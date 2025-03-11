@@ -7,10 +7,10 @@ import com.staccato.moment.service.dto.response.CommentShareResponse;
 import com.staccato.moment.service.dto.response.StaccatoSharedResponse;
 
 public class StaccatoSharedResponseFixture {
-    public static StaccatoSharedResponse create() {
+    public static StaccatoSharedResponse create(LocalDateTime expiredAt) {
         return new StaccatoSharedResponse(
                 1,
-                LocalDateTime.of(2024, 7, 2, 10, 0),
+                expiredAt,
                 "staccato",
                 List.of(
                         "https://oldExample.com.jpg",

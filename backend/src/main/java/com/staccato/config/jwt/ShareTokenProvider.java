@@ -27,7 +27,7 @@ public class ShareTokenProvider extends AbstractTokenProvider {
         return Jwts.builder()
                 .claim(PROPERTY_NAME, staccatoId)
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                .signWith(SignatureAlgorithm.HS256, tokenProperties.secretKey().getBytes())
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
@@ -43,7 +43,7 @@ public class ShareTokenProvider extends AbstractTokenProvider {
             return expiredAt.toInstant()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDateTime();
-        }  catch (JwtException | IllegalArgumentException e) {
+        } catch (JwtException | IllegalArgumentException e) {
             throw new UnauthorizedException();
         }
     }

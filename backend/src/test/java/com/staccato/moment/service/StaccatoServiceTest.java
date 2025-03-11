@@ -440,7 +440,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         StaccatoSharedResponse response = staccatoService.readSharedStaccatoByToken(token);
 
         // then
-        assertThat(response).isEqualTo(StaccatoSharedResponseFixture.create());
+        assertThat(response).isEqualTo(StaccatoSharedResponseFixture.create(response.expiredAt()));
     }
 
     @DisplayName("만료된 토큰이면, 예외가 발생한다.")

@@ -1,6 +1,9 @@
 package com.staccato.config.jwt;
 
-import java.util.Date;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -10,21 +13,28 @@ import com.staccato.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
-@RequiredArgsConstructor
 @EnableConfigurationProperties(TokenProperties.class)
 public abstract class AbstractTokenProvider {
     protected final TokenProperties tokenProperties;
+    protected final Key secretKey;
+
+    public AbstractTokenProvider(TokenProperties tokenProperties) {
+        this.tokenProperties = tokenProperties;
+        this.secretKey = new SecretKeySpec(
+                tokenProperties.secretKey().getBytes(StandardCharsets.UTF_8),
+                SignatureAlgorithm.HS256.getJcaName()
+        );
+    }
 
     public abstract String create(Object payload);
 
     public Claims getPayload(String token) {
         try {
-            byte[] key = tokenProperties.secretKey().getBytes();
             return Jwts.parser()
-                    .setSigningKey(key)
+                    .setSigningKey(secretKey.getEncoded())
                     .parseClaimsJws(token)
                     .getBody();
         } catch (JwtException | IllegalArgumentException e) {

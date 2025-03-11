@@ -21,7 +21,7 @@ public class MemberTokenProvider extends AbstractTokenProvider {
                 .claim("id", member.getId())
                 .claim("nickname", member.getNickname().getNickname())
                 .claim("createdAt", member.getCreatedAt().toString())
-                .signWith(SignatureAlgorithm.HS256, tokenProperties.secretKey().getBytes())
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
