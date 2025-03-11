@@ -70,6 +70,10 @@ class TimelineFragment :
         popup.show()
     }
 
+    override fun onFilterClicked() {
+        timelineViewModel.changeFilterState()
+    }
+
     private fun setupBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = timelineViewModel

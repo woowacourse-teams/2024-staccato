@@ -14,10 +14,15 @@ class TimelineDefaultRepository
     constructor(
         private val timelineDataSource: TimelineDataSource,
     ) : TimelineRepository {
-        override suspend fun getTimeline(): ApiResult<Timeline> = timelineDataSource.getAllTimeline().handle { it.toDomain() }
+        override suspend fun getTimeline(
+            sort: String?,
+            term: String?,
+        ): ApiResult<Timeline> =
+            timelineDataSource.getTimeline(sort, term)
+                .handle { it.toDomain() }
 
         override suspend fun getCategoryCandidates(): ApiResult<CategoryCandidates> =
-            timelineDataSource.getAllTimeline().handle {
+            timelineDataSource.getTimeline().handle {
                 it.toCategoryCandidates()
             }
     }
