@@ -74,7 +74,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
         );
     }
 
-    @DisplayName("특정 추억의 id를 가진 모든 스타카토를 삭제한다.")
+    @DisplayName("특정 카테고리의 id를 가진 모든 스타카토를 삭제한다.")
     @Test
     void deleteAllByCategoryIdInBulk() {
         // given
@@ -104,7 +104,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
         );
     }
 
-    @DisplayName("사용자의 특정 추억에 해당하는 모든 스타카토를 최신순으로 조회한다.")
+    @DisplayName("사용자의 특정 카테고리에 해당하는 모든 스타카토를 최신순으로 조회한다.")
     @Test
     void findAllByCategoryIdOrderByVisitedAt() {
         // given

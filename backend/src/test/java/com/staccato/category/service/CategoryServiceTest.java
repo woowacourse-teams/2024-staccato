@@ -71,7 +71,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                         CategoryRequestFixture.create("imageUrl", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)), "imageUrl"));
     }
 
-    @DisplayName("추억 정보를 기반으로, 추억을 생성하고 작성자를 저장한다.")
+    @DisplayName("카테고리 정보를 기반으로, 카테고리를 생성하고 작성자를 저장한다.")
     @Test
     void createCategory() {
         // given
@@ -89,7 +89,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("추억의 기간이 null이더라도 추억을 생성할 수 있다.")
+    @DisplayName("카테고리의 기간이 null이더라도 카테고리를 생성할 수 있다.")
     @Test
     void createCategoryWithoutTerm() {
         // given
@@ -108,7 +108,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("사용자의 추억 중 이미 존재하는 추억 이름으로 추억을 생성할 수 없다.")
+    @DisplayName("사용자의 카테고리 중 이미 존재하는 카테고리 이름으로 카테고리를 생성할 수 없다.")
     @Test
     void cannotCreateCategoryByDuplicatedTitle() {
         // given
@@ -119,10 +119,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> categoryService.createCategory(categoryRequest, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
+                .hasMessage("같은 이름을 가진 카테고리가 있어요. 다른 이름으로 설정해주세요.");
     }
 
-    @DisplayName("다른 사용자의 이미 존재하는 추억 이름으로 추억을 생성할 수 있다.")
+    @DisplayName("다른 사용자의 이미 존재하는 카테고리 이름으로 카테고리를 생성할 수 있다.")
     @Test
     void canCreateCategoryByDuplicatedTitleOfOther() {
         // given
@@ -135,7 +135,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertThatNoException().isThrownBy(() -> categoryService.createCategory(categoryRequest, member));
     }
 
-    @DisplayName("현재 날짜를 포함하는 모든 추억 목록을 조회한다.")
+    @DisplayName("현재 날짜를 포함하는 모든 카테고리 목록을 조회한다.")
     @MethodSource("dateProvider")
     @ParameterizedTest
     void readAllCategories(LocalDate currentDate, int expectedSize) {
@@ -175,7 +175,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("특정 추억을 조회한다.")
+    @DisplayName("특정 카테고리를 조회한다.")
     @Test
     void readCategoryById() {
         // given
@@ -194,7 +194,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("기간이 없는 특정 추억을 조회한다.")
+    @DisplayName("기간이 없는 특정 카테고리를 조회한다.")
     @Test
     void readCategoryByIdWithoutTerm() {
         // given
@@ -215,7 +215,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 특정 추억을 조회하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 특정 카테고리를 조회하려고 하면 예외가 발생한다.")
     @Test
     void cannotReadCategoryByIdIfNotOwner() {
         // given
@@ -231,7 +231,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("특정 추억을 조회하면 스타카토는 최신순으로 반환한다.")
+    @DisplayName("특정 카테고리를 조회하면 스타카토는 최신순으로 반환한다.")
     @Test
     void readCategoryByIdOrderByVisitedAt() {
         // given
@@ -256,7 +256,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("존재하지 않는 추억을 조회하려고 할 경우 예외가 발생한다.")
+    @DisplayName("존재하지 않는 카테고리를 조회하려고 할 경우 예외가 발생한다.")
     @Test
     void failReadMemory() {
         // given
@@ -266,10 +266,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> categoryService.readCategoryById(unknownId, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("요청하신 추억을 찾을 수 없어요.");
+                .hasMessage("요청하신 카테고리를 찾을 수 없어요.");
     }
 
-    @DisplayName("추억 정보를 기반으로, 추억을 수정한다.")
+    @DisplayName("카테고리 정보를 기반으로, 카테고리을 수정한다.")
     @MethodSource("updateCategoryProvider")
     @ParameterizedTest
     void updateCategory(CategoryRequest updatedCategory, String expected) {
@@ -293,7 +293,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("기간이 존재하는 추억에 대해 기간이 존재하지 않도록 변경할 수 있다.")
+    @DisplayName("기간이 존재하는 카테고리에 대해 기간이 존재하지 않도록 변경할 수 있다.")
     @Test
     void updateCategoryWithNullableTerm() {
         // given
@@ -313,7 +313,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("존재하지 않는 추억을 수정하려 할 경우 예외가 발생한다.")
+    @DisplayName("존재하지 않는 카테고리를 수정하려 할 경우 예외가 발생한다.")
     @Test
     void failUpdateCategory() {
         // given
@@ -323,10 +323,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> categoryService.updateCategory(categoryRequest, 1L, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("요청하신 추억을 찾을 수 없어요.");
+                .hasMessage("요청하신 카테고리를 찾을 수 없어요.");
     }
 
-    @DisplayName("본인 것이 아닌 추억을 수정하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 카테고리를 수정하려고 하면 예외가 발생한다.")
     @Test
     void cannotUpdateCategoryIfNotOwner() {
         // given
@@ -342,7 +342,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("본래 해당 추억의 이름과 동일한 이름으로 추억을 수정할 수 있다.")
+    @DisplayName("본래 해당 카테고리의 이름과 동일한 이름으로 카테고리를 수정할 수 있다.")
     @Test
     void updateCategoryByOriginTitle() {
         // given
@@ -354,7 +354,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertThatNoException().isThrownBy(() -> categoryService.updateCategory(categoryRequest, categoryIdResponse.categoryId(), member));
     }
 
-    @DisplayName("이미 존재하는 이름으로 추억을 수정할 수 없다.")
+    @DisplayName("이미 존재하는 이름으로 카테고리를 수정할 수 없다.")
     @Test
     void cannotUpdateCategoryByDuplicatedTitle() {
         // given
@@ -367,10 +367,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> categoryService.updateCategory(categoryRequest1, categoryIdResponse.categoryId(), member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
+                .hasMessage("같은 이름을 가진 카테고리가 있어요. 다른 이름으로 설정해주세요.");
     }
 
-    @DisplayName("추억 식별값을 통해 추억을 삭제한다.")
+    @DisplayName("카테고리 식별값을 통해 카테고리를 삭제한다.")
     @Test
     void deleteCategory() {
         // given
@@ -388,7 +388,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("추억을 삭제하면 속한 스타카토들도 함께 삭제된다.")
+    @DisplayName("카테고리를 삭제하면 속한 스타카토들도 함께 삭제된다.")
     @Test
     void deleteCategoryWithMoment() {
         // given
@@ -415,7 +415,7 @@ class CategoryServiceTest extends ServiceSliceTest {
             StaccatoFixture.create(categoryRepository.findById(memoryId).get(), visitedAt));
     }
 
-    @DisplayName("본인 것이 아닌 추억 상세를 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 카테고리 상세를 삭제하려고 하면 예외가 발생한다.")
     @Test
     void cannotDeleteCategoryIfNotOwner() {
         // given

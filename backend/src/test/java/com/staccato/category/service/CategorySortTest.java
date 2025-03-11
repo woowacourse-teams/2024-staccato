@@ -56,7 +56,7 @@ public class CategorySortTest extends ServiceSliceTest {
         assertThat(result).isEqualTo(CategorySort.UPDATED);
     }
 
-    @DisplayName("수정 시간 기준 내림차순으로 추억 목록을 조회된다.")
+    @DisplayName("수정 시간 기준 내림차순으로 카테고리 목록을 조회된다.")
     @Test
     void readAllMemoriesByUpdatedAtDesc() {
         // given
@@ -75,7 +75,7 @@ public class CategorySortTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("최근 생성순으로 추억 목록을 조회된다.")
+    @DisplayName("최근 생성순으로 카테고리 목록을 조회된다.")
     @Test
     void readAllMemoriesByCreatedAtDesc() {
         // given
@@ -94,7 +94,7 @@ public class CategorySortTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("오래된 순으로 추억 목록을 조회된다.")
+    @DisplayName("오래된 순으로 카테고리 목록을 조회된다.")
     @Test
     void readAllMemoriesByCreatedAtAsc() {
         // given

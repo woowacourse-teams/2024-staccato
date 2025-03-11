@@ -46,7 +46,7 @@ class AuthServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("입력받은 닉네임으로 멤버를 저장할 때 기본 추억을 생성한다.")
+    @DisplayName("입력받은 닉네임으로 멤버를 저장할 때 기본 카테고리를 생성한다.")
     @Test
     void loginThenCreateBasicCategory() {
         // given

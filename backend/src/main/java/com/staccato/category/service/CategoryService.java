@@ -96,12 +96,12 @@ public class CategoryService {
 
     private Category getCategoryById(long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리 찾을 수 없어요."));
     }
 
     private void validateCategoryTitle(Category category, Member member) {
         if (categoryMemberRepository.existsByMemberAndCategoryTitle(member, category.getTitle())) {
-            throw new StaccatoException("같은 이름을 가진 추억이 있어요. 다른 이름으로 설정해주세요.");
+            throw new StaccatoException("같은 이름을 가진 카테고리가 있어요. 다른 이름으로 설정해주세요.");
         }
     }
 

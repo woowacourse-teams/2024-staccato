@@ -72,7 +72,7 @@ class CategoryFilterTest extends ServiceSliceTest {
         assertThat(result).isEmpty();
     }
 
-    @DisplayName("기간이 있는 추억 목록만 조회된다.")
+    @DisplayName("기간이 있는 카테고리 목록만 조회된다.")
     @Test
     void readAllMemoriesWithTerm() {
         // given

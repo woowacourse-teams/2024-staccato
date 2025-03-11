@@ -28,7 +28,7 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @DisplayName("사용자의 모든 추억 목록을 조회한다.")
+    @DisplayName("사용자의 모든 카테고리 목록을 조회한다.")
     @Test
     void findAllByMemberId() {
         // given
@@ -47,7 +47,7 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
         assertThat(result).hasSize(2);
     }
 
-    @DisplayName("사용자 식별자와 날짜로 추억 목록을 조회한다.")
+    @DisplayName("사용자 식별자와 날짜로 카테고리 목록을 조회한다.")
     @Test
     void findAllByMemberIdAndDate() {
         // given
@@ -66,7 +66,7 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
         assertThat(result).hasSize(1);
     }
 
-    @DisplayName("사용자 식별자와 날짜로 추억 목록을 조회할 때 추억에 기한이 없을 경우 함께 조회한다.")
+    @DisplayName("사용자 식별자와 날짜로 카테고리 목록을 조회할 때 카테고리에 기한이 없을 경우 함께 조회한다.")
     @Test
     void findAllByMemberIdAndDateWhenNull() {
         // given
@@ -84,7 +84,7 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
         assertThat(result).hasSize(2);
     }
 
-    @DisplayName("특정 추억의 id를 가지고 있는 모든 CategoryMember를 삭제한다.")
+    @DisplayName("특정 카테고리의 id를 가지고 있는 모든 CategoryMember를 삭제한다.")
     @Test
     void deleteAllByCategoryIdInBulk() {
         // given

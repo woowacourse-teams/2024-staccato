@@ -83,7 +83,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("본인 것이 아닌 추억에 스타카토를 생성하려고 하면 예외가 발생한다.")
+    @DisplayName("본인 것이 아닌 카테고리에 스타카토를 생성하려고 하면 예외가 발생한다.")
     @Test
     void cannotCreateStaccatoIfNotOwner() {
         // given
@@ -98,7 +98,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 
-    @DisplayName("존재하지 않는 추억에 스타카토 생성을 시도하면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 카테고리에 스타카토 생성을 시도하면 예외가 발생한다.")
     @Test
     void failCreateStaccato() {
         // given
@@ -108,7 +108,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> staccatoService.createStaccato(staccatoRequest, member))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessageContaining("요청하신 추억을 찾을 수 없어요.");
+                .hasMessageContaining("요청하신 카테고리를 찾을 수 없어요.");
     }
 
     @DisplayName("스타카토 목록 조회에 성공한다.")

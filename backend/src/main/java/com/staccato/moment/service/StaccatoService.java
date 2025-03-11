@@ -83,7 +83,7 @@ public class StaccatoService {
 
     private Category getCategoryById(long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 추억을 찾을 수 없어요."));
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 
     @Transactional
