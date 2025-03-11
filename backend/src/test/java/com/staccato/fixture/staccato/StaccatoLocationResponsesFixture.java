@@ -1,4 +1,4 @@
-package com.staccato.fixture.moment;
+package com.staccato.fixture.staccato;
 
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;

@@ -16,8 +16,9 @@ import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.comment.CommentUpdateRequestFixture;
+
+import com.staccato.fixture.member.MemberFixture;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +35,7 @@ import org.springframework.http.MediaType;
 public class CommentControllerTest extends ControllerTest {
 
     private static final int MAX_CONTENT_LENGTH = 500;
-    private static final long MIN_MOMENT_ID = 1L;
+    private static final long MIN_STACCATO_ID = 1L;
 
     static Stream<Arguments> invalidCommentRequestProvider() {
         return Stream.of(
@@ -43,23 +44,23 @@ public class CommentControllerTest extends ControllerTest {
                 "스타카토를 선택해주세요."
             ),
             Arguments.of(
-                new CommentRequestV2(MIN_MOMENT_ID - 1, "예시 댓글 내용"),
+                new CommentRequestV2(MIN_STACCATO_ID - 1, "예시 댓글 내용"),
                 "스타카토 식별자는 양수로 이루어져야 합니다."
             ),
             Arguments.of(
-                new CommentRequestV2(MIN_MOMENT_ID, null),
+                new CommentRequestV2(MIN_STACCATO_ID, null),
                 "댓글 내용을 입력해주세요."
             ),
             Arguments.of(
-                new CommentRequestV2(MIN_MOMENT_ID, ""),
+                new CommentRequestV2(MIN_STACCATO_ID, ""),
                 "댓글 내용을 입력해주세요."
             ),
             Arguments.of(
-                new CommentRequestV2(MIN_MOMENT_ID, " "),
+                new CommentRequestV2(MIN_STACCATO_ID, " "),
                 "댓글 내용을 입력해주세요."
             ),
             Arguments.of(
-                new CommentRequestV2(MIN_MOMENT_ID, "1".repeat(MAX_CONTENT_LENGTH + 1)),
+                new CommentRequestV2(MIN_STACCATO_ID, "1".repeat(MAX_CONTENT_LENGTH + 1)),
                 "댓글은 공백 포함 500자 이하로 입력해주세요."
             )
         );
@@ -67,7 +68,7 @@ public class CommentControllerTest extends ControllerTest {
 
     @DisplayName("댓글 생성 요청/응답에 대한 직렬화/역직렬화에 성공한다.")
     @Test
-    void createComment() throws Exception {
+    void createCommentV2() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         String commentRequest = """
@@ -90,7 +91,7 @@ public class CommentControllerTest extends ControllerTest {
     @DisplayName("올바르지 않은 형식으로 정보를 입력하면, 댓글을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidCommentRequestProvider")
-    void createCommentFail(CommentRequestV2 commentRequest, String expectedMessage)
+    void createCommentFailV2(CommentRequestV2 commentRequestV2, String expectedMessage)
         throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
@@ -100,7 +101,7 @@ public class CommentControllerTest extends ControllerTest {
         // when & then
         mockMvc.perform(post("/comments/v2")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(commentRequest))
+                .content(objectMapper.writeValueAsString(commentRequestV2))
                 .header(HttpHeaders.AUTHORIZATION, "token"))
             .andExpect(status().isBadRequest())
             .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
@@ -108,7 +109,7 @@ public class CommentControllerTest extends ControllerTest {
 
     @DisplayName("댓글을 조회했을 때 응답 직렬화에 성공한다.")
     @Test
-    void readCommentsByMomentId() throws Exception {
+    void readCommentsByStaccatoIdV2() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         CommentResponse commentResponse = new CommentResponse(1L, 1L, "member", "image.jpg", "내용");
@@ -139,7 +140,7 @@ public class CommentControllerTest extends ControllerTest {
 
     @DisplayName("스타카토 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
     @Test
-    void readCommentsByMomentIdFail() throws Exception {
+    void readCommentsByStaccatoIdFailV2() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         ExceptionResponse exceptionResponse = new ExceptionResponse(

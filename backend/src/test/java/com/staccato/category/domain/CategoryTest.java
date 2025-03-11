@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.moment.StaccatoFixture;
+import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Nickname;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CategoryTest {
     @DisplayName("카테고리 생성 시 제목에는 앞뒤 공백이 잘린다.")
     @Test
-    void trimMemoryTitle() {
+    void trimCategoryTitle() {
         // given
         String expectedTitle = "title";
 
@@ -30,7 +30,7 @@ class CategoryTest {
 
     @DisplayName("기본 카테고리는 멤버 이름으로 만들어진다.")
     @Test
-    void createBasicMemoryWithMemberNickname() {
+    void createBasicCategoryWithMemberNickname() {
         // given
         String nickname = "staccato";
 

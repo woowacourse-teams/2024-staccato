@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.moment.StaccatoFixture;
+import com.staccato.fixture.staccato.StaccatoFixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -33,7 +33,7 @@ class StaccatoImagesTest {
     @DisplayName("생성하려는 사진의 갯수가 0장 이상, 5장 이하이면 생성에 성공한다.")
     @ParameterizedTest
     @ValueSource(ints = {0, 5})
-    void addMomentImages(int size) {
+    void addStaccatoImages(int size) {
         // given
         List<String> images = new ArrayList<>();
         for (int count = 1; count <= size; count++) {
@@ -46,7 +46,7 @@ class StaccatoImagesTest {
 
     @DisplayName("생성하려는 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
     @Test
-    void failAddMomentImages() {
+    void failAddStaccatoImages() {
         // given & when & then
         assertThatThrownBy(() -> new StaccatoImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
                 .isInstanceOf(StaccatoException.class)
@@ -55,7 +55,7 @@ class StaccatoImagesTest {
 
     @DisplayName("사진을 추가할 때 총 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
     @Test
-    void failUpdateMomentImages() {
+    void failUpdateStaccatoImages() {
         // given & when & then
         assertThatThrownBy(() -> new StaccatoImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
                 .isInstanceOf(StaccatoException.class)

@@ -16,9 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.moment.StaccatoFixture;
+import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.repository.CategoryRepository;
@@ -29,9 +29,9 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class StaccatoTest {
-    @DisplayName("카테고리 날짜 안에 스타카토 날짜가 포함되면 Moment을 생성할 수 있다.")
+    @DisplayName("카테고리 날짜 안에 스타카토 날짜가 포함되면 Staccato를 생성할 수 있다.")
     @Test
-    void createMoment() {
+    void createStaccato() {
         // given
         Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
         LocalDateTime visitedAt = LocalDateTime.now().plusDays(1);
@@ -52,7 +52,7 @@ class StaccatoTest {
 
     @DisplayName("카테고리 기간이 없는 경우 스타카토를 날짜 상관없이 생성할 수 있다.")
     @Test
-    void createMomentInUndefinedDuration() {
+    void createStaccatoInUndefinedDuration() {
         // given
         Category category = CategoryFixture.create(null, null);
         LocalDateTime visitedAt = LocalDateTime.now().plusDays(1);
@@ -162,9 +162,9 @@ class StaccatoTest {
         @PersistenceContext
         private EntityManager entityManager;
 
-        @DisplayName("Moment 생성 시 Category의 updatedAt이 갱신된다.")
+        @DisplayName("Staccato 생성 시 Category의 updatedAt이 갱신된다.")
         @Test
-        void updateCategoryUpdatedDateWhenMomentCreated() {
+        void updateCategoryUpdatedDateWhenStaccatoCreated() {
             // given
             Member member = memberRepository.save(MemberFixture.create());
             Category category = categoryRepository.save(CategoryFixture.createWithMember(member));
@@ -180,9 +180,9 @@ class StaccatoTest {
             assertThat(afterCreate).isAfter(beforeCreate);
         }
 
-        @DisplayName("Moment 수정 시 Category의 updatedAt이 갱신된다.")
+        @DisplayName("Staccato 수정 시 Category의 updatedAt이 갱신된다.")
         @Test
-        void updateCategoryUpdatedDateWhenMomentUpdated() {
+        void updateCategoryUpdatedDateWhenStaccatoUpdated() {
             // given
             Member member = memberRepository.save(MemberFixture.create());
             Category category = categoryRepository.save(CategoryFixture.createWithMember(member));
@@ -199,9 +199,9 @@ class StaccatoTest {
             assertThat(afterUpdate).isAfter(beforeUpdate);
         }
 
-        @DisplayName("Moment 삭제 시 Category의 updatedAt이 갱신된다.")
+        @DisplayName("Staccato 삭제 시 Category의 updatedAt이 갱신된다.")
         @Test
-        void updateCategoryUpdatedDateWhenMomentDeleted() {
+        void updateCategoryUpdatedDateWhenStaccatoDeleted() {
             // given
             Member member = memberRepository.save(MemberFixture.create());
             Category category = categoryRepository.save(CategoryFixture.createWithMember(member));

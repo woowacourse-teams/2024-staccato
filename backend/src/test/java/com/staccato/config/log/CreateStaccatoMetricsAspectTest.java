@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
-import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -94,7 +94,7 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
                 .counter().count();
     }
 
-    private StaccatoRequest createRequest(Long memoryId, LocalDateTime localDateTime) {
+    private StaccatoRequest createRequest(Long categoryId, LocalDateTime localDateTime) {
         return new StaccatoRequest(
                 "staccatoTitle",
                 "placeName",
@@ -102,7 +102,7 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
                 BigDecimal.ONE,
                 BigDecimal.ONE,
                 localDateTime,
-                memoryId,
+            categoryId,
                 List.of());
     }
 }

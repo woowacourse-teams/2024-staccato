@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
-import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -26,7 +26,7 @@ public class CategorySortTest extends ServiceSliceTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @DisplayName("정렬명이 주어졌을 때 대소문자 구분 없이 MemorySort을 반환한다.")
+    @DisplayName("정렬명이 주어졌을 때 대소문자 구분 없이 CategorySort을 반환한다.")
     @ParameterizedTest
     @CsvSource({
             "UPDATED, UPDATED",

@@ -1,8 +1,9 @@
-package com.staccato.fixture.Member;
+package com.staccato.fixture.member;
 
 import com.staccato.member.domain.Member;
 
 public class MemberFixture {
+
     public static Member create() {
         return Member.create("staccato");
     }

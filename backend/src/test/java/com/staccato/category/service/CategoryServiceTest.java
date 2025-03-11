@@ -22,11 +22,11 @@ import com.staccato.ServiceSliceTest;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.category.CategoryRequestFixture;
-import com.staccato.fixture.moment.StaccatoFixture;
-import com.staccato.fixture.moment.StaccatoRequestFixture;
+import com.staccato.fixture.staccato.StaccatoFixture;
+import com.staccato.fixture.staccato.StaccatoRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.CategoryMember;
@@ -239,9 +239,9 @@ class CategoryServiceTest extends ServiceSliceTest {
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
             CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
-        Staccato firstStaccato = saveMoment(LocalDateTime.of(2023, 7, 1, 10, 0), categoryIdResponse.categoryId());
-        Staccato secondStaccato = saveMoment(LocalDateTime.of(2023, 7, 1, 10, 10), categoryIdResponse.categoryId());
-        Staccato lastStaccato = saveMoment(LocalDateTime.of(2023, 7, 5, 9, 0), categoryIdResponse.categoryId());
+        Staccato firstStaccato = saveStaccato(LocalDateTime.of(2023, 7, 1, 10, 0), categoryIdResponse.categoryId());
+        Staccato secondStaccato = saveStaccato(LocalDateTime.of(2023, 7, 1, 10, 10), categoryIdResponse.categoryId());
+        Staccato lastStaccato = saveStaccato(LocalDateTime.of(2023, 7, 5, 9, 0), categoryIdResponse.categoryId());
 
         // when
         CategoryDetailResponse categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
@@ -258,7 +258,7 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     @DisplayName("존재하지 않는 카테고리를 조회하려고 할 경우 예외가 발생한다.")
     @Test
-    void failReadMemory() {
+    void failReadCategory() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         long unknownId = 1;
@@ -390,12 +390,12 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     @DisplayName("카테고리를 삭제하면 속한 스타카토들도 함께 삭제된다.")
     @Test
-    void deleteCategoryWithMoment() {
+    void deleteCategoryWithStaccato() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
             CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
-        Staccato staccato = saveMoment(LocalDateTime.of(2023, 7, 2, 10, 10), categoryIdResponse.categoryId());
+        Staccato staccato = saveStaccato(LocalDateTime.of(2023, 7, 2, 10, 10), categoryIdResponse.categoryId());
         commentRepository.save(CommentFixture.create(staccato, member));
 
         // when
@@ -410,9 +410,9 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    private Staccato saveMoment(LocalDateTime visitedAt, long memoryId) {
+    private Staccato saveStaccato(LocalDateTime visitedAt, long categoryId) {
         return staccatoRepository.save(
-            StaccatoFixture.create(categoryRepository.findById(memoryId).get(), visitedAt));
+            StaccatoFixture.create(categoryRepository.findById(categoryId).get(), visitedAt));
     }
 
     @DisplayName("본인 것이 아닌 카테고리 상세를 삭제하려고 하면 예외가 발생한다.")

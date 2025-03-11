@@ -37,11 +37,11 @@ import org.springframework.http.MediaType;
 
 import com.staccato.ControllerTest;
 import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.category.CategoryNameResponsesFixture;
 import com.staccato.fixture.category.CategoryResponsesFixture;
-import com.staccato.fixture.moment.StaccatoFixture;
+import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.category.service.dto.request.CategoryRequest;
 

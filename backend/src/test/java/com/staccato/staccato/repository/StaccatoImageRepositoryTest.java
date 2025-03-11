@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
 import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.moment.StaccatoFixture;
+import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.staccato.domain.StaccatoImage;
 

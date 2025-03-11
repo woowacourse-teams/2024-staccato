@@ -25,7 +25,7 @@ public class CreateStaccatoMetricsAspect {
     }
 
     @AfterReturning(pointcut = "createStaccatoPointcut(staccatoRequest, member)", returning = "result")
-    public void afterSuccessfulCreateMoment(StaccatoRequest staccatoRequest, Member member, Object result) {
+    public void afterSuccessfulCreateStaccato(StaccatoRequest staccatoRequest, Member member, Object result) {
         LocalDate visitedAt = staccatoRequest.visitedAt().toLocalDate();
         LocalDate now = LocalDate.now();
         if (isPastDate(visitedAt, now)) {
@@ -50,7 +50,7 @@ public class CreateStaccatoMetricsAspect {
     private void recordCounter(String viewPoint) {
         Counter.builder("staccato_record_viewpoint")
                 .tag("class", StaccatoService.class.getName())
-                .tag("method", "createMoment")
+                .tag("method", "createStaccato")
                 .tag("viewPoint", viewPoint)
                 .description("counts different view points for Staccato Record")
                 .register(meterRegistry).increment();

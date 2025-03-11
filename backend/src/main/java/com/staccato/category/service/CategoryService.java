@@ -120,14 +120,14 @@ public class CategoryService {
         }
     }
 
-    private void deleteAllRelatedCategory(long memoryId) {
-        List<Long> momentIds = staccatoRepository.findAllByCategoryId(memoryId)
+    private void deleteAllRelatedCategory(long categoryId) {
+        List<Long> staccatoIds = staccatoRepository.findAllByCategoryId(categoryId)
                 .stream()
                 .map(Staccato::getId)
                 .toList();
-        staccatoImageRepository.deleteAllByStaccatoIdInBulk(momentIds);
-        commentRepository.deleteAllByStaccatoIdInBulk(momentIds);
-        staccatoRepository.deleteAllByCategoryIdInBulk(memoryId);
-        categoryMemberRepository.deleteAllByCategoryIdInBulk(memoryId);
+        staccatoImageRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
+        commentRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
+        staccatoRepository.deleteAllByCategoryIdInBulk(categoryId);
+        categoryMemberRepository.deleteAllByCategoryIdInBulk(categoryId);
     }
 }

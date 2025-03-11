@@ -7,7 +7,7 @@ import com.staccato.staccato.domain.Staccato;
 public class CommentFixture {
     public static Comment create(Staccato staccato, Member member) {
         return Comment.builder()
-                .content("Sample Moment Log")
+                .content("Sample Staccato Log")
                 .staccato(staccato)
                 .member(member)
                 .build();

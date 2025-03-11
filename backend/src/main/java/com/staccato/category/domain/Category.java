@@ -76,9 +76,9 @@ public class Category extends BaseEntity {
         this.term = updatedCategory.getTerm();
     }
 
-    private void validateDuration(Category updatedCategory, List<Staccato> staccatoes) {
-        staccatoes.stream()
-                .filter(moment -> updatedCategory.isWithoutDuration(moment.getVisitedAt()))
+    private void validateDuration(Category updatedCategory, List<Staccato> staccatos) {
+        staccatos.stream()
+                .filter(staccato -> updatedCategory.isWithoutDuration(staccato.getVisitedAt()))
                 .findAny()
                 .ifPresent(moment -> {
                     throw new StaccatoException("기간이 이미 존재하는 스타카토를 포함하지 않아요. 다시 설정해주세요.");

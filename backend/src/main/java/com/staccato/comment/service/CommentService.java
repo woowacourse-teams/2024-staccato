@@ -47,8 +47,8 @@ public class CommentService {
         return CommentResponses.from(comments);
     }
 
-    private Staccato getStaccato(long momentId) {
-        return staccatoRepository.findById(momentId)
+    private Staccato getStaccato(long staccatoId) {
+        return staccatoRepository.findById(staccatoId)
             .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 

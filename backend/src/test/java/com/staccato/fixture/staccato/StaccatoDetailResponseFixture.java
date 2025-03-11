@@ -1,4 +1,4 @@
-package com.staccato.fixture.moment;
+package com.staccato.fixture.staccato;
 
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import java.math.BigDecimal;
@@ -11,7 +11,7 @@ public class StaccatoDetailResponseFixture {
         return new StaccatoDetailResponse(
                 staccatoId,
                 1,
-                "memoryTitle",
+                "categoryTitle",
                 LocalDate.parse("2024-06-30"),
                 LocalDate.parse("2024-07-04"),
                 "staccatoTitle",

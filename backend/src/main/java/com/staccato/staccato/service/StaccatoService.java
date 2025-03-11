@@ -58,11 +58,11 @@ public class StaccatoService {
 
     @Transactional
     public void updateStaccatoById(
-            long momentId,
+            long staccatoId,
             StaccatoRequest staccatoRequest,
             Member member
     ) {
-        Staccato staccato = getStaccatoById(momentId);
+        Staccato staccato = getStaccatoById(staccatoId);
         validateCategoryOwner(staccato.getCategory(), member);
 
         Category targetCategory = getCategoryById(staccatoRequest.categoryId());
@@ -88,8 +88,8 @@ public class StaccatoService {
 
     @Transactional
     public void deleteStaccatoById(long staccatoId, Member member) {
-        staccatoRepository.findById(staccatoId).ifPresent(moment -> {
-            validateCategoryOwner(moment.getCategory(), member);
+        staccatoRepository.findById(staccatoId).ifPresent(staccato -> {
+            validateCategoryOwner(staccato.getCategory(), member);
             commentRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
             staccatoImageRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
             staccatoRepository.deleteById(staccatoId);

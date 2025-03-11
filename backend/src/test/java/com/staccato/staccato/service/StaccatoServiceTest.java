@@ -17,11 +17,11 @@ import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.moment.StaccatoFixture;
-import com.staccato.fixture.moment.StaccatoRequestFixture;
+import com.staccato.fixture.staccato.StaccatoFixture;
+import com.staccato.fixture.staccato.StaccatoRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.repository.CategoryRepository;
@@ -58,28 +58,28 @@ class StaccatoServiceTest extends ServiceSliceTest {
         StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId());
 
         // when
-        long momentId = staccatoService.createStaccato(staccatoRequest, member).staccatoId();
+        long staccatoId = staccatoService.createStaccato(staccatoRequest, member).staccatoId();
 
         // then
-        assertThat(staccatoRepository.findById(momentId)).isNotEmpty();
+        assertThat(staccatoRepository.findById(staccatoId)).isNotEmpty();
     }
 
-    @DisplayName("스타카토를 생성하면 Moment과 MomentImage들이 함께 저장되고 id를 반환한다.")
+    @DisplayName("스타카토를 생성하면 Staccato과 StaccatoImage들이 함께 저장되고 id를 반환한다.")
     @Test
-    void createMomentWithStaccatoImages() {
+    void createStaccatoWithStaccatoImages() {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
         StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId(), List.of("image.jpg"));
 
         // when
-        long momentId = staccatoService.createStaccato(staccatoRequest, member).staccatoId();
+        long staccatoId = staccatoService.createStaccato(staccatoRequest, member).staccatoId();
 
         // then
         assertAll(
-                () -> assertThat(staccatoRepository.findById(momentId)).isNotEmpty(),
+                () -> assertThat(staccatoRepository.findById(staccatoId)).isNotEmpty(),
                 () -> assertThat(staccatoImageRepository.findAll().size()).isEqualTo(1),
-                () -> assertThat(staccatoImageRepository.findAll().get(0).getStaccato().getId()).isEqualTo(momentId)
+                () -> assertThat(staccatoImageRepository.findAll().get(0).getStaccato().getId()).isEqualTo(staccatoId)
         );
     }
 
@@ -196,7 +196,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
 
     @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")
     @Test
-    void failToUpdateMomentOfOther() {
+    void failToUpdateStaccatoOfOther() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
@@ -212,7 +212,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
 
     @DisplayName("본인 것이 아닌 카테고리에 속하도록 스타카토를 수정하려고 하면 예외가 발생한다.")
     @Test
-    void failToUpdateMomentToOtherCategory() {
+    void failToUpdateStaccatoToOtherCategory() {
         // given
         Member member = saveMember();
         Member otherMember = saveMember();
@@ -229,7 +229,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
 
     @DisplayName("존재하지 않는 스타카토를 수정하면 예외가 발생한다.")
     @Test
-    void failToUpdateNotExistMoment() {
+    void failToUpdateNotExistStaccato() {
         // given
         Member member = saveMember();
         Category category = saveCategory(member);
@@ -241,7 +241,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .hasMessageContaining("요청하신 스타카토를 찾을 수 없어요.");
     }
 
-    @DisplayName("Moment을 삭제하면 이에 포함된 MomentImage와 MomentLog도 모두 삭제된다.")
+    @DisplayName("Staccato를 삭제하면 이에 포함된 StaccatoImage와 StaccatoLog도 모두 삭제된다.")
     @Test
     void deleteStaccatoById() {
         // given
