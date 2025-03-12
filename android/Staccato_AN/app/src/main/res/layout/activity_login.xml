@@ -54,7 +54,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/text_input_layout_login_user_nickname"
                 style="@style/TextInputLayoutStyle.Validation"
-                app:counterMaxLength="20"
+                app:counterMaxLength="10"
                 app:layout_constraintBottom_toTopOf="@id/btn_login_start_staccato"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +67,7 @@
                     style="@style/TextInputEditTextStyle.SingleLine"
                     android:hint="@string/login_nickname_hint"
                     android:imeOptions="actionDone"
-                    android:maxLength="20"
+                    android:maxLength="10"
                     android:text="@={viewModel.nickname}" />
 
             </com.google.android.material.textfield.TextInputLayout>
