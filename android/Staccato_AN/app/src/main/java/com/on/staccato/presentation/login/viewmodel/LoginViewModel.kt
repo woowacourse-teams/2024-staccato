@@ -28,6 +28,8 @@ class LoginViewModel
 
         val nicknameState: LiveData<NicknameState> = nickname.map { Nickname.validate(it) }
 
+        val nicknameMaxLength = Nickname.MAX_LENGTH
+
         private val _isLoginSuccess = MutableSingleLiveData(false)
         val isLoginSuccess: SingleLiveData<Boolean>
             get() = _isLoginSuccess

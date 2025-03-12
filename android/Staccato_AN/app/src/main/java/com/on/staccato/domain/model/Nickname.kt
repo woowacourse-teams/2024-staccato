@@ -3,8 +3,8 @@ package com.on.staccato.domain.model
 @JvmInline
 value class Nickname(val nickname: String) {
     companion object {
+        const val MAX_LENGTH = 10
         private const val MIN_LENGTH = 1
-        private const val MAX_LENGTH = 10
         private const val FORMAT_REGEX_PATTERN = "^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z._\\d ]+$"
         private val formatRegex = FORMAT_REGEX_PATTERN.toRegex()
 
