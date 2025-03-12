@@ -50,7 +50,7 @@ class AuthControllerTest extends ControllerTest {
     void cannotLoginIfNicknameTooShort(String nickname) throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest(nickname);
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "1자 이상 20자 이하의 닉네임으로 설정해주세요.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "1자 이상 10자 이하의 닉네임으로 설정해주세요.");
 
         // when & then
         mockMvc.perform(post("/login")
