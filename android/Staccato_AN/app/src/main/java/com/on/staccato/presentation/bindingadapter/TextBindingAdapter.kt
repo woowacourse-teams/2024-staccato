@@ -1,6 +1,9 @@
 package com.on.staccato.presentation.bindingadapter
 
+import android.content.Context
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.databinding.BindingAdapter
@@ -10,6 +13,7 @@ import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
+import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -25,12 +29,14 @@ fun TextView.setSelectedCategory(
             isClickable = false
             isFocusable = false
         }
+
         (selectedCategory == null) -> {
             text = resources.getString(R.string.staccato_creation_no_category_in_this_date)
             setTextColor(resources.getColor(R.color.gray3, null))
             isClickable = false
             isFocusable = false
         }
+
         else -> {
             text = selectedCategory.categoryTitle
             isClickable = true
@@ -178,6 +184,58 @@ fun TextView.setCategoryFilter(filterType: FilterType?) {
             setTextColor(resources.getColor(R.color.gray3, null))
         }
     }
+}
+
+@BindingAdapter(
+    value = ["visibilityByTimeline", "visibilityByFilterType", "isTimelineLoading"],
+)
+fun TextView.setTimelineEmptyText(
+    timeLine: List<TimelineUiModel>? = null,
+    filterType: FilterType?,
+    isTimelineLoading: Boolean?,
+) {
+    visibility =
+        if (timeLine.isNullOrEmpty() && isTimelineLoading == false) View.VISIBLE else View.GONE
+    updateTopMargin(if (filterType == FilterType.TERM) 100f else 10f)
+}
+
+@BindingAdapter(
+    value = ["visibilityAndTextByTimeline", "visibilityAndTextByFilterType", "isTimelineLoading"],
+)
+fun TextView.setMakeCategoryText(
+    timeLine: List<TimelineUiModel>? = null,
+    filterType: FilterType?,
+    isTimelineLoading: Boolean?,
+) {
+    visibility =
+        if (timeLine.isNullOrEmpty() && isTimelineLoading == false) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+    text =
+        context.getString(
+            if (filterType == FilterType.TERM) {
+                R.string.timeline_make_category_with_term
+            } else {
+                R.string.timeline_make_category
+            },
+        )
+}
+
+private fun View.updateTopMargin(dp: Float) {
+    val params = layoutParams as? ViewGroup.MarginLayoutParams ?: return
+    val px = dp.dpToPx(context).toInt()
+    params.topMargin = px
+    layoutParams = params
+}
+
+private fun Float.dpToPx(context: Context): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this,
+        context.resources.displayMetrics,
+    )
 }
 
 private const val DRAGGABLE_PHOTO_NUMBER = 2

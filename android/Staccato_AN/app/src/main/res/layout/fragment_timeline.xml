@@ -51,7 +51,10 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_timeline_my_timeline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_timeline_my_timeline"
-            >
+            bind:isEmptyView="@{false}"
+            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
+            bind:visibilityByFilterType="@{viewModel.filterType}"
+            bind:visibilityByTimeline="@{viewModel.timeline}">
 
             <Button
                 android:id="@+id/btn_timeline_add_category"
@@ -72,7 +75,11 @@
             android:onClick="@{() -> handler.onSortClicked()}"
             android:paddingVertical="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline">
+            app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline"
+            bind:isEmptyView="@{false}"
+            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
+            bind:visibilityByFilterType="@{viewModel.FilterType}"
+            bind:visibilityByTimeline="@{viewModel.timeline}">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -108,7 +115,11 @@
             android:orientation="horizontal"
             android:paddingVertical="10dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline">
+            app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline"
+            bind:isEmptyView="@{false}"
+            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
+            bind:visibilityByFilterType="@{viewModel.FilterType}"
+            bind:visibilityByTimeline="@{viewModel.timeline}">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -156,15 +167,17 @@
             android:id="@+id/iv_timeline_empty"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="20dp"
             android:contentDescription="@string/all_staccato_main_character"
             android:src="@drawable/staccato_character"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.25"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHeight_percent="0.18"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/linear_timeline_sort_categories"
-            bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
+            bind:isEmptyView="@{true}"
+            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
+            bind:visibilityByFilterType="@{viewModel.FilterType}"
             bind:visibilityByTimeline="@{viewModel.timeline}"
             tools:visibility="visible" />
 
@@ -176,26 +189,47 @@
             android:gravity="center"
             android:text="@string/timeline_empty"
             android:textAppearance="@style/Typography.Body2.Not.Resizable"
+            android:textColor="@color/gray4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_timeline_empty"
-            bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
+            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
+            bind:visibilityByFilterType="@{viewModel.FilterType}"
             bind:visibilityByTimeline="@{viewModel.timeline}"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_timeline_make_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/timeline_make_category"
+            android:textAppearance="@style/Typography.Body4.Not.Resizable"
+            android:textColor="@color/gray4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_timeline_empty"
+            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
+            bind:visibilityAndTextByFilterType="@{viewModel.FilterType}"
+            bind:visibilityAndTextByTimeline="@{viewModel.timeline}"
             tools:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_timeline_create_category"
             style="@style/ButtonStyle.Save.Active"
             android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:contentDescription="@string/timeline_category_creation_btn_description"
             android:onClick="@{() -> handler.onCategoryCreationClicked()}"
             android:text="@string/timeline_create_category"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_timeline_empty"
+            app:layout_constraintTop_toBottomOf="@id/tv_timeline_make_category"
             app:layout_constraintWidth_max="500dp"
-            bind:visibilityByLoading="@{viewModel.isTimelineLoading}"
+            bind:isEmptyView="@{true}"
+            bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
+            bind:visibilityByFilterType="@{viewModel.FilterType}"
             bind:visibilityByTimeline="@{viewModel.timeline}"
             tools:visibility="visible" />
 
