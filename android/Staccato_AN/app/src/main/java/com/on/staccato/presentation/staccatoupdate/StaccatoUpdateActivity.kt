@@ -440,6 +440,8 @@ class StaccatoUpdateActivity :
     }
 
     companion object {
+        private const val DEFAULT_ADDRESS = ""
+
         fun startWithResultLauncher(
             staccatoId: Long,
             categoryId: Long,
