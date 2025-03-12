@@ -1,7 +1,5 @@
 package com.on.staccato.presentation.bindingadapter
 
-import android.content.Context
-import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -14,6 +12,7 @@ import com.on.staccato.presentation.common.getFormattedLocalDateTime
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
+import com.on.staccato.presentation.util.dpToPx
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -228,14 +227,6 @@ private fun View.updateTopMargin(dp: Float) {
     val px = dp.dpToPx(context).toInt()
     params.topMargin = px
     layoutParams = params
-}
-
-private fun Float.dpToPx(context: Context): Float {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        this,
-        context.resources.displayMetrics,
-    )
 }
 
 private const val DRAGGABLE_PHOTO_NUMBER = 2

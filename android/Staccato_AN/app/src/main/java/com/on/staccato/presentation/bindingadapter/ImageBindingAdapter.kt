@@ -1,16 +1,15 @@
 package com.on.staccato.presentation.bindingadapter
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.util.TypedValue
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.on.staccato.R
 import com.on.staccato.presentation.timeline.model.FilterType
+import com.on.staccato.presentation.util.dpToPx
 
 @BindingAdapter(
     value = ["coilImageUrl", "coilPlaceHolder"],
@@ -69,14 +68,6 @@ fun ImageView.setCoilRoundedCornerImageWithUri(
         transformations(RoundedCornersTransformation(radiusDp.dpToPx(context)))
         error(placeHolder)
     }
-}
-
-private fun Float.dpToPx(context: Context): Float {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        this,
-        context.resources.displayMetrics,
-    )
 }
 
 @BindingAdapter(
