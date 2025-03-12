@@ -27,16 +27,18 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
 security:
   jwt:
     token:
-      secret-key: ${SECRET_KEY}
-  admin:
-    key: ${ADMIN_KEY}
-    token: ${ADMIN_TOKEN}
+      secret-key: ENC(PTdRqoaq21lmba/mc5hZi2wSn4ZmvQIB7RDyi8lW0tgoJkUl3SozY7UhWobbmCWghYICKb4oNz2faxci9dGGV4Wl0bo5MNbs)
 cloud:
   aws:
     access-key: accessKey
