@@ -6,7 +6,8 @@ on:
 jobs:
   ci:
     runs-on: [ self-hosted, dev ]
-
+    env:
+      JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
     defaults:
       run:
         shell: bash

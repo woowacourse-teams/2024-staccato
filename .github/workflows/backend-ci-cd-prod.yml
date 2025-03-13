@@ -8,7 +8,8 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
-
+    env:
+      JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
     defaults:
       run:
         shell: bash
