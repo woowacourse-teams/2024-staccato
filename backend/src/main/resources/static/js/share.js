@@ -88,19 +88,25 @@ fetch('/staccatos/shared?token=' + token)
 
                 commentElement.classList.add(commentAlignmentClass);
 
+                const defaultProfileImage = "https://image.staccato.kr/web/share/default-profile.png";
+                let profileImageUrl = comment.memberImageUrl;
+                if (!profileImageUrl) {
+                    profileImageUrl = defaultProfileImage;
+                }
+
                 commentElement.innerHTML = `
-                <div class="content-wrapper ${contentWrapperAlignmentClass}">
-                    <div class="text-section">
-                        <div class="nickname-wrapper ${nicknameAlignmentClass}">
-                            <p class="nickname">${comment.nickname}</p>
+                    <div class="content-wrapper ${contentWrapperAlignmentClass}">
+                        <div class="text-section">
+                            <div class="nickname-wrapper ${nicknameAlignmentClass}">
+                                <p class="nickname">${comment.nickname}</p>
+                            </div>
+                            <div class="comment-box">
+                                <p class="content">${comment.content}</p>
+                            </div>
                         </div>
-                        <div class="comment-box">
-                            <p class="content">${comment.content}</p>
-                        </div>
+                        <img class="profile-picture" src="${profileImageUrl}" alt="User Image">
                     </div>
-                    <img class="profile-picture" src="${comment.memberImageUrl}" alt="User Image">
-                </div>
-            `;
+                `;
                 commentsContainer.appendChild(commentElement);
             });
         }
