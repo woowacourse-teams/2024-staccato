@@ -89,7 +89,7 @@ public class MemoryService {
 
     private String getMomentThumbnail(Moment moment) {
         if (moment.hasImage()) {
-            return moment.getThumbnailUrl();
+            return moment.thumbnailUrl();
         }
         return null;
     }
