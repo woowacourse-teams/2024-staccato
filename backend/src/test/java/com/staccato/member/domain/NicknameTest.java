@@ -3,6 +3,9 @@ package com.staccato.member.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.staccato.exception.StaccatoException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -28,9 +31,10 @@ class NicknameTest {
     }
 
     @DisplayName("닉네임의 형식이 잘못되었을 경우 예외를 발생시킨다.")
-    @Test
-    void cannotCreateNicknameByInvalidFormat() {
-        assertThatThrownBy(() -> new Nickname("//"))
+    @ParameterizedTest
+    @ValueSource(strings = {"  ", "//", ""})
+    void cannotCreateNicknameByInvalidFormat(String name) {
+        assertThatThrownBy(() -> new Nickname(name))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("올바르지 않은 닉네임 형식입니다.");
     }
