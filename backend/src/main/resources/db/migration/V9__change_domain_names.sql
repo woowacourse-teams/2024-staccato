@@ -3,7 +3,7 @@ DROP INDEX idx_nickname ON member;
 DROP INDEX idx_code ON member;
 DROP INDEX idx_title ON memory;
 DROP INDEX idx_member_id_memory_id ON memory_member;
-DROP INDEX idx_memory_id_visited_at ON staccato;
+DROP INDEX idx_memory_id_visited_at ON moment;
 
 -- 1. 기존 외래키 제거
 ALTER TABLE comment DROP FOREIGN KEY comment_ibfk_1;
@@ -13,7 +13,7 @@ ALTER TABLE memory_member DROP FOREIGN KEY memory_member_ibfk_2;
 ALTER TABLE moment DROP FOREIGN KEY moment_ibfk_1;
 ALTER TABLE moment_image DROP FOREIGN KEY moment_image_ibfk_1;
 
--- 2. 테이블명 변경 (memory -> category, staccato -> staccato)
+-- 2. 테이블명 변경 (memory -> category, moment -> staccato)
 RENAME TABLE memory TO category;
 RENAME TABLE moment TO staccato;
 RENAME TABLE memory_member TO category_member;
