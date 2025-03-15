@@ -21,19 +21,16 @@ RENAME TABLE moment_image TO staccato_image;
 
 -- 3. 컬럼명 변경 (memory_id -> category_id, moment_id -> staccato_id)
 ALTER TABLE comment CHANGE moment_id staccato_id BIGINT NOT NULL;
-ALTER TABLE comment DROP INDEX moment_id_idx, ADD KEY staccato_id_idx (staccato_id);
+ALTER TABLE comment DROP INDEX moment_id, ADD KEY staccato_id (staccato_id);
 
 ALTER TABLE category_member CHANGE memory_id category_id BIGINT NOT NULL;
-ALTER TABLE category_member DROP INDEX memory_id_idx, ADD KEY category_id_idx (category_id);
-
-ALTER TABLE category_member CHANGE member_id member_id BIGINT NOT NULL;
-ALTER TABLE category_member DROP INDEX member_id_idx, ADD KEY member_id_idx (member_id);
+ALTER TABLE category_member DROP INDEX memory_id, ADD KEY category_id (category_id);
 
 ALTER TABLE staccato CHANGE memory_id category_id BIGINT NOT NULL;
-ALTER TABLE staccato DROP INDEX memory_id_idx, ADD KEY category_id_idx (category_id);
+ALTER TABLE staccato DROP INDEX memory_id, ADD KEY category_id (category_id);
 
 ALTER TABLE staccato_image CHANGE moment_id staccato_id BIGINT NOT NULL;
-ALTER TABLE staccato_image DROP INDEX moment_id_idx, ADD KEY staccato_id_idx (staccato_id);
+ALTER TABLE staccato_image DROP INDEX moment_id, ADD KEY staccato_id (staccato_id);
 
 -- 4. 외래키 재설정
 ALTER TABLE comment
