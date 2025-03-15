@@ -22,7 +22,7 @@ public class JasyptConfig {
 
         config.setPassword(password);
         config.setAlgorithm("PBEWithHMACSHA512AndAES_256");
-        config.setKeyObtentionIterations("1000");
+        config.setKeyObtentionIterations("210000");
         config.setPoolSize("2");
         config.setProviderName("SunJCE");
         config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
