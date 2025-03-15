@@ -23,29 +23,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.ControllerTest;
-import com.staccato.auth.service.AuthService;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.Member.MemberFixture;
 import com.staccato.fixture.moment.MomentDetailResponseFixture;
 import com.staccato.fixture.moment.MomentLocationResponsesFixture;
+import com.staccato.fixture.staccato.StaccatoSharedResponseFixture;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.service.MomentService;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
 import com.staccato.moment.service.dto.request.StaccatoRequest;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponses;
+import com.staccato.moment.service.dto.response.StaccatoShareLinkResponse;
 
 class StaccatoControllerTest extends ControllerTest {
     static Stream<Arguments> invalidStaccatoRequestProvider() {
@@ -361,5 +356,70 @@ class StaccatoControllerTest extends ControllerTest {
                         .content(objectMapper.writeValueAsString(feelingRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("스타카토 링크 생성에 성공한다.")
+    @Test
+    void createStaccatoShareLink() throws Exception {
+        // given
+        long staccatoId = 1L;
+        StaccatoShareLinkResponse response = new StaccatoShareLinkResponse(staccatoId, "https://staccato.kr/share?token=sample-token");
+        when(staccatoService.createStaccatoShareLink(any(), any())).thenReturn(response);
+        String expectedResponse = """
+                {
+                    "staccatoId": 1,
+                    "shareLink": "https://staccato.kr/share?token=sample-token"
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/staccatos/{staccatoId}/share", staccatoId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("토큰으로 스타카토의 정보를 불러온다.")
+    @Test
+    void readSharedStaccatoByToken() throws Exception {
+        // given
+        String token = "sample-token";
+        LocalDateTime expiredAt = LocalDateTime.of(2024, 7, 2, 10, 0, 0);
+        when(staccatoService.readSharedStaccatoByToken(token)).thenReturn(StaccatoSharedResponseFixture.create(expiredAt));
+        String expectedResponse = """
+                {
+                    "staccatoId": 1,
+                    "expiredAt": "2024-07-02T10:00:00",
+                    "userName": "staccato",
+                    "staccatoImageUrls": [
+                        "https://oldExample.com.jpg",
+                        "https://existExample.com.jpg"
+                    ],
+                    "staccatoTitle": "staccatoTitle",
+                    "placeName": "placeName",
+                    "address": "address",
+                    "visitedAt": "2024-07-01T10:00:00",
+                    "feeling": "nothing",
+                    "comments": [
+                        {
+                            "nickname": "staccato",
+                            "content": "댓글 샘플",
+                            "memberImageUrl": "image.jpg"
+                        },
+                        {
+                            "nickname": "staccato2",
+                            "content": "댓글 샘플2",
+                            "memberImageUrl": "image2.jpg"
+                        }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/staccatos/shared")
+                        .param("token", token)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
     }
 }

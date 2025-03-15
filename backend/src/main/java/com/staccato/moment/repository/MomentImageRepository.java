@@ -16,4 +16,6 @@ public interface MomentImageRepository extends JpaRepository<MomentImage, Long> 
     @Modifying
     @Query("DELETE FROM MomentImage mi WHERE mi.id In :ids")
     void deleteAllByIdInBulk(@Param("ids") List<Long> ids);
+
+    List<MomentImage> findAllByMomentId(@Param("momentId") long staccatoId);
 }
