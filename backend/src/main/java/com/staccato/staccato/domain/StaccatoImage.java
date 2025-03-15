@@ -35,8 +35,4 @@ public class StaccatoImage {
     protected void belongTo(Staccato staccato) {
         this.staccato = staccato;
     }
-
-    protected boolean isSame(StaccatoImage staccatoImage) {
-        return imageUrl.equals(staccatoImage.imageUrl);
-    }
 }

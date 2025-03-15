@@ -10,8 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record CategoryNameResponses(
         List<CategoryNameResponse> categories
 ) {
-    public static CategoryNameResponses from(List<Category> memories) {
-        return new CategoryNameResponses(memories.stream()
+    public static CategoryNameResponses from(List<Category> categories) {
+        return new CategoryNameResponses(categories.stream()
                 .map(CategoryNameResponse::new)
                 .toList());
     }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CategoryNameResponsesFixture {
     public static CategoryNameResponses create(Category... category) {
-        List<Category> memories = Arrays.stream(category).toList();
-        return CategoryNameResponses.from(memories);
+        List<Category> categories = Arrays.stream(category).toList();
+        return CategoryNameResponses.from(categories);
     }
 }

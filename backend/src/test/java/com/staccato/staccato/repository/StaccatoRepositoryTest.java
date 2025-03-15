@@ -121,12 +121,12 @@ class StaccatoRepositoryTest extends RepositoryTest {
             category, LocalDateTime.of(2024, 1, 10, 23, 21)));
 
         // when
-        List<Staccato> staccatoes = staccatoRepository.findAllByCategoryIdOrdered(category.getId());
+        List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(category.getId());
 
         // then
         assertAll(
-                () -> assertThat(staccatoes.size()).isEqualTo(3),
-                () -> assertThat(staccatoes).containsExactly(staccato3, staccato2, staccato1)
+                () -> assertThat(staccatos.size()).isEqualTo(3),
+                () -> assertThat(staccatos).containsExactly(staccato3, staccato2, staccato1)
         );
     }
 
@@ -145,12 +145,12 @@ class StaccatoRepositoryTest extends RepositoryTest {
             category, LocalDateTime.of(2024, 1, 10, 23, 21)));
 
         // when
-        List<Staccato> staccatoes = staccatoRepository.findAllByCategoryIdOrdered(category.getId());
+        List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(category.getId());
 
         // then
         assertAll(
-                () -> assertThat(staccatoes.size()).isEqualTo(2),
-                () -> assertThat(staccatoes).containsExactly(staccato2, staccato1)
+                () -> assertThat(staccatos.size()).isEqualTo(2),
+                () -> assertThat(staccatos).containsExactly(staccato2, staccato1)
         );
     }
 }

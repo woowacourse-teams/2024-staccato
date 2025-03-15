@@ -28,7 +28,7 @@ import lombok.NonNull;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category extends BaseEntity {
     private static final String DEFAULT_SUBTITLE = "의 추억";
-    private static final String DEFAULT_DESCRIPTION = "스타카토를 추억에 담아보세요.";
+    private static final String DEFAULT_DESCRIPTION = "스타카토를 카테고리에 담아보세요.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,8 +68,8 @@ public class Category extends BaseEntity {
         categoryMembers.add(categoryMember);
     }
 
-    public void update(Category updatedCategory, List<Staccato> staccatoes) {
-        validateDuration(updatedCategory, staccatoes);
+    public void update(Category updatedCategory, List<Staccato> staccatos) {
+        validateDuration(updatedCategory, staccatos);
         this.thumbnailUrl = updatedCategory.getThumbnailUrl();
         this.title = updatedCategory.getTitle();
         this.description = updatedCategory.getDescription();
@@ -80,7 +80,7 @@ public class Category extends BaseEntity {
         staccatos.stream()
                 .filter(staccato -> updatedCategory.isWithoutDuration(staccato.getVisitedAt()))
                 .findAny()
-                .ifPresent(moment -> {
+                .ifPresent(staccato -> {
                     throw new StaccatoException("기간이 이미 존재하는 스타카토를 포함하지 않아요. 다시 설정해주세요.");
                 });
     }

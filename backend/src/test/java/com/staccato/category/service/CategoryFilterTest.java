@@ -74,19 +74,19 @@ class CategoryFilterTest extends ServiceSliceTest {
 
     @DisplayName("기간이 있는 카테고리 목록만 조회된다.")
     @Test
-    void readAllMemoriesWithTerm() {
+    void readAllCategoriesWithTerm() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         Category category = categoryRepository.save(CategoryFixture.createWithMember("first", member));
         Category category2 = categoryRepository.save(
             CategoryFixture.createWithMember(LocalDate.now(), LocalDate.now()
                 .plusDays(3), member));
-        List<Category> memories = new ArrayList<>();
-        memories.add(category);
-        memories.add(category2);
+        List<Category> categories = new ArrayList<>();
+        categories.add(category);
+        categories.add(category2);
 
         // when
-        List<Category> result = CategoryFilter.TERM.apply(memories);
+        List<Category> result = CategoryFilter.TERM.apply(categories);
 
         // then
         assertAll(

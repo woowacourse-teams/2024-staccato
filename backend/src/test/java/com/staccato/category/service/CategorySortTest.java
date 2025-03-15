@@ -58,15 +58,15 @@ public class CategorySortTest extends ServiceSliceTest {
 
     @DisplayName("수정 시간 기준 내림차순으로 카테고리 목록을 조회된다.")
     @Test
-    void readAllMemoriesByUpdatedAtDesc() {
+    void readAllCategoriesByUpdatedAtDesc() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        List<Category> memories = new ArrayList<>();
-        memories.add(categoryRepository.save(CategoryFixture.createWithMember("first", member)));
-        memories.add(categoryRepository.save(CategoryFixture.createWithMember("second", member)));
+        List<Category> categories = new ArrayList<>();
+        categories.add(categoryRepository.save(CategoryFixture.createWithMember("first", member)));
+        categories.add(categoryRepository.save(CategoryFixture.createWithMember("second", member)));
 
         // when
-        List<Category> result = CategorySort.UPDATED.apply(memories);
+        List<Category> result = CategorySort.UPDATED.apply(categories);
 
         // then
         assertAll(
@@ -77,15 +77,15 @@ public class CategorySortTest extends ServiceSliceTest {
 
     @DisplayName("최근 생성순으로 카테고리 목록을 조회된다.")
     @Test
-    void readAllMemoriesByCreatedAtDesc() {
+    void readAllCategoriesByCreatedAtDesc() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        List<Category> memories = new ArrayList<>();
-        memories.add(categoryRepository.save(CategoryFixture.createWithMember("first", member)));
-        memories.add(categoryRepository.save(CategoryFixture.createWithMember("second", member)));
+        List<Category> categories = new ArrayList<>();
+        categories.add(categoryRepository.save(CategoryFixture.createWithMember("first", member)));
+        categories.add(categoryRepository.save(CategoryFixture.createWithMember("second", member)));
 
         // when
-        List<Category> result = CategorySort.NEWEST.apply(memories);
+        List<Category> result = CategorySort.NEWEST.apply(categories);
 
         // then
         assertAll(
@@ -96,15 +96,15 @@ public class CategorySortTest extends ServiceSliceTest {
 
     @DisplayName("오래된 순으로 카테고리 목록을 조회된다.")
     @Test
-    void readAllMemoriesByCreatedAtAsc() {
+    void readAllCategoriesByCreatedAtAsc() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        List<Category> memories = new ArrayList<>();
-        memories.add(categoryRepository.save(CategoryFixture.createWithMember("first", member)));
-        memories.add(categoryRepository.save(CategoryFixture.createWithMember("second", member)));
+        List<Category> categories = new ArrayList<>();
+        categories.add(categoryRepository.save(CategoryFixture.createWithMember("first", member)));
+        categories.add(categoryRepository.save(CategoryFixture.createWithMember("second", member)));
 
         // when
-        List<Category> result = CategorySort.OLDEST.apply(memories);
+        List<Category> result = CategorySort.OLDEST.apply(categories);
 
         // then
         assertAll(

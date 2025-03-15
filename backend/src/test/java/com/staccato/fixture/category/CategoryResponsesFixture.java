@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CategoryResponsesFixture {
-    public static CategoryResponses create(Category... memories) {
-        return new CategoryResponses(convertToCategoryResponses(Arrays.stream(memories).toList()));
+    public static CategoryResponses create(Category... categories) {
+        return new CategoryResponses(convertToCategoryResponses(Arrays.stream(categories).toList()));
     }
 
     private static List<CategoryResponse> convertToCategoryResponses(List<Category> category) {

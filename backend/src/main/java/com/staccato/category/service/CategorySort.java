@@ -30,8 +30,8 @@ public enum CategorySort {
     private final String name;
     private final Function<List<Category>, List<Category>> operation;
 
-    public List<Category> apply(List<Category> memories) {
-        return operation.apply(memories);
+    public List<Category> apply(List<Category> categories) {
+        return operation.apply(categories);
     }
 
     public static CategorySort findByName(String name) {

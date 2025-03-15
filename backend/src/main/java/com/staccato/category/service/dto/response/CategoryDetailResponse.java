@@ -32,7 +32,7 @@ public record CategoryDetailResponse(
     List<StaccatoResponse> staccatos
 ) {
 
-  public CategoryDetailResponse(Category category, List<Staccato> staccatoes) {
+  public CategoryDetailResponse(Category category, List<Staccato> staccatos) {
     this(
         category.getId(),
         category.getThumbnailUrl(),
@@ -41,7 +41,7 @@ public record CategoryDetailResponse(
         category.getTerm().getStartAt(),
         category.getTerm().getEndAt(),
         toMemberResponses(category),
-        toStaccatoResponses(staccatoes)
+        toStaccatoResponses(staccatos)
     );
   }
 
@@ -49,7 +49,7 @@ public record CategoryDetailResponse(
     return category.getMates().stream().map(MemberResponse::new).toList();
   }
 
-  private static List<StaccatoResponse> toStaccatoResponses(List<Staccato> staccatoes) {
-    return staccatoes.stream().map(StaccatoResponse::new).toList();
+  private static List<StaccatoResponse> toStaccatoResponses(List<Staccato> staccatos) {
+    return staccatos.stream().map(StaccatoResponse::new).toList();
   }
 }

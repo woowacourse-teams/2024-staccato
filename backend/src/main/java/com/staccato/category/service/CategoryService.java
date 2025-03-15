@@ -50,36 +50,36 @@ public class CategoryService {
 
     public CategoryResponses readAllCategories(Member member, CategoryReadRequest categoryReadRequest) {
         List<Category> rawMemories = getCategories(categoryMemberRepository.findAllByMemberId(member.getId()));
-        List<Category> memories = filterAndSort(rawMemories, categoryReadRequest.getFilters(), categoryReadRequest.getSort());
+        List<Category> categories = filterAndSort(rawMemories, categoryReadRequest.getFilters(), categoryReadRequest.getSort());
 
-        return CategoryResponses.from(memories);
+        return CategoryResponses.from(categories);
     }
 
     public CategoryNameResponses readAllCategoriesByDate(Member member, LocalDate currentDate) {
         List<Category> rawMemories = getCategories(
             categoryMemberRepository.findAllByMemberIdAndDate(member.getId(), currentDate));
-        List<Category> memories = filterAndSort(rawMemories, DEFAULT_CATEGORY_FILTER,
+        List<Category> categories = filterAndSort(rawMemories, DEFAULT_CATEGORY_FILTER,
             DEFAULT_CATEGORY_SORT);
 
-        return CategoryNameResponses.from(memories);
+        return CategoryNameResponses.from(categories);
     }
 
     private List<Category> getCategories(List<CategoryMember> categoryMembers) {
         return categoryMembers.stream().map(CategoryMember::getCategory).collect(Collectors.toList());
     }
 
-    private List<Category> filterAndSort(List<Category> memories, List<CategoryFilter> filters, CategorySort sort) {
+    private List<Category> filterAndSort(List<Category> categories, List<CategoryFilter> filters, CategorySort sort) {
         for (CategoryFilter filter : filters) {
-            memories = filter.apply(memories);
+            categories = filter.apply(categories);
         }
-        return sort.apply(memories);
+        return sort.apply(categories);
     }
 
     public CategoryDetailResponse readCategoryById(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
         validateOwner(category, member);
-        List<Staccato> staccatoes = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
-        return new CategoryDetailResponse(category, staccatoes);
+        List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
+        return new CategoryDetailResponse(category, staccatos);
     }
 
     @Transactional
@@ -90,8 +90,8 @@ public class CategoryService {
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
             validateCategoryTitle(updatedCategory, member);
         }
-        List<Staccato> staccatoes = staccatoRepository.findAllByCategoryId(categoryId);
-        originCategory.update(updatedCategory, staccatoes);
+        List<Staccato> staccatos = staccatoRepository.findAllByCategoryId(categoryId);
+        originCategory.update(updatedCategory, staccatos);
     }
 
     private Category getCategoryById(long categoryId) {

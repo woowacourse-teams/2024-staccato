@@ -21,8 +21,8 @@ public enum CategoryFilter {
     private final String name;
     private final Function<List<Category>, List<Category>> operation;
 
-    public List<Category> apply(List<Category> memories) {
-        return operation.apply(memories);
+    public List<Category> apply(List<Category> categories) {
+        return operation.apply(categories);
     }
 
     public static List<CategoryFilter> findAllByName(List<String> filters) {
