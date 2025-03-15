@@ -26,7 +26,7 @@ public class JasyptConfig {
         config.setPoolSize("2");
         config.setProviderName("SunJCE");
         config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
-        config.setIvGeneratorClassName("org.jasypt.iv.NoIvGenerator");
+        config.setIvGeneratorClassName("org.jasypt.iv.RandomIvGenerator");
         config.setStringOutputType("base64");
         encryptor.setConfig(config);
         return encryptor;
