@@ -37,11 +37,11 @@ public class ReadAllCategoryMetricsAspectTest extends ServiceSliceTest {
         // then
         double filterCount = meterRegistry.counter("category_filter_count",
                 "class", CategoryService.class.getName(),
-                "method", "readAllMemories",
+                "method", "readAllCategories",
                 "filter", "term").count();
         double sortCount = meterRegistry.counter("category_sort_count",
                 "class", CategoryService.class.getName(),
-                "method", "readAllMemories",
+                "method", "readAllCategories",
                 "sort", "OLDEST").count();
         assertAll(
                 () -> assertThat(filterCount).isEqualTo(1.0),

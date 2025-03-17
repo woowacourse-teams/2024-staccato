@@ -35,7 +35,7 @@ public class ReadAllCategoryMetricsAspect {
     private void countFilter(CategoryFilter filter) {
         Counter.builder("category_filter_count")
                 .tag("class", CategoryService.class.getName())
-                .tag("method", "readAllMemories")
+                .tag("method", "readAllCategories")
                 .tag("filter", filter.getName())
                 .description("counts for filter usage of categories")
                 .register(meterRegistry).increment();
@@ -44,7 +44,7 @@ public class ReadAllCategoryMetricsAspect {
     private void countSort(CategorySort sort) {
         Counter.builder("category_sort_count")
                 .tag("class", CategoryService.class.getName())
-                .tag("method", "readAllMemories")
+                .tag("method", "readAllCategories")
                 .tag("sort", sort.getName())
                 .description("counts for sort usage of categories")
                 .register(meterRegistry).increment();

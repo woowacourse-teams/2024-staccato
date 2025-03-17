@@ -49,16 +49,16 @@ public class CategoryService {
     }
 
     public CategoryResponses readAllCategories(Member member, CategoryReadRequest categoryReadRequest) {
-        List<Category> rawMemories = getCategories(categoryMemberRepository.findAllByMemberId(member.getId()));
-        List<Category> categories = filterAndSort(rawMemories, categoryReadRequest.getFilters(), categoryReadRequest.getSort());
+        List<Category> rawCategories = getCategories(categoryMemberRepository.findAllByMemberId(member.getId()));
+        List<Category> categories = filterAndSort(rawCategories, categoryReadRequest.getFilters(), categoryReadRequest.getSort());
 
         return CategoryResponses.from(categories);
     }
 
     public CategoryNameResponses readAllCategoriesByDate(Member member, LocalDate currentDate) {
-        List<Category> rawMemories = getCategories(
+        List<Category> rawCategories = getCategories(
             categoryMemberRepository.findAllByMemberIdAndDate(member.getId(), currentDate));
-        List<Category> categories = filterAndSort(rawMemories, DEFAULT_CATEGORY_FILTER,
+        List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER,
             DEFAULT_CATEGORY_SORT);
 
         return CategoryNameResponses.from(categories);
