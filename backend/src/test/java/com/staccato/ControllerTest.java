@@ -9,8 +9,8 @@ import com.staccato.auth.service.AuthService;
 import com.staccato.comment.service.CommentService;
 import com.staccato.image.service.ImageService;
 import com.staccato.member.service.MemberService;
-import com.staccato.memory.service.MemoryService;
-import com.staccato.moment.service.MomentService;
+import com.staccato.category.service.CategoryService;
+import com.staccato.staccato.service.StaccatoService;
 
 @WebMvcTest
 public abstract class ControllerTest {
@@ -21,9 +21,9 @@ public abstract class ControllerTest {
     @MockBean
     protected MemberService memberService;
     @MockBean
-    protected MemoryService memoryService;
+    protected CategoryService categoryService;
     @MockBean
-    protected MomentService momentService;
+    protected StaccatoService staccatoService;
     @MockBean
     protected ImageService imageService;
     @MockBean
