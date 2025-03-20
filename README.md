@@ -1,8 +1,11 @@
+<img src="https://github.com/user-attachments/assets/ec7c126e-5824-4722-ac9b-f17c868cb142">
+
+🔗 [Google PlayStore 구경하러 가기](https://play.google.com/store/apps/details?id=com.on.staccato)
+
+<br>
+<br>
+
 # 🧑‍🤝‍🧑 We are team Staccato!
-
-🤩 [플레이스토어](https://play.google.com/store/apps/details?id=com.on.staccato)로 구경가기
-
-
 ## 📱 Android
 |빙티(이소민)|호두(원준영)|해나(공혜연)|
 |:---:|:---:|:---:|
@@ -23,12 +26,11 @@
 
 <br>
 
-# '지도 기반 일상 기록 서비스' 스타카토를 소개합니다!
-<img src="https://github.com/user-attachments/assets/3565643f-6120-43b4-916e-e8ba93abc348" width="400">
+# 🤩 지도 기반 일상 기록 서비스, 스타카토를 소개합니다!
 
 `스타카토`는 하나의 `기록`을 의미하며 ***지도 위에*** ***빠르고*** ***생생하게*** 남길 수 있어요! 
 
-### 지도 위에
+### 지도에서
 스타카토를 남기면 지도 위에서 마커로 확인할 수 있어요.  
 나의 발자취를 한 눈에 확인해보세요!
 
@@ -38,3 +40,5 @@
 
 ### 생생하게
 사진, 감정 캐릭터, 댓글을 더해서 그 순간을 생생하게 스타카토로 남겨보세요! 
+
+<img src="https://github.com/user-attachments/assets/3565643f-6120-43b4-916e-e8ba93abc348">
