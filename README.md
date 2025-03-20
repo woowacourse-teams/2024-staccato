@@ -1,11 +1,20 @@
 <img src="https://github.com/user-attachments/assets/ec7c126e-5824-4722-ac9b-f17c868cb142">
 
-🔗 [Google PlayStore 구경하러 가기](https://play.google.com/store/apps/details?id=com.on.staccato)
-
 <br>
+
 <br>
 
 # 🧑‍🤝‍🧑 We are team Staccato!
+
+[![Google Play Store](https://img.shields.io/badge/Google_Play-0F9D58?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=com.on.staccato)
+
+<!-- [![App Store](https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white)](#) -->
+
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat-square&logo=openjdk&logoColor=white) ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=flat-square&logo=spring&logoColor=white) ![Android](https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white) ![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=flat-square&logo=kotlin&logoColor=white) ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=flat-square&logo=mysql&logoColor=white) ![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat-square&logo=slack&logoColor=fff) ![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?style=flat-square&logo=github&logoColor=white)
+
+🔗 [Android Tech Stack](https://wonjunyoung.notion.site/SDK-Version-9627eb4cbe8e4d2489afc20bd21cb428?pvs=4)
+
+
 ## 📱 Android
 |빙티(이소민)|호두(원준영)|해나(공혜연)|
 |:---:|:---:|:---:|
@@ -13,7 +22,6 @@
 |s6m1n|Junyoung-WON|hxeyexn|
 |[GitHub](https://github.com/s6m1n)|[GitHub](https://github.com/Junyoung-WON)|[GitHub](https://github.com/hxeyexn)|
 |[PR 모아보기](https://github.com/woowacourse-teams/2024-staccato/pulls?q=is%3Apr+assignee%3As6m1n)|[PR 모아보기](https://github.com/woowacourse-teams/2024-staccato/pulls?q=is%3Apr+assignee%3AJunyoung-WON+)|[PR 모아보기](https://github.com/woowacourse-teams/2024-staccato/pulls?q=is%3Apr+assignee%3Ahxeyexn)|
-
 
 ## 🌐 Backend
 |리니(이예린)|카고(정민호)|폭포(이성주)|호티(윤주호)|
