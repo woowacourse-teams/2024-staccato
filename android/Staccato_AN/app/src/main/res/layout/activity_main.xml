@@ -13,6 +13,10 @@
         <variable
             name="handler"
             type="com.on.staccato.presentation.main.MainHandler" />
+        
+        <variable
+            name="isPermissionCanceled"
+            type="Boolean" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -28,7 +32,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragment_container_view_map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:name="com.on.staccato.presentation.map.MapsFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -45,7 +49,7 @@
                 android:clickable="true"
                 android:contentDescription="@string/main_staccato_creation_btn_description"
                 android:focusable="true"
-                android:onClick="@{() -> handler.onStaccatoCreationClicked()}"
+                android:onClick="@{() -> handler.onStaccatoCreationClicked(isPermissionCanceled)}"
                 android:paddingTop="10dp"
                 android:src="@drawable/icon_floating_button"
                 app:layout_constraintBottom_toBottomOf="parent"
