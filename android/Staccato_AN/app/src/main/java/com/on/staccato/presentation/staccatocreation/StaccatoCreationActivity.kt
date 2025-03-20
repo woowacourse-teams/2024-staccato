@@ -453,6 +453,7 @@ class StaccatoCreationActivity :
         const val CATEGORY_TITLE_KEY = "categoryTitle"
         const val DEFAULT_CATEGORY_ID = 0L
         private const val DEFAULT_CATEGORY_TITLE = ""
+        private const val DEFAULT_ADDRESS = ""
 
         fun startWithResultLauncher(
             context: Context,

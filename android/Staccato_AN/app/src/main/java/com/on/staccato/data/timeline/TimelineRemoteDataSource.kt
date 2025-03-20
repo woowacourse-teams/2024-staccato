@@ -9,13 +9,8 @@ class TimelineRemoteDataSource
     constructor(
         private val timelineApiService: TimeLineApiService,
     ) : TimelineDataSource {
-        override suspend fun getAllTimeline(): ApiResult<TimelineResponse> {
-            return fetchTimeline()
-        }
-
-        override suspend fun getTimeline(year: Int): ApiResult<TimelineResponse> {
-            return fetchTimeline(year)
-        }
-
-        private suspend fun fetchTimeline(year: Int? = null): ApiResult<TimelineResponse> = timelineApiService.getTimeline(year)
+        override suspend fun getTimeline(
+            sort: String?,
+            term: String?,
+        ): ApiResult<TimelineResponse> = timelineApiService.getTimeline(sort, term)
     }

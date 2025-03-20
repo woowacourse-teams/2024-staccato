@@ -6,4 +6,6 @@ interface TimelineHandler {
     fun onCategoryCreationClicked()
 
     fun onSortClicked()
+
+    fun onFilterClicked()
 }

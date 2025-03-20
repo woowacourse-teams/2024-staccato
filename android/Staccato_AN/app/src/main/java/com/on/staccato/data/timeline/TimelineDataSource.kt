@@ -4,7 +4,8 @@ import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.timeline.TimelineResponse
 
 interface TimelineDataSource {
-    suspend fun getAllTimeline(): ApiResult<TimelineResponse>
-
-    suspend fun getTimeline(year: Int): ApiResult<TimelineResponse>
+    suspend fun getTimeline(
+        sort: String? = null,
+        term: String? = null,
+    ): ApiResult<TimelineResponse>
 }

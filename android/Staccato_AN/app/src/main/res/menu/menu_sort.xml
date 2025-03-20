@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/creation_order"
-        android:title="@string/sort_creation_order" />
+        android:id="@+id/updated_order"
+        android:title="@string/sort_updated_order" />
     <item
-        android:id="@+id/latest_order"
-        android:title="@string/sort_latest_order" />
+        android:id="@+id/newest_order"
+        android:title="@string/sort_newest_order" />
     <item
         android:id="@+id/oldest_order"
         android:title="@string/sort_oldest_order" />
-    <item
-        android:id="@+id/with_period_order"
-        android:title="@string/sort_categories_with_period_order" />
-    <item
-        android:id="@+id/without_period_order"
-        android:title="@string/sort_categories_without_period_order" />
 </menu>
