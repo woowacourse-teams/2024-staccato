@@ -4,10 +4,14 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.databinding.BindingAdapter
+import com.google.android.material.textfield.TextInputLayout
 import com.on.staccato.R
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
+import com.on.staccato.domain.model.NicknameState
+import com.on.staccato.presentation.common.InputState
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
+import com.on.staccato.presentation.mapper.handleNicknameInputState
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -23,12 +27,14 @@ fun TextView.setSelectedCategory(
             isClickable = false
             isFocusable = false
         }
+
         (selectedCategory == null) -> {
             text = resources.getString(R.string.staccato_creation_no_category_in_this_date)
             setTextColor(resources.getColor(R.color.gray3, null))
             isClickable = false
             isFocusable = false
         }
+
         else -> {
             text = selectedCategory.categoryTitle
             isClickable = true
@@ -152,6 +158,41 @@ fun TextView.setPhotoDragHintVisibility(currentPhotoNumbers: Int) {
 @BindingAdapter("selectedAddress")
 fun TextView.setSelectedAddress(address: String?) {
     text = address ?: context.getString(R.string.staccato_creation_empty_address)
+}
+
+@BindingAdapter("nicknameState")
+fun TextInputLayout.setNicknameInputState(nicknameState: NicknameState) {
+    val inputState = nicknameState.handleNicknameInputState(context)
+    changeLayoutByInputState(inputState)
+}
+
+fun TextInputLayout.changeLayoutByInputState(inputState: InputState) {
+    val strokeWidth = 1F.dpToPx(context).toInt()
+    when (inputState) {
+        is InputState.Empty -> {
+            boxStrokeColor = resources.getColor(R.color.gray1, context.theme)
+            boxStrokeWidth = 0
+            boxStrokeWidthFocused = 0
+            error = null
+            helperText = null
+        }
+
+        is InputState.Valid -> {
+            boxStrokeColor = resources.getColor(R.color.staccato_blue, context.theme)
+            boxStrokeWidth = 0
+            boxStrokeWidthFocused = strokeWidth
+            error = null
+            helperText = inputState.message
+        }
+
+        is InputState.Invalid -> {
+            boxStrokeColor = resources.getColor(R.color.sub1, context.theme)
+            boxStrokeWidth = strokeWidth
+            boxStrokeWidthFocused = strokeWidth
+            error = inputState.errorMessage
+            helperText = null
+        }
+    }
 }
 
 private const val DRAGGABLE_PHOTO_NUMBER = 2

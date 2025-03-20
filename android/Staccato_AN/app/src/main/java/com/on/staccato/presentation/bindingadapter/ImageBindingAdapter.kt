@@ -1,9 +1,7 @@
 package com.on.staccato.presentation.bindingadapter
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.util.TypedValue
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import coil.load
@@ -71,14 +69,6 @@ fun ImageView.setCoilRoundedCornerImageWithUri(
         transformations(RoundedCornersTransformation(radiusDp.dpToPx(context)))
         error(placeHolder)
     }
-}
-
-private fun Float.dpToPx(context: Context): Float {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        this,
-        context.resources.displayMetrics,
-    )
 }
 
 @BindingAdapter(
