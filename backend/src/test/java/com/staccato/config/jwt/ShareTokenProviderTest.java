@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import io.jsonwebtoken.Claims;
 
 public class ShareTokenProviderTest {
-    private final static String TEST_SECRET_KEY = "test-secret-key";
-    private final static long STACCATO_ID = 1L;
-    private final static String PROPERTY_NAME = "staccatoId";
+    private static final String TEST_SECRET_KEY = "test-secret-key";
+    private static final long STACCATO_ID = 1L;
+    private static final String PROPERTY_NAME = "staccatoId";
 
     private ShareTokenProvider tokenProvider;
 

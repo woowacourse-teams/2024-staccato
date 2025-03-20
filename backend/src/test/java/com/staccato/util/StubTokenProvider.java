@@ -9,7 +9,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class StubTokenProvider extends AbstractTokenProvider {
-    private final static String TEST_PROPERTY_NAME = "data";
+    private static final String TEST_PROPERTY_NAME = "data";
 
     public StubTokenProvider(TokenProperties tokenProperties) {
         super(tokenProperties);

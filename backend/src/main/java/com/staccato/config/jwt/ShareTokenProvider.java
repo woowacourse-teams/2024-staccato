@@ -15,7 +15,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class ShareTokenProvider extends AbstractTokenProvider {
-    private final static String PROPERTY_NAME = "staccatoId";
+    private static final String PROPERTY_NAME = "staccatoId";
     private static final long EXPIRATION_TIME_24H = 1000 * 60 * 60 * 24;
 
     public ShareTokenProvider(TokenProperties tokenProperties) {

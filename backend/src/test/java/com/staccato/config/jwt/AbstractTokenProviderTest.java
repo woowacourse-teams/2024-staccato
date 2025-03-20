@@ -13,10 +13,10 @@ import com.staccato.util.StubTokenProvider;
 import io.jsonwebtoken.Claims;
 
 public class AbstractTokenProviderTest {
-    private final static String TEST_SECRET_KEY = "test-secret-key";
-    private final static String TEST_PAYLOAD = "test-payload";
-    private final static String INVALID_TOKEN = "invalid.token.value";
-    private final static String TEST_PROPERTY_NAME = "data";
+    private static final String TEST_SECRET_KEY = "test-secret-key";
+    private static final String TEST_PAYLOAD = "test-payload";
+    private static final String INVALID_TOKEN = "invalid.token.value";
+    private static final String TEST_PROPERTY_NAME = "data";
 
     private StubTokenProvider tokenProvider;
 
