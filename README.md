@@ -12,8 +12,12 @@
 
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat-square&logo=openjdk&logoColor=white) ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=flat-square&logo=spring&logoColor=white) ![Android](https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white) ![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=flat-square&logo=kotlin&logoColor=white) ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=flat-square&logo=mysql&logoColor=white) ![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat-square&logo=slack&logoColor=fff) ![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?style=flat-square&logo=github&logoColor=white)
 
-🔗 [Android Tech Stack](https://wonjunyoung.notion.site/SDK-Version-9627eb4cbe8e4d2489afc20bd21cb428?pvs=4)
+<br>
 
+🔗 [Android Tech Stack](https://wonjunyoung.notion.site/9627eb4cbe8e4d2489afc20bd21cb428)  
+🔗 [Backend Tech Stack](https://wonjunyoung.notion.site/4c63b9a066834561936213555b1feee8)  
+
+<br>
 
 ## 📱 Android
 |빙티(이소민)|호두(원준영)|해나(공혜연)|
