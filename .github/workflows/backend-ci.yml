@@ -9,9 +9,9 @@ permissions: write-all
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    env:
+      JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
     defaults:
       run:
         shell: bash
