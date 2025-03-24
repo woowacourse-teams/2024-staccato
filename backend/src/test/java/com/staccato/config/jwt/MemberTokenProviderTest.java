@@ -14,7 +14,7 @@ import com.staccato.member.repository.MemberRepository;
 
 import io.jsonwebtoken.Claims;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.NONE)
 public class MemberTokenProviderTest {
 
     @Autowired
