@@ -10,9 +10,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class StubTokenProvider extends AbstractTokenProvider {
     private static final String TEST_PROPERTY_NAME = "data";
+    private static final String TEST_SECRET_KEY = "test-secret-key";
 
-    public StubTokenProvider(TokenProperties tokenProperties) {
+    private StubTokenProvider(TokenProperties tokenProperties) {
         super(tokenProperties);
+    }
+
+    public static StubTokenProvider withTestKey() {
+        return new StubTokenProvider(new TokenProperties(TEST_SECRET_KEY));
     }
 
     @Override

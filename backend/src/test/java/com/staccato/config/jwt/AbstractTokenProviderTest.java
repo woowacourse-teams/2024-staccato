@@ -13,7 +13,6 @@ import com.staccato.util.StubTokenProvider;
 import io.jsonwebtoken.Claims;
 
 public class AbstractTokenProviderTest {
-    private static final String TEST_SECRET_KEY = "test-secret-key";
     private static final String TEST_PAYLOAD = "test-payload";
     private static final String INVALID_TOKEN = "invalid.token.value";
     private static final String TEST_PROPERTY_NAME = "data";
@@ -22,8 +21,7 @@ public class AbstractTokenProviderTest {
 
     @BeforeEach
     public void setUp() {
-        TokenProperties tokenProperties = new TokenProperties(TEST_SECRET_KEY);
-        tokenProvider = new StubTokenProvider(tokenProperties);
+        tokenProvider = StubTokenProvider.withTestKey();
     }
 
     @DisplayName("토큰을 생성할 수 있다.")

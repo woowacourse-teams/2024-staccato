@@ -447,8 +447,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     @Test
     void failReadSharedStaccatoWhenTokenExpired() {
         // given
-        TokenProperties tokenProperties = new TokenProperties("test-secret-key");
-        StubTokenProvider stubTokenProvider = new StubTokenProvider(tokenProperties);
+        StubTokenProvider stubTokenProvider = StubTokenProvider.withTestKey();
         String expiredToken = stubTokenProvider.createExpired("test-payload");
 
         // when & then

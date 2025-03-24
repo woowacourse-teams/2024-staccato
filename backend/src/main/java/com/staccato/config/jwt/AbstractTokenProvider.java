@@ -18,7 +18,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 @EnableConfigurationProperties(TokenProperties.class)
 public abstract class AbstractTokenProvider {
-    protected final TokenProperties tokenProperties;
+    protected TokenProperties tokenProperties;
     protected final Key secretKey;
 
     public AbstractTokenProvider(TokenProperties tokenProperties) {
