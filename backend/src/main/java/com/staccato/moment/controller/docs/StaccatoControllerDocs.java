@@ -155,6 +155,5 @@ public interface StaccatoControllerDocs {
                 """, responseCode = "401")
     })
     ResponseEntity<StaccatoSharedResponse> readSharedStaccatoByToken(
-            @Parameter(description = "공유 토큰", example = "sample-token")
-            @RequestParam(name = "token") String token);
+            @Parameter(description = "공유 토큰", example = "sample-token") @PathVariable String token);
 }

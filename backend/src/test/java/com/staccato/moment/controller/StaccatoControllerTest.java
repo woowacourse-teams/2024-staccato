@@ -416,8 +416,7 @@ class StaccatoControllerTest extends ControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(get("/staccatos/shared")
-                        .param("token", token)
+        mockMvc.perform(get("/staccatos/shared/{token}", token)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
