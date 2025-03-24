@@ -26,7 +26,7 @@ public class AbstractTokenProviderTest {
 
     @DisplayName("토큰을 생성할 수 있다.")
     @Test
-    void testCreate() {
+    void create() {
         // given & when
         String token = tokenProvider.create(TEST_PAYLOAD);
 
@@ -36,7 +36,7 @@ public class AbstractTokenProviderTest {
 
     @DisplayName("토큰의 Payload를 추출할 수 있다.")
     @Test
-    void testGetPayload() {
+    void getPayload() {
         // given
         String token = tokenProvider.create(TEST_PAYLOAD);
 

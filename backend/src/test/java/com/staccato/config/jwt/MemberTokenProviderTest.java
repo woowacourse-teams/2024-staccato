@@ -32,7 +32,7 @@ public class MemberTokenProviderTest {
 
     @DisplayName("멤버 토큰은 멤버 아이디를 갖고 있다.")
     @Test
-    void testShareTokenContainsStaccatoId() {
+    void shareTokenContainsStaccatoId() {
         // given
         String token = tokenProvider.create(member);
 
@@ -45,7 +45,7 @@ public class MemberTokenProviderTest {
 
     @DisplayName("멤버 토큰에서 멤버 아이디를 추출할 수 있다.")
     @Test
-    void testExtractStaccatoId() {
+    void extractStaccatoId() {
         // given
         String token = tokenProvider.create(member);
 
