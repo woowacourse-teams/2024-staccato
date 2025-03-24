@@ -75,11 +75,7 @@ public class StaccatoService {
     }
 
     @Transactional
-    public void updateMomentById(
-            long momentId,
-            MomentRequest momentRequest,
-            Member member
-    ) {
+    public void updateMomentById(long momentId, MomentRequest momentRequest, Member member) {
         Moment moment = getMomentById(momentId);
         validateMemoryOwner(moment.getMemory(), member);
 
