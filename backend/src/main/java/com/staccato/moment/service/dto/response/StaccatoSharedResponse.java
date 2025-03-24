@@ -3,8 +3,11 @@ package com.staccato.moment.service.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.staccato.comment.domain.Comment;
 import com.staccato.member.domain.Member;
 import com.staccato.moment.domain.Moment;
+import com.staccato.moment.domain.MomentImage;
+import com.staccato.moment.domain.MomentImages;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,18 +39,30 @@ public record StaccatoSharedResponse(
         String feeling,
         List<CommentShareResponse> comments
 ) {
-    public StaccatoSharedResponse(LocalDateTime expiredAt, Moment moment, Member member, List<String> momentImageUrls, List<CommentShareResponse> commentShareResponses) {
+    public StaccatoSharedResponse(LocalDateTime expiredAt, Moment moment, Member member, List<MomentImage> momentImages, List<Comment> comments) {
         this(
                 moment.getId(),
                 expiredAt,
                 member.getNickname().getNickname(),
-                momentImageUrls,
+                toMomentImageUrls(momentImages),
                 moment.getTitle(),
                 moment.getSpot().getPlaceName(),
                 moment.getSpot().getAddress(),
                 moment.getVisitedAt(),
                 moment.getFeeling().getValue(),
-                commentShareResponses
+                toCommentShareResponses(comments)
         );
+    }
+
+    private static List<String> toMomentImageUrls(List<MomentImage> momentImages) {
+        return momentImages.stream()
+                .map(MomentImage::getImageUrl)
+                .toList();
+    }
+
+    private static List<CommentShareResponse> toCommentShareResponses(List<Comment> comments) {
+        return comments.stream()
+                .map(CommentShareResponse::new)
+                .toList();
     }
 }

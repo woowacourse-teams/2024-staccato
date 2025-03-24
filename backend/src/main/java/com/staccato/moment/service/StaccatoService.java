@@ -139,18 +139,11 @@ public class StaccatoService {
         LocalDateTime expiredAt = shareTokenProvider.extractExpiredAt(token);
 
         Moment moment = getMomentById(staccatoId);
-        long memoryId = moment.getMemory().getId();
-        Member member = getMember(memoryMemberRepository.findAllByMemoryId(memoryId));
+        Member member = getMember(memoryMemberRepository.findAllByMemoryId(moment.getMemory().getId()));
         List<MomentImage> momentImages = momentImageRepository.findAllByMomentId(staccatoId);
-        List<String> momentImageUrls = momentImages.stream()
-                .map(MomentImage::getImageUrl)
-                .toList();
         List<Comment> comments = commentRepository.findAllByMomentId(staccatoId);
-        List<CommentShareResponse> commentShareResponses = comments.stream()
-                .map(CommentShareResponse::new)
-                .toList();
 
-        return new StaccatoSharedResponse(expiredAt, moment, member, momentImageUrls, commentShareResponses);
+        return new StaccatoSharedResponse(expiredAt, moment, member, momentImages, comments);
     }
 
     private Moment getMomentById(long momentId) {
