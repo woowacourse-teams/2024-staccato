@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,14 +18,13 @@ public class ShareTokenProviderTest {
     private static final long STACCATO_ID = 1L;
     private static final long MEMBER_ID = 1L;
 
-    private ShareTokenProvider tokenProvider;
-    private String shareToken;
+    private static ShareTokenProvider tokenProvider;
+    private static String shareToken;
 
-    @BeforeEach
-    public void setUp() {
+    @BeforeAll
+    static void init() {
         TokenProperties tokenProperties = new TokenProperties(TEST_SECRET_KEY);
         tokenProvider = new ShareTokenProvider(tokenProperties);
-
         shareToken = tokenProvider.create(new ShareTokenPayload(STACCATO_ID, MEMBER_ID));
     }
 
