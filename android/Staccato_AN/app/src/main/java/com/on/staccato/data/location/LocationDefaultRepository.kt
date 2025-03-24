@@ -8,7 +8,7 @@ import javax.inject.Inject
 class LocationDefaultRepository
     @Inject
     constructor(
-        private val locationLocalDataSource: LocationLocalDataSource,
+        private val locationDataSource: LocationDataSource,
     ) : LocationRepository {
-        override fun getCurrentLocation(): Task<Location> = locationLocalDataSource.getCurrentLocation()
+        override fun getCurrentLocation(): Task<Location> = locationDataSource.getCurrentLocation()
     }
