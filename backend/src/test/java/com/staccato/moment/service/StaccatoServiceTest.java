@@ -18,7 +18,7 @@ import com.staccato.ServiceSliceTest;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.jwt.ShareTokenProvider;
-import com.staccato.config.jwt.TokenProperties;
+import com.staccato.config.jwt.dto.ShareTokenPayload;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.exception.UnauthorizedException;
@@ -434,7 +434,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         saveComment(moment, member1, "댓글 샘플");
         saveComment(moment, member2, "댓글 샘플2");
 
-        String token = shareTokenProvider.create(moment.getId());
+        String token = shareTokenProvider.create(new ShareTokenPayload(moment.getId(), member1.getId()));
 
         // when
         StaccatoSharedResponse response = staccatoService.readSharedStaccatoByToken(token);
@@ -470,7 +470,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     @Test
     void failReadSharedStaccatoWhenStaccatoNotExist() {
         // given
-        String token = shareTokenProvider.create(1L);
+        String token = shareTokenProvider.create(new ShareTokenPayload(1L, 1L));
 
         // when & then
         assertThatThrownBy(() -> staccatoService.readSharedStaccatoByToken(token))

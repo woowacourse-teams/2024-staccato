@@ -19,7 +19,7 @@ public record StaccatoSharedResponse(
         @Schema(example = "2024-09-30T17:00:00")
         LocalDateTime expiredAt,
         @Schema(example = "staccato")
-        String userName,
+        String nickname,
         @ArraySchema(arraySchema = @Schema(example = "[" +
                 "\"https://image.staccato.kr/dev/squirrel.png\"," +
                 "\"https://image.staccato.kr/dev/squirrel.png\"," +

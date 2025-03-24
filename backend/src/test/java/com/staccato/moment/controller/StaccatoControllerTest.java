@@ -391,7 +391,7 @@ class StaccatoControllerTest extends ControllerTest {
                 {
                     "staccatoId": 1,
                     "expiredAt": "2024-07-02T10:00:00",
-                    "userName": "staccato",
+                    "nickname": "staccato",
                     "staccatoImageUrls": [
                         "https://oldExample.com.jpg",
                         "https://existExample.com.jpg"

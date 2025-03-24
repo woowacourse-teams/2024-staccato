@@ -2,7 +2,6 @@ package com.staccato.moment.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,14 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.jwt.ShareTokenProvider;
+import com.staccato.config.jwt.dto.ShareTokenPayload;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.memory.domain.Memory;
-import com.staccato.memory.domain.MemoryMember;
-import com.staccato.memory.repository.MemoryMemberRepository;
 import com.staccato.memory.repository.MemoryRepository;
 import com.staccato.moment.domain.Feeling;
 import com.staccato.moment.domain.Moment;
@@ -26,7 +24,6 @@ import com.staccato.moment.repository.MomentImageRepository;
 import com.staccato.moment.repository.MomentRepository;
 import com.staccato.moment.service.dto.request.FeelingRequest;
 import com.staccato.moment.service.dto.request.MomentRequest;
-import com.staccato.moment.service.dto.response.CommentShareResponse;
 import com.staccato.moment.service.dto.response.MomentDetailResponse;
 import com.staccato.moment.service.dto.response.MomentIdResponse;
 import com.staccato.moment.service.dto.response.MomentLocationResponse;
@@ -48,7 +45,7 @@ public class StaccatoService {
     private final CommentRepository commentRepository;
     private final MomentImageRepository momentImageRepository;
     private final ShareTokenProvider shareTokenProvider;
-    private final MemoryMemberRepository memoryMemberRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public MomentIdResponse createMoment(MomentRequest momentRequest, Member member) {
@@ -121,7 +118,8 @@ public class StaccatoService {
         Moment moment = getMomentById(staccatoId);
         validateMemoryOwner(moment.getMemory(), member);
 
-        String token = shareTokenProvider.create(staccatoId);
+        ShareTokenPayload shareTokenPayload = new ShareTokenPayload(staccatoId, member.getId());
+        String token = shareTokenProvider.create(shareTokenPayload);
         String shareLink = SHARE_LINK_PREFIX + token;
 
         return new StaccatoShareLinkResponse(staccatoId, shareLink);
@@ -136,10 +134,11 @@ public class StaccatoService {
     public StaccatoSharedResponse readSharedStaccatoByToken(String token) {
         shareTokenProvider.validateToken(token);
         long staccatoId = shareTokenProvider.extractStaccatoId(token);
+        long memberId = shareTokenProvider.extractMemberId(token);
         LocalDateTime expiredAt = shareTokenProvider.extractExpiredAt(token);
 
         Moment moment = getMomentById(staccatoId);
-        Member member = getMember(memoryMemberRepository.findAllByMemoryId(moment.getMemory().getId()));
+        Member member = getMemberById(memberId);
         List<MomentImage> momentImages = momentImageRepository.findAllByMomentId(staccatoId);
         List<Comment> comments = commentRepository.findAllByMomentId(staccatoId);
 
@@ -151,11 +150,8 @@ public class StaccatoService {
                 .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 
-    private Member getMember(List<MemoryMember> memoryMembers) {
-        List<Member> members = memoryMembers.stream().map(MemoryMember::getMember).toList();
-        if (members.isEmpty()) {
-            throw new StaccatoException("요청하신 멤버를 찾을 수 없어요.");
-        }
-        return members.get(0);
+    private Member getMemberById(long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new StaccatoException("요청하신 멤버를 찾을 수 없어요."));
     }
 }

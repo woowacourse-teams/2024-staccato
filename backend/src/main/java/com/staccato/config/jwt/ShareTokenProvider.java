@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
+import com.staccato.config.jwt.dto.ShareTokenPayload;
 import com.staccato.exception.UnauthorizedException;
 
 import io.jsonwebtoken.Claims;
@@ -15,7 +16,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class ShareTokenProvider extends AbstractTokenProvider {
-    private static final String PROPERTY_NAME = "staccatoId";
     private static final long EXPIRATION_TIME_24H = 1000 * 60 * 60 * 24;
 
     public ShareTokenProvider(TokenProperties tokenProperties) {
@@ -24,9 +24,11 @@ public class ShareTokenProvider extends AbstractTokenProvider {
 
     @Override
     public String create(Object payload) {
-        long staccatoId = (long) payload;
+        ShareTokenPayload tokenPayload = (ShareTokenPayload) payload;
+
         return Jwts.builder()
-                .claim(PROPERTY_NAME, staccatoId)
+                .claim("staccatoId", tokenPayload.staccatoId())
+                .claim("memberId", tokenPayload.memberId())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_24H))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
@@ -34,7 +36,12 @@ public class ShareTokenProvider extends AbstractTokenProvider {
 
     public long extractStaccatoId(String token) {
         Claims claims = getPayload(token);
-        return claims.get(PROPERTY_NAME, Long.class);
+        return claims.get("staccatoId", Long.class);
+    }
+
+    public long extractMemberId(String token) {
+        Claims claims = getPayload(token);
+        return claims.get("memberId", Long.class);
     }
 
     public LocalDateTime extractExpiredAt(String token) {
