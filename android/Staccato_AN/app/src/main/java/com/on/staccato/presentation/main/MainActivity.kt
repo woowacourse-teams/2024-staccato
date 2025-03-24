@@ -66,7 +66,7 @@ class MainActivity :
     private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        binding.handler = this
+        initBinding()
         loadMemberProfile()
         observeMemberProfile()
         observeStaccatoId()
@@ -91,6 +91,12 @@ class MainActivity :
             activityLauncher = staccatoCreationLauncher,
             isPermissionCanceled,
         )
+    }
+
+    private fun initBinding() {
+        binding.lifecycleOwner = this
+        binding.sharedViewModel = sharedViewModel
+        binding.handler = this
     }
 
     override fun onMyPageClicked() {
