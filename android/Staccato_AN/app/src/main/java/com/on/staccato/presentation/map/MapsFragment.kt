@@ -197,7 +197,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun GoogleMap.setMapPadding() {
         sharedViewModel.isBottomSheetHalf.observe(viewLifecycleOwner) { isBottomSheetHalf ->
-            val mapPaddingBottom = if (isBottomSheetHalf) (requireView().height / 1.8).toInt() else DEFAULT_MAP_PADDING
+            val mapPaddingBottom = if (isBottomSheetHalf) (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt() else DEFAULT_MAP_PADDING
             val yPixel = if (isBottomSheetHalf) yPixel else -yPixel
 
             setPadding(
@@ -206,7 +206,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
                 DEFAULT_MAP_PADDING,
                 mapPaddingBottom,
             )
-            animateCamera(CameraUpdateFactory.scrollBy(0f, yPixel))
+            animateCamera(CameraUpdateFactory.scrollBy(DEFAULT_X_PIXEL, yPixel))
         }
     }
 
@@ -262,5 +262,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         private const val DEFAULT_ZOOM = 15f
         private const val SEOUL_STATION_LATITUDE = 37.554677038139815
         private const val SEOUL_STATION_LONGITUDE = 126.97061201084968
+        private const val DEFAULT_X_PIXEL = 0f
+        private const val BOTTOM_SHEET_HALF_RATIO = 1.8
     }
 }
