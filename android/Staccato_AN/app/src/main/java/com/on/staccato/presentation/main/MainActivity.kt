@@ -68,7 +68,6 @@ class MainActivity :
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
         loadMemberProfile()
-        observeMemberProfile()
         observeStaccatoId()
         setupBottomSheetController()
         setupBackPressedHandler()
@@ -105,12 +104,6 @@ class MainActivity :
 
     private fun loadMemberProfile() {
         sharedViewModel.fetchMemberProfile()
-    }
-
-    private fun observeMemberProfile() {
-        sharedViewModel.memberProfile.observe(this) { memberProfile ->
-            binding.memberProfile = memberProfile
-        }
     }
 
     private fun observeStaccatoId() {

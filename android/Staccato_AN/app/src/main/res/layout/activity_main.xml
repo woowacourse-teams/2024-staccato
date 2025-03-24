@@ -11,10 +11,6 @@
             type="com.on.staccato.presentation.main.viewmodel.SharedViewModel" />
 
         <variable
-            name="memberProfile"
-            type="com.on.staccato.domain.model.MemberProfile" />
-
-        <variable
             name="handler"
             type="com.on.staccato.presentation.main.MainHandler" />
     </data>
@@ -76,7 +72,7 @@
                     android:onClick="@{() -> handler.onMyPageClicked()}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:coilCircleImageUrl="@{memberProfile.profileImageUrl}"
+                    bind:coilCircleImageUrl="@{sharedViewModel.memberProfile.profileImageUrl}"
                     bind:coilPlaceHolder="@{@drawable/icon_member}" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
