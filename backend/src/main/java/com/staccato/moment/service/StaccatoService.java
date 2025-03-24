@@ -48,7 +48,6 @@ public class StaccatoService {
     private final CommentRepository commentRepository;
     private final MomentImageRepository momentImageRepository;
     private final ShareTokenProvider shareTokenProvider;
-    private final MemberRepository memberRepository;
     private final MemoryMemberRepository memoryMemberRepository;
 
     @Transactional
