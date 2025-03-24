@@ -101,13 +101,14 @@ public class StaccatoController implements StaccatoControllerDocs {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{staccatoId}/share")
+    @PostMapping("/{staccatoId}/share")
     public ResponseEntity<StaccatoShareLinkResponse> shareStaccato(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId
     ) {
         StaccatoShareLinkResponse staccatoShareLinkResponse = staccatoService.createStaccatoShareLink(staccatoId, member);
-        return ResponseEntity.ok().body(staccatoShareLinkResponse);
+        return ResponseEntity.created(URI.create("/staccatos/shared/" + staccatoShareLinkResponse.getToken()))
+                .body(staccatoShareLinkResponse);
     }
 
     @GetMapping("/shared/{token}")

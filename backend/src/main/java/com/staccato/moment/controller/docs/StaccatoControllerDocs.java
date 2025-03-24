@@ -127,7 +127,7 @@ public interface StaccatoControllerDocs {
 
     @Operation(summary = "스타카토 공유 링크 생성", description = "스타카토의 공유 링크를 생성합니다.")
     @ApiResponses(value = {
-            @ApiResponse(description = "스타카토 공유 링크 생성 성공", responseCode = "200"),
+            @ApiResponse(description = "스타카토 공유 링크 생성 성공", responseCode = "201"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
 
