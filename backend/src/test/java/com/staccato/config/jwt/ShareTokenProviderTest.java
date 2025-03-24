@@ -1,6 +1,7 @@
 package com.staccato.config.jwt;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDateTime;
 
@@ -35,8 +36,10 @@ public class ShareTokenProviderTest {
         Claims claims = tokenProvider.getPayload(shareToken);
 
         // then
-        assertThat(claims.get("staccatoId", Long.class)).isEqualTo(STACCATO_ID);
-        assertThat(claims.get("memberId", Long.class)).isEqualTo(MEMBER_ID);
+        assertAll(
+                () -> assertThat(claims.get("staccatoId", Long.class)).isEqualTo(STACCATO_ID),
+                () -> assertThat(claims.get("memberId", Long.class)).isEqualTo(MEMBER_ID)
+        );
     }
 
     @DisplayName("공유 토큰은 만료 기한을 갖고 있다.")
