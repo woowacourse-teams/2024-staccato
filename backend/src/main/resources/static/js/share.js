@@ -3,7 +3,7 @@ fetch(`/staccatos/shared/${token}`)
     .then(data => {
         const {
             expiredAt,
-            userName,
+            nickname,
             staccatoImageUrls,
             staccatoTitle,
             placeName,
@@ -13,7 +13,7 @@ fetch(`/staccatos/shared/${token}`)
             comments,
         } = data;
 
-        document.querySelector('.memory-title').innerText = `${userName}님이 공유한 추억`;
+        document.querySelector('.memory-title').innerText = `${nickname}님이 공유한 추억`;
 
         const expiredDate = new Date(expiredAt);
         const expiredYear = expiredDate.getUTCFullYear();
@@ -82,9 +82,9 @@ fetch(`/staccatos/shared/${token}`)
                 commentElement.classList.add('comment');
                 commentElement.setAttribute('data-nickname', comment.nickname);
 
-                const commentAlignmentClass = comment.nickname === userName ? 'comment-right' : 'comment-left';
-                const nicknameAlignmentClass = comment.nickname === userName ? 'nickname-right' : 'nickname-left';
-                const contentWrapperAlignmentClass = comment.nickname === userName ? 'margin-right-auto' : 'margin-left-auto';
+                const commentAlignmentClass = comment.nickname === nickname ? 'comment-right' : 'comment-left';
+                const nicknameAlignmentClass = comment.nickname === nickname ? 'nickname-right' : 'nickname-left';
+                const contentWrapperAlignmentClass = comment.nickname === nickname ? 'margin-right-auto' : 'margin-left-auto';
 
                 commentElement.classList.add(commentAlignmentClass);
 
