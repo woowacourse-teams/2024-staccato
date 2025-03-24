@@ -230,7 +230,7 @@ class MainActivity :
                     ) {
                         when (newState) {
                             STATE_EXPANDED -> {
-                                sharedViewModel.setIsHalf(false)
+                                sharedViewModel.setIsBottomSheetHalf(false)
                                 binding.viewMainDragBar.visibility =
                                     View.INVISIBLE
                                 binding.constraintMainBottomSheet.setBackgroundResource(
@@ -245,7 +245,7 @@ class MainActivity :
                             }
 
                             STATE_HALF_EXPANDED -> {
-                                sharedViewModel.setIsHalf(true)
+                                sharedViewModel.setIsBottomSheetHalf(true)
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
                                 changeSkipCollapsed()
                                 loggingManager.logEvent(
@@ -256,7 +256,7 @@ class MainActivity :
                             }
 
                             STATE_COLLAPSED -> {
-                                sharedViewModel.setIsHalf(false)
+                                sharedViewModel.setIsBottomSheetHalf(false)
                                 loggingManager.logEvent(
                                     NAME_BOTTOM_SHEET,
                                     Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_COLLAPSED),

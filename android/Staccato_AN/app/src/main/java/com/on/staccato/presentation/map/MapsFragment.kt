@@ -196,9 +196,9 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun GoogleMap.setMapPadding() {
-        sharedViewModel.isHalf.observe(viewLifecycleOwner) { isHalf ->
-            val mapPaddingBottom = if (isHalf) (requireView().height / 1.8).toInt() else DEFAULT_MAP_PADDING
-            val yPixel = if (isHalf) yPixel else -yPixel
+        sharedViewModel.isBottomSheetHalf.observe(viewLifecycleOwner) { isBottomSheetHalf ->
+            val mapPaddingBottom = if (isBottomSheetHalf) (requireView().height / 1.8).toInt() else DEFAULT_MAP_PADDING
+            val yPixel = if (isBottomSheetHalf) yPixel else -yPixel
 
             setPadding(
                 DEFAULT_MAP_PADDING,

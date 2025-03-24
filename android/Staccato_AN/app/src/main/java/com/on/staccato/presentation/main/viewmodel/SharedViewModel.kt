@@ -41,8 +41,8 @@ class SharedViewModel
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
 
-        private val _isHalf = MutableLiveData(true)
-        val isHalf: LiveData<Boolean> get() = _isHalf
+        private val _isBottomSheetHalf = MutableLiveData(true)
+        val isBottomSheetHalf: LiveData<Boolean> get() = _isBottomSheetHalf
 
         private val _staccatoId = MutableLiveData<Long>()
         val staccatoId: LiveData<Long> get() = _staccatoId
@@ -77,9 +77,9 @@ class SharedViewModel
             _isSettingClicked.value = isSettingClicked
         }
 
-        fun setIsHalf(isHalf: Boolean) {
-            val isDifferent = isHalf != _isHalf.value
-            if (isDifferent && isDragging.value == false) _isHalf.value = isHalf
+        fun setIsBottomSheetHalf(isBottomSheetHalf: Boolean) {
+            val isDifferent = isBottomSheetHalf != _isBottomSheetHalf.value
+            if (isDifferent && isDragging.value == false) _isBottomSheetHalf.value = isBottomSheetHalf
         }
 
         fun updateStaccatoId(id: Long) {
