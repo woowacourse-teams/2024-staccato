@@ -16,7 +16,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class ShareTokenProvider extends AbstractTokenProvider {
-    private static final long EXPIRATION_TIME_24H = 1000 * 60 * 60 * 24;
+    private static final long EXPIRATION_TIME_7DAYS = 1000 * 60 * 60 * 24 * 7;
 
     public ShareTokenProvider(TokenProperties tokenProperties) {
         super(tokenProperties);
@@ -29,7 +29,7 @@ public class ShareTokenProvider extends AbstractTokenProvider {
         return Jwts.builder()
                 .claim("staccatoId", tokenPayload.staccatoId())
                 .claim("memberId", tokenPayload.memberId())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_24H))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_7DAYS))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
