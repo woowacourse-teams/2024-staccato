@@ -326,7 +326,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(moment.getId(), member);
 
         // then
-        assertThat(response.shareLink()).startsWith("https://staccato.kr/share?token=");
+        assertThat(response.shareLink()).startsWith("https://staccato.kr/share/");
     }
 
     @DisplayName("존재하지 않는 스타카토의 공유 링크를 생성하려고 하면, 예외가 발생한다.")
@@ -366,7 +366,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
 
         // when
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(moment.getId(), member);
-        String token = response.shareLink().split("token=")[1];
+        String token = response.getToken();
 
         // then
         assertThat(token).isNotNull();
@@ -381,7 +381,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Moment moment = saveMomentWithImages(memory);
 
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(moment.getId(), member);
-        String token = response.shareLink().split("token=")[1];
+        String token = response.getToken();
 
         // when & then
         assertThatCode(() -> shareTokenProvider.extractStaccatoId(token))
@@ -398,7 +398,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Moment moment = saveMomentWithImages(memory);
 
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(moment.getId(), member);
-        String token = response.shareLink().split("token=")[1];
+        String token = response.getToken();
 
         // when
         Claims claims = shareTokenProvider.getPayload(token);
@@ -416,7 +416,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Moment moment = saveMomentWithImages(memory);
 
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(moment.getId(), member);
-        String token = response.shareLink().split("token=")[1];
+        String token = response.getToken();
 
         // when & then
         assertThatCode(() -> shareTokenProvider.validateToken(token))
