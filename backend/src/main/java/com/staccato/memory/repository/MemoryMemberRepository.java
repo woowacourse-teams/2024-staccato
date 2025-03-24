@@ -1,12 +1,14 @@
 package com.staccato.memory.repository;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.staccato.member.domain.Member;
+import com.staccato.memory.domain.Memory;
 import com.staccato.memory.domain.MemoryMember;
 
 public interface MemoryMemberRepository extends JpaRepository<MemoryMember, Long> {
@@ -26,4 +28,7 @@ public interface MemoryMemberRepository extends JpaRepository<MemoryMember, Long
     @Modifying
     @Query("DELETE FROM MemoryMember mm WHERE mm.memory.id = :memoryId")
     void deleteAllByMemoryIdInBulk(@Param("memoryId") Long memoryId);
+
+    @Query("SELECT mm FROM MemoryMember mm JOIN FETCH mm.member WHERE mm.memory.id = :memoryId")
+    List<MemoryMember> findAllByMemoryId(long memoryId);
 }
