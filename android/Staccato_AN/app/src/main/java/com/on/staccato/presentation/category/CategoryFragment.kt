@@ -110,11 +110,11 @@ class CategoryFragment :
         )
         val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
         StaccatoCreationActivity.startWithResultLauncher(
-            requireContext(),
-            staccatoCreationLauncher,
-            isPermissionCanceled,
-            category.id,
-            category.title,
+            context = requireContext(),
+            activityLauncher = staccatoCreationLauncher,
+            isPermissionCanceled = isPermissionCanceled,
+            categoryId = category.id,
+            categoryTitle = category.title,
         )
     }
 
