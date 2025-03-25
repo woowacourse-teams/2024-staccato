@@ -6,17 +6,17 @@ value class Nickname(val value: String) {
         return when {
             value.isEmpty() -> NicknameState.Empty
 
+            value.first().isWhitespace() -> NicknameState.BlankFirst
+
+            value.matches(formatRegex).not() -> NicknameState.InvalidFormat
+
             value.length !in MIN_LENGTH..MAX_LENGTH ->
                 NicknameState.InvalidLength(
                     MIN_LENGTH,
                     MAX_LENGTH,
                 )
 
-            value.first().isWhitespace() -> NicknameState.BlankFirst
-
-            value.matches(formatRegex) -> NicknameState.Valid(value)
-
-            else -> NicknameState.InvalidFormat
+            else -> NicknameState.Valid(value)
         }
     }
 

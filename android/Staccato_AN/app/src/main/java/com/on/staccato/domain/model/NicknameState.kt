@@ -3,7 +3,7 @@ package com.on.staccato.domain.model
 sealed interface NicknameState {
     data object Empty : NicknameState
 
-    data class Valid(val nickname: String) : NicknameState
+    data object BlankFirst : NicknameState
 
     data object InvalidFormat : NicknameState
 
@@ -12,5 +12,5 @@ sealed interface NicknameState {
         val max: Int,
     ) : NicknameState
 
-    data object BlankFirst : NicknameState
+    data class Valid(val nickname: String) : NicknameState
 }
