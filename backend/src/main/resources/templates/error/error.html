@@ -1,18 +1,12 @@
-<!-- src/main/resources/templates/error/error.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>에러 발생</title>
-    <link rel="stylesheet" th:href="@{/css/error.css}" />
 </head>
 <body>
-<div class="error-container">
-    <h1>문제가 발생했어요 😥</h1>
-    <p th:text="'오류 코드: ' + ${status}"></p>
-    <p th:text="${error}"></p>
-    <p th:text="${message}"></p>
-    <a th:href="@{/}" class="go-home">홈으로 돌아가기</a>
-</div>
+<h1>예상치 못한 에러가 발생했습니다</h1>
+<p th:text="${message}">요청을 처리하는 중 문제가 발생했습니다.</p>
+<a th:href="@{/}">홈으로 돌아가기</a>
 </body>
 </html>
