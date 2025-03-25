@@ -27,12 +27,12 @@ class CategoryFilterTest extends ServiceSliceTest {
     @Test
     void findByNameWithValidFilter() {
         // when
-        List<CategoryFilter> result = CategoryFilter.findAllByName(List.of("term"));
+        List<CategoryFilter> result = CategoryFilter.findAllByName(List.of("without_term"));
 
         // then
         assertAll(
                 () -> assertThat(result).hasSize(1),
-                () -> assertThat(result.get(0)).isEqualTo(CategoryFilter.TERM)
+                () -> assertThat(result.get(0)).isEqualTo(CategoryFilter.NO_TERM)
         );
     }
 
@@ -40,7 +40,7 @@ class CategoryFilterTest extends ServiceSliceTest {
     @Test
     void findAllByNameIfOnlyValid() {
         // when
-        List<CategoryFilter> result = CategoryFilter.findAllByName(List.of("invalid", "term"));
+        List<CategoryFilter> result = CategoryFilter.findAllByName(List.of("invalid", "with_term"));
 
         // then
         assertAll(
@@ -53,7 +53,7 @@ class CategoryFilterTest extends ServiceSliceTest {
     @Test
     void findAllByNameDistinct() {
         // when
-        List<CategoryFilter> result = CategoryFilter.findAllByName(List.of("TERM", "term"));
+        List<CategoryFilter> result = CategoryFilter.findAllByName(List.of("WITH_TERM", "with_term"));
 
         // then
         assertAll(
@@ -92,6 +92,29 @@ class CategoryFilterTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(result).hasSize(1),
                 () -> assertThat(result.get(0).getTitle()).isEqualTo(category2.getTitle())
+        );
+    }
+
+    @DisplayName("기간이 없는 카테고리 목록만 조회된다.")
+    @Test
+    void readAllCategoriesWithoutTerm() {
+        // given
+        Member member = memberRepository.save(MemberFixture.create());
+        Category category = categoryRepository.save(CategoryFixture.createWithMember("first", member));
+        Category category2 = categoryRepository.save(
+            CategoryFixture.createWithMember(LocalDate.now(), LocalDate.now()
+                .plusDays(3), member));
+        List<Category> categories = new ArrayList<>();
+        categories.add(category);
+        categories.add(category2);
+
+        // when
+        List<Category> result = CategoryFilter.NO_TERM.apply(categories);
+
+        // then
+        assertAll(
+            () -> assertThat(result).hasSize(1),
+            () -> assertThat(result.get(0).getTitle()).isEqualTo(category.getTitle())
         );
     }
 }
