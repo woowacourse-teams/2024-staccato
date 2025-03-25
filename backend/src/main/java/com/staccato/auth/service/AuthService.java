@@ -1,5 +1,6 @@
 package com.staccato.auth.service;
 
+import com.staccato.category.domain.Category;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.auth.service.dto.request.LoginRequest;
@@ -12,8 +13,7 @@ import com.staccato.exception.UnauthorizedException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.domain.Nickname;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.memory.domain.Memory;
-import com.staccato.memory.repository.MemoryRepository;
+import com.staccato.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,14 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class AuthService {
     private final MemberRepository memberRepository;
-    private final MemoryRepository memoryRepository;
+    private final CategoryRepository categoryRepository;
     private final MemberTokenProvider tokenProvider;
 
     @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
         Member member = createMember(loginRequest);
         String token = tokenProvider.create(member);
-        createBasicMemory(member);
+        createBasicCategory(member);
         return new LoginResponse(token);
     }
 
@@ -47,10 +47,10 @@ public class AuthService {
         }
     }
 
-    private void createBasicMemory(Member member) {
-        Memory memory = Memory.basic(member.getNickname());
-        memory.addMemoryMember(member);
-        memoryRepository.save(memory);
+    private void createBasicCategory(Member member) {
+        Category category = Category.basic(member.getNickname());
+        category.addCategoryMember(member);
+        categoryRepository.save(category);
     }
 
     public Member extractFromToken(String token) {

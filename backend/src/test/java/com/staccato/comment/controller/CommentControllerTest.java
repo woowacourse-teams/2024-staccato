@@ -1,5 +1,24 @@
 package com.staccato.comment.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.staccato.ControllerTest;
+import com.staccato.comment.service.dto.request.CommentRequestV2;
+import com.staccato.comment.service.dto.request.CommentUpdateRequest;
+import com.staccato.comment.service.dto.response.CommentResponse;
+import com.staccato.comment.service.dto.response.CommentResponses;
+import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.comment.CommentUpdateRequestFixture;
+
+import com.staccato.fixture.member.MemberFixture;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -12,142 +31,128 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import com.staccato.ControllerTest;
-import com.staccato.comment.service.dto.request.CommentRequest;
-import com.staccato.comment.service.dto.request.CommentUpdateRequest;
-import com.staccato.comment.service.dto.response.CommentResponse;
-import com.staccato.comment.service.dto.response.CommentResponses;
-import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.Member.MemberFixture;
-import com.staccato.fixture.comment.CommentUpdateRequestFixture;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CommentControllerTest extends ControllerTest {
+
     private static final int MAX_CONTENT_LENGTH = 500;
-    private static final long MIN_MOMENT_ID = 1L;
+    private static final long MIN_STACCATO_ID = 1L;
 
     static Stream<Arguments> invalidCommentRequestProvider() {
         return Stream.of(
-                Arguments.of(
-                        new CommentRequest(null, "예시 댓글 내용"),
-                        "스타카토를 선택해주세요."
-                ),
-                Arguments.of(
-                        new CommentRequest(MIN_MOMENT_ID - 1, "예시 댓글 내용"),
-                        "스타카토 식별자는 양수로 이루어져야 합니다."
-                ),
-                Arguments.of(
-                        new CommentRequest(MIN_MOMENT_ID, null),
-                        "댓글 내용을 입력해주세요."
-                ),
-                Arguments.of(
-                        new CommentRequest(MIN_MOMENT_ID, ""),
-                        "댓글 내용을 입력해주세요."
-                ),
-                Arguments.of(
-                        new CommentRequest(MIN_MOMENT_ID, " "),
-                        "댓글 내용을 입력해주세요."
-                ),
-                Arguments.of(
-                        new CommentRequest(MIN_MOMENT_ID, "1".repeat(MAX_CONTENT_LENGTH + 1)),
-                        "댓글은 공백 포함 500자 이하로 입력해주세요."
-                )
+            Arguments.of(
+                new CommentRequestV2(null, "예시 댓글 내용"),
+                "스타카토를 선택해주세요."
+            ),
+            Arguments.of(
+                new CommentRequestV2(MIN_STACCATO_ID - 1, "예시 댓글 내용"),
+                "스타카토 식별자는 양수로 이루어져야 합니다."
+            ),
+            Arguments.of(
+                new CommentRequestV2(MIN_STACCATO_ID, null),
+                "댓글 내용을 입력해주세요."
+            ),
+            Arguments.of(
+                new CommentRequestV2(MIN_STACCATO_ID, ""),
+                "댓글 내용을 입력해주세요."
+            ),
+            Arguments.of(
+                new CommentRequestV2(MIN_STACCATO_ID, " "),
+                "댓글 내용을 입력해주세요."
+            ),
+            Arguments.of(
+                new CommentRequestV2(MIN_STACCATO_ID, "1".repeat(MAX_CONTENT_LENGTH + 1)),
+                "댓글은 공백 포함 500자 이하로 입력해주세요."
+            )
         );
     }
 
     @DisplayName("댓글 생성 요청/응답에 대한 직렬화/역직렬화에 성공한다.")
     @Test
-    void createComment() throws Exception {
+    void createCommentV2() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         String commentRequest = """
-                {
-                    "momentId": 1,
-                    "content": "content"
-                }
-                """;
+            {
+                "staccatoId": 1,
+                "content": "content"
+            }
+            """;
         when(commentService.createComment(any(), any())).thenReturn(1L);
 
         // when & then
-        mockMvc.perform(post("/comments")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(commentRequest)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isCreated())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/comments/1"));
+        mockMvc.perform(post("/comments/v2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(commentRequest)
+                .header(HttpHeaders.AUTHORIZATION, "token"))
+            .andExpect(status().isCreated())
+            .andExpect(header().string(HttpHeaders.LOCATION, "/comments/1"));
     }
 
     @DisplayName("올바르지 않은 형식으로 정보를 입력하면, 댓글을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidCommentRequestProvider")
-    void createCommentFail(CommentRequest commentRequest, String expectedMessage) throws Exception {
+    void createCommentFailV2(CommentRequestV2 commentRequestV2, String expectedMessage)
+        throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
-        mockMvc.perform(post("/comments")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(commentRequest))
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+        mockMvc.perform(post("/comments/v2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(commentRequestV2))
+                .header(HttpHeaders.AUTHORIZATION, "token"))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("댓글을 조회했을 때 응답 직렬화에 성공한다.")
     @Test
-    void readCommentsByMomentId() throws Exception {
+    void readCommentsByStaccatoIdV2() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         CommentResponse commentResponse = new CommentResponse(1L, 1L, "member", "image.jpg", "내용");
         CommentResponses commentResponses = new CommentResponses(List.of(commentResponse));
-        when(commentService.readAllCommentsByMomentId(any(), any())).thenReturn(commentResponses);
+        when(commentService.readAllCommentsByStaccatoId(any(), any())).thenReturn(commentResponses);
         String expectedResponse = """
-                {
-                    "comments": [
-                	        {
-                            "commentId": 1,
-                            "memberId": 1,
-                            "nickname": "member",
-                            "memberImageUrl": "image.jpg",
-                            "content": "내용"
-                        }
-                    ]
-                }
-                """;
+            {
+                "comments": [
+            	        {
+                        "commentId": 1,
+                        "memberId": 1,
+                        "nickname": "member",
+                        "memberImageUrl": "image.jpg",
+                        "content": "내용"
+                    }
+                ]
+            }
+            """;
 
         // when & then
-        mockMvc.perform(get("/comments")
-                        .param("momentId", "1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+        mockMvc.perform(get("/comments/v2")
+                .param("staccatoId", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "token"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(expectedResponse));
     }
 
     @DisplayName("스타카토 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
     @Test
-    void readCommentsByMomentIdFail() throws Exception {
+    void readCommentsByStaccatoIdFailV2() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(get("/comments")
-                        .param("momentId", "0")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+        mockMvc.perform(get("/comments/v2")
+                .param("staccatoId", "0")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "token"))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("댓글 수정 요청 역직렬화에 성공한다.")
@@ -156,17 +161,17 @@ public class CommentControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         String commentUpdateRequest = """
-                {
-                    "content": "content"
-                }
-                """;
+            {
+                "content": "content"
+            }
+            """;
 
         // when & then
         mockMvc.perform(put("/comments/{commentId}", 1)
-                        .content(commentUpdateRequest)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isOk());
+                .content(commentUpdateRequest)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "token"))
+            .andExpect(status().isOk());
     }
 
     @DisplayName("댓글 식별자가 양수가 아닐 경우 댓글 수정에 실패한다.")
@@ -175,15 +180,16 @@ public class CommentControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
         mockMvc.perform(put("/comments/{commentId}", 0)
-                        .content(objectMapper.writeValueAsString(commentUpdateRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+                .content(objectMapper.writeValueAsString(commentUpdateRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "token"))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("댓글 내용을 입력하지 않을 경우 댓글 수정에 실패한다.")
@@ -194,15 +200,16 @@ public class CommentControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
         CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "댓글 내용을 입력해주세요.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            HttpStatus.BAD_REQUEST.toString(), "댓글 내용을 입력해주세요.");
 
         // when & then
         mockMvc.perform(put("/comments/{commentId}", 1)
-                        .content(objectMapper.writeValueAsString(commentUpdateRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+                .content(objectMapper.writeValueAsString(commentUpdateRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "token"))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("올바른 형식으로 댓글 삭제를 시도하면 성공한다.")
@@ -213,9 +220,9 @@ public class CommentControllerTest extends ControllerTest {
 
         // when & then
         mockMvc.perform(delete("/comments/{commentId}", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "token"))
+            .andExpect(status().isOk());
     }
 
     @DisplayName("댓글 식별자가 양수가 아닐 경우 댓글 삭제에 실패한다.")
@@ -223,13 +230,14 @@ public class CommentControllerTest extends ControllerTest {
     void deleteCommentFail() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+            HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
         mockMvc.perform(delete("/comments/{commentId}", 0)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "token"))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 }

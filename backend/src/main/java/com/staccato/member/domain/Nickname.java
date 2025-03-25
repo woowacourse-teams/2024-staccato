@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @EqualsAndHashCode
 public class Nickname {
-    private static final Pattern NICKNAME_REGEX = Pattern.compile("^[ㄱ-ㅎㅏ-ㅣ가-힣0-9a-zA-Z._]+$");
+    private static final Pattern NICKNAME_REGEX = Pattern.compile("^(?!\\\\s+$)[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9._ ]+$");
     private static final int MAX_LENGTH = 20;
 
     @Column(nullable = false, length = MAX_LENGTH)
