@@ -1,5 +1,6 @@
 package com.staccato.exception;
 
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,6 +35,13 @@ public class WebExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.FORBIDDEN.toString(), e.getMessage());
         log.warn(LogForm.CUSTOM_EXCEPTION_LOGGING_FORM, exceptionResponse);
         return buildErrorView("403", "접근 권한이 없습니다.");
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handleNotFoundException(NotFoundException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.toString(), e.getMessage());
+        log.warn(LogForm.CUSTOM_EXCEPTION_LOGGING_FORM, exceptionResponse);
+        return buildErrorView("404", "요청하신 페이지를 찾을 수 없습니다.");
     }
 
     @ExceptionHandler(Exception.class)
