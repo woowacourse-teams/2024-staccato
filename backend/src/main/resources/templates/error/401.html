@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>401 - 인증 실패</title>
+</head>
+<body>
+<h1>접근 권한이 없습니다</h1>
+<p>유효하지 않거나 만료된 토큰으로 인해 요청을 처리할 수 없습니다.</p>
+<p>다시 로그인하거나, 유효한 링크를 사용해 주세요.</p>
+<a th:href="@{/}">홈으로 돌아가기</a>
+</body>
+</html>
