@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>401 - 인증 필요</title>
+    <link rel="stylesheet" th:href="@{/css/error.css}" />
 </head>
 <body>
-<h1>401 - 인증 실패</h1>
-<p th:text="${message}">유효하지 않거나 만료된 링크로 인해 요청을 처리할 수 없습니다.</p>
-<a th:href="@{/}">홈으로 이동</a>
+<div class="container">
+    <h1>401</h1>
+    <h2>인증이 필요합니다</h2>
+    <p>보호된 페이지에 접근하려면 로그인이 필요합니다.</p>
+    <p>로그인 후 다시 시도해 주세요.</p>
+    <a th:href="@{/}">메인으로</a>
+</div>
 </body>
 </html>

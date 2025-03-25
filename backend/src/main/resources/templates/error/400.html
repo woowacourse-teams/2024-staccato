@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>400 - 잘못된 요청</title>
+    <link rel="stylesheet" th:href="@{/css/error.css}" />
 </head>
 <body>
-<h1>400 - 잘못된 요청</h1>
-<p th:text="${message}">요청이 올바르지 않습니다.</p>
-<a th:href="@{/}">홈으로 이동</a>
+<div class="container">
+    <h1>400</h1>
+    <h2>잘못된 요청입니다</h2>
+    <p>요청이 올바르지 않아 서버에서 처리할 수 없습니다.</p>
+    <p>입력한 값을 다시 확인하고 다시 시도해 주세요.</p>
+    <a th:href="@{/}">메인으로</a>
+</div>
 </body>
 </html>

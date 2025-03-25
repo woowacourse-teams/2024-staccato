@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>500 - 서버 오류</title>
+    <link rel="stylesheet" th:href="@{/css/error.css}" />
 </head>
 <body>
-<h1>500 - 서버 내부 오류</h1>
-<p th:text="${message}">예기치 않은 문제가 발생했습니다. 잠시 후 다시 시도해주세요.</p>
-<a th:href="@{/}">홈으로 이동</a>
+<div class="container">
+    <h1>500</h1>
+    <h2>서버에 오류가 발생했습니다</h2>
+    <p>요청을 처리하는 중 서버 내부에서 문제가 발생했습니다.</p>
+    <p>잠시 후 다시 시도해 주세요.</p>
+    <a th:href="@{/}">메인으로</a>
+</div>
 </body>
 </html>

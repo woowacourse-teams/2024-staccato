@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>에러 발생</title>
+    <link rel="stylesheet" th:href="@{/css/error.css}" />
 </head>
 <body>
-<h1>예상치 못한 에러가 발생했습니다</h1>
-<p th:text="${message}">요청을 처리하는 중 문제가 발생했습니다.</p>
-<a th:href="@{/}">홈으로 돌아가기</a>
+<div class="container">
+    <h1>에러</h1>
+    <h2>예상치 못한 에러가 발생했습니다</h2>
+    <p th:text="${message}">요청을 처리하는 중 문제가 발생했습니다.</p>
+    <p>지속적인 문제가 발생하면 관리자에게 문의해 주세요.</p>
+    <a th:href="@{/}">메인으로</a>
+</div>
 </body>
 </html>
