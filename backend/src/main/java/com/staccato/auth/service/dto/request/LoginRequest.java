@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record LoginRequest(
         @Schema(example = "hi_staccato")
         @NotNull(message = "닉네임을 입력해주세요.")
-        @Size(min = 1, max = 20, message = "1자 이상 20자 이하의 닉네임으로 설정해주세요.")
+        @Size(min = 1, max = 10, message = "1자 이상 10자 이하의 닉네임으로 설정해주세요.")
         String nickname
 ) {
     public LoginRequest {
