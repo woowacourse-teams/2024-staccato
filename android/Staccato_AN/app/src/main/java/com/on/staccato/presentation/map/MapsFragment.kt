@@ -25,6 +25,7 @@ import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
+import com.on.staccato.presentation.util.showSnackBar
 import com.on.staccato.util.logging.AnalyticsEvent
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
@@ -214,19 +215,22 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         mapsViewModel.markersOptions.observe(viewLifecycleOwner) { markersOptions ->
             if (this::map.isInitialized) {
                 map.clear()
-                addMarkers(markersOptions)
+                val markers: List<Marker>? = addMarkers(markersOptions)
+                if (markers != null) mapsViewModel.updateMarkers(markers)
             }
         }
     }
 
-    private fun addMarkers(markerOptions: List<MarkerOptions>) {
-        val markers: List<Marker> =
-            markerOptions.map {
-                map.addMarker(it.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_pin_3x)))
-                    ?: return
+    private fun addMarkers(markerOptions: List<MarkerOptions>): List<Marker>? =
+        markerOptions.map {
+            val marker: Marker? = map.addMarker(it.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_pin_3x)))
+            if (marker == null) {
+                map.clear()
+                requireView().showSnackBar(getString(R.string.maps_markers_loading_error))
+                return null
             }
-        mapsViewModel.updateMarkers(markers)
-    }
+            marker
+        }
 
     private fun GoogleMap.onMarkerClicked() {
         setOnMarkerClickListener { marker ->
