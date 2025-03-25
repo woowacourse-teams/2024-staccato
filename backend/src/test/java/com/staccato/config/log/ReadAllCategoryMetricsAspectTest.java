@@ -29,7 +29,7 @@ public class ReadAllCategoryMetricsAspectTest extends ServiceSliceTest {
         // given
         Member member = MemberFixture.create();
         memberRepository.save(member);
-        CategoryReadRequest categoryReadRequest = new CategoryReadRequest("term", "oldest");
+        CategoryReadRequest categoryReadRequest = new CategoryReadRequest("with_term", "oldest");
 
         // when
         categoryService.readAllCategories(member, categoryReadRequest);
@@ -38,7 +38,7 @@ public class ReadAllCategoryMetricsAspectTest extends ServiceSliceTest {
         double filterCount = meterRegistry.counter("category_filter_count",
                 "class", CategoryService.class.getName(),
                 "method", "readAllCategories",
-                "filter", "term").count();
+                "filter", "with_term").count();
         double sortCount = meterRegistry.counter("category_sort_count",
                 "class", CategoryService.class.getName(),
                 "method", "readAllCategories",
