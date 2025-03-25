@@ -5,7 +5,7 @@ import com.on.staccato.R
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.common.InputState
 
-fun NicknameState.handleNicknameInputState(context: Context): InputState {
+fun NicknameState.toInputState(context: Context): InputState {
     return when (this) {
         NicknameState.Empty -> InputState.Empty
 

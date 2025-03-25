@@ -8,14 +8,14 @@ import com.on.staccato.R
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.common.InputState
-import com.on.staccato.presentation.mapper.handleNicknameInputState
+import com.on.staccato.presentation.mapper.toInputState
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 @BindingAdapter("loginButtonEnabled")
 fun Button.setLoginButtonEnabled(nicknameState: NicknameState) {
-    val inputState = nicknameState.handleNicknameInputState(context)
+    val inputState = nicknameState.toInputState(context)
     isEnabled =
         when (inputState) {
             is InputState.Empty -> {

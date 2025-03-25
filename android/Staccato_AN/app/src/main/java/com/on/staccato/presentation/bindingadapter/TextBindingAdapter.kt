@@ -11,7 +11,7 @@ import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.common.InputState
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
-import com.on.staccato.presentation.mapper.handleNicknameInputState
+import com.on.staccato.presentation.mapper.toInputState
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -162,11 +162,11 @@ fun TextView.setSelectedAddress(address: String?) {
 
 @BindingAdapter("nicknameState")
 fun TextInputLayout.setNicknameInputState(nicknameState: NicknameState) {
-    val inputState = nicknameState.handleNicknameInputState(context)
-    changeLayoutByInputState(inputState)
+    val inputState = nicknameState.toInputState(context)
+    changeLayoutBy(inputState)
 }
 
-fun TextInputLayout.changeLayoutByInputState(inputState: InputState) {
+fun TextInputLayout.changeLayoutBy(inputState: InputState) {
     val strokeWidth = 1F.dpToPx(context).toInt()
     when (inputState) {
         is InputState.Empty -> {
