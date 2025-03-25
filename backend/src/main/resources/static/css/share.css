@@ -15,20 +15,20 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.memory-header {
+.staccato-header {
     text-align: left;
     background-color: #fff;
     padding: 1.5rem;
 }
 
-.memory-title {
+.staccato-title {
     font-size: 1.5rem;
     font-weight: bold;
     color: #333;
     margin: 0.5rem 0;
 }
 
-.memory-subtitle {
+.staccato-subtitle {
     font-size: 1rem;
     color: #555;
     margin: 0;

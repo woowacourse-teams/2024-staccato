@@ -119,8 +119,8 @@ public class StaccatoService {
     }
 
     public StaccatoShareLinkResponse createStaccatoShareLink(Long staccatoId, Member member) {
-        Moment moment = getMomentById(staccatoId);
-        validateMemoryOwner(moment.getMemory(), member);
+        Staccato staccato = getStaccatoById(staccatoId);
+        validateCategoryOwner(staccato.getCategory(), member);
 
         ShareTokenPayload shareTokenPayload = new ShareTokenPayload(staccatoId, member.getId());
         String token = shareTokenProvider.create(shareTokenPayload);
@@ -135,12 +135,12 @@ public class StaccatoService {
         long memberId = shareTokenProvider.extractMemberId(token);
         LocalDateTime expiredAt = shareTokenProvider.extractExpiredAt(token);
 
-        Moment moment = getMomentById(staccatoId);
+        Staccato staccato = getStaccatoById(staccatoId);
         Member member = getMemberById(memberId);
-        List<MomentImage> momentImages = momentImageRepository.findAllByMomentId(staccatoId);
-        List<Comment> comments = commentRepository.findAllByMomentId(staccatoId);
+        List<StaccatoImage> staccatoImages = staccatoImageRepository.findAllByStaccatoId(staccatoId);
+        List<Comment> comments = commentRepository.findAllByStaccatoId(staccatoId);
 
-        return new StaccatoSharedResponse(expiredAt, moment, member, momentImages, comments);
+        return new StaccatoSharedResponse(expiredAt, staccato, member, staccatoImages, comments);
     }
 
     private Staccato getStaccatoById(long staccatoId) {

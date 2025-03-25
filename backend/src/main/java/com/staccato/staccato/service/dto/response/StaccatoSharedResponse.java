@@ -5,9 +5,8 @@ import java.util.List;
 
 import com.staccato.comment.domain.Comment;
 import com.staccato.member.domain.Member;
-import com.staccato.moment.domain.Moment;
-import com.staccato.moment.domain.MomentImage;
-import com.staccato.moment.domain.MomentImages;
+import com.staccato.staccato.domain.Staccato;
+import com.staccato.staccato.domain.StaccatoImage;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -39,24 +38,24 @@ public record StaccatoSharedResponse(
         String feeling,
         List<CommentShareResponse> comments
 ) {
-    public StaccatoSharedResponse(LocalDateTime expiredAt, Moment moment, Member member, List<MomentImage> momentImages, List<Comment> comments) {
+    public StaccatoSharedResponse(LocalDateTime expiredAt, Staccato staccato, Member member, List<StaccatoImage> staccatoImages, List<Comment> comments) {
         this(
-                moment.getId(),
+                staccato.getId(),
                 expiredAt,
                 member.getNickname().getNickname(),
-                toMomentImageUrls(momentImages),
-                moment.getTitle(),
-                moment.getSpot().getPlaceName(),
-                moment.getSpot().getAddress(),
-                moment.getVisitedAt(),
-                moment.getFeeling().getValue(),
+                toStaccatoImageUrls(staccatoImages),
+                staccato.getTitle(),
+                staccato.getSpot().getPlaceName(),
+                staccato.getSpot().getAddress(),
+                staccato.getVisitedAt(),
+                staccato.getFeeling().getValue(),
                 toCommentShareResponses(comments)
         );
     }
 
-    private static List<String> toMomentImageUrls(List<MomentImage> momentImages) {
-        return momentImages.stream()
-                .map(MomentImage::getImageUrl)
+    private static List<String> toStaccatoImageUrls(List<StaccatoImage> staccatoImages) {
+        return staccatoImages.stream()
+                .map(StaccatoImage::getImageUrl)
                 .toList();
     }
 

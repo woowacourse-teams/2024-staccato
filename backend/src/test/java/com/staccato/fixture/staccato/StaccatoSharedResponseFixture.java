@@ -3,8 +3,8 @@ package com.staccato.fixture.staccato;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.staccato.moment.service.dto.response.CommentShareResponse;
-import com.staccato.moment.service.dto.response.StaccatoSharedResponse;
+import com.staccato.staccato.service.dto.response.CommentShareResponse;
+import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
 
 public class StaccatoSharedResponseFixture {
     public static StaccatoSharedResponse create(LocalDateTime expiredAt) {

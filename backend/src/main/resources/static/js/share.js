@@ -13,14 +13,14 @@ fetch(`/staccatos/shared/${token}`)
             comments,
         } = data;
 
-        document.querySelector('.memory-title').innerText = `${nickname}님이 공유한 추억`;
+        document.querySelector('.staccato-title').innerText = `${nickname}님이 공유한 추억`;
 
         const expiredDate = new Date(expiredAt);
         const expiredYear = expiredDate.getUTCFullYear();
         const expiredMonth = expiredDate.getUTCMonth() + 1;
         const expiredDay = expiredDate.getUTCDate();
         const formattedExpiredAt = `${expiredYear}년 ${expiredMonth}월 ${expiredDay}일`;
-        document.querySelector('.memory-subtitle').innerText = `${formattedExpiredAt}까지 열람할 수 있어요!`;
+        document.querySelector('.staccato-subtitle').innerText = `${formattedExpiredAt}까지 열람할 수 있어요!`;
 
         const sliderWrapper = document.querySelector('.swiper-wrapper');
         sliderWrapper.innerHTML = '';
