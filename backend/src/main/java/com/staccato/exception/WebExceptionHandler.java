@@ -18,7 +18,7 @@ public class WebExceptionHandler {
     @ExceptionHandler(StaccatoException.class)
     public ModelAndView handleBadRequestException(StaccatoException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
-        log.warn(LogForm.CUSTOM_EXCEPTION_LOGGING_FORM, exceptionResponse);
+        log.info(LogForm.CUSTOM_EXCEPTION_LOGGING_FORM, exceptionResponse);
         return buildErrorView("400", "잘못된 요청입니다.");
     }
 
