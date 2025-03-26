@@ -15,7 +15,7 @@ sealed interface NicknameState {
         val max: Int,
     ) : NicknameState
 
-    data class Valid(val nickname: String) : NicknameState
+    data class Valid(val value: String) : NicknameState
 
     companion object {
         fun from(value: String): NicknameState {

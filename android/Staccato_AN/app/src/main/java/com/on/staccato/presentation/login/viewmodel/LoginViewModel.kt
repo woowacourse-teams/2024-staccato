@@ -39,12 +39,14 @@ class LoginViewModel
             get() = _errorMessage
 
         fun requestLogin() {
-            val nickname = nickname.value ?: ""
-            viewModelScope.launch {
-                repository.loginWithNickname(nickname)
-                    .onSuccess { updateIsLoginSuccess() }
-                    .onServerError(::handleError)
-                    .onException(::handleException)
+            val nickname = nicknameState.value
+            if (nickname is NicknameState.Valid) {
+                viewModelScope.launch {
+                    repository.loginWithNickname(nickname.value)
+                        .onSuccess { updateIsLoginSuccess() }
+                        .onServerError(::handleError)
+                        .onException(::handleException)
+                }
             }
         }
 
