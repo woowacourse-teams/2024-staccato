@@ -31,7 +31,7 @@ class NicknameTest {
     }
 
     @Test
-    fun `닉네임이 빈 문자열이라면 Empty 상태이다`() {
+    fun `닉네임이 빈 문자열이라면 비어있는 상태이다`() {
         // when
         val nicknameState = Nickname("").validate()
 
@@ -43,7 +43,7 @@ class NicknameTest {
     @ValueSource(
         strings = [" ", "  ", "  nickname"],
     )
-    fun `닉네임에 공백이 먼저 나온다면 BlankFirst 상태이다`(blankFirstString: String) {
+    fun `닉네임 첫 글자에 공백이 오면 유효하지 않은 형식이다`(blankFirstString: String) {
         // when
         val nicknameState = Nickname(blankFirstString).validate()
 
@@ -55,7 +55,7 @@ class NicknameTest {
     @ValueSource(
         strings = ["스타카토!", "st@cc@to", "star*cato", "수타카토~^^", "해피 :)"],
     )
-    fun `닉네임에 밑줄, 마침표를 제외한 다른 특수기호가 포함되어 있다면 InvalidFormat 상태이다`(invalidNickname: String) {
+    fun `닉네임에 밑줄, 마침표를 제외한 다른 특수기호가 포함되어 있다면 유효하지 않은 형식이다`(invalidNickname: String) {
         // when
         val nicknameState = Nickname(invalidNickname).validate()
 
@@ -64,7 +64,7 @@ class NicknameTest {
     }
 
     @Test
-    fun `닉네임의 길이는 1자 이상 10자 이내이며, 10자를 초과하면 InvalidLength 상태이다`() {
+    fun `닉네임의 길이는 1자 이상 10자 이내이며, 10자를 초과하면 유효하지 않은 길이이다`() {
         // when : 10자를 초과한 문자열 (테스트 문자열: 11자)
         val nicknameState = Nickname("엄청 기이이인 닉네임").validate()
 
