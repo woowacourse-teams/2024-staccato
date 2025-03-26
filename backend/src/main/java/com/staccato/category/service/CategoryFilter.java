@@ -12,12 +12,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum CategoryFilter {
-    TERM("with_term", categories ->
+    TERM("WITH_TERM", categories ->
         categories.stream()
             .filter(Category::hasTerm)
             .collect(Collectors.toList())
     ),
-    NO_TERM("without_term", categories ->
+    NO_TERM("WITHOUT_TERM", categories ->
         categories.stream()
             .filter(category -> !category.hasTerm())
             .collect(Collectors.toList())
