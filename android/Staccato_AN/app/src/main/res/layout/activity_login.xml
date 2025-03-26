@@ -63,7 +63,7 @@
                 bind:nicknameState="@{viewModel.nicknameState}">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/text_input_edit_text_login_user_nickname"
+                    android:id="@+id/edit_text_login_user_nickname"
                     style="@style/TextInputEditTextStyle.SingleLine"
                     android:hint="@string/login_nickname_hint"
                     android:imeOptions="actionDone"

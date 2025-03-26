@@ -28,7 +28,7 @@ class LoginActivityTest {
     private val nicknameInputLayout: ViewInteraction =
         onView(withId(R.id.text_input_layout_login_user_nickname))
     private val nicknameInputEditText: ViewInteraction =
-        onView(withId(R.id.text_input_edit_text_login_user_nickname))
+        onView(withId(R.id.edit_text_login_user_nickname))
 
     @Test
     fun `닉네임을_입력하지_않으면_시작하기_버튼이_비활성화_상태이다`() {
