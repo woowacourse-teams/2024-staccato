@@ -167,7 +167,7 @@ fun TextInputLayout.setNicknameInputState(nicknameState: NicknameState) {
 }
 
 fun TextInputLayout.changeLayoutBy(inputState: InputState) {
-    val strokeWidth = 1F.dpToPx(context).toInt()
+    val strokeWidth = DEFAULT_DP_SIZE.dpToPx(context).toInt()
     when (inputState) {
         is InputState.Empty -> {
             boxStrokeColor = resources.getColor(R.color.gray1, context.theme)
@@ -197,3 +197,4 @@ fun TextInputLayout.changeLayoutBy(inputState: InputState) {
 
 private const val DRAGGABLE_PHOTO_NUMBER = 2
 private const val EMPTY_TEXT = ""
+private const val DEFAULT_DP_SIZE = 1F
