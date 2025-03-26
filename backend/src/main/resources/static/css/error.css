@@ -12,6 +12,13 @@ body {
     color: #333;
 }
 
+.error-image {
+    display: block;
+    margin: auto;
+    max-width: 280px;
+    height: auto;
+}
+
 .container {
     background: white;
     padding: 3rem;
@@ -24,7 +31,8 @@ body {
 h1 {
     font-size: 3rem;
     color: #e74c3c;
-    margin-bottom: 0.5rem;
+    margin-bottom: 2rem;
+    margin-top: 0.5rem;
 }
 
 h2 {
