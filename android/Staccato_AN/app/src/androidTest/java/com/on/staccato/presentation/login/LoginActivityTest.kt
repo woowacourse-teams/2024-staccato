@@ -3,7 +3,6 @@ package com.on.staccato.presentation.login
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -40,7 +39,7 @@ class LoginActivityTest {
     @Parameters(method = "startsWithBlank")
     fun `공백_또는_공백이_먼저_오는_문자열을_입력하면_닉네임_입력_란에서_에러_메세지를_보여준다`(nickname: String) {
         // when
-        nicknameInputEditText.perform(typeText(nickname))
+        nicknameInputEditText.perform(replaceText(nickname))
 
         // then
         nicknameInputLayout
@@ -55,6 +54,12 @@ class LoginActivityTest {
                 ),
             )
     }
+
+    private fun startsWithBlank(): List<String> =
+        listOf(
+            "   ",
+            " 공백 먼저",
+        )
 
     @Test
     @Parameters(method = "invalidFormatNicknames")
@@ -76,6 +81,12 @@ class LoginActivityTest {
             )
     }
 
+    private fun invalidFormatNicknames(): List<String> =
+        listOf(
+            "!valid",
+            "쓸수없는닉네임!@#",
+        )
+
     @Test
     @Parameters(method = "validNicknames")
     fun `올바른_형식의_닉네임을_입력하면_닉네임_입력_란에서_사용_가능하다는_메세지를_보여준다`(validNickname: String) {
@@ -96,6 +107,13 @@ class LoginActivityTest {
             )
     }
 
+    private fun validNicknames(): List<String> =
+        listOf(
+            "valid name",
+            "안녕하세요2",
+            "ㅎrㅇI",
+        )
+
     @Test
     @Parameters(method = "invalidNicknames")
     fun `올바르지_않은_닉네임을_입력하면_시작하기_버튼이_비활성화_상태이다`(invalidNickname: String) {
@@ -106,49 +124,19 @@ class LoginActivityTest {
         startButton.check(matches(isNotEnabled()))
     }
 
+    private fun invalidNicknames(): List<String> =
+        listOf(
+            "   ",
+            "!valid",
+            " 공백 먼저",
+        )
+
     @Test
-    @Parameters(method = "validNicknames")
-    fun `올바른_형식의_닉네임을_입력하면_시작하기_버튼이_활성화_상태이다`(validNickname: String) {
+    fun `올바른_형식의_닉네임을_입력하면_시작하기_버튼이_활성화_상태이다`() {
         // when
-        nicknameInputEditText.perform(replaceText(validNickname))
+        nicknameInputEditText.perform(replaceText("._스타카토 짱_."))
 
         // then
         startButton.check(matches(isEnabled()))
-    }
-
-    private fun startsWithBlank(): List<String> =
-        listOf(
-            WHITESPACE,
-            INVALID_NICKNAME_STARTS_WITH_BLANK,
-        )
-
-    private fun invalidFormatNicknames(): List<String> =
-        listOf(
-            INVALID_NICKNAME_FORMAT,
-            INVALID_NICKNAME_FORMAT_2,
-        )
-
-    private fun validNicknames(): List<String> =
-        listOf(
-            VALID_NICKNAME,
-            VALID_NICKNAME_WITH_HANGUL,
-            VALID_NICKNAME_WITH_HANGUL_2,
-        )
-
-    private fun invalidNicknames(): List<String> =
-        listOf(
-            WHITESPACE,
-            INVALID_NICKNAME_FORMAT,
-            INVALID_NICKNAME_STARTS_WITH_BLANK,
-        )
-
-    companion object {
-        private const val VALID_NICKNAME = "valid nickname1"
-        private const val VALID_NICKNAME_WITH_HANGUL = "안녕하세요2"
-        private const val VALID_NICKNAME_WITH_HANGUL_2 = "ㅎrㅇI"
-        private const val INVALID_NICKNAME_FORMAT = "!valid_nickname"
-        private const val INVALID_NICKNAME_FORMAT_2 = "쓸수없는닉네임!@#"
-        private const val INVALID_NICKNAME_STARTS_WITH_BLANK = " start_with_blank"
-        private const val WHITESPACE = "   "
     }
 }
