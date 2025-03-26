@@ -1,9 +1,12 @@
-name: Android CI/CD for distribution and test
+name: Android CI/CD for QA
 
 on:
-  push:
+  pull_request:
     paths: 'android/**'
-    branches: [ "release-an" ]
+    branches:
+      - develop
+    types:
+      - closed
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
@@ -16,6 +19,7 @@ env:
 
 jobs:
   build-and-distribute:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'feature/')
     name: Generate debug APK and distribute to tester
     runs-on: ubuntu-latest
 
@@ -80,7 +84,7 @@ jobs:
           overwrite: 'true'
 
       - name: Upload APK to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
