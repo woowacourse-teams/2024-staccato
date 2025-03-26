@@ -89,7 +89,7 @@ class LoginActivityTest {
 
     @Test
     @Parameters(method = "validNicknames")
-    fun `올바른_형식의_닉네임을_입력하면_닉네임_입력_란에서_사용_가능하다는_메세지를_보여준다`(validNickname: String) {
+    fun `올바른_형식의_닉네임을_입력하면_에러_메세지가_나타나지_않는다`(validNickname: String) {
         // when
         nicknameInputEditText.perform(replaceText(validNickname))
 
@@ -99,7 +99,7 @@ class LoginActivityTest {
                 matches(
                     allOf(
                         hasDescendant(
-                            withText(R.string.login_nickname_valid_message),
+                            withText(""),
                         ),
                         isDisplayed(),
                     ),

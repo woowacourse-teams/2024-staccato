@@ -18,6 +18,6 @@ fun NicknameState.toInputState(context: Context): InputState {
                 context.getString(R.string.login_nickname_error_message_length).format(min, max),
             )
 
-        is NicknameState.Valid -> InputState.Valid(context.getString(R.string.login_nickname_valid_message))
+        is NicknameState.Valid -> InputState.Valid()
     }
 }
