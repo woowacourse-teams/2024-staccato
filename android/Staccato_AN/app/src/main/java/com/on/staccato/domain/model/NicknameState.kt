@@ -18,7 +18,7 @@ sealed interface NicknameState {
     data class Valid(val nickname: String) : NicknameState
 
     companion object {
-        fun validate(value: String): NicknameState {
+        fun from(value: String): NicknameState {
             val nickname = Nickname(value)
             return when {
                 nickname.isEmpty() -> Empty
