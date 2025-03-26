@@ -186,7 +186,7 @@ fun TextInputLayout.changeLayoutBy(inputState: InputState) {
         }
 
         is InputState.Invalid -> {
-            boxStrokeColor = resources.getColor(R.color.sub1, context.theme)
+            boxStrokeColor = resources.getColor(R.color.point1, context.theme)
             boxStrokeWidth = strokeWidth
             boxStrokeWidthFocused = strokeWidth
             error = inputState.errorMessage
