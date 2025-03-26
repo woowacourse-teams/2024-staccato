@@ -26,7 +26,7 @@ class LoginViewModel
     ) : ViewModel() {
         val nickname = MutableLiveData("")
 
-        val nicknameState: LiveData<NicknameState> = nickname.map { Nickname(it).validate() }
+        val nicknameState: LiveData<NicknameState> = nickname.map { NicknameState.validate(it) }
 
         val nicknameMaxLength = Nickname.MAX_LENGTH
 

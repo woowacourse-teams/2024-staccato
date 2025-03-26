@@ -1,5 +1,8 @@
 package com.on.staccato.domain.model
 
+import com.on.staccato.domain.model.Nickname.Companion.MAX_LENGTH
+import com.on.staccato.domain.model.Nickname.Companion.MIN_LENGTH
+
 sealed interface NicknameState {
     data object Empty : NicknameState
 
@@ -13,4 +16,21 @@ sealed interface NicknameState {
     ) : NicknameState
 
     data class Valid(val nickname: String) : NicknameState
+
+    companion object {
+        fun validate(value: String): NicknameState {
+            val nickname = Nickname(value)
+            return when {
+                nickname.isEmpty() -> Empty
+
+                nickname.isBlankFirst() -> BlankFirst
+
+                !nickname.isValidFormat() -> InvalidFormat
+
+                !nickname.isValidLength() -> InvalidLength(MIN_LENGTH, MAX_LENGTH)
+
+                else -> Valid(nickname.value)
+            }
+        }
+    }
 }
