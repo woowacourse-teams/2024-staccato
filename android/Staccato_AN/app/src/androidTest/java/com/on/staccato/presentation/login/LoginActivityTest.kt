@@ -36,8 +36,35 @@ class LoginActivityTest {
     }
 
     @Test
+    @Parameters(method = "blankNicknames")
+    fun `공백만으로_이루어진_문자열을_입력하면_닉네임_입력_란에서_에러_메세지를_보여준다`(blank: String) {
+        // when
+        nicknameInputEditText.perform(replaceText(blank))
+
+        // then
+        nicknameInputLayout
+            .check(
+                matches(
+                    allOf(
+                        hasDescendant(
+                            withText(R.string.login_nickname_error_message_blank_first),
+                        ),
+                        isDisplayed(),
+                    ),
+                ),
+            )
+    }
+
+    private fun blankNicknames(): List<String> =
+        listOf(
+            " ",
+            "    ",
+            "\n",
+        )
+
+    @Test
     @Parameters(method = "startsWithBlank")
-    fun `공백_또는_공백이_먼저_오는_문자열을_입력하면_닉네임_입력_란에서_에러_메세지를_보여준다`(nickname: String) {
+    fun `공백으로_시작하는_문자열을_입력하면_닉네임_입력_란에서_에러_메세지를_보여준다`(nickname: String) {
         // when
         nicknameInputEditText.perform(replaceText(nickname))
 
@@ -57,7 +84,7 @@ class LoginActivityTest {
 
     private fun startsWithBlank(): List<String> =
         listOf(
-            "   ",
+            "  nickname",
             " 공백 먼저",
         )
 
