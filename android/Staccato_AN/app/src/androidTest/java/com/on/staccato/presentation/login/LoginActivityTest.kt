@@ -26,7 +26,7 @@ class LoginActivityTest {
 
     private val startButton: ViewInteraction = onView(withId(R.id.btn_login_start_staccato))
     private val nicknameInputLayout: ViewInteraction =
-        onView(withId(R.id.text_input_layout_login_user_nickname))
+        onView(withId(R.id.text_input_login_user_nickname))
     private val nicknameInputEditText: ViewInteraction =
         onView(withId(R.id.edit_text_login_user_nickname))
 
