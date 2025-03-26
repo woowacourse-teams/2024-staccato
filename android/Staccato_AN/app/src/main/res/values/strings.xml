@@ -43,9 +43,11 @@
     <string name="timeline_empty">텅 비었어요!</string>
     <string name="timeline_make_category">스타카토를 담을 카테고리를 만들어보세요.</string>
     <string name="timeline_make_category_with_term">아직 기간이 설정된 카테고리가 없어요.\n시작과 끝이 있는 카테고리를 만들어볼까요?</string>
+    <string name="timeline_make_category_without_term">아직 카테고리가 없어요.\n카테고리를 만들어볼까요?</string>
     <string name="timeline_add_category">추가</string>
     <string name="timeline_sort">정렬</string>
-    <string name="timeline_filter_term">기간 있는 카테고리</string>
+    <string name="timeline_filter_with_term">기간 있는 카테고리만</string>
+    <string name="timeline_filter_without_term">기간 없는 카테고리만</string>
     <string name="timeline_filter_all">모든 카테고리</string>
     <string name="timeline_create_category">카테고리 생성하기</string>
     <string name="timeline_category_creation_btn_description">카테고리 만들기로 이동</string>

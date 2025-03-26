@@ -173,8 +173,13 @@ fun TextView.setCategoryFilter(sortType: SortType?) {
 @BindingAdapter("categoryFilter")
 fun TextView.setCategoryFilter(filterType: FilterType?) {
     when (filterType) {
-        FilterType.TERM -> {
-            text = resources.getString(R.string.timeline_filter_term)
+        FilterType.WITH_TERM -> {
+            text = resources.getString(R.string.timeline_filter_with_term)
+            setTextColor(resources.getColor(R.color.staccato_blue, null))
+        }
+
+        FilterType.WITHOUT_TERM -> {
+            text = resources.getString(R.string.timeline_filter_without_term)
             setTextColor(resources.getColor(R.color.staccato_blue, null))
         }
 
@@ -195,7 +200,7 @@ fun TextView.setTimelineEmptyText(
 ) {
     visibility =
         if (timeLine.isNullOrEmpty() && isTimelineLoading == false) View.VISIBLE else View.GONE
-    updateTopMargin(if (filterType == FilterType.TERM) 100f else 10f)
+    updateTopMargin(if (filterType == null) 10f else 100f)
 }
 
 @BindingAdapter(
@@ -214,10 +219,10 @@ fun TextView.setMakeCategoryText(
         }
     text =
         context.getString(
-            if (filterType == FilterType.TERM) {
-                R.string.timeline_make_category_with_term
-            } else {
-                R.string.timeline_make_category
+            when (filterType) {
+                FilterType.WITH_TERM -> R.string.timeline_make_category_with_term
+                FilterType.WITHOUT_TERM -> R.string.timeline_make_category_without_term
+                else -> R.string.timeline_make_category
             },
         )
 }

@@ -1,15 +1,16 @@
 package com.on.staccato.presentation.timeline.model
 
 enum class FilterType {
-    TERM,
+    WITH_TERM,
+    WITHOUT_TERM,
     ;
 
     companion object {
         fun next(filterType: FilterType?): FilterType? =
-            if (filterType == TERM) {
-                null
-            } else {
-                TERM
+            when (filterType) {
+                WITH_TERM -> WITHOUT_TERM
+                WITHOUT_TERM -> null
+                else -> WITH_TERM
             }
     }
 }

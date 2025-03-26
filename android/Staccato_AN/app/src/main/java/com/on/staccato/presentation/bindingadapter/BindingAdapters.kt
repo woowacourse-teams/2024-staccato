@@ -55,22 +55,22 @@ fun View.setVisibilityByTimelineAndFilter(
 ) {
     visibility =
         when (filterType) {
-            FilterType.TERM -> getVisibilityForTermFilter(isEmptyView)
-            else -> getVisibilityForAllCategories(timeLine, filterType, isEmptyView, isTimelineLoading)
+            null -> getVisibilityForAllCategories(timeLine, isEmptyView, isTimelineLoading)
+            else -> getVisibilityForFilteredCategories(isEmptyView)
         }
 }
 
-private fun getVisibilityForTermFilter(isEmptyView: Boolean?) = if (isEmptyView == true) View.GONE else View.VISIBLE
+private fun getVisibilityForFilteredCategories(isEmptyView: Boolean?) = if (isEmptyView == true) View.GONE else View.VISIBLE
 
 private fun getVisibilityForAllCategories(
     timeLine: List<TimelineUiModel>?,
-    filterType: FilterType?,
     isEmptyView: Boolean?,
     isTimelineLoading: Boolean?,
 ): Int {
-    return when (isEmptyTimeline(timeLine, filterType)) {
-        true -> getVisibilityForEmptyTimeline(isEmptyView, isTimelineLoading)
-        else -> getVisibilityForExistingTimeline(isEmptyView)
+    return if (timeLine.isNullOrEmpty()) {
+        getVisibilityForEmptyTimeline(isEmptyView, isTimelineLoading)
+    } else {
+        getVisibilityForExistingTimeline(isEmptyView)
     }
 }
 
