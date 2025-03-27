@@ -12,6 +12,7 @@ import com.on.staccato.domain.model.endDateOf2023
 import com.on.staccato.domain.model.endDateOf2024
 import com.on.staccato.domain.model.makeTestStaccato
 import com.on.staccato.domain.model.targetCategoryCandidate
+import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.MainDispatcherRule
@@ -44,6 +45,9 @@ class StaccatoUpdateViewModelTest {
 
     @MockK
     private lateinit var imageRepository: ImageDefaultRepository
+
+    @MockK
+    private lateinit var locationRepository: LocationRepository
 
     @InjectMockKs
     private lateinit var viewModel: StaccatoUpdateViewModel

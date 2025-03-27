@@ -12,6 +12,7 @@ import com.on.staccato.databinding.FragmentCategoryBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.adapter.MatesAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
+import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity
 import com.on.staccato.presentation.common.DeleteDialogFragment
@@ -84,37 +85,37 @@ class CategoryFragment :
     }
 
     override fun onStaccatoClicked(staccatoId: Long) {
-        viewModel.category.value?.let {
-            loggingManager.logEvent(
-                NAME_STACCATO_READ,
-                Param(KEY_IS_VIEWED_BY_MARKER, false),
+        loggingManager.logEvent(
+            NAME_STACCATO_READ,
+            Param(KEY_IS_VIEWED_BY_MARKER, false),
+        )
+        val bundle =
+            bundleOf(
+                STACCATO_ID_KEY to staccatoId,
             )
-            val bundle =
-                bundleOf(
-                    STACCATO_ID_KEY to staccatoId,
-                )
-            findNavController().navigate(R.id.action_categoryFragment_to_staccatoFragment, bundle)
-        }
+        findNavController().navigate(R.id.action_categoryFragment_to_staccatoFragment, bundle)
     }
 
     override fun onConfirmClicked() {
         viewModel.deleteCategory(categoryId)
     }
 
-    override fun onStaccatoCreationClicked() {
+    override fun onStaccatoCreationClicked(
+        category: CategoryUiModel,
+        isPermissionCanceled: Boolean,
+    ) {
         loggingManager.logEvent(
             NAME_STACCATO_CREATION,
             Param(KEY_IS_CREATED_IN_MAIN, false),
         )
-        viewModel.category.value?.let {
-            val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
-            StaccatoCreationActivity.startWithResultLauncher(
-                requireContext(),
-                staccatoCreationLauncher,
-                categoryId,
-                it.title,
-            )
-        }
+        val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
+        StaccatoCreationActivity.startWithResultLauncher(
+            context = requireContext(),
+            activityLauncher = staccatoCreationLauncher,
+            isPermissionCanceled = isPermissionCanceled,
+            categoryId = category.id,
+            categoryTitle = category.title,
+        )
     }
 
     private fun initBinding() {
@@ -122,6 +123,13 @@ class CategoryFragment :
         binding.viewModel = viewModel
         binding.toolbarHandler = this
         binding.categoryHandler = this
+        observeIsPermissionCanceled()
+    }
+
+    private fun observeIsPermissionCanceled() {
+        sharedViewModel.isPermissionCanceled.observe(viewLifecycleOwner) {
+            binding.isPermissionCanceled = it
+        }
     }
 
     private fun initToolbar() {
