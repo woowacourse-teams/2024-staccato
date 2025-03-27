@@ -55,6 +55,14 @@ public class Member extends BaseEntity {
                 .build();
     }
 
+    public static Member create(String nickname, String imageUrl) {
+        return Member.builder()
+                .nickname(nickname)
+                .imageUrl(imageUrl)
+                .code(UUID.randomUUID().toString())
+                .build();
+    }
+
     public void updateImage(String imageUrl) {
         this.imageUrl = imageUrl;
     }
