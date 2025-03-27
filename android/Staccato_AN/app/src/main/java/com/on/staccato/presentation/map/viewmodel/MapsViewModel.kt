@@ -75,10 +75,10 @@ class MapsViewModel
         }
 
         fun updateMarkers(markers: List<Marker>) {
-            staccatoLocations.value?.map { staccatoLocation ->
+            staccatoLocations.value?.let { locations ->
                 markerUiModels.value =
-                    markers.map { marker ->
-                        MarkerUiModel(staccatoLocation.staccatoId, marker.id)
+                    locations.zip(markers) { location, marker ->
+                        MarkerUiModel(location.staccatoId, marker.id)
                     }
             }
         }
