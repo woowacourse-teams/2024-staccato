@@ -16,7 +16,7 @@ env:
   KEY_STORE_PROPERTIES: ${{ secrets.KEY_STORE_PROPERTIES }}
 
 jobs:
-  android-cd:
+  build-and-deploy:
     if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-an/')
 
     name: Run Android CI/CD for release
