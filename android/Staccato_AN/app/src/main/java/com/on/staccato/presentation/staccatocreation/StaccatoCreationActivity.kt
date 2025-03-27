@@ -84,7 +84,7 @@ class StaccatoCreationActivity :
     lateinit var locationPermissionManager: LocationPermissionManager
 
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
-    private lateinit var address: String
+    private var address: String = DEFAULT_ADDRESS
     private var currentSnackBar: Snackbar? = null
 
     override fun initStartView(savedInstanceState: Bundle?) {
@@ -452,6 +452,7 @@ class StaccatoCreationActivity :
     companion object {
         const val DEFAULT_CATEGORY_ID = 0L
         private const val DEFAULT_CATEGORY_TITLE = ""
+        private const val DEFAULT_ADDRESS = ""
 
         fun startWithResultLauncher(
             context: Context,

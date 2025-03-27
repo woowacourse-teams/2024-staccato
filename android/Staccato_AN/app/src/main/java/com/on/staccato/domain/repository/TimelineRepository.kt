@@ -5,7 +5,10 @@ import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.Timeline
 
 interface TimelineRepository {
-    suspend fun getTimeline(): ApiResult<Timeline>
+    suspend fun getTimeline(
+        sort: String?,
+        filter: String?,
+    ): ApiResult<Timeline>
 
     suspend fun getCategoryCandidates(): ApiResult<CategoryCandidates>
 }

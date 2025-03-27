@@ -82,7 +82,7 @@ class StaccatoUpdateActivity :
     lateinit var locationPermissionManager: LocationPermissionManager
 
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
-    private lateinit var address: String
+    private var address: String = DEFAULT_ADDRESS
     private var currentSnackBar: Snackbar? = null
 
     override fun onNewPlaceSelected(
@@ -428,6 +428,8 @@ class StaccatoUpdateActivity :
     }
 
     companion object {
+        private const val DEFAULT_ADDRESS = ""
+
         fun startWithResultLauncher(
             staccatoId: Long,
             categoryId: Long,
