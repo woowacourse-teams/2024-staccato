@@ -176,6 +176,7 @@ class MainActivity :
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
+                    sharedViewModel.setStaccatosHasUpdated()
                     val id = it.getLongExtra(STACCATO_ID_KEY, 0L)
                     val isStaccatoCreated = it.getBooleanExtra(CREATED_STACCATO_KEY, false)
                     val bundle = bundleOf(STACCATO_ID_KEY to id, CREATED_STACCATO_KEY to isStaccatoCreated)

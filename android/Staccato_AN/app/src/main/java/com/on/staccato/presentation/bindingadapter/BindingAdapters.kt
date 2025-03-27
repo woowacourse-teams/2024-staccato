@@ -1,10 +1,10 @@
 package com.on.staccato.presentation.bindingadapter
 
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ScrollView
 import androidx.databinding.BindingAdapter
 import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
+import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 
 @BindingAdapter("visibleOrGone")
@@ -45,26 +45,51 @@ fun View.setThumbnailLoadingVisibility(thumbnail: ThumbnailUiModel) {
 }
 
 @BindingAdapter(
-    value = ["visibilityByTimeline", "visibilityByLoading"],
+    value = ["visibilityByTimeline", "visibilityByFilterType", "isEmptyView", "isTimelineLoading"],
 )
-fun View.setTimelineEmptyViewVisible(
+fun View.setVisibilityByTimelineAndFilter(
     timeLine: List<TimelineUiModel>? = null,
-    isTimelineLoading: Boolean,
+    filterType: FilterType?,
+    isEmptyView: Boolean?,
+    isTimelineLoading: Boolean?,
 ) {
-    visibility = if (isTimeLineEmpty(timeLine, isTimelineLoading)) View.VISIBLE else View.GONE
+    visibility =
+        when (filterType) {
+            null -> getVisibilityForAllCategories(timeLine, isEmptyView, isTimelineLoading)
+            else -> getVisibilityForFilteredCategories(isEmptyView)
+        }
 }
 
-@BindingAdapter(
-    value = ["visibilityByTimeline", "visibilityByLoading"],
-)
-fun ViewGroup.setCategoryAddButtonVisible(
-    timeLine: List<TimelineUiModel>? = null,
-    isTimelineLoading: Boolean,
-) {
-    visibility = if (isTimeLineEmpty(timeLine, isTimelineLoading)) View.GONE else View.VISIBLE
-}
+private fun getVisibilityForFilteredCategories(isEmptyView: Boolean?) = if (isEmptyView == true) View.GONE else View.VISIBLE
 
-private fun isTimeLineEmpty(
+private fun getVisibilityForAllCategories(
     timeLine: List<TimelineUiModel>?,
-    isTimelineLoading: Boolean,
-) = timeLine.isNullOrEmpty() && isTimelineLoading.not()
+    isEmptyView: Boolean?,
+    isTimelineLoading: Boolean?,
+): Int {
+    return if (timeLine.isNullOrEmpty()) {
+        getVisibilityForEmptyTimeline(isEmptyView, isTimelineLoading)
+    } else {
+        getVisibilityForExistingTimeline(isEmptyView)
+    }
+}
+
+private fun isEmptyTimeline(
+    timeLine: List<TimelineUiModel>?,
+    filterType: FilterType?,
+) = timeLine.isNullOrEmpty() && filterType == null
+
+private fun getVisibilityForEmptyTimeline(
+    isEmptyView: Boolean?,
+    isTimelineLoading: Boolean?,
+) = when {
+    isEmptyView == true && isTimelineLoading != true -> View.VISIBLE
+    isEmptyView != true && isTimelineLoading == true -> View.VISIBLE
+    else -> View.INVISIBLE
+}
+
+private fun getVisibilityForExistingTimeline(isEmptyView: Boolean?) =
+    when (isEmptyView) {
+        true -> View.INVISIBLE
+        else -> View.VISIBLE
+    }

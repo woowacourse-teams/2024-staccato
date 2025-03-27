@@ -1,11 +1,15 @@
 package com.on.staccato.presentation.login.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.onException
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
+import com.on.staccato.domain.model.Nickname
+import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.domain.repository.LoginRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
@@ -22,6 +26,10 @@ class LoginViewModel
     ) : ViewModel() {
         val nickname = MutableLiveData("")
 
+        val nicknameState: LiveData<NicknameState> = nickname.map { NicknameState.from(it) }
+
+        val nicknameMaxLength = Nickname.MAX_LENGTH
+
         private val _isLoginSuccess = MutableSingleLiveData(false)
         val isLoginSuccess: SingleLiveData<Boolean>
             get() = _isLoginSuccess
@@ -31,12 +39,14 @@ class LoginViewModel
             get() = _errorMessage
 
         fun requestLogin() {
-            val nickname = nickname.value ?: ""
-            viewModelScope.launch {
-                repository.loginWithNickname(nickname)
-                    .onSuccess { updateIsLoginSuccess() }
-                    .onServerError(::handleError)
-                    .onException(::handleException)
+            val nickname = nicknameState.value
+            if (nickname is NicknameState.Valid) {
+                viewModelScope.launch {
+                    repository.loginWithNickname(nickname.value)
+                        .onSuccess { updateIsLoginSuccess() }
+                        .onServerError(::handleError)
+                        .onException(::handleException)
+                }
             }
         }
 
