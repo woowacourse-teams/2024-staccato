@@ -2,7 +2,6 @@ name: Android CI/CD for release
 
 on:
   pull_request:
-    paths: 'android/**'
     branches:
       - main
     types:
@@ -19,6 +18,7 @@ env:
 jobs:
   android-cd:
     if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-an/')
+
     name: Run Android CI/CD for release
     runs-on: ubuntu-latest
 

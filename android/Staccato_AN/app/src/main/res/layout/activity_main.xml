@@ -7,8 +7,8 @@
     <data>
 
         <variable
-            name="memberProfile"
-            type="com.on.staccato.domain.model.MemberProfile" />
+            name="sharedViewModel"
+            type="com.on.staccato.presentation.main.viewmodel.SharedViewModel" />
 
         <variable
             name="handler"
@@ -28,7 +28,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragment_container_view_map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:name="com.on.staccato.presentation.map.MapsFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -45,7 +45,7 @@
                 android:clickable="true"
                 android:contentDescription="@string/main_staccato_creation_btn_description"
                 android:focusable="true"
-                android:onClick="@{() -> handler.onStaccatoCreationClicked()}"
+                android:onClick="@{() -> handler.onStaccatoCreationClicked(sharedViewModel.isPermissionCanceled)}"
                 android:paddingTop="10dp"
                 android:src="@drawable/icon_floating_button"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -72,7 +72,7 @@
                     android:onClick="@{() -> handler.onMyPageClicked()}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:coilCircleImageUrl="@{memberProfile.profileImageUrl}"
+                    bind:coilCircleImageUrl="@{sharedViewModel.memberProfile.profileImageUrl}"
                     bind:coilPlaceHolder="@{@drawable/icon_member}" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
