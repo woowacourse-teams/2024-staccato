@@ -12,6 +12,8 @@ import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
+import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
+import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -121,4 +123,36 @@ public interface StaccatoControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "스타카토 ID", example = "1") @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId,
             @Parameter(required = true) @Valid FeelingRequest feelingRequest);
+
+    @Operation(summary = "스타카토 공유 링크 생성", description = "스타카토의 공유 링크를 생성합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "스타카토 공유 링크 생성 성공", responseCode = "201"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+
+                    (1) 스타카토 ID가 양수가 아닐 때
+                    
+                    (2) 스타카토가 존재하지 않을 때
+                    """,
+                    responseCode = "400"),
+            @ApiResponse(description = "스타카토가 본인 것이 아닐 때", responseCode = "403")
+    })
+    ResponseEntity<StaccatoShareLinkResponse> shareStaccato(
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "스타카토 ID", example = "1") @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId);
+
+    @Operation(summary = "공유된 스타카토 조회", description = "공유 토큰을 이용하여 공유된 스타카토 정보를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "스타카토 조회 성공", responseCode = "200"),
+            @ApiResponse(description = "해당 스타카토가 없을 때", responseCode = "400"),
+            @ApiResponse(description = """
+                <발생 가능한 케이스>
+
+                (1) 만료된 토큰일 때
+                
+                (2) 잘못된 토큰일 때
+                """, responseCode = "401")
+    })
+    ResponseEntity<StaccatoSharedResponse> readSharedStaccatoByToken(
+            @Parameter(description = "공유 토큰", example = "sample-token") @PathVariable String token);
 }

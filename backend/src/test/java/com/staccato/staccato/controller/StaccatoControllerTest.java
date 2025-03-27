@@ -18,12 +18,15 @@ import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.staccato.StaccatoDetailResponseFixture;
 import com.staccato.fixture.staccato.StaccatoLocationResponsesFixture;
+import com.staccato.fixture.staccato.StaccatoSharedResponseFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
+import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -384,5 +387,70 @@ class StaccatoControllerTest extends ControllerTest {
                 .content(objectMapper.writeValueAsString(feelingRequest)))
             .andExpect(status().isBadRequest())
             .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("스타카토 링크 생성에 성공한다.")
+    @Test
+    void createStaccatoShareLink() throws Exception {
+        // given
+        long staccatoId = 1L;
+        StaccatoShareLinkResponse response = new StaccatoShareLinkResponse(staccatoId, "https://staccato.kr/share/sample-token");
+        when(staccatoService.createStaccatoShareLink(any(), any())).thenReturn(response);
+        String expectedResponse = """
+                {
+                    "staccatoId": 1,
+                    "shareLink": "https://staccato.kr/share/sample-token"
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(post("/staccatos/{staccatoId}/share", staccatoId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isCreated())
+                .andExpect(header().string(HttpHeaders.LOCATION, "/staccatos/shared/" + "sample-token"))
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("토큰으로 스타카토의 정보를 불러온다.")
+    @Test
+    void readSharedStaccatoByToken() throws Exception {
+        // given
+        String token = "sample-token";
+        LocalDateTime expiredAt = LocalDateTime.of(2024, 7, 2, 10, 0, 0);
+        when(staccatoService.readSharedStaccatoByToken(token)).thenReturn(StaccatoSharedResponseFixture.create(expiredAt));
+        String expectedResponse = """
+                {
+                    "staccatoId": 1,
+                    "expiredAt": "2024-07-02T10:00:00",
+                    "nickname": "staccato",
+                    "staccatoImageUrls": [
+                        "https://oldExample.com.jpg",
+                        "https://existExample.com.jpg"
+                    ],
+                    "staccatoTitle": "staccatoTitle",
+                    "placeName": "placeName",
+                    "address": "address",
+                    "visitedAt": "2024-07-01T10:00:00",
+                    "feeling": "nothing",
+                    "comments": [
+                        {
+                            "nickname": "staccato",
+                            "content": "댓글 샘플",
+                            "memberImageUrl": "image.jpg"
+                        },
+                        {
+                            "nickname": "staccato2",
+                            "content": "댓글 샘플2",
+                            "memberImageUrl": "image2.jpg"
+                        }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/staccatos/shared/{token}", token)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
     }
 }

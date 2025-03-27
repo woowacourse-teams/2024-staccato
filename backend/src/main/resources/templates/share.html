@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staccato</title>
+
+    <link rel="stylesheet" href="/css/share.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js" defer></script>
+    <script src="/js/share.js" defer></script>
+</head>
+<body>
+<div class="container">
+    <div class="staccato-header">
+        <h1 class="staccato-title"></h1>
+        <p class="staccato-subtitle"></p>
+    </div>
+
+    <div class="image-slider">
+        <div class="swiper">
+            <div class="swiper-wrapper">
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+
+    <div class="title">
+        <h1></h1>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="details">
+        <p class="place-name"></p>
+        <p class="address"></p>
+        <p class="visited-at"></p>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="feeling">
+        <p>이 때의 기분은 어땠나요?</p>
+        <div class="emojis"></div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="comments">
+        <h2>코멘트</h2>
+        <div class="comments-list">
+        </div>
+    </div>
+
+    <div class="promotion">
+        <h2>더 많은 추억을 남기고 싶다면?</h2>
+        <a href="https://play.google.com/store/apps/details?id=com.on.staccato&pcampaignid=web_share" target="_blank" class="google-play-link">
+            <img th:src="${'https://image.staccato.kr/web/share/google-play-badge.png'}" alt="Get it on Google Play">
+        </a>
+        <p>플레이 스토어에서 스타카토를 만나보세요!</p>
+    </div>
+</div>
+
+</body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const token = [[${token}]];
+    /*]]>*/
+</script>
+</html>
