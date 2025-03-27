@@ -93,8 +93,8 @@ fun ImageView.setImageResourceWithId(
 fun ImageView.setCategoryFilter(filterType: FilterType?) {
     val color =
         when (filterType) {
-            null -> resources.getColor(R.color.staccato_blue, null)
-            else -> resources.getColor(R.color.gray3, null)
+            null -> resources.getColor(R.color.gray3, null)
+            else -> resources.getColor(R.color.staccato_blue, null)
         }
     imageTintList = ColorStateList.valueOf(color)
 }
