@@ -38,7 +38,7 @@ public class ReadAllCategoryMetricsAspectTest extends ServiceSliceTest {
         double filterCount = meterRegistry.counter("category_filter_count",
                 "class", CategoryService.class.getName(),
                 "method", "readAllCategories",
-                "filter", "with_term").count();
+                "filter", "WITH_TERM").count();
         double sortCount = meterRegistry.counter("category_sort_count",
                 "class", CategoryService.class.getName(),
                 "method", "readAllCategories",
