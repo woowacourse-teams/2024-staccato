@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.staccato.comment.controller.docs.CommentControllerDocs;
 import com.staccato.comment.service.CommentService;
-import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentRequestV2;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
@@ -33,40 +32,14 @@ import lombok.RequiredArgsConstructor;
 public class CommentController implements CommentControllerDocs {
     private final CommentService commentService;
 
-    @PostMapping
-    public ResponseEntity<Void> createComment(
-            @LoginMember Member member,
-            @Valid @RequestBody CommentRequest commentRequest
-    ) {
-        long commentId = commentService.createComment(commentRequest, member);
-        return ResponseEntity.created(URI.create("/comments/" + commentId))
-                .build();
-    }
-
     @PostMapping("/v2")
     public ResponseEntity<Void> createComment(
             @LoginMember Member member,
             @Valid @RequestBody CommentRequestV2 commentRequestV2
     ) {
-        long commentId = commentService.createComment(toCommentRequest(commentRequestV2), member);
+        long commentId = commentService.createComment(commentRequestV2, member);
         return ResponseEntity.created(URI.create("/comments/" + commentId))
                 .build();
-    }
-
-    private CommentRequest toCommentRequest(CommentRequestV2 commentRequestV2) {
-        return new CommentRequest(
-                commentRequestV2.staccatoId(),
-                commentRequestV2.content()
-        );
-    }
-
-    @GetMapping
-    public ResponseEntity<CommentResponses> readCommentsByMomentId(
-            @LoginMember Member member,
-            @RequestParam @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long momentId
-    ) {
-        CommentResponses commentResponses = commentService.readAllCommentsByMomentId(member, momentId);
-        return ResponseEntity.ok().body(commentResponses);
     }
 
     @GetMapping("/v2")
@@ -74,7 +47,7 @@ public class CommentController implements CommentControllerDocs {
             @LoginMember Member member,
             @RequestParam @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId
     ) {
-        CommentResponses commentResponses = commentService.readAllCommentsByMomentId(member, staccatoId);
+        CommentResponses commentResponses = commentService.readAllCommentsByStaccatoId(member, staccatoId);
         return ResponseEntity.ok().body(commentResponses);
     }
 

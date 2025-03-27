@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import com.staccato.exception.UnauthorizedException;
-import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.member.MemberFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import io.jsonwebtoken.Claims;

@@ -1,5 +1,7 @@
 package com.staccato.comment.repository;
 
+import com.staccato.category.domain.Category;
+import com.staccato.staccato.domain.Staccato;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -7,16 +9,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
-import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
-import com.staccato.fixture.memory.MemoryFixture;
-import com.staccato.fixture.moment.MomentFixture;
+import com.staccato.fixture.category.CategoryFixture;
+import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.memory.domain.Memory;
-import com.staccato.memory.repository.MemoryRepository;
-import com.staccato.moment.domain.Moment;
-import com.staccato.moment.repository.MomentRepository;
+import com.staccato.category.repository.CategoryRepository;
+import com.staccato.staccato.repository.StaccatoRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,9 +24,9 @@ class CommentRepositoryTest extends RepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
-    private MomentRepository momentRepository;
+    private StaccatoRepository staccatoRepository;
     @Autowired
-    private MemoryRepository memoryRepository;
+    private CategoryRepository categoryRepository;
     @Autowired
     private CommentRepository commentRepository;
     @PersistenceContext
@@ -34,19 +34,19 @@ class CommentRepositoryTest extends RepositoryTest {
 
     @DisplayName("특정 스타카토의 id를 여러개를 가지고 있는 모든 댓글들을 삭제한다.")
     @Test
-    void deleteAllByMomentIdInBulk() {
+    void deleteAllByStaccatoIdInBulk() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Memory memory = memoryRepository.save(MemoryFixture.create(null, null));
-        Moment moment1 = MomentFixture.create(memory);
-        CommentFixture.create(moment1, member);
-        Moment moment2 = MomentFixture.create(memory);
-        CommentFixture.create(moment2, member);
-        momentRepository.save(moment1);
-        momentRepository.save(moment2);
+        Category category = categoryRepository.save(CategoryFixture.create(null, null));
+        Staccato staccato1 = StaccatoFixture.create(category);
+        CommentFixture.create(staccato1, member);
+        Staccato staccato2 = StaccatoFixture.create(category);
+        CommentFixture.create(staccato2, member);
+        staccatoRepository.save(staccato1);
+        staccatoRepository.save(staccato2);
 
         // when
-        commentRepository.deleteAllByMomentIdInBulk(List.of(moment1.getId(), moment2.getId()));
+        commentRepository.deleteAllByStaccatoIdInBulk(List.of(staccato1.getId(), staccato2.getId()));
         em.flush();
         em.clear();
 
