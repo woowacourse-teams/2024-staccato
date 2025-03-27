@@ -1,14 +1,18 @@
 name: Backend CI/CD prod
 
 on:
-  push:
-    paths: [ 'backend/**', '.github/**' ]
-    branches: [ "release-be" ]
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
 
 jobs:
   ci:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-be')
     runs-on: ubuntu-latest
-
+    env:
+      JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
     defaults:
       run:
         shell: bash
@@ -52,7 +56,7 @@ jobs:
 
       - name: Docker Image Build
         run: |
-          sudo docker build --platform linux/arm64 -t staccato/staccato:prod -f Dockerfile.prod .
+          sudo docker build --platform linux/arm64 -t staccato/staccato:prod -f Dockerfile.prod --build-arg JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} .
 
       - name: Docker Hub Push
         run: |

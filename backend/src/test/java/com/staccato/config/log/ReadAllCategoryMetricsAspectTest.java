@@ -1,14 +1,14 @@
 package com.staccato.config.log;
 
+import com.staccato.category.service.dto.request.CategoryReadRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
-import com.staccato.fixture.Member.MemberFixture;
+import com.staccato.fixture.member.MemberFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.memory.service.MemoryService;
-import com.staccato.memory.service.dto.request.MemoryReadRequest;
+import com.staccato.category.service.CategoryService;
 import io.micrometer.core.instrument.MeterRegistry;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class ReadAllCategoryMetricsAspectTest extends ServiceSliceTest {
 
     @Autowired
-    private MemoryService memoryService;
+    private CategoryService categoryService;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -29,19 +29,19 @@ public class ReadAllCategoryMetricsAspectTest extends ServiceSliceTest {
         // given
         Member member = MemberFixture.create();
         memberRepository.save(member);
-        MemoryReadRequest memoryReadRequest = new MemoryReadRequest("term", "oldest");
+        CategoryReadRequest categoryReadRequest = new CategoryReadRequest("with_term", "oldest");
 
         // when
-        memoryService.readAllMemories(member, memoryReadRequest);
+        categoryService.readAllCategories(member, categoryReadRequest);
 
         // then
         double filterCount = meterRegistry.counter("category_filter_count",
-                "class", MemoryService.class.getName(),
-                "method", "readAllMemories",
-                "filter", "term").count();
+                "class", CategoryService.class.getName(),
+                "method", "readAllCategories",
+                "filter", "WITH_TERM").count();
         double sortCount = meterRegistry.counter("category_sort_count",
-                "class", MemoryService.class.getName(),
-                "method", "readAllMemories",
+                "class", CategoryService.class.getName(),
+                "method", "readAllCategories",
                 "sort", "OLDEST").count();
         assertAll(
                 () -> assertThat(filterCount).isEqualTo(1.0),

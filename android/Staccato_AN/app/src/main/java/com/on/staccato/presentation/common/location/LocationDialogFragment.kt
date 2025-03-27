@@ -48,7 +48,7 @@ class LocationDialogFragment : DialogFragment(), LocationDialogHandler {
     }
 
     override fun onCancelClicked() {
-        sharedViewModel.updateIsPermissionCancelClicked()
+        sharedViewModel.updateIsPermissionCanceled()
         dismiss()
     }
 
@@ -67,5 +67,6 @@ class LocationDialogFragment : DialogFragment(), LocationDialogHandler {
     companion object {
         const val TAG = "LocationDialogFragment"
         const val PACKAGE_SCHEME = "package"
+        const val PERMISSION_CANCEL_KEY = "isPermissionCanceled"
     }
 }

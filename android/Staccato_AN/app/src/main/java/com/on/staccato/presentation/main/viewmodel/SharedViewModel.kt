@@ -11,6 +11,7 @@ import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,22 +24,33 @@ class SharedViewModel
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile> get() = _memberProfile
 
-        private val _isTimelineUpdated = MutableSingleLiveData(false)
-        val isTimelineUpdated: SingleLiveData<Boolean>
+        private val _isTimelineUpdated = MutableLiveData(false)
+        val isTimelineUpdated: LiveData<Boolean>
             get() = _isTimelineUpdated
 
         private val _isStaccatosUpdated = MutableSingleLiveData(false)
         val isStaccatosUpdated: SingleLiveData<Boolean>
             get() = _isStaccatosUpdated
 
-        private val _isPermissionCancelClicked = MutableLiveData(false)
-        val isPermissionCancelClicked: LiveData<Boolean> get() = _isPermissionCancelClicked
+        private val _isPermissionCanceled = MutableLiveData(false)
+        val isPermissionCanceled: LiveData<Boolean> get() = _isPermissionCanceled
 
         private val _isSettingClicked = MutableLiveData(false)
         val isSettingClicked: LiveData<Boolean> get() = _isSettingClicked
 
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
+
+        private val _isBottomSheetHalf = MutableLiveData(true)
+        val isBottomSheetHalf: LiveData<Boolean> get() = _isBottomSheetHalf
+
+        private val _staccatoId = MutableLiveData<Long>()
+        val staccatoId: LiveData<Long> get() = _staccatoId
+
+        private val _staccatoLocation = MutableLiveData<LocationUiModel>()
+        val staccatoLocation: LiveData<LocationUiModel> get() = _staccatoLocation
+
+        private val isDragging = MutableLiveData<Boolean>(false)
 
         fun fetchMemberProfile() {
             viewModelScope.launch {
@@ -50,7 +62,7 @@ class SharedViewModel
         }
 
         fun setTimelineHasUpdated() {
-            _isTimelineUpdated.setValue(true)
+            _isTimelineUpdated.value = true
         }
 
         fun setStaccatosHasUpdated() {
@@ -58,12 +70,32 @@ class SharedViewModel
             _isStaccatosUpdated.setValue(true)
         }
 
-        fun updateIsPermissionCancelClicked() {
-            _isPermissionCancelClicked.value = true
+        fun updateIsPermissionCanceled() {
+            _isPermissionCanceled.value = true
         }
 
         fun updateIsSettingClicked(isSettingClicked: Boolean) {
             _isSettingClicked.value = isSettingClicked
+        }
+
+        fun setIsBottomSheetHalf(isBottomSheetHalf: Boolean) {
+            val isDifferent = isBottomSheetHalf != _isBottomSheetHalf.value
+            if (isDifferent && isDragging.value == false) _isBottomSheetHalf.value = isBottomSheetHalf
+        }
+
+        fun updateStaccatoId(id: Long) {
+            _staccatoId.value = id
+        }
+
+        fun updateStaccatoLocation(
+            latitude: Double,
+            longitude: Double,
+        ) {
+            _staccatoLocation.value = LocationUiModel(latitude, longitude)
+        }
+
+        fun updateIsDragging(state: Boolean) {
+            isDragging.value = state
         }
 
         private fun setMemberProfile(memberProfile: MemberProfile) {

@@ -27,16 +27,18 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
 security:
   jwt:
     token:
-      secret-key: ${SECRET_KEY}
-  admin:
-    key: ${ADMIN_KEY}
-    token: ${ADMIN_TOKEN}
+      secret-key: ENC(w6iIOc1EMsu5lNXZZF7wz+wo/KziZPWM3jzsF6yeWnjnrfIaUifO6TD+i6jIeQMIB7EyY5Bj2rD2l4VZgDxuR38F1tIxp+RwofkPiaht+E+0WIR8GB94ur9whNL4oUQp)
 cloud:
   aws:
     access-key: accessKey
@@ -66,3 +68,8 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+  error:
+    whitelabel:
+      enabled: false
+    include-message: never
+    include-binding-errors: never
