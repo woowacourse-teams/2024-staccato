@@ -9,7 +9,7 @@ on:
 
 jobs:
   ci:
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-be')
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-be/')
     runs-on: ubuntu-latest
     env:
       JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
