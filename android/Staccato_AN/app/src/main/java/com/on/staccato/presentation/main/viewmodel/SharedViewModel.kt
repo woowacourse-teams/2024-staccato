@@ -54,6 +54,7 @@ class SharedViewModel
         }
 
         fun setStaccatosHasUpdated() {
+            _isTimelineUpdated.setValue(true)
             _isStaccatosUpdated.setValue(true)
         }
 

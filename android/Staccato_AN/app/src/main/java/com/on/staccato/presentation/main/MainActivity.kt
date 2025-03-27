@@ -379,6 +379,7 @@ class MainActivity :
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
+                    sharedViewModel.setStaccatosHasUpdated()
                     val bundle: Bundle = makeBundle(it, STACCATO_ID_KEY)
                     navigateTo(R.id.staccatoFragment, R.id.staccatoFragment, bundle, true)
                 }
