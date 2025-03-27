@@ -15,10 +15,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
@@ -28,9 +24,10 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_TITLE_KEY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
-import com.on.staccato.presentation.common.LocationPermissionManager
-import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.location.GPSManager
+import com.on.staccato.presentation.common.location.LocationPermissionManager
+import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.CurrentLocationHandler
@@ -46,6 +43,7 @@ import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class StaccatoUpdateActivity :
@@ -77,10 +75,13 @@ class StaccatoUpdateActivity :
         supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as CustomAutocompleteSupportFragment
     }
 
-    private val locationPermissionManager =
-        LocationPermissionManager(context = this, activity = this)
+    @Inject
+    lateinit var gpsManager: GPSManager
+
+    @Inject
+    lateinit var locationPermissionManager: LocationPermissionManager
+
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var address: String
     private var currentSnackBar: Snackbar? = null
 
@@ -140,7 +141,6 @@ class StaccatoUpdateActivity :
 
     override fun initStartView(savedInstanceState: Bundle?) {
         setupPermissionRequestLauncher()
-        setupFusedLocationProviderClient()
         initBinding()
         initToolbar()
         initCategorySelectionFragment()
@@ -163,36 +163,28 @@ class StaccatoUpdateActivity :
         permissionRequestLauncher =
             locationPermissionManager.requestPermissionLauncher(
                 view = binding.root,
+                activity = this,
+                activityResultCaller = this,
                 actionWhenHavePermission = ::fetchCurrentLocationAddress,
             )
     }
 
     private fun checkLocationSetting() {
-        locationPermissionManager.checkLocationSetting(
-            actionWhenHavePermission = { fetchCurrentLocationAddress() },
+        gpsManager.checkLocationSetting(
+            context = this,
+            activity = this,
+            actionWhenGPSIsOn = { fetchCurrentLocationAddress() },
         )
-    }
-
-    private fun setupFusedLocationProviderClient() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
     private fun fetchCurrentLocationAddress() {
         val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
         val shouldShowRequestLocationPermissionsRationale =
-            locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
+            locationPermissionManager.shouldShowRequestLocationPermissionsRationale(activity = this)
 
         when {
             isLocationPermissionGranted -> {
-                viewModel.setCurrentLocationLoading(true)
-                val currentLocation: Task<Location> =
-                    fusedLocationProviderClient.getCurrentLocation(
-                        Priority.PRIORITY_HIGH_ACCURACY,
-                        null,
-                    )
-                currentLocation.addOnSuccessListener { location ->
-                    fetchAddress(location)
-                }
+                viewModel.getCurrentLocation()
             }
 
             shouldShowRequestLocationPermissionsRationale -> {
@@ -212,16 +204,7 @@ class StaccatoUpdateActivity :
             val checkSelfLocationPermission =
                 locationPermissionManager.checkSelfLocationPermission()
 
-            if (isSettingClicked && checkSelfLocationPermission) {
-                val currentLocation: Task<Location> =
-                    fusedLocationProviderClient.getCurrentLocation(
-                        Priority.PRIORITY_HIGH_ACCURACY,
-                        null,
-                    )
-                currentLocation.addOnSuccessListener { location ->
-                    fetchAddress(location)
-                }
-            }
+            if (isSettingClicked && checkSelfLocationPermission) viewModel.getCurrentLocation()
         }
     }
 
@@ -267,6 +250,7 @@ class StaccatoUpdateActivity :
         observeVisitedAtData()
         observeCategoryData()
         observeIsUpdateComplete()
+        observeCurrentLocation()
     }
 
     private fun observePhotoData() {
@@ -319,6 +303,12 @@ class StaccatoUpdateActivity :
         }
     }
 
+    private fun observeCurrentLocation() {
+        viewModel.currentLocation.observe(this) {
+            fetchAddress(it)
+        }
+    }
+
     private fun handleUpdateComplete(isUpdateCompleted: Boolean) {
         if (isUpdateCompleted) {
             val intent =
@@ -344,7 +334,7 @@ class StaccatoUpdateActivity :
                 }
             getCurrentLocationJob.join()
             defaultDelayJob.join()
-            viewModel.setPlaceByCurrentAddress(address, location)
+            viewModel.setPlaceByCurrentAddress(address)
         }
     }
 

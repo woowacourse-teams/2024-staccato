@@ -15,22 +15,22 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityStaccatoCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
+import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_TITLE_KEY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
-import com.on.staccato.presentation.common.LocationPermissionManager
-import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.PhotoAttachFragment
-import com.on.staccato.presentation.main.viewmodel.SharedViewModel
+import com.on.staccato.presentation.common.location.GPSManager
+import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.PERMISSION_CANCEL_KEY
+import com.on.staccato.presentation.common.location.LocationPermissionManager
+import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
+import com.on.staccato.presentation.common.location.PermissionCancelListener
+import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
@@ -44,6 +44,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class StaccatoCreationActivity :
@@ -54,7 +55,6 @@ class StaccatoCreationActivity :
     BindingActivity<ActivityStaccatoCreationBinding>() {
     override val layoutResourceId = R.layout.activity_staccato_creation
     private val viewModel: StaccatoCreationViewModel by viewModels()
-    private val sharedViewModel: SharedViewModel by viewModels()
     private val categorySelectionFragment by lazy {
         CategorySelectionFragment()
     }
@@ -75,18 +75,21 @@ class StaccatoCreationActivity :
 
     private val categoryId by lazy { intent.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID) }
     private val categoryTitle by lazy { intent.getStringExtra(CATEGORY_TITLE_KEY) ?: "" }
+    private val isPermissionCanceled by lazy { intent.getBooleanExtra(PERMISSION_CANCEL_KEY, false) }
 
-    private val locationPermissionManager =
-        LocationPermissionManager(context = this, activity = this)
+    @Inject
+    lateinit var gpsManager: GPSManager
+
+    @Inject
+    lateinit var locationPermissionManager: LocationPermissionManager
+
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var address: String
     private var currentSnackBar: Snackbar? = null
 
     override fun initStartView(savedInstanceState: Bundle?) {
         viewModel.fetchCategoryCandidates()
         setupPermissionRequestLauncher()
-        setupFusedLocationProviderClient()
         initBinding()
         initAdapter()
         initItemTouchHelper()
@@ -169,14 +172,18 @@ class StaccatoCreationActivity :
     private fun setupPermissionRequestLauncher() {
         permissionRequestLauncher =
             locationPermissionManager.requestPermissionLauncher(
+                activity = this,
                 view = binding.root,
+                activityResultCaller = this,
                 actionWhenHavePermission = ::fetchCurrentLocationAddress,
             )
     }
 
     private fun checkLocationSetting(isCurrentLocationCallClicked: Boolean = false) {
-        locationPermissionManager.checkLocationSetting(
-            actionWhenHavePermission = {
+        gpsManager.checkLocationSetting(
+            context = this,
+            activity = this,
+            actionWhenGPSIsOn = {
                 fetchCurrentLocationAddress(
                     isCurrentLocationCallClicked,
                 )
@@ -184,26 +191,14 @@ class StaccatoCreationActivity :
         )
     }
 
-    private fun setupFusedLocationProviderClient() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-    }
-
     private fun fetchCurrentLocationAddress(isCurrentLocationCallClicked: Boolean = false) {
         val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
         val shouldShowRequestLocationPermissionsRationale =
-            locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
+            locationPermissionManager.shouldShowRequestLocationPermissionsRationale(activity = this)
 
         when {
             isLocationPermissionGranted -> {
-                viewModel.setCurrentLocationLoading(true)
-                val currentLocation: Task<Location> =
-                    fusedLocationProviderClient.getCurrentLocation(
-                        Priority.PRIORITY_HIGH_ACCURACY,
-                        null,
-                    )
-                currentLocation.addOnSuccessListener { location ->
-                    fetchAddress(location)
-                }
+                viewModel.getCurrentLocation()
             }
 
             isCurrentLocationCallClicked -> {
@@ -226,10 +221,8 @@ class StaccatoCreationActivity :
         }
     }
 
-    private fun observeIsPermissionCancelClicked(requestLocationPermissions: () -> Unit) {
-        sharedViewModel.isPermissionCancelClicked.observe(this) { isCancel ->
-            if (!isCancel) requestLocationPermissions()
-        }
+    private fun observeIsPermissionCancelClicked(listener: PermissionCancelListener) {
+        if (!isPermissionCanceled) listener.requestPermission()
     }
 
     private fun initBinding() {
@@ -274,6 +267,7 @@ class StaccatoCreationActivity :
         observeVisitedAtData()
         observeCategoryData()
         observeCreatedStaccatoId()
+        observeCurrentLocation()
     }
 
     private fun observePhotoData() {
@@ -343,9 +337,16 @@ class StaccatoCreationActivity :
                     .putExtra(STACCATO_ID_KEY, createdStaccatoId)
                     .putExtra(CATEGORY_ID_KEY, categoryId)
                     .putExtra(CATEGORY_TITLE_KEY, categoryTitle)
+                    .putExtra(CREATED_STACCATO_KEY, true)
             setResult(RESULT_OK, resultIntent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
+        }
+    }
+
+    private fun observeCurrentLocation() {
+        viewModel.currentLocation.observe(this) {
+            fetchAddress(it)
         }
     }
 
@@ -361,7 +362,7 @@ class StaccatoCreationActivity :
                 }
             getCurrentLocationJob.join()
             defaultDelayJob.join()
-            viewModel.setPlaceByCurrentAddress(address, location)
+            viewModel.setPlaceByCurrentAddress(address)
         }
     }
 
@@ -449,19 +450,20 @@ class StaccatoCreationActivity :
     }
 
     companion object {
-        const val CATEGORY_TITLE_KEY = "categoryTitle"
         const val DEFAULT_CATEGORY_ID = 0L
         private const val DEFAULT_CATEGORY_TITLE = ""
 
         fun startWithResultLauncher(
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
+            isPermissionCanceled: Boolean,
             categoryId: Long = DEFAULT_CATEGORY_ID,
             categoryTitle: String = DEFAULT_CATEGORY_TITLE,
         ) {
             Intent(context, StaccatoCreationActivity::class.java).apply {
                 putExtra(CATEGORY_ID_KEY, categoryId)
                 putExtra(CATEGORY_TITLE_KEY, categoryTitle)
+                putExtra(PERMISSION_CANCEL_KEY, isPermissionCanceled)
                 activityLauncher.launch(this)
             }
         }
