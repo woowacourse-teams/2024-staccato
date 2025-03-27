@@ -1,7 +1,7 @@
 package com.on.staccato.presentation.main
 
 interface MainHandler {
-    fun onStaccatoCreationClicked()
+    fun onStaccatoCreationClicked(isPermissionCanceled: Boolean)
 
     fun onMyPageClicked()
 }

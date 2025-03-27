@@ -1,0 +1,20 @@
+title: "[feat]"
+body:
+  - type: input
+    id: discussion-topic
+    attributes:
+      label: "어떠한 안건을 논의하고 싶은가요?"
+      description: "논의하고자 하는 안건을 간략하게 작성해 주세요."
+    validations:
+      required: true
+  - type: textarea
+    id: reference-materials
+    attributes:
+      label: "참고할만한 자료(선택)가 있을까요?"
+      description: "관련 자료의 링크나 설명을 자유롭게 입력해 주세요."
+      value: "N/A"
+  - type: input
+    id: discussion-confirmation-tags
+    attributes:
+      label: "디스커션 확인했어요 (확인해야 할 사용자를 태그해 주세요)"
+      description: "예: @username1, @username2"

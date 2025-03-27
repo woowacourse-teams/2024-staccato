@@ -1,12 +1,15 @@
 name: Backend CI/CD prod
 
 on:
-  push:
-    paths: [ 'backend/**', '.github/**' ]
-    branches: [ "release-be" ]
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
 
 jobs:
   ci:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-be')
     runs-on: ubuntu-latest
     env:
       JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}

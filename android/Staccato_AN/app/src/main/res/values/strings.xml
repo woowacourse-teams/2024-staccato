@@ -196,4 +196,7 @@
     <string name="sort_categories_with_period_order">기간 있는 카테고리</string>
     <string name="sort_categories_without_period_order">기간 없는 카테고리</string>
 
+    // fragment_maps
+    <string name="maps_markers_loading_error">마커를 불러오는 중에 오류가 발생했어요.</string>
+
 </resources>

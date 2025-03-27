@@ -1,7 +1,6 @@
 package com.on.staccato.presentation.main
 
 import android.content.Intent
-import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -14,46 +13,28 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_DRAGGING
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
-import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
-import com.on.staccato.presentation.common.LocationPermissionManager
-import com.on.staccato.presentation.common.LocationPermissionManager.Companion.locationPermissions
-import com.on.staccato.presentation.main.model.MarkerUiModel
-import com.on.staccato.presentation.main.viewmodel.MapsViewModel
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.mypage.MyPageActivity
+import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_BOTTOM_SHEET
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_CREATION
-import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_READ
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
 import com.on.staccato.util.logging.Param.Companion.KEY_BOTTOM_SHEET_DURATION
 import com.on.staccato.util.logging.Param.Companion.KEY_BOTTOM_SHEET_STATE
 import com.on.staccato.util.logging.Param.Companion.KEY_IS_CREATED_IN_MAIN
-import com.on.staccato.util.logging.Param.Companion.KEY_IS_VIEWED_BY_MARKER
 import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_COLLAPSED
 import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_EXPANDED
 import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_HALF_EXPANDED
@@ -64,26 +45,19 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity :
     BindingActivity<ActivityMainBinding>(),
-    OnMapReadyCallback,
     MainHandler {
     override val layoutResourceId: Int
         get() = R.layout.activity_main
 
-    private lateinit var googleMap: GoogleMap
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
-    private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     @Inject
     lateinit var loggingManager: LoggingManager
     private var previousBottomSheetStateTime: Long = currentTimeMillis()
 
     private val sharedViewModel: SharedViewModel by viewModels()
-    private val mapsViewModel: MapsViewModel by viewModels()
-    private val locationPermissionManager =
-        LocationPermissionManager(context = this, activity = this)
 
     val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
     val categoryUpdateLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
@@ -92,34 +66,13 @@ class MainActivity :
     private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        binding.handler = this
-        setupPermissionRequestLauncher()
-        setupGoogleMap()
-        setupFusedLocationProviderClient()
+        initBinding()
         loadMemberProfile()
-        observeMemberProfile()
-        observeCurrentLocation()
-        observeStaccatoLocations()
         observeStaccatoId()
-        observeDeletedStaccato()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
         setUpBottomSheetStateListener()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (this::googleMap.isInitialized) checkLocationSetting()
-        mapsViewModel.loadStaccatos()
-    }
-
-    override fun onMapReady(map: GoogleMap) {
-        googleMap = map
-        setMapStyle(map)
-        moveDefaultLocation()
-        checkLocationSetting()
-        onMarkerClicked(map)
     }
 
     override fun onStop() {
@@ -127,7 +80,7 @@ class MainActivity :
         sharedViewModel.updateIsSettingClicked(false)
     }
 
-    override fun onStaccatoCreationClicked() {
+    override fun onStaccatoCreationClicked(isPermissionCanceled: Boolean) {
         loggingManager.logEvent(
             NAME_STACCATO_CREATION,
             Param(KEY_IS_CREATED_IN_MAIN, true),
@@ -135,187 +88,31 @@ class MainActivity :
         StaccatoCreationActivity.startWithResultLauncher(
             context = this,
             activityLauncher = staccatoCreationLauncher,
+            isPermissionCanceled,
         )
+    }
+
+    private fun initBinding() {
+        binding.lifecycleOwner = this
+        binding.sharedViewModel = sharedViewModel
+        binding.handler = this
     }
 
     override fun onMyPageClicked() {
         MyPageActivity.startWithResultLauncher(this, myPageLauncher)
     }
 
-    private fun setupPermissionRequestLauncher() {
-        permissionRequestLauncher =
-            locationPermissionManager.requestPermissionLauncher(
-                view = binding.root,
-                actionWhenHavePermission = ::enableMyLocation,
-            )
-    }
-
-    private fun setupGoogleMap() {
-        val map: SupportMapFragment? =
-            supportFragmentManager.findFragmentById(R.id.fragment_container_view_map) as? SupportMapFragment
-        map?.getMapAsync(this)
-    }
-
-    private fun checkLocationSetting() {
-        locationPermissionManager.checkLocationSetting(actionWhenHavePermission = ::enableMyLocation)
-    }
-
-    private fun setMapStyle(map: GoogleMap) {
-        map.setMapStyle(
-            MapStyleOptions.loadRawResourceStyle(this, R.raw.google_map_style),
-        )
-    }
-
-    private fun moveDefaultLocation() {
-        val defaultLocation =
-            LatLng(SEOUL_STATION_LATITUDE, SEOUL_STATION_LONGITUDE)
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM))
-    }
-
-    private fun enableMyLocation() {
-        val isLocationPermissionGranted = locationPermissionManager.checkSelfLocationPermission()
-        val shouldShowRequestLocationPermissionsRationale =
-            locationPermissionManager.shouldShowRequestLocationPermissionsRationale()
-
-        when {
-            isLocationPermissionGranted -> {
-                googleMap.isMyLocationEnabled = true
-                val currentLocation: Task<Location> =
-                    fusedLocationProviderClient.getCurrentLocation(
-                        PRIORITY_HIGH_ACCURACY,
-                        null,
-                    )
-                mapsViewModel.setCurrentLocation(currentLocation)
-            }
-
-            shouldShowRequestLocationPermissionsRationale -> {
-                observeIsPermissionCancelClicked {
-                    locationPermissionManager.showLocationRequestRationaleDialog(
-                        supportFragmentManager,
-                    )
-                }
-            }
-
-            else -> {
-                observeIsPermissionCancelClicked {
-                    permissionRequestLauncher.launch(
-                        locationPermissions,
-                    )
-                }
-            }
-        }
-    }
-
-    private fun observeIsPermissionCancelClicked(requestLocationPermissions: () -> Unit) {
-        sharedViewModel.isPermissionCancelClicked.observe(this) { isCancel ->
-            if (!isCancel) requestLocationPermissions()
-        }
-    }
-
-    private fun setupFusedLocationProviderClient() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-    }
-
     private fun loadMemberProfile() {
         sharedViewModel.fetchMemberProfile()
     }
 
-    private fun observeMemberProfile() {
-        sharedViewModel.memberProfile.observe(this) { memberProfile ->
-            binding.memberProfile = memberProfile
-        }
-    }
-
-    private fun observeCurrentLocation() {
-        mapsViewModel.currentLocation.observe(this) { currentLocation ->
-            moveCurrentLocation(currentLocation)
-        }
-    }
-
-    private fun moveCurrentLocation(currentLocation: Task<Location>) {
-        currentLocation.addOnSuccessListener { location ->
-            moveCamera(location)
-        }
-    }
-
-    private fun moveCamera(location: Location?) {
-        if (location != null) observeMapIsHalf(location)
-    }
-
-    private fun observeMapIsHalf(location: Location) {
-        val currentLocation = LatLng(location.latitude, location.longitude)
-        mapsViewModel.isHalf.observe(this) { isHalf ->
-            if (isHalf) {
-                val mapPaddingBottom = (binding.root.height / 1.8).toInt()
-                setMapPadding(currentLocation, mapPaddingBottom)
-            } else {
-                setMapPadding(currentLocation)
-            }
-        }
-    }
-
-    private fun setMapPadding(
-        currentLocation: LatLng,
-        mapPaddingBottom: Int = DEFAULT_MAP_PADDING,
-    ) {
-        googleMap.setPadding(
-            DEFAULT_MAP_PADDING,
-            DEFAULT_MAP_PADDING,
-            DEFAULT_MAP_PADDING,
-            mapPaddingBottom,
-        )
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
-    }
-
-    private fun observeStaccatoLocations() {
-        mapsViewModel.staccatoLocations.observe(this) { staccatoLocations ->
-            if (this::googleMap.isInitialized) {
-                googleMap.clear()
-                addMarkers(staccatoLocations)
-            }
-        }
-    }
-
-    private fun addMarkers(staccatoLocations: List<StaccatoLocation>) {
-        val markers: MutableList<MarkerUiModel> = mutableListOf()
-        staccatoLocations.forEach { staccatoLocation ->
-            val latLng = LatLng(staccatoLocation.latitude, staccatoLocation.longitude)
-            val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
-            val marker: Marker =
-                googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_pin_3x)))
-                    ?: return
-            val markerId: String = marker.id
-            markers.add(MarkerUiModel(staccatoLocation.staccatoId, markerId))
-        }
-        mapsViewModel.setMarkers(markers)
-    }
-
-    private fun onMarkerClicked(googleMap: GoogleMap) {
-        googleMap.setOnMarkerClickListener { marker ->
-            mapsViewModel.findStaccatoId(marker.id)
-            loggingManager.logEvent(
-                NAME_STACCATO_READ,
-                Param(KEY_IS_VIEWED_BY_MARKER, true),
-            )
-            false
-        }
-    }
-
     private fun observeStaccatoId() {
-        mapsViewModel.staccatoId.observe(this) { staccatoId ->
+        sharedViewModel.staccatoId.observe(this) { staccatoId ->
             navigateToStaccato(staccatoId)
             supportFragmentManager.setFragmentResult(
                 BOTTOM_SHEET_STATE_REQUEST_KEY,
                 bundleOf(BOTTOM_SHEET_NEW_STATE to STATE_EXPANDED),
             )
-        }
-    }
-
-    private fun observeDeletedStaccato() {
-        sharedViewModel.isStaccatosUpdated.observe(this) { isDeleted ->
-            if (isDeleted) {
-                mapsViewModel.loadStaccatos()
-            }
         }
     }
 
@@ -379,7 +176,9 @@ class MainActivity :
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    val bundle: Bundle = makeBundle(it, STACCATO_ID_KEY)
+                    val id = it.getLongExtra(STACCATO_ID_KEY, 0L)
+                    val isStaccatoCreated = it.getBooleanExtra(CREATED_STACCATO_KEY, false)
+                    val bundle = bundleOf(STACCATO_ID_KEY to id, CREATED_STACCATO_KEY to isStaccatoCreated)
                     navigateTo(R.id.staccatoFragment, R.id.staccatoFragment, bundle, true)
                 }
             }
@@ -430,6 +229,7 @@ class MainActivity :
                     ) {
                         when (newState) {
                             STATE_EXPANDED -> {
+                                sharedViewModel.setIsBottomSheetHalf(false)
                                 binding.viewMainDragBar.visibility =
                                     View.INVISIBLE
                                 binding.constraintMainBottomSheet.setBackgroundResource(
@@ -444,7 +244,7 @@ class MainActivity :
                             }
 
                             STATE_HALF_EXPANDED -> {
-                                mapsViewModel.setIsHalf(isHalf = true)
+                                sharedViewModel.setIsBottomSheetHalf(true)
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
                                 changeSkipCollapsed()
                                 loggingManager.logEvent(
@@ -455,7 +255,7 @@ class MainActivity :
                             }
 
                             STATE_COLLAPSED -> {
-                                mapsViewModel.setIsHalf(isHalf = false)
+                                sharedViewModel.setIsBottomSheetHalf(false)
                                 loggingManager.logEvent(
                                     NAME_BOTTOM_SHEET,
                                     Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_COLLAPSED),
@@ -477,6 +277,7 @@ class MainActivity :
                         view: View,
                         slideOffset: Float,
                     ) {
+                        sharedViewModel.updateIsDragging(state == STATE_DRAGGING)
                         if (slideOffset < 0.05) {
                             changeSkipCollapsed(isHideable = false)
                             state = STATE_COLLAPSED
@@ -525,10 +326,6 @@ class MainActivity :
     }
 
     companion object {
-        private const val DEFAULT_MAP_PADDING = 0
-        private const val DEFAULT_ZOOM = 15f
-        private const val SEOUL_STATION_LATITUDE = 37.554677038139815
-        private const val SEOUL_STATION_LONGITUDE = 126.97061201084968
         private const val BOTTOM_SHEET_STATE_REQUEST_KEY = "requestKey"
         private const val BOTTOM_SHEET_NEW_STATE = "newState"
         private const val MILLISECONDS_TO_SECONDS = 1000.0
