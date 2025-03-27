@@ -1,0 +1,200 @@
+package com.on.staccato.presentation.category
+
+import android.os.Bundle
+import android.view.View
+import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import com.on.staccato.R
+import com.on.staccato.databinding.FragmentCategoryBinding
+import com.on.staccato.presentation.base.BindingFragment
+import com.on.staccato.presentation.category.adapter.MatesAdapter
+import com.on.staccato.presentation.category.adapter.StaccatosAdapter
+import com.on.staccato.presentation.category.model.CategoryUiModel
+import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
+import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity
+import com.on.staccato.presentation.common.DeleteDialogFragment
+import com.on.staccato.presentation.common.DialogHandler
+import com.on.staccato.presentation.common.ToolbarHandler
+import com.on.staccato.presentation.main.MainActivity
+import com.on.staccato.presentation.main.viewmodel.SharedViewModel
+import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
+import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
+import com.on.staccato.presentation.util.showSnackBarWithAction
+import com.on.staccato.presentation.util.showToast
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_FRAGMENT_PAGE
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_CREATION
+import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_READ
+import com.on.staccato.util.logging.LoggingManager
+import com.on.staccato.util.logging.Param
+import com.on.staccato.util.logging.Param.Companion.KEY_FRAGMENT_NAME
+import com.on.staccato.util.logging.Param.Companion.KEY_IS_CREATED_IN_MAIN
+import com.on.staccato.util.logging.Param.Companion.KEY_IS_VIEWED_BY_MARKER
+import com.on.staccato.util.logging.Param.Companion.PARAM_CATEGORY_FRAGMENT
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
+@AndroidEntryPoint
+class CategoryFragment :
+    BindingFragment<FragmentCategoryBinding>(R.layout.fragment_category),
+    ToolbarHandler,
+    CategoryHandler,
+    DialogHandler {
+    private val categoryId by lazy {
+        arguments?.getLong(CATEGORY_ID_KEY) ?: throw IllegalArgumentException()
+    }
+    private val viewModel: CategoryViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
+    private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
+
+    @Inject
+    lateinit var loggingManager: LoggingManager
+
+    private lateinit var matesAdapter: MatesAdapter
+    private lateinit var staccatosAdapter: StaccatosAdapter
+
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
+        initBinding()
+        initToolbar()
+        initMatesAdapter()
+        initStaccatosAdapter()
+        observeCategory()
+        observeIsDeleteSuccess()
+        showErrorToast()
+        showExceptionSnackBar()
+        viewModel.loadCategory(categoryId)
+        logAccess()
+    }
+
+    override fun onUpdateClicked() {
+        val categoryUpdateLauncher = (activity as MainActivity).categoryUpdateLauncher
+        CategoryUpdateActivity.startWithResultLauncher(
+            categoryId,
+            requireActivity(),
+            categoryUpdateLauncher,
+        )
+    }
+
+    override fun onDeleteClicked() {
+        deleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
+    }
+
+    override fun onStaccatoClicked(staccatoId: Long) {
+        loggingManager.logEvent(
+            NAME_STACCATO_READ,
+            Param(KEY_IS_VIEWED_BY_MARKER, false),
+        )
+        val bundle =
+            bundleOf(
+                STACCATO_ID_KEY to staccatoId,
+            )
+        findNavController().navigate(R.id.action_categoryFragment_to_staccatoFragment, bundle)
+    }
+
+    override fun onConfirmClicked() {
+        viewModel.deleteCategory(categoryId)
+    }
+
+    override fun onStaccatoCreationClicked(
+        category: CategoryUiModel,
+        isPermissionCanceled: Boolean,
+    ) {
+        loggingManager.logEvent(
+            NAME_STACCATO_CREATION,
+            Param(KEY_IS_CREATED_IN_MAIN, false),
+        )
+        val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
+        StaccatoCreationActivity.startWithResultLauncher(
+            context = requireContext(),
+            activityLauncher = staccatoCreationLauncher,
+            isPermissionCanceled = isPermissionCanceled,
+            categoryId = category.id,
+            categoryTitle = category.title,
+        )
+    }
+
+    private fun initBinding() {
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        binding.toolbarHandler = this
+        binding.categoryHandler = this
+        observeIsPermissionCanceled()
+    }
+
+    private fun observeIsPermissionCanceled() {
+        sharedViewModel.isPermissionCanceled.observe(viewLifecycleOwner) {
+            binding.isPermissionCanceled = it
+        }
+    }
+
+    private fun initToolbar() {
+        binding.includeCategoryToolbar.toolbarDetail.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun observeCategory() {
+        viewModel.category.observe(viewLifecycleOwner) { category ->
+            matesAdapter.updateMates(category.mates)
+            staccatosAdapter.updateStaccatos(category.staccatos)
+        }
+    }
+
+    private fun observeIsDeleteSuccess() {
+        viewModel.isDeleteSuccess.observe(viewLifecycleOwner) { isDeleteSuccess ->
+            if (isDeleteSuccess) {
+                sharedViewModel.setTimelineHasUpdated()
+                findNavController().popBackStack()
+                showToast(getString(R.string.category_delete_complete))
+            }
+        }
+    }
+
+    private fun initMatesAdapter() {
+        matesAdapter = MatesAdapter()
+        binding.rvCategoryMates.adapter = matesAdapter
+    }
+
+    private fun initStaccatosAdapter() {
+        staccatosAdapter = StaccatosAdapter(handler = this)
+        binding.rvCategoryStaccatos.adapter = staccatosAdapter
+    }
+
+    private fun showErrorToast() {
+        viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+            showToast(message)
+        }
+    }
+
+    private fun showExceptionSnackBar() {
+        viewModel.exceptionMessage.observe(viewLifecycleOwner) { message ->
+            view?.showSnackBarWithAction(
+                message = message,
+                actionLabel = R.string.all_retry,
+                onAction = ::onRetryAction,
+                Snackbar.LENGTH_INDEFINITE,
+            )
+        }
+    }
+
+    private fun onRetryAction() {
+        viewModel.loadCategory(categoryId)
+    }
+
+    private fun logAccess() {
+        loggingManager.logEvent(
+            NAME_FRAGMENT_PAGE,
+            Param(KEY_FRAGMENT_NAME, PARAM_CATEGORY_FRAGMENT),
+        )
+    }
+
+    companion object {
+        const val CATEGORY_ID_KEY = "categoryId"
+        const val CATEGORY_TITLE_KEY = "categoryTitle"
+    }
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation_graph"
+    app:startDestination="@id/timelineFragment">
+
+    <fragment
+        android:id="@+id/timelineFragment"
+        android:name="com.on.staccato.presentation.timeline.TimelineFragment"
+        android:label="fragment_timeline"
+        tools:layout="@layout/fragment_timeline">
+
+        <action
+            android:id="@+id/action_timelineFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment"
+            app:enterAnim="@anim/anim_slide_in_from_left_fade_in"
+            app:exitAnim="@anim/anim_fade_out"
+            app:popEnterAnim="@anim/anim_fade_in"
+            app:popExitAnim="@anim/anim_slide_out_to_left_fade_out" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.on.staccato.presentation.category.CategoryFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category">
+
+        <action
+            android:id="@+id/action_categoryFragment_to_staccatoFragment"
+            app:destination="@id/staccatoFragment"
+            app:enterAnim="@anim/anim_slide_in_from_left_fade_in"
+            app:exitAnim="@anim/anim_fade_out"
+            app:popEnterAnim="@anim/anim_fade_in"
+            app:popExitAnim="@anim/anim_slide_out_to_left_fade_out" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/staccatoFragment"
+        android:name="com.on.staccato.presentation.staccato.StaccatoFragment"
+        android:label="fragment_staccato"
+        tools:layout="@layout/fragment_staccato" />
+
+</navigation>

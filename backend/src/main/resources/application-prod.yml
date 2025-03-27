@@ -1,0 +1,120 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  application:
+    name: staccato
+  sql:
+    init:
+      mode: always
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(QdX7RtOmixaK8JZYh9uxBmsnpkQEOQvKL7j2zSvT5+FOeCPgdxxE2q6R1/fFN/JaIg8wzcvy/64a1DVCoAZH+QpcX+0uSmL9uUfv99hffyY4azyYVxTs8fEKoKwE+voc1Y2KeagzudlQXjC5LAfBzFQGWLA/Fg5oIHdZg+RtC9oIERrpeCoClNaytryS3nYU)
+    username: ENC(S8qX2951mrx7H100uifIdrJPizgxCHyNXQGuVdN87JTrT3WIo4mYeXNXkSC8To1B)
+    password: ENC(wx1OIC98fnnql3kmBAzd4EUV1/yRcHh9i0zxFVA8YFP7yzFiodXd1UgcwDHUrnWL)
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 10
+      idle-timeout: 600000
+      connection-timeout: 8000
+      max-lifetime: 1800000
+#    writer:
+#      hikari:
+#        maximum-pool-size: 10
+#        minimum-idle: 10
+#        idle-timeout: 600000
+#        connection-timeout: 8000
+#        max-lifetime: 1800000
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      jdbcUrl: ${SPRING_WRITER_DATASOURCE_URL}
+#      username: ${SPRING_DATASOURCE_USERNAME}
+#      password: ${SPRING_DATASOURCE_PASSWORD}
+#    reader:
+#      hikari:
+#        maximum-pool-size: 10
+#        minimum-idle: 10
+#        idle-timeout: 600000
+#        connection-timeout: 8000
+#        max-lifetime: 1800000
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      jdbcUrl: ${SPRING_READER_DATASOURCE_URL}
+#      username: ${SPRING_DATASOURCE_USERNAME}
+#      password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    database: MYSQL
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        create_empty_composites.enabled: true
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    defer-datasource-initialization: false
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  api-docs:
+    enabled: false
+security:
+  jwt:
+    token:
+      secret-key: ENC(+Qh3z6Vs/t2gOrKeEYcBBW/pgwQ6XVzd2HpnjxhcULrcHj4ILjSxlQ/gye/J/QX3WocVO+fdUqSZqJYmWVOsMp5Eph14Rb1jjkDlA8TzpZgHxbJAp3dzcwxpXxlMz0yp)
+cloud:
+  aws:
+    access-key: ENC(FkurMRWpLS2WpFdQLMkoY+LX+InfAKaB+MeTAlduvo8Iu8upBdCbHCxUOr/BWIMB6lVNiEAjudEr29Dp3V0Pgg==)
+    secret-access-key: ENC(q9iscV69jad2wTy5i/FjvktTcC2yCKy+bQVFpx5RbE+B2xOO+yzyz8nwzZKsH9T44HdbroHdfecbt0TpCxDGHQonk7KYpx6wjdW8arMAPaI=)
+    s3:
+      bucket: ENC(8wokWdzHnGVuaQxBq8FhSPTyCrbhzzxbOZ6avTtjKjmjFX1/XlbCI3/lVX1JCtj7)
+      endpoint: ENC(9lRj8rogcOdHbIpkXcC5AUpV7MlB3AWbbTvLYzbygHl8GXEgZFG8SJSPjwRd+eK728+gHJZGHIvb+Byq9hsJcukiTXJveIOSUGpY/SVPjflSSrN9VlH8J++X+yMhni/q)
+    cloudfront:
+      endpoint: ENC(adIKldEPdhYmx3EdT/x3aIgLxfzWeB26JNTXCzcfZW2bBRjMw+hhjTEQW0O69OQ6+iWoeJaICI3glyQtLqLtm2bVYm7vF0bfALHaJH81lco=)
+    region:
+      static: ENC(vJkU8XavMdzVGfsG12iAMrFWN5pX49FIL8MZLHfFPQVO12TwBjuzji1D8Z1eh4bn)
+    stack:
+      auto: false
+image:
+  folder:
+    name: prod/
+
+management:
+  server:
+    port: 9292
+  endpoints:
+    web:
+      exposure:
+        include: info, health, prometheus
+    jmx:
+      exposure:
+        exclude: "*"
+  endpoint:
+    health:
+      show-components: never
+
+server:
+  tomcat:
+    accept-count: 100
+    max-connections: 2048
+    threads:
+      min-spare: 10
+      max: 30
+    mbeanregistry:
+      enabled: true
+  error:
+    whitelabel:
+      enabled: false
+    include-message: never
+    include-binding-errors: never

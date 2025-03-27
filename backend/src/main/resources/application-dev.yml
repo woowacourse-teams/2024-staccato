@@ -1,0 +1,79 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  application:
+    name: staccato
+  sql:
+    init:
+      mode: always
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(Bhf3aE/YmxUOU46I9KniZFPEqiJzNNpPFWp+BGk2Hyk0GOrhQE1D0h2UEdxpf1TpcmaWScgFDXqEdA7Pj7CK0YWNyfAcUsFc3Tu2tsHJrV9CHF2t8sUGettLn9RVKCQaUXUClz0QHasPmdAjkw+BeVHl+xiZfvqUOFP+7WtJniYsBPM9TvRnfM7DH77ryKVEztXvxNDhRDkS2qyY9XDySQ==)
+    username: ENC(pvX1j0OBUpzxQBzlDxOty1HdBKoufY3UWN3yFwmdbwIWd6yz14FXaAiCVsNkuz3o)
+    password: ENC(LzwPGUo4GEfmf88zBWpfRbAachfEbT4W6JqymJ5KlvvNv+nXP1xydOJPNg9FRV0p)
+  jpa:
+    database: MYSQL
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        create_empty_composites.enabled: true
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    defer-datasource-initialization: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+security:
+  jwt:
+    token:
+      secret-key: ENC(AXnLfMTl5wkGHnVtZGEIrJdrNGqJ22n7c2mmpHdyNnCveMMU0wLnZQuPlbK0l7Ooi05C4/6ZZrsGCzSJJYWO8ME1Yyy1IN1ES1uq0RnWU5J8N04ZBp1/bmT2fYbeRbO+)
+cloud:
+  aws:
+    access-key: ENC(esOew5zDP7xeUY4rqpHQIWRJvnyh4qC9HHMzFI9Bek4gu65ZxgQOaGT40tXaJ/kLBsPAXM4NIYF7g64+67gfHg==)
+    secret-access-key: ENC(osZssrZ+Z1Mraw1D8Rd0tXOk0VfMj/8uaGeRrH7/pF+PMJQQga6EBCp14HbGE/zwsSKaZ4xyI5tBy6hwSCJFqKPzzgTN4/Y/AQX3bFp6k90=)
+    s3:
+      bucket: ENC(3G8rZ+nSA+6jQBkeskKXlBcpdJEjr+6CnsK8auvOzMMF9ytS6lqGuJbW+G7emzL2)
+      endpoint: ENC(9yj+jkWlB807kp6umhJIA+osCj4ha/WQcuh8+TTipY3XJNpPs+LswGr4pPPQ5bLQobDzat8PSNZClqvALLpue3PCBxqpUq7Ot3zN02siH+PuFEAqV/izRYpku0bUgK65)
+    cloudfront:
+      endpoint: ENC(LMIPHd+0QQ480lNvi9VTyTjVs/+ok8dpUnZfcNTqrLrlmjAEFV61fh/JmgQmjTBCWW+vlKqWmp3tqnbjjqsxrTI+wl2IGB6O+K/ewjU6TMg=)
+    region:
+      static: ENC(VU25sKaZUPFns2J8GhgAyrioMpwOaWyMa4fBWSzX8LH3zInZc2upgBttgy7EaJWV)
+    stack:
+      auto: false
+image:
+  folder:
+    name: dev/
+
+management:
+  server:
+    port: 8080
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics, env, beans, threaddump, loggers, prometheus
+
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+  error:
+    whitelabel:
+      enabled: false
+    include-message: never
+    include-binding-errors: never

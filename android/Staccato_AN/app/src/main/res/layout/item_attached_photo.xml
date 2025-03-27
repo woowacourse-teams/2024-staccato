@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="selectedPhotoHandler"
+            type="com.on.staccato.presentation.common.AttachedPhotoHandler" />
+
+        <variable
+            name="attachedPhoto"
+            type="com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/iv_attached_photo"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:contentDescription="@string/attached_photo_staccato_photo_description"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            bind:coilRoundedCornerImageUri="@{attachedPhoto.uri}"
+            bind:coilRoundedCornerImageUrl="@{attachedPhoto.imageUrl}"
+            bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray1_5dp}"
+            bind:coilRoundingRadiusDp="@{5f}" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_attached_photo_5dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_attached_photo"
+            app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
+            app:layout_constraintStart_toStartOf="@id/iv_attached_photo"
+            app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
+            bind:visibleOrGone="@{attachedPhoto.imageUrl == null}"
+            tools:visibility="visible" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            style="@style/LottieStyle"
+            app:layout_constraintBaseline_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
+            bind:visibleOrGone="@{attachedPhoto.imageUrl == null}"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/iv_delete_photo"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="130dp"
+            android:layout_marginBottom="130dp"
+            android:contentDescription="@string/all_delete_image"
+            android:onClick="@{() -> selectedPhotoHandler.onDeleteClicked(attachedPhoto)}"
+            android:src="@drawable/icon_delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

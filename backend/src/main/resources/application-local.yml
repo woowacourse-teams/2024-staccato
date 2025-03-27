@@ -1,0 +1,75 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  application:
+    name: staccato
+  sql:
+    init:
+      mode: always
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:staccato
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        create_empty_composites.enabled: true
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+  flyway:
+    enabled: false
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+security:
+  jwt:
+    token:
+      secret-key: ENC(w6iIOc1EMsu5lNXZZF7wz+wo/KziZPWM3jzsF6yeWnjnrfIaUifO6TD+i6jIeQMIB7EyY5Bj2rD2l4VZgDxuR38F1tIxp+RwofkPiaht+E+0WIR8GB94ur9whNL4oUQp)
+cloud:
+  aws:
+    access-key: accessKey
+    secret-access-key: secretAccessKey
+    s3:
+      bucket: bucket
+      endpoint: endpoint
+    cloudfront:
+      endpoint: endpoint
+    region:
+      static: static
+    stack:
+      auto: false
+image:
+  folder:
+    name: local/
+
+management:
+  server:
+    port: 8080
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+  error:
+    whitelabel:
+      enabled: false
+    include-message: never
+    include-binding-errors: never

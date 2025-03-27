@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  TextInputLayout style  -->
+
+    <style name="TextInputLayoutStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="boxBackgroundColor">@color/gray1</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="counterEnabled">true</item>
+        <item name="counterTextAppearance">@style/Typography.Body4.Not.Resizable</item>
+        <item name="counterTextColor">@color/gray3</item>
+        <item name="hintEnabled">false</item>
+    </style>
+
+    <style name="TextInputLayoutStyle.ClearText" parent="TextInputLayoutStyle">
+        <item name="endIconDrawable">@drawable/icon_delete_small</item>
+        <item name="endIconMode">clear_text</item>
+        <item name="endIconTint">@color/gray3</item>
+    </style>
+
+    <style name="TextInputLayoutStyle.Validation" parent="TextInputLayoutStyle.ClearText">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxStrokeErrorColor">@color/point1</item>
+        <item name="errorEnabled">true</item>
+        <item name="errorIconDrawable">@null</item>
+        <item name="errorTextAppearance">@style/Typography.Body4.Not.Resizable</item>
+        <item name="errorTextColor">@color/point1</item>
+        <item name="helperTextEnabled">true</item>
+        <item name="helperTextTextAppearance">@style/Typography.Body4.Not.Resizable</item>
+        <item name="helperTextTextColor">@color/staccato_blue</item>
+    </style>
+
+    <!--  TextInputEditText styles  -->
+
+    <style name="TextInputEditTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">12.5dp</item>
+        <item name="android:textAppearance">@style/Typography.Body1.Not.Resizable</item>
+        <item name="android:textColorHint">@color/gray3</item>
+    </style>
+
+    <style name="TextInputEditTextStyle.SingleLine" parent="TextInputEditTextStyle">
+        <item name="android:inputType">text</item>
+        <item name="maxLines">1</item>
+    </style>
+
+    <style name="TextInputEditTextStyle.MultiLine" parent="TextInputEditTextStyle">
+        <item name="android:gravity">top</item>
+    </style>
+
+    <style name="TextInputEditTextStyle.Title" parent="TextInputEditTextStyle.SingleLine">
+        <item name="android:layout_marginHorizontal">24dp</item>
+    </style>
+
+    <style name="TextInputEditTextStyle.Description" parent="TextInputEditTextStyle.MultiLine">
+        <item name="android:layout_marginHorizontal">24dp</item>
+        <item name="android:minHeight">100dp</item>
+    </style>
+
+    <style name="TextInputEditTextStyle.Comment" parent="TextInputEditTextStyle.MultiLine">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:paddingEnd">48dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
+        <item name="android:backgroundTint">@null</item>
+        <item name="android:hint">@string/staccato_enter_log</item>
+        <item name="android:imeOptions">actionNone</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:maxLength">500</item>
+        <item name="android:maxLines">10</item>
+        <item name="android:textAppearance">@style/Typography.Body3</item>
+    </style>
+
+</resources>

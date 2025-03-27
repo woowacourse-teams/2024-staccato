@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="com.on.staccato.presentation.category.CategoryHandler" />
+
+        <variable
+            name="staccato"
+            type="com.on.staccato.presentation.category.model.CategoryStaccatoUiModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> handler.onStaccatoClicked(staccato.id)}"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/iv_staccatos"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/staccatos_thumbnail_photo_description"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="4:5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            bind:coilRoundedCornerImageUrl="@{staccato.staccatoImageUrl}"
+            bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            bind:coilRoundingRadiusDp="@{4f}"
+            tools:src="@drawable/shape_all_gray2_4dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_gradient_4dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_staccatos"
+            app:layout_constraintEnd_toEndOf="@id/iv_staccatos"
+            app:layout_constraintStart_toStartOf="@id/iv_staccatos"
+            app:layout_constraintTop_toTopOf="@id/iv_staccatos" />
+
+        <TextView
+            android:id="@+id/tv_staccatos_place_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginVertical="2dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="@{staccato.staccatoTitle}"
+            android:textAppearance="@style/Typography.Title3"
+            android:textColor="@color/absolute_white"
+            app:layout_constraintBottom_toTopOf="@id/tv_staccatos_visited_at"
+            app:layout_constraintEnd_toEndOf="@id/iv_staccatos"
+            app:layout_constraintStart_toStartOf="@id/iv_staccatos"
+            app:layout_constraintTop_toTopOf="@id/iv_staccatos"
+            app:layout_constraintVertical_bias="1.0"
+            tools:text="스타카토 이름" />
+
+        <ImageView
+            android:id="@+id/iv_staccatos_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="12dp"
+            android:contentDescription="@string/staccatos_calendar_icon_description"
+            android:src="@drawable/calendar_today"
+            app:layout_constraintBottom_toBottomOf="@id/iv_staccatos"
+            app:layout_constraintEnd_toStartOf="@id/tv_staccatos_visited_at"
+            app:layout_constraintStart_toStartOf="@id/iv_staccatos"
+            app:layout_constraintTop_toTopOf="@id/tv_staccatos_visited_at" />
+
+        <TextView
+            android:id="@+id/tv_staccatos_visited_at"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:text="@{@string/all_date_dots_format(staccato.visitedAt.year, staccato.visitedAt.monthValue, staccato.visitedAt.dayOfMonth)}"
+            android:textAppearance="@style/Typography.Body4.Not.Resizable"
+            android:textColor="@color/absolute_white"
+            app:layout_constraintBottom_toBottomOf="@id/iv_staccatos"
+            app:layout_constraintEnd_toEndOf="@id/iv_staccatos"
+            app:layout_constraintStart_toEndOf="@id/iv_staccatos_calendar"
+            tools:text="2024. 03. 21" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

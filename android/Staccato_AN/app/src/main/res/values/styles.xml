@@ -1,0 +1,139 @@
+<resources>
+
+    <!-- SubTitle sytles -->
+
+    <style name="SubTitleStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/Typography.Title2</item>
+    </style>
+
+    <style name="RequiredMarkStyle" parent="SubTitleStyle">
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:text">@string/all_required_mark</item>
+        <item name="android:textColor">@color/staccato_blue</item>
+    </style>
+
+    <!-- Divider styles   -->
+
+    <style name="DividerStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="dividerColor">@color/gray2</item>
+    </style>
+
+    <!-- Dialog styles   -->
+
+    <style name="DialogBackgroundStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/shape_dialog_10dp</item>
+        <item name="android:paddingHorizontal">24dp</item>
+        <item name="android:paddingVertical">20dp</item>
+    </style>
+
+    <style name="DialogDescriptionStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:textAppearance">@style/Typography.Body2</item>
+        <item name="android:textColor">@color/gray3</item>
+    </style>
+
+    <!-- PhotoAttatch styles   -->
+
+    <style name="PhotoAttachBoxStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="layout_constraintDimensionRatio">8:5</item>
+    </style>
+
+    <style name="PhotoAttachMenuStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:paddingVertical">16dp</item>
+        <item name="android:textAppearance">@style/Typography.Body1</item>
+        <item name="android:textColor">@color/gray4</item>
+    </style>
+
+    <!-- DargHandle styles   -->
+
+    <style name="DragHandleStyle">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">4dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:background">@drawable/shape_drag_handle</item>
+    </style>
+
+    <!-- MeterialCalendar styles   -->
+
+    <style name="DatePickerStyle" parent="ThemeOverlay.Material3.MaterialCalendar">
+        <item name="android:background">@color/white</item>
+        <item name="colorPrimary">@color/staccato_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="materialCalendarHeaderSelection">@style/Typography.Title1</item>
+        <item name="materialCalendarStyle">@style/CustomMaterialCalendarStyle</item>
+    </style>
+
+    <style name="CustomMaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
+        <item name="rangeFillColor">@color/staccato_blue_30</item>
+    </style>
+
+    <!-- Feeling styles   -->
+
+    <style name="FeelingStyle">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_marginHorizontal">5dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
+    <style name="LottieStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="lottie_autoPlay">true</item>
+        <item name="lottie_loop">true</item>
+        <item name="lottie_rawRes">@raw/dot_loading</item>
+    </style>
+
+    <!--  Creation of Update Text styles  -->
+
+    <style name="BackgroundedTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
+        <item name="android:layout_marginHorizontal">24dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">12.5dp</item>
+        <item name="android:textAppearance">@style/Typography.Body1.Not.Resizable</item>
+        <item name="android:textColor">@color/staccato_black</item>
+    </style>
+
+    <style name="BoundedTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/shape_all_stroke_gray1_4dp</item>
+        <item name="android:layout_marginHorizontal">24dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">12.5dp</item>
+        <item name="android:textAppearance">@style/Typography.Body1.Not.Resizable</item>
+        <item name="android:textColor">@color/gray3</item>
+    </style>
+
+    <style name="HintTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/Typography.Body4.Not.Resizable</item>
+        <item name="android:textColor">@color/gray3</item>
+    </style>
+
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout style="@style/DialogBackgroundStyle">
+
+        <TextView
+            android:id="@+id/tv_delete_impossibility_dialog_title"
+            style="@style/SubTitleStyle"
+            android:text="@string/category_delete_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_delete_impossibility_dialog_description"
+            style="@style/DialogDescriptionStyle"
+            android:text="@string/category_delete_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_delete_impossibility_dialog_title" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_delete_impossibility_confirm"
+            style="@style/ButtonStyle.Confirm.Narrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_delete_impossibility_dialog_description" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

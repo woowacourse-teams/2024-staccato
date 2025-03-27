@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staccato</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/index.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js" defer></script>
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function() {
+            AOS.init();
+        })
+    </script>
+</head>
+<body>
+
+<section class="features">
+    <div class="feature feature-start" data-aos="fade-up">
+        <img th:src="${'https://image.staccato.kr/web/index/feature-01.png'}" alt="Feature 1">
+    </div>
+    <div class="feature" data-aos="fade-up">
+        <img th:src="${'https://image.staccato.kr/web/index/feature-02.png'}" alt="Feature 2">
+    </div>
+    <div class="feature" data-aos="fade-up">
+        <img th:src="${'https://image.staccato.kr/web/index/feature-03.png'}" alt="Feature 3">
+    </div>
+    <div class="feature" data-aos="fade-up">
+        <img th:src="${'https://image.staccato.kr/web/index/feature-04.png'}" alt="Feature 4">
+    </div>
+    <div class="feature" data-aos="fade-up">
+        <img th:src="${'https://image.staccato.kr/web/index/feature-05.png'}" alt="Feature 5">
+    </div>
+    <div class="feature" data-aos="fade-up">
+        <img th:src="${'https://image.staccato.kr/web/index/feature-06.png'}" alt="Feature 6">
+    </div>
+    <div class="feature feature-end" data-aos="fade-up">
+        <img th:src="${'https://image.staccato.kr/web/index/feature-07.png'}" alt="Feature 7" class="background-image">
+        <a href="https://play.google.com/store/apps/details?id=com.on.staccato&pcampaignid=web_share" target="_blank">
+            <img th:src="${'https://image.staccato.kr/web/index/google-play-badge.png'}" alt="Google Play Badge" class="overlay-image">
+        </a>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2025 Staccato. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
