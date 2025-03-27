@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>403 - 접근 금지</title>
+    <link rel="stylesheet" th:href="@{/css/error.css}" />
+</head>
+<body>
+<div class="container">
+    <img src="https://image.staccato.kr/web/share/sad.png" alt="404 이미지" class="error-image" />
+    <h1>403 ERROR</h1>
+    <h2>접근이 거부되었습니다</h2>
+    <p>이 페이지에 접근할 수 있는 권한이 없습니다.</p>
+    <p>권한이 있는 링크로 다시 시도해 주세요.</p>
+    <a th:href="@{/}">메인으로</a>
+</div>
+</body>
+</html>

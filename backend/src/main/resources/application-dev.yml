@@ -72,3 +72,8 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+  error:
+    whitelabel:
+      enabled: false
+    include-message: never
+    include-binding-errors: never

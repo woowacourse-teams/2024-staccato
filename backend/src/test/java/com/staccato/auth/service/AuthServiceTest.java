@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
-import com.staccato.config.auth.TokenProvider;
+import com.staccato.config.jwt.MemberTokenProvider;
 import com.staccato.exception.StaccatoException;
 import com.staccato.exception.UnauthorizedException;
 import com.staccato.fixture.member.MemberFixture;
@@ -28,7 +28,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Autowired
     private CategoryMemberRepository categoryMemberRepository;
     @Autowired
-    private TokenProvider tokenProvider;
+    private MemberTokenProvider tokenProvider;
 
     @DisplayName("입력받은 닉네임으로 멤버를 저장하고, 토큰을 생성한다.")
     @Test

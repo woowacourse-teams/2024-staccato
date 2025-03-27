@@ -26,6 +26,8 @@ import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
+import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
+import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -88,5 +90,21 @@ public class StaccatoController implements StaccatoControllerDocs {
     ) {
         staccatoService.updateStaccatoFeelingById(staccatoId, member, feelingRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{staccatoId}/share")
+    public ResponseEntity<StaccatoShareLinkResponse> shareStaccato(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId
+    ) {
+        StaccatoShareLinkResponse staccatoShareLinkResponse = staccatoService.createStaccatoShareLink(staccatoId, member);
+        return ResponseEntity.created(URI.create("/staccatos/shared/" + staccatoShareLinkResponse.getToken()))
+                .body(staccatoShareLinkResponse);
+    }
+
+    @GetMapping("/shared/{token}")
+    public ResponseEntity<StaccatoSharedResponse> readSharedStaccatoByToken(@PathVariable String token) {
+        StaccatoSharedResponse staccatoSharedResponse = staccatoService.readSharedStaccatoByToken(token);
+        return ResponseEntity.ok().body(staccatoSharedResponse);
     }
 }

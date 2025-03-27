@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>500 - 서버 오류</title>
+    <link rel="stylesheet" th:href="@{/css/error.css}" />
+</head>
+<body>
+<div class="container">
+    <img src="https://image.staccato.kr/web/share/angry.png" alt="404 이미지" class="error-image" />
+    <h1>500 ERROR</h1>
+    <h2>서버에 오류가 발생했습니다</h2>
+    <p>요청을 처리하는 중 서버 내부에서 문제가 발생했습니다.</p>
+    <p>잠시 후 다시 시도해 주세요.</p>
+    <a th:href="@{/}">메인으로</a>
+</div>
+</body>
+</html>
