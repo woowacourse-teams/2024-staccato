@@ -41,7 +41,6 @@ public class CategoryFixture {
             .build();
     }
 
-
     public static Category createWithMember(Member member) {
         Category category = Category.builder()
                 .thumbnailUrl("https://example.com/categories/geumohrm.jpg")

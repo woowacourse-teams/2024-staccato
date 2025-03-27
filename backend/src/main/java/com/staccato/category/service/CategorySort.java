@@ -30,7 +30,7 @@ public enum CategorySort {
                     .filter(Category::hasTerm)
                     .sorted(Comparator
                             .comparing(Category::getTerm, Comparator.comparing(Term::getStartAt))
-                            .thenComparing(Category::getUpdatedAt)),
+                            .thenComparing(Category::getUpdatedAt, Comparator.reverseOrder())),
             sortCategoriesWithoutTerm(categories)
     ).toList()),
     ;
