@@ -25,8 +25,8 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
-import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.PERMISSION_CANCEL_KEY
 import com.on.staccato.presentation.common.location.GPSManager
+import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.PERMISSION_CANCEL_KEY
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.location.PermissionCancelListener
@@ -174,12 +174,14 @@ class StaccatoCreationActivity :
             locationPermissionManager.requestPermissionLauncher(
                 activity = this,
                 view = binding.root,
+                activityResultCaller = this,
                 actionWhenHavePermission = ::fetchCurrentLocationAddress,
             )
     }
 
     private fun checkLocationSetting(isCurrentLocationCallClicked: Boolean = false) {
         gpsManager.checkLocationSetting(
+            context = this,
             activity = this,
             actionWhenGPSIsOn = {
                 fetchCurrentLocationAddress(

@@ -128,12 +128,17 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             locationPermissionManager.requestPermissionLauncher(
                 activity = requireActivity(),
                 view = view,
+                activityResultCaller = this,
                 actionWhenHavePermission = ::enableMyLocation,
             )
     }
 
     private fun checkLocationSetting() {
-        gpsManager.checkLocationSetting(activity = requireActivity(), actionWhenGPSIsOn = ::enableMyLocation)
+        gpsManager.checkLocationSetting(
+            context = requireContext(),
+            activity = requireActivity(),
+            actionWhenGPSIsOn = ::enableMyLocation,
+        )
     }
 
     private fun enableMyLocation() {

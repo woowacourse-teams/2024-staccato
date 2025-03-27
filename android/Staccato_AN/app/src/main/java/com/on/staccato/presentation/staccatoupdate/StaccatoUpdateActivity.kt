@@ -163,14 +163,16 @@ class StaccatoUpdateActivity :
     private fun setupPermissionRequestLauncher() {
         permissionRequestLauncher =
             locationPermissionManager.requestPermissionLauncher(
-                activity = this,
                 view = binding.root,
+                activity = this,
+                activityResultCaller = this,
                 actionWhenHavePermission = ::fetchCurrentLocationAddress,
             )
     }
 
     private fun checkLocationSetting() {
         gpsManager.checkLocationSetting(
+            context = this,
             activity = this,
             actionWhenGPSIsOn = { fetchCurrentLocationAddress() },
         )

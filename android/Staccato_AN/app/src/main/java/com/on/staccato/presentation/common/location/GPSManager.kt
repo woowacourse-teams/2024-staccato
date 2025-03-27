@@ -1,6 +1,7 @@
 package com.on.staccato.presentation.common.location
 
 import android.app.Activity
+import android.content.Context
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
@@ -15,10 +16,11 @@ class GPSManager
         private val locationSettingsRequest: LocationSettingsRequest,
     ) {
         fun checkLocationSetting(
+            context: Context,
             activity: Activity,
             actionWhenGPSIsOn: () -> Unit,
         ) {
-            val settingsClient: SettingsClient = LocationServices.getSettingsClient(activity)
+            val settingsClient: SettingsClient = LocationServices.getSettingsClient(context)
             val locationSettingsResponse: Task<LocationSettingsResponse> =
                 settingsClient.checkLocationSettings(locationSettingsRequest)
 
