@@ -53,50 +53,52 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/text_input_login_user_nickname"
-                style="@style/TextInputLayoutStyle"
-                app:counterMaxLength="20"
-                app:layout_constraintBottom_toTopOf="@id/btn_start_staccato"
+                style="@style/TextInputLayoutStyle.Validation"
+                app:counterMaxLength="@{viewModel.nicknameMaxLength}"
+                app:layout_constraintBottom_toTopOf="@id/btn_login_start_staccato"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/space_login_logo_nickname"
-                app:layout_constraintWidth_max="500dp">
+                app:layout_constraintWidth_max="500dp"
+                bind:nicknameState="@{viewModel.nicknameState}">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_login_user_nickname"
                     style="@style/TextInputEditTextStyle.SingleLine"
                     android:hint="@string/login_nickname_hint"
                     android:imeOptions="actionDone"
-                    android:maxLength="20"
+                    android:maxLength="@{viewModel.nicknameMaxLength}"
                     android:text="@={viewModel.nickname}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_start_staccato"
+                android:id="@+id/btn_login_start_staccato"
                 style="@style/ButtonStyle.Login"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="40dp"
                 android:onClick="@{() -> handler.onStartClicked()}"
                 app:layout_constraintBottom_toTopOf="@id/tv_login_recovery"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_input_login_user_nickname"
                 app:layout_constraintWidth_max="500dp"
-                bind:loginButtonEnabled="@{viewModel.nickname}" />
+                bind:loginButtonEnabled="@{viewModel.nicknameState}" />
 
             <TextView
                 android:id="@+id/tv_login_recovery"
                 style="@style/Typography.Body4.Not.Resizable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="36dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:onClick="@{() -> handler.onRecoveryClicked()}"
                 android:paddingVertical="10dp"
                 android:text="@string/login_recovery_click_here_if_need_recovery"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/btn_start_staccato"
-                app:layout_constraintStart_toStartOf="@id/btn_start_staccato"
-                app:layout_constraintTop_toBottomOf="@id/btn_start_staccato" />
+                app:layout_constraintEnd_toEndOf="@id/btn_login_start_staccato"
+                app:layout_constraintStart_toStartOf="@id/btn_login_start_staccato"
+                app:layout_constraintTop_toBottomOf="@id/btn_login_start_staccato" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

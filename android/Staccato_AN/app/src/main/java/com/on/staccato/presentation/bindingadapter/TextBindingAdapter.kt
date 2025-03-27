@@ -5,10 +5,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.databinding.BindingAdapter
+import com.google.android.material.textfield.TextInputLayout
 import com.on.staccato.R
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
+import com.on.staccato.domain.model.NicknameState
+import com.on.staccato.presentation.common.InputState
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
+import com.on.staccato.presentation.mapper.toInputState
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
@@ -233,5 +237,41 @@ private fun View.updateTopMargin(dp: Float) {
     layoutParams = params
 }
 
+@BindingAdapter("nicknameState")
+fun TextInputLayout.setNicknameInputState(nicknameState: NicknameState) {
+    val inputState = nicknameState.toInputState(context)
+    changeLayoutBy(inputState)
+}
+
+fun TextInputLayout.changeLayoutBy(inputState: InputState) {
+    val strokeWidth = DEFAULT_DP_SIZE.dpToPx(context).toInt()
+    when (inputState) {
+        is InputState.Empty -> {
+            boxStrokeColor = resources.getColor(R.color.gray1, context.theme)
+            boxStrokeWidth = 0
+            boxStrokeWidthFocused = 0
+            error = null
+            helperText = null
+        }
+
+        is InputState.Valid -> {
+            boxStrokeColor = resources.getColor(R.color.staccato_blue, context.theme)
+            boxStrokeWidth = 0
+            boxStrokeWidthFocused = strokeWidth
+            error = null
+            helperText = inputState.message
+        }
+
+        is InputState.Invalid -> {
+            boxStrokeColor = resources.getColor(R.color.point1, context.theme)
+            boxStrokeWidth = strokeWidth
+            boxStrokeWidthFocused = strokeWidth
+            error = inputState.errorMessage
+            helperText = null
+        }
+    }
+}
+
 private const val DRAGGABLE_PHOTO_NUMBER = 2
 private const val EMPTY_TEXT = ""
+private const val DEFAULT_DP_SIZE = 1F
