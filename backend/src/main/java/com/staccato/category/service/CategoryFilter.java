@@ -12,10 +12,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum CategoryFilter {
-    TERM("term", categories ->
+    TERM("WITH_TERM", categories ->
         categories.stream()
-                    .filter(Category::hasTerm)
-                    .collect(Collectors.toList())
+            .filter(Category::hasTerm)
+            .collect(Collectors.toList())
+    ),
+    NO_TERM("WITHOUT_TERM", categories ->
+        categories.stream()
+            .filter(category -> !category.hasTerm())
+            .collect(Collectors.toList())
     );
 
     private final String name;
@@ -27,17 +32,17 @@ public enum CategoryFilter {
 
     public static List<CategoryFilter> findAllByName(List<String> filters) {
         return filters.stream()
-                .map(name -> CategoryFilter.findByName(name.trim()))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .distinct()
-                .toList();
+            .map(name -> CategoryFilter.findByName(name.trim()))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .distinct()
+            .toList();
     }
 
     private static Optional<CategoryFilter> findByName(String name) {
         return Stream.of(values())
-                .filter(value -> value.isSame(name))
-                .findFirst();
+            .filter(value -> value.isSame(name))
+            .findFirst();
     }
 
     private boolean isSame(String name) {
