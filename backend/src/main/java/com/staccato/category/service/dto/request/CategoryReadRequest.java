@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "카테고리 목록 조회시 정렬과 필터링 조건을 위한 요청 형식입니다.")
 public record CategoryReadRequest(
-        @Schema(description = "사용할 필터링을 구분자(,)로 구분하여 나열 (TERM / 대소문자 구분 X)", example = "TERM")
+        @Schema(description = "사용할 필터링을 구분자(,)로 구분하여 나열 (WITH_TERM, WITHOUT_TERM / 대소문자 구분 X)", example = "WITH_TERM")
         String filters,
         @Schema(description = "정렬 기준 (UPDATED, NEWEST, OLDEST / 대소문자 구분 X)", example = "NEWEST")
         String sort

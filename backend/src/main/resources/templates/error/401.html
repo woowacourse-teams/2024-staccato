@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>401 - 인증 필요</title>
+    <link rel="stylesheet" th:href="@{/css/error.css}" />
+</head>
+<body>
+<div class="container">
+    <img src="https://image.staccato.kr/web/share/sad.png" alt="404 이미지" class="error-image" />
+    <h1>401 ERROR</h1>
+    <h2>잘못된 링크입니다.</h2>
+    <p>만료되었거나 올바르지 않은 링크입니다.</p>
+    <p>링크를 다시 확인하고 다시 시도해 주세요.</p>
+    <a th:href="@{/}">메인으로</a>
+</div>
+</body>
+</html>
