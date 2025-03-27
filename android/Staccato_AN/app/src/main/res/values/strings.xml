@@ -53,9 +53,9 @@
     <string name="timeline_category_creation_btn_description">카테고리 만들기로 이동</string>
 
     // menu_sort
-    <string name="sort_updated_order">최근 수정 순</string>
-    <string name="sort_newest_order">최신 순</string>
-    <string name="sort_oldest_order">과거 순</string>
+    <string name="sort_updated_order">최근 수정순</string>
+    <string name="sort_newest_order">최신순</string>
+    <string name="sort_oldest_order">과거순</string>
 
     // item_timeline
     <string name="timeline_category_icon_description">카테고리 아이콘</string>
