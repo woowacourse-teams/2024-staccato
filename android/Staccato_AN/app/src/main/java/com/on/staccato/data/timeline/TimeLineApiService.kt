@@ -9,7 +9,7 @@ interface TimeLineApiService {
     @GET(CATEGORIES_PATH)
     suspend fun getTimeline(
         @Query(SORT) sort: String? = null,
-        @Query(FILTERS) term: String? = null,
+        @Query(FILTERS) filter: String? = null,
     ): ApiResult<TimelineResponse>
 
     companion object {

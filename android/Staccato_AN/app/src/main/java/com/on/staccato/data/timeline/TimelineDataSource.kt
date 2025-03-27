@@ -6,6 +6,6 @@ import com.on.staccato.data.dto.timeline.TimelineResponse
 interface TimelineDataSource {
     suspend fun getTimeline(
         sort: String? = null,
-        term: String? = null,
+        filter: String? = null,
     ): ApiResult<TimelineResponse>
 }

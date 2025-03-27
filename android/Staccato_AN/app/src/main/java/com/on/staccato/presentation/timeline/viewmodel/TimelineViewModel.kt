@@ -69,7 +69,7 @@ class TimelineViewModel
             viewModelScope.launch(coroutineExceptionHandler) {
                 timelineRepository.getTimeline(
                     sort = sortType.value?.name,
-                    term = filterType.value?.name,
+                    filter = filterType.value?.name,
                 ).onSuccess(::setTimelineUiModels)
                     .onServerError(::handleServerError)
                     .onException(::handleException)

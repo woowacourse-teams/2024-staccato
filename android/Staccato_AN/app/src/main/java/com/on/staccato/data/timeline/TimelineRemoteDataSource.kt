@@ -11,6 +11,6 @@ class TimelineRemoteDataSource
     ) : TimelineDataSource {
         override suspend fun getTimeline(
             sort: String?,
-            term: String?,
-        ): ApiResult<TimelineResponse> = timelineApiService.getTimeline(sort, term)
+            filter: String?,
+        ): ApiResult<TimelineResponse> = timelineApiService.getTimeline(sort, filter)
     }

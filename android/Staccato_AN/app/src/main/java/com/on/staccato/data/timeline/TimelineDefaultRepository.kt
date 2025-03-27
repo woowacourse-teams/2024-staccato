@@ -16,9 +16,9 @@ class TimelineDefaultRepository
     ) : TimelineRepository {
         override suspend fun getTimeline(
             sort: String?,
-            term: String?,
+            filter: String?,
         ): ApiResult<Timeline> =
-            timelineDataSource.getTimeline(sort, term)
+            timelineDataSource.getTimeline(sort, filter)
                 .handle { it.toDomain() }
 
         override suspend fun getCategoryCandidates(): ApiResult<CategoryCandidates> =
