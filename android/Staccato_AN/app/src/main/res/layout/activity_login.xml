@@ -75,7 +75,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_login_start_staccato"
                 style="@style/ButtonStyle.Login"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="40dp"
                 android:onClick="@{() -> handler.onStartClicked()}"
                 app:layout_constraintBottom_toTopOf="@id/tv_login_recovery"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +89,7 @@
                 style="@style/Typography.Body4.Not.Resizable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="36dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:onClick="@{() -> handler.onRecoveryClicked()}"
