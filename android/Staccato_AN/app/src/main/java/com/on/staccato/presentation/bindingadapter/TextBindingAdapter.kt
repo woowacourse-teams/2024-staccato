@@ -1,6 +1,7 @@
 package com.on.staccato.presentation.bindingadapter
 
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.databinding.BindingAdapter
@@ -12,6 +13,10 @@ import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.common.InputState
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
 import com.on.staccato.presentation.mapper.toInputState
+import com.on.staccato.presentation.timeline.model.FilterType
+import com.on.staccato.presentation.timeline.model.SortType
+import com.on.staccato.presentation.timeline.model.TimelineUiModel
+import com.on.staccato.presentation.util.dpToPx
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -78,11 +83,9 @@ fun TextView.setIsCategoryCandidatesEmptyVisibility(categoryCandidates: Category
 @BindingAdapter("timelineNickname")
 fun TextView.formatTimelineNickname(nickname: String?) {
     text = nickname?.let {
-        resources.getString(R.string.timeline_nickname_memories).formatNickname(it)
+        resources.getString(R.string.timeline_nickname_memories).format(it)
     } ?: EMPTY_TEXT
 }
-
-fun String.formatNickname(nickname: String) = format(nickname.takeIf { it.length <= 10 } ?: ("${nickname.take(10)}..."))
 
 @BindingAdapter("visitedAtHistory")
 fun TextView.formatVisitedAtHistory(visitedAt: LocalDateTime?) {
@@ -158,6 +161,80 @@ fun TextView.setPhotoDragHintVisibility(currentPhotoNumbers: Int) {
 @BindingAdapter("selectedAddress")
 fun TextView.setSelectedAddress(address: String?) {
     text = address ?: context.getString(R.string.staccato_creation_empty_address)
+}
+
+@BindingAdapter("categorySort")
+fun TextView.setCategoryFilter(sortType: SortType?) {
+    text =
+        when (sortType) {
+            SortType.UPDATED -> resources.getString(R.string.sort_updated_order)
+            SortType.NEWEST -> resources.getString(R.string.sort_newest_order)
+            SortType.OLDEST -> resources.getString(R.string.sort_oldest_order)
+            else -> resources.getString(R.string.timeline_sort)
+        }
+}
+
+@BindingAdapter("categoryFilter")
+fun TextView.setCategoryFilter(filterType: FilterType?) {
+    when (filterType) {
+        FilterType.WITH_TERM -> {
+            text = resources.getString(R.string.timeline_filter_with_term)
+            setTextColor(resources.getColor(R.color.staccato_blue, null))
+        }
+
+        FilterType.WITHOUT_TERM -> {
+            text = resources.getString(R.string.timeline_filter_without_term)
+            setTextColor(resources.getColor(R.color.staccato_blue, null))
+        }
+
+        else -> {
+            text = resources.getString(R.string.timeline_filter_all)
+            setTextColor(resources.getColor(R.color.gray3, null))
+        }
+    }
+}
+
+@BindingAdapter(
+    value = ["visibilityByTimeline", "visibilityByFilterType", "isTimelineLoading"],
+)
+fun TextView.setTimelineEmptyText(
+    timeLine: List<TimelineUiModel>? = null,
+    filterType: FilterType?,
+    isTimelineLoading: Boolean?,
+) {
+    visibility =
+        if (timeLine.isNullOrEmpty() && isTimelineLoading == false) View.VISIBLE else View.GONE
+    updateTopMargin(if (filterType == null) 10f else 100f)
+}
+
+@BindingAdapter(
+    value = ["visibilityAndTextByTimeline", "visibilityAndTextByFilterType", "isTimelineLoading"],
+)
+fun TextView.setMakeCategoryText(
+    timeLine: List<TimelineUiModel>? = null,
+    filterType: FilterType?,
+    isTimelineLoading: Boolean?,
+) {
+    visibility =
+        if (timeLine.isNullOrEmpty() && isTimelineLoading == false) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+    text =
+        context.getString(
+            when (filterType) {
+                null -> R.string.timeline_make_category
+                else -> R.string.timeline_no_filtered_category
+            },
+        )
+}
+
+private fun View.updateTopMargin(dp: Float) {
+    val params = layoutParams as? ViewGroup.MarginLayoutParams ?: return
+    val px = dp.dpToPx(context).toInt()
+    params.topMargin = px
+    layoutParams = params
 }
 
 @BindingAdapter("nicknameState")
