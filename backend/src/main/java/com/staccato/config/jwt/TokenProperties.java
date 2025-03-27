@@ -1,4 +1,4 @@
-package com.staccato.config.auth;
+package com.staccato.config.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

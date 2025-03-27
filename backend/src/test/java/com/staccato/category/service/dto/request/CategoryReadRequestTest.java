@@ -17,7 +17,7 @@ class CategoryReadRequestTest {
     @Test
     void getFiltersWithValidFilters() {
         // given
-        CategoryReadRequest request = new CategoryReadRequest("TERM, term", "NEWEST");
+        CategoryReadRequest request = new CategoryReadRequest("WITH_TERM, with_term", "NEWEST");
 
         // when
         List<CategoryFilter> filters = request.getFilters();
