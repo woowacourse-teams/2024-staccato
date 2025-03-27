@@ -1,5 +1,6 @@
 package com.staccato.comment.service;
 
+import com.staccato.comment.service.dto.request.CommentRequestV2;
 import java.util.Comparator;
 import java.util.List;
 
@@ -8,16 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
-import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.memory.domain.Memory;
-import com.staccato.moment.domain.Moment;
-import com.staccato.moment.repository.MomentRepository;
+import com.staccato.category.domain.Category;
+import com.staccato.staccato.domain.Staccato;
+import com.staccato.staccato.repository.StaccatoRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,24 +27,39 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final MomentRepository momentRepository;
+    private final StaccatoRepository staccatoRepository;
 
     @Transactional
-    public long createComment(CommentRequest commentRequest, Member member) {
-        Moment moment = getMoment(commentRequest.momentId());
-        validateOwner(moment.getMemory(), member);
-        Comment comment = commentRequest.toComment(moment, member);
+    public long createComment(CommentRequestV2 commentRequest, Member member) {
+        Staccato staccato = getStaccato(commentRequest.staccatoId());
+        validateOwner(staccato.getCategory(), member);
+        Comment comment = commentRequest.toComment(staccato, member);
 
         return commentRepository.save(comment).getId();
     }
 
-    public CommentResponses readAllCommentsByMomentId(Member member, Long momentId) {
-        Moment moment = getMoment(momentId);
-        validateOwner(moment.getMemory(), member);
-        List<Comment> comments = commentRepository.findAllByMomentId(momentId);
+    public CommentResponses readAllCommentsByStaccatoId(Member member, Long staccatoId) {
+        Staccato staccato = getStaccato(staccatoId);
+        validateOwner(staccato.getCategory(), member);
+        List<Comment> comments = commentRepository.findAllByStaccatoId(staccatoId);
         sortByCreatedAtAscending(comments);
 
         return CommentResponses.from(comments);
+    }
+
+    private Staccato getStaccato(long staccatoId) {
+        return staccatoRepository.findById(staccatoId)
+            .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
+    }
+
+    private void validateOwner(Category category, Member member) {
+        if (category.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private void sortByCreatedAtAscending(List<Comment> comments) {
+        comments.sort(Comparator.comparing(Comment::getCreatedAt));
     }
 
     @Transactional
@@ -54,30 +69,9 @@ public class CommentService {
         comment.changeContent(commentUpdateRequest.content());
     }
 
-    private Moment getMoment(long momentId) {
-        return momentRepository.findById(momentId)
-                .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
-    }
-
     private Comment getComment(long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new StaccatoException("요청하신 댓글을 찾을 수 없어요."));
-    }
-
-    private void validateOwner(Memory memory, Member member) {
-        if (memory.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    private void sortByCreatedAtAscending(List<Comment> comments) {
-        comments.sort(Comparator.comparing(Comment::getCreatedAt));
-    }
-
-    private void validateCommentOwner(Comment comment, Member member) {
-        if (comment.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
     }
 
     @Transactional
@@ -86,5 +80,11 @@ public class CommentService {
             validateCommentOwner(comment, member);
             commentRepository.deleteById(commentId);
         });
+    }
+
+    private void validateCommentOwner(Comment comment, Member member) {
+        if (comment.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
     }
 }

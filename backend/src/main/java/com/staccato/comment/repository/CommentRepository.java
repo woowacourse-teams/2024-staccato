@@ -8,9 +8,9 @@ import org.springframework.data.repository.query.Param;
 import com.staccato.comment.domain.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findAllByMomentId(long momentId);
+    List<Comment> findAllByStaccatoId(long staccatoId);
 
     @Modifying
-    @Query("DELETE FROM Comment c WHERE c.moment.id IN :momentIds")
-    void deleteAllByMomentIdInBulk(@Param("momentIds") List<Long> momentIds);
+    @Query("DELETE FROM Comment c WHERE c.staccato.id IN :staccatoIds")
+    void deleteAllByStaccatoIdInBulk(@Param("staccatoIds") List<Long> staccatoIds);
 }
