@@ -82,7 +82,7 @@ class StaccatoUpdateActivity :
         LocationPermissionManager(context = this, activity = this)
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var address: String
+    private var address: String = DEFAULT_ADDRESS
     private var currentSnackBar: Snackbar? = null
 
     override fun onNewPlaceSelected(
