@@ -13,16 +13,16 @@
         android:layout_marginBottom="10dp">
 
         <TextView
-            android:id="@+id/tv_moment_feeling_selection_title"
+            android:id="@+id/tv_staccato_feeling_selection_title"
             style="@style/SubTitleStyle"
             android:layout_marginStart="18dp"
             android:layout_marginTop="20dp"
-            android:text="@string/moment_how_was_your_feeling"
+            android:text="@string/staccato_how_was_your_feeling"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_moment_feeling_selection"
+            android:id="@+id/rv_staccato_feeling_selection"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -30,22 +30,22 @@
             android:nestedScrollingEnabled="false"
             android:orientation="horizontal"
             android:overScrollMode="never"
-            android:paddingStart="13dp"
+            android:paddingHorizontal="13dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_moment_feeling_selection_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_staccato_feeling_selection_title"
             tools:itemCount="5"
-            tools:listitem="@layout/item_moment_feeling_selection" />
+            tools:listitem="@layout/item_staccato_feeling_selection" />
 
         <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider_moment_feeling_selection"
+            android:id="@+id/divider_staccato_feeling_selection"
             style="@style/DividerStyle"
             android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_moment_feeling_selection" />
+            app:layout_constraintTop_toBottomOf="@id/rv_staccato_feeling_selection" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,28 +1,6 @@
 <resources>
 
-    <style name="DefaultToolbarStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="navigationIcon">@drawable/icon_arrow_left</item>
-    </style>
-
-    <style name="TitleToolbarStyle" parent="DefaultToolbarStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="titleTextAppearance">@style/Typography.Title2</item>
-        <item name="subtitleTextAppearance">@style/Typography.Body4</item>
-        <item name="subtitleTextColor">@color/gray5</item>
-        <item name="titleTextColor">@color/gray5</item>
-    </style>
-
-    <style name="CloseToolbarStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingEnd">8dp</item>
-        <item name="titleCentered">true</item>
-        <item name="titleTextAppearance">@style/Typography.Title2</item>
-        <item name="titleTextColor">@color/gray5</item>
-    </style>
+    <!-- SubTitle sytles -->
 
     <style name="SubTitleStyle">
         <item name="android:layout_width">wrap_content</item>
@@ -31,9 +9,27 @@
     </style>
 
     <style name="RequiredMarkStyle" parent="SubTitleStyle">
+        <item name="android:layout_marginStart">4dp</item>
         <item name="android:text">@string/all_required_mark</item>
         <item name="android:textColor">@color/staccato_blue</item>
-        <item name="android:layout_marginStart">4dp</item>
+    </style>
+
+    <!-- Divider styles   -->
+
+    <style name="DividerStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="dividerColor">@color/gray2</item>
+    </style>
+
+    <!-- Dialog styles   -->
+
+    <style name="DialogBackgroundStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/shape_dialog_10dp</item>
+        <item name="android:paddingHorizontal">24dp</item>
+        <item name="android:paddingVertical">20dp</item>
     </style>
 
     <style name="DialogDescriptionStyle">
@@ -44,160 +40,28 @@
         <item name="android:textColor">@color/gray3</item>
     </style>
 
-    <style name="TextInputLayoutStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="counterEnabled">true</item>
-        <item name="counterTextAppearance">@style/Typography.Body4</item>
-        <item name="counterTextColor">@color/gray3</item>
-        <item name="hintEnabled">false</item>
-    </style>
-
-    <style name="TextInputEditTextStyle">
-        <item name="android:layout_marginHorizontal">24dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">@style/Typography.Body1</item>
-        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
-        <item name="android:paddingHorizontal">16dp</item>
-        <item name="android:paddingVertical">12dp</item>
-        <item name="android:textColorHint">@color/gray3</item>
-    </style>
-
-    <style name="TextInputEditTextStyle.Title" parent="TextInputEditTextStyle">
-        <item name="android:inputType">text</item>
-        <item name="maxLines">1</item>
-    </style>
-
-    <style name="EditTextStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">@style/Typography.Body1</item>
-        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
-        <item name="android:paddingHorizontal">16dp</item>
-        <item name="android:paddingVertical">12dp</item>
-        <item name="android:textColorHint">@color/gray3</item>
-    </style>
-
-    <style name="ButtonStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:minWidth">0dp</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:paddingVertical">14dp</item>
-        <item name="android:stateListAnimator">@null</item>
-        <item name="android:textAppearance">@style/Typography.Title3</item>
-    </style>
-
-    <style name="ButtonStyle.Save" parent="ButtonStyle">
-        <item name="android:background">@drawable/selector_button_5dp</item>
-        <item name="android:text">@string/all_save</item>
-        <item name="android:textColor">@color/gray4</item>
-        <item name="android:enabled">false</item>
-    </style>
-
-    <style name="ButtonStyle.Save.Active" parent="ButtonStyle.Save">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:enabled">true</item>
-    </style>
-
-    <style name="ButtonStyle.Confirm" parent="ButtonStyle">
-        <item name="android:background">@drawable/shape_button_staccato_blue_5dp</item>
-        <item name="android:text">@string/all_confirm</item>
-        <item name="android:layout_marginTop">36dp</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="ButtonStyle.Confirm.Narrow" parent="ButtonStyle.Confirm">
-        <item name="android:paddingHorizontal">32dp</item>
-    </style>
-
-    <style name="ButtonStyle.Cancel" parent="ButtonStyle">
-        <item name="android:text">@string/all_cancel</item>
-        <item name="android:layout_marginTop">36dp</item>
-        <item name="android:paddingHorizontal">32dp</item>
-        <item name="android:background">@drawable/shape_button_gray1_5dp</item>
-        <item name="android:textColor">@color/gray4</item>
-    </style>
-
-    <style name="ButtonStyle.Login" parent="ButtonStyle">
-        <item name="android:background">@drawable/selector_button_5dp</item>
-        <item name="android:text">@string/login_start</item>
-        <item name="android:textColor">@color/gray4</item>
-        <item name="android:enabled">false</item>
-    </style>
-
-    <style name="ButtonStyle.Login.Active" parent="ButtonStyle.Login">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:enabled">true</item>
-    </style>
-
-    <style name="ButtonStyle.Recovery" parent="ButtonStyle">
-        <item name="android:background">@drawable/selector_button_5dp</item>
-        <item name="android:text">@string/recovery_load</item>
-        <item name="android:textColor">@color/gray4</item>
-        <item name="android:enabled">false</item>
-    </style>
-
-    <style name="ButtonStyle.Recovery.Active" parent="ButtonStyle.Recovery">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:enabled">true</item>
-    </style>
-
-    <style name="ButtonStyle.MyPage" parent="ButtonStyle">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:drawableEnd">@drawable/icon_arrow_right</item>
-        <item name="android:paddingVertical">8dp</item>
-        <item name="android:paddingStart">24dp</item>
-        <item name="android:paddingEnd">12dp</item>
-        <item name="android:textAlignment">textStart</item>
-    </style>
-
-    <style name="ToolbarMenuStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">end</item>
-        <item name="android:paddingVertical">14dp</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:textAppearance">@style/Typography.Body2</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:minWidth">0dp</item>
-        <item name="android:paddingHorizontal">8dp</item>
-    </style>
-
-    <style name="PhotoAttachMenuStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:clickable">true</item>
-        <item name="android:paddingVertical">16dp</item>
-        <item name="android:focusable">true</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">@style/Typography.Body1</item>
-        <item name="android:textColor">@color/gray4</item>
-    </style>
-
-    <style name="DividerStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">0.5dp</item>
-        <item name="dividerColor">@color/gray2</item>
-    </style>
-
-    <style name="DialogBackgroundStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/shape_dialog_10dp</item>
-        <item name="android:paddingHorizontal">24dp</item>
-        <item name="android:paddingVertical">20dp</item>
-    </style>
+    <!-- PhotoAttatch styles   -->
 
     <style name="PhotoAttachBoxStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
+        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
-        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
         <item name="layout_constraintDimensionRatio">8:5</item>
     </style>
+
+    <style name="PhotoAttachMenuStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:paddingVertical">16dp</item>
+        <item name="android:textAppearance">@style/Typography.Body1</item>
+        <item name="android:textColor">@color/gray4</item>
+    </style>
+
+    <!-- DargHandle styles   -->
 
     <style name="DragHandleStyle">
         <item name="android:layout_width">40dp</item>
@@ -206,10 +70,12 @@
         <item name="android:background">@drawable/shape_drag_handle</item>
     </style>
 
+    <!-- MeterialCalendar styles   -->
+
     <style name="DatePickerStyle" parent="ThemeOverlay.Material3.MaterialCalendar">
+        <item name="android:background">@color/white</item>
         <item name="colorPrimary">@color/staccato_blue</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="android:background">@color/white</item>
         <item name="fontFamily">@font/pretendard_medium</item>
         <item name="materialCalendarHeaderSelection">@style/Typography.Title1</item>
         <item name="materialCalendarStyle">@style/CustomMaterialCalendarStyle</item>
@@ -219,93 +85,24 @@
         <item name="rangeFillColor">@color/staccato_blue_30</item>
     </style>
 
+    <!-- Feeling styles   -->
+
     <style name="FeelingStyle">
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:layout_marginHorizontal">5dp</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:gravity">center</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">5dp</item>
     </style>
 
-    <style name="CurrentLocationStyle" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:clickable">true</item>
-        <item name="android:layout_width">0dp</item>
+    <style name="LottieStyle">
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:text">@string/visit_creation_load_current_location</item>
-        <item name="android:textAppearance">@style/Typography.Body4</item>
-        <item name="android:textColor">@color/gray4</item>
-
-        <item name="icon">@drawable/icon_crosshair</item>
-        <item name="iconGravity">textStart</item>
-        <item name="iconPadding">10dp</item>
-        <item name="iconTint">@color/gray3</item>
-
-        <item name="rippleColor">@android:color/transparent</item>
-        <item name="strokeColor">@color/gray3</item>
-    </style>
-
-    <!--  Creation of Update Text styles  -->
-
-    <style name="BackgroundedTextStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
-        <item name="android:layout_marginHorizontal">24dp</item>
-        <item name="android:paddingHorizontal">16dp</item>
-        <item name="android:paddingVertical">12.5dp</item>
-        <item name="android:textAppearance">@style/Typography.Body1.Not.Resizable</item>
-        <item name="android:textColor">@color/staccato_black</item>
-    </style>
-
-    <style name="BoundedTextStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/shape_all_gray1_4dp</item>
-        <item name="android:layout_marginHorizontal">24dp</item>
-        <item name="android:paddingHorizontal">16dp</item>
-        <item name="android:paddingVertical">12.5dp</item>
-        <item name="android:textAppearance">@style/Typography.Body1.Not.Resizable</item>
-        <item name="android:textColor">@color/gray3</item>
-    </style>
-
-    <style name="HintTextStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">@style/Typography.Body4.Not.Resizable</item>
-        <item name="android:textColor">@color/gray3</item>
-    </style>
-
-    <!--  Creation of Update Text styles  -->
-
-    <style name="BackgroundedTextStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/shape_all_gray1_8dp</item>
-        <item name="android:layout_marginHorizontal">24dp</item>
-        <item name="android:paddingHorizontal">16dp</item>
-        <item name="android:paddingVertical">12.5dp</item>
-        <item name="android:textAppearance">@style/Typography.Body1.Not.Resizable</item>
-        <item name="android:textColor">@color/staccato_black</item>
-    </style>
-
-    <style name="BoundedTextStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/shape_all_gray1_4dp</item>
-        <item name="android:layout_marginHorizontal">24dp</item>
-        <item name="android:paddingHorizontal">16dp</item>
-        <item name="android:paddingVertical">12.5dp</item>
-        <item name="android:textAppearance">@style/Typography.Body1.Not.Resizable</item>
-        <item name="android:textColor">@color/gray3</item>
-    </style>
-
-    <style name="HintTextStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">@style/Typography.Body4.Not.Resizable</item>
-        <item name="android:textColor">@color/gray3</item>
+        <item name="lottie_autoPlay">true</item>
+        <item name="lottie_loop">true</item>
+        <item name="lottie_rawRes">@raw/dot_loading</item>
     </style>
 
     <!--  Creation of Update Text styles  -->
