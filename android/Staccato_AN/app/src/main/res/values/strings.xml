@@ -138,12 +138,16 @@
     // activity_login
     <string name="login_start">시작하기</string>
     <string name="login_nickname_hint">닉네임을 입력해 주세요</string>
+    <string name="login_nickname_valid_message">사용 가능한 닉네임이에요!</string>
+    <string name="login_nickname_error_message_format">닉네임은 한글, 영어, 숫자,\n마침표(.), 밑줄(_)만 사용할 수 있어요.</string>
+    <string name="login_nickname_error_message_blank_first">닉네임은 공백으로 시작할 수 없어요.</string>
+    <string name="login_nickname_error_message_length">%d~%d 사이의 길이로 입력해 주세요.</string>
     <string name="login_recovery_click_here_if_need_recovery"><u>이전 기록을 불러오려면 여기를 눌러주세요</u></string>
     <string name="login_staccato_logo_description">스타카토 로고</string>
 
     // activity_recovery
     <string name="recovery_title">이전 기록을 불러올게요</string>
-    <string name="recovery_subtitle">고유 코드를 입력해주세요</string>
+    <string name="recovery_subtitle">고유 코드를 입력해 주세요</string>
     <string name="recovery_code_hint">ex) bt2hnhd4-07kght-0pp2ln</string>
     <string name="recovery_load">불러오기</string>
 
