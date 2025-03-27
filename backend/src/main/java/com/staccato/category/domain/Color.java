@@ -1,8 +1,12 @@
 package com.staccato.category.domain;
 
+import java.util.Arrays;
+import com.staccato.exception.StaccatoException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Getter
 public enum Color {
 
     RED("red", "F4828E"),
@@ -17,4 +21,11 @@ public enum Color {
 
     private final String name;
     private final String hexCode;
+
+    public static Color findByName(String color) {
+        return Arrays.stream(values())
+                .filter(value -> value.name.equalsIgnoreCase(color))
+                .findFirst()
+                .orElseThrow(() -> new StaccatoException("유효하지 않은 색깔입니다."));
+    }
 }

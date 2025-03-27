@@ -1,5 +1,35 @@
 package com.staccato.category.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import com.staccato.ControllerTest;
+import com.staccato.category.domain.Category;
+import com.staccato.category.service.dto.request.CategoryReadRequest;
+import com.staccato.category.service.dto.request.CategoryRequest;
+import com.staccato.category.service.dto.response.CategoryDetailResponse;
+import com.staccato.category.service.dto.response.CategoryIdResponse;
+import com.staccato.category.service.dto.response.CategoryNameResponses;
+import com.staccato.category.service.dto.response.CategoryResponses;
+import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.category.CategoryFixture;
+import com.staccato.fixture.category.CategoryNameResponsesFixture;
+import com.staccato.fixture.category.CategoryResponsesFixture;
+import com.staccato.fixture.member.MemberFixture;
+import com.staccato.fixture.staccato.StaccatoFixture;
+import com.staccato.member.domain.Member;
+import com.staccato.staccato.domain.Staccato;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -12,38 +42,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.staccato.category.domain.Category;
-import com.staccato.category.service.dto.request.CategoryReadRequest;
-import com.staccato.category.service.dto.response.CategoryDetailResponse;
-import com.staccato.category.service.dto.response.CategoryIdResponse;
-import com.staccato.category.service.dto.response.CategoryNameResponses;
-import com.staccato.category.service.dto.response.CategoryResponses;
-import com.staccato.staccato.domain.Staccato;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Stream;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-
-import com.staccato.ControllerTest;
-import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.category.CategoryNameResponsesFixture;
-import com.staccato.fixture.category.CategoryResponsesFixture;
-import com.staccato.fixture.staccato.StaccatoFixture;
-import com.staccato.member.domain.Member;
-import com.staccato.category.service.dto.request.CategoryRequest;
 
 class CategoryControllerTest extends ControllerTest {
 
@@ -214,10 +212,10 @@ class CategoryControllerTest extends ControllerTest {
 
         // when & then
         mockMvc.perform(get("/categories")
-                .header(HttpHeaders.AUTHORIZATION, "token")
-                .param("filters", "invalid"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.categories.size()").value(2));
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("filters", "invalid"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.categories.size()").value(2));
     }
 
     @DisplayName("사용자가 기간이 없는 카테고리를 포함한 목록을 조회하는 응답 직렬화에 성공한다.")
@@ -299,7 +297,7 @@ class CategoryControllerTest extends ControllerTest {
         Category category = CategoryFixture.createWithMember(MemberFixture.create());
         Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
-            staccato));
+                staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
@@ -343,7 +341,7 @@ class CategoryControllerTest extends ControllerTest {
         Category category = CategoryFixture.createWithMember(null, null, MemberFixture.create());
         Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
-            staccato));
+                staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
@@ -388,6 +386,27 @@ class CategoryControllerTest extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("카테고리 색깔 수정에 성공한다.")
+    @Test
+    void updateCategoryColor() throws Exception {
+        // given
+        long categoryId = 1L;
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        String categoryColorRequest =
+                """
+                {
+                    "color" : "pink"
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(put("/categories/{categoryId}/colors", categoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(categoryColorRequest))
                 .andExpect(status().isOk());
     }
 
