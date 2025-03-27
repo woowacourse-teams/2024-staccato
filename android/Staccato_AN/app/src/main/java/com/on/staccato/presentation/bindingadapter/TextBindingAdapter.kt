@@ -220,9 +220,8 @@ fun TextView.setMakeCategoryText(
     text =
         context.getString(
             when (filterType) {
-                FilterType.WITH_TERM -> R.string.timeline_make_category_with_term
-                FilterType.WITHOUT_TERM -> R.string.timeline_make_category_without_term
-                else -> R.string.timeline_make_category
+                null -> R.string.timeline_make_category
+                else -> R.string.timeline_no_filtered_category
             },
         )
 }
