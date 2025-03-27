@@ -25,7 +25,7 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
-import com.on.staccato.presentation.common.location.LocationManager
+import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
@@ -77,7 +77,7 @@ class StaccatoUpdateActivity :
     }
 
     @Inject
-    lateinit var locationManager: LocationManager
+    lateinit var gpsManager: GPSManager
 
     @Inject
     lateinit var locationPermissionManager: LocationPermissionManager
@@ -170,7 +170,7 @@ class StaccatoUpdateActivity :
     }
 
     private fun checkLocationSetting() {
-        locationManager.checkLocationSetting(
+        gpsManager.checkLocationSetting(
             activity = this,
             actionWhenGPSIsOn = { fetchCurrentLocationAddress() },
         )

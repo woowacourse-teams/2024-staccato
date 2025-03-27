@@ -9,7 +9,7 @@ import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 import javax.inject.Inject
 
-class LocationManager
+class GPSManager
     @Inject
     constructor(
         private val locationSettingsRequest: LocationSettingsRequest,

@@ -19,7 +19,7 @@ class LocationPermissionManager
     @Inject
     constructor(
         @ApplicationContext private val context: Context,
-        private val locationManager: LocationManager,
+        private val gpsManager: GPSManager,
     ) {
         private val locationDialog = LocationDialogFragment()
 
@@ -31,7 +31,7 @@ class LocationPermissionManager
             permissions.forEach { (_, isGranted) ->
                 if (isGranted) {
                     view.showSnackBar(context.resources.getString(R.string.maps_location_permission_granted_message))
-                    locationManager.checkLocationSetting(activity, actionWhenHavePermission)
+                    gpsManager.checkLocationSetting(activity, actionWhenHavePermission)
                 } else {
                     view.showSnackBar(context.resources.getString(R.string.all_location_permission_denial))
                 }

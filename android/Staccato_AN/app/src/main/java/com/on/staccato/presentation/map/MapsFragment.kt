@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.on.staccato.R
-import com.on.staccato.presentation.common.location.LocationManager
+import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
@@ -35,7 +35,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     @Inject
-    lateinit var locationManager: LocationManager
+    lateinit var gpsManager: GPSManager
 
     @Inject
     lateinit var locationPermissionManager: LocationPermissionManager
@@ -133,7 +133,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun checkLocationSetting() {
-        locationManager.checkLocationSetting(activity = requireActivity(), actionWhenGPSIsOn = ::enableMyLocation)
+        gpsManager.checkLocationSetting(activity = requireActivity(), actionWhenGPSIsOn = ::enableMyLocation)
     }
 
     private fun enableMyLocation() {

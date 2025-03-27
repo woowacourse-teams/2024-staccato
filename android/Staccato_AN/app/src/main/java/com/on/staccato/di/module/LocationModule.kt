@@ -7,7 +7,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.Priority
-import com.on.staccato.presentation.common.location.LocationManager
+import com.on.staccato.presentation.common.location.GPSManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,5 +43,5 @@ object LocationModule {
 
     @Singleton
     @Provides
-    fun provideLocationManager(locationSettingsRequest: LocationSettingsRequest): LocationManager = LocationManager(locationSettingsRequest)
+    fun provideLocationManager(locationSettingsRequest: LocationSettingsRequest): GPSManager = GPSManager(locationSettingsRequest)
 }

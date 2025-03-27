@@ -26,7 +26,7 @@ import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.PERMISSION_CANCEL_KEY
-import com.on.staccato.presentation.common.location.LocationManager
+import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.location.PermissionCancelListener
@@ -78,7 +78,7 @@ class StaccatoCreationActivity :
     private val isPermissionCanceled by lazy { intent.getBooleanExtra(PERMISSION_CANCEL_KEY, false) }
 
     @Inject
-    lateinit var locationManager: LocationManager
+    lateinit var gpsManager: GPSManager
 
     @Inject
     lateinit var locationPermissionManager: LocationPermissionManager
@@ -179,7 +179,7 @@ class StaccatoCreationActivity :
     }
 
     private fun checkLocationSetting(isCurrentLocationCallClicked: Boolean = false) {
-        locationManager.checkLocationSetting(
+        gpsManager.checkLocationSetting(
             activity = this,
             actionWhenGPSIsOn = {
                 fetchCurrentLocationAddress(
