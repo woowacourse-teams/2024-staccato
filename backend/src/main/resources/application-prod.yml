@@ -118,3 +118,7 @@ server:
       enabled: false
     include-message: never
     include-binding-errors: never
+
+staccato:
+  share:
+    link-prefix: https://staccato.kr/share/

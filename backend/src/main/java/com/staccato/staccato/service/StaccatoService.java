@@ -38,7 +38,6 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class StaccatoService {
-    private static final String SHARE_LINK_PREFIX = "https://staccato.kr/share/";
 
     private final StaccatoRepository staccatoRepository;
     private final CategoryRepository categoryRepository;
@@ -124,7 +123,7 @@ public class StaccatoService {
 
         ShareTokenPayload shareTokenPayload = new ShareTokenPayload(staccatoId, member.getId());
         String token = shareTokenProvider.create(shareTokenPayload);
-        String shareLink = SHARE_LINK_PREFIX + token;
+        String shareLink = StaccatoShareLinkFactory.create(token);
 
         return new StaccatoShareLinkResponse(staccatoId, shareLink);
     }

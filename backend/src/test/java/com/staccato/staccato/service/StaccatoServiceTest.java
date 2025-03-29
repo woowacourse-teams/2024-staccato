@@ -360,7 +360,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
 
         // when
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(staccato.getId(), member);
-        String token = response.getToken();
+        String token = StaccatoShareLinkFactory.extractToken(response.shareLink());
 
         // then
         assertThat(token).isNotNull();
@@ -375,7 +375,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Staccato staccato = saveStaccatoWithImages(category);
 
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(staccato.getId(), member);
-        String token = response.getToken();
+        String token = StaccatoShareLinkFactory.extractToken(response.shareLink());
 
         // when & then
         assertThatCode(() -> shareTokenProvider.extractStaccatoId(token))
@@ -392,7 +392,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Staccato staccato = saveStaccatoWithImages(category);
 
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(staccato.getId(), member);
-        String token = response.getToken();
+        String token = StaccatoShareLinkFactory.extractToken(response.shareLink());
 
         // when
         Claims claims = shareTokenProvider.getPayload(token);
@@ -410,7 +410,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Staccato staccato = saveStaccatoWithImages(category);
 
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(staccato.getId(), member);
-        String token = response.getToken();
+        String token = StaccatoShareLinkFactory.extractToken(response.shareLink());
 
         // when & then
         assertThatCode(() -> shareTokenProvider.validateToken(token))
