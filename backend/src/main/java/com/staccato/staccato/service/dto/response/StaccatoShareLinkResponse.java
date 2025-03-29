@@ -8,9 +8,4 @@ public record StaccatoShareLinkResponse(
         @Schema(example = "https://staccato.kr/share/sample-token")
         String shareLink
 ) {
-        private static final String SHARE_LINK_PREFIX = "https://staccato.kr/share/";
-
-        public String getToken() {
-                return shareLink.substring(SHARE_LINK_PREFIX.length());
-        }
 }
