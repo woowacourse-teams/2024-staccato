@@ -1,9 +1,23 @@
 package com.staccato.category.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,6 +27,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
 import com.staccato.ControllerTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
@@ -29,19 +44,6 @@ import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class CategoryControllerTest extends ControllerTest {
 
@@ -386,27 +388,6 @@ class CategoryControllerTest extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
-                .andExpect(status().isOk());
-    }
-
-    @DisplayName("카테고리 색깔 수정에 성공한다.")
-    @Test
-    void updateCategoryColor() throws Exception {
-        // given
-        long categoryId = 1L;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        String categoryColorRequest =
-                """
-                {
-                    "color" : "pink"
-                }
-                """;
-
-        // when & then
-        mockMvc.perform(put("/categories/{categoryId}/colors", categoryId)
-                        .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(categoryColorRequest))
                 .andExpect(status().isOk());
     }
 
