@@ -99,8 +99,7 @@ public class StaccatoController implements StaccatoControllerDocs {
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId
     ) {
         StaccatoShareLinkResponse staccatoShareLinkResponse = staccatoService.createStaccatoShareLink(staccatoId, member);
-        String token = StaccatoShareLinkFactory.extractToken(staccatoShareLinkResponse.shareLink());
-        return ResponseEntity.created(URI.create("/staccatos/shared/" + token))
+        return ResponseEntity.created(URI.create("/staccatos/shared/" + staccatoShareLinkResponse.token()))
                 .body(staccatoShareLinkResponse);
     }
 

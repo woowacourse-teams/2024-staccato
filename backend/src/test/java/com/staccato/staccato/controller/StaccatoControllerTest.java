@@ -396,12 +396,8 @@ class StaccatoControllerTest extends ControllerTest {
     @Test
     void createStaccatoShareLink() throws Exception {
         // given
-        Field shareLinkPrefixField = StaccatoShareLinkFactory.class.getDeclaredField("shareLinkPrefix");
-        shareLinkPrefixField.setAccessible(true);
-        shareLinkPrefixField.set(null, "https://staccato.kr/share/");
-
         long staccatoId = 1L;
-        StaccatoShareLinkResponse response = new StaccatoShareLinkResponse(staccatoId, "https://staccato.kr/share/sample-token");
+        StaccatoShareLinkResponse response = new StaccatoShareLinkResponse(staccatoId, "https://staccato.kr/share/sample-token", "sample-token");
         when(staccatoService.createStaccatoShareLink(any(), any())).thenReturn(response);
         String expectedResponse = """
                 {

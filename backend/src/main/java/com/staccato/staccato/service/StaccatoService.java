@@ -125,7 +125,7 @@ public class StaccatoService {
         String token = shareTokenProvider.create(shareTokenPayload);
         String shareLink = StaccatoShareLinkFactory.create(token);
 
-        return new StaccatoShareLinkResponse(staccatoId, shareLink);
+        return new StaccatoShareLinkResponse(staccatoId, shareLink, token);
     }
 
     public StaccatoSharedResponse readSharedStaccatoByToken(String token) {

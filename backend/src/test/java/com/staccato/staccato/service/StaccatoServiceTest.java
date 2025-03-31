@@ -360,10 +360,9 @@ class StaccatoServiceTest extends ServiceSliceTest {
 
         // when
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(staccato.getId(), member);
-        String token = StaccatoShareLinkFactory.extractToken(response.shareLink());
 
         // then
-        assertThat(token).isNotNull();
+        assertThat(response.token()).isNotNull();
     }
 
     @DisplayName("토큰은 올바른 스타카토 id를 포함하고 있다.")
@@ -375,12 +374,11 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Staccato staccato = saveStaccatoWithImages(category);
 
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(staccato.getId(), member);
-        String token = StaccatoShareLinkFactory.extractToken(response.shareLink());
 
         // when & then
-        assertThatCode(() -> shareTokenProvider.extractStaccatoId(token))
+        assertThatCode(() -> shareTokenProvider.extractStaccatoId(response.token()))
                 .doesNotThrowAnyException();
-        assertThat(shareTokenProvider.extractStaccatoId(token)).isEqualTo(staccato.getId());
+        assertThat(shareTokenProvider.extractStaccatoId(response.token())).isEqualTo(staccato.getId());
     }
 
     @DisplayName("토큰은 만료 기한을 포함하고 있다.")
@@ -392,10 +390,9 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Staccato staccato = saveStaccatoWithImages(category);
 
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(staccato.getId(), member);
-        String token = StaccatoShareLinkFactory.extractToken(response.shareLink());
 
         // when
-        Claims claims = shareTokenProvider.getPayload(token);
+        Claims claims = shareTokenProvider.getPayload(response.token());
 
         // then
         assertThat(claims.getExpiration()).isNotNull();
@@ -410,10 +407,9 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Staccato staccato = saveStaccatoWithImages(category);
 
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(staccato.getId(), member);
-        String token = StaccatoShareLinkFactory.extractToken(response.shareLink());
 
         // when & then
-        assertThatCode(() -> shareTokenProvider.validateToken(token))
+        assertThatCode(() -> shareTokenProvider.validateToken(response.token()))
                 .doesNotThrowAnyException();
     }
 

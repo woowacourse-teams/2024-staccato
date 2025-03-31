@@ -15,8 +15,4 @@ public class StaccatoShareLinkFactory {
     public static String create(String token) {
         return shareLinkPrefix + token;
     }
-
-    public static String extractToken(String shareLink) {
-        return shareLink.substring(shareLinkPrefix.length());
-    }
 }
