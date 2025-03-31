@@ -320,7 +320,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         StaccatoShareLinkResponse response = staccatoService.createStaccatoShareLink(staccato.getId(), member);
 
         // then
-        assertThat(response.shareLink()).startsWith("https://staccato.kr/share/");
+        assertThat(response.shareLink()).startsWith("http://localhost:8080/share/");
     }
 
     @DisplayName("존재하지 않는 스타카토의 공유 링크를 생성하려고 하면, 예외가 발생한다.")

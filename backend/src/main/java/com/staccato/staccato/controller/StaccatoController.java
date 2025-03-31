@@ -21,7 +21,6 @@ import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.controller.docs.StaccatoControllerDocs;
 import com.staccato.staccato.service.StaccatoService;
-import com.staccato.staccato.service.StaccatoShareLinkFactory;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;

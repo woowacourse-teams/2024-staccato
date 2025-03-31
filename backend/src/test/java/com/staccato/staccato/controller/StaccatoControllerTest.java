@@ -20,7 +20,6 @@ import com.staccato.fixture.staccato.StaccatoDetailResponseFixture;
 import com.staccato.fixture.staccato.StaccatoLocationResponsesFixture;
 import com.staccato.fixture.staccato.StaccatoSharedResponseFixture;
 import com.staccato.member.domain.Member;
-import com.staccato.staccato.service.StaccatoShareLinkFactory;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
@@ -28,7 +27,6 @@ import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
 import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,7 +39,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.thymeleaf.spring6.util.FieldUtils;
 
 class StaccatoControllerTest extends ControllerTest {
 

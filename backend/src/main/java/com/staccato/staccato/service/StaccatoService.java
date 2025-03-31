@@ -10,6 +10,7 @@ import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +46,8 @@ public class StaccatoService {
     private final StaccatoImageRepository staccatoImageRepository;
     private final ShareTokenProvider shareTokenProvider;
     private final MemberRepository memberRepository;
+    @Value("${staccato.share.link-prefix}")
+    private String shareLinkPrefix;
 
     @Transactional
     public StaccatoIdResponse createStaccato(StaccatoRequest staccatoRequest, Member member) {
@@ -123,7 +126,7 @@ public class StaccatoService {
 
         ShareTokenPayload shareTokenPayload = new ShareTokenPayload(staccatoId, member.getId());
         String token = shareTokenProvider.create(shareTokenPayload);
-        String shareLink = StaccatoShareLinkFactory.create(token);
+        String shareLink = shareLinkPrefix + token;
 
         return new StaccatoShareLinkResponse(staccatoId, shareLink, token);
     }
