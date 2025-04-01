@@ -1,16 +1,20 @@
 package com.staccato.category.repository;
 
 import com.staccato.category.domain.Category;
+
 import java.time.LocalDate;
 import java.util.List;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.staccato.RepositoryTest;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.CategoryMember;
@@ -33,10 +37,14 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     void findAllByMemberId() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 30), LocalDate.of(2023, 12, 30)));
-        Category category2 = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2023, 12, 31)));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 30),
+                        LocalDate.of(2023, 12, 30))
+                .buildAndSave(categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 31),
+                        LocalDate.of(2023, 12, 31))
+                .buildAndSave(categoryRepository);
         categoryMemberRepository.save(new CategoryMember(member, category));
         categoryMemberRepository.save(new CategoryMember(member, category2));
 
@@ -52,10 +60,14 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     void findAllByMemberIdAndDate() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 30), LocalDate.of(2023, 12, 30)));
-        Category category2 = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2023, 12, 31)));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 30),
+                        LocalDate.of(2023, 12, 30))
+                .buildAndSave(categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 31),
+                        LocalDate.of(2023, 12, 31))
+                .buildAndSave(categoryRepository);
         categoryMemberRepository.save(new CategoryMember(member, category));
         categoryMemberRepository.save(new CategoryMember(member, category2));
 
@@ -71,9 +83,11 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     void findAllByMemberIdAndDateWhenNull() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 30), LocalDate.of(2023, 12, 30)));
-        Category category2 = categoryRepository.save(CategoryFixture.create(null, null));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 30),
+                        LocalDate.of(2023, 12, 30))
+                .buildAndSave(categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
         categoryMemberRepository.save(new CategoryMember(member, category));
         categoryMemberRepository.save(new CategoryMember(member, category2));
 
@@ -90,12 +104,14 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         Member member2 = memberRepository.save(MemberFixture.create("hotea"));
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 30), LocalDate.of(2023, 12, 30)));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 30),
+                        LocalDate.of(2023, 12, 30))
+                .buildAndSave(categoryRepository);
         CategoryMember categoryMember = categoryMemberRepository.save(new CategoryMember(member,
-            category));
+                category));
         CategoryMember categoryMember2 = categoryMemberRepository.save(new CategoryMember(member2,
-            category));
+                category));
 
         // when
         categoryMemberRepository.deleteAllByCategoryIdInBulk(category.getId());

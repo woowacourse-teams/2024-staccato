@@ -1,6 +1,7 @@
 package com.staccato.comment.repository;
 
 import com.staccato.category.domain.Category;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.util.List;
 import jakarta.persistence.EntityManager;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
 import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
-import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -37,7 +37,7 @@ class CommentRepositoryTest extends RepositoryTest {
     void deleteAllByStaccatoIdInBulk() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(CategoryFixture.create(null, null));
+        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
         Staccato staccato1 = StaccatoFixture.create(category);
         CommentFixture.create(staccato1, member);
         Staccato staccato2 = StaccatoFixture.create(category);

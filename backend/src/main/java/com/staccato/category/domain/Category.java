@@ -18,6 +18,7 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.domain.Nickname;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Category extends BaseEntity {
     private static final String DEFAULT_SUBTITLE = "의 추억";
     private static final String DEFAULT_DESCRIPTION = "스타카토를 카테고리에 담아보세요.";

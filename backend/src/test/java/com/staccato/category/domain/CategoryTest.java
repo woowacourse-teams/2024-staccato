@@ -1,5 +1,6 @@
 package com.staccato.category.domain;
 
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,7 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Nickname;
 
@@ -45,8 +45,14 @@ class CategoryTest {
     @Test
     void validateDuration() {
         // given
-        Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
-        Category updatedCategory = CategoryFixture.create(LocalDate.now().plusDays(1), LocalDate.now().plusDays(2));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.now(),
+                        LocalDate.now().plusDays(1))
+                .build();
+        Category updatedCategory = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.now().plusDays(1),
+                        LocalDate.now().plusDays(2))
+                .build();
         Staccato staccato = StaccatoFixture.create(category, LocalDateTime.now());
 
         // when & then

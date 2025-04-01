@@ -1,6 +1,7 @@
 package com.staccato.staccato.repository;
 
 import com.staccato.category.domain.Category;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
-import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.staccato.domain.StaccatoImage;
@@ -33,8 +33,10 @@ class StaccatoImageRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByStaccatoIdInBulk() {
         // given
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 31),
+                        LocalDate.of(2024, 1, 10))
+                .buildAndSave(categoryRepository);
         Staccato staccato1 = staccatoRepository.save(StaccatoFixture
                 .createWithImages(
                     category, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2")));
@@ -60,8 +62,10 @@ class StaccatoImageRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByIdInBulk() {
         // given
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 31),
+                        LocalDate.of(2024, 1, 10))
+                .buildAndSave(categoryRepository);
         Staccato staccato = staccatoRepository.save(StaccatoFixture.createWithImages(
             category, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2", "url3")));
 

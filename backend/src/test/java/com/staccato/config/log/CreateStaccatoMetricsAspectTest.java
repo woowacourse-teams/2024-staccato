@@ -1,5 +1,6 @@
 package com.staccato.config.log;
 
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
 import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.Category;
@@ -37,7 +37,7 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
     @TestFactory
     List<DynamicTest> createStaccatoMetricsAspect() {
         Member member = saveMember();
-        Category category = saveCategory(member);
+        Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
         LocalDateTime now = LocalDateTime.now();
 
         return List.of(
@@ -74,12 +74,6 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
 
     private Member saveMember() {
         return memberRepository.save(MemberFixture.create());
-    }
-
-    private Category saveCategory(Member member) {
-        Category category = CategoryFixture.create();
-        category.addCategoryMember(member);
-        return categoryRepository.save(category);
     }
 
     private double getFutureCount() {

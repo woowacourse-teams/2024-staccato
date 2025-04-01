@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
-import com.staccato.fixture.category.CategoryFixture;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -63,8 +63,12 @@ public class CategorySortTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         List<Category> categories = new ArrayList<>();
-        categories.add(categoryRepository.save(CategoryFixture.createWithMember("first", member)));
-        categories.add(categoryRepository.save(CategoryFixture.createWithMember("second", member)));
+        categories.add(CategoryFixtures.defaultCategory()
+                .withTitle("first")
+                .buildAndSaveWithMember(member, categoryRepository));
+        categories.add(CategoryFixtures.defaultCategory()
+                .withTitle("second")
+                .buildAndSaveWithMember(member, categoryRepository));
 
         // when
         List<Category> result = CategorySort.UPDATED.apply(categories);
@@ -81,12 +85,22 @@ public class CategorySortTest extends ServiceSliceTest {
     void readAllCategoriesByNewest() {
         // given
         List<Category> categories = new ArrayList<>();
-        categories.add(categoryRepository.save(CategoryFixture.create("first", LocalDate.now()
-                .minusDays(2), LocalDate.now().plusDays(2))));
-        categories.add(categoryRepository.save(CategoryFixture.create("second", LocalDate.now(), LocalDate.now()
-                .plusDays(2))));
-        categories.add(categoryRepository.save(CategoryFixture.create("third")));
-        categories.add(categoryRepository.save(CategoryFixture.create("fourth")));
+        categories.add(CategoryFixtures.defaultCategory()
+                .withTitle("first")
+                .withTerm(LocalDate.now().minusDays(2),
+                        LocalDate.now().plusDays(2))
+                .buildAndSave(categoryRepository));
+        categories.add(CategoryFixtures.defaultCategory()
+                .withTitle("second")
+                .withTerm(LocalDate.now(),
+                        LocalDate.now().plusDays(2))
+                .buildAndSave(categoryRepository));
+        categories.add(CategoryFixtures.defaultCategory()
+                .withTitle("third")
+                .buildAndSave(categoryRepository));
+        categories.add(CategoryFixtures.defaultCategory()
+                .withTitle("fourth")
+                .buildAndSave(categoryRepository));
 
         // when
         List<Category> result = CategorySort.NEWEST.apply(categories);
@@ -105,12 +119,22 @@ public class CategorySortTest extends ServiceSliceTest {
     void readAllCategoriesByOldest() {
         // given
         List<Category> categories = new ArrayList<>();
-        categories.add(categoryRepository.save(CategoryFixture.create("first", LocalDate.now()
-                .minusDays(2), LocalDate.now().plusDays(2))));
-        categories.add(categoryRepository.save(CategoryFixture.create("second", LocalDate.now(), LocalDate.now()
-                .plusDays(2))));
-        categories.add(categoryRepository.save(CategoryFixture.create("third")));
-        categories.add(categoryRepository.save(CategoryFixture.create("fourth")));
+        categories.add(CategoryFixtures.defaultCategory()
+                .withTitle("first")
+                .withTerm(LocalDate.now().minusDays(2),
+                        LocalDate.now().plusDays(2))
+                .buildAndSave(categoryRepository));
+        categories.add(CategoryFixtures.defaultCategory()
+                .withTitle("second")
+                .withTerm(LocalDate.now(),
+                        LocalDate.now().plusDays(2))
+                .buildAndSave(categoryRepository));
+        categories.add(CategoryFixtures.defaultCategory()
+                .withTitle("third")
+                .buildAndSave(categoryRepository));
+        categories.add(CategoryFixtures.defaultCategory()
+                .withTitle("fourth")
+                .buildAndSave(categoryRepository));
 
         // when
         List<Category> result = CategorySort.OLDEST.apply(categories);

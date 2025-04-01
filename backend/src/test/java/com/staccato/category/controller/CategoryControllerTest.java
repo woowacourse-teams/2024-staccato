@@ -19,6 +19,7 @@ import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,7 +39,6 @@ import org.springframework.http.MediaType;
 import com.staccato.ControllerTest;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.category.CategoryNameResponsesFixture;
 import com.staccato.fixture.category.CategoryResponsesFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
@@ -176,7 +176,10 @@ class CategoryControllerTest extends ControllerTest {
     void readAllCategory() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Category category = CategoryFixture.createWithMember(MemberFixture.create());
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 7, 1),
+                        LocalDate.of(2024, 7, 10))
+                .buildWithMember(MemberFixture.create());
         CategoryResponses categoryResponses = CategoryResponsesFixture.create(category);
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
@@ -206,8 +209,11 @@ class CategoryControllerTest extends ControllerTest {
         // given
         Member member = MemberFixture.create();
         when(authService.extractFromToken(anyString())).thenReturn(member);
-        Category category = CategoryFixture.createWithMember(member);
-        Category category2 = CategoryFixture.createWithMember(LocalDate.of(2023, 8, 1), LocalDate.of(2023, 8, 10), member);
+        Category category = CategoryFixtures.defaultCategory().buildWithMember(member);
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 8, 1),
+                        LocalDate.of(2023, 8, 10))
+                .buildWithMember(member);
         CategoryResponses categoryResponses = CategoryResponsesFixture.create(category, category2);
 
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
@@ -225,7 +231,7 @@ class CategoryControllerTest extends ControllerTest {
     void readAllCategoryWithoutTerm() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Category category = CategoryFixture.createWithMember(MemberFixture.create());
+        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixture.create());
         CategoryResponses categoryResponses = CategoryResponsesFixture.create(category);
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
@@ -252,7 +258,7 @@ class CategoryControllerTest extends ControllerTest {
     void readAllCategoryIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Category category = CategoryFixture.createWithMember(MemberFixture.create());
+        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixture.create());
         CategoryNameResponses categoryNameResponses = CategoryNameResponsesFixture.create(category);
         when(categoryService.readAllCategoriesByDate(any(Member.class), any())).thenReturn(categoryNameResponses);
         String expectedResponse = """
@@ -296,7 +302,10 @@ class CategoryControllerTest extends ControllerTest {
         // given
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Category category = CategoryFixture.createWithMember(MemberFixture.create());
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 7, 1),
+                        LocalDate.of(2024, 7, 10))
+                .buildWithMember(MemberFixture.create());
         Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
             staccato));
@@ -340,7 +349,7 @@ class CategoryControllerTest extends ControllerTest {
         // given
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Category category = CategoryFixture.createWithMember(null, null, MemberFixture.create());
+        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixture.create());
         Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
             staccato));

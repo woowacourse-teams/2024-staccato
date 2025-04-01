@@ -2,6 +2,7 @@ package com.staccato.staccato.repository;
 
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
 import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -41,12 +41,18 @@ class StaccatoRepositoryTest extends RepositoryTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         Member anotherMember = memberRepository.save(MemberFixture.create("anotherMember"));
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Category category2 = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)));
-        Category anotherMemberCategory = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2024, 5, 1), LocalDate.of(2024, 6, 10)));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 31),
+                        LocalDate.of(2024, 1, 10))
+                .buildAndSave(categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 7, 1),
+                        LocalDate.of(2024, 7, 10))
+                .buildAndSave(categoryRepository);
+        Category anotherMemberCategory = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 5, 1),
+                        LocalDate.of(2024, 6, 10))
+                .buildAndSave(categoryRepository);
         categoryMemberRepository.save(new CategoryMember(member, category));
         categoryMemberRepository.save(new CategoryMember(member, category2));
         categoryMemberRepository.save(new CategoryMember(anotherMember, anotherMemberCategory));
@@ -79,8 +85,10 @@ class StaccatoRepositoryTest extends RepositoryTest {
     void deleteAllByCategoryIdInBulk() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 31),
+                        LocalDate.of(2024, 1, 10))
+                .buildAndSave(categoryRepository);
         categoryMemberRepository.save(new CategoryMember(member, category));
 
         Staccato staccato = staccatoRepository.save(StaccatoFixture.create(
@@ -109,8 +117,10 @@ class StaccatoRepositoryTest extends RepositoryTest {
     void findAllByCategoryIdOrderByVisitedAt() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 31),
+                        LocalDate.of(2024, 1, 10))
+                .buildAndSave(categoryRepository);
         categoryMemberRepository.save(new CategoryMember(member, category));
 
         Staccato staccato1 = staccatoRepository.save(
@@ -135,8 +145,10 @@ class StaccatoRepositoryTest extends RepositoryTest {
     void findAllByCategoryIdOrderByCreatedAt() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 12, 31),
+                        LocalDate.of(2024, 1, 10))
+                .buildAndSave(categoryRepository);
         categoryMemberRepository.save(new CategoryMember(member, category));
 
         Staccato staccato1 = staccatoRepository.save(StaccatoFixture.create(

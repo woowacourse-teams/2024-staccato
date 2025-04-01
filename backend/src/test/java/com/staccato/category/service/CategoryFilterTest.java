@@ -7,8 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.Category;
@@ -77,10 +77,13 @@ class CategoryFilterTest extends ServiceSliceTest {
     void readAllCategoriesWithTerm() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(CategoryFixture.createWithMember("first", member));
-        Category category2 = categoryRepository.save(
-            CategoryFixture.createWithMember(LocalDate.now(), LocalDate.now()
-                .plusDays(3), member));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTitle("first")
+                .buildAndSaveWithMember(member, categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.now(),
+                        LocalDate.now().plusDays(3))
+                .buildAndSaveWithMember(member, categoryRepository);
         List<Category> categories = new ArrayList<>();
         categories.add(category);
         categories.add(category2);
@@ -100,10 +103,13 @@ class CategoryFilterTest extends ServiceSliceTest {
     void readAllCategoriesWithoutTerm() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(CategoryFixture.createWithMember("first", member));
-        Category category2 = categoryRepository.save(
-            CategoryFixture.createWithMember(LocalDate.now(), LocalDate.now()
-                .plusDays(3), member));
+        Category category = CategoryFixtures.defaultCategory()
+                .withTitle("first")
+                .buildAndSaveWithMember(member, categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.now(),
+                        LocalDate.now().plusDays(3))
+                .buildAndSaveWithMember(member, categoryRepository);
         List<Category> categories = new ArrayList<>();
         categories.add(category);
         categories.add(category2);
