@@ -8,6 +8,7 @@ import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
+import com.staccato.fixture.staccato.StaccatoRequestFixtures;
 import com.staccato.fixture.staccato.StaccatoSharedResponseFixture;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
@@ -25,7 +26,6 @@ import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.staccato.StaccatoRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.repository.CategoryRepository;
@@ -67,7 +67,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
-        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId());
+        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withCategoryId(category.getId()).build();
 
         // when
         long staccatoId = staccatoService.createStaccato(staccatoRequest, member).staccatoId();
@@ -82,7 +83,9 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
-        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId(), List.of("image.jpg"));
+        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withCategoryId(category.getId())
+                .withStaccatoImageUrls(List.of("image.jpg")).build();
 
         // when
         long staccatoId = staccatoService.createStaccato(staccatoRequest, member).staccatoId();
@@ -102,7 +105,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
-        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId());
+        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withCategoryId(category.getId()).build();
 
         // when & then
         assertThatThrownBy(() -> staccatoService.createStaccato(staccatoRequest, otherMember))
@@ -115,7 +119,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
     void failCreateStaccato() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(0L);
+        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withCategoryId(0L).build();
 
         // when & then
         assertThatThrownBy(() -> staccatoService.createStaccato(staccatoRequest, member))
@@ -232,7 +237,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .withVisitedAt(LocalDateTime.now())
                 .withCategory(category)
                 .buildAndSaveWithStaccatoImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"), staccatoRepository);
-        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId());
+        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withCategoryId(category.getId()).build();
 
         // when & then
         assertThatThrownBy(() -> staccatoService.updateStaccatoById(staccato.getId(), staccatoRequest, otherMember))
@@ -252,7 +258,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .withVisitedAt(LocalDateTime.now())
                 .withCategory(category)
                 .buildAndSaveWithStaccatoImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"), staccatoRepository);
-        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(otherCategory.getId());
+        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withCategoryId(otherCategory.getId()).build();
 
         // when & then
         assertThatThrownBy(() -> staccatoService.updateStaccatoById(staccato.getId(), staccatoRequest, member))
@@ -266,7 +273,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
-        StaccatoRequest staccatoRequest = StaccatoRequestFixture.create(category.getId());
+        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withCategoryId(category.getId()).build();
 
         // when & then
         assertThatThrownBy(() -> staccatoService.updateStaccatoById(1L, staccatoRequest, member))

@@ -26,7 +26,7 @@ import com.staccato.fixture.category.CategoryRequestFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
-import com.staccato.fixture.staccato.StaccatoRequestFixture;
+import com.staccato.fixture.staccato.StaccatoRequestFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.CategoryMember;
@@ -167,7 +167,8 @@ class CategoryServiceTest extends ServiceSliceTest {
                 CategoryRequestFixtures.defaultCategoryRequest().withCategoryTitle("first").withTerm(null, null).build(), member);
         categoryService.createCategory(
                 CategoryRequestFixtures.defaultCategoryRequest().withCategoryTitle("second").withTerm(null, null).build(), member);
-        staccatoService.createStaccato(StaccatoRequestFixture.create(categoryIdResponse.categoryId()), member);
+        staccatoService.createStaccato(StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withCategoryId(categoryIdResponse.categoryId()).build(), member);
         CategoryReadRequest categoryReadRequest = new CategoryReadRequest("false", null);
 
         // when
