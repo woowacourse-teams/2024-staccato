@@ -11,7 +11,7 @@ import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.config.jwt.MemberTokenProvider;
 import com.staccato.exception.StaccatoException;
 import com.staccato.exception.UnauthorizedException;
-import com.staccato.fixture.auth.LoginRequestFixture;
+import com.staccato.fixture.auth.LoginRequestFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -34,7 +34,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void login() {
         // given
-        LoginRequest loginRequest = LoginRequestFixture.create();
+        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest().build();
 
         // when
         LoginResponse loginResponse = authService.login(loginRequest);
@@ -50,7 +50,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void loginThenCreateBasicCategory() {
         // given
-        LoginRequest loginRequest = LoginRequestFixture.create();
+        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest().build();
 
         // when
         LoginResponse loginResponse = authService.login(loginRequest);
@@ -68,7 +68,7 @@ class AuthServiceTest extends ServiceSliceTest {
     void cannotLoginByDuplicated() {
         // given
         MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        LoginRequest loginRequest = LoginRequestFixture.create();
+        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest().build();
 
         // when & then
         assertThatThrownBy(() -> authService.login(loginRequest))
