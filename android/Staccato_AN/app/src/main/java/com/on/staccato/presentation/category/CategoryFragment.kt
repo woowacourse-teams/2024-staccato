@@ -138,6 +138,11 @@ class CategoryFragment :
         }
     }
 
+    private fun initAdapter() {
+        binding.rvCategoryMates.adapter = matesAdapter
+        binding.rvCategoryStaccatos.adapter = staccatosAdapter
+    }
+
     private fun observeCategory() {
         viewModel.category.observe(viewLifecycleOwner) { category ->
             matesAdapter.updateMates(category.mates)
@@ -153,11 +158,6 @@ class CategoryFragment :
                 showToast(getString(R.string.category_delete_complete))
             }
         }
-    }
-
-    private fun initAdapter() {
-        binding.rvCategoryMates.adapter = matesAdapter
-        binding.rvCategoryStaccatos.adapter = staccatosAdapter
     }
 
     private fun showErrorToast() {
