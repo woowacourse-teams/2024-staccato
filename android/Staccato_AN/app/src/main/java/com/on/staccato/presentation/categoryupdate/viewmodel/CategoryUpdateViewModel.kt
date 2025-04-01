@@ -2,7 +2,6 @@ package com.on.staccato.presentation.categoryupdate.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,8 +44,8 @@ class CategoryUpdateViewModel
         private val _thumbnail = MutableLiveData<ThumbnailUiModel>(ThumbnailUiModel())
         val thumbnail: LiveData<ThumbnailUiModel> get() = _thumbnail
 
-        val title = ObservableField<String>()
-        val description = ObservableField<String>()
+        val title = MutableLiveData<String>()
+        val description = MutableLiveData<String?>()
 
         private val _startDate = MutableLiveData<LocalDate?>(null)
         val startDate: LiveData<LocalDate?> get() = _startDate
@@ -120,8 +119,8 @@ class CategoryUpdateViewModel
 
         private fun initializeCategory(category: Category) {
             _thumbnail.value = _thumbnail.value?.updateUrl(category.categoryThumbnailUrl)
-            title.set(category.categoryTitle)
-            description.set(category.description)
+            title.value = category.categoryTitle
+            description.value = category.description
             _startDate.value = category.startAt
             _endDate.value = category.endAt
             checkCategoryHasPeriod(category)
@@ -134,10 +133,10 @@ class CategoryUpdateViewModel
         private fun makeNewCategory() =
             NewCategory(
                 categoryThumbnailUrl = _thumbnail.value?.url,
-                categoryTitle = title.get() ?: throw IllegalArgumentException(),
+                categoryTitle = title.value ?: throw IllegalArgumentException(),
                 startAt = getDateByPeriodSetting(startDate),
                 endAt = getDateByPeriodSetting(endDate),
-                description = description.get(),
+                description = description.value,
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {
