@@ -45,7 +45,7 @@ class CategoryViewModel
                 viewModelScope.launch {
                     val result: ApiResult<Category> = categoryRepository.getCategory(id)
                     result
-                        .onSuccess(::setCategory)
+                        .onSuccess(::updateCategory)
                         .onServerError(::handleServerError)
                         .onException(::handelException)
                 }
@@ -62,7 +62,7 @@ class CategoryViewModel
             }
         }
 
-        private fun setCategory(category: Category) {
+        private fun updateCategory(category: Category) {
             _category.value = category.toUiModel()
         }
 
