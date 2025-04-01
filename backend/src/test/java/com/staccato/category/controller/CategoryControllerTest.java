@@ -39,7 +39,6 @@ import org.springframework.http.MediaType;
 import com.staccato.ControllerTest;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.category.CategoryResponsesFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.category.service.dto.request.CategoryRequest;
@@ -179,7 +178,7 @@ class CategoryControllerTest extends ControllerTest {
                 .withTerm(LocalDate.of(2024, 7, 1),
                         LocalDate.of(2024, 7, 10))
                 .buildWithMember(MemberFixture.create());
-        CategoryResponses categoryResponses = CategoryResponsesFixture.create(category);
+        CategoryResponses categoryResponses = CategoryResponses.from(List.of(category));
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
                 {
@@ -213,7 +212,7 @@ class CategoryControllerTest extends ControllerTest {
                 .withTerm(LocalDate.of(2023, 8, 1),
                         LocalDate.of(2023, 8, 10))
                 .buildWithMember(member);
-        CategoryResponses categoryResponses = CategoryResponsesFixture.create(category, category2);
+        CategoryResponses categoryResponses = CategoryResponses.from(List.of(category, category2));
 
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
 
@@ -231,7 +230,7 @@ class CategoryControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixture.create());
-        CategoryResponses categoryResponses = CategoryResponsesFixture.create(category);
+        CategoryResponses categoryResponses = CategoryResponses.from(List.of(category));
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
                 {
