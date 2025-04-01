@@ -17,8 +17,8 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.comment.CommentRequestFixtures;
+import com.staccato.fixture.comment.CommentUpdateRequestFixtures;
 import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.comment.CommentUpdateRequestFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -144,7 +144,7 @@ class CommentServiceTest extends ServiceSliceTest {
                 .withStaccato(staccato)
                 .withMember(member)
                 .buildAndSave(commentRepository);
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
 
         // when
         commentService.updateComment(member, comment.getId(), commentUpdateRequest);
@@ -159,7 +159,7 @@ class CommentServiceTest extends ServiceSliceTest {
     void updateCommentFailByNotExist() {
         // given
         long notExistCommentId = 1;
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
 
         // when & then
         assertThatThrownBy(
@@ -181,7 +181,7 @@ class CommentServiceTest extends ServiceSliceTest {
                 .withStaccato(staccato)
                 .withMember(staccatoOwner)
                 .buildAndSave(commentRepository);
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
 
         // when & then
         assertThatThrownBy(() -> commentService.updateComment(unexpectedMember, comment.getId(),
