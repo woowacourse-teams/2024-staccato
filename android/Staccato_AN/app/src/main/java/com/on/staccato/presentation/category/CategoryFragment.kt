@@ -52,8 +52,8 @@ class CategoryFragment :
     @Inject
     lateinit var loggingManager: LoggingManager
 
-    private lateinit var matesAdapter: MatesAdapter
-    private lateinit var staccatosAdapter: StaccatosAdapter
+    private val matesAdapter by lazy { MatesAdapter() }
+    private val staccatosAdapter by lazy { StaccatosAdapter(handler = this) }
 
     override fun onViewCreated(
         view: View,
@@ -61,8 +61,7 @@ class CategoryFragment :
     ) {
         initBinding()
         initToolbar()
-        initMatesAdapter()
-        initStaccatosAdapter()
+        initAdapter()
         observeCategory()
         observeIsDeleteSuccess()
         showErrorToast()
@@ -155,13 +154,8 @@ class CategoryFragment :
         }
     }
 
-    private fun initMatesAdapter() {
-        matesAdapter = MatesAdapter()
+    private fun initAdapter() {
         binding.rvCategoryMates.adapter = matesAdapter
-    }
-
-    private fun initStaccatosAdapter() {
-        staccatosAdapter = StaccatosAdapter(handler = this)
         binding.rvCategoryStaccatos.adapter = staccatosAdapter
     }
 
