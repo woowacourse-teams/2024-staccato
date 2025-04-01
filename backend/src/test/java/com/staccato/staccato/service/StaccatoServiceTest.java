@@ -308,8 +308,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .buildAndSaveWithStaccatoImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"), staccatoRepository);
         Comment comment = CommentFixtures.defaultComment()
                 .withStaccato(staccato)
-                .withMember(member)
-                .buildAndSave(commentRepository);
+                .withMember(member).buildAndSave(commentRepository);
 
         // when
         staccatoService.deleteStaccatoById(staccato.getId(), member);
@@ -518,15 +517,11 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .withCategory(category)
                 .buildAndSaveWithStaccatoImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"), staccatoRepository);
         Comment comment1 = CommentFixtures.defaultComment()
-                .withContent("댓글 샘플")
                 .withStaccato(staccato)
-                .withMember(member1)
-                .buildAndSave(commentRepository);
+                .withMember(member1).buildAndSave(commentRepository);
         Comment comment2 = CommentFixtures.defaultComment()
-                .withContent("댓글 샘플2")
                 .withStaccato(staccato)
-                .withMember(member2)
-                .buildAndSave(commentRepository);
+                .withMember(member2).buildAndSave(commentRepository);
 
         String token = shareTokenProvider.create(new ShareTokenPayload(staccato.getId(), member1.getId()));
 

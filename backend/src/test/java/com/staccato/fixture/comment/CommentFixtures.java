@@ -9,7 +9,7 @@ public class CommentFixtures {
 
     public static CommentBuilder defaultComment() {
         return new CommentBuilder()
-                .withContent("Sample Staccato Log");
+                .withContent("commentContent");
     }
 
     public static class CommentBuilder {
@@ -17,11 +17,6 @@ public class CommentFixtures {
         String content;
         Staccato staccato;
         Member member;
-
-        public CommentBuilder withId(Long id) {
-            this.id = id;
-            return this;
-        }
 
         public CommentBuilder withContent(String content) {
             this.content = content;

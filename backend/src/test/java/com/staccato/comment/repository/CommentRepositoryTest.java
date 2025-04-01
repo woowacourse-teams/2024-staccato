@@ -42,14 +42,12 @@ class CommentRepositoryTest extends RepositoryTest {
                 .withCategory(category).build();
         CommentFixtures.defaultComment()
                 .withStaccato(staccato1)
-                .withMember(member)
-                .build();
+                .withMember(member).build();
         Staccato staccato2 = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).build();
         CommentFixtures.defaultComment()
                 .withStaccato(staccato2)
-                .withMember(member)
-                .build();
+                .withMember(member).build();
         staccatoRepository.save(staccato1);
         staccatoRepository.save(staccato2);
 

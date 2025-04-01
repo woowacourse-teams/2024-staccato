@@ -6,7 +6,7 @@ public class CommentUpdateRequestFixtures {
 
     public static CommentUpdateRequestBuilder defaultCommentUpdateRequest() {
         return new CommentUpdateRequestBuilder()
-                .withContent("updatedContent");
+                .withContent("commentUpdateContent");
     }
 
     public static class CommentUpdateRequestBuilder {

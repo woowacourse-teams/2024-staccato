@@ -448,8 +448,10 @@ class StaccatoControllerTest extends ControllerTest {
                 .withNickname("staccato2")
                 .withImageUrl("memberImageUrl2.jpg").build();
         Comment comment1 = CommentFixtures.defaultComment()
+                .withStaccato(staccato)
                 .withMember(member1).build();
         Comment comment2 = CommentFixtures.defaultComment()
+                .withStaccato(staccato)
                 .withMember(member2).build();
         StaccatoSharedResponse staccatoSharedResponse = new StaccatoSharedResponse(expiredAt, staccato, member1, List.of(comment1, comment2));
         when(staccatoService.readSharedStaccatoByToken(token)).thenReturn(staccatoSharedResponse);
@@ -470,12 +472,12 @@ class StaccatoControllerTest extends ControllerTest {
                     "comments": [
                         {
                             "nickname": "staccato1",
-                            "content": "Sample Staccato Log",
+                            "content": "commentContent",
                             "memberImageUrl": "memberImageUrl1.jpg"
                         },
                         {
                             "nickname": "staccato2",
-                            "content": "Sample Staccato Log",
+                            "content": "commentContent",
                             "memberImageUrl": "memberImageUrl2.jpg"
                         }
                     ]

@@ -7,7 +7,7 @@ public class CommentRequestFixtures {
     public static CommentRequestBuilder defaultCommentRequest() {
         return new CommentRequestBuilder()
                 .withStaccatoId(1L)
-                .withContent("content");
+                .withContent("commentContent");
     }
 
     public static class CommentRequestBuilder {

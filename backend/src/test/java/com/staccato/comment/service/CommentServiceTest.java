@@ -146,8 +146,7 @@ class CommentServiceTest extends ServiceSliceTest {
                 .withCategory(category).buildAndSave(staccatoRepository);
         CommentFixtures.defaultComment()
                 .withStaccato(staccato)
-                .withMember(staccatoOwner)
-                .buildAndSave(commentRepository);
+                .withMember(staccatoOwner).buildAndSave(commentRepository);
 
         // when & then
         assertThatThrownBy(
@@ -169,8 +168,7 @@ class CommentServiceTest extends ServiceSliceTest {
                 .withCategory(category).buildAndSave(staccatoRepository);
         Comment comment = CommentFixtures.defaultComment()
                 .withStaccato(staccato)
-                .withMember(member)
-                .buildAndSave(commentRepository);
+                .withMember(member).buildAndSave(commentRepository);
         CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
 
         // when
@@ -236,8 +234,7 @@ class CommentServiceTest extends ServiceSliceTest {
                 .withCategory(category).buildAndSave(staccatoRepository);
         Comment comment = CommentFixtures.defaultComment()
                 .withStaccato(staccato)
-                .withMember(member)
-                .buildAndSave(commentRepository);
+                .withMember(member).buildAndSave(commentRepository);
 
         // when
         commentService.deleteComment(comment.getId(), member);
@@ -262,8 +259,7 @@ class CommentServiceTest extends ServiceSliceTest {
                 .withCategory(category).buildAndSave(staccatoRepository);
         Comment comment = CommentFixtures.defaultComment()
                 .withStaccato(staccato)
-                .withMember(commentOwner)
-                .buildAndSave(commentRepository);
+                .withMember(commentOwner).buildAndSave(commentRepository);
 
         // when & then
         assertThatThrownBy(() -> commentService.deleteComment(comment.getId(), unexpectedMember))

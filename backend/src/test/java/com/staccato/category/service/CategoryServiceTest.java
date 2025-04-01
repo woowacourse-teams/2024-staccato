@@ -431,8 +431,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withCategory(category).buildAndSave(staccatoRepository);
         CommentFixtures.defaultComment()
                 .withStaccato(staccato)
-                .withMember(member)
-                .buildAndSave(commentRepository);
+                .withMember(member).buildAndSave(commentRepository);
 
         // when
         categoryService.deleteCategory(categoryIdResponse.categoryId(), member);
