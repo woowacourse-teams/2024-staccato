@@ -1,7 +1,7 @@
 package com.on.staccato.data.image
 
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.image.ImageResponse
+import com.on.staccato.data.network.ApiResult
 import okhttp3.MultipartBody
 import retrofit2.http.Multipart
 import retrofit2.http.POST

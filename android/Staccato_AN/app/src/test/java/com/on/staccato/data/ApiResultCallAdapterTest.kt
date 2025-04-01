@@ -6,6 +6,10 @@ import com.on.staccato.data.dto.GetResponse
 import com.on.staccato.data.dto.PostResponse
 import com.on.staccato.data.dto.image.ImageResponse
 import com.on.staccato.data.image.ImageApiService
+import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.Exception
+import com.on.staccato.data.network.ServerError
+import com.on.staccato.data.network.Success
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse

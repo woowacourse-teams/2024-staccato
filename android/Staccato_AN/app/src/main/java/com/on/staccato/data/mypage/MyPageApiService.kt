@@ -1,8 +1,8 @@
 package com.on.staccato.data.mypage
 
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.mypage.MemberProfileResponse
 import com.on.staccato.data.dto.mypage.ProfileImageResponse
+import com.on.staccato.data.network.ApiResult
 import okhttp3.MultipartBody
 import retrofit2.http.GET
 import retrofit2.http.Multipart

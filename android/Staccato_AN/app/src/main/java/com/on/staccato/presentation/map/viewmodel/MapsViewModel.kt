@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.on.staccato.data.onException
-import com.on.staccato.data.onServerError
-import com.on.staccato.data.onSuccess
+import com.on.staccato.data.network.onException
+import com.on.staccato.data.network.onServerError
+import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
