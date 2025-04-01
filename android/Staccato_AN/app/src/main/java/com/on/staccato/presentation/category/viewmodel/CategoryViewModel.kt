@@ -52,9 +52,10 @@ class CategoryViewModel
             }
         }
 
-        fun deleteCategory(categoryId: Long) {
+        fun deleteCategory() {
             viewModelScope.launch {
-                val result: ApiResult<Unit> = categoryRepository.deleteCategory(categoryId)
+                val id = _category.value?.id ?: return@launch
+                val result: ApiResult<Unit> = categoryRepository.deleteCategory(id)
                 result.onSuccess { updateIsDeleteSuccess() }
                     .onServerError(::handleServerError)
                     .onException(::handelException)

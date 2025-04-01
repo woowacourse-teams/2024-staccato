@@ -97,7 +97,7 @@ class CategoryFragment :
     }
 
     override fun onConfirmClicked() {
-        viewModel.deleteCategory(categoryId)
+        viewModel.deleteCategory()
     }
 
     override fun onStaccatoCreationClicked(
