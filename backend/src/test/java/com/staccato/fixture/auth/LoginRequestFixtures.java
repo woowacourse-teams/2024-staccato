@@ -6,7 +6,7 @@ public class LoginRequestFixtures {
 
     public static LoginRequestBuilder defaultLoginRequest() {
         return new LoginRequestBuilder()
-                .withNickname("staccato");
+                .withNickname("nickname");
     }
 
     public static class LoginRequestBuilder {

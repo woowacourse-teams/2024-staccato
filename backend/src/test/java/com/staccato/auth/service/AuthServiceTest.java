@@ -67,8 +67,10 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void cannotLoginByDuplicated() {
         // given
-        MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest().build();
+        MemberFixtures.defaultMember()
+                .withNickname("nickname").buildAndSave(memberRepository);
+        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest()
+                .withNickname("nickname").build();
 
         // when & then
         assertThatThrownBy(() -> authService.login(loginRequest))
