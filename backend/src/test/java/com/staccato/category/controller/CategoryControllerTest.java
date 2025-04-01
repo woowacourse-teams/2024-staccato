@@ -176,8 +176,7 @@ class CategoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2024, 7, 1),
-                        LocalDate.of(2024, 7, 10))
-                .buildWithMember(MemberFixtures.defaultMember().build());
+                        LocalDate.of(2024, 7, 10)).build();
         CategoryResponses categoryResponses = CategoryResponses.from(List.of(category));
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
@@ -207,11 +206,10 @@ class CategoryControllerTest extends ControllerTest {
         // given
         Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
-        Category category = CategoryFixtures.defaultCategory().buildWithMember(member);
+        Category category = CategoryFixtures.defaultCategory().build();
         Category category2 = CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2023, 8, 1),
-                        LocalDate.of(2023, 8, 10))
-                .buildWithMember(member);
+                        LocalDate.of(2023, 8, 10)).build();
         CategoryResponses categoryResponses = CategoryResponses.from(List.of(category, category2));
 
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
@@ -229,7 +227,7 @@ class CategoryControllerTest extends ControllerTest {
     void readAllCategoryWithoutTerm() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().build();
         CategoryResponses categoryResponses = CategoryResponses.from(List.of(category));
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
@@ -256,7 +254,7 @@ class CategoryControllerTest extends ControllerTest {
     void readAllCategoryIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().build();
         CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
         when(categoryService.readAllCategoriesByDate(any(Member.class), any())).thenReturn(categoryNameResponses);
         String expectedResponse = """
@@ -308,8 +306,7 @@ class CategoryControllerTest extends ControllerTest {
                 .withVisitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
                 .withCategory(category)
                 .withStaccatoImages(List.of("image.jpg")).build();
-        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
-            staccato));
+        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {

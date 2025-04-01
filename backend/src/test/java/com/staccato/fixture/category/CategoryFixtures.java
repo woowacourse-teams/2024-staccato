@@ -64,7 +64,6 @@ public class CategoryFixtures {
 
         public Category buildWithMember(Member member) {
             Category category = build();
-            // fixture 수정하면서 변경 예정
             category.addCategoryMember(member);
             return category;
         }
@@ -75,9 +74,7 @@ public class CategoryFixtures {
         }
 
         public Category buildAndSaveWithMember(Member member, CategoryRepository repository) {
-            Category category = build();
-            // fixture 수정하면서 변경 예정
-            category.addCategoryMember(member);
+            Category category = buildWithMember(member);
             return repository.save(category);
         }
     }
