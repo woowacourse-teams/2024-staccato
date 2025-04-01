@@ -25,7 +25,7 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryRequestFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
-import com.staccato.fixture.staccato.StaccatoFixture;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.fixture.staccato.StaccatoRequestFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -248,9 +248,16 @@ class CategoryServiceTest extends ServiceSliceTest {
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
             CategoryRequestFixtures.defaultCategoryRequest().build(), member);
-        Staccato firstStaccato = saveStaccato(LocalDateTime.of(2023, 7, 1, 10, 0), categoryIdResponse.categoryId());
-        Staccato secondStaccato = saveStaccato(LocalDateTime.of(2023, 7, 1, 10, 10), categoryIdResponse.categoryId());
-        Staccato lastStaccato = saveStaccato(LocalDateTime.of(2023, 7, 5, 9, 0), categoryIdResponse.categoryId());
+        Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
+        Staccato firstStaccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.of(2023, 7, 1, 10, 0))
+                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato secondStaccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.of(2023, 7, 1, 10, 10))
+                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato lastStaccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.of(2023, 7, 5, 9, 0))
+                .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
         CategoryDetailResponse categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
@@ -408,7 +415,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
             CategoryRequestFixtures.defaultCategoryRequest().build(), member);
-        Staccato staccato = saveStaccato(LocalDateTime.of(2023, 7, 2, 10, 10), categoryIdResponse.categoryId());
+        Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.of(2023, 7, 2, 10, 10))
+                .withCategory(category).buildAndSave(staccatoRepository);
         CommentFixtures.defaultComment()
                 .withStaccato(staccato)
                 .withMember(member)
@@ -424,11 +434,6 @@ class CategoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(staccatoRepository.findAll()).isEmpty(),
                 () -> assertThat(commentRepository.findAll()).isEmpty()
         );
-    }
-
-    private Staccato saveStaccato(LocalDateTime visitedAt, long categoryId) {
-        return staccatoRepository.save(
-            StaccatoFixture.create(categoryRepository.findById(categoryId).get(), visitedAt));
     }
 
     @DisplayName("본인 것이 아닌 카테고리 상세를 삭제하려고 하면 예외가 발생한다.")

@@ -21,6 +21,7 @@ import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,7 +40,6 @@ import org.springframework.http.MediaType;
 
 import com.staccato.ControllerTest;
 import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.category.service.dto.request.CategoryRequest;
 
@@ -304,7 +304,10 @@ class CategoryControllerTest extends ControllerTest {
                 .withTerm(LocalDate.of(2024, 7, 1),
                         LocalDate.of(2024, 7, 10))
                 .buildWithMember(MemberFixtures.defaultMember().build());
-        Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
+                .withCategory(category)
+                .withStaccatoImages(List.of("image.jpg")).build();
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
             staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
@@ -348,7 +351,10 @@ class CategoryControllerTest extends ControllerTest {
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixtures.defaultMember().build());
-        Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
+                .withCategory(category)
+                .withStaccatoImages(List.of("image.jpg")).build();
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
             staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);

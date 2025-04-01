@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.staccato.StaccatoFixture;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -73,7 +73,10 @@ class StaccatoImagesTest {
         StaccatoImages updatedImages = new StaccatoImages(updatedImageNames);
 
         // when
-        existingImages.update(updatedImages, StaccatoFixture.create(category, LocalDateTime.now()));
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.now())
+                .withCategory(category).build();
+        existingImages.update(updatedImages, staccato);
         List<String> images = existingImages.getImages().stream().map(StaccatoImage::getImageUrl).toList();
 
         // then

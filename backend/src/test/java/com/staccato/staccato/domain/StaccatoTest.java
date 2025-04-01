@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
-import com.staccato.fixture.staccato.StaccatoFixture;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.repository.CategoryRepository;
@@ -137,8 +137,11 @@ class StaccatoTest {
                         LocalDate.now().plusDays(1))
                 .build();
         String thumbnail = "1.png";
-        Staccato staccato = StaccatoFixture.createWithImages(
-            category, LocalDateTime.now(), List.of(thumbnail, "2.png"));
+
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.now())
+                .withCategory(category)
+                .withStaccatoImages(List.of(thumbnail, "2.png")).build();
 
         // when
         String result = staccato.thumbnailUrl();
@@ -155,7 +158,10 @@ class StaccatoTest {
                 .withTerm(LocalDate.now(),
                         LocalDate.now().plusDays(1))
                 .build();
-        Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.now(), List.of());
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.now())
+                .withCategory(category)
+                .withStaccatoImages(List.of()).build();
 
         // when
         String result = staccato.thumbnailUrl();
@@ -186,7 +192,8 @@ class StaccatoTest {
             LocalDateTime beforeCreate = category.getUpdatedAt();
 
             // when
-            staccatoRepository.save(StaccatoFixture.create(category));
+            StaccatoFixtures.defaultStaccato()
+                    .withCategory(category).buildAndSave(staccatoRepository);
             entityManager.flush();
             entityManager.refresh(category);
             LocalDateTime afterCreate = category.getUpdatedAt();
@@ -201,7 +208,8 @@ class StaccatoTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
-            Staccato staccato = staccatoRepository.save(StaccatoFixture.create(category));
+            Staccato staccato = StaccatoFixtures.defaultStaccato()
+                    .withCategory(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeUpdate = category.getUpdatedAt();
 
             // when
@@ -220,7 +228,8 @@ class StaccatoTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
-            Staccato staccato = staccatoRepository.save(StaccatoFixture.create(category));
+            Staccato staccato = StaccatoFixtures.defaultStaccato()
+                    .withCategory(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeDelete = category.getUpdatedAt();
 
             // when

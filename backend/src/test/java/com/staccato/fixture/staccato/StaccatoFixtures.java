@@ -1,0 +1,84 @@
+package com.staccato.fixture.staccato;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import com.staccato.category.domain.Category;
+import com.staccato.staccato.domain.Feeling;
+import com.staccato.staccato.domain.Spot;
+import com.staccato.staccato.domain.Staccato;
+import com.staccato.staccato.domain.StaccatoImages;
+import com.staccato.staccato.repository.StaccatoRepository;
+
+public class StaccatoFixtures {
+
+    public static StaccatoBuilder defaultStaccato() {
+        return new StaccatoBuilder()
+                .withVisitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
+                .withTitle("staccatoTitle")
+                .withSpot("placeName", "address",
+                        new BigDecimal("37.77490000000000"), new BigDecimal("-122.41940000000000"));
+    }
+
+    public static class StaccatoBuilder {
+        Long id;
+        LocalDateTime visitedAt;
+        String title;
+        Feeling feeling = Feeling.NOTHING;
+        Spot spot;
+        Category category;
+        StaccatoImages staccatoImages = new StaccatoImages(List.of());
+
+        public StaccatoBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public StaccatoBuilder withVisitedAt(LocalDateTime visitedAt) {
+            this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
+            return this;
+        }
+
+        public StaccatoBuilder withTitle(String title) {
+            this.title = title.trim();
+            return this;
+        }
+
+        public StaccatoBuilder withFeeling(Feeling feeling) {
+            this.feeling = feeling;
+            return this;
+        }
+
+        public StaccatoBuilder withSpot(String placeName, String address, BigDecimal latitude, BigDecimal longitude) {
+            this.spot = new Spot(placeName, address, latitude, longitude);
+            return this;
+        }
+
+        public StaccatoBuilder withCategory(Category category) {
+            this.category = category;
+            return this;
+        }
+
+        public StaccatoBuilder withStaccatoImages(List<String> staccatoImages) {
+            this.staccatoImages = new StaccatoImages(staccatoImages);
+            return this;
+        }
+
+        public Staccato build() {
+            return new Staccato(id, visitedAt, title, feeling, spot, category, staccatoImages);
+        }
+
+        public Staccato buildAndSave(StaccatoRepository repository) {
+            Staccato staccato = build();
+            return repository.save(staccato);
+        }
+
+        public Staccato buildAndSaveWithStaccatoImages(List<String> staccatoImages, StaccatoRepository repository) {
+            Staccato staccato = build();
+            this.staccatoImages.addAll(new StaccatoImages(staccatoImages), staccato);
+            return repository.save(staccato);
+        }
+    }
+}

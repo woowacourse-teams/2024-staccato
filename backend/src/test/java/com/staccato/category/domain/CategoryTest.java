@@ -1,6 +1,7 @@
 package com.staccato.category.domain;
 
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,7 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Nickname;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +53,9 @@ class CategoryTest {
                 .withTerm(LocalDate.now().plusDays(1),
                         LocalDate.now().plusDays(2))
                 .build();
-        Staccato staccato = StaccatoFixture.create(category, LocalDateTime.now());
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.now())
+                .withCategory(category).build();
 
         // when & then
         assertThatThrownBy(() -> category.update(updatedCategory, List.of(staccato)))
