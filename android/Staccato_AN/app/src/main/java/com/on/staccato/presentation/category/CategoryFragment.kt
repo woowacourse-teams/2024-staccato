@@ -13,6 +13,7 @@ import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.adapter.MatesAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
 import com.on.staccato.presentation.category.model.CategoryUiModel
+import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity
 import com.on.staccato.presentation.common.DeleteDialogFragment
@@ -42,8 +43,8 @@ class CategoryFragment :
     ToolbarHandler,
     CategoryHandler,
     DialogHandler {
-    private val categoryId by lazy {
-        arguments?.getLong(CATEGORY_ID_KEY) ?: throw IllegalArgumentException()
+    private val categoryId: Long by lazy {
+        arguments?.getLong(CATEGORY_ID_KEY) ?: DEFAULT_CATEGORY_ID
     }
     private val viewModel: CategoryViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
@@ -59,6 +60,7 @@ class CategoryFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
+        viewModel.loadCategory(categoryId)
         initBinding()
         initToolbar()
         initAdapter()
@@ -66,7 +68,6 @@ class CategoryFragment :
         observeIsDeleteSuccess()
         showErrorToast()
         showExceptionSnackBar()
-        viewModel.loadCategory(categoryId)
         logAccess()
     }
 

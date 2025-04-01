@@ -14,13 +14,6 @@ data class CategoryUiModel(
     val staccatos: List<CategoryStaccatoUiModel>,
 ) {
     companion object {
-        fun buildDatesInRange(
-            startAt: LocalDate?,
-            endAt: LocalDate?,
-        ): List<LocalDate> {
-            return generateSequence(startAt) { it.plusDays(1) }
-                .takeWhile { !it.isAfter(endAt) }
-                .toList()
-        }
+        const val DEFAULT_CATEGORY_ID = 0L
     }
 }

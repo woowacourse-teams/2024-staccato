@@ -11,6 +11,7 @@ import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.category.model.CategoryUiModel
+import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
@@ -37,13 +38,17 @@ class CategoryViewModel
         private val _isDeleteSuccess = MutableSingleLiveData<Boolean>(false)
         val isDeleteSuccess: SingleLiveData<Boolean> get() = _isDeleteSuccess
 
-        fun loadCategory(categoryId: Long) {
-            viewModelScope.launch {
-                val result: ApiResult<Category> = categoryRepository.getCategory(categoryId)
-                result
-                    .onSuccess(::setCategory)
-                    .onServerError(::handleServerError)
-                    .onException(::handelException)
+        fun loadCategory(id: Long) {
+            if (id <= DEFAULT_CATEGORY_ID) {
+                handelException(ExceptionState.UnknownError)
+            } else {
+                viewModelScope.launch {
+                    val result: ApiResult<Category> = categoryRepository.getCategory(id)
+                    result
+                        .onSuccess(::setCategory)
+                        .onServerError(::handleServerError)
+                        .onException(::handelException)
+                }
             }
         }
 
