@@ -8,11 +8,11 @@ public class CategoryRequestFixtures {
 
     public static CategoryRequestBuilder defaultCategoryRequest() {
         return new CategoryRequestBuilder()
-                .withCategoryThumbnailUrl("https://example.com/categories/geumohrm.jpg")
-                .withCategoryTitle("2023 여름 휴가")
-                .withDescription("친구들과 함께한 여름 휴가 추억")
-                .withTerm(LocalDate.of(2023, 7, 1),
-                        LocalDate.of(2024, 7, 10));
+                .withCategoryThumbnailUrl("https://example.com/categoryThumbnailUrl.jpg")
+                .withCategoryTitle("categoryTitle")
+                .withDescription("categoryDescription")
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31));
     }
 
     public static class CategoryRequestBuilder {
