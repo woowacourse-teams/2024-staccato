@@ -272,6 +272,11 @@ fun TextInputLayout.changeLayoutBy(inputState: InputState) {
     }
 }
 
+@BindingAdapter("visibilityByDescription")
+fun View.visibilityByDescription(description: String?) {
+    visibility = if (description.isNullOrEmpty()) View.GONE else View.VISIBLE
+}
+
 private const val DRAGGABLE_PHOTO_NUMBER = 2
 private const val EMPTY_TEXT = ""
 private const val DEFAULT_DP_SIZE = 1F
