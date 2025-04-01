@@ -23,8 +23,8 @@ import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryRequestFixtures;
+import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.fixture.staccato.StaccatoRequestFixture;
 import com.staccato.member.domain.Member;
@@ -399,7 +399,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
             CategoryRequestFixtures.defaultCategoryRequest().build(), member);
         Staccato staccato = saveStaccato(LocalDateTime.of(2023, 7, 2, 10, 10), categoryIdResponse.categoryId());
-        commentRepository.save(CommentFixture.create(staccato, member));
+        CommentFixtures.defaultComment()
+                .withStaccato(staccato)
+                .withMember(member)
+                .buildAndSave(commentRepository);
 
         // when
         categoryService.deleteCategory(categoryIdResponse.categoryId(), member);

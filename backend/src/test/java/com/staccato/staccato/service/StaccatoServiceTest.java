@@ -5,6 +5,7 @@ import com.staccato.config.jwt.ShareTokenProvider;
 import com.staccato.config.jwt.dto.ShareTokenPayload;
 import com.staccato.exception.UnauthorizedException;
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.staccato.StaccatoSharedResponseFixture;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
@@ -23,7 +24,6 @@ import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.comment.CommentFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.fixture.staccato.StaccatoRequestFixture;
 import com.staccato.member.domain.Member;
@@ -260,7 +260,10 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Member member = saveMember();
         Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
         Staccato staccato = saveStaccatoWithImages(category);
-        Comment comment = commentRepository.save(CommentFixture.create(staccato, member));
+        Comment comment = CommentFixtures.defaultComment()
+                .withStaccato(staccato)
+                .withMember(member)
+                .buildAndSave(commentRepository);
 
         // when
         staccatoService.deleteStaccatoById(staccato.getId(), member);
@@ -429,8 +432,16 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .buildAndSaveWithMember(member1, categoryRepository);
 
         Staccato staccato = saveStaccatoWithFixedDateTime(category);
-        saveComment(staccato, member1, "댓글 샘플");
-        saveComment(staccato, member2, "댓글 샘플2");
+        CommentFixtures.defaultComment()
+                .withContent("댓글 샘플")
+                .withStaccato(staccato)
+                .withMember(member1)
+                .buildAndSave(commentRepository);
+        CommentFixtures.defaultComment()
+                .withContent("댓글 샘플2")
+                .withStaccato(staccato)
+                .withMember(member2)
+                .buildAndSave(commentRepository);
 
         String token = shareTokenProvider.create(new ShareTokenPayload(staccato.getId(), member1.getId()));
 
@@ -491,9 +502,5 @@ class StaccatoServiceTest extends ServiceSliceTest {
     private Staccato saveStaccatoWithFixedDateTime(Category category) {
         Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.of(2024, 7, 1, 10, 0), List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"));
         return staccatoRepository.save(staccato);
-    }
-
-    private void saveComment(Staccato staccato, Member member, String content) {
-        commentRepository.save(CommentFixture.create(staccato, member, content));
     }
 }
