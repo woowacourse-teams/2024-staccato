@@ -39,7 +39,6 @@ import org.springframework.http.MediaType;
 import com.staccato.ControllerTest;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.category.CategoryNameResponsesFixture;
 import com.staccato.fixture.category.CategoryResponsesFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
@@ -259,7 +258,7 @@ class CategoryControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
         Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixture.create());
-        CategoryNameResponses categoryNameResponses = CategoryNameResponsesFixture.create(category);
+        CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
         when(categoryService.readAllCategoriesByDate(any(Member.class), any())).thenReturn(categoryNameResponses);
         String expectedResponse = """
                 {
