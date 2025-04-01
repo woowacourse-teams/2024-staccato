@@ -9,7 +9,6 @@ import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.fixture.staccato.StaccatoRequestFixtures;
-import com.staccato.fixture.staccato.StaccatoSharedResponseFixture;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
@@ -497,12 +496,12 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .withVisitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
                 .withCategory(category)
                 .buildAndSaveWithStaccatoImages(List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"), staccatoRepository);
-        CommentFixtures.defaultComment()
+        Comment comment1 = CommentFixtures.defaultComment()
                 .withContent("댓글 샘플")
                 .withStaccato(staccato)
                 .withMember(member1)
                 .buildAndSave(commentRepository);
-        CommentFixtures.defaultComment()
+        Comment comment2 = CommentFixtures.defaultComment()
                 .withContent("댓글 샘플2")
                 .withStaccato(staccato)
                 .withMember(member2)
@@ -511,10 +510,11 @@ class StaccatoServiceTest extends ServiceSliceTest {
         String token = shareTokenProvider.create(new ShareTokenPayload(staccato.getId(), member1.getId()));
 
         // when
-        StaccatoSharedResponse response = staccatoService.readSharedStaccatoByToken(token);
+        StaccatoSharedResponse actual = staccatoService.readSharedStaccatoByToken(token);
+        StaccatoSharedResponse expected = new StaccatoSharedResponse(actual.expiredAt(), staccato, member1, List.of(comment1, comment2));
 
         // then
-        assertThat(response).isEqualTo(StaccatoSharedResponseFixture.create(response.expiredAt()));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("만료된 토큰이면, 예외가 발생한다.")

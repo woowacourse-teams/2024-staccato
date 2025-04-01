@@ -137,10 +137,9 @@ public class StaccatoService {
 
         Staccato staccato = getStaccatoById(staccatoId);
         Member member = getMemberById(memberId);
-        List<StaccatoImage> staccatoImages = staccatoImageRepository.findAllByStaccatoId(staccatoId);
         List<Comment> comments = commentRepository.findAllByStaccatoId(staccatoId);
 
-        return new StaccatoSharedResponse(expiredAt, staccato, member, staccatoImages, comments);
+        return new StaccatoSharedResponse(expiredAt, staccato, member, comments);
     }
 
     private Staccato getStaccatoById(long staccatoId) {

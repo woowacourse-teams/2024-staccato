@@ -14,20 +14,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.staccato.ControllerTest;
+import com.staccato.category.domain.Category;
+import com.staccato.comment.domain.Comment;
 import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
-import com.staccato.fixture.staccato.StaccatoDetailResponseFixture;
-import com.staccato.fixture.staccato.StaccatoLocationResponsesFixture;
-import com.staccato.fixture.staccato.StaccatoSharedResponseFixture;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
+import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
 import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
+import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -190,25 +196,32 @@ class StaccatoControllerTest extends ControllerTest {
     void readAllStaccato() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        StaccatoLocationResponses responses = StaccatoLocationResponsesFixture.create();
+        StaccatoLocationResponse response1 = new StaccatoLocationResponse(
+                StaccatoFixtures.defaultStaccato().withId(1L).build());
+        StaccatoLocationResponse response2 = new StaccatoLocationResponse(
+                StaccatoFixtures.defaultStaccato().withId(2L).build());
+        StaccatoLocationResponse response3 = new StaccatoLocationResponse(
+                StaccatoFixtures.defaultStaccato().withId(3L).build());
+        StaccatoLocationResponses responses = new StaccatoLocationResponses(List.of(response1, response2, response3));
+
         when(staccatoService.readAllStaccato(any(Member.class))).thenReturn(responses);
         String expectedResponse = """
             {
                 "staccatoLocationResponses": [
                      {
                          "staccatoId": 1,
-                         "latitude": 1,
-                         "longitude": 0
+                         "latitude": 37.7749,
+                         "longitude": -122.4194
                      },
                      {
                          "staccatoId": 2,
-                         "latitude": 1,
-                         "longitude": 0
+                         "latitude": 37.7749,
+                         "longitude": -122.4194
                      },
                      {
                          "staccatoId": 3,
-                         "latitude": 1,
-                         "longitude": 0
+                         "latitude": 37.7749,
+                         "longitude": -122.4194
                      }
                 ]
             }
@@ -227,20 +240,29 @@ class StaccatoControllerTest extends ControllerTest {
         // given
         long staccatoId = 1L;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        StaccatoDetailResponse response = StaccatoDetailResponseFixture.create(staccatoId,
-            LocalDateTime.parse("2021-11-08T11:58:20"));
+        Category category = CategoryFixtures.defaultCategory()
+                .withId(1L)
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
+                .build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withId(1L)
+                .withCategory(category)
+                .withStaccatoImages(List.of("image.jpg"))
+                .build();
+        StaccatoDetailResponse response = new StaccatoDetailResponse(staccato);
         when(staccatoService.readStaccatoById(anyLong(), any(Member.class))).thenReturn(response);
         String expectedResponse = """
                 {
                      "staccatoId": 1,
                      "categoryId": 1,
-                     "categoryTitle": "categoryTitle",
-                     "startAt": "2024-06-30",
-                     "endAt": "2024-07-04",
+                     "categoryTitle": "2024 여름 휴가",
+                     "startAt": "2024-01-01",
+                     "endAt": "2024-12-31",
                      "staccatoTitle": "staccatoTitle",
-                     "staccatoImageUrls": ["https://example1.com.jpg"],
-                     "visitedAt": "2021-11-08T11:58:20",
-                     "feeling": "happy",
+                     "staccatoImageUrls": ["image.jpg"],
+                     "visitedAt": "2024-07-01T10:00:00",
+                     "feeling": "nothing",
                      "placeName": "placeName",
                      "address": "address",
                      "latitude": 37.7749,
@@ -417,15 +439,29 @@ class StaccatoControllerTest extends ControllerTest {
         // given
         String token = "sample-token";
         LocalDateTime expiredAt = LocalDateTime.of(2024, 7, 2, 10, 0, 0);
-        when(staccatoService.readSharedStaccatoByToken(token)).thenReturn(StaccatoSharedResponseFixture.create(expiredAt));
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withId(1L)
+                .withStaccatoImages(List.of("image1.jpg", "image2.jpg")).build();
+        Member member1 = MemberFixtures.defaultMember()
+                .withNickname("staccato1")
+                .withImageUrl("memberImageUrl1.jpg").build();
+        Member member2 = MemberFixtures.defaultMember()
+                .withNickname("staccato2")
+                .withImageUrl("memberImageUrl2.jpg").build();
+        Comment comment1 = CommentFixtures.defaultComment()
+                .withMember(member1).build();
+        Comment comment2 = CommentFixtures.defaultComment()
+                .withMember(member2).build();
+        StaccatoSharedResponse staccatoSharedResponse = new StaccatoSharedResponse(expiredAt, staccato, member1, List.of(comment1, comment2));
+        when(staccatoService.readSharedStaccatoByToken(token)).thenReturn(staccatoSharedResponse);
         String expectedResponse = """
                 {
                     "staccatoId": 1,
                     "expiredAt": "2024-07-02T10:00:00",
-                    "nickname": "staccato",
+                    "nickname": "staccato1",
                     "staccatoImageUrls": [
-                        "https://oldExample.com.jpg",
-                        "https://existExample.com.jpg"
+                        "image1.jpg",
+                        "image2.jpg"
                     ],
                     "staccatoTitle": "staccatoTitle",
                     "placeName": "placeName",
@@ -434,14 +470,14 @@ class StaccatoControllerTest extends ControllerTest {
                     "feeling": "nothing",
                     "comments": [
                         {
-                            "nickname": "staccato",
-                            "content": "댓글 샘플",
-                            "memberImageUrl": "image.jpg"
+                            "nickname": "staccato1",
+                            "content": "Sample Staccato Log",
+                            "memberImageUrl": "memberImageUrl1.jpg"
                         },
                         {
                             "nickname": "staccato2",
-                            "content": "댓글 샘플2",
-                            "memberImageUrl": "image2.jpg"
+                            "content": "Sample Staccato Log",
+                            "memberImageUrl": "memberImageUrl2.jpg"
                         }
                     ]
                 }
