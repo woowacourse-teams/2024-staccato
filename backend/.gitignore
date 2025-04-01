@@ -5,3 +5,5 @@
 .gradle
 
 mysql
+
+gradle.properties
