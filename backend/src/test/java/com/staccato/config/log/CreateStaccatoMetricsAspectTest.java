@@ -1,6 +1,7 @@
 package com.staccato.config.log;
 
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
-import com.staccato.fixture.member.MemberFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.Category;
@@ -36,7 +36,7 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
     @DisplayName("기록 상의 날짜를 현재를 기준으로 과거 혹은 미래 인지 매트릭을 통해 표현 할 수 있습니다.")
     @TestFactory
     List<DynamicTest> createStaccatoMetricsAspect() {
-        Member member = saveMember();
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
         LocalDateTime now = LocalDateTime.now();
 
@@ -70,10 +70,6 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
                     );
                 })
         );
-    }
-
-    private Member saveMember() {
-        return memberRepository.save(MemberFixture.create());
     }
 
     private double getFutureCount() {

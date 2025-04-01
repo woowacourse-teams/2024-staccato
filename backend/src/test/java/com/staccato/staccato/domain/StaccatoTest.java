@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
-import com.staccato.fixture.member.MemberFixture;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -181,7 +181,7 @@ class StaccatoTest {
         @Test
         void updateCategoryUpdatedDateWhenStaccatoCreated() {
             // given
-            Member member = memberRepository.save(MemberFixture.create());
+            Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
             LocalDateTime beforeCreate = category.getUpdatedAt();
 
@@ -199,7 +199,7 @@ class StaccatoTest {
         @Test
         void updateCategoryUpdatedDateWhenStaccatoUpdated() {
             // given
-            Member member = memberRepository.save(MemberFixture.create());
+            Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
             Staccato staccato = staccatoRepository.save(StaccatoFixture.create(category));
             LocalDateTime beforeUpdate = category.getUpdatedAt();
@@ -218,7 +218,7 @@ class StaccatoTest {
         @Test
         void updateCategoryUpdatedDateWhenStaccatoDeleted() {
             // given
-            Member member = memberRepository.save(MemberFixture.create());
+            Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
             Staccato staccato = staccatoRepository.save(StaccatoFixture.create(category));
             LocalDateTime beforeDelete = category.getUpdatedAt();

@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.staccato.ControllerTest;
 import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.member.MemberFixture;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoDetailResponseFixture;
 import com.staccato.fixture.staccato.StaccatoLocationResponsesFixture;
 import com.staccato.fixture.staccato.StaccatoSharedResponseFixture;
@@ -122,7 +122,7 @@ class StaccatoControllerTest extends ControllerTest {
                 "staccatoId": 1
             }
             """;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         when(staccatoService.createStaccato(any(StaccatoRequest.class),
             any(Member.class))).thenReturn(new StaccatoIdResponse(1L));
 
@@ -151,7 +151,7 @@ class StaccatoControllerTest extends ControllerTest {
                     "categoryId": 1
                 }
             """;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         when(staccatoService.createStaccato(any(StaccatoRequest.class),
             any(Member.class))).thenReturn(new StaccatoIdResponse(1L));
 
@@ -172,7 +172,7 @@ class StaccatoControllerTest extends ControllerTest {
         // given
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), expectedMessage);
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         when(staccatoService.createStaccato(any(StaccatoRequest.class),
             any(Member.class))).thenReturn(new StaccatoIdResponse(1L));
 
@@ -189,7 +189,7 @@ class StaccatoControllerTest extends ControllerTest {
     @Test
     void readAllStaccato() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         StaccatoLocationResponses responses = StaccatoLocationResponsesFixture.create();
         when(staccatoService.readAllStaccato(any(Member.class))).thenReturn(responses);
         String expectedResponse = """
@@ -226,7 +226,7 @@ class StaccatoControllerTest extends ControllerTest {
     void readStaccatoById() throws Exception {
         // given
         long staccatoId = 1L;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         StaccatoDetailResponse response = StaccatoDetailResponseFixture.create(staccatoId,
             LocalDateTime.parse("2021-11-08T11:58:20"));
         when(staccatoService.readStaccatoById(anyLong(), any(Member.class))).thenReturn(response);
@@ -287,7 +287,7 @@ class StaccatoControllerTest extends ControllerTest {
                 ]
             }
             """;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
 
         // when & then
         mockMvc.perform(put("/staccatos/{staccatoId}", staccatoId)
@@ -312,7 +312,7 @@ class StaccatoControllerTest extends ControllerTest {
                 "https://example.com/images/namsan_tower4.jpg",
                 "https://example.com/images/namsan_tower5.jpg",
                 "https://example.com/images/namsan_tower6.jpg"));
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
 
         // when & then
         mockMvc.perform(put("/staccatos/{staccatoId}", staccatoId)
@@ -333,7 +333,7 @@ class StaccatoControllerTest extends ControllerTest {
             List.of("https://example.com/images/namsan_tower.jpg"));
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
 
         // when & then
         mockMvc.perform(put("/staccatos/{staccatoId}", staccatoId)
@@ -349,7 +349,7 @@ class StaccatoControllerTest extends ControllerTest {
     void deleteStaccatoById() throws Exception {
         // given
         long staccatoId = 1L;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
 
         // when & then
         mockMvc.perform(delete("/staccatos/{staccatoId}", staccatoId)

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
 import com.staccato.fixture.category.CategoryFixtures;
-import com.staccato.fixture.member.MemberFixture;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.Category;
@@ -76,7 +76,7 @@ class CategoryFilterTest extends ServiceSliceTest {
     @Test
     void readAllCategoriesWithTerm() {
         // given
-        Member member = memberRepository.save(MemberFixture.create());
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withTitle("first")
                 .buildAndSaveWithMember(member, categoryRepository);
@@ -102,7 +102,7 @@ class CategoryFilterTest extends ServiceSliceTest {
     @Test
     void readAllCategoriesWithoutTerm() {
         // given
-        Member member = memberRepository.save(MemberFixture.create());
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withTitle("first")
                 .buildAndSaveWithMember(member, categoryRepository);

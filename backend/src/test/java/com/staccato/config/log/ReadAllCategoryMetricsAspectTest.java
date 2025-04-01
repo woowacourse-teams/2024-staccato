@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
-import com.staccato.fixture.member.MemberFixture;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.service.CategoryService;
@@ -27,7 +27,7 @@ public class ReadAllCategoryMetricsAspectTest extends ServiceSliceTest {
     @Test
     void testMetricsAfterServiceExecution() {
         // given
-        Member member = MemberFixture.create();
+        Member member = MemberFixtures.defaultMember().build();
         memberRepository.save(member);
         CategoryReadRequest categoryReadRequest = new CategoryReadRequest("with_term", "oldest");
 

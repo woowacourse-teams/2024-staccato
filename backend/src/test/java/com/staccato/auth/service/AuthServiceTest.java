@@ -11,8 +11,8 @@ import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.config.jwt.MemberTokenProvider;
 import com.staccato.exception.StaccatoException;
 import com.staccato.exception.UnauthorizedException;
-import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.auth.LoginRequestFixture;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,7 +67,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void cannotLoginByDuplicated() {
         // given
-        memberRepository.save(MemberFixture.create());
+        MemberFixtures.defaultMember().buildAndSave(memberRepository);
         LoginRequest loginRequest = LoginRequestFixture.create();
 
         // when & then
@@ -80,7 +80,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void cannotExtractMemberByUnknown() {
         // given
-        memberRepository.save(MemberFixture.create());
+        MemberFixtures.defaultMember().buildAndSave(memberRepository);
 
         // when & then
         assertThatThrownBy(() -> authService.extractFromToken(null))

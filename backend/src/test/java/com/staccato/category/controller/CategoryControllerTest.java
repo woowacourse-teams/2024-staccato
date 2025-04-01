@@ -20,6 +20,7 @@ import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,7 +39,6 @@ import org.springframework.http.MediaType;
 
 import com.staccato.ControllerTest;
 import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.category.service.dto.request.CategoryRequest;
@@ -78,7 +78,7 @@ class CategoryControllerTest extends ControllerTest {
     @Test
     void createCategory() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         String categoryRequest = """
                 {
                     "categoryThumbnailUrl": "https://example.com/categories/geumohrm.jpg",
@@ -109,7 +109,7 @@ class CategoryControllerTest extends ControllerTest {
     @Test
     void createCategoryWithoutTerm() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         String categoryRequest = """
                 {
                     "categoryThumbnailUrl": "https://example.com/categories/geumohrm.jpg",
@@ -139,7 +139,7 @@ class CategoryControllerTest extends ControllerTest {
     @MethodSource("categoryRequestProvider")
     void createCategoryWithoutOption(CategoryRequest categoryRequest) throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         when(categoryService.createCategory(any(), any())).thenReturn(new CategoryIdResponse(1));
 
         // when & then
@@ -157,7 +157,7 @@ class CategoryControllerTest extends ControllerTest {
     @MethodSource("invalidCategoryRequestProvider")
     void failCreateCategory(CategoryRequest categoryRequest, String expectedMessage) throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
@@ -173,11 +173,11 @@ class CategoryControllerTest extends ControllerTest {
     @Test
     void readAllCategory() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2024, 7, 1),
                         LocalDate.of(2024, 7, 10))
-                .buildWithMember(MemberFixture.create());
+                .buildWithMember(MemberFixtures.defaultMember().build());
         CategoryResponses categoryResponses = CategoryResponses.from(List.of(category));
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
@@ -205,7 +205,7 @@ class CategoryControllerTest extends ControllerTest {
     @Test
     void readAllCategoryIgnoringInvalidFilter() throws Exception {
         // given
-        Member member = MemberFixture.create();
+        Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category = CategoryFixtures.defaultCategory().buildWithMember(member);
         Category category2 = CategoryFixtures.defaultCategory()
@@ -228,8 +228,8 @@ class CategoryControllerTest extends ControllerTest {
     @Test
     void readAllCategoryWithoutTerm() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixtures.defaultMember().build());
         CategoryResponses categoryResponses = CategoryResponses.from(List.of(category));
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
@@ -255,8 +255,8 @@ class CategoryControllerTest extends ControllerTest {
     @Test
     void readAllCategoryIncludingDate() throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixtures.defaultMember().build());
         CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
         when(categoryService.readAllCategoriesByDate(any(Member.class), any())).thenReturn(categoryNameResponses);
         String expectedResponse = """
@@ -283,7 +283,7 @@ class CategoryControllerTest extends ControllerTest {
     @ValueSource(strings = {"2024.07.01", "2024-07", "2024", "a"})
     void cannotReadAllCategoryByInvalidDateFormat(String currentDate) throws Exception {
         // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
 
         // when & then
@@ -299,11 +299,11 @@ class CategoryControllerTest extends ControllerTest {
     void readCategory() throws Exception {
         // given
         long categoryId = 1;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2024, 7, 1),
                         LocalDate.of(2024, 7, 10))
-                .buildWithMember(MemberFixture.create());
+                .buildWithMember(MemberFixtures.defaultMember().build());
         Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
             staccato));
@@ -346,8 +346,8 @@ class CategoryControllerTest extends ControllerTest {
     void readCategoryWithoutTerm() throws Exception {
         // given
         long categoryId = 1;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
-        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixtures.defaultMember().build());
         Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
             staccato));
@@ -388,7 +388,7 @@ class CategoryControllerTest extends ControllerTest {
     void updateCategory(CategoryRequest categoryRequest) throws Exception {
         // given
         long categoryId = 1L;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
 
         // when & then
         mockMvc.perform(put("/categories/{categoryId}", categoryId)
@@ -404,7 +404,7 @@ class CategoryControllerTest extends ControllerTest {
     void failUpdateCategory(CategoryRequest categoryRequest, String expectedMessage) throws Exception {
         // given
         long categoryId = 1L;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
@@ -422,7 +422,7 @@ class CategoryControllerTest extends ControllerTest {
     void failUpdateCategoryByInvalidPath(CategoryRequest categoryRequest) throws Exception {
         // given
         long categoryId = 0L;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "카테고리 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
@@ -439,7 +439,7 @@ class CategoryControllerTest extends ControllerTest {
     void deleteCategory() throws Exception {
         // given
         long categoryId = 1;
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
 
         // when & then
         mockMvc.perform(delete("/categories/{categoryId}", categoryId)

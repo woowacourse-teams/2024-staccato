@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
-import com.staccato.fixture.member.MemberFixture;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
@@ -27,7 +27,7 @@ public class MemberTokenProviderTest {
     public void setUp() {
         TokenProperties tokenProperties = new TokenProperties("test-secret-key");
         tokenProvider = new MemberTokenProvider(tokenProperties);
-        member = memberRepository.save(MemberFixture.create());
+        member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
     }
 
     @DisplayName("멤버 토큰은 멤버 아이디를 갖고 있다.")

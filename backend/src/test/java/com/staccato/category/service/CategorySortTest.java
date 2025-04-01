@@ -14,7 +14,7 @@ import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.fixture.category.CategoryFixtures;
-import com.staccato.fixture.member.MemberFixture;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
@@ -61,7 +61,7 @@ public class CategorySortTest extends ServiceSliceTest {
     @Test
     void readAllCategoriesByUpdatedAtDesc() {
         // given
-        Member member = memberRepository.save(MemberFixture.create());
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         List<Category> categories = new ArrayList<>();
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("first")

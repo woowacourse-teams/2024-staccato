@@ -3,6 +3,7 @@ package com.staccato.staccato.repository;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
-import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -39,8 +39,10 @@ class StaccatoRepositoryTest extends RepositoryTest {
     @Test
     void findAllByCategory_CategoryMembers_Member() {
         // given
-        Member member = memberRepository.save(MemberFixture.create());
-        Member anotherMember = memberRepository.save(MemberFixture.create("anotherMember"));
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member anotherMember = MemberFixtures.defaultMember()
+                .withNickname("anotherMember")
+                .buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2023, 12, 31),
                         LocalDate.of(2024, 1, 10))
@@ -84,7 +86,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByCategoryIdInBulk() {
         // given
-        Member member = memberRepository.save(MemberFixture.create());
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2023, 12, 31),
                         LocalDate.of(2024, 1, 10))
@@ -116,7 +118,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
     @Test
     void findAllByCategoryIdOrderByVisitedAt() {
         // given
-        Member member = memberRepository.save(MemberFixture.create());
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2023, 12, 31),
                         LocalDate.of(2024, 1, 10))
@@ -144,7 +146,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
     @Test
     void findAllByCategoryIdOrderByCreatedAt() {
         // given
-        Member member = memberRepository.save(MemberFixture.create());
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2023, 12, 31),
                         LocalDate.of(2024, 1, 10))
