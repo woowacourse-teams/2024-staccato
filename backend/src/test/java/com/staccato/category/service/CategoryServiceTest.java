@@ -22,9 +22,9 @@ import com.staccato.ServiceSliceTest;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.category.CategoryRequestFixtures;
 import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.comment.CommentFixture;
-import com.staccato.fixture.category.CategoryRequestFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.fixture.staccato.StaccatoRequestFixture;
 import com.staccato.member.domain.Member;
@@ -65,17 +65,15 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     static Stream<Arguments> updateCategoryProvider() {
         return Stream.of(
-                Arguments.of(
-                        CategoryRequestFixture.create(null, LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)), null),
-                Arguments.of(
-                        CategoryRequestFixture.create("imageUrl", LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10)), "imageUrl"));
+                Arguments.of(CategoryRequestFixtures.defaultCategoryRequest().withCategoryThumbnailUrl(null).build(), null),
+                Arguments.of(CategoryRequestFixtures.defaultCategoryRequest().withCategoryThumbnailUrl("imageUrl").build(), "imageUrl"));
     }
 
     @DisplayName("카테고리 정보를 기반으로, 카테고리를 생성하고 작성자를 저장한다.")
     @Test
     void createCategory() {
         // given
-        CategoryRequest categoryRequest= CategoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10));
+        CategoryRequest categoryRequest = CategoryRequestFixtures.defaultCategoryRequest().build();
         Member member = memberRepository.save(MemberFixture.create());
 
         // when
@@ -93,7 +91,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void createCategoryWithoutTerm() {
         // given
-        CategoryRequest categoryRequest = CategoryRequestFixture.create(null, null);
+        CategoryRequest categoryRequest = CategoryRequestFixtures.defaultCategoryRequest().withTerm(null, null).build();
         Member member = memberRepository.save(MemberFixture.create());
 
         // when
@@ -112,7 +110,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void cannotCreateCategoryByDuplicatedTitle() {
         // given
-        CategoryRequest categoryRequest = CategoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10));
+        CategoryRequest categoryRequest = CategoryRequestFixtures.defaultCategoryRequest().build();
         Member member = memberRepository.save(MemberFixture.create());
         categoryService.createCategory(categoryRequest, member);
 
@@ -126,7 +124,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void canCreateCategoryByDuplicatedTitleOfOther() {
         // given
-        CategoryRequest categoryRequest = CategoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10));
+        CategoryRequest categoryRequest = CategoryRequestFixtures.defaultCategoryRequest().build();
         Member member = memberRepository.save(MemberFixture.create());
         Member otherMember = memberRepository.save(MemberFixture.create("other"));
         categoryService.createCategory(categoryRequest, otherMember);
@@ -141,11 +139,15 @@ class CategoryServiceTest extends ServiceSliceTest {
     void readAllCategories(LocalDate currentDate, int expectedSize) {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        categoryService.createCategory(
-            CategoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 1), "title1"), member);
-        categoryService.createCategory(
-            CategoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2), "title2"), member);
-        categoryService.createCategory(CategoryRequestFixture.create(null, null, "title3"), member);
+        categoryService.createCategory(CategoryRequestFixtures.defaultCategoryRequest()
+                .withCategoryTitle("title1")
+                .withTerm(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 1))
+                .build(), member);
+        categoryService.createCategory(CategoryRequestFixtures.defaultCategoryRequest()
+                .withCategoryTitle("title2")
+                .withTerm(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2))
+                .build(), member);
+        categoryService.createCategory(CategoryRequestFixtures.defaultCategoryRequest().withCategoryTitle("title3").withTerm(null, null).build(), member);
 
         // when
         CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDate(member, currentDate);
@@ -160,8 +162,9 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-            CategoryRequestFixture.create(null, null, "first"), member);
-        categoryService.createCategory(CategoryRequestFixture.create(null, null, "second"), member);
+                CategoryRequestFixtures.defaultCategoryRequest().withCategoryTitle("first").withTerm(null, null).build(), member);
+        categoryService.createCategory(
+                CategoryRequestFixtures.defaultCategoryRequest().withCategoryTitle("second").withTerm(null, null).build(), member);
         staccatoService.createStaccato(StaccatoRequestFixture.create(categoryIdResponse.categoryId()), member);
         CategoryReadRequest categoryReadRequest = new CategoryReadRequest("false", null);
 
@@ -182,7 +185,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create());
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-            CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
+                CategoryRequestFixtures.defaultCategoryRequest().build(), member);
 
         // when
         CategoryDetailResponse categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
@@ -201,7 +204,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create());
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-            CategoryRequestFixture.create(null, null), member);
+            CategoryRequestFixtures.defaultCategoryRequest().withTerm(null, null).build(), member);
 
         // when
         CategoryDetailResponse categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
@@ -223,7 +226,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         Member otherMember = memberRepository.save(MemberFixture.create("otherMember"));
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-            CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
+            CategoryRequestFixtures.defaultCategoryRequest().build(), member);
 
         // when & then
         assertThatThrownBy(() -> categoryService.readCategoryById(categoryIdResponse.categoryId(), otherMember))
@@ -238,7 +241,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create());
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-            CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
+            CategoryRequestFixtures.defaultCategoryRequest().build(), member);
         Staccato firstStaccato = saveStaccato(LocalDateTime.of(2023, 7, 1, 10, 0), categoryIdResponse.categoryId());
         Staccato secondStaccato = saveStaccato(LocalDateTime.of(2023, 7, 1, 10, 10), categoryIdResponse.categoryId());
         Staccato lastStaccato = saveStaccato(LocalDateTime.of(2023, 7, 5, 9, 0), categoryIdResponse.categoryId());
@@ -276,7 +279,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-            CategoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
+            CategoryRequestFixtures.defaultCategoryRequest().build(), member);
 
         // when
         categoryService.updateCategory(updatedCategory, categoryIdResponse.categoryId(), member);
@@ -299,10 +302,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-            CategoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10)), member);
+            CategoryRequestFixtures.defaultCategoryRequest().build(), member);
 
         // when
-        CategoryRequest categoryRequest = CategoryRequestFixture.create(null, null);
+        CategoryRequest categoryRequest = CategoryRequestFixtures.defaultCategoryRequest().withTerm(null, null).build();
         categoryService.updateCategory(categoryRequest, categoryIdResponse.categoryId(), member);
         Category foundedCategory = categoryRepository.findById(categoryIdResponse.categoryId()).get();
 
@@ -318,7 +321,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     void failUpdateCategory() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        CategoryRequest categoryRequest = CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10));
+        CategoryRequest categoryRequest = CategoryRequestFixtures.defaultCategoryRequest().build();
 
         // when & then
         assertThatThrownBy(() -> categoryService.updateCategory(categoryRequest, 1L, member))
@@ -332,9 +335,9 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create("member"));
         Member otherMember = memberRepository.save(MemberFixture.create("otherMember"));
-        CategoryRequest categoryRequest = CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10));
+        CategoryRequest categoryRequest = CategoryRequestFixtures.defaultCategoryRequest().build();
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-            CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
+                CategoryRequestFixtures.defaultCategoryRequest().build(), member);
 
         // when & then
         assertThatThrownBy(() -> categoryService.updateCategory(categoryRequest, categoryIdResponse.categoryId(), otherMember))
@@ -346,7 +349,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void updateCategoryByOriginTitle() {
         // given
-        CategoryRequest categoryRequest = CategoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10));
+        CategoryRequest categoryRequest = CategoryRequestFixtures.defaultCategoryRequest().build();
         Member member = memberRepository.save(MemberFixture.create());
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest, member);
 
@@ -359,9 +362,9 @@ class CategoryServiceTest extends ServiceSliceTest {
     void cannotUpdateCategoryByDuplicatedTitle() {
         // given
         Member member = memberRepository.save(MemberFixture.create());
-        CategoryRequest categoryRequest1 = CategoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10), "existingTitle");
+        CategoryRequest categoryRequest1 = CategoryRequestFixtures.defaultCategoryRequest().withCategoryTitle("existingTitle").build();
         categoryService.createCategory(categoryRequest1, member);
-        CategoryRequest categoryRequest2 = CategoryRequestFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 10), "otherTitle");
+        CategoryRequest categoryRequest2 = CategoryRequestFixtures.defaultCategoryRequest().withCategoryTitle("otherTitle").build();
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest2, member);
 
         // when & then
@@ -376,7 +379,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-            CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
+            CategoryRequestFixtures.defaultCategoryRequest().build(), member);
 
         // when
         categoryService.deleteCategory(categoryIdResponse.categoryId(), member);
@@ -394,7 +397,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = memberRepository.save(MemberFixture.create());
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-            CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
+            CategoryRequestFixtures.defaultCategoryRequest().build(), member);
         Staccato staccato = saveStaccato(LocalDateTime.of(2023, 7, 2, 10, 10), categoryIdResponse.categoryId());
         commentRepository.save(CommentFixture.create(staccato, member));
 
@@ -422,7 +425,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create("member"));
         Member otherMember = memberRepository.save(MemberFixture.create("otherMember"));
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-            CategoryRequestFixture.create(LocalDate.of(2023, 7, 1), LocalDate.of(2024, 7, 10)), member);
+            CategoryRequestFixtures.defaultCategoryRequest().build(), member);
 
         // when & then
         assertThatThrownBy(() -> categoryService.deleteCategory(categoryIdResponse.categoryId(), otherMember))
