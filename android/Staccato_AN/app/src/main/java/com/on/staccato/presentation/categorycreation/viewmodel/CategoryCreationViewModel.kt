@@ -2,7 +2,6 @@ package com.on.staccato.presentation.categorycreation.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -39,8 +38,8 @@ class CategoryCreationViewModel
         private val categoryRepository: CategoryRepository,
         private val imageRepository: ImageRepository,
     ) : ViewModel() {
-        val title = ObservableField<String>()
-        val description = ObservableField<String>()
+        val title = MutableLiveData<String>()
+        val description = MutableLiveData<String>()
         val isPeriodActive = MutableLiveData<Boolean>(false)
 
         private val _startDate = MutableLiveData<LocalDate?>(null)
@@ -154,10 +153,10 @@ class CategoryCreationViewModel
         private fun makeNewCategory() =
             NewCategory(
                 categoryThumbnailUrl = _thumbnail.value?.url,
-                categoryTitle = title.get() ?: throw IllegalArgumentException(),
+                categoryTitle = title.value ?: throw IllegalArgumentException(),
                 startAt = getDateByPeriodSetting(startDate),
                 endAt = getDateByPeriodSetting(endDate),
-                description = description.get(),
+                description = description.value,
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {
