@@ -37,15 +37,9 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     void findAllByMemberId() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2023, 12, 30),
-                        LocalDate.of(2023, 12, 30))
-                .buildAndSave(categoryRepository);
-        Category category2 = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2023, 12, 31),
-                        LocalDate.of(2023, 12, 31))
-                .buildAndSave(categoryRepository);
-        categoryMemberRepository.save(new CategoryMember(member, category));
+        Category category1 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
+        categoryMemberRepository.save(new CategoryMember(member, category1));
         categoryMemberRepository.save(new CategoryMember(member, category2));
 
         // when
@@ -60,19 +54,20 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     void findAllByMemberIdAndDate() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2023, 12, 30),
-                        LocalDate.of(2023, 12, 30))
-                .buildAndSave(categoryRepository);
-        Category category2 = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2023, 12, 31),
+        Category category1 = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 1, 1),
                         LocalDate.of(2023, 12, 31))
                 .buildAndSave(categoryRepository);
-        categoryMemberRepository.save(new CategoryMember(member, category));
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
+                .buildAndSave(categoryRepository);
+        categoryMemberRepository.save(new CategoryMember(member, category1));
         categoryMemberRepository.save(new CategoryMember(member, category2));
 
         // when
-        List<CategoryMember> result = categoryMemberRepository.findAllByMemberIdAndDate(member.getId(), LocalDate.of(2023, 12, 31));
+        List<CategoryMember> result = categoryMemberRepository.findAllByMemberIdAndDate(
+                member.getId(), LocalDate.of(2024, 6, 1));
 
         // then
         assertThat(result).hasSize(1);
@@ -83,16 +78,18 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     void findAllByMemberIdAndDateWhenNull() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2023, 12, 30),
-                        LocalDate.of(2023, 12, 30))
+        Category category1 = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository);
-        Category category2 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        categoryMemberRepository.save(new CategoryMember(member, category));
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTerm(null, null)
+                .buildAndSave(categoryRepository);
+        categoryMemberRepository.save(new CategoryMember(member, category1));
         categoryMemberRepository.save(new CategoryMember(member, category2));
 
         // when
-        List<CategoryMember> result = categoryMemberRepository.findAllByMemberIdAndDate(member.getId(), LocalDate.of(2023, 12, 30));
+        List<CategoryMember> result = categoryMemberRepository.findAllByMemberIdAndDate(member.getId(), LocalDate.of(2024, 6, 1));
 
         // then
         assertThat(result).hasSize(2);
@@ -106,14 +103,9 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
         Member member2 = MemberFixtures.defaultMember()
                 .withNickname("hotea")
                 .buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2023, 12, 30),
-                        LocalDate.of(2023, 12, 30))
-                .buildAndSave(categoryRepository);
-        CategoryMember categoryMember = categoryMemberRepository.save(new CategoryMember(member,
-                category));
-        CategoryMember categoryMember2 = categoryMemberRepository.save(new CategoryMember(member2,
-                category));
+        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
+        CategoryMember categoryMember = categoryMemberRepository.save(new CategoryMember(member, category));
+        CategoryMember categoryMember2 = categoryMemberRepository.save(new CategoryMember(member2, category));
 
         // when
         categoryMemberRepository.deleteAllByCategoryIdInBulk(category.getId());

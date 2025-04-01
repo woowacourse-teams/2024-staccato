@@ -243,8 +243,7 @@ class StaccatoControllerTest extends ControllerTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withId(1L)
                 .withTerm(LocalDate.of(2024, 1, 1),
-                        LocalDate.of(2024, 12, 31))
-                .build();
+                        LocalDate.of(2024, 12, 31)).build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withId(1L)
                 .withCategory(category)
@@ -256,12 +255,12 @@ class StaccatoControllerTest extends ControllerTest {
                 {
                      "staccatoId": 1,
                      "categoryId": 1,
-                     "categoryTitle": "2024 여름 휴가",
+                     "categoryTitle": "categoryTitle",
                      "startAt": "2024-01-01",
                      "endAt": "2024-12-31",
                      "staccatoTitle": "staccatoTitle",
                      "staccatoImageUrls": ["image.jpg"],
-                     "visitedAt": "2024-07-01T10:00:00",
+                     "visitedAt": "2024-06-01T00:00:00",
                      "feeling": "nothing",
                      "placeName": "placeName",
                      "address": "address",
@@ -466,7 +465,7 @@ class StaccatoControllerTest extends ControllerTest {
                     "staccatoTitle": "staccatoTitle",
                     "placeName": "placeName",
                     "address": "address",
-                    "visitedAt": "2024-07-01T10:00:00",
+                    "visitedAt": "2024-06-01T00:00:00",
                     "feeling": "nothing",
                     "comments": [
                         {

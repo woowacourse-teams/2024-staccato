@@ -46,15 +46,13 @@ class CategoryTest {
     void validateDuration() {
         // given
         Category category = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.now(),
-                        LocalDate.now().plusDays(1))
-                .build();
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31)).build();
         Category updatedCategory = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.now().plusDays(1),
-                        LocalDate.now().plusDays(2))
-                .build();
+                .withTerm(LocalDate.of(2023, 1, 1),
+                        LocalDate.of(2023, 12, 31)).build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.now())
+                .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .withCategory(category).build();
 
         // when & then

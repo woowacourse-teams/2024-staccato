@@ -77,15 +77,17 @@ class CategoryFilterTest extends ServiceSliceTest {
     void readAllCategoriesWithTerm() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Category category1 = CategoryFixtures.defaultCategory()
                 .withTitle("first")
+                .withTerm(null, null)
                 .buildAndSaveWithMember(member, categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.now(),
-                        LocalDate.now().plusDays(3))
+                .withTitle("second")
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
                 .buildAndSaveWithMember(member, categoryRepository);
         List<Category> categories = new ArrayList<>();
-        categories.add(category);
+        categories.add(category1);
         categories.add(category2);
 
         // when
@@ -103,15 +105,17 @@ class CategoryFilterTest extends ServiceSliceTest {
     void readAllCategoriesWithoutTerm() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        Category category1 = CategoryFixtures.defaultCategory()
                 .withTitle("first")
+                .withTerm(null, null)
                 .buildAndSaveWithMember(member, categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.now(),
-                        LocalDate.now().plusDays(3))
+                .withTitle("second")
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
                 .buildAndSaveWithMember(member, categoryRepository);
         List<Category> categories = new ArrayList<>();
-        categories.add(category);
+        categories.add(category1);
         categories.add(category2);
 
         // when
@@ -120,7 +124,7 @@ class CategoryFilterTest extends ServiceSliceTest {
         // then
         assertAll(
             () -> assertThat(result).hasSize(1),
-            () -> assertThat(result.get(0).getTitle()).isEqualTo(category.getTitle())
+            () -> assertThat(result.get(0).getTitle()).isEqualTo(category1.getTitle())
         );
     }
 }

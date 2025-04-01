@@ -14,10 +14,11 @@ public class CategoryFixtures {
 
     public static CategoryBuilder defaultCategory() {
         return new CategoryBuilder()
-                .withThumbnailUrl("https://example.com/categories/geumohrm.jpg")
-                .withTitle("2024 여름 휴가")
-                .withDescription("친구들과 함께한 여름 휴가 추억")
-                .withTerm(null, null);
+                .withThumbnailUrl("https://example.com/categoryThumbnailUrl.jpg")
+                .withTitle("categoryTitle")
+                .withDescription("categoryDescription")
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31));
     }
 
     public static class CategoryBuilder {
@@ -26,7 +27,7 @@ public class CategoryFixtures {
         private String title;
         private String description;
         private Term term;
-        private List<CategoryMember> members = new ArrayList<>();
+        private final List<CategoryMember> members = new ArrayList<>();
 
         public CategoryBuilder withId(Long id) {
             this.id = id;
@@ -50,11 +51,6 @@ public class CategoryFixtures {
 
         public CategoryBuilder withTerm(LocalDate startAt, LocalDate endAt) {
             this.term = new Term(startAt, endAt);
-            return this;
-        }
-
-        public CategoryBuilder withMembers(List<CategoryMember> members) {
-            this.members = members;
             return this;
         }
 

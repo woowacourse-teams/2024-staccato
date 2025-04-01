@@ -33,16 +33,11 @@ class StaccatoImageRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByStaccatoIdInBulk() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2023, 12, 31),
-                        LocalDate.of(2024, 1, 10))
-                .buildAndSave(categoryRepository);
+        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
         Staccato staccato1 = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2023, 12, 31, 22, 20))
                 .withCategory(category)
                 .buildAndSaveWithStaccatoImages(List.of("url1", "url2"), staccatoRepository);
         Staccato staccato2 = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2023, 12, 31, 22, 20))
                 .withCategory(category)
                 .buildAndSaveWithStaccatoImages(List.of("url1", "url2"), staccatoRepository);
 
@@ -64,12 +59,8 @@ class StaccatoImageRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByIdInBulk() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2023, 12, 31),
-                        LocalDate.of(2024, 1, 10))
-                .buildAndSave(categoryRepository);
+        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2023, 12, 31, 22, 20))
                 .withCategory(category)
                 .buildAndSaveWithStaccatoImages(List.of("url1", "url2", "url3"), staccatoRepository);
 

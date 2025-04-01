@@ -87,19 +87,21 @@ public class CategorySortTest extends ServiceSliceTest {
         List<Category> categories = new ArrayList<>();
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("first")
-                .withTerm(LocalDate.now().minusDays(2),
-                        LocalDate.now().plusDays(2))
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("second")
-                .withTerm(LocalDate.now(),
-                        LocalDate.now().plusDays(2))
+                .withTerm(LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("third")
+                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("fourth")
+                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
 
         // when
@@ -121,19 +123,21 @@ public class CategorySortTest extends ServiceSliceTest {
         List<Category> categories = new ArrayList<>();
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("first")
-                .withTerm(LocalDate.now().minusDays(2),
-                        LocalDate.now().plusDays(2))
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("second")
-                .withTerm(LocalDate.now(),
-                        LocalDate.now().plusDays(2))
+                .withTerm(LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("third")
+                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("fourth")
+                .withTerm(null, null)
                 .buildAndSave(categoryRepository));
 
         // when

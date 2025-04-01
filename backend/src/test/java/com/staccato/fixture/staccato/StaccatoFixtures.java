@@ -16,7 +16,7 @@ public class StaccatoFixtures {
 
     public static StaccatoBuilder defaultStaccato() {
         return new StaccatoBuilder()
-                .withVisitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
+                .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .withTitle("staccatoTitle")
                 .withSpot("placeName", "address",
                         new BigDecimal("37.77490000000000"), new BigDecimal("-122.41940000000000"));

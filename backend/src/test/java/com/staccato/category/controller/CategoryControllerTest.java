@@ -174,20 +174,29 @@ class CategoryControllerTest extends ControllerTest {
     void readAllCategory() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2024, 7, 1),
-                        LocalDate.of(2024, 7, 10)).build();
-        CategoryResponses categoryResponses = CategoryResponses.from(List.of(category));
+        Category categoryWithTerm = CategoryFixtures.defaultCategory()
+                .withId(1L)
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31)).build();
+        Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
+                .withId(2L)
+                .withTerm(null, null).build();
+        CategoryResponses categoryResponses = CategoryResponses.from(List.of(categoryWithTerm, categoryWithoutTerm));
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
                 {
                     "categories": [
                         {
-                            "categoryId": null,
-                            "categoryTitle": "2024 여름 휴가",
-                            "categoryThumbnailUrl": "https://example.com/categories/geumohrm.jpg",
-                            "startAt": "2024-07-01",
-                            "endAt": "2024-07-10"
+                            "categoryId": 1,
+                            "categoryTitle": "categoryTitle",
+                            "categoryThumbnailUrl": "https://example.com/categoryThumbnailUrl.jpg",
+                            "startAt": "2024-01-01",
+                            "endAt": "2024-12-31"
+                        },
+                        {
+                            "categoryId": 2,
+                            "categoryTitle": "categoryTitle",
+                            "categoryThumbnailUrl": "https://example.com/categoryThumbnailUrl.jpg"
                         }
                     ]
                 }
@@ -206,11 +215,9 @@ class CategoryControllerTest extends ControllerTest {
         // given
         Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
-        Category category = CategoryFixtures.defaultCategory().build();
-        Category category2 = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2023, 8, 1),
-                        LocalDate.of(2023, 8, 10)).build();
-        CategoryResponses categoryResponses = CategoryResponses.from(List.of(category, category2));
+        Category category1 = CategoryFixtures.defaultCategory().build();
+        Category category2 = CategoryFixtures.defaultCategory().build();
+        CategoryResponses categoryResponses = CategoryResponses.from(List.of(category1, category2));
 
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
 
@@ -222,47 +229,21 @@ class CategoryControllerTest extends ControllerTest {
             .andExpect(jsonPath("$.categories.size()").value(2));
     }
 
-    @DisplayName("사용자가 기간이 없는 카테고리를 포함한 목록을 조회하는 응답 직렬화에 성공한다.")
-    @Test
-    void readAllCategoryWithoutTerm() throws Exception {
-        // given
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory().build();
-        CategoryResponses categoryResponses = CategoryResponses.from(List.of(category));
-        when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
-        String expectedResponse = """
-                {
-                    "categories": [
-                        {
-                            "categoryId": null,
-                            "categoryTitle": "2024 여름 휴가",
-                            "categoryThumbnailUrl": "https://example.com/categories/geumohrm.jpg"
-                        }
-                    ]
-                }
-                """;
-
-        // when & then
-        mockMvc.perform(get("/categories")
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
-    }
-
     @DisplayName("특정 날짜를 포함하고 있는 모든 카테고리 목록을 조회하는 응답 직렬화에 성공한다.")
     @Test
     void readAllCategoryIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory().build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withId(1L).build();
         CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
         when(categoryService.readAllCategoriesByDate(any(Member.class), any())).thenReturn(categoryNameResponses);
         String expectedResponse = """
                 {
                     "categories": [
                         {
-                            "categoryId": null,
-                            "categoryTitle": "2024 여름 휴가"
+                            "categoryId": 1,
+                            "categoryTitle": "categoryTitle"
                         }
                     ]
                 }
@@ -292,16 +273,14 @@ class CategoryControllerTest extends ControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("사용자가 특정 카테고리를 조회하는 응답 직렬화에 한다.")
+    @DisplayName("사용자가 특정 카테고리를 조회하는 응답 직렬화에 성공한다.")
     @Test
     void readCategory() throws Exception {
         // given
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2024, 7, 1),
-                        LocalDate.of(2024, 7, 10))
-                .buildWithMember(MemberFixtures.defaultMember().build());
+                .withId(categoryId).buildWithMember(MemberFixtures.defaultMember().build());
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withVisitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
                 .withCategory(category)
@@ -310,12 +289,12 @@ class CategoryControllerTest extends ControllerTest {
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
-                    "categoryId": null,
-                    "categoryThumbnailUrl": "https://example.com/categories/geumohrm.jpg",
-                    "categoryTitle": "2024 여름 휴가",
-                    "startAt": "2024-07-01",
-                    "endAt": "2024-07-10",
-                    "description": "친구들과 함께한 여름 휴가 추억",
+                    "categoryId": 1,
+                    "categoryThumbnailUrl": "https://example.com/categoryThumbnailUrl.jpg",
+                    "categoryTitle": "categoryTitle",
+                    "startAt": "2024-01-01",
+                    "endAt": "2024-12-31",
+                    "description": "categoryDescription",
                     "mates": [
                         {
                             "memberId": null,
@@ -341,13 +320,16 @@ class CategoryControllerTest extends ControllerTest {
     }
 
 
-    @DisplayName("사용자가 기간이 없는 특정 카테고리를 조회하는 응답 직렬화에 한다.")
+    @DisplayName("사용자가 기간이 없는 특정 카테고리를 조회하는 응답 직렬화에 성공한다.")
     @Test
     void readCategoryWithoutTerm() throws Exception {
         // given
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory().buildWithMember(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory()
+                .withId(categoryId)
+                .withTerm(null, null)
+                .buildWithMember(MemberFixtures.defaultMember().build());
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withVisitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
                 .withCategory(category)
@@ -357,10 +339,10 @@ class CategoryControllerTest extends ControllerTest {
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
-                    "categoryId": null,
-                    "categoryThumbnailUrl": "https://example.com/categories/geumohrm.jpg",
-                    "categoryTitle": "2024 여름 휴가",
-                    "description": "친구들과 함께한 여름 휴가 추억",
+                    "categoryId": 1,
+                    "categoryThumbnailUrl": "https://example.com/categoryThumbnailUrl.jpg",
+                    "categoryTitle": "categoryTitle",
+                    "description": "categoryDescription",
                     "mates": [
                         {
                             "memberId": null,
