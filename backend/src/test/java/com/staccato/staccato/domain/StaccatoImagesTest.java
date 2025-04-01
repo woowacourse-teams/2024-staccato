@@ -74,7 +74,6 @@ class StaccatoImagesTest {
 
         // when
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.now())
                 .withCategory(category).build();
         existingImages.update(updatedImages, staccato);
         List<String> images = existingImages.getImages().stream().map(StaccatoImage::getImageUrl).toList();

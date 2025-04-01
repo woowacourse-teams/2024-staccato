@@ -197,12 +197,16 @@ class StaccatoControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         StaccatoLocationResponse response1 = new StaccatoLocationResponse(
-                StaccatoFixtures.defaultStaccato().withId(1L).build());
+                StaccatoFixtures.defaultStaccato()
+                        .withId(1L)
+                        .withSpot("placeName", "address",
+                                BigDecimal.ZERO, BigDecimal.ZERO).build());
         StaccatoLocationResponse response2 = new StaccatoLocationResponse(
-                StaccatoFixtures.defaultStaccato().withId(2L).build());
-        StaccatoLocationResponse response3 = new StaccatoLocationResponse(
-                StaccatoFixtures.defaultStaccato().withId(3L).build());
-        StaccatoLocationResponses responses = new StaccatoLocationResponses(List.of(response1, response2, response3));
+                StaccatoFixtures.defaultStaccato()
+                        .withId(2L)
+                        .withSpot("placeName", "address",
+                                new BigDecimal("123.456789"), new BigDecimal("123.456789")).build());
+        StaccatoLocationResponses responses = new StaccatoLocationResponses(List.of(response1, response2));
 
         when(staccatoService.readAllStaccato(any(Member.class))).thenReturn(responses);
         String expectedResponse = """
@@ -210,18 +214,13 @@ class StaccatoControllerTest extends ControllerTest {
                 "staccatoLocationResponses": [
                      {
                          "staccatoId": 1,
-                         "latitude": 37.7749,
-                         "longitude": -122.4194
+                         "latitude": 0,
+                         "longitude": 0
                      },
                      {
                          "staccatoId": 2,
-                         "latitude": 37.7749,
-                         "longitude": -122.4194
-                     },
-                     {
-                         "staccatoId": 3,
-                         "latitude": 37.7749,
-                         "longitude": -122.4194
+                         "latitude": 123.456789,
+                         "longitude": 123.456789
                      }
                 ]
             }
@@ -247,8 +246,7 @@ class StaccatoControllerTest extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withId(1L)
                 .withCategory(category)
-                .withStaccatoImages(List.of("image.jpg"))
-                .build();
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         StaccatoDetailResponse response = new StaccatoDetailResponse(staccato);
         when(staccatoService.readStaccatoById(anyLong(), any(Member.class))).thenReturn(response);
         String expectedResponse = """
@@ -259,13 +257,13 @@ class StaccatoControllerTest extends ControllerTest {
                      "startAt": "2024-01-01",
                      "endAt": "2024-12-31",
                      "staccatoTitle": "staccatoTitle",
-                     "staccatoImageUrls": ["image.jpg"],
+                     "staccatoImageUrls": ["https://example.com/staccatoImage.jpg"],
                      "visitedAt": "2024-06-01T00:00:00",
-                     "feeling": "nothing",
+                     "feeling": "happy",
                      "placeName": "placeName",
                      "address": "address",
-                     "latitude": 37.7749,
-                     "longitude": -122.4194
+                     "latitude": 0,
+                     "longitude": 0
                  }
             """;
 
@@ -440,7 +438,8 @@ class StaccatoControllerTest extends ControllerTest {
         LocalDateTime expiredAt = LocalDateTime.of(2024, 7, 2, 10, 0, 0);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withId(1L)
-                .withStaccatoImages(List.of("image1.jpg", "image2.jpg")).build();
+                .withStaccatoImages(List.of("https://example.com/stacccatoImage1.jpg",
+                        "https://example.com/stacccatoImage2.jpg")).build();
         Member member1 = MemberFixtures.defaultMember()
                 .withNickname("nickname1")
                 .withImageUrl("memberImageUrl1.jpg").build();
@@ -461,14 +460,14 @@ class StaccatoControllerTest extends ControllerTest {
                     "expiredAt": "2024-07-02T10:00:00",
                     "nickname": "nickname1",
                     "staccatoImageUrls": [
-                        "image1.jpg",
-                        "image2.jpg"
+                        "https://example.com/stacccatoImage1.jpg",
+                        "https://example.com/stacccatoImage2.jpg"
                     ],
                     "staccatoTitle": "staccatoTitle",
                     "placeName": "placeName",
                     "address": "address",
                     "visitedAt": "2024-06-01T00:00:00",
-                    "feeling": "nothing",
+                    "feeling": "happy",
                     "comments": [
                         {
                             "nickname": "nickname1",

@@ -18,8 +18,8 @@ public class StaccatoFixtures {
         return new StaccatoBuilder()
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .withTitle("staccatoTitle")
-                .withSpot("placeName", "address",
-                        new BigDecimal("37.77490000000000"), new BigDecimal("-122.41940000000000"));
+                .withFeeling("happy")
+                .withSpot("placeName", "address", BigDecimal.ZERO.setScale(14), BigDecimal.ZERO.setScale(14));
     }
 
     public static class StaccatoBuilder {
@@ -46,8 +46,8 @@ public class StaccatoFixtures {
             return this;
         }
 
-        public StaccatoBuilder withFeeling(Feeling feeling) {
-            this.feeling = feeling;
+        public StaccatoBuilder withFeeling(String feeling) {
+            this.feeling = Feeling.match(feeling);
             return this;
         }
 

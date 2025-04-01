@@ -252,13 +252,13 @@ class CategoryServiceTest extends ServiceSliceTest {
                 CategoryRequestFixtures.defaultCategoryRequest().build(), member);
         Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
         Staccato firstStaccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2023, 7, 1, 10, 0))
+                .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .withCategory(category).buildAndSave(staccatoRepository);
         Staccato secondStaccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2023, 7, 1, 10, 10))
+                .withVisitedAt(LocalDateTime.of(2024, 6, 2, 0, 0))
                 .withCategory(category).buildAndSave(staccatoRepository);
-        Staccato lastStaccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2023, 7, 5, 9, 0))
+        Staccato thirdStaccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.of(2024, 6, 3, 0, 0))
                 .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
@@ -270,7 +270,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(categoryDetailResponse.staccatos()).hasSize(3),
                 () -> assertThat(categoryDetailResponse.staccatos().stream().map(StaccatoResponse::staccatoId).toList())
                         .containsExactly(
-                            lastStaccato.getId(), secondStaccato.getId(), firstStaccato.getId())
+                            thirdStaccato.getId(), secondStaccato.getId(), firstStaccato.getId())
         );
     }
 
@@ -417,7 +417,6 @@ class CategoryServiceTest extends ServiceSliceTest {
                 CategoryRequestFixtures.defaultCategoryRequest().build(), member);
         Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2023, 7, 2, 10, 10))
                 .withCategory(category).buildAndSave(staccatoRepository);
         CommentFixtures.defaultComment()
                 .withStaccato(staccato)

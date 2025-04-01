@@ -283,9 +283,9 @@ class CategoryControllerTest extends ControllerTest {
         Category category = CategoryFixtures.defaultCategory()
                 .withId(categoryId).buildWithMember(member);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
+                .withId(1L)
                 .withCategory(category)
-                .withStaccatoImages(List.of("image.jpg")).build();
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
@@ -305,10 +305,10 @@ class CategoryControllerTest extends ControllerTest {
                     ],
                     "staccatos": [
                             {
-                                "staccatoId": null,
+                                "staccatoId": 1,
                                 "staccatoTitle": "staccatoTitle",
-                                "staccatoImageUrl": "image.jpg",
-                                "visitedAt": "2024-07-01T10:00:00"
+                                "staccatoImageUrl": "https://example.com/staccatoImage.jpg",
+                                "visitedAt": "2024-06-01T00:00:00"
                             }
                     ]
                 }
@@ -334,9 +334,9 @@ class CategoryControllerTest extends ControllerTest {
                 .withTerm(null, null)
                 .buildWithMember(member);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.of(2024, 7, 1, 10, 0))
+                .withId(1L)
                 .withCategory(category)
-                .withStaccatoImages(List.of("image.jpg")).build();
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
             staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
@@ -355,10 +355,10 @@ class CategoryControllerTest extends ControllerTest {
                     ],
                     "staccatos": [
                             {
-                                "staccatoId": null,
+                                "staccatoId": 1,
                                 "staccatoTitle": "staccatoTitle",
-                                "staccatoImageUrl": "image.jpg",
-                                "visitedAt": "2024-07-01T10:00:00"
+                                "staccatoImageUrl": "https://example.com/staccatoImage.jpg",
+                                "visitedAt": "2024-06-01T00:00:00"
                             }
                     ]
                 }

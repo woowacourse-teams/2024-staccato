@@ -127,11 +127,11 @@ class StaccatoTest {
     void thumbnail(){
         // given
         Category category = CategoryFixtures.defaultCategory().build();
-        String thumbnail = "1.png";
+        String thumbnail = "https://example.com/staccatoImage1.jpg";
 
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
-                .withStaccatoImages(List.of(thumbnail, "2.png")).build();
+                .withStaccatoImages(List.of(thumbnail, "https://example.com/staccatoImage2.jpg")).build();
 
         // when
         String result = staccato.thumbnailUrl();

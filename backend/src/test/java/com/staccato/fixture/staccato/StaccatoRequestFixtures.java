@@ -13,8 +13,8 @@ public class StaccatoRequestFixtures {
                 .withStaccatoTitle("staccatoTitle")
                 .withPlaceName("placeName")
                 .withAddress("address")
-                .withLatitude(BigDecimal.ONE)
-                .withLongitude(BigDecimal.ONE)
+                .withLatitude(BigDecimal.ZERO)
+                .withLongitude(BigDecimal.ZERO)
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0));
     }
 
