@@ -8,7 +8,6 @@ import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.core.util.Pair
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
@@ -31,7 +30,6 @@ class CategoryCreationActivity :
     private val viewModel: CategoryCreationViewModel by viewModels()
 
     private val photoAttachFragment = PhotoAttachFragment()
-    private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
     private var currentSnackBar: Snackbar? = null
 
@@ -57,7 +55,7 @@ class CategoryCreationActivity :
 
     override fun onPhotoAttachClicked() {
         if (!photoAttachFragment.isAdded) {
-            photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+            photoAttachFragment.show(supportFragmentManager, PhotoAttachFragment.TAG)
         }
     }
 
