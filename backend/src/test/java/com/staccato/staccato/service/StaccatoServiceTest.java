@@ -501,14 +501,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
     @Test
     void readSharedStaccatoByToken() {
         // given
-        Member member1 = MemberFixtures.defaultMember()
-                .withNickname("staccato")
-                .withImageUrl("image.jpg")
-                .buildAndSave(memberRepository);
-        Member member2 = MemberFixtures.defaultMember()
-                .withNickname("staccato2")
-                .withImageUrl("image2.jpg")
-                .buildAndSave(memberRepository);
+        Member member1 = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member member2 = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .buildAndSaveWithMember(member1, categoryRepository);
 

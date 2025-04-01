@@ -14,7 +14,7 @@ public class CategoryFixtures {
 
     public static CategoryBuilder defaultCategory() {
         return new CategoryBuilder()
-                .withThumbnailUrl("https://example.com/categoryThumbnailUrl.jpg")
+                .withThumbnailUrl("https://example.com/categoryThumbnail.jpg")
                 .withTitle("categoryTitle")
                 .withDescription("categoryDescription")
                 .withTerm(LocalDate.of(2024, 1, 1),

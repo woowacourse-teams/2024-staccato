@@ -129,9 +129,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         CategoryRequest categoryRequest = CategoryRequestFixtures.defaultCategoryRequest().build();
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember()
-                .withNickname("other")
-                .buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         categoryService.createCategory(categoryRequest, otherMember);
 
         // when & then
@@ -232,12 +230,8 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void cannotReadCategoryByIdIfNotOwner() {
         // given
-        Member member = MemberFixtures.defaultMember()
-                .withNickname("member")
-                .buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember()
-                .withNickname("otherMember")
-                .buildAndSave(memberRepository);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
             CategoryRequestFixtures.defaultCategoryRequest().build(), member);
@@ -354,12 +348,8 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void cannotUpdateCategoryIfNotOwner() {
         // given
-        Member member = MemberFixtures.defaultMember()
-                .withNickname("member")
-                .buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember()
-                .withNickname("otherMember")
-                .buildAndSave(memberRepository);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         CategoryRequest categoryRequest = CategoryRequestFixtures.defaultCategoryRequest().build();
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
                 CategoryRequestFixtures.defaultCategoryRequest().build(), member);
@@ -449,12 +439,8 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void cannotDeleteCategoryIfNotOwner() {
         // given
-        Member member = MemberFixtures.defaultMember()
-                .withNickname("member")
-                .buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember()
-                .withNickname("otherMember")
-                .buildAndSave(memberRepository);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
                 CategoryRequestFixtures.defaultCategoryRequest().build(), member);
 

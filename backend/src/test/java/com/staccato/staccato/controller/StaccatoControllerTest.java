@@ -442,10 +442,10 @@ class StaccatoControllerTest extends ControllerTest {
                 .withId(1L)
                 .withStaccatoImages(List.of("image1.jpg", "image2.jpg")).build();
         Member member1 = MemberFixtures.defaultMember()
-                .withNickname("staccato1")
+                .withNickname("nickname1")
                 .withImageUrl("memberImageUrl1.jpg").build();
         Member member2 = MemberFixtures.defaultMember()
-                .withNickname("staccato2")
+                .withNickname("nickname2")
                 .withImageUrl("memberImageUrl2.jpg").build();
         Comment comment1 = CommentFixtures.defaultComment()
                 .withStaccato(staccato)
@@ -459,7 +459,7 @@ class StaccatoControllerTest extends ControllerTest {
                 {
                     "staccatoId": 1,
                     "expiredAt": "2024-07-02T10:00:00",
-                    "nickname": "staccato1",
+                    "nickname": "nickname1",
                     "staccatoImageUrls": [
                         "image1.jpg",
                         "image2.jpg"
@@ -471,12 +471,12 @@ class StaccatoControllerTest extends ControllerTest {
                     "feeling": "nothing",
                     "comments": [
                         {
-                            "nickname": "staccato1",
+                            "nickname": "nickname1",
                             "content": "commentContent",
                             "memberImageUrl": "memberImageUrl1.jpg"
                         },
                         {
-                            "nickname": "staccato2",
+                            "nickname": "nickname2",
                             "content": "commentContent",
                             "memberImageUrl": "memberImageUrl2.jpg"
                         }

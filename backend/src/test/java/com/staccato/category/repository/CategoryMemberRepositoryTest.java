@@ -99,12 +99,10 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByCategoryIdInBulk() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member member2 = MemberFixtures.defaultMember()
-                .withNickname("hotea")
-                .buildAndSave(memberRepository);
+        Member member1 = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member member2 = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        CategoryMember categoryMember = categoryMemberRepository.save(new CategoryMember(member, category));
+        CategoryMember categoryMember = categoryMemberRepository.save(new CategoryMember(member1, category));
         CategoryMember categoryMember2 = categoryMemberRepository.save(new CategoryMember(member2, category));
 
         // when

@@ -40,9 +40,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
     void findAllByCategory_CategoryMembers_Member() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member anotherMember = MemberFixtures.defaultMember()
-                .withNickname("anotherMember")
-                .buildAndSave(memberRepository);
+        Member anotherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category1 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
         Category anotherMemberCategory = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);

@@ -10,7 +10,8 @@ public class MemberFixtures {
 
     public static MemberBuilder defaultMember() {
         return new MemberBuilder()
-                .withNickname("staccato")
+                .withNickname("nickname")
+                .withImageUrl("https://example.com/memberImage.png")
                 .withCode(UUID.randomUUID().toString());
     }
 
@@ -20,6 +21,11 @@ public class MemberFixtures {
         String imageUrl;
         String code;
         Boolean isDeleted = false;
+
+        public MemberBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
 
         public MemberBuilder withNickname(String nickname) {
             this.nickname = new Nickname(nickname);
