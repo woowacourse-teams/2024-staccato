@@ -8,7 +8,7 @@ import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
-import com.staccato.comment.service.dto.request.CommentRequestV2;
+import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
@@ -16,8 +16,8 @@ import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
+import com.staccato.fixture.comment.CommentRequestFixtures;
 import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.comment.CommentRequestV2Fixture;
 import com.staccato.fixture.comment.CommentUpdateRequestFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
@@ -48,7 +48,7 @@ class CommentServiceTest extends ServiceSliceTest {
         Member member = memberRepository.save(MemberFixture.create("nickname"));
         Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
         Staccato staccato = staccatoRepository.save(StaccatoFixture.create(category));
-        CommentRequestV2 commentRequest = new CommentRequestV2(staccato.getId(), "content");
+        CommentRequest commentRequest = new CommentRequest(staccato.getId(), "content");
 
         // when
         long commentId = commentService.createComment(commentRequest, member);
@@ -62,7 +62,7 @@ class CommentServiceTest extends ServiceSliceTest {
     void createCommentFailByNotExistStaccato() {
         // given
         Member member = memberRepository.save(MemberFixture.create("nickname"));
-        CommentRequestV2 commentRequest = CommentRequestV2Fixture.create();
+        CommentRequest commentRequest = CommentRequestFixtures.defaultCommentRequest().build();
 
         // when & then
         assertThatThrownBy(() -> commentService.createComment(commentRequest, member))
@@ -78,7 +78,7 @@ class CommentServiceTest extends ServiceSliceTest {
         Member unexpectedMember = memberRepository.save(MemberFixture.create("unexpectedMember"));
         Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(staccatoOwner, categoryRepository);
         staccatoRepository.save(StaccatoFixture.create(category));
-        CommentRequestV2 commentRequest = CommentRequestV2Fixture.create();
+        CommentRequest commentRequest = CommentRequestFixtures.defaultCommentRequest().build();
 
         // when & then
         assertThatThrownBy(() -> commentService.createComment(commentRequest, unexpectedMember))
@@ -94,10 +94,12 @@ class CommentServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory().buildAndSaveWithMember(member, categoryRepository);
         Staccato staccato = staccatoRepository.save(StaccatoFixture.create(category));
         Staccato anotherStaccato = staccatoRepository.save(StaccatoFixture.create(category));
-        CommentRequestV2 commentRequest1 = CommentRequestV2Fixture.create(staccato.getId());
-        CommentRequestV2 commentRequest2 = CommentRequestV2Fixture.create(staccato.getId());
-        CommentRequestV2 commentRequestOfAnotherStaccato = CommentRequestV2Fixture.create(
-            anotherStaccato.getId());
+        CommentRequest commentRequest1 = CommentRequestFixtures.defaultCommentRequest()
+                .withStaccatoId(staccato.getId()).build();
+        CommentRequest commentRequest2 = CommentRequestFixtures.defaultCommentRequest()
+                .withStaccatoId(staccato.getId()).build();
+        CommentRequest commentRequestOfAnotherStaccato = CommentRequestFixtures.defaultCommentRequest()
+                .withStaccatoId(anotherStaccato.getId()).build();
         long commentId1 = commentService.createComment(commentRequest1, member);
         long commentId2 = commentService.createComment(commentRequest2, member);
         commentService.createComment(commentRequestOfAnotherStaccato, member);

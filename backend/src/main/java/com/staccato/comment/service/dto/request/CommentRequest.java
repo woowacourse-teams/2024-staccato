@@ -12,7 +12,7 @@ import com.staccato.staccato.domain.Staccato;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "댓글 생성 시 요청 형식입니다.")
-public record CommentRequestV2(
+public record CommentRequest(
         @Schema(example = "1")
         @NotNull(message = "스타카토를 선택해주세요.")
         @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.")

@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.staccato.ControllerTest;
-import com.staccato.comment.service.dto.request.CommentRequestV2;
+import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
@@ -40,27 +40,27 @@ public class CommentControllerTest extends ControllerTest {
     static Stream<Arguments> invalidCommentRequestProvider() {
         return Stream.of(
             Arguments.of(
-                new CommentRequestV2(null, "예시 댓글 내용"),
+                new CommentRequest(null, "예시 댓글 내용"),
                 "스타카토를 선택해주세요."
             ),
             Arguments.of(
-                new CommentRequestV2(MIN_STACCATO_ID - 1, "예시 댓글 내용"),
+                new CommentRequest(MIN_STACCATO_ID - 1, "예시 댓글 내용"),
                 "스타카토 식별자는 양수로 이루어져야 합니다."
             ),
             Arguments.of(
-                new CommentRequestV2(MIN_STACCATO_ID, null),
+                new CommentRequest(MIN_STACCATO_ID, null),
                 "댓글 내용을 입력해주세요."
             ),
             Arguments.of(
-                new CommentRequestV2(MIN_STACCATO_ID, ""),
+                new CommentRequest(MIN_STACCATO_ID, ""),
                 "댓글 내용을 입력해주세요."
             ),
             Arguments.of(
-                new CommentRequestV2(MIN_STACCATO_ID, " "),
+                new CommentRequest(MIN_STACCATO_ID, " "),
                 "댓글 내용을 입력해주세요."
             ),
             Arguments.of(
-                new CommentRequestV2(MIN_STACCATO_ID, "1".repeat(MAX_CONTENT_LENGTH + 1)),
+                new CommentRequest(MIN_STACCATO_ID, "1".repeat(MAX_CONTENT_LENGTH + 1)),
                 "댓글은 공백 포함 500자 이하로 입력해주세요."
             )
         );
@@ -91,7 +91,7 @@ public class CommentControllerTest extends ControllerTest {
     @DisplayName("올바르지 않은 형식으로 정보를 입력하면, 댓글을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidCommentRequestProvider")
-    void createCommentFailV2(CommentRequestV2 commentRequestV2, String expectedMessage)
+    void createCommentFailV2(CommentRequest commentRequest, String expectedMessage)
         throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
@@ -101,7 +101,7 @@ public class CommentControllerTest extends ControllerTest {
         // when & then
         mockMvc.perform(post("/comments/v2")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(commentRequestV2))
+                .content(objectMapper.writeValueAsString(commentRequest))
                 .header(HttpHeaders.AUTHORIZATION, "token"))
             .andExpect(status().isBadRequest())
             .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
