@@ -7,6 +7,8 @@ import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -33,6 +35,11 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
     private StaccatoService staccatoService;
     @Autowired
     private MeterRegistry meterRegistry;
+
+    @BeforeEach
+    void clearMeterRegistry() {
+        meterRegistry.clear();
+    }
 
     @DisplayName("기록 상의 날짜를 현재를 기준으로 과거 혹은 미래 인지 매트릭을 통해 표현 할 수 있습니다.")
     @TestFactory
