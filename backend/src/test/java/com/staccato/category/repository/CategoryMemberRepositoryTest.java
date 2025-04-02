@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.staccato.RepositoryTest;
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.category.CategoryMemberFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -39,8 +40,12 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category1 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        categoryMemberRepository.save(new CategoryMember(member, category1));
-        categoryMemberRepository.save(new CategoryMember(member, category2));
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member)
+                .withCategory(category1).buildAndSave(categoryMemberRepository);
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member)
+                .withCategory(category2).buildAndSave(categoryMemberRepository);
 
         // when
         List<CategoryMember> result = categoryMemberRepository.findAllByMemberId(member.getId());
@@ -62,8 +67,12 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
                 .buildAndSave(categoryRepository);
-        categoryMemberRepository.save(new CategoryMember(member, category1));
-        categoryMemberRepository.save(new CategoryMember(member, category2));
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member)
+                .withCategory(category1).buildAndSave(categoryMemberRepository);
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member)
+                .withCategory(category2).buildAndSave(categoryMemberRepository);
 
         // when
         List<CategoryMember> result = categoryMemberRepository.findAllByMemberIdAndDate(
@@ -85,8 +94,12 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
         Category category2 = CategoryFixtures.defaultCategory()
                 .withTerm(null, null)
                 .buildAndSave(categoryRepository);
-        categoryMemberRepository.save(new CategoryMember(member, category1));
-        categoryMemberRepository.save(new CategoryMember(member, category2));
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member)
+                .withCategory(category1).buildAndSave(categoryMemberRepository);
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member)
+                .withCategory(category2).buildAndSave(categoryMemberRepository);
 
         // when
         List<CategoryMember> result = categoryMemberRepository.findAllByMemberIdAndDate(member.getId(), LocalDate.of(2024, 6, 1));
@@ -102,8 +115,12 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
         Member member1 = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Member member2 = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        CategoryMember categoryMember = categoryMemberRepository.save(new CategoryMember(member1, category));
-        CategoryMember categoryMember2 = categoryMemberRepository.save(new CategoryMember(member2, category));
+        CategoryMember categoryMember1 = CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member1)
+                .withCategory(category).buildAndSave(categoryMemberRepository);
+        CategoryMember categoryMember2 = CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member2)
+                .withCategory(category).buildAndSave(categoryMemberRepository);
 
         // when
         categoryMemberRepository.deleteAllByCategoryIdInBulk(category.getId());
@@ -112,7 +129,7 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(categoryMemberRepository.findById(categoryMember.getId()).isEmpty()).isTrue(),
+                () -> assertThat(categoryMemberRepository.findById(categoryMember1.getId()).isEmpty()).isTrue(),
                 () -> assertThat(categoryMemberRepository.findById(categoryMember2.getId()).isEmpty()).isTrue()
         );
     }
