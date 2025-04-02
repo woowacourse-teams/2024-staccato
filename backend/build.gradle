@@ -69,10 +69,6 @@ jacocoTestReport {
 	}
 }
 
-test {
-	systemProperty "JASYPT_PASSWORD", project.findProperty("JASYPT_PASSWORD") ?: ""
-}
-
 /*jacocoTestCoverageVerification {
 	violationRules {
 		rule {
