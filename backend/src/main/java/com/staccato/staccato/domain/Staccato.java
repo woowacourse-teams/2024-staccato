@@ -22,7 +22,6 @@ import jakarta.persistence.PreUpdate;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +30,6 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Staccato extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,6 +67,20 @@ public class Staccato extends BaseEntity {
         this.spot = new Spot(placeName, address, latitude, longitude);
         this.staccatoImages.addAll(staccatoImages, this);
         this.category = category;
+    }
+
+    public Staccato(
+            Long id,
+            LocalDateTime visitedAt,
+            String title,
+            String placeName,
+            String address,
+            BigDecimal latitude,
+            BigDecimal longitude,
+            StaccatoImages staccatoImages,
+            Category category) {
+        this(visitedAt, title, placeName, address, latitude, longitude, staccatoImages, category);
+        this.id = id;
     }
 
     private void validateIsWithinCategoryTerm(LocalDateTime visitedAt, Category category) {

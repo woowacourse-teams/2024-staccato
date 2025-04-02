@@ -14,7 +14,6 @@ import jakarta.validation.constraints.NotNull;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.member.domain.Member;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,6 @@ import lombok.NonNull;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
     @Id

@@ -169,14 +169,17 @@ class StaccatoControllerTest extends ControllerTest {
     void readAllStaccato() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().build();
         StaccatoLocationResponse response1 = new StaccatoLocationResponse(
                 StaccatoFixtures.defaultStaccato()
                         .withId(1L)
+                        .withCategory(category)
                         .withSpot("placeName", "address",
                                 BigDecimal.ZERO, BigDecimal.ZERO).build());
         StaccatoLocationResponse response2 = new StaccatoLocationResponse(
                 StaccatoFixtures.defaultStaccato()
                         .withId(2L)
+                        .withCategory(category)
                         .withSpot("placeName", "address",
                                 new BigDecimal("123.456789"), new BigDecimal("123.456789")).build());
         StaccatoLocationResponses responses = new StaccatoLocationResponses(List.of(response1, response2));
@@ -232,7 +235,7 @@ class StaccatoControllerTest extends ControllerTest {
                      "staccatoTitle": "staccatoTitle",
                      "staccatoImageUrls": ["https://example.com/staccatoImage.jpg"],
                      "visitedAt": "2024-06-01T00:00:00",
-                     "feeling": "happy",
+                     "feeling": "nothing",
                      "placeName": "placeName",
                      "address": "address",
                      "latitude": 0,
@@ -404,8 +407,10 @@ class StaccatoControllerTest extends ControllerTest {
         // given
         String token = "sample-token";
         LocalDateTime expiredAt = LocalDateTime.of(2024, 6, 1, 0, 0, 0);
+        Category category = CategoryFixtures.defaultCategory().build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withId(1L)
+                .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/stacccatoImage1.jpg",
                         "https://example.com/stacccatoImage2.jpg")).build();
         Member member1 = MemberFixtures.defaultMember()
@@ -435,7 +440,7 @@ class StaccatoControllerTest extends ControllerTest {
                     "placeName": "placeName",
                     "address": "address",
                     "visitedAt": "2024-06-01T00:00:00",
-                    "feeling": "happy",
+                    "feeling": "nothing",
                     "comments": [
                         {
                             "nickname": "nickname1",

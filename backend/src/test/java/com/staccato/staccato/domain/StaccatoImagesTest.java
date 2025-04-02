@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,8 +68,7 @@ class StaccatoImagesTest {
     @ParameterizedTest
     void update(List<String> existingImageNames, List<String> updatedImageNames) {
         // given
-        Category category = Category.builder().title("Sample categories").startAt(LocalDate.now().minusDays(1))
-                .endAt(LocalDate.now().plusDays(1)).build();
+        Category category = CategoryFixtures.defaultCategory().build();
         StaccatoImages existingImages = new StaccatoImages(existingImageNames);
         StaccatoImages updatedImages = new StaccatoImages(updatedImageNames);
 

@@ -13,7 +13,6 @@ public class CommentFixtures {
     }
 
     public static class CommentBuilder {
-        Long id;
         String content;
         Staccato staccato;
         Member member;
@@ -34,7 +33,7 @@ public class CommentFixtures {
         }
 
         public Comment build() {
-            return new Comment(id, content, staccato, member);
+            return new Comment(content, staccato, member);
         }
 
         public Comment buildAndSave(CommentRepository repository) {

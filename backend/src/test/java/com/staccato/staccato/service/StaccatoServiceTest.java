@@ -289,7 +289,6 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .buildAndSaveWithMember(member, categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withVisitedAt(LocalDateTime.now())
                 .withCategory(category)
                 .buildAndSaveWithStaccatoImages(List.of("https://example.com/staccatoImage1.jpg", "https://example.com/staccatoImage2.jpg"), staccatoRepository);
         Comment comment = CommentFixtures.defaultComment()
@@ -333,7 +332,6 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Category category = CategoryFixtures.defaultCategory()
                 .buildAndSaveWithMember(member, categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withFeeling("nothing")
                 .withCategory(category).buildAndSave(staccatoRepository);
         FeelingRequest feelingRequest = new FeelingRequest("happy");
 

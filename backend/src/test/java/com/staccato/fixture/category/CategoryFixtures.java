@@ -55,7 +55,7 @@ public class CategoryFixtures {
         }
 
         public Category build() {
-            return new Category(id, thumbnailUrl, title, description, term, members);
+            return new Category(id, thumbnailUrl, title, description, term.getStartAt(), term.getEndAt());
         }
 
         public Category buildWithMember(Member member) {

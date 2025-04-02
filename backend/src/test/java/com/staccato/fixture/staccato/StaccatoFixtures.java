@@ -18,7 +18,6 @@ public class StaccatoFixtures {
         return new StaccatoBuilder()
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .withTitle("staccatoTitle")
-                .withFeeling("happy")
                 .withSpot("placeName", "address", BigDecimal.ZERO.setScale(14), BigDecimal.ZERO.setScale(14));
     }
 
@@ -26,7 +25,6 @@ public class StaccatoFixtures {
         Long id;
         LocalDateTime visitedAt;
         String title;
-        Feeling feeling = Feeling.NOTHING;
         Spot spot;
         Category category;
         StaccatoImages staccatoImages = new StaccatoImages(List.of());
@@ -46,11 +44,6 @@ public class StaccatoFixtures {
             return this;
         }
 
-        public StaccatoBuilder withFeeling(String feeling) {
-            this.feeling = Feeling.match(feeling);
-            return this;
-        }
-
         public StaccatoBuilder withSpot(String placeName, String address, BigDecimal latitude, BigDecimal longitude) {
             this.spot = new Spot(placeName, address, latitude, longitude);
             return this;
@@ -67,7 +60,8 @@ public class StaccatoFixtures {
         }
 
         public Staccato build() {
-            return new Staccato(id, visitedAt, title, feeling, spot, category, staccatoImages);
+            return new Staccato(id, visitedAt, title, spot.getPlaceName(), spot.getAddress(), spot.getLatitude(),
+                    spot.getLongitude(), staccatoImages, category);
         }
 
         public Staccato buildAndSave(StaccatoRepository repository) {

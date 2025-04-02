@@ -17,10 +17,9 @@ public class MemberFixtures {
 
     public static class MemberBuilder {
         Long id;
-        Nickname nickname;
+        String nickname;
         String imageUrl;
         String code;
-        Boolean isDeleted = false;
 
         public MemberBuilder withId(Long id) {
             this.id = id;
@@ -28,7 +27,7 @@ public class MemberFixtures {
         }
 
         public MemberBuilder withNickname(String nickname) {
-            this.nickname = new Nickname(nickname);
+            this.nickname = nickname;
             return this;
         }
 
@@ -43,7 +42,7 @@ public class MemberFixtures {
         }
 
         public Member build() {
-            return new Member(id, nickname, imageUrl, code, isDeleted);
+            return new Member(id, nickname, imageUrl, code);
         }
 
         public Member buildAndSave(MemberRepository repository) {

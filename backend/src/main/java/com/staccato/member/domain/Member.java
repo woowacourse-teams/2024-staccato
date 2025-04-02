@@ -15,7 +15,6 @@ import org.hibernate.annotations.SQLRestriction;
 import com.staccato.config.domain.BaseEntity;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,7 +24,6 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @SQLRestriction("is_deleted = false")
@@ -48,6 +46,11 @@ public class Member extends BaseEntity {
         this.nickname = new Nickname(nickname);
         this.imageUrl = imageUrl;
         this.code = code;
+    }
+
+    public Member(Long id, String nickname, String imageUrl, String code) {
+        this(nickname, imageUrl, code);
+        this.id = id;
     }
 
     public static Member create(String nickname) {

@@ -12,7 +12,6 @@ public class CategoryMemberFixtures {
     }
 
     public static class CategoryMemberBuilder {
-        Long id;
         Member member;
         Category category;
 
@@ -27,7 +26,7 @@ public class CategoryMemberFixtures {
         }
 
         public CategoryMember build() {
-            return new CategoryMember(id, member, category);
+            return new CategoryMember(member, category);
         }
 
         public CategoryMember buildAndSave(CategoryMemberRepository repository) {
