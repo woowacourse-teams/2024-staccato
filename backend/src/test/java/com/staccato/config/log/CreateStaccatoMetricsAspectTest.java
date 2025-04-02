@@ -2,6 +2,7 @@ package com.staccato.config.log;
 
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoRequestFixtures;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -45,8 +46,14 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
         return List.of(
                 dynamicTest("기록 상의 날짜가 과거인 기록과 미래인 기록을 매트릭에 등록합니다.", () -> {
                     // given
-                    StaccatoRequest pastRequest = createRequest(category.getId(), now.minusDays(2));
-                    StaccatoRequest futureRequest = createRequest(category.getId(), now.plusDays(2));
+                    StaccatoRequest pastRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withVisitedAt(now.minusDays(2))
+                            .withCategoryId(category.getId())
+                            .build();
+                    StaccatoRequest futureRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withVisitedAt(now.plusDays(2))
+                            .withCategoryId(category.getId())
+                            .build();
 
                     //when
                     staccatoService.createStaccato(pastRequest, member);
@@ -60,7 +67,10 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
                 }),
                 dynamicTest("기록 상의 날짜가 과거인 기록 작성 요청 → 누적: past:2.0, future:1.0", () -> {
                     // given
-                    StaccatoRequest staccatoRequest = createRequest(category.getId(), now.minusDays(3));
+                    StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withVisitedAt(now.minusDays(3))
+                            .withCategoryId(category.getId())
+                            .build();
 
                     // when
                     staccatoService.createStaccato(staccatoRequest, member);
@@ -84,17 +94,5 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
         return meterRegistry.get("staccato_record_viewpoint")
                 .tag("viewPoint", "past")
                 .counter().count();
-    }
-
-    private StaccatoRequest createRequest(Long categoryId, LocalDateTime localDateTime) {
-        return new StaccatoRequest(
-                "staccatoTitle",
-                "placeName",
-                "address",
-                BigDecimal.ONE,
-                BigDecimal.ONE,
-                localDateTime,
-            categoryId,
-                List.of());
     }
 }

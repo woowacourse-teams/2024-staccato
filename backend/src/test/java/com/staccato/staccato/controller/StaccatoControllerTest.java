@@ -21,6 +21,7 @@ import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
+import com.staccato.fixture.staccato.StaccatoRequestFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
@@ -50,60 +51,33 @@ class StaccatoControllerTest extends ControllerTest {
 
     static Stream<Arguments> invalidStaccatoRequestProvider() {
         return Stream.of(
-            Arguments.of(
-                new StaccatoRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE,
-                    BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 0L,
-                    List.of("https://example.com/images/namsan_tower.jpg")),
-                "카테고리 식별자는 양수로 이루어져야 합니다."
-            ),
-            Arguments.of(
-                new StaccatoRequest(null, "placeName", "address", BigDecimal.ONE, BigDecimal.ONE,
-                    LocalDateTime.of(2023, 7, 1, 10, 0), 1L,
-                    List.of("https://example.com/images/namsan_tower.jpg")),
-                "스타카토 제목을 입력해주세요."
-            ),
-            Arguments.of(
-                new StaccatoRequest("  ", "placeName", "address", BigDecimal.ONE, BigDecimal.ONE,
-                    LocalDateTime.of(2023, 7, 1, 10, 0), 1L,
-                    List.of("https://example.com/images/namsan_tower.jpg")),
-                "스타카토 제목을 입력해주세요."
-            ),
-            Arguments.of(
-                new StaccatoRequest("staccatoTitle", null, "address", BigDecimal.ONE,
-                    BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L,
-                    List.of("https://example.com/images/namsan_tower.jpg")),
-                "장소 이름을 입력해주세요."
-            ),
-            Arguments.of(
-                new StaccatoRequest("가".repeat(31), "placeName", "address", BigDecimal.ONE,
-                    BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L,
-                    List.of("https://example.com/images/namsan_tower.jpg")),
-                "스타카토 제목은 공백 포함 30자 이하로 설정해주세요."
-            ),
-            Arguments.of(
-                new StaccatoRequest("staccatoTitle", "placeName", "address", null, BigDecimal.ONE,
-                    LocalDateTime.of(2023, 7, 1, 10, 0), 1L,
-                    List.of("https://example.com/images/namsan_tower.jpg")),
-                "스타카토의 위도를 입력해주세요."
-            ),
-            Arguments.of(
-                new StaccatoRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE, null,
-                    LocalDateTime.of(2023, 7, 1, 10, 0), 1L,
-                    List.of("https://example.com/images/namsan_tower.jpg")),
-                "스타카토의 경도를 입력해주세요."
-            ),
-            Arguments.of(
-                new StaccatoRequest("staccatoTitle", "placeName", null, BigDecimal.ONE,
-                    BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L,
-                    List.of("https://example.com/images/namsan_tower.jpg")),
-                "스타카토의 주소를 입력해주세요."
-            ),
-            Arguments.of(
-                new StaccatoRequest("staccatoTitle", "placeName", "address", BigDecimal.ONE,
-                    BigDecimal.ONE, null, 1L,
-                    List.of("https://example.com/images/namsan_tower.jpg")),
-                "스타카토 날짜를 입력해주세요."
-            )
+            Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withCategoryId(0L).build(),
+                    "카테고리 식별자는 양수로 이루어져야 합니다."),
+            Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withStaccatoTitle(null).build(),
+                    "스타카토 제목을 입력해주세요."),
+            Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withStaccatoTitle("").build(),
+                    "스타카토 제목을 입력해주세요."),
+            Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withPlaceName(null).build(),
+                    "장소 이름을 입력해주세요."),
+            Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withStaccatoTitle("가".repeat(31)).build(),
+                    "스타카토 제목은 공백 포함 30자 이하로 설정해주세요."),
+            Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withLatitude(null).build(),
+                    "스타카토의 위도를 입력해주세요."),
+            Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withLongitude(null).build(),
+                    "스타카토의 경도를 입력해주세요."),
+            Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withAddress(null).build(),
+                    "스타카토의 주소를 입력해주세요."),
+            Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withVisitedAt(null).build(),
+                    "스타카토 날짜를 입력해주세요.")
         );
     }
 
@@ -173,11 +147,10 @@ class StaccatoControllerTest extends ControllerTest {
     @DisplayName("사용자가 잘못된 요청 형식으로 정보를 입력하면, 스타카토를 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidStaccatoRequestProvider")
-    void failCreateStaccato(StaccatoRequest staccatoRequest, String expectedMessage)
-        throws Exception {
+    void failCreateStaccato(StaccatoRequest staccatoRequest, String expectedMessage) throws Exception {
         // given
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-            HttpStatus.BAD_REQUEST.toString(), expectedMessage);
+                HttpStatus.BAD_REQUEST.toString(), expectedMessage);
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         when(staccatoService.createStaccato(any(StaccatoRequest.class),
             any(Member.class))).thenReturn(new StaccatoIdResponse(1L));
@@ -299,10 +272,10 @@ class StaccatoControllerTest extends ControllerTest {
                 "address": "address",
                 "latitude": 1.0,
                 "longitude": 1.0,
-                "visitedAt": "2023-07-01T10:00:00",
+                "visitedAt": "2023-06-01T00:00:00",
                 "categoryId": 1,
                 "staccatoImageUrls": [
-                    "https://example.com/images/namsan_tower.jpg"
+                    "https://example.com/staccatoImage.jpg"
                 ]
             }
             """;
@@ -323,14 +296,11 @@ class StaccatoControllerTest extends ControllerTest {
         long staccatoId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
-        StaccatoRequest staccatoRequest = new StaccatoRequest("staccatoTitle", "placeName",
-            "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.now(), 1L,
-            List.of("https://example.com/images/namsan_tower1.jpg",
-                "https://example.com/images/namsan_tower2.jpg",
-                "https://example.com/images/namsan_tower3.jpg",
-                "https://example.com/images/namsan_tower4.jpg",
-                "https://example.com/images/namsan_tower5.jpg",
-                "https://example.com/images/namsan_tower6.jpg"));
+        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withStaccatoImageUrls(List.of(
+                        "https://example.com/staccatoImage1.jpg", "https://example.com/staccatoImage2.jpg",
+                        "https://example.com/staccatoImage3.jpg", "https://example.com/staccatoImage4.jpg",
+                        "https://example.com/staccatoImage5.jpg", "https://example.com/staccatoImage6.jpg")).build();
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
 
         // when & then
@@ -347,9 +317,7 @@ class StaccatoControllerTest extends ControllerTest {
     void failUpdateStaccatoById() throws Exception {
         // given
         long staccatoId = 0L;
-        StaccatoRequest staccatoRequest = new StaccatoRequest("staccatoTitle", "placeName",
-            "address", BigDecimal.ONE, BigDecimal.ONE, LocalDateTime.of(2023, 7, 1, 10, 0), 1L,
-            List.of("https://example.com/images/namsan_tower.jpg"));
+        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest().build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
@@ -435,7 +403,7 @@ class StaccatoControllerTest extends ControllerTest {
     void readSharedStaccatoByToken() throws Exception {
         // given
         String token = "sample-token";
-        LocalDateTime expiredAt = LocalDateTime.of(2024, 7, 2, 10, 0, 0);
+        LocalDateTime expiredAt = LocalDateTime.of(2024, 6, 1, 0, 0, 0);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withId(1L)
                 .withStaccatoImages(List.of("https://example.com/stacccatoImage1.jpg",
@@ -457,7 +425,7 @@ class StaccatoControllerTest extends ControllerTest {
         String expectedResponse = """
                 {
                     "staccatoId": 1,
-                    "expiredAt": "2024-07-02T10:00:00",
+                    "expiredAt": "2024-06-01T00:00:00",
                     "nickname": "nickname1",
                     "staccatoImageUrls": [
                         "https://example.com/stacccatoImage1.jpg",

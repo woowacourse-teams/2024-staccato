@@ -15,7 +15,8 @@ public class StaccatoRequestFixtures {
                 .withAddress("address")
                 .withLatitude(BigDecimal.ZERO)
                 .withLongitude(BigDecimal.ZERO)
-                .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0));
+                .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
+                .withCategoryId(1L);
     }
 
     public static class StaccatoBuilder {

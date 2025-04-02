@@ -17,6 +17,8 @@ import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ExceptionResponse;
 
+import com.staccato.fixture.comment.CommentRequestFixtures;
+import com.staccato.fixture.comment.CommentUpdateRequestFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 
 import java.util.List;
@@ -39,30 +41,24 @@ public class CommentControllerTest extends ControllerTest {
 
     static Stream<Arguments> invalidCommentRequestProvider() {
         return Stream.of(
-            Arguments.of(
-                new CommentRequest(null, "예시 댓글 내용"),
-                "스타카토를 선택해주세요."
-            ),
-            Arguments.of(
-                new CommentRequest(MIN_STACCATO_ID - 1, "예시 댓글 내용"),
-                "스타카토 식별자는 양수로 이루어져야 합니다."
-            ),
-            Arguments.of(
-                new CommentRequest(MIN_STACCATO_ID, null),
-                "댓글 내용을 입력해주세요."
-            ),
-            Arguments.of(
-                new CommentRequest(MIN_STACCATO_ID, ""),
-                "댓글 내용을 입력해주세요."
-            ),
-            Arguments.of(
-                new CommentRequest(MIN_STACCATO_ID, " "),
-                "댓글 내용을 입력해주세요."
-            ),
-            Arguments.of(
-                new CommentRequest(MIN_STACCATO_ID, "1".repeat(MAX_CONTENT_LENGTH + 1)),
-                "댓글은 공백 포함 500자 이하로 입력해주세요."
-            )
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withStaccatoId(null).build(),
+                    "스타카토를 선택해주세요."),
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withStaccatoId(MIN_STACCATO_ID - 1).build(),
+                    "스타카토 식별자는 양수로 이루어져야 합니다."),
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withContent(null).build(),
+                    "댓글 내용을 입력해주세요."),
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withContent("").build(),
+                    "댓글 내용을 입력해주세요."),
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withContent("  ").build(),
+                    "댓글 내용을 입력해주세요."),
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withContent("1".repeat(MAX_CONTENT_LENGTH + 1)).build(),
+                    "댓글은 공백 포함 500자 이하로 입력해주세요.")
         );
     }
 
@@ -179,7 +175,7 @@ public class CommentControllerTest extends ControllerTest {
     void updateCommentFail() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
-        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest("updatedContent");
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
 
@@ -199,7 +195,8 @@ public class CommentControllerTest extends ControllerTest {
     void updateCommentFailByBlank(String updatedContent) throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
-        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest()
+                .withContent(updatedContent).build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "댓글 내용을 입력해주세요.");
 

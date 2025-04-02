@@ -20,11 +20,11 @@ import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.category.CategoryRequestFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -47,30 +47,28 @@ class CategoryControllerTest extends ControllerTest {
 
     static Stream<CategoryRequest> categoryRequestProvider() {
         return Stream.of(
-                new CategoryRequest(null, "2023 여름 휴가", "친구들과 함께한 여름 휴가 카테고리", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                new CategoryRequest("https://example.com/categories/geumohrm.jpg", "2023 여름 휴가", null, LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                new CategoryRequest("https://example.com/categories/geumohrm.jpg", "2023 여름 휴가", null, null, null)
+                CategoryRequestFixtures.defaultCategoryRequest()
+                        .withTerm(LocalDate.of(2024, 1, 1),
+                                LocalDate.of(2024, 12, 31)).build(),
+                CategoryRequestFixtures.defaultCategoryRequest()
+                        .withTerm(null, null).build()
         );
     }
 
     static Stream<Arguments> invalidCategoryRequestProvider() {
         return Stream.of(
-                Arguments.of(
-                        new CategoryRequest("https://example.com/categories/geumohrm.jpg", null, "친구들과 함께한 여름 휴가 카테고리", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                        "카테고리 제목을 입력해주세요."
-                ),
-                Arguments.of(
-                        new CategoryRequest("https://example.com/categories/geumohrm.jpg", "  ", "친구들과 함께한 여름 휴가 카테고리", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                        "카테고리 제목을 입력해주세요."
-                ),
-                Arguments.of(
-                        new CategoryRequest("https://example.com/categories/geumohrm.jpg", "가".repeat(31), "친구들과 함께한 여름 휴가 카테고리", LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                        "제목은 공백 포함 30자 이하로 설정해주세요."
-                ),
-                Arguments.of(
-                        new CategoryRequest("https://example.com/categories/geumohrm.jpg", "2023 여름 휴가", "가".repeat(501), LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10)),
-                        "내용의 최대 허용 글자수는 공백 포함 500자입니다."
-                )
+                Arguments.of(CategoryRequestFixtures.defaultCategoryRequest()
+                                .withCategoryTitle(null).build(),
+                        "카테고리 제목을 입력해주세요."),
+                Arguments.of(CategoryRequestFixtures.defaultCategoryRequest()
+                                .withCategoryTitle("  ").build(),
+                        "카테고리 제목을 입력해주세요."),
+                Arguments.of(CategoryRequestFixtures.defaultCategoryRequest()
+                                .withCategoryTitle("가".repeat(31)).build(),
+                        "제목은 공백 포함 30자 이하로 설정해주세요."),
+                Arguments.of(CategoryRequestFixtures.defaultCategoryRequest()
+                                .withDescription("가".repeat(501)).build(),
+                        "내용의 최대 허용 글자수는 공백 포함 500자입니다.")
         );
     }
 

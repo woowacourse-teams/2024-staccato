@@ -7,14 +7,14 @@ import org.junit.jupiter.api.Test;
 import com.staccato.exception.StaccatoException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class TermTest {
     @DisplayName("끝 날짜는 시작 날짜보다 앞설 수 없다.")
     @Test
     void validateDate() {
-        assertThatCode(() -> new Term(LocalDate.now().plusDays(1), LocalDate.now()))
+        assertThatThrownBy(() -> new Term(LocalDate.of(2024, 12, 31),
+                LocalDate.of(2024, 12, 30)))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("끝 날짜가 시작 날짜보다 앞설 수 없어요.");
     }
@@ -23,20 +23,22 @@ class TermTest {
     @Test
     void isOutOfTerm() {
         // given
-        Term term = new Term(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
+        Term term = new Term(LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31));
 
         // when & then
-        assertThat(term.doesNotContain(LocalDateTime.of(2023, 7, 11, 10, 0))).isTrue();
+        assertThat(term.doesNotContain(LocalDateTime.of(2023, 6, 1, 0, 0))).isTrue();
     }
 
     @DisplayName("특정 날짜가 카테고리 기간에 속하면 거짓을 반환한다.")
     @Test
     void isInTerm() {
         // given
-        Term term = new Term(LocalDate.of(2023, 7, 1), LocalDate.of(2023, 7, 10));
+        Term term = new Term(LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31));
 
         // when & then
-        assertThat(term.doesNotContain(LocalDateTime.of(2023, 7, 1, 10, 0))).isFalse();
+        assertThat(term.doesNotContain(LocalDateTime.of(2024, 6, 1, 0, 0))).isFalse();
     }
 
     @DisplayName("카테고리 기간이 없다면, 어떤 날짜든 거짓을 반환한다.")
@@ -46,13 +48,13 @@ class TermTest {
         Term term = new Term(null, null);
 
         // when & then
-        assertThat(term.doesNotContain(LocalDateTime.of(2023, 7, 11, 10, 0))).isFalse();
+        assertThat(term.doesNotContain(LocalDateTime.of(2024, 6, 1, 0, 0))).isFalse();
     }
 
     @DisplayName("끝 날짜는 있는데, 시작 날짜가 누락되면 예외를 발생한다.")
     @Test
     void cannotCreateTermByNoStartAt() {
-        assertThatThrownBy(() -> new Term(null, LocalDate.now()))
+        assertThatThrownBy(() -> new Term(null, LocalDate.of(2024, 12, 31)))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("카테고리의 시작 날짜와 끝 날짜는 함께 입력되거나, 함께 비워져 있어야 합니다.");
     }
@@ -60,7 +62,7 @@ class TermTest {
     @DisplayName("시작 날짜는 있는데, 끝 날짜가 누락되면 예외를 발생한다.")
     @Test
     void cannotCreateTermByNoEndAt() {
-        assertThatThrownBy(() -> new Term(LocalDate.now(), null))
+        assertThatThrownBy(() -> new Term(LocalDate.of(2024, 1, 1), null))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("카테고리의 시작 날짜와 끝 날짜는 함께 입력되거나, 함께 비워져 있어야 합니다.");
     }
@@ -69,7 +71,8 @@ class TermTest {
     @Test
     void isNotEmpty() {
         // given
-        Term term = new Term(LocalDate.now(), LocalDate.now().plusDays(3));
+        Term term = new Term(LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31));
 
         // when
         boolean result = term.isExist();

@@ -95,11 +95,8 @@ class AuthServiceTest extends ServiceSliceTest {
     void createTokenByCode() {
         // given
         String code = UUID.randomUUID().toString();
-        Member member = Member.builder()
-            .nickname("staccato")
-            .code(code)
-            .build();
-        memberRepository.save(member);
+        Member member = MemberFixtures.defaultMember()
+                .withCode(code).buildAndSave(memberRepository);
 
         // when
         LoginResponse loginResponse = authService.loginByCode(code);

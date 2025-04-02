@@ -66,7 +66,8 @@ class CategoryTest {
     void isNotSameTitle() {
         // given
         String title = "title";
-        Category category = Category.builder().title(title).build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withTitle(title).build();
 
         // when
         boolean result = category.isNotSameTitle(title);
@@ -79,11 +80,9 @@ class CategoryTest {
     @Test
     void hasTerm() {
         // given
-        Category category = Category.builder()
-                .title("title")
-                .startAt(LocalDate.now())
-                .endAt(LocalDate.now().plusDays(4))
-                .build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31)).build();
 
         // when
         boolean result = category.hasTerm();
@@ -96,9 +95,8 @@ class CategoryTest {
     @Test
     void doesNotHaveTerm() {
         // given
-        Category category = Category.builder()
-                .title("title")
-                .build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(null, null).build();
 
         // when
         boolean result = category.hasTerm();

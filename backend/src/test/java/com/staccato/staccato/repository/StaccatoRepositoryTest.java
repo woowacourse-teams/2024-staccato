@@ -3,10 +3,10 @@ package com.staccato.staccato.repository;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.category.CategoryMemberFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.staccato.domain.Staccato;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import jakarta.persistence.EntityManager;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,9 +43,15 @@ class StaccatoRepositoryTest extends RepositoryTest {
         Category category1 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
         Category anotherMemberCategory = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        categoryMemberRepository.save(new CategoryMember(member, category1));
-        categoryMemberRepository.save(new CategoryMember(member, category2));
-        categoryMemberRepository.save(new CategoryMember(anotherMember, anotherMemberCategory));
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member)
+                .withCategory(category1).buildAndSave(categoryMemberRepository);
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member)
+                .withCategory(category2).buildAndSave(categoryMemberRepository);
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(anotherMember)
+                .withCategory(anotherMemberCategory).buildAndSave(categoryMemberRepository);
 
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category1).buildAndSave(staccatoRepository);
@@ -77,7 +82,9 @@ class StaccatoRepositoryTest extends RepositoryTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        categoryMemberRepository.save(new CategoryMember(member, category));
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member)
+                .withCategory(category).buildAndSave(categoryMemberRepository);
 
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
@@ -106,7 +113,9 @@ class StaccatoRepositoryTest extends RepositoryTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        categoryMemberRepository.save(new CategoryMember(member, category));
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member)
+                .withCategory(category).buildAndSave(categoryMemberRepository);
 
         Staccato staccato1 = StaccatoFixtures.defaultStaccato()
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
@@ -134,7 +143,9 @@ class StaccatoRepositoryTest extends RepositoryTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        categoryMemberRepository.save(new CategoryMember(member, category));
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withMember(member)
+                .withCategory(category).buildAndSave(categoryMemberRepository);
 
         Staccato staccato1 = StaccatoFixtures.defaultStaccato()
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
