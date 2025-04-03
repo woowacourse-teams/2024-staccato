@@ -38,6 +38,7 @@ class CategoryCreationActivity :
         navigateToMap()
         updateCategoryPeriod()
         observeCreatedCategoryId()
+        observeIsPosting()
         showErrorToast()
         handleError()
     }
@@ -49,7 +50,6 @@ class CategoryCreationActivity :
     }
 
     override fun onSaveClicked() {
-        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         viewModel.createCategory()
     }
 
@@ -104,14 +104,22 @@ class CategoryCreationActivity :
             val resultIntent = Intent()
             resultIntent.putExtra(CATEGORY_ID_KEY, categoryId)
             setResult(RESULT_OK, resultIntent)
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
+        }
+    }
+
+    private fun observeIsPosting() {
+        viewModel.isPosting.observe(this) {
+            if (it) {
+                window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
+            } else {
+                window.clearFlags(FLAG_NOT_TOUCHABLE)
+            }
         }
     }
 
     private fun showErrorToast() {
         viewModel.errorMessage.observe(this) {
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
     }
@@ -130,7 +138,6 @@ class CategoryCreationActivity :
     }
 
     private fun handleCreateException(error: CategoryCreationError.CategoryCreation) {
-        window.clearFlags(FLAG_NOT_TOUCHABLE)
         showExceptionSnackBar(error.message) { recreateCategory() }
     }
 

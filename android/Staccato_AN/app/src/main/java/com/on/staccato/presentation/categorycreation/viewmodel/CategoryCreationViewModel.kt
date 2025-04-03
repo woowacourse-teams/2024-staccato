@@ -147,6 +147,7 @@ class CategoryCreationViewModel
         }
 
         private fun setCreatedCategoryId(categoryCreationResponse: CategoryCreationResponse) {
+            _isPosting.value = false
             _createdCategoryId.value = categoryCreationResponse.categoryId
         }
 
