@@ -24,5 +24,6 @@ public class SwaggerExamples {
             "\"https://image.staccato.kr/web/share/sad.png\"]";
     public static final String FEELING = "happy";
     public static final String EXPIRED_AT = "2025-06-01T00:00:00";
+    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
     public static final String SHARE_LINK = "https://staccato.kr/share/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
 }
