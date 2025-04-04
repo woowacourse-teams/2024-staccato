@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.app.ActivityOptionsCompat
+import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityRecoveryBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.recovery.viewmodel.RecoveryViewModel
+import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,6 +35,14 @@ class RecoveryActivity : BindingActivity<ActivityRecoveryBinding>() {
     private fun observeViewModel() {
         recoveryViewModel.isRecoverySuccess.observe(this, ::checkRecoverySuccess)
         recoveryViewModel.errorMessage.observe(this, ::showToast)
+        recoveryViewModel.exception.observe(this) { state ->
+            binding.root.showSnackBarWithAction(
+                message = getString(state.messageId),
+                actionLabel = R.string.all_retry,
+                onAction = { recoveryViewModel.onRecoveryClicked() },
+                length = Snackbar.LENGTH_INDEFINITE,
+            )
+        }
     }
 
     private fun checkRecoverySuccess(success: Boolean) {

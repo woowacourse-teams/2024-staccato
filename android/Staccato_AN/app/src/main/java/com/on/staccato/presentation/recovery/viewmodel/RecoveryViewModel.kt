@@ -3,14 +3,14 @@ package com.on.staccato.presentation.recovery.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.onException
+import com.on.staccato.data.onException2
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.recovery.RecoveryHandler
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,6 +31,10 @@ class RecoveryViewModel
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
 
+        private val _exception = MutableSingleLiveData<ExceptionState2>()
+        val exception: SingleLiveData<ExceptionState2>
+            get() = _exception
+
         override fun onRecoveryClicked() {
             requestRecovery()
         }
@@ -41,7 +45,7 @@ class RecoveryViewModel
                 repository.fetchTokenWithRecoveryCode(code)
                     .onSuccess { updateIsRecoverySuccess() }
                     .onServerError(::handleError)
-                    .onException(::handleException)
+                    .onException2(::handleException)
             }
         }
 
@@ -53,7 +57,7 @@ class RecoveryViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(state: ExceptionState) {
-            _errorMessage.postValue(state.message)
+        private fun handleException(state: ExceptionState2) {
+            _exception.setValue(state)
         }
     }
