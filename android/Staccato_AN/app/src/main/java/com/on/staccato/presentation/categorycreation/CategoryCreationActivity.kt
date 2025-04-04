@@ -16,8 +16,10 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.photo.FileUiModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.ExceptionState2
+import com.on.staccato.presentation.util.convertCategoryUriToFile
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,7 +69,9 @@ class CategoryCreationActivity :
 
     override fun onUrisSelected(vararg uris: Uri) {
         currentSnackBar?.dismiss()
-        viewModel.createThumbnailUrl(this, uris.first())
+        val uri = uris.first()
+        val file: FileUiModel = convertCategoryUriToFile(this, uri)
+        viewModel.createThumbnailUrl(uri, file)
     }
 
     private fun buildDateRangePicker() =
@@ -135,15 +139,18 @@ class CategoryCreationActivity :
     }
 
     private fun handleCreatePhotoUrlFail(error: CategoryCreationError.Thumbnail) {
-        showExceptionSnackBar(error.state) { reCreateThumbnailUrl(error.uri) }
+        showExceptionSnackBar(error.state) { reCreateThumbnailUrl(error.uri, error.file) }
     }
 
     private fun handleCreateException(error: CategoryCreationError.CategoryCreation) {
         showExceptionSnackBar(error.state) { recreateCategory() }
     }
 
-    private fun reCreateThumbnailUrl(uri: Uri) {
-        viewModel.createThumbnailUrl(this, uri)
+    private fun reCreateThumbnailUrl(
+        uri: Uri,
+        file: FileUiModel,
+    ) {
+        viewModel.createThumbnailUrl(uri, file)
     }
 
     private fun recreateCategory() {

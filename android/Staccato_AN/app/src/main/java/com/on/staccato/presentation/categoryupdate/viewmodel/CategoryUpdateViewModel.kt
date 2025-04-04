@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.categoryupdate.viewmodel
 
-import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,12 +19,18 @@ import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.photo.FileUiModel
+import com.on.staccato.presentation.util.CATEGORY_FILE_CHILD_NAME
 import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
-import com.on.staccato.presentation.util.convertCategoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -105,12 +110,12 @@ class CategoryUpdateViewModel
         }
 
         fun createThumbnailUrl(
-            context: Context,
             uri: Uri,
+            file: FileUiModel,
         ) {
             _isPhotoPosting.value = true
             setThumbnailUri(uri)
-            registerThumbnailJob(context, uri)
+            registerThumbnailJob(uri, file)
         }
 
         fun clearThumbnail() {
@@ -163,10 +168,10 @@ class CategoryUpdateViewModel
         private fun isNewUri(uri: Uri?): Boolean = _thumbnail.value?.isEqualUri(uri) == false
 
         private fun registerThumbnailJob(
-            context: Context,
             uri: Uri,
+            file: FileUiModel,
         ) {
-            val thumbnailJob = createFetchingThumbnailJob(context, uri)
+            val thumbnailJob = createFetchingThumbnailJob(uri, file)
             thumbnailJob.invokeOnCompletion {
                 thumbnailJobs.remove(uri)
             }
@@ -174,19 +179,32 @@ class CategoryUpdateViewModel
         }
 
         private fun createFetchingThumbnailJob(
-            context: Context,
             uri: Uri,
+            file: FileUiModel,
         ): Job {
-            val thumbnailFile = convertCategoryUriToFile(context, uri, IMAGE_FORM_DATA_NAME)
+            val formData = createFormData(file)
+
             return viewModelScope.launch {
                 val result: ApiResult<ImageResponse> =
-                    imageRepository.convertImageFileToUrl(thumbnailFile)
-                result.onSuccess(::setThumbnailUrl)
+                    imageRepository.convertImageFileToUrl(formData)
+                result
+                    .onSuccess(::setThumbnailUrl)
                     .onServerError(::handlePhotoError)
                     .onException { state ->
-                        handlePhotoException(state, uri)
+                        handlePhotoException(state, uri, file)
                     }
             }
+        }
+
+        private fun createFormData(fileUiModel: FileUiModel): MultipartBody.Part {
+            val mediaType: MediaType? = fileUiModel.contentType?.toMediaTypeOrNull()
+            val requestFile: RequestBody = fileUiModel.file.asRequestBody(mediaType)
+
+            return MultipartBody.Part.createFormData(
+                IMAGE_FORM_DATA_NAME,
+                CATEGORY_FILE_CHILD_NAME,
+                requestFile,
+            )
         }
 
         private fun setThumbnailUrl(imageResponse: ImageResponse) {
@@ -202,9 +220,10 @@ class CategoryUpdateViewModel
         private fun handlePhotoException(
             state: ExceptionState,
             uri: Uri,
+            fileUiModel: FileUiModel,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(CategoryUpdateError.Thumbnail(state.message, uri))
+                _error.setValue(CategoryUpdateError.Thumbnail(state.message, uri, fileUiModel))
             }
         }
 
