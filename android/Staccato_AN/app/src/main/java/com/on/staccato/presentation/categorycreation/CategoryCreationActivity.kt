@@ -35,7 +35,7 @@ class CategoryCreationActivity :
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
-        navigateToMap()
+        navigateToHome()
         updateCategoryPeriod()
         observeCreatedCategoryId()
         observeIsPosting()
@@ -85,7 +85,7 @@ class CategoryCreationActivity :
         binding.handler = this
     }
 
-    private fun navigateToMap() {
+    private fun navigateToHome() {
         binding.toolbarCategoryCreation.setNavigationOnClickListener {
             finish()
         }
