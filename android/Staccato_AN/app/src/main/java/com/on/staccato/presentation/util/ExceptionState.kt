@@ -16,7 +16,7 @@ enum class ExceptionState(val message: String) {
 }
 
 enum class ExceptionState2(
-    @StringRes val message: Int,
+    @StringRes val messageId: Int,
 ) {
     NetworkError(R.string.network_error_message),
     RequiredValuesMissing(R.string.required_values_error_message),
