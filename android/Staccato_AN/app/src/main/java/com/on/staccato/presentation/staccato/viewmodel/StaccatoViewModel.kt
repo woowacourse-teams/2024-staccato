@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.onException
+import com.on.staccato.data.onException2
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.Feeling
@@ -14,7 +14,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toStaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.comments.CommentUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,8 +40,8 @@ class StaccatoViewModel
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
 
-        private val _exceptionMessage: MutableSingleLiveData<String> = MutableSingleLiveData()
-        val exceptionMessage: SingleLiveData<String> get() = _exceptionMessage
+        private val _exception: MutableSingleLiveData<ExceptionState2> = MutableSingleLiveData()
+        val exception: SingleLiveData<ExceptionState2> get() = _exception
 
         fun loadStaccato(staccatoId: Long) {
             fetchStaccatoData(staccatoId)
@@ -52,7 +52,7 @@ class StaccatoViewModel
                 staccatoRepository.deleteStaccato(staccatoId)
                     .onSuccess {
                         _isDeleted.postValue(true)
-                    }.onException(::handleException)
+                    }.onException2(::handleException)
                     .onServerError(::handleServerError)
             }
 
@@ -62,7 +62,7 @@ class StaccatoViewModel
                     .onSuccess { staccato ->
                         _staccatoDetail.value = staccato.toStaccatoDetailUiModel()
                         _feeling.value = staccato.feeling
-                    }.onException(::handleException)
+                    }.onException2(::handleException)
                     .onServerError(::handleServerError)
             }
         }
@@ -71,7 +71,7 @@ class StaccatoViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(state: ExceptionState) {
-            _exceptionMessage.postValue(state.message)
+        private fun handleException(state: ExceptionState2) {
+            _exception.setValue(state)
         }
     }

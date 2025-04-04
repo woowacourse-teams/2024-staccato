@@ -229,9 +229,9 @@ class StaccatoFragment :
     }
 
     private fun showExceptionSnackBar() {
-        staccatoViewModel.exceptionMessage.observe(viewLifecycleOwner) { message ->
+        staccatoViewModel.exception.observe(viewLifecycleOwner) { state ->
             view?.showSnackBarWithAction(
-                message = message,
+                message = getString(state.messageId),
                 actionLabel = R.string.all_retry,
                 onAction = ::onRetryAction,
                 Snackbar.LENGTH_INDEFINITE,

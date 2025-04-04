@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.onException
+import com.on.staccato.data.onException2
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.NewComment
@@ -13,7 +13,7 @@ import com.on.staccato.domain.repository.CommentRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toCommentUiModel
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,6 +44,10 @@ class StaccatoCommentsViewModel
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
 
+        private val _exception = MutableSingleLiveData<ExceptionState2>()
+        val exception: SingleLiveData<ExceptionState2>
+            get() = _exception
+
         private var staccatoId: Long = STACCATO_DEFAULT_ID
 
         override fun onSendButtonClicked() {
@@ -64,7 +68,7 @@ class StaccatoCommentsViewModel
                         _isDeleteSuccess.postValue(true)
                     }
                     .onServerError(::handleServerError)
-                    .onException(::handleException)
+                    .onException2(::handleException)
             }
         }
 
@@ -76,7 +80,7 @@ class StaccatoCommentsViewModel
                         setComments(comments.map { it.toCommentUiModel() })
                     }
                     .onServerError(::handleServerError)
-                    .onException(::handleException)
+                    .onException2(::handleException)
             }
         }
 
@@ -97,7 +101,7 @@ class StaccatoCommentsViewModel
                             _isSendingSuccess.postValue(true)
                         }
                         .onServerError(::handleServerError)
-                        .onException(::handleException)
+                        .onException2(::handleException)
                 }
             }
         }
@@ -110,8 +114,8 @@ class StaccatoCommentsViewModel
             _errorMessage.postValue(message)
         }
 
-        private fun handleException(state: ExceptionState) {
-            _errorMessage.postValue(state.message)
+        private fun handleException(state: ExceptionState2) {
+            _exception.setValue(state)
         }
 
         companion object {
