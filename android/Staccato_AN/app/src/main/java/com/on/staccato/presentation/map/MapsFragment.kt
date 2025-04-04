@@ -26,6 +26,7 @@ import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
 import com.on.staccato.presentation.util.showSnackBar
+import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
@@ -84,6 +85,8 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         observeUpdatedStaccato()
         observeLocation()
         observeIsTimelineUpdated()
+        observeErrorMessage()
+        observeException()
     }
 
     override fun onResume() {
@@ -263,6 +266,18 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private fun observeIsTimelineUpdated() {
         sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) {
             if (it) mapsViewModel.loadStaccatos()
+        }
+    }
+
+    private fun observeErrorMessage() {
+        mapsViewModel.errorMessage.observe(this) { message ->
+            showToast(message)
+        }
+    }
+
+    private fun observeException() {
+        mapsViewModel.exception.observe(this) { state ->
+            // TODO - fix: 네트워크 재설정 시 스타카토 마커 재로딩 #709 이슈에서 구현 예정
         }
     }
 
