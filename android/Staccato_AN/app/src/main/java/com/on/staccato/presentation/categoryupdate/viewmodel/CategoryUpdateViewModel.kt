@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.onException
+import com.on.staccato.data.onException2
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.Category
@@ -21,7 +21,7 @@ import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.photo.FileUiModel
 import com.on.staccato.presentation.util.CATEGORY_FILE_CHILD_NAME
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -86,7 +86,7 @@ class CategoryUpdateViewModel
                 result
                     .onSuccess(::initializeCategory)
                     .onServerError(::handleInitializeCategoryError)
-                    .onException(::handleInitializeCategoryException)
+                    .onException2(::handleInitializeCategoryException)
             }
         }
 
@@ -97,7 +97,7 @@ class CategoryUpdateViewModel
                 result
                     .onSuccess { updateSuccessStatus() }
                     .onServerError(::handleUpdateError)
-                    .onException(::handleUpdateException)
+                    .onException2(::handleUpdateException)
             }
         }
 
@@ -190,7 +190,7 @@ class CategoryUpdateViewModel
                 result
                     .onSuccess(::setThumbnailUrl)
                     .onServerError(::handlePhotoError)
-                    .onException { state ->
+                    .onException2 { state ->
                         handlePhotoException(state, uri, file)
                     }
             }
@@ -218,12 +218,12 @@ class CategoryUpdateViewModel
         }
 
         private fun handlePhotoException(
-            state: ExceptionState,
+            state: ExceptionState2,
             uri: Uri,
             fileUiModel: FileUiModel,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(CategoryUpdateError.Thumbnail(state.message, uri, fileUiModel))
+                _error.setValue(CategoryUpdateError.Thumbnail(state, uri, fileUiModel))
             }
         }
 
@@ -231,8 +231,8 @@ class CategoryUpdateViewModel
             _errorMessage.value = message
         }
 
-        private fun handleInitializeCategoryException(state: ExceptionState) {
-            _error.setValue(CategoryUpdateError.CategoryInitialization(state.message))
+        private fun handleInitializeCategoryException(state: ExceptionState2) {
+            _error.setValue(CategoryUpdateError.CategoryInitialization(state))
         }
 
         private fun handleUpdateError(message: String) {
@@ -240,8 +240,8 @@ class CategoryUpdateViewModel
             _errorMessage.value = message
         }
 
-        private fun handleUpdateException(state: ExceptionState) {
+        private fun handleUpdateException(state: ExceptionState2) {
             _isPosting.value = false
-            _error.setValue(CategoryUpdateError.CategoryUpdate(state.message))
+            _error.setValue(CategoryUpdateError.CategoryUpdate(state))
         }
     }

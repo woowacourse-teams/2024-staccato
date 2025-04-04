@@ -18,6 +18,7 @@ import com.on.staccato.presentation.categoryupdate.viewmodel.CategoryUpdateViewM
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.common.photo.FileUiModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
+import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.convertCategoryUriToFile
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
@@ -141,16 +142,16 @@ class CategoryUpdateActivity :
 
     private fun handleInitializeFail(error: CategoryUpdateError.CategoryInitialization) {
         finish()
-        showToast(error.message)
+        showToast(getString(error.state.messageId))
     }
 
     private fun handleCreatePhotoUrlFail(error: CategoryUpdateError.Thumbnail) {
-        showExceptionSnackBar(error.message) { reCreateThumbnailUrl(error.uri, error.file) }
+        showExceptionSnackBar(error.state) { reCreateThumbnailUrl(error.uri, error.file) }
     }
 
     private fun handleCategoryUpdateFail(error: CategoryUpdateError.CategoryUpdate) {
         window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(error.message) { reupdateCategory() }
+        showExceptionSnackBar(error.state) { reupdateCategory() }
     }
 
     private fun reCreateThumbnailUrl(
@@ -165,12 +166,12 @@ class CategoryUpdateActivity :
     }
 
     private fun showExceptionSnackBar(
-        message: String,
+        state: ExceptionState2,
         onRetryAction: () -> Unit,
     ) {
         currentSnackBar =
             binding.root.getSnackBarWithAction(
-                message = message,
+                message = getString(state.messageId),
                 actionLabel = R.string.all_retry,
                 onAction = onRetryAction,
                 length = Snackbar.LENGTH_INDEFINITE,
