@@ -46,7 +46,7 @@ class CategoryViewModelTest {
         viewModel.loadCategory(INVALID_ID)
 
         // then
-        val actual = viewModel.exceptionState.getValue()
+        val actual = viewModel.exceptionState.getOrAwaitValue()
         assertThat(actual).isInstanceOf(ExceptionState2.UnknownError::class.java)
     }
 
@@ -74,7 +74,7 @@ class CategoryViewModelTest {
             viewModel.loadCategory(VALID_ID)
 
             // then
-            val actual = viewModel.errorMessage.getValue()
+            val actual = viewModel.errorMessage.getOrAwaitValue()
             assertThat(actual).isEqualTo("Bad Request")
         }
 
@@ -88,7 +88,7 @@ class CategoryViewModelTest {
             viewModel.loadCategory(VALID_ID)
 
             // then
-            val actual = viewModel.exceptionState.getValue()
+            val actual = viewModel.exceptionState.getOrAwaitValue()
             assertThat(actual).isInstanceOf(ExceptionState2.NetworkError::class.java)
         }
 
@@ -102,7 +102,7 @@ class CategoryViewModelTest {
             viewModel.loadCategory(VALID_ID)
 
             // then
-            val actual = viewModel.exceptionState.getValue()
+            val actual = viewModel.exceptionState.getOrAwaitValue()
             assertThat(actual).isInstanceOf(ExceptionState2.UnknownError::class.java)
         }
 
@@ -118,7 +118,7 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val actual = viewModel.isDeleteSuccess.getValue()
+            val actual = viewModel.isDeleteSuccess.getOrAwaitValue()
             assertThat(actual).isTrue()
         }
 
@@ -134,8 +134,8 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val isDeleteSuccess = viewModel.isDeleteSuccess.getValue()
-            val errorMessage = viewModel.errorMessage.getValue()
+            val isDeleteSuccess = viewModel.isDeleteSuccess.getOrAwaitValue()
+            val errorMessage = viewModel.errorMessage.getOrAwaitValue()
 
             assertAll(
                 { assertThat(isDeleteSuccess).isFalse() },
@@ -155,8 +155,8 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val isDeleteSuccess = viewModel.isDeleteSuccess.getValue()
-            val exceptionState = viewModel.exceptionState.getValue()
+            val isDeleteSuccess = viewModel.isDeleteSuccess.getOrAwaitValue()
+            val exceptionState = viewModel.exceptionState.getOrAwaitValue()
 
             assertAll(
                 { assertThat(isDeleteSuccess).isFalse() },
@@ -176,8 +176,8 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val isDeleteSuccess = viewModel.isDeleteSuccess.getValue()
-            val exceptionState = viewModel.exceptionState.getValue()
+            val isDeleteSuccess = viewModel.isDeleteSuccess.getOrAwaitValue()
+            val exceptionState = viewModel.exceptionState.getOrAwaitValue()
 
             assertAll(
                 { assertThat(isDeleteSuccess).isFalse() },
