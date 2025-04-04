@@ -1,6 +1,7 @@
 package com.on.staccato.presentation.categorycreation.viewmodel
 
 import com.on.staccato.CoroutinesTestExtension
+import com.on.staccato.InstantTaskExecutorExtension
 import com.on.staccato.data.Exception
 import com.on.staccato.data.ServerError
 import com.on.staccato.data.Success
@@ -9,7 +10,6 @@ import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
-import com.on.staccato.presentation.InstantTaskExecutorExtension
 import com.on.staccato.presentation.categorycreation.CategoryCreationError
 import com.on.staccato.presentation.getOrAwaitValue
 import com.on.staccato.presentation.util.ExceptionState2

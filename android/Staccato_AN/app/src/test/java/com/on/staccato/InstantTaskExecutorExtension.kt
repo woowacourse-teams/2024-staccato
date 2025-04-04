@@ -1,4 +1,4 @@
-package com.on.staccato.presentation
+package com.on.staccato
 
 import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.arch.core.executor.TaskExecutor
