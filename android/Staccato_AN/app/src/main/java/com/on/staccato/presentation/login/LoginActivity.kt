@@ -39,6 +39,7 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         setBinding()
         observeLoginState()
         observeErrorEvent()
+        observeException()
     }
 
     override fun onStartClicked() {
@@ -122,6 +123,12 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
         loginViewModel.errorMessage.observe(this) { errorMessage ->
             showToast(errorMessage)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
+        }
+    }
+
+    private fun observeException() {
+        loginViewModel.exception.observe(this) {
+            showToast(getString(it.messageId))
         }
     }
 
