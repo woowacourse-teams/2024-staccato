@@ -151,6 +151,7 @@ class CategoryCreationViewModelTest {
 
         // then
         val actual = viewModel.thumbnail.value
+
         assertAll(
             { assertThat(actual?.uri).isNull() },
             { assertThat(actual?.url).isNull() },
@@ -159,10 +160,13 @@ class CategoryCreationViewModelTest {
 
     @Test
     fun `카테고리 기간 설정 시 시작일과 종료일이 올바르게 변환된다`() {
+        // when
         viewModel.setCategoryPeriod(startAt = 1743798000000, endAt = 1743967200000)
 
+        // then
         val startDate = viewModel.startDate.getOrAwaitValue()
         val endDate = viewModel.endDate.getOrAwaitValue()
+
         assertAll(
             { assertThat(startDate).isEqualTo(LocalDate.of(2025, 4, 5)) },
             { assertThat(endDate).isEqualTo(LocalDate.of(2025, 4, 7)) },
