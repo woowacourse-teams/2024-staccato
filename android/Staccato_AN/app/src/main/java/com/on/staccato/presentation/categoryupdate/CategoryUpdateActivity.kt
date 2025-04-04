@@ -43,6 +43,7 @@ class CategoryUpdateActivity :
         fetchCategory()
         updateCategoryPeriod()
         observeIsUpdateSuccess()
+        observeIsPosting()
         showErrorToast()
         handleError()
     }
@@ -54,7 +55,6 @@ class CategoryUpdateActivity :
     }
 
     override fun onSaveClicked() {
-        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         viewModel.updateCategory()
     }
 
@@ -114,18 +114,26 @@ class CategoryUpdateActivity :
         }
     }
 
+    private fun observeIsPosting() {
+        viewModel.isPosting.observe(this) {
+            if (it) {
+                window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
+            } else {
+                window.clearFlags(FLAG_NOT_TOUCHABLE)
+            }
+        }
+    }
+
     private fun navigateToCategory(isUpdateSuccess: Boolean) {
         if (isUpdateSuccess) {
             val intent = Intent().putExtra(CATEGORY_ID_KEY, categoryId)
             setResult(RESULT_OK, intent)
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
     }
 
     private fun showErrorToast() {
         viewModel.errorMessage.observe(this) {
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
     }
@@ -150,7 +158,6 @@ class CategoryUpdateActivity :
     }
 
     private fun handleCategoryUpdateFail(error: CategoryUpdateError.CategoryUpdate) {
-        window.clearFlags(FLAG_NOT_TOUCHABLE)
         showExceptionSnackBar(error.state) { reupdateCategory() }
     }
 
