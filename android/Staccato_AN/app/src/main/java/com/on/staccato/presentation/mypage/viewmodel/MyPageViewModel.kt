@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.onException
+import com.on.staccato.data.onException2
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.MemberProfile
@@ -12,7 +12,7 @@ import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mypage.MemberProfileHandler
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
@@ -35,6 +35,10 @@ class MyPageViewModel
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
 
+        private val _exception = MutableSingleLiveData<ExceptionState2>()
+        val exception: SingleLiveData<ExceptionState2>
+            get() = _exception
+
         override fun onCodeCopyClicked() {
             val memberProfile = memberProfile.value
             if (memberProfile != null) {
@@ -50,7 +54,7 @@ class MyPageViewModel
                     .onSuccess {
                         _memberProfile.value =
                             memberProfile.value?.copy(profileImageUrl = it)
-                    }.onException(::handleException)
+                    }.onException2(::handleException)
                     .onServerError(::handleError)
             }
         }
@@ -59,7 +63,7 @@ class MyPageViewModel
             viewModelScope.launch {
                 repository.getMemberProfile()
                     .onServerError(::handleError)
-                    .onException(::handleException)
+                    .onException2(::handleException)
                     .onSuccess {
                         _memberProfile.value = it
                     }
@@ -70,8 +74,8 @@ class MyPageViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(state: ExceptionState) {
-            _errorMessage.postValue(state.message)
+        private fun handleException(state: ExceptionState2) {
+            _exception.setValue(state)
         }
 
         companion object {

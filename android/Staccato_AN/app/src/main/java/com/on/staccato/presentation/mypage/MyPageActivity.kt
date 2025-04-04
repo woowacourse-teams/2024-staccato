@@ -43,6 +43,7 @@ class MyPageActivity :
         observeMemberProfile()
         observeCopyingUuidCode()
         observeErrorMessage()
+        observeException()
     }
 
     override fun onProfileImageChangeClicked() {
@@ -123,6 +124,14 @@ class MyPageActivity :
         myPageViewModel.errorMessage.observe(this) { errorMessage ->
             finish()
             showToast(errorMessage)
+        }
+    }
+
+    private fun observeException() {
+        myPageViewModel.exception.observe(this) { state ->
+            // TODO: exception이 발생하면 finish 하기 보다는 스낵바를 띄워 재시도 할 수 있도록 유도하는 게 좋을 것 같음
+            finish()
+            showToast(getString(state.messageId))
         }
     }
 
