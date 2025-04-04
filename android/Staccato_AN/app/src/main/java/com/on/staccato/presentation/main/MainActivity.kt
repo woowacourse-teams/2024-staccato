@@ -18,6 +18,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPS
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_DRAGGING
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
+import com.google.android.material.internal.ViewUtils.hideKeyboard
+import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.presentation.base.BindingActivity
@@ -27,6 +29,7 @@ import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
+import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_BOTTOM_SHEET
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_CREATION
@@ -69,6 +72,8 @@ class MainActivity :
         initBinding()
         loadMemberProfile()
         observeStaccatoId()
+        observeErrorMessage()
+        observeException()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
@@ -112,6 +117,23 @@ class MainActivity :
             supportFragmentManager.setFragmentResult(
                 BOTTOM_SHEET_STATE_REQUEST_KEY,
                 bundleOf(BOTTOM_SHEET_NEW_STATE to STATE_EXPANDED),
+            )
+        }
+    }
+
+    private fun observeErrorMessage() {
+        sharedViewModel.errorMessage.observe(this) { message ->
+            showToast(message)
+        }
+    }
+
+    private fun observeException() {
+        sharedViewModel.exception.observe(this) {
+            binding.root.showSnackBarWithAction(
+                message = getString(it.messageId),
+                actionLabel = R.string.all_retry,
+                onAction = { sharedViewModel.fetchMemberProfile() },
+                length = Snackbar.LENGTH_INDEFINITE,
             )
         }
     }

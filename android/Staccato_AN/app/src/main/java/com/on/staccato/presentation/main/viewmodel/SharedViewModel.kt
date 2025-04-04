@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.onException
+import com.on.staccato.data.onException2
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.MemberProfile
@@ -12,7 +12,7 @@ import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,6 +41,9 @@ class SharedViewModel
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
 
+        private val _exception = MutableSingleLiveData<ExceptionState2>()
+        val exception: SingleLiveData<ExceptionState2> get() = _exception
+
         private val _isBottomSheetHalf = MutableLiveData(true)
         val isBottomSheetHalf: LiveData<Boolean> get() = _isBottomSheetHalf
 
@@ -55,7 +58,7 @@ class SharedViewModel
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = myPageRepository.getMemberProfile()
-                result.onException(::handleException)
+                result.onException2(::handleException)
                     .onServerError(::handleServerError)
                     .onSuccess(::setMemberProfile)
             }
@@ -106,7 +109,7 @@ class SharedViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(exceptionState: ExceptionState) {
-            _errorMessage.postValue(exceptionState.message)
+        private fun handleException(state: ExceptionState2) {
+            _exception.setValue(state)
         }
     }
