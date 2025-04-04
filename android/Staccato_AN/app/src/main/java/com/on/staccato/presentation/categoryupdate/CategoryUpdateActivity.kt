@@ -158,7 +158,7 @@ class CategoryUpdateActivity :
     }
 
     private fun handleCategoryUpdateFail(error: CategoryUpdateError.CategoryUpdate) {
-        showExceptionSnackBar(error.state) { reupdateCategory() }
+        showExceptionSnackBar(error.state) { reUpdateCategory() }
     }
 
     private fun reCreateThumbnailUrl(
@@ -168,7 +168,7 @@ class CategoryUpdateActivity :
         viewModel.createThumbnailUrl(uri, file)
     }
 
-    private fun reupdateCategory() {
+    private fun reUpdateCategory() {
         viewModel.updateCategory()
     }
 
