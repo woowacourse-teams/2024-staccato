@@ -71,10 +71,10 @@ class CategoryViewModel
         }
 
         private fun handleServerError(message: String) {
-            _errorMessage.postValue(message)
+            _errorMessage.setValue(message)
         }
 
         private fun handelException(state: ExceptionState2) {
-            _exceptionState.postValue(state)
+            _exceptionState.setValue(state)
         }
     }
