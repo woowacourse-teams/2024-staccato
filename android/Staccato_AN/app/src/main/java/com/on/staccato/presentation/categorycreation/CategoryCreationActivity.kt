@@ -143,7 +143,7 @@ class CategoryCreationActivity :
     }
 
     private fun handleCreateException(error: CategoryCreationError.CategoryCreation) {
-        showExceptionSnackBar(error.state) { recreateCategory() }
+        showExceptionSnackBar(error.state) { reCreateCategory() }
     }
 
     private fun reCreateThumbnailUrl(
@@ -153,7 +153,7 @@ class CategoryCreationActivity :
         viewModel.createThumbnailUrl(uri, file)
     }
 
-    private fun recreateCategory() {
+    private fun reCreateCategory() {
         viewModel.createCategory()
     }
 
