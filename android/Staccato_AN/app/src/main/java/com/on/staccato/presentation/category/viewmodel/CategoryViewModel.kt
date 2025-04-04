@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.ApiResult
-import com.on.staccato.data.onException
+import com.on.staccato.data.onException2
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.Category
@@ -15,7 +15,7 @@ import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEF
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,22 +32,22 @@ class CategoryViewModel
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
 
-        private val _exceptionMessage = MutableSingleLiveData<String>()
-        val exceptionMessage: SingleLiveData<String> get() = _exceptionMessage
+        private val _exceptionState = MutableSingleLiveData<ExceptionState2>()
+        val exceptionState: SingleLiveData<ExceptionState2> get() = _exceptionState
 
         private val _isDeleteSuccess = MutableSingleLiveData<Boolean>(false)
         val isDeleteSuccess: SingleLiveData<Boolean> get() = _isDeleteSuccess
 
         fun loadCategory(id: Long) {
             if (id <= DEFAULT_CATEGORY_ID) {
-                handelException(ExceptionState.UnknownError)
+                handelException(ExceptionState2.UnknownError)
             } else {
                 viewModelScope.launch {
                     val result: ApiResult<Category> = categoryRepository.getCategory(id)
                     result
                         .onSuccess(::updateCategory)
                         .onServerError(::handleServerError)
-                        .onException(::handelException)
+                        .onException2(::handelException)
                 }
             }
         }
@@ -58,7 +58,7 @@ class CategoryViewModel
                 val result: ApiResult<Unit> = categoryRepository.deleteCategory(id)
                 result.onSuccess { updateIsDeleteSuccess() }
                     .onServerError(::handleServerError)
-                    .onException(::handelException)
+                    .onException2(::handelException)
             }
         }
 
@@ -74,7 +74,7 @@ class CategoryViewModel
             _errorMessage.postValue(message)
         }
 
-        private fun handelException(state: ExceptionState) {
-            _exceptionMessage.postValue(state.message)
+        private fun handelException(state: ExceptionState2) {
+            _exceptionState.postValue(state)
         }
     }

@@ -167,9 +167,9 @@ class CategoryFragment :
     }
 
     private fun showExceptionSnackBar() {
-        viewModel.exceptionMessage.observe(viewLifecycleOwner) { message ->
+        viewModel.exceptionState.observe(viewLifecycleOwner) { state ->
             view?.showSnackBarWithAction(
-                message = message,
+                message = getString(state.message),
                 actionLabel = R.string.all_retry,
                 onAction = ::onRetryAction,
                 Snackbar.LENGTH_INDEFINITE,
