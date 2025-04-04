@@ -100,9 +100,9 @@ class TimelineFragment :
             showToast(message)
         }
 
-        timelineViewModel.exceptionMessage.observe(viewLifecycleOwner) { message ->
+        timelineViewModel.exception.observe(viewLifecycleOwner) { state ->
             view?.showSnackBarWithAction(
-                message = message,
+                message = getString(state.messageId),
                 actionLabel = R.string.all_retry,
                 onAction = ::onRetryAction,
                 Snackbar.LENGTH_INDEFINITE,
