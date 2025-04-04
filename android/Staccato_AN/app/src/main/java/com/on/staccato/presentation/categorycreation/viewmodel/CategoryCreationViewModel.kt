@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.onException
+import com.on.staccato.data.onException2
 import com.on.staccato.data.onServerError
 import com.on.staccato.data.onSuccess
 import com.on.staccato.domain.model.NewCategory
@@ -20,7 +20,7 @@ import com.on.staccato.presentation.categorycreation.DateConverter.convertLongTo
 import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertCategoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -98,7 +98,7 @@ class CategoryCreationViewModel
                 result
                     .onSuccess(::setCreatedCategoryId)
                     .onServerError(::handleCreateServerError)
-                    .onException(::handleCreateException)
+                    .onException2(::handleCreateException)
             }
         }
 
@@ -134,7 +134,7 @@ class CategoryCreationViewModel
                 result
                     .onSuccess(::setThumbnailUrl)
                     .onServerError(::handlePhotoError)
-                    .onException { state ->
+                    .onException2 { state ->
                         handlePhotoException(state, uri)
                     }
             }
@@ -173,11 +173,11 @@ class CategoryCreationViewModel
         }
 
         private fun handlePhotoException(
-            state: ExceptionState,
+            state: ExceptionState2,
             uri: Uri,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(CategoryCreationError.Thumbnail(state.message, uri))
+                _error.setValue(CategoryCreationError.Thumbnail(state, uri))
             }
         }
 
@@ -186,8 +186,8 @@ class CategoryCreationViewModel
             _errorMessage.postValue(message)
         }
 
-        private fun handleCreateException(state: ExceptionState) {
+        private fun handleCreateException(state: ExceptionState2) {
             _isPosting.value = false
-            _error.setValue(CategoryCreationError.CategoryCreation(state.message))
+            _error.setValue(CategoryCreationError.CategoryCreation(state))
         }
     }

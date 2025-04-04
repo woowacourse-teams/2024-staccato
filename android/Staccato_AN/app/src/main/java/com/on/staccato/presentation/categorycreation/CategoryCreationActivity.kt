@@ -17,6 +17,7 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
+import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -134,11 +135,11 @@ class CategoryCreationActivity :
     }
 
     private fun handleCreatePhotoUrlFail(error: CategoryCreationError.Thumbnail) {
-        showExceptionSnackBar(error.message) { reCreateThumbnailUrl(error.uri) }
+        showExceptionSnackBar(error.state) { reCreateThumbnailUrl(error.uri) }
     }
 
     private fun handleCreateException(error: CategoryCreationError.CategoryCreation) {
-        showExceptionSnackBar(error.message) { recreateCategory() }
+        showExceptionSnackBar(error.state) { recreateCategory() }
     }
 
     private fun reCreateThumbnailUrl(uri: Uri) {
@@ -150,12 +151,12 @@ class CategoryCreationActivity :
     }
 
     private fun showExceptionSnackBar(
-        message: String,
+        state: ExceptionState2,
         onRetryAction: () -> Unit,
     ) {
         currentSnackBar =
             binding.root.getSnackBarWithAction(
-                message = message,
+                message = getString(state.messageId),
                 actionLabel = R.string.all_retry,
                 onAction = onRetryAction,
                 length = Snackbar.LENGTH_INDEFINITE,
