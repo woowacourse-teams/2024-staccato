@@ -80,6 +80,3 @@ jobs:
         if: always()
         with:
           files: app/build/test-results/**/*.xml
-
-      - name: Build with Gradle
-        run: ./gradlew build
