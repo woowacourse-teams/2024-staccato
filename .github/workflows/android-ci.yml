@@ -25,6 +25,8 @@ jobs:
 
     permissions:
       contents: read
+      checks: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -67,11 +69,17 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run ktlint
+      - name: Check Lint
         run: ./gradlew ktlintCheck
 
-      - name: Run test
+      - name: Run Test
         run: ./gradlew test
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: app/build/test-results/**/*.xml
 
       - name: Build with Gradle
         run: ./gradlew build
