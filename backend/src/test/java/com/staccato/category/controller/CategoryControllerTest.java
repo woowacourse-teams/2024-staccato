@@ -13,13 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.staccato.category.domain.Category;
-import com.staccato.category.service.dto.request.CategoryReadRequest;
-import com.staccato.category.service.dto.response.CategoryDetailResponse;
-import com.staccato.category.service.dto.response.CategoryIdResponse;
-import com.staccato.category.service.dto.response.CategoryNameResponses;
-import com.staccato.category.service.dto.response.CategoryResponses;
-import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,14 +29,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import com.staccato.ControllerTest;
+import com.staccato.category.domain.Category;
+import com.staccato.category.service.dto.request.CategoryReadRequest;
+import com.staccato.category.service.dto.request.CategoryRequest;
+import com.staccato.category.service.dto.response.CategoryDetailResponse;
+import com.staccato.category.service.dto.response.CategoryIdResponse;
+import com.staccato.category.service.dto.response.CategoryNameResponses;
+import com.staccato.category.service.dto.response.CategoryResponses;
 import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.fixture.category.CategoryNameResponsesFixture;
 import com.staccato.fixture.category.CategoryResponsesFixture;
+import com.staccato.fixture.member.MemberFixture;
 import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
-import com.staccato.category.service.dto.request.CategoryRequest;
+import com.staccato.staccato.domain.Staccato;
 
 class CategoryControllerTest extends ControllerTest {
 
@@ -214,10 +214,10 @@ class CategoryControllerTest extends ControllerTest {
 
         // when & then
         mockMvc.perform(get("/categories")
-                .header(HttpHeaders.AUTHORIZATION, "token")
-                .param("filters", "invalid"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.categories.size()").value(2));
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("filters", "invalid"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.categories.size()").value(2));
     }
 
     @DisplayName("사용자가 기간이 없는 카테고리를 포함한 목록을 조회하는 응답 직렬화에 성공한다.")
@@ -299,7 +299,7 @@ class CategoryControllerTest extends ControllerTest {
         Category category = CategoryFixture.createWithMember(MemberFixture.create());
         Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
-            staccato));
+                staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
@@ -343,7 +343,7 @@ class CategoryControllerTest extends ControllerTest {
         Category category = CategoryFixture.createWithMember(null, null, MemberFixture.create());
         Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.parse("2024-07-01T10:00:00"), List.of("image.jpg"));
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
-            staccato));
+                staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {

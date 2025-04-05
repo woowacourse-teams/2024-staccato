@@ -6,7 +6,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import com.staccato.category.service.dto.request.CategoryColorRequest;
+import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
@@ -106,6 +111,27 @@ public interface CategoryControllerDocs {
     ResponseEntity<Void> updateCategory(
             @Parameter(description = "카테고리 ID", example = "1") @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Parameter(required = true) @Valid CategoryRequest categoryRequest,
+            @Parameter(hidden = true) Member member);
+
+    @Operation(summary = "카테고리 색상 수정", description = "카테고리 색상을 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "카테고리 색상 수정 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                                        
+                    (1) 필수 값(카테고리 색상)이 누락되었을 때
+                                        
+                    (2) 색상 설정이 잘못되었을 때
+                                        
+                    (3) 수정하려는 카테고리이 존재하지 않을 때
+                                        
+                    (4) Path Variable 형식이 잘못되었을 때
+                    """,
+                    responseCode = "400")
+    })
+    ResponseEntity<Void> updateCategoryColor(
+            @Parameter(description = "카테고리 ID", example = "1") @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @Parameter(required = true) @Valid CategoryColorRequest categoryColorRequest,
             @Parameter(hidden = true) Member member);
 
     @Operation(summary = "카테고리 삭제", description = "사용자의 카테고리을 삭제합니다.")
