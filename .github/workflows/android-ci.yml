@@ -3,7 +3,8 @@ name: Android CI for develop
 on:
   pull_request:
     paths: 'android/**'
-    branches: [ "develop", "release-an", "main" ]
+    branches: [ "develop" ]
+  workflow_dispatch:
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
@@ -25,6 +26,8 @@ jobs:
 
     permissions:
       contents: read
+      checks: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -67,11 +70,14 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run ktlint
+      - name: Check Lint
         run: ./gradlew ktlintCheck
 
-      - name: Run test
-        run: ./gradlew test
+      - name: Run Test
+        run: ./gradlew testDebugUnitTest --stacktrace --no-build-cache --no-parallel
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: app/build/test-results/**/*.xml
