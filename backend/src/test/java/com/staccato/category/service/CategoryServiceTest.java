@@ -366,9 +366,10 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void updateCategoryColor() {
         // given
+
         CategoryColorRequest categoryColorRequest = new CategoryColorRequest(Color.PINK.getName());
-        Member member = memberRepository.save(MemberFixture.create());
-        CategoryRequest categoryRequest = CategoryRequestFixture.create(LocalDate.now(), LocalDate.now().plusDays(3));
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        CategoryRequest categoryRequest = CategoryRequestFixtures.defaultCategoryRequest().build();
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest, member);
 
         // when

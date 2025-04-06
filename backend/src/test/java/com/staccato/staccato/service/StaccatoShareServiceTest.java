@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -15,17 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
+import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.jwt.ShareTokenProvider;
 import com.staccato.config.jwt.dto.ShareTokenPayload;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.exception.UnauthorizedException;
-import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.comment.CommentFixture;
-import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.staccato.StaccatoFixture;
-import com.staccato.fixture.staccato.StaccatoSharedResponseFixture;
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.comment.CommentFixtures;
+import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
@@ -54,9 +52,11 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
     @Test
     void createValidShareLink() {
         // given
-        Member member = saveMember();
-        Category category = saveCategory(member);
-        Staccato staccato = saveStaccatoWithImages(category);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .buildAndSaveWithMember(member, categoryRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
         StaccatoShareLinkResponse response = staccatoShareService.createStaccatoShareLink(staccato.getId(), member);
@@ -69,7 +69,7 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
     @Test
     void failToCreateShareLinkWhenNoStaccato() {
         // given
-        Member member = saveMember();
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
 
         // when & then
         assertThatThrownBy(() -> staccatoShareService.createStaccatoShareLink(1L, member))
@@ -81,10 +81,12 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
     @Test
     void failToCreateShareLinkWhenInvalidMember() {
         // given
-        Member member = saveMember();
-        Member otherMember = saveMember();
-        Category category = saveCategory(member);
-        Staccato staccato = saveStaccatoWithImages(category);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .buildAndSaveWithMember(member, categoryRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
 
         // when & then
         assertThatThrownBy(() -> staccatoShareService.createStaccatoShareLink(staccato.getId(), otherMember))
@@ -96,9 +98,11 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
     @Test
     void shouldContainTokenInShareLink() {
         // given
-        Member member = saveMember();
-        Category category = saveCategory(member);
-        Staccato staccato = saveStaccatoWithImages(category);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .buildAndSaveWithMember(member, categoryRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
         StaccatoShareLinkResponse response = staccatoShareService.createStaccatoShareLink(staccato.getId(), member);
@@ -111,9 +115,11 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
     @Test
     void shouldContainStaccatoIdInToken() {
         // given
-        Member member = saveMember();
-        Category category = saveCategory(member);
-        Staccato staccato = saveStaccatoWithImages(category);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .buildAndSaveWithMember(member, categoryRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
 
         StaccatoShareLinkResponse response = staccatoShareService.createStaccatoShareLink(staccato.getId(), member);
 
@@ -127,9 +133,11 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
     @Test
     void shouldContainExpirationInToken() {
         // given
-        Member member = saveMember();
-        Category category = saveCategory(member);
-        Staccato staccato = saveStaccatoWithImages(category);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .buildAndSaveWithMember(member, categoryRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
 
         StaccatoShareLinkResponse response = staccatoShareService.createStaccatoShareLink(staccato.getId(), member);
 
@@ -144,9 +152,11 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
     @Test
     void validateToken() {
         // given
-        Member member = saveMember();
-        Category category = saveCategory(member);
-        Staccato staccato = saveStaccatoWithImages(category);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .buildAndSaveWithMember(member, categoryRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
 
         StaccatoShareLinkResponse response = staccatoShareService.createStaccatoShareLink(staccato.getId(), member);
 
@@ -159,20 +169,28 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
     @Test
     void readSharedStaccatoByToken() {
         // given
-        Member member1 = saveMemberWithNicknameAndImageUrl("staccato", "image.jpg");
-        Member member2 = saveMemberWithNicknameAndImageUrl("staccato2", "image2.jpg");
-        Category category = saveCategoryWithFixedDate(member1);
-        Staccato staccato = saveStaccatoWithFixedDateTime(category);
-        saveComment(staccato, member1, "댓글 샘플");
-        saveComment(staccato, member2, "댓글 샘플2");
+        Member member1 = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member member2 = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .buildAndSaveWithMember(member1, categoryRepository);
+
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
+        Comment comment1 = CommentFixtures.defaultComment()
+                .withStaccato(staccato)
+                .withMember(member1).buildAndSave(commentRepository);
+        Comment comment2 = CommentFixtures.defaultComment()
+                .withStaccato(staccato)
+                .withMember(member2).buildAndSave(commentRepository);
 
         String token = shareTokenProvider.create(new ShareTokenPayload(staccato.getId(), member1.getId()));
 
         // when
-        StaccatoSharedResponse response = staccatoShareService.readSharedStaccatoByToken(token);
+        StaccatoSharedResponse actual = staccatoShareService.readSharedStaccatoByToken(token);
+        StaccatoSharedResponse expected = new StaccatoSharedResponse(actual.expiredAt(), staccato, member1, List.of(comment1, comment2));
 
         // then
-        assertThat(response).isEqualTo(StaccatoSharedResponseFixture.create(response.expiredAt()));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("만료된 토큰이면, 예외가 발생한다.")
@@ -207,39 +225,5 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
         // when & then
         assertThatThrownBy(() -> staccatoShareService.readSharedStaccatoByToken(token))
                 .isInstanceOf(StaccatoException.class);
-    }
-
-    private Member saveMember() {
-        return memberRepository.save(MemberFixture.create());
-    }
-
-    private Member saveMemberWithNicknameAndImageUrl(String nickname, String imageUrl) {
-        return memberRepository.save(MemberFixture.create(nickname, imageUrl));
-    }
-
-    private Category saveCategory(Member member) {
-        Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
-        category.addCategoryMember(member);
-        return categoryRepository.save(category);
-    }
-
-    private Staccato saveStaccatoWithImages(Category category) {
-        Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.now(), List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"));
-        return staccatoRepository.save(staccato);
-    }
-
-    private Category saveCategoryWithFixedDate(Member member) {
-        Category category = CategoryFixture.create(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 2));
-        category.addCategoryMember(member);
-        return categoryRepository.save(category);
-    }
-
-    private Staccato saveStaccatoWithFixedDateTime(Category category) {
-        Staccato staccato = StaccatoFixture.createWithImages(category, LocalDateTime.of(2024, 7, 1, 10, 0), List.of("https://oldExample.com.jpg", "https://existExample.com.jpg"));
-        return staccatoRepository.save(staccato);
-    }
-
-    private void saveComment(Staccato staccato, Member member, String content) {
-        commentRepository.save(CommentFixture.create(staccato, member, content));
     }
 }

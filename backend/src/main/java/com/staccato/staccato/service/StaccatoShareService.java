@@ -36,7 +36,6 @@ public class StaccatoShareService {
     private String shareLinkPrefix;
 
     private final ShareTokenProvider shareTokenProvider;
-    private final StaccatoImageRepository staccatoImageRepository;
     private final CommentRepository commentRepository;
     private final StaccatoRepository staccatoRepository;
     private final MemberRepository memberRepository;
@@ -60,10 +59,9 @@ public class StaccatoShareService {
 
         Staccato staccato = getStaccatoById(staccatoId);
         Member member = getMemberById(memberId);
-        List<StaccatoImage> staccatoImages = staccatoImageRepository.findAllByStaccatoId(staccatoId);
         List<Comment> comments = commentRepository.findAllByStaccatoId(staccatoId);
 
-        return new StaccatoSharedResponse(expiredAt, staccato, member, staccatoImages, comments);
+        return new StaccatoSharedResponse(expiredAt, staccato, member, comments);
     }
 
     private Staccato getStaccatoById(long staccatoId) {
