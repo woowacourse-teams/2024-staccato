@@ -2,6 +2,7 @@ package com.staccato.category.service;
 
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
+import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
@@ -92,6 +93,13 @@ public class CategoryService {
         }
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryId(categoryId);
         originCategory.update(updatedCategory, staccatos);
+    }
+
+    @Transactional
+    public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
+        Category category = getCategoryById(categoryId);
+        validateOwner(category, member);
+        category.changeColor(categoryColorRequest.toColor());
     }
 
     private Category getCategoryById(long categoryId) {

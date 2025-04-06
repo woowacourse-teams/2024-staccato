@@ -1,7 +1,9 @@
 package com.staccato.category.service;
 
 import com.staccato.category.domain.Category;
+import com.staccato.category.domain.Color;
 import com.staccato.category.repository.CategoryMemberRepository;
+import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
@@ -358,6 +360,22 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> categoryService.updateCategory(categoryRequest, categoryIdResponse.categoryId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("카테고리의 색상을 변경한다.")
+    @Test
+    void updateCategoryColor() {
+        // given
+        CategoryColorRequest categoryColorRequest = new CategoryColorRequest(Color.PINK.getName());
+        Member member = memberRepository.save(MemberFixture.create());
+        CategoryRequest categoryRequest = CategoryRequestFixture.create(LocalDate.now(), LocalDate.now().plusDays(3));
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest, member);
+
+        // when
+        categoryService.updateCategoryColor(categoryIdResponse.categoryId(), categoryColorRequest, member);
+
+        // then
+        assertThat(categoryRepository.findById(categoryIdResponse.categoryId()).get().getColor()).isEqualTo(Color.PINK);
     }
 
     @DisplayName("본래 해당 카테고리의 이름과 동일한 이름으로 카테고리를 수정할 수 있다.")

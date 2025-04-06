@@ -384,8 +384,8 @@ class StaccatoControllerTest extends ControllerTest {
     void createStaccatoShareLink() throws Exception {
         // given
         long staccatoId = 1L;
-        StaccatoShareLinkResponse response = new StaccatoShareLinkResponse(staccatoId, "https://staccato.kr/share/sample-token");
-        when(staccatoService.createStaccatoShareLink(any(), any())).thenReturn(response);
+        StaccatoShareLinkResponse response = new StaccatoShareLinkResponse(staccatoId, "https://staccato.kr/share/sample-token", "sample-token");
+        when(staccatoShareService.createStaccatoShareLink(any(), any())).thenReturn(response);
         String expectedResponse = """
                 {
                     "staccatoId": 1,
@@ -426,7 +426,7 @@ class StaccatoControllerTest extends ControllerTest {
                 .withStaccato(staccato)
                 .withMember(member2).build();
         StaccatoSharedResponse staccatoSharedResponse = new StaccatoSharedResponse(expiredAt, staccato, member1, List.of(comment1, comment2));
-        when(staccatoService.readSharedStaccatoByToken(token)).thenReturn(staccatoSharedResponse);
+        when(staccatoShareService.readSharedStaccatoByToken(token)).thenReturn(staccatoSharedResponse);
         String expectedResponse = """
                 {
                     "staccatoId": 1,

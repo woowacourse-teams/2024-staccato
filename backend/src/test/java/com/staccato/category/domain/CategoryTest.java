@@ -104,4 +104,31 @@ class CategoryTest {
         // then
         assertThat(result).isFalse();
     }
+
+    @DisplayName("카테고리를 생성하면 기본 색깔이 설정된다.")
+    @Test
+    void createCategoryWithDefaultColor() {
+        // given
+        Category category = Category.builder()
+                .title("title")
+                .build();
+
+        // when & then
+        assertThat(category.getColor()).isEqualTo(Color.GRAY);
+    }
+
+    @DisplayName("카테고리의 색깔을 변경한다.")
+    @Test
+    void changeColor() {
+        // given
+        Category category = Category.builder()
+                .title("title")
+                .build();
+
+        // when
+        category.changeColor(Color.BLUE);
+
+        // then
+        assertThat(category.getColor()).isEqualTo(Color.BLUE);
+    }
 }

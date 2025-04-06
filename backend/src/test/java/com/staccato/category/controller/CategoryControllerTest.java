@@ -221,10 +221,10 @@ class CategoryControllerTest extends ControllerTest {
 
         // when & then
         mockMvc.perform(get("/categories")
-                .header(HttpHeaders.AUTHORIZATION, "token")
-                .param("filters", "invalid"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.categories.size()").value(2));
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("filters", "invalid"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.categories.size()").value(2));
     }
 
     @DisplayName("특정 날짜를 포함하고 있는 모든 카테고리 목록을 조회하는 응답 직렬화에 성공한다.")
@@ -335,8 +335,7 @@ class CategoryControllerTest extends ControllerTest {
                 .withId(1L)
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(
-            staccato));
+        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
