@@ -1,5 +1,7 @@
 package com.staccato.category.domain;
 
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,8 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.staccato.exception.StaccatoException;
-import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Nickname;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,9 +45,15 @@ class CategoryTest {
     @Test
     void validateDuration() {
         // given
-        Category category = CategoryFixture.create(LocalDate.now(), LocalDate.now().plusDays(1));
-        Category updatedCategory = CategoryFixture.create(LocalDate.now().plusDays(1), LocalDate.now().plusDays(2));
-        Staccato staccato = StaccatoFixture.create(category, LocalDateTime.now());
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31)).build();
+        Category updatedCategory = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2023, 1, 1),
+                        LocalDate.of(2023, 12, 31)).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
+                .withCategory(category).build();
 
         // when & then
         assertThatThrownBy(() -> category.update(updatedCategory, List.of(staccato)))
@@ -60,7 +66,8 @@ class CategoryTest {
     void isNotSameTitle() {
         // given
         String title = "title";
-        Category category = Category.builder().title(title).build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withTitle(title).build();
 
         // when
         boolean result = category.isNotSameTitle(title);
@@ -73,11 +80,9 @@ class CategoryTest {
     @Test
     void hasTerm() {
         // given
-        Category category = Category.builder()
-                .title("title")
-                .startAt(LocalDate.now())
-                .endAt(LocalDate.now().plusDays(4))
-                .build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31)).build();
 
         // when
         boolean result = category.hasTerm();
@@ -90,9 +95,8 @@ class CategoryTest {
     @Test
     void doesNotHaveTerm() {
         // given
-        Category category = Category.builder()
-                .title("title")
-                .build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(null, null).build();
 
         // when
         boolean result = category.hasTerm();

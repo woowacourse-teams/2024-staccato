@@ -1,6 +1,6 @@
 package com.staccato.comment.service;
 
-import com.staccato.comment.service.dto.request.CommentRequestV2;
+import com.staccato.comment.service.dto.request.CommentRequest;
 import java.util.Comparator;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class CommentService {
     private final StaccatoRepository staccatoRepository;
 
     @Transactional
-    public long createComment(CommentRequestV2 commentRequest, Member member) {
+    public long createComment(CommentRequest commentRequest, Member member) {
         Staccato staccato = getStaccato(commentRequest.staccatoId());
         validateOwner(staccato.getCategory(), member);
         Comment comment = commentRequest.toComment(staccato, member);

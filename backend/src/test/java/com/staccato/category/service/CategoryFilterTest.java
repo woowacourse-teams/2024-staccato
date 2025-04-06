@@ -7,8 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
-import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.category.CategoryFixture;
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.Category;
@@ -76,13 +76,18 @@ class CategoryFilterTest extends ServiceSliceTest {
     @Test
     void readAllCategoriesWithTerm() {
         // given
-        Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(CategoryFixture.createWithMember("first", member));
-        Category category2 = categoryRepository.save(
-            CategoryFixture.createWithMember(LocalDate.now(), LocalDate.now()
-                .plusDays(3), member));
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category1 = CategoryFixtures.defaultCategory()
+                .withTitle("first")
+                .withTerm(null, null)
+                .buildAndSaveWithMember(member, categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTitle("second")
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
+                .buildAndSaveWithMember(member, categoryRepository);
         List<Category> categories = new ArrayList<>();
-        categories.add(category);
+        categories.add(category1);
         categories.add(category2);
 
         // when
@@ -99,13 +104,18 @@ class CategoryFilterTest extends ServiceSliceTest {
     @Test
     void readAllCategoriesWithoutTerm() {
         // given
-        Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(CategoryFixture.createWithMember("first", member));
-        Category category2 = categoryRepository.save(
-            CategoryFixture.createWithMember(LocalDate.now(), LocalDate.now()
-                .plusDays(3), member));
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category1 = CategoryFixtures.defaultCategory()
+                .withTitle("first")
+                .withTerm(null, null)
+                .buildAndSaveWithMember(member, categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTitle("second")
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
+                .buildAndSaveWithMember(member, categoryRepository);
         List<Category> categories = new ArrayList<>();
-        categories.add(category);
+        categories.add(category1);
         categories.add(category2);
 
         // when
@@ -114,7 +124,7 @@ class CategoryFilterTest extends ServiceSliceTest {
         // then
         assertAll(
             () -> assertThat(result).hasSize(1),
-            () -> assertThat(result.get(0).getTitle()).isEqualTo(category.getTitle())
+            () -> assertThat(result.get(0).getTitle()).isEqualTo(category1.getTitle())
         );
     }
 }

@@ -48,6 +48,11 @@ public class Member extends BaseEntity {
         this.code = code;
     }
 
+    public Member(Long id, String nickname, String imageUrl, String code) {
+        this(nickname, imageUrl, code);
+        this.id = id;
+    }
+
     public static Member create(String nickname) {
         return Member.builder()
                 .nickname(nickname)

@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import com.staccato.ControllerTest;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.image.service.dto.ImageUrlResponse;
 import com.staccato.member.domain.Member;
 import com.staccato.member.service.dto.response.MemberProfileImageResponse;
@@ -49,13 +50,13 @@ class MyPageControllerTest extends ControllerTest {
     @Test
     void readMyPage() throws Exception {
         // given
-        Member member = Member.builder().nickname("staccato").imageUrl("image.jpg")
-                .code("550e8400-e29b-41d4-a716-446655440000").build();
+        Member member = MemberFixtures.defaultMember()
+                .withCode("550e8400-e29b-41d4-a716-446655440000").build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         String expectedResponse = """
                 {
-                	"nickname": "staccato",
-                    "profileImageUrl": "image.jpg",
+                	"nickname": "nickname",
+                    "profileImageUrl": "https://example.com/memberImage.png",
                     "code": "550e8400-e29b-41d4-a716-446655440000"
                 }
                 """;

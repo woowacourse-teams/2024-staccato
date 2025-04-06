@@ -31,7 +31,7 @@ public class StaccatoImages {
         }
     }
 
-    protected void addAll(StaccatoImages newStaccatoImages, Staccato staccato) {
+    public void addAll(StaccatoImages newStaccatoImages, Staccato staccato) {
         newStaccatoImages.images.forEach(image -> {
             this.images.add(image);
             image.belongTo(staccato);

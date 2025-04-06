@@ -38,12 +38,12 @@ public record StaccatoSharedResponse(
         String feeling,
         List<CommentShareResponse> comments
 ) {
-    public StaccatoSharedResponse(LocalDateTime expiredAt, Staccato staccato, Member member, List<StaccatoImage> staccatoImages, List<Comment> comments) {
+    public StaccatoSharedResponse(LocalDateTime expiredAt, Staccato staccato, Member member, List<Comment> comments) {
         this(
                 staccato.getId(),
                 expiredAt,
                 member.getNickname().getNickname(),
-                toStaccatoImageUrls(staccatoImages),
+                toStaccatoImageUrls(staccato.getStaccatoImages().getImages()),
                 staccato.getTitle(),
                 staccato.getSpot().getPlaceName(),
                 staccato.getSpot().getAddress(),

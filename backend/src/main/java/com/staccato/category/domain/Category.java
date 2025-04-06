@@ -58,6 +58,11 @@ public class Category extends BaseEntity {
         this.term = new Term(startAt, endAt);
     }
 
+    public Category(Long id, String thumbnailUrl, @NonNull String title, String description, LocalDate startAt, LocalDate endAt) {
+        this(thumbnailUrl, title, description, startAt, endAt);
+        this.id = id;
+    }
+
     public static Category basic(Nickname memberNickname) {
         return Category.builder()
                 .title(memberNickname.getNickname() + DEFAULT_SUBTITLE)
