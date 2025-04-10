@@ -106,14 +106,29 @@
                     android:id="@+id/tv_staccato_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="20dp"
                     android:text="@{staccatoViewModel.staccatoDetail.staccatoTitle}"
                     android:textAppearance="@style/Typography.Title1"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/iv_staccato_share"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tab_staccato_photo_horizontal"
-                    tools:text="스타카토 제목" />
+                    tools:text="가나다라마바사아자차카타파하정확하게삼십글자를만들기위해노력" />
+
+                <ImageView
+                    android:id="@+id/iv_staccato_share"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/staccato_share_btn_description"
+                    android:focusable="true"
+                    android:onClick="@{()->shareHandler.onStaccatoShare()}"
+                    android:padding="6dp"
+                    android:src="@drawable/icon_share"
+                    app:layout_constraintBottom_toBottomOf="@id/divider_staccato_first"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tab_staccato_photo_horizontal" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider_staccato_first"
@@ -158,18 +173,6 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_staccato_detail"
                     bind:visitedAtHistory="@{staccatoViewModel.staccatoDetail.visitedAt}"
                     tools:text="2024년 7월 15일 2시에 방문했어요" />
-
-                <Button
-                    android:id="@+id/btn_staccato_share"
-                    style="@style/BoundedIconButtonStyle"
-                    android:layout_marginEnd="20dp"
-                    android:contentDescription="@string/staccato_share_btn_description"
-                    android:onClick="@{()->shareHandler.onStaccatoShare()}"
-                    android:text="@string/staccato_share"
-                    app:icon="@drawable/icon_share"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_staccato_visited_at"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_staccato_visited_at" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider_staccato_second"

@@ -102,7 +102,6 @@
     <string name="staccato_loading_failure">스타카토를 불러올 수 없어요!</string>
     <string name="staccato_feeling_selection_description">스타카토 기분</string>
     <string name="staccato_feeling_selection_comment_send_btn_description">코멘트 전송</string>
-    <string name="staccato_share">공유하기</string>
     <string name="staccato_share_btn_description">링크로 스타카토 공유하기</string>
 
     // item_staccato_my_comment
