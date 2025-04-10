@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.staccato.config.swagger.SwaggerExamples;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.domain.StaccatoImage;
 
@@ -14,33 +15,33 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "스타카토를 조회했을 때 응답 형식입니다.")
 public record StaccatoDetailResponse(
-        @Schema(example = "1")
+        @Schema(example = SwaggerExamples.STACCATO_ID)
         long staccatoId,
-        @Schema(example = "1")
+        @Schema(example = SwaggerExamples.CATEGORY_ID)
         long categoryId,
-        @Schema(example = "2024 서울 투어")
+        @Schema(example = SwaggerExamples.CATEGORY_TITLE)
         String categoryTitle,
-        @Schema(example = "2024-06-30")
+        @Schema(example = SwaggerExamples.CATEGORY_START_AT)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate startAt,
-        @Schema(example = "2024-07-04")
+        @Schema(example = SwaggerExamples.CATEGORY_END_AT)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate endAt,
-        @Schema(example = "즐거웠던 남산에서의 기억")
+        @Schema(example = SwaggerExamples.STACCATO_TITLE)
         String staccatoTitle,
-        @ArraySchema(arraySchema = @Schema(example = "[\"https://example.com/images/namsan_tower.jpg\", \"https://example.com/images/namsan_tower2.jpg\"]"))
+        @ArraySchema(arraySchema = @Schema(example = SwaggerExamples.IMAGE_URLS))
         List<String> staccatoImageUrls,
-        @Schema(example = "2021-11-08T11:58:20")
+        @Schema(example = SwaggerExamples.STACCATO_VISITED_AT)
         LocalDateTime visitedAt,
-        @Schema(example = "happy")
+        @Schema(example = SwaggerExamples.FEELING)
         String feeling,
-        @Schema(example = "남산서울타워")
+        @Schema(example = SwaggerExamples.STACCATO_PLACE_NAME)
         String placeName,
-        @Schema(example = "서울 용산구 남산공원길 105")
+        @Schema(example = SwaggerExamples.STACCATO_ADDRESS)
         String address,
-        @Schema(example = "51.51978412729915")
+        @Schema(example = SwaggerExamples.STACCATO_LATITUDE)
         BigDecimal latitude,
-        @Schema(example = "-0.12712788587027796")
+        @Schema(example = SwaggerExamples.STACCATO_LONGITUDE)
         BigDecimal longitude
 ) {
     public StaccatoDetailResponse(Staccato staccato) {

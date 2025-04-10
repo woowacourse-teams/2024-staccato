@@ -19,8 +19,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .servers(Arrays.asList(
-                        new Server().url("https://stage.staccato.kr").description("Stage Server URL"),
-                        new Server().url("https://dev.staccato.kr").description("Dev Server URL"),
+                        new Server().url("https://stage.staccato.kr").description("Development Server URL"),
                         new Server().url("http://localhost:8080").description("Local Server URL")
                 ))
                 .addSecurityItem(new SecurityRequirement().addList("Auth"))
