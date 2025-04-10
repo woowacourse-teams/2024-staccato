@@ -10,6 +10,7 @@ import com.on.staccato.data.handle
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.StaccatoLocation
+import com.on.staccato.domain.model.StaccatoShareLink
 import com.on.staccato.domain.repository.StaccatoRepository
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -50,6 +51,9 @@ class StaccatoDefaultRepository
                     staccatoImageUrls = staccatoImageUrls,
                 ),
             ).handle { it }
+
+        override suspend fun createStaccatoShareLink(staccatoId: Long): ApiResult<StaccatoShareLink> =
+            remoteDataSource.createStaccatoShareLink(staccatoId).handle { it.toDomain() }
 
         override suspend fun updateStaccato(
             staccatoId: Long,
