@@ -15,6 +15,7 @@ import com.on.staccato.R
 import com.on.staccato.databinding.FragmentStaccatoBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
+import com.on.staccato.presentation.common.ShareManager
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.comments.CommentsAdapter
@@ -39,6 +40,9 @@ class StaccatoFragment :
     @Inject
     lateinit var loggingManager: LoggingManager
 
+    @Inject
+    lateinit var shareManager: ShareManager
+
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private val commentsViewModel: StaccatoCommentsViewModel by viewModels()
@@ -51,6 +55,7 @@ class StaccatoFragment :
     private val staccatoId by lazy {
         arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID
     }
+
     private val isStaccatoCreated by lazy {
         arguments?.getBoolean(CREATED_STACCATO_KEY) ?: false
     }
@@ -158,8 +163,13 @@ class StaccatoFragment :
     }
 
     private fun observeStaccatoShareLink() {
-        staccatoViewModel.shareLink.observe(viewLifecycleOwner) { link ->
-            // 복사 및 공유 창 띄우기
+        staccatoViewModel.shareEvent.observe(viewLifecycleOwner) { data ->
+            shareManager.shareStaccato(
+                context = requireContext(),
+                staccatoTitle = data.staccatoTitle,
+                nickname = data.nickname,
+                url = data.url,
+            )
         }
     }
 
