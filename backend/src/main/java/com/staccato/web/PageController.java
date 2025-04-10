@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class PageController {
+    private static final String DEFAULT_THUMBNAIL_URL = "https://image.staccato.kr/web/share/frame.png";
+
     private final StaccatoShareService staccatoShareService;
 
     @GetMapping("/")
@@ -25,7 +27,7 @@ public class PageController {
         StaccatoSharedResponse response = staccatoShareService.readSharedStaccatoByToken(token);
         String thumbnailUrl = response.staccatoImageUrls().stream()
                 .findFirst()
-                .orElse("https://image.staccato.kr/web/share/frame.png");
+                .orElse(DEFAULT_THUMBNAIL_URL);
 
         model.addAttribute("token", token);
         model.addAttribute("thumbnailUrl", thumbnailUrl);
