@@ -13,6 +13,10 @@
             type="com.on.staccato.presentation.staccato.StaccatoToolbarHandler" />
 
         <variable
+            name="shareHandler"
+            type="com.on.staccato.presentation.staccato.StaccatoShareHandler" />
+
+        <variable
             name="commentHandler"
             type="com.on.staccato.presentation.staccato.comments.CommentHandler" />
 
@@ -160,6 +164,7 @@
                     style="@style/BoundedIconButtonStyle"
                     android:layout_marginEnd="20dp"
                     android:contentDescription="@string/staccato_share_btn_description"
+                    android:onClick="@{()->shareHandler.onStaccatoShare()}"
                     android:text="@string/staccato_share"
                     app:icon="@drawable/icon_share"
                     app:layout_constraintBottom_toBottomOf="@id/tv_staccato_visited_at"

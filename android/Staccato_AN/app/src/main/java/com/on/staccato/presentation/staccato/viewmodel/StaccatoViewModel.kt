@@ -43,6 +43,17 @@ class StaccatoViewModel
         private val _exceptionMessage: MutableSingleLiveData<String> = MutableSingleLiveData()
         val exceptionMessage: SingleLiveData<String> get() = _exceptionMessage
 
+        private val _shareLink = MutableSingleLiveData<String>()
+        val shareLink: SingleLiveData<String> get() = _shareLink
+
+        fun createStaccatoShareLink(staccatoId: Long) {
+            viewModelScope.launch {
+                staccatoRepository.createStaccatoShareLink(staccatoId).onSuccess {
+                    _shareLink.postValue(it.shareLink)
+                }
+            }
+        }
+
         fun loadStaccato(staccatoId: Long) {
             fetchStaccatoData(staccatoId)
         }

@@ -33,7 +33,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class StaccatoFragment :
-    BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato), StaccatoToolbarHandler {
+    BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato),
+    StaccatoShareHandler,
+    StaccatoToolbarHandler {
     @Inject
     lateinit var loggingManager: LoggingManager
 
@@ -90,9 +92,14 @@ class StaccatoFragment :
         )
     }
 
+    override fun onStaccatoShare() {
+        staccatoViewModel.createStaccatoShareLink(staccatoId)
+    }
+
     private fun setUpBinding() {
         binding.lifecycleOwner = this
         binding.toolbarHandler = this
+        binding.shareHandler = this
         binding.commentHandler = commentsViewModel
         binding.staccatoViewModel = staccatoViewModel
         binding.commentsViewModel = commentsViewModel
@@ -128,12 +135,16 @@ class StaccatoFragment :
     private fun observeStaccatoViewModel() {
         observeStaccatoDetail()
         observeStaccatoDelete()
+        observeStaccatoShareLink()
     }
 
     private fun observeStaccatoDetail() {
         staccatoViewModel.staccatoDetail.observe(viewLifecycleOwner) { staccatoDetail ->
             pagePhotoAdapter.submitList(staccatoDetail.staccatoImageUrls)
-            sharedViewModel.updateStaccatoLocation(staccatoDetail.latitude, staccatoDetail.longitude)
+            sharedViewModel.updateStaccatoLocation(
+                staccatoDetail.latitude,
+                staccatoDetail.longitude,
+            )
         }
     }
 
@@ -143,6 +154,12 @@ class StaccatoFragment :
                 sharedViewModel.setStaccatosHasUpdated()
                 findNavController().popBackStack()
             }
+        }
+    }
+
+    private fun observeStaccatoShareLink() {
+        staccatoViewModel.shareLink.observe(viewLifecycleOwner) { link ->
+            // 복사 및 공유 창 띄우기
         }
     }
 
