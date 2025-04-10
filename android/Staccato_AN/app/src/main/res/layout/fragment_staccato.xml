@@ -155,6 +155,17 @@
                     bind:visitedAtHistory="@{staccatoViewModel.staccatoDetail.visitedAt}"
                     tools:text="2024년 7월 15일 2시에 방문했어요" />
 
+                <Button
+                    android:id="@+id/btn_staccato_share"
+                    style="@style/BoundedIconButtonStyle"
+                    android:layout_marginEnd="20dp"
+                    android:contentDescription="@string/staccato_share_btn_description"
+                    android:text="@string/staccato_share"
+                    app:icon="@drawable/icon_share"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_staccato_visited_at"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_staccato_visited_at" />
+
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider_staccato_second"
                     style="@style/DividerStyle"
