@@ -9,6 +9,11 @@ import com.on.staccato.domain.model.NewCategory
 interface CategoryRepository {
     suspend fun getCategory(categoryId: Long): ApiResult<Category>
 
+    suspend fun changeCategoryColor(
+        categoryId: Long,
+        color: String,
+    ): ApiResult<Unit>
+
     suspend fun getCategories(currentDate: String?): ApiResult<CategoryCandidates>
 
     suspend fun createCategory(newCategory: NewCategory): ApiResult<CategoryCreationResponse>

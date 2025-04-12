@@ -2,6 +2,7 @@ package com.on.staccato.data.category
 
 import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.category.CategoriesResponse
+import com.on.staccato.data.dto.category.CategoryColorRequest
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.dto.category.CategoryRequest
 import com.on.staccato.data.dto.category.CategoryResponse
@@ -18,6 +19,12 @@ interface CategoryApiService {
     suspend fun getCategory(
         @Path(CATEGORY_ID) categoryId: Long,
     ): ApiResult<CategoryResponse>
+
+    @PUT(CATEGORY_COLOR_CHANGE_PATH)
+    suspend fun putCategoryColor(
+        @Path(CATEGORY_ID) categoryId: Long,
+        @Body color: CategoryColorRequest,
+    ): ApiResult<Unit>
 
     @GET(CATEGORY_PATH_WITH_CANDIDATES)
     suspend fun getCategories(
@@ -45,6 +52,7 @@ interface CategoryApiService {
         private const val CANDIDATES_PATH = "/candidates"
         private const val CATEGORY_ID = "categoryId"
         private const val CATEGORY_PATH_WITH_ID = "$CATEGORIES_PATH/{$CATEGORY_ID}"
+        private const val CATEGORY_COLOR_CHANGE_PATH = "$CATEGORIES_PATH/{$CATEGORY_ID}/colors"
         private const val CATEGORY_PATH_WITH_CANDIDATES = "$CATEGORIES_PATH$CANDIDATES_PATH"
         private const val CURRENT_DATE = "currentDate"
     }
