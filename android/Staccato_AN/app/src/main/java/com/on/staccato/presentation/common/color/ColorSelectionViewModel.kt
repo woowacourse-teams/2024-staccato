@@ -16,10 +16,10 @@ class ColorSelectionViewModel
         private val _colorSelectionResult = MutableLiveData<CategoryColorChangeEvent>()
         val colorSelectionResult: LiveData<CategoryColorChangeEvent> get() = _colorSelectionResult
 
-        private val _categoryId = MutableLiveData<Long>()
+        private val categoryId = MutableLiveData<Long>()
 
         fun setCategoryId(id: Long) {
-            _categoryId.value = id
+            categoryId.value = id
         }
 
         fun selectCategoryColor(color: CategoryColor) {
@@ -29,7 +29,7 @@ class ColorSelectionViewModel
         fun changeCategoryColor() {
             _colorSelectionResult.value =
                 CategoryColorChangeEvent(
-                    _categoryId.value ?: return,
+                    categoryId.value ?: return,
                     _selectedColor.value ?: return,
                 )
         }
