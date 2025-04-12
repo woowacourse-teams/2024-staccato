@@ -8,6 +8,7 @@ import com.on.staccato.R
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.common.InputState
+import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.mapper.toInputState
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import java.time.LocalDate
@@ -86,6 +87,18 @@ fun Button.setCategorySaveButtonEnabled(
 fun Button.setVisitedAtSelectButtonEnabled(years: List<Int>?) {
     isEnabled =
         if (years.isNullOrEmpty()) {
+            setTextColor(resources.getColor(R.color.gray4, null))
+            false
+        } else {
+            setTextColor(resources.getColor(R.color.white, null))
+            true
+        }
+}
+
+@BindingAdapter("colorSelectButtonEnabled")
+fun Button.setColorSelectButtonEnabled(selectedColor: CategoryColor?) {
+    isEnabled =
+        if (selectedColor == null) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
         } else {

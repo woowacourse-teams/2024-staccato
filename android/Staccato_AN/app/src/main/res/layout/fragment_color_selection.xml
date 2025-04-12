@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.on.staccato.presentation.common.color.ColorSelectionViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bottom_sheet_20dp"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tv_visited_at_title"
+            style="@style/SubTitleStyle"
+            android:text="@string/all_please_select_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_staccato_color_selection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:clipToPadding="true"
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never"
+            app:spanCount="6"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
+            tools:listitem="@layout/item_color_selection" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_color_selection_confirm"
+            style="@style/ButtonStyle.Save.Active"
+            android:layout_marginTop="20dp"
+            android:text="@string/all_confirm"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_staccato_color_selection"
+            bind:colorSelectButtonEnabled="@{viewModel.selectedColor}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
