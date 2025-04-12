@@ -20,9 +20,9 @@ import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
@@ -68,7 +68,11 @@ class CategoryViewModelTest {
     fun `카테고리 조회 중 서버 오류가 발생하면 에러 메시지를 설정한다`() =
         runTest {
             // given
-            coEvery { categoryRepository.getCategory(VALID_ID) } returns ServerError(Status.Code(400), "Bad Request")
+            coEvery { categoryRepository.getCategory(VALID_ID) } returns
+                ServerError(
+                    Status.Code(400),
+                    "Bad Request",
+                )
 
             // when
             viewModel.loadCategory(VALID_ID)
@@ -128,7 +132,11 @@ class CategoryViewModelTest {
             // given
             coEvery { categoryRepository.getCategory(VALID_ID) } returns Success(category)
             viewModel.loadCategory(VALID_ID)
-            coEvery { categoryRepository.deleteCategory(VALID_ID) } returns ServerError(Status.Code(400), "Bad Request")
+            coEvery { categoryRepository.deleteCategory(VALID_ID) } returns
+                ServerError(
+                    Status.Code(400),
+                    "Bad Request",
+                )
 
             // when
             viewModel.deleteCategory()
