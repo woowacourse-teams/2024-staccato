@@ -1,15 +1,33 @@
 package com.on.staccato.presentation.bindingadapter
 
 import android.content.res.ColorStateList
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.on.staccato.R
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.util.dpToPx
+
+@BindingAdapter("tintColorRes")
+fun ImageView.setTintColor(
+    @ColorRes colorRes: Int,
+) {
+    val color = getColor(context, colorRes)
+    setColorFilter(color, PorterDuff.Mode.SRC_IN)
+}
+
+@BindingAdapter("colorSelectionIcon")
+fun ImageView.setColorSelectionIcon(isSelected: Boolean) {
+    setImageResource(
+        if (isSelected) R.drawable.icon_checked_circle else R.drawable.icon_circle,
+    )
+}
 
 @BindingAdapter(
     value = ["coilImageUrl", "coilPlaceHolder"],
