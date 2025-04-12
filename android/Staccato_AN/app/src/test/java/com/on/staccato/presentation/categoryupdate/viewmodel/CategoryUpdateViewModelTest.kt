@@ -26,6 +26,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDate
+import java.util.Locale
+import java.util.TimeZone
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
@@ -43,6 +45,8 @@ class CategoryUpdateViewModelTest {
     @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this)
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+        Locale.setDefault(Locale.KOREA)
     }
 
     @Test
