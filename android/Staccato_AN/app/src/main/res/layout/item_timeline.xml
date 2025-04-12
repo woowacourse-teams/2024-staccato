@@ -30,6 +30,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:contentDescription="@string/timeline_category_icon_description"
+            android:onClick="@{()-> eventHandler.onCategoryColorChange(category.categoryId)}"
             android:src="@drawable/icon_folder"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
