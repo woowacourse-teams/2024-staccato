@@ -228,7 +228,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun addMarkers(markerOptions: List<MarkerOptions>): List<Marker>? =
         markerOptions.map {
-            val marker: Marker? = map.addMarker(it.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_pin_3x)))
+            val marker: Marker? = map.addMarker(it.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_2x_indigo)))
             if (marker == null) {
                 map.clear()
                 requireView().showSnackBar(getString(R.string.maps_markers_loading_error))
