@@ -45,7 +45,7 @@ class CategoryCreationViewModelTest {
     fun setUp() {
         MockKAnnotations.init(this)
         viewModel.title.value = "카테고리 제목"
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"))
         Locale.setDefault(Locale.KOREA)
     }
 

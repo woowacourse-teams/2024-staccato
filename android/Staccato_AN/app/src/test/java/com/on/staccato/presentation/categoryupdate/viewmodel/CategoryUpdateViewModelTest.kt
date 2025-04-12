@@ -45,7 +45,7 @@ class CategoryUpdateViewModelTest {
     @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this)
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"))
         Locale.setDefault(Locale.KOREA)
     }
 
