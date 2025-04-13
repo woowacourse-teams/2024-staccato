@@ -1,11 +1,15 @@
 package com.staccato.staccato.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
+
 import com.staccato.exception.StaccatoException;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StaccatoImages {
     private static final int MAX_COUNT = 5;
+
     @OneToMany(mappedBy = "staccato", cascade = CascadeType.PERSIST)
     private List<StaccatoImage> images = new ArrayList<>();
 
@@ -31,19 +36,38 @@ public class StaccatoImages {
         }
     }
 
-    public void addAll(StaccatoImages newStaccatoImages, Staccato staccato) {
-        newStaccatoImages.images.forEach(image -> {
-            this.images.add(image);
-            image.belongTo(staccato);
-        });
-    }
-
     public boolean isNotEmpty() {
         return !images.isEmpty();
     }
 
     protected void update(StaccatoImages newStaccatoImages, Staccato staccato) {
+        if (isImagesChanged(newStaccatoImages)) {
+            staccato.getCategory().setUpdatedAt(LocalDateTime.now());
+        }
         images.clear();
         addAll(newStaccatoImages, staccato);
+    }
+
+    private boolean isImagesChanged(StaccatoImages newStaccatoImages) {
+        if (this.images.size() != newStaccatoImages.images.size()) {
+            return true;
+        }
+
+        for (int i = 0; i < this.images.size(); i++) {
+            String oldUrl = this.images.get(i).getImageUrl();
+            String newUrl = newStaccatoImages.images.get(i).getImageUrl();
+            if (!oldUrl.equals(newUrl)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void addAll(StaccatoImages newStaccatoImages, Staccato staccato) {
+        newStaccatoImages.images.forEach(image -> {
+            this.images.add(image);
+            image.belongTo(staccato);
+        });
     }
 }
