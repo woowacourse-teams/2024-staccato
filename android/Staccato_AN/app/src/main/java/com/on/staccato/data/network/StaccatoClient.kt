@@ -2,8 +2,6 @@ package com.on.staccato.data.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.on.staccato.BuildConfig
-import com.on.staccato.data.HeaderInterceptor
-import com.on.staccato.data.TokenManager
 import com.on.staccato.data.dto.ErrorResponse
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
