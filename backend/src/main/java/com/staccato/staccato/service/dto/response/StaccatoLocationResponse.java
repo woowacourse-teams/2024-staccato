@@ -2,17 +2,18 @@ package com.staccato.staccato.service.dto.response;
 
 import java.math.BigDecimal;
 
+import com.staccato.config.swagger.SwaggerExamples;
 import com.staccato.staccato.domain.Staccato;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "스타카토 목록 중 하나의 스타카토에 해당하는 응답입니다.")
 public record StaccatoLocationResponse(
-        @Schema(example = "1")
+        @Schema(example = SwaggerExamples.STACCATO_ID)
         long staccatoId,
-        @Schema(example = "51.51978412729915")
+        @Schema(example = SwaggerExamples.STACCATO_LATITUDE)
         BigDecimal latitude,
-        @Schema(example = "-0.12712788587027796")
+        @Schema(example = SwaggerExamples.STACCATO_LONGITUDE)
         BigDecimal longitude) {
 
     public StaccatoLocationResponse(Staccato staccato) {

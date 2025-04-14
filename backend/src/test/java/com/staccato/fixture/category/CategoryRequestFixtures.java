@@ -1,0 +1,50 @@
+package com.staccato.fixture.category;
+
+import java.time.LocalDate;
+
+import com.staccato.category.service.dto.request.CategoryRequest;
+
+public class CategoryRequestFixtures {
+
+    public static CategoryRequestBuilder defaultCategoryRequest() {
+        return new CategoryRequestBuilder()
+                .withCategoryThumbnailUrl("https://example.com/categoryThumbnailUrl.jpg")
+                .withCategoryTitle("categoryTitle")
+                .withDescription("categoryDescription")
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31));
+    }
+
+    public static class CategoryRequestBuilder {
+        String categoryThumbnailUrl;
+        String categoryTitle;
+        String description;
+        LocalDate startAt;
+        LocalDate endAt;
+
+        public CategoryRequestBuilder withCategoryThumbnailUrl(String categoryThumbnailUrl) {
+            this.categoryThumbnailUrl = categoryThumbnailUrl;
+            return this;
+        }
+
+        public CategoryRequestBuilder withCategoryTitle(String categoryTitle) {
+            this.categoryTitle = categoryTitle;
+            return this;
+        }
+
+        public CategoryRequestBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public CategoryRequestBuilder withTerm(LocalDate startAt, LocalDate endAt) {
+            this.startAt = startAt;
+            this.endAt = endAt;
+            return this;
+        }
+
+        public CategoryRequest build() {
+            return new CategoryRequest(categoryThumbnailUrl, categoryTitle, description, startAt, endAt);
+        }
+    }
+}

@@ -18,6 +18,4 @@ public interface StaccatoImageRepository extends JpaRepository<StaccatoImage, Lo
     @Modifying
     @Query("DELETE FROM StaccatoImage si WHERE si.id In :ids")
     void deleteAllByIdInBulk(@Param("ids") List<Long> ids);
-
-    List<StaccatoImage> findAllByStaccatoId(@Param("staccatoId") long staccatoId);
 }

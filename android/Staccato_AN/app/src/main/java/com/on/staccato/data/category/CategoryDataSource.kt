@@ -1,9 +1,9 @@
 package com.on.staccato.data.category
 
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.category.CategoriesResponse
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.dto.category.CategoryResponse
+import com.on.staccato.data.network.ApiResult
 import com.on.staccato.domain.model.NewCategory
 
 interface CategoryDataSource {

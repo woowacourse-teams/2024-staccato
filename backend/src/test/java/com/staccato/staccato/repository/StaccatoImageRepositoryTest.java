@@ -1,6 +1,8 @@
 package com.staccato.staccato.repository;
 
 import com.staccato.category.domain.Category;
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,8 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
-import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.staccato.domain.StaccatoImage;
 
@@ -33,14 +33,13 @@ class StaccatoImageRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByStaccatoIdInBulk() {
         // given
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Staccato staccato1 = staccatoRepository.save(StaccatoFixture
-                .createWithImages(
-                    category, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2")));
-        Staccato staccato2 = staccatoRepository.save(StaccatoFixture
-                .createWithImages(
-                    category, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2")));
+        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
+        Staccato staccato1 = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .buildAndSaveWithStaccatoImages(List.of("url1", "url2"), staccatoRepository);
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .buildAndSaveWithStaccatoImages(List.of("url1", "url2"), staccatoRepository);
 
         // when
         staccatoImageRepository.deleteAllByStaccatoIdInBulk(List.of(staccato1.getId(), staccato2.getId()));
@@ -60,10 +59,10 @@ class StaccatoImageRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByIdInBulk() {
         // given
-        Category category = categoryRepository.save(
-            CategoryFixture.create(LocalDate.of(2023, 12, 31), LocalDate.of(2024, 1, 10)));
-        Staccato staccato = staccatoRepository.save(StaccatoFixture.createWithImages(
-            category, LocalDateTime.of(2023, 12, 31, 22, 20), List.of("url1", "url2", "url3")));
+        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .buildAndSaveWithStaccatoImages(List.of("url1", "url2", "url3"), staccatoRepository);
 
         List<Long> imageIds = staccato.getStaccatoImages()
                 .getImages()

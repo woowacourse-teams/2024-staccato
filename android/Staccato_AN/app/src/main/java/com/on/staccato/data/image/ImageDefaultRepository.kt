@@ -1,8 +1,8 @@
 package com.on.staccato.data.image
 
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.handle
+import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.handle
 import com.on.staccato.domain.repository.ImageRepository
 import okhttp3.MultipartBody
 import javax.inject.Inject

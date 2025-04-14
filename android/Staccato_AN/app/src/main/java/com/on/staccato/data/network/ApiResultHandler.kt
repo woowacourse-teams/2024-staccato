@@ -1,4 +1,4 @@
-package com.on.staccato.data
+package com.on.staccato.data.network
 
 import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.ExceptionState2

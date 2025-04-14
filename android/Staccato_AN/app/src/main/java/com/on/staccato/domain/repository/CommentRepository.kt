@@ -1,6 +1,6 @@
 package com.on.staccato.domain.repository
 
-import com.on.staccato.data.ApiResult
+import com.on.staccato.data.network.ApiResult
 import com.on.staccato.domain.model.Comment
 import com.on.staccato.domain.model.NewComment
 

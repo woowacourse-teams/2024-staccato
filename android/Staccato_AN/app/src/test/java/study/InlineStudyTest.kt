@@ -1,9 +1,9 @@
 package study
 
-import com.on.staccato.data.ApiResult
-import com.on.staccato.data.Exception
-import com.on.staccato.data.ServerError
-import com.on.staccato.data.Success
+import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.Exception
+import com.on.staccato.data.network.ServerError
+import com.on.staccato.data.network.Success
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryStaccato
 import com.on.staccato.domain.model.Member

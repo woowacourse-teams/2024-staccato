@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
@@ -73,12 +74,21 @@ public class CategoryController implements CategoryControllerDocs {
         return ResponseEntity.ok(categoryDetailResponse);
     }
 
-    @PutMapping(path = "/{categoryId}")
+    @PutMapping("/{categoryId}")
     public ResponseEntity<Void> updateCategory(
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member) {
         categoryService.updateCategory(categoryRequest, categoryId, member);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{categoryId}/colors")
+    public ResponseEntity<Void> updateCategoryColor(
+            @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @Valid @RequestBody CategoryColorRequest categoryColorRequest,
+            @LoginMember Member member) {
+        categoryService.updateCategoryColor(categoryId, categoryColorRequest, member);
         return ResponseEntity.ok().build();
     }
 

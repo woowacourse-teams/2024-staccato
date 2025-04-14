@@ -1,9 +1,9 @@
 package com.on.staccato.data.mypage
 
-import com.on.staccato.data.ApiResult
-import com.on.staccato.data.Success
 import com.on.staccato.data.dto.mapper.toDomain
-import com.on.staccato.data.handle
+import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.Success
+import com.on.staccato.data.network.handle
 import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.repository.MyPageRepository
 import okhttp3.MultipartBody

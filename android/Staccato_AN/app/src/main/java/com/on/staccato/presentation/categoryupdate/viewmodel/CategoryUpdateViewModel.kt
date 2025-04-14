@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.onException2
-import com.on.staccato.data.onServerError
-import com.on.staccato.data.onSuccess
+import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.onException2
+import com.on.staccato.data.network.onServerError
+import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.CategoryRepository

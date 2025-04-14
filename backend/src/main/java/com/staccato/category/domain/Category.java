@@ -9,6 +9,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,6 +41,8 @@ public class Category extends BaseEntity {
     private String title;
     @Column(columnDefinition = "TEXT")
     private String description;
+    @Enumerated(EnumType.STRING)
+    private Color color;
     @Column
     @Embedded
     private Term term;
@@ -50,7 +54,13 @@ public class Category extends BaseEntity {
         this.thumbnailUrl = thumbnailUrl;
         this.title = title.trim();
         this.description = description;
+        this.color = Color.GRAY;
         this.term = new Term(startAt, endAt);
+    }
+
+    public Category(Long id, String thumbnailUrl, @NonNull String title, String description, LocalDate startAt, LocalDate endAt) {
+        this(thumbnailUrl, title, description, startAt, endAt);
+        this.id = id;
     }
 
     public static Category basic(Nickname memberNickname) {
@@ -106,5 +116,9 @@ public class Category extends BaseEntity {
 
     public boolean hasTerm() {
         return term.isExist();
+    }
+
+    public void changeColor(Color color){
+        this.color = color;
     }
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.staccato.comment.controller.docs.CommentControllerDocs;
 import com.staccato.comment.service.CommentService;
-import com.staccato.comment.service.dto.request.CommentRequestV2;
+import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.config.auth.LoginMember;
@@ -35,9 +35,9 @@ public class CommentController implements CommentControllerDocs {
     @PostMapping("/v2")
     public ResponseEntity<Void> createComment(
             @LoginMember Member member,
-            @Valid @RequestBody CommentRequestV2 commentRequestV2
+            @Valid @RequestBody CommentRequest commentRequest
     ) {
-        long commentId = commentService.createComment(commentRequestV2, member);
+        long commentId = commentService.createComment(commentRequest, member);
         return ResponseEntity.created(URI.create("/comments/" + commentId))
                 .build();
     }

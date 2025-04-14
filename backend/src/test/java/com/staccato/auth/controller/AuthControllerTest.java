@@ -11,6 +11,7 @@ import com.staccato.ControllerTest;
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.auth.LoginRequestFixtures;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -30,10 +31,10 @@ class AuthControllerTest extends ControllerTest {
                 """;
         String expectedResponse = """
                 {
-                  "token": "staccatotoken"
+                  "token": "staccatoToken"
                 }
                 """;
-        LoginResponse loginResponse = new LoginResponse("staccatotoken");
+        LoginResponse loginResponse = new LoginResponse("staccatoToken");
         when(authService.login(any(LoginRequest.class))).thenReturn(loginResponse);
 
         // when & then
@@ -49,7 +50,8 @@ class AuthControllerTest extends ControllerTest {
     @ValueSource(strings = {"", " "})
     void cannotLoginIfNicknameTooShort(String nickname) throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest(nickname);
+        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest()
+                .withNickname(nickname).build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "1자 이상 10자 이하의 닉네임으로 설정해주세요.");
 
         // when & then
@@ -64,7 +66,8 @@ class AuthControllerTest extends ControllerTest {
     @Test
     void cannotLoginIfNicknameNull() throws Exception {
         // given
-        LoginRequest loginRequest = new LoginRequest(null);
+        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest()
+                .withNickname(null).build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "닉네임을 입력해주세요.");
 
         // when & then
@@ -80,7 +83,8 @@ class AuthControllerTest extends ControllerTest {
     void cannotLoginIfLengthExceeded() throws Exception {
         // given
         String nickname = "가".repeat(11);
-        LoginRequest loginRequest = new LoginRequest(nickname);
+        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest()
+                .withNickname(nickname).build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "1자 이상 10자 이하의 닉네임으로 설정해주세요.");
 
         // when & then
