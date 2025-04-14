@@ -2,11 +2,11 @@ package com.on.staccato.presentation.categorycreation.viewmodel
 
 import com.on.staccato.CoroutinesTestExtension
 import com.on.staccato.InstantTaskExecutorExtension
-import com.on.staccato.data.Exception
-import com.on.staccato.data.ServerError
-import com.on.staccato.data.Success
 import com.on.staccato.data.dto.Status
 import com.on.staccato.data.dto.category.CategoryCreationResponse
+import com.on.staccato.data.network.Exception
+import com.on.staccato.data.network.ServerError
+import com.on.staccato.data.network.Success
 import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
