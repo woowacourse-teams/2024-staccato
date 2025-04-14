@@ -1,10 +1,10 @@
 package com.on.staccato.data.comment
 
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.comment.CommentUpdateRequest
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.dto.mapper.toDto
-import com.on.staccato.data.handle
+import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.handle
 import com.on.staccato.domain.model.Comment
 import com.on.staccato.domain.model.NewComment
 import com.on.staccato.domain.repository.CommentRepository

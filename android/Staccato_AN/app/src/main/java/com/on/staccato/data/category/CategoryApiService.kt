@@ -1,10 +1,10 @@
 package com.on.staccato.data.category
 
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.category.CategoriesResponse
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.dto.category.CategoryRequest
 import com.on.staccato.data.dto.category.CategoryResponse
+import com.on.staccato.data.network.ApiResult
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET

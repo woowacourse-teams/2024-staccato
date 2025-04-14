@@ -3,8 +3,8 @@ package com.on.staccato
 import android.app.Application
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.on.staccato.data.PlacesClientProvider
-import com.on.staccato.data.StaccatoClient
 import com.on.staccato.data.UserInfoPreferencesManager
+import com.on.staccato.data.network.StaccatoClient
 import dagger.hilt.android.HiltAndroidApp
 import retrofit2.Retrofit
 
