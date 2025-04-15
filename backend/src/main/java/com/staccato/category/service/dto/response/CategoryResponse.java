@@ -17,6 +17,8 @@ public record CategoryResponse(
         String categoryThumbnailUrl,
         @Schema(example = SwaggerExamples.CATEGORY_TITLE)
         String categoryTitle,
+        @Schema(example = SwaggerExamples.CATEGORY_COLOR)
+        String categoryColor,
         @Schema(example = SwaggerExamples.CATEGORY_START_AT)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate startAt,
@@ -29,6 +31,7 @@ public record CategoryResponse(
                 category.getId(),
                 category.getThumbnailUrl(),
                 category.getTitle(),
+                category.getColor().getName(),
                 category.getTerm().getStartAt(),
                 category.getTerm().getEndAt()
         );

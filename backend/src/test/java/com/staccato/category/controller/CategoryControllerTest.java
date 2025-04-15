@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.staccato.category.domain.Category;
+import com.staccato.category.domain.Color;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
@@ -175,9 +176,12 @@ class CategoryControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category categoryWithTerm = CategoryFixtures.defaultCategory()
+                .withColor(Color.PINK)
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
-        Category categoryWithoutTerm = CategoryFixtures.defaultCategory().withTerm(null, null).build();
+        Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
+                .withColor(Color.BLUE)
+                .withTerm(null, null).build();
         CategoryResponses categoryResponses = CategoryResponses.from(List.of(categoryWithTerm, categoryWithoutTerm));
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
@@ -187,13 +191,15 @@ class CategoryControllerTest extends ControllerTest {
                             "categoryId": null,
                             "categoryTitle": "categoryTitle",
                             "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
+                            "categoryColor": "pink",
                             "startAt": "2024-01-01",
                             "endAt": "2024-12-31"
                         },
                         {
                             "categoryId": null,
                             "categoryTitle": "categoryTitle",
-                            "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg"
+                            "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
+                            "categoryColor": "blue"
                         }
                     ]
                 }
