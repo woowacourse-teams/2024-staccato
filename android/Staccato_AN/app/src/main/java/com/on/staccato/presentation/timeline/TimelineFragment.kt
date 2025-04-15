@@ -99,6 +99,7 @@ class TimelineFragment :
         }
 
         observeException()
+        observeIsRetry()
 
         sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) { isUpdated ->
             if (isUpdated) {
@@ -114,6 +115,12 @@ class TimelineFragment :
     private fun observeException() {
         timelineViewModel.exception.observe(viewLifecycleOwner) { state ->
             sharedViewModel.updateException(state)
+        }
+    }
+
+    private fun observeIsRetry() {
+        sharedViewModel.isRetry.observe(viewLifecycleOwner) {
+            if (it) timelineViewModel.loadTimeline()
         }
     }
 
@@ -136,10 +143,6 @@ class TimelineFragment :
             timelineViewModel.sortTimeline(sortType)
             false
         }
-    }
-
-    private fun onRetryAction() {
-        timelineViewModel.loadTimeline()
     }
 
     private fun logAccess() {
