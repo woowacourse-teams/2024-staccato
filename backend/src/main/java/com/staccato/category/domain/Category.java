@@ -43,6 +43,7 @@ public class Category extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Color color;
     @Column
     @Embedded
