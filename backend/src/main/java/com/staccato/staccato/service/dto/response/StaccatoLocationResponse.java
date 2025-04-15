@@ -2,6 +2,7 @@ package com.staccato.staccato.service.dto.response;
 
 import java.math.BigDecimal;
 
+import com.staccato.category.domain.Color;
 import com.staccato.config.swagger.SwaggerExamples;
 import com.staccato.staccato.domain.Staccato;
 
@@ -11,12 +12,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record StaccatoLocationResponse(
         @Schema(example = SwaggerExamples.STACCATO_ID)
         Long staccatoId,
+        @Schema(example = SwaggerExamples.CATEGORY_COLOR)
+        String staccatoColor,
         @Schema(example = SwaggerExamples.STACCATO_LATITUDE)
         BigDecimal latitude,
         @Schema(example = SwaggerExamples.STACCATO_LONGITUDE)
         BigDecimal longitude) {
 
-    public StaccatoLocationResponse(Staccato staccato) {
-        this(staccato.getId(), staccato.getSpot().getLatitude(), staccato.getSpot().getLongitude());
+    public StaccatoLocationResponse(Staccato staccato, Color color) {
+        this(staccato.getId(), color.getName(), staccato.getSpot().getLatitude(), staccato.getSpot().getLongitude());
     }
 }
