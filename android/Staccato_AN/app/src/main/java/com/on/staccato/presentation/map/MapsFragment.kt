@@ -85,6 +85,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         observeLocation()
         observeIsTimelineUpdated()
         observeException()
+        observeIsRetry()
     }
 
     override fun onResume() {
@@ -270,6 +271,12 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private fun observeException() {
         mapsViewModel.exception.observe(viewLifecycleOwner) { state ->
             sharedViewModel.updateException(state)
+        }
+    }
+
+    private fun observeIsRetry() {
+        sharedViewModel.isRetry.observe(viewLifecycleOwner) {
+            if (it) mapsViewModel.loadStaccatos()
         }
     }
 
