@@ -173,26 +173,23 @@ class CategoryControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category categoryWithTerm = CategoryFixtures.defaultCategory()
-                .withId(1L)
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
-        Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
-                .withId(2L)
-                .withTerm(null, null).build();
+        Category categoryWithoutTerm = CategoryFixtures.defaultCategory().withTerm(null, null).build();
         CategoryResponses categoryResponses = CategoryResponses.from(List.of(categoryWithTerm, categoryWithoutTerm));
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
                 {
                     "categories": [
                         {
-                            "categoryId": 1,
+                            "categoryId": null,
                             "categoryTitle": "categoryTitle",
                             "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
                             "startAt": "2024-01-01",
                             "endAt": "2024-12-31"
                         },
                         {
-                            "categoryId": 2,
+                            "categoryId": null,
                             "categoryTitle": "categoryTitle",
                             "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg"
                         }
@@ -232,15 +229,14 @@ class CategoryControllerTest extends ControllerTest {
     void readAllCategoryIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-        Category category = CategoryFixtures.defaultCategory()
-                .withId(1L).build();
+        Category category = CategoryFixtures.defaultCategory().build();
         CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
         when(categoryService.readAllCategoriesByDate(any(Member.class), any())).thenReturn(categoryNameResponses);
         String expectedResponse = """
                 {
                     "categories": [
                         {
-                            "categoryId": 1,
+                            "categoryId": null,
                             "categoryTitle": "categoryTitle"
                         }
                     ]
@@ -276,19 +272,17 @@ class CategoryControllerTest extends ControllerTest {
     void readCategory() throws Exception {
         // given
         long categoryId = 1;
-        Member member = MemberFixtures.defaultMember().withId(1L).build();
+        Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
-        Category category = CategoryFixtures.defaultCategory()
-                .withId(categoryId).buildWithMember(member);
+        Category category = CategoryFixtures.defaultCategory().buildWithMember(member);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withId(1L)
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
-                    "categoryId": 1,
+                    "categoryId": null,
                     "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
                     "categoryTitle": "categoryTitle",
                     "startAt": "2024-01-01",
@@ -296,14 +290,14 @@ class CategoryControllerTest extends ControllerTest {
                     "description": "categoryDescription",
                     "mates": [
                         {
-                            "memberId": 1,
+                            "memberId": null,
                             "nickname": "nickname",
                             "memberImageUrl": "https://example.com/memberImage.png"
                         }
                     ],
                     "staccatos": [
                             {
-                                "staccatoId": 1,
+                                "staccatoId": null,
                                 "staccatoTitle": "staccatoTitle",
                                 "staccatoImageUrl": "https://example.com/staccatoImage.jpg",
                                 "visitedAt": "2024-06-01T00:00:00"
@@ -325,34 +319,32 @@ class CategoryControllerTest extends ControllerTest {
     void readCategoryWithoutTerm() throws Exception {
         // given
         long categoryId = 1;
-        Member member = MemberFixtures.defaultMember().withId(1L).build();
+        Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category = CategoryFixtures.defaultCategory()
-                .withId(categoryId)
                 .withTerm(null, null)
                 .buildWithMember(member);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withId(1L)
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
-                    "categoryId": 1,
+                    "categoryId": null,
                     "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
                     "categoryTitle": "categoryTitle",
                     "description": "categoryDescription",
                     "mates": [
                         {
-                            "memberId": 1,
+                            "memberId": null,
                             "nickname": "nickname",
                             "memberImageUrl": "https://example.com/memberImage.png"
                         }
                     ],
                     "staccatos": [
                             {
-                                "staccatoId": 1,
+                                "staccatoId": null,
                                 "staccatoTitle": "staccatoTitle",
                                 "staccatoImageUrl": "https://example.com/staccatoImage.jpg",
                                 "visitedAt": "2024-06-01T00:00:00"

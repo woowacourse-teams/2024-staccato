@@ -49,18 +49,17 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
     private List<CategoryMember> categoryMembers = new ArrayList<>();
 
-    @Builder
-    public Category(String thumbnailUrl, @NonNull String title, String description, LocalDate startAt, LocalDate endAt) {
+    public Category(String thumbnailUrl, @NonNull String title, String description, Color color, LocalDate startAt, LocalDate endAt) {
         this.thumbnailUrl = thumbnailUrl;
         this.title = title.trim();
         this.description = description;
-        this.color = Color.GRAY;
+        this.color = color;
         this.term = new Term(startAt, endAt);
     }
 
-    public Category(Long id, String thumbnailUrl, @NonNull String title, String description, LocalDate startAt, LocalDate endAt) {
-        this(thumbnailUrl, title, description, startAt, endAt);
-        this.id = id;
+    @Builder
+    public Category(String thumbnailUrl, @NonNull String title, String description, String color, LocalDate startAt, LocalDate endAt) {
+        this(thumbnailUrl, title, description, Color.findByName(color), startAt, endAt);
     }
 
     public static Category basic(Nickname memberNickname) {

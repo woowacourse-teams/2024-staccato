@@ -172,16 +172,12 @@ class StaccatoControllerTest extends ControllerTest {
         Category category = CategoryFixtures.defaultCategory().build();
         StaccatoLocationResponse response1 = new StaccatoLocationResponse(
                 StaccatoFixtures.defaultStaccato()
-                        .withId(1L)
                         .withCategory(category)
-                        .withSpot("placeName", "address",
-                                BigDecimal.ZERO, BigDecimal.ZERO).build());
+                        .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build());
         StaccatoLocationResponse response2 = new StaccatoLocationResponse(
                 StaccatoFixtures.defaultStaccato()
-                        .withId(2L)
                         .withCategory(category)
-                        .withSpot("placeName", "address",
-                                new BigDecimal("123.456789"), new BigDecimal("123.456789")).build());
+                        .withSpot(new BigDecimal("123.456789"), new BigDecimal("123.456789")).build());
         StaccatoLocationResponses responses = new StaccatoLocationResponses(List.of(response1, response2));
 
         when(staccatoService.readAllStaccato(any(Member.class))).thenReturn(responses);
@@ -189,12 +185,12 @@ class StaccatoControllerTest extends ControllerTest {
             {
                 "staccatoLocationResponses": [
                      {
-                         "staccatoId": 1,
+                         "staccatoId": null,
                          "latitude": 0,
                          "longitude": 0
                      },
                      {
-                         "staccatoId": 2,
+                         "staccatoId": null,
                          "latitude": 123.456789,
                          "longitude": 123.456789
                      }
@@ -216,19 +212,17 @@ class StaccatoControllerTest extends ControllerTest {
         long staccatoId = 1L;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory()
-                .withId(1L)
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withId(1L)
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
         StaccatoDetailResponse response = new StaccatoDetailResponse(staccato);
         when(staccatoService.readStaccatoById(anyLong(), any(Member.class))).thenReturn(response);
         String expectedResponse = """
                 {
-                     "staccatoId": 1,
-                     "categoryId": 1,
+                     "staccatoId": null,
+                     "categoryId": null,
                      "categoryTitle": "categoryTitle",
                      "startAt": "2024-01-01",
                      "endAt": "2024-12-31",
@@ -409,7 +403,6 @@ class StaccatoControllerTest extends ControllerTest {
         LocalDateTime expiredAt = LocalDateTime.of(2024, 6, 1, 0, 0, 0);
         Category category = CategoryFixtures.defaultCategory().build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withId(1L)
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/stacccatoImage1.jpg",
                         "https://example.com/stacccatoImage2.jpg")).build();
@@ -429,7 +422,7 @@ class StaccatoControllerTest extends ControllerTest {
         when(staccatoShareService.readSharedStaccatoByToken(token)).thenReturn(staccatoSharedResponse);
         String expectedResponse = """
                 {
-                    "staccatoId": 1,
+                    "staccatoId": null,
                     "expiredAt": "2024-06-01T00:00:00",
                     "nickname": "nickname1",
                     "staccatoImageUrls": [

@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "스타카토 목록 중 하나의 스타카토에 해당하는 응답입니다.")
 public record StaccatoLocationResponse(
         @Schema(example = SwaggerExamples.STACCATO_ID)
-        long staccatoId,
+        Long staccatoId,
         @Schema(example = SwaggerExamples.STACCATO_LATITUDE)
         BigDecimal latitude,
         @Schema(example = SwaggerExamples.STACCATO_LONGITUDE)

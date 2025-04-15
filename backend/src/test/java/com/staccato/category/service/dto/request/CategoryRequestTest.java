@@ -20,6 +20,7 @@ class CategoryRequestTest {
                 "thumbnail",
                 categoryTitle,
                 "description",
+                "PINK",
                 LocalDate.of(2024, 8, 22),
                 LocalDate.of(2024, 8, 22)
         );
