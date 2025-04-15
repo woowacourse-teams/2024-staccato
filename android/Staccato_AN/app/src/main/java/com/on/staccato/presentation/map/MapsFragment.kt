@@ -84,6 +84,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         observeUpdatedStaccato()
         observeLocation()
         observeIsTimelineUpdated()
+        observeException()
     }
 
     override fun onResume() {
@@ -263,6 +264,12 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private fun observeIsTimelineUpdated() {
         sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) {
             if (it) mapsViewModel.loadStaccatos()
+        }
+    }
+
+    private fun observeException() {
+        mapsViewModel.exception.observe(viewLifecycleOwner) { state ->
+            sharedViewModel.updateException(state)
         }
     }
 
