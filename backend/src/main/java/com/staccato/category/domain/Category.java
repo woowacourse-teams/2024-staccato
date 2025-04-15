@@ -31,6 +31,7 @@ import lombok.NonNull;
 public class Category extends BaseEntity {
     private static final String DEFAULT_SUBTITLE = "의 추억";
     private static final String DEFAULT_DESCRIPTION = "스타카토를 카테고리에 담아보세요.";
+    private static final String DEFAULT_COLOR = Color.GRAY.getName();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,7 +59,7 @@ public class Category extends BaseEntity {
     }
 
     @Builder
-    public Category(String thumbnailUrl, @NonNull String title, String description, String color, LocalDate startAt, LocalDate endAt) {
+    public Category(String thumbnailUrl, @NonNull String title, String description, @NonNull String color, LocalDate startAt, LocalDate endAt) {
         this(thumbnailUrl, title, description, Color.findByName(color), startAt, endAt);
     }
 
@@ -66,6 +67,7 @@ public class Category extends BaseEntity {
         return Category.builder()
                 .title(memberNickname.getNickname() + DEFAULT_SUBTITLE)
                 .description(DEFAULT_DESCRIPTION)
+                .color(DEFAULT_COLOR)
                 .build();
     }
 
@@ -82,6 +84,7 @@ public class Category extends BaseEntity {
         this.thumbnailUrl = updatedCategory.getThumbnailUrl();
         this.title = updatedCategory.getTitle();
         this.description = updatedCategory.getDescription();
+        this.color = updatedCategory.getColor();
         this.term = updatedCategory.getTerm();
     }
 

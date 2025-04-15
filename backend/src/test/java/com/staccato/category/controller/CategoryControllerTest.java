@@ -82,6 +82,7 @@ class CategoryControllerTest extends ControllerTest {
                     "categoryThumbnailUrl": "https://example.com/categories/geumohrm.jpg",
                     "categoryTitle": "2023 여름 휴가",
                     "description": "친구들과 함께한 여름 휴가 여행",
+                    "color": "gray",
                     "startAt": "2023-07-01",
                     "endAt": "2023-07-10"
                 }
@@ -112,7 +113,8 @@ class CategoryControllerTest extends ControllerTest {
                 {
                     "categoryThumbnailUrl": "https://example.com/categories/geumohrm.jpg",
                     "categoryTitle": "2023 여름 휴가",
-                    "description": "친구들과 함께한 여름 휴가 여행"
+                    "description": "친구들과 함께한 여름 휴가 여행",
+                    "color": "gray"
                 }
                 """;
         when(categoryService.createCategory(any(), any())).thenReturn(new CategoryIdResponse(1));

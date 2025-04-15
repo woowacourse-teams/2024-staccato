@@ -24,6 +24,9 @@ public record CategoryRequest(
         @Schema(example = SwaggerExamples.CATEGORY_DESCRIPTION)
         @Size(max = 500, message = "내용의 최대 허용 글자수는 공백 포함 500자입니다.")
         String description,
+        @Schema(example = SwaggerExamples.CATEGORY_COLOR)
+        @NotBlank(message = "카테고리 색상을 선택해주세요.")
+        String color,
         @Schema(example = SwaggerExamples.CATEGORY_START_AT)
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate startAt,
@@ -41,6 +44,7 @@ public record CategoryRequest(
                 .thumbnailUrl(categoryThumbnailUrl)
                 .title(categoryTitle)
                 .description(description)
+                .color(color)
                 .startAt(startAt)
                 .endAt(endAt)
                 .build();
