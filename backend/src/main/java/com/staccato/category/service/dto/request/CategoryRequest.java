@@ -26,7 +26,7 @@ public record CategoryRequest(
         String description,
         @Schema(example = SwaggerExamples.CATEGORY_COLOR)
         @NotBlank(message = "카테고리 색상을 선택해주세요.")
-        String color,
+        String categoryColor,
         @Schema(example = SwaggerExamples.CATEGORY_START_AT)
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate startAt,
@@ -44,7 +44,7 @@ public record CategoryRequest(
                 .thumbnailUrl(categoryThumbnailUrl)
                 .title(categoryTitle)
                 .description(description)
-                .color(color)
+                .color(categoryColor)
                 .startAt(startAt)
                 .endAt(endAt)
                 .build();

@@ -18,6 +18,7 @@ public class CategoryFixtures {
                 .withThumbnailUrl("https://example.com/categoryThumbnail.jpg")
                 .withTitle("categoryTitle")
                 .withDescription("categoryDescription")
+                .withColor(Color.PINK)
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31));
     }
