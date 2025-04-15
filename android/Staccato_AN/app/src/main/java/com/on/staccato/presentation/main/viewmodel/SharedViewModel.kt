@@ -53,6 +53,9 @@ class SharedViewModel
         private val _exception = MutableLiveData<ExceptionState2>()
         val exception: LiveData<ExceptionState2> get() = _exception
 
+        private val _isRetry = MutableLiveData<Boolean>()
+        val isRetry: LiveData<Boolean> get() = _isRetry
+
         private val isDragging = MutableLiveData<Boolean>(false)
 
         fun fetchMemberProfile() {
@@ -103,6 +106,10 @@ class SharedViewModel
 
         fun updateException(state: ExceptionState2) {
             _exception.value = state
+        }
+
+        fun updateIsRetry() {
+            _isRetry.value = true
         }
 
         private fun setMemberProfile(memberProfile: MemberProfile) {
