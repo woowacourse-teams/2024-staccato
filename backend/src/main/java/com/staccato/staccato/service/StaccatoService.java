@@ -8,6 +8,7 @@ import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import com.staccato.staccato.domain.StaccatoImage;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,22 +55,22 @@ public class StaccatoService {
         return new StaccatoIdResponse(staccato.getId());
     }
 
-    public StaccatoLocationResponses readAllStaccato(Member member) {
+    public StaccatoLocationResponsesV2 readAllStaccato(Member member) {
         /*return new StaccatoLocationResponses(staccatoRepository.findAllByCategory_CategoryMembers_Member(member)
                 .stream()
                 .map(StaccatoLocationResponse::new).toList());*/
-        List<StaccatoLocationResponse> staccatoLocationResponses = new ArrayList<>();
+        List<StaccatoLocationResponseV2> staccatoLocationResponses = new ArrayList<>();
         List<CategoryMember> categoryMembers = categoryMemberRepository.findAllByMemberId(member.getId());
         for (CategoryMember categoryMember : categoryMembers) {
             staccatoLocationResponses.addAll(getStaccatoLocationResponsesByCategory(categoryMember.getCategory()));
         }
-        return new StaccatoLocationResponses(staccatoLocationResponses);
+        return new StaccatoLocationResponsesV2(staccatoLocationResponses);
     }
 
-    private List<StaccatoLocationResponse> getStaccatoLocationResponsesByCategory(Category category) {
+    private List<StaccatoLocationResponseV2> getStaccatoLocationResponsesByCategory(Category category) {
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryId(category.getId());
         return staccatos.stream()
-                .map(staccato -> new StaccatoLocationResponse(staccato, category.getColor()))
+                .map(staccato -> new StaccatoLocationResponseV2(staccato, category.getColor()))
                 .toList();
     }
 

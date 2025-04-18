@@ -140,7 +140,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .withCategory(category2).buildAndSave(staccatoRepository);
 
         // when
-        StaccatoLocationResponses responses = staccatoService.readAllStaccato(member);
+        StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member);
 
         // then
         assertAll(

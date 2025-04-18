@@ -45,7 +45,9 @@ import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
 import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
 
@@ -172,19 +174,19 @@ class StaccatoControllerTest extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
-        StaccatoLocationResponse response1 = new StaccatoLocationResponse(
+        StaccatoLocationResponseV2 response1 = new StaccatoLocationResponseV2(
                 StaccatoFixtures.defaultStaccato()
                         .withCategory(category)
                         .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build(),
                 category.getColor()
         );
-        StaccatoLocationResponse response2 = new StaccatoLocationResponse(
+        StaccatoLocationResponseV2 response2 = new StaccatoLocationResponseV2(
                 StaccatoFixtures.defaultStaccato()
                         .withCategory(category)
                         .withSpot(new BigDecimal("123.456789"), new BigDecimal("123.456789")).build(),
                 category.getColor()
         );
-        StaccatoLocationResponses responses = new StaccatoLocationResponses(List.of(response1, response2));
+        StaccatoLocationResponsesV2 responses = new StaccatoLocationResponsesV2(List.of(response1, response2));
 
         when(staccatoService.readAllStaccato(any(Member.class))).thenReturn(responses);
         String expectedResponse = """
@@ -192,13 +194,11 @@ class StaccatoControllerTest extends ControllerTest {
                     "staccatoLocationResponses": [
                          {
                              "staccatoId": null,
-                             "staccatoColor": "pink",
                              "latitude": 0,
                              "longitude": 0
                          },
                          {
                              "staccatoId": null,
-                             "staccatoColor": "pink",
                              "latitude": 123.456789,
                              "longitude": 123.456789
                          }
