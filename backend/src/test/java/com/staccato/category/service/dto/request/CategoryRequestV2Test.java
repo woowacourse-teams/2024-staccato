@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class CategoryRequestTest {
-    @DisplayName("CategoryRequest를 생성할 때 title에는 trim이 적용된다.")
+class CategoryRequestV2Test {
+    @DisplayName("CategoryRequestV2를 생성할 때 title에는 trim이 적용된다.")
     @Test
     void trimTitle() {
         // given
@@ -16,7 +16,7 @@ class CategoryRequestTest {
         String expectedTitle = "title";
 
         // when
-        CategoryRequest categoryRequest = new CategoryRequest(
+        CategoryRequestV2 categoryRequest = new CategoryRequestV2(
                 "thumbnail",
                 categoryTitle,
                 "description",
