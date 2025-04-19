@@ -19,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
+import com.staccato.category.domain.Color;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import lombok.AccessLevel;
@@ -107,5 +108,9 @@ public class Staccato extends BaseEntity {
 
     public List<StaccatoImage> existingImages() {
         return staccatoImages.getImages();
+    }
+
+    public Color getColor() {
+        return category.getColor();
     }
 }

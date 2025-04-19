@@ -56,21 +56,25 @@ public class StaccatoService {
     }
 
     public StaccatoLocationResponsesV2 readAllStaccato(Member member) {
-        /*return new StaccatoLocationResponses(staccatoRepository.findAllByCategory_CategoryMembers_Member(member)
-                .stream()
-                .map(StaccatoLocationResponse::new).toList());*/
-        List<StaccatoLocationResponseV2> staccatoLocationResponses = new ArrayList<>();
-        List<CategoryMember> categoryMembers = categoryMemberRepository.findAllByMemberId(member.getId());
-        for (CategoryMember categoryMember : categoryMembers) {
-            staccatoLocationResponses.addAll(getStaccatoLocationResponsesByCategory(categoryMember.getCategory()));
+/*        List<Staccato> staccatos = staccatoRepository.findAllByCategory_CategoryMembers_Member(member);
+        List<StaccatoLocationResponseV2> responses = new ArrayList<>();
+        for (Staccato staccato : staccatos) {
+            responses.add(new StaccatoLocationResponseV2(staccato, staccato.getCategory().getColor()));
         }
+        return new StaccatoLocationResponsesV2(responses);*/
+        List<CategoryMember> categoryMembers = categoryMemberRepository.findAllByMemberId(member.getId());
+        List<Long> categoryIds = getCategoryIds(categoryMembers);
+        List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdIn(categoryIds);
+        List<StaccatoLocationResponseV2> staccatoLocationResponses = staccatos.stream()
+                .map(staccato -> new StaccatoLocationResponseV2(staccato, staccato.getColor()))
+                .toList();
         return new StaccatoLocationResponsesV2(staccatoLocationResponses);
     }
 
-    private List<StaccatoLocationResponseV2> getStaccatoLocationResponsesByCategory(Category category) {
-        List<Staccato> staccatos = staccatoRepository.findAllByCategoryId(category.getId());
-        return staccatos.stream()
-                .map(staccato -> new StaccatoLocationResponseV2(staccato, category.getColor()))
+    private static List<Long> getCategoryIds(List<CategoryMember> categoryMembers) {
+        return categoryMembers.stream()
+                .map(CategoryMember::getCategory)
+                .map(Category::getId)
                 .toList();
     }
 

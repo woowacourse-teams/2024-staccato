@@ -34,7 +34,9 @@ import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
 class StaccatoServiceTest extends ServiceSliceTest {
     @Autowired
@@ -143,13 +145,19 @@ class StaccatoServiceTest extends ServiceSliceTest {
         StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member);
 
         // then
+        long blueCount = responses.staccatoLocationResponses().stream()
+                .map(StaccatoLocationResponseV2::staccatoColor)
+                .filter(color -> color.equals(Color.BLUE.getName()))
+                .count();
+        long pinkCount = responses.staccatoLocationResponses().stream()
+                .map(StaccatoLocationResponseV2::staccatoColor)
+                .filter(color -> color.equals(Color.PINK.getName()))
+                .count();
         assertAll(
-                () -> assertThat(responses.staccatoLocationResponses()).hasSize(3),
-                () -> assertThat(responses.staccatoLocationResponses().stream()
-                        .map(StaccatoLocationResponse::staccatoColor)
-                        .toList())
-                        .containsExactlyInAnyOrder(Color.BLUE.getName(), Color.BLUE.getName(), Color.PINK.getName())
-                );
+                () -> assertThat(responses.staccatoLocationResponses()).hasSize(2),
+                () -> assertThat(blueCount).isEqualTo(1),
+                () -> assertThat(pinkCount).isEqualTo(1)
+        );
     }
 
     @DisplayName("스타카토 조회에 성공한다.")
