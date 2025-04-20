@@ -154,8 +154,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .filter(color -> color.equals(Color.PINK.getName()))
                 .count();
         assertAll(
-                () -> assertThat(responses.staccatoLocationResponses()).hasSize(2),
-                () -> assertThat(blueCount).isEqualTo(1),
+                () -> assertThat(responses.staccatoLocationResponses()).hasSize(3),
+                () -> assertThat(blueCount).isEqualTo(2),
                 () -> assertThat(pinkCount).isEqualTo(1)
         );
     }
