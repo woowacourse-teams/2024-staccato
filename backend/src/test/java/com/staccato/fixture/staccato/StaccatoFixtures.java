@@ -18,7 +18,7 @@ public class StaccatoFixtures {
         return new StaccatoBuilder()
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .withTitle("staccatoTitle")
-                .withSpot("placeName", "address", BigDecimal.ZERO.setScale(14), BigDecimal.ZERO.setScale(14));
+                .withSpot(BigDecimal.ZERO.setScale(14), BigDecimal.ZERO.setScale(14));
     }
 
     public static class StaccatoBuilder {
@@ -28,11 +28,6 @@ public class StaccatoFixtures {
         Spot spot;
         Category category;
         StaccatoImages staccatoImages = new StaccatoImages(List.of());
-
-        public StaccatoBuilder withId(Long id) {
-            this.id = id;
-            return this;
-        }
 
         public StaccatoBuilder withVisitedAt(LocalDateTime visitedAt) {
             this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
@@ -44,8 +39,8 @@ public class StaccatoFixtures {
             return this;
         }
 
-        public StaccatoBuilder withSpot(String placeName, String address, BigDecimal latitude, BigDecimal longitude) {
-            this.spot = new Spot(placeName, address, latitude, longitude);
+        public StaccatoBuilder withSpot(BigDecimal latitude, BigDecimal longitude) {
+            this.spot = new Spot("placeName", "address", latitude, longitude);
             return this;
         }
 
@@ -60,7 +55,7 @@ public class StaccatoFixtures {
         }
 
         public Staccato build() {
-            return new Staccato(id, visitedAt, title, spot.getPlaceName(), spot.getAddress(), spot.getLatitude(),
+            return new Staccato(visitedAt, title, spot.getPlaceName(), spot.getAddress(), spot.getLatitude(),
                     spot.getLongitude(), staccatoImages, category);
         }
 

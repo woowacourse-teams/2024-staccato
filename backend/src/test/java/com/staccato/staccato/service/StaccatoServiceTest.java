@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
+import com.staccato.category.domain.Color;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
@@ -32,7 +33,10 @@ import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
 class StaccatoServiceTest extends ServiceSliceTest {
     @Autowired
@@ -124,17 +128,36 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
+                .withColor(Color.BLUE)
+                .buildAndSaveWithMember(member, categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTitle("title2")
+                .withColor(Color.PINK)
                 .buildAndSaveWithMember(member, categoryRepository);
         StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
         StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
+        StaccatoFixtures.defaultStaccato()
+                .withCategory(category2).buildAndSave(staccatoRepository);
 
         // when
-        StaccatoLocationResponses actual = staccatoService.readAllStaccato(member);
+        StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member);
 
         // then
-        assertThat(actual.staccatoLocationResponses()).hasSize(2);
+        long blueCount = responses.staccatoLocationResponses().stream()
+                .map(StaccatoLocationResponseV2::staccatoColor)
+                .filter(color -> color.equals(Color.BLUE.getName()))
+                .count();
+        long pinkCount = responses.staccatoLocationResponses().stream()
+                .map(StaccatoLocationResponseV2::staccatoColor)
+                .filter(color -> color.equals(Color.PINK.getName()))
+                .count();
+        assertAll(
+                () -> assertThat(responses.staccatoLocationResponses()).hasSize(3),
+                () -> assertThat(blueCount).isEqualTo(2),
+                () -> assertThat(pinkCount).isEqualTo(1)
+        );
     }
 
     @DisplayName("스타카토 조회에 성공한다.")

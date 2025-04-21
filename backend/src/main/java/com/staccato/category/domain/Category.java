@@ -31,6 +31,7 @@ import lombok.NonNull;
 public class Category extends BaseEntity {
     private static final String DEFAULT_SUBTITLE = "의 추억";
     private static final String DEFAULT_DESCRIPTION = "스타카토를 카테고리에 담아보세요.";
+    private static final String DEFAULT_COLOR = Color.GRAY.getName();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +43,7 @@ public class Category extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Color color;
     @Column
     @Embedded
@@ -49,24 +51,24 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
     private List<CategoryMember> categoryMembers = new ArrayList<>();
 
-    @Builder
-    public Category(String thumbnailUrl, @NonNull String title, String description, LocalDate startAt, LocalDate endAt) {
+    public Category(String thumbnailUrl, @NonNull String title, String description, Color color, LocalDate startAt, LocalDate endAt) {
         this.thumbnailUrl = thumbnailUrl;
         this.title = title.trim();
         this.description = description;
-        this.color = Color.GRAY;
+        this.color = color;
         this.term = new Term(startAt, endAt);
     }
 
-    public Category(Long id, String thumbnailUrl, @NonNull String title, String description, LocalDate startAt, LocalDate endAt) {
-        this(thumbnailUrl, title, description, startAt, endAt);
-        this.id = id;
+    @Builder
+    public Category(String thumbnailUrl, @NonNull String title, String description, @NonNull String color, LocalDate startAt, LocalDate endAt) {
+        this(thumbnailUrl, title, description, Color.findByName(color), startAt, endAt);
     }
 
     public static Category basic(Nickname memberNickname) {
         return Category.builder()
                 .title(memberNickname.getNickname() + DEFAULT_SUBTITLE)
                 .description(DEFAULT_DESCRIPTION)
+                .color(DEFAULT_COLOR)
                 .build();
     }
 
@@ -83,6 +85,7 @@ public class Category extends BaseEntity {
         this.thumbnailUrl = updatedCategory.getThumbnailUrl();
         this.title = updatedCategory.getTitle();
         this.description = updatedCategory.getDescription();
+        this.color = updatedCategory.getColor();
         this.term = updatedCategory.getTerm();
     }
 

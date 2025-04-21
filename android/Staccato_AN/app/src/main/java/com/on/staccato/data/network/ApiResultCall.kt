@@ -1,9 +1,9 @@
-package com.on.staccato.data
+package com.on.staccato.data.network
 
 import com.on.staccato.StaccatoApplication.Companion.retrofit
-import com.on.staccato.data.StaccatoClient.getErrorResponse
 import com.on.staccato.data.dto.ErrorResponse
 import com.on.staccato.data.dto.Status
+import com.on.staccato.data.network.StaccatoClient.getErrorResponse
 import okhttp3.Request
 import okhttp3.ResponseBody
 import okio.Timeout

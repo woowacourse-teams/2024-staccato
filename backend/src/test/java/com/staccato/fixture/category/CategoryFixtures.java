@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
+import com.staccato.category.domain.Color;
 import com.staccato.category.domain.Term;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.member.domain.Member;
@@ -17,6 +18,7 @@ public class CategoryFixtures {
                 .withThumbnailUrl("https://example.com/categoryThumbnail.jpg")
                 .withTitle("categoryTitle")
                 .withDescription("categoryDescription")
+                .withColor(Color.PINK)
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31));
     }
@@ -26,13 +28,9 @@ public class CategoryFixtures {
         private String thumbnailUrl;
         private String title;
         private String description;
+        private Color color;
         private Term term;
         private final List<CategoryMember> members = new ArrayList<>();
-
-        public CategoryBuilder withId(Long id) {
-            this.id = id;
-            return this;
-        }
 
         public CategoryBuilder withThumbnailUrl(String thumbnailUrl) {
             this.thumbnailUrl = thumbnailUrl;
@@ -54,8 +52,13 @@ public class CategoryFixtures {
             return this;
         }
 
+        public CategoryBuilder withColor(Color color) {
+            this.color = color;
+            return this;
+        }
+
         public Category build() {
-            return new Category(id, thumbnailUrl, title, description, term.getStartAt(), term.getEndAt());
+            return new Category(thumbnailUrl, title, description, color, term.getStartAt(), term.getEndAt());
         }
 
         public Category buildWithMember(Member member) {

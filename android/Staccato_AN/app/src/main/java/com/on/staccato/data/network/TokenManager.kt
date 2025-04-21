@@ -1,4 +1,4 @@
-package com.on.staccato.data
+package com.on.staccato.data.network
 
 import com.on.staccato.StaccatoApplication
 import kotlinx.coroutines.Dispatchers
