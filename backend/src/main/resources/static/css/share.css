@@ -156,6 +156,7 @@ body {
 .comments h2 {
     padding-left: 1.5rem;
     font-size: 1rem;
+    margin-top: 2rem;
 }
 
 .comments-list {
@@ -263,7 +264,7 @@ body {
 }
 
 .promotion h2 {
-    font-size: 2rem;
+    font-size: 1rem;
     font-weight: bold;
     color: #333;
     margin-bottom: 0;
@@ -277,7 +278,7 @@ body {
 }
 
 .promotion p {
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: #555;
     margin: 0;
 }
@@ -308,4 +309,16 @@ body {
     margin-top: 10px;
     font-size: 18px;
     color: #666;
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 90%;
+    }
+}
+
+@media (max-width: 360px) {
+    html {
+        font-size: 85%;
+    }
 }
