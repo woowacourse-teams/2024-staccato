@@ -124,6 +124,8 @@ enum class CategoryColor(
     companion object {
         fun getAllColors() = entries.toList()
 
-        fun getColorBy(label: String) = entries.firstOrNull { it.label == label }
+        fun getColorBy(label: String) = entries.firstOrNull { it.label == label } ?: GRAY
+
+        fun getMarkerResBy(label: String) = entries.firstOrNull { it.label == label }?.markerRes ?: GRAY.markerRes
     }
 }
