@@ -270,7 +270,9 @@ body {
 }
 
 .promotion img {
-    width: 300px;
+    height: auto;
+    width: 100%;
+    max-width: 300px;
     margin: 1rem 0;
 }
 
@@ -295,7 +297,9 @@ body {
 }
 
 .empty-comments-image {
+    width: 100%;
     max-width: 250px;
+    height: auto;
     opacity: 0.8;
     margin-bottom: 1rem;
 }
