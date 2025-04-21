@@ -15,8 +15,6 @@ import com.on.staccato.databinding.FragmentTimelineBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity
-import com.on.staccato.presentation.common.color.CategoryColor
-import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.CATEGORY_ID
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.SELECTED_COLOR_LABEL
@@ -60,14 +58,6 @@ class TimelineFragment :
     override fun onCategoryClicked(categoryId: Long) {
         val bundle: Bundle = bundleOf(CATEGORY_ID_KEY to categoryId)
         navigateToCategory(bundle)
-    }
-
-    override fun onCategoryColorChange(categoryId: Long) {
-        val existing = parentFragmentManager.findFragmentByTag(ColorSelectionDialogFragment.TAG)
-        if (existing == null) {
-            ColorSelectionDialogFragment.newInstance(categoryId, CategoryColor.LIGHT_BLUE)
-                .show(parentFragmentManager, ColorSelectionDialogFragment.TAG)
-        }
     }
 
     override fun onCategoryCreationClicked() {

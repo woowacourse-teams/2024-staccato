@@ -2,9 +2,9 @@ package com.on.staccato.data.dto.mapper
 
 import com.on.staccato.data.dto.timeline.TimelineCategoryDto
 import com.on.staccato.data.dto.timeline.TimelineResponse
-import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
+import com.on.staccato.domain.model.TimeLineCategory
 import com.on.staccato.domain.model.Timeline
 import java.time.LocalDate
 
@@ -24,14 +24,14 @@ fun TimelineResponse.toCategoryCandidates(): CategoryCandidates {
     return CategoryCandidates(categories)
 }
 
-fun TimelineCategoryDto.toDomain(): Category {
-    return Category(
+fun TimelineCategoryDto.toDomain(): TimeLineCategory {
+    return TimeLineCategory(
         categoryId = categoryId,
         categoryThumbnailUrl = categoryThumbnailUrl,
         categoryTitle = categoryTitle,
+        color = color,
         startAt = startAt?.let { LocalDate.parse(it) },
         endAt = endAt?.let { LocalDate.parse(it) },
-        description = description,
         mates = emptyList(),
         staccatos = emptyList(),
     )

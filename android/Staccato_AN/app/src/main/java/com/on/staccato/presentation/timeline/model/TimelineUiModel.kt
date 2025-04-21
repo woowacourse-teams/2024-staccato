@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.timeline.model
 
+import androidx.annotation.ColorRes
 import java.time.LocalDate
 
 data class TimelineUiModel(
@@ -8,4 +9,5 @@ data class TimelineUiModel(
     val categoryThumbnailUrl: String? = null,
     val startAt: LocalDate? = null,
     val endAt: LocalDate? = null,
+    @ColorRes val color: Int,
 )
