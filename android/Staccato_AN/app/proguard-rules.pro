@@ -20,4 +20,4 @@
 # hide the original source file name.
 -renamesourcefileattribute SourceFile
 
--keepnames, allowobfuscation class com.on.staccato.data.ApiResult
+-keepnames, allowobfuscation class com.on.staccato.data.network.ApiResult

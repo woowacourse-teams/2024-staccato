@@ -1,7 +1,7 @@
 package com.on.staccato.data.member
 
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.member.RecoveryCodeResponse
+import com.on.staccato.data.network.ApiResult
 import retrofit2.http.POST
 import retrofit2.http.Query
 

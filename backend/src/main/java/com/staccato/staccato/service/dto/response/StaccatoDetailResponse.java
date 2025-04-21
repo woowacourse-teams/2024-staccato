@@ -16,9 +16,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "스타카토를 조회했을 때 응답 형식입니다.")
 public record StaccatoDetailResponse(
         @Schema(example = SwaggerExamples.STACCATO_ID)
-        long staccatoId,
+        Long staccatoId,
         @Schema(example = SwaggerExamples.CATEGORY_ID)
-        long categoryId,
+        Long categoryId,
         @Schema(example = SwaggerExamples.CATEGORY_TITLE)
         String categoryTitle,
         @Schema(example = SwaggerExamples.CATEGORY_START_AT)

@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "스타카토를 공유했을 때 응답 형식입니다.")
 public record StaccatoSharedResponse(
         @Schema(example = SwaggerExamples.STACCATO_ID)
-        long staccatoId,
+        Long staccatoId,
         @Schema(example = SwaggerExamples.EXPIRED_AT)
         LocalDateTime expiredAt,
         @Schema(example = SwaggerExamples.MEMBER_NICKNAME)

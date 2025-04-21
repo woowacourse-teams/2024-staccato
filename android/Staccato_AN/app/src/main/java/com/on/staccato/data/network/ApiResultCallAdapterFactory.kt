@@ -1,4 +1,4 @@
-package com.on.staccato.data
+package com.on.staccato.data.network
 
 import retrofit2.Call
 import retrofit2.CallAdapter
