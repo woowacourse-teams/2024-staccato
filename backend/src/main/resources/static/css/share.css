@@ -126,7 +126,6 @@ body {
 }
 
 .feeling {
-    text-align: center;
     padding: 1.5rem;
 }
 
@@ -134,6 +133,7 @@ body {
     margin: 0 0 1rem 0;
     font-size: 1rem;
     font-weight: bold;
+    text-align: center;
 }
 
 .feeling .emojis {
