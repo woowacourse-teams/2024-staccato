@@ -119,7 +119,7 @@ jobs:
     strategy:
       matrix:
         api-level: [ 28, 34 ]
-        profile: [ "Pixel 6", "Pixel 4", "Nexus 7" ]
+        profile: [ "Pixel_6", "Pixel_4", "Nexus_7" ]
       fail-fast: false
 
     # api-level 28 과 Pixel 6 조합은 skip
@@ -165,24 +165,37 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
+          key: avd-${{ matrix.api-level }}-${{ matrix.profile }}
 
       - name: Create AVD and Generate Snapshot for Caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
+          profile: ${{ matrix.profile }}
           force-avd-creation: false
+          target: google_apis
+          arch: x86_64
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
+          disable-animations: true
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run UI Test with Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
+          profile: ${{ matrix.profile }}
+          force-avd-creation: false
           target: google_apis
           arch: x86_64
-          disable-animations: true
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: ./gradlew connectedCheck
+          disable-animations: true
+          script: ./gradlew connectedCheck --stacktrace
+
+      - name: Upload UI Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.api-level }}-${{ matrix.profile }}
+          path: |
+            **/build/reports/*
+            **/build/outputs/*/connected/*
