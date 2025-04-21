@@ -21,11 +21,6 @@ public class MemberFixtures {
         String imageUrl;
         String code;
 
-        public MemberBuilder withId(Long id) {
-            this.id = id;
-            return this;
-        }
-
         public MemberBuilder withNickname(String nickname) {
             this.nickname = nickname;
             return this;
@@ -42,7 +37,7 @@ public class MemberFixtures {
         }
 
         public Member build() {
-            return new Member(id, nickname, imageUrl, code);
+            return new Member(nickname, imageUrl, code);
         }
 
         public Member buildAndSave(MemberRepository repository) {
