@@ -1,9 +1,9 @@
 package com.on.staccato.data.comment
 
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.comment.CommentRequest
 import com.on.staccato.data.dto.comment.CommentUpdateRequest
 import com.on.staccato.data.dto.comment.CommentsResponse
+import com.on.staccato.data.network.ApiResult
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
