@@ -45,7 +45,6 @@ public class PageControllerTest extends ControllerTest {
 
         Category category = CategoryFixtures.defaultCategory().build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withId(1L)
                 .withCategory(category)
                 .withStaccatoImages(imageUrls).build();
         Member member = MemberFixtures.defaultMember().build();
@@ -70,7 +69,6 @@ public class PageControllerTest extends ControllerTest {
 
         Category category = CategoryFixtures.defaultCategory().build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withId(1L)
                 .withCategory(category)
                 .withStaccatoImages(imageUrls).build();
         Member member = MemberFixtures.defaultMember().build();
