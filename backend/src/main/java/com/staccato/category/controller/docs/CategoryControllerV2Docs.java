@@ -25,7 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Category", description = "Category API V2")
+@Tag(name = "Category V2", description = "Category API V2")
 public interface CategoryControllerV2Docs {
     @Operation(summary = "카테고리 생성", description = "카테고리(썸네일, 제목, 내용, 기간)을 생성합니다.")
     @ApiResponses(value = {
