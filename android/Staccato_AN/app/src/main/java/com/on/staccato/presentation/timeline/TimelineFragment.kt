@@ -1,7 +1,6 @@
 package com.on.staccato.presentation.timeline
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.PopupMenu
@@ -15,9 +14,6 @@ import com.on.staccato.databinding.FragmentTimelineBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity
-import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.CATEGORY_ID
-import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY
-import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.SELECTED_COLOR_LABEL
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.timeline.adapter.TimelineAdapter
@@ -51,7 +47,6 @@ class TimelineFragment :
         setupBinding()
         setUpAdapter()
         setUpObserving()
-        initColorSelectionResultListener()
         logAccess()
     }
 
@@ -122,17 +117,6 @@ class TimelineFragment :
 
         sharedViewModel.memberProfile.observe(viewLifecycleOwner) { memberProfile ->
             binding.nickname = memberProfile.nickname
-        }
-    }
-
-    private fun initColorSelectionResultListener() {
-        parentFragmentManager.setFragmentResultListener(
-            COLOR_SELECTION_REQUEST_KEY,
-            viewLifecycleOwner,
-        ) { _, bundle ->
-            val categoryId = bundle.getLong(CATEGORY_ID)
-            val selectedColorLabel = bundle.getString(SELECTED_COLOR_LABEL)
-            Log.d("ㅌㅅㅌ", "$categoryId 카테고리 $selectedColorLabel 컬러 선택")
         }
     }
 
