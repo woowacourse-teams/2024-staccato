@@ -16,18 +16,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.staccato.category.service.dto.request.CategoryColorRequest;
-import com.staccato.config.auth.LoginMember;
-import com.staccato.config.log.annotation.Trace;
-import com.staccato.member.domain.Member;
 import com.staccato.category.controller.docs.CategoryControllerDocs;
 import com.staccato.category.service.CategoryService;
+import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
+import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.config.auth.LoginMember;
+import com.staccato.config.log.annotation.Trace;
+import com.staccato.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -43,7 +45,7 @@ public class CategoryController implements CategoryControllerDocs {
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member
     ) {
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest, member);
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest.toCategoryRequestV2(), member);
         return ResponseEntity.created(URI.create("/categories/" + categoryIdResponse.categoryId()))
                 .body(categoryIdResponse);
     }
@@ -53,8 +55,8 @@ public class CategoryController implements CategoryControllerDocs {
             @LoginMember Member member,
             @ModelAttribute("CategoryReadRequest") CategoryReadRequest categoryReadRequest
     ) {
-        CategoryResponses categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
-        return ResponseEntity.ok(categoryResponses);
+        CategoryResponsesV2 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
+        return ResponseEntity.ok(categoryResponses.toCategoryResponses());
     }
 
     @GetMapping("/candidates")
@@ -70,8 +72,8 @@ public class CategoryController implements CategoryControllerDocs {
     public ResponseEntity<CategoryDetailResponse> readCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
-        CategoryDetailResponse categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
-        return ResponseEntity.ok(categoryDetailResponse);
+        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
+        return ResponseEntity.ok(categoryDetailResponse.toCategoryDetailResponse());
     }
 
     @PutMapping("/{categoryId}")
@@ -79,7 +81,7 @@ public class CategoryController implements CategoryControllerDocs {
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member) {
-        categoryService.updateCategory(categoryRequest, categoryId, member);
+        categoryService.updateCategory(categoryRequest.toCategoryRequestV2(), categoryId, member);
         return ResponseEntity.ok().build();
     }
 

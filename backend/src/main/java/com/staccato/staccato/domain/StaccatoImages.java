@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StaccatoImages {
-    private static final int MAX_COUNT = 5;
+    private static final int MAX_COUNT = 8;
 
     @OneToMany(mappedBy = "staccato", cascade = CascadeType.PERSIST)
     private List<StaccatoImage> images = new ArrayList<>();
@@ -32,7 +32,7 @@ public class StaccatoImages {
 
     private void validateNumberOfImages(List<String> addedImages) {
         if (addedImages.size() > MAX_COUNT) {
-            throw new StaccatoException("사진은 5장을 초과할 수 없습니다.");
+            throw new StaccatoException("사진은 8장을 초과할 수 없습니다.");
         }
     }
 

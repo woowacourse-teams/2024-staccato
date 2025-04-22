@@ -1,8 +1,8 @@
 package com.on.staccato.data.login
 
 import com.on.staccato.StaccatoApplication
-import com.on.staccato.data.ApiResult
-import com.on.staccato.data.handle
+import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.handle
 import com.on.staccato.domain.repository.LoginRepository
 import javax.inject.Inject
 

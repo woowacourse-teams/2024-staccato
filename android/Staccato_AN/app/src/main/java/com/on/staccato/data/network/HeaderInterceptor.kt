@@ -1,4 +1,4 @@
-package com.on.staccato.data
+package com.on.staccato.data.network
 
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
