@@ -51,4 +51,5 @@ fun NewCategory.toDto() =
         description = description,
         startAt = startAt?.toString(),
         endAt = endAt?.toString(),
+        color = color,
     )

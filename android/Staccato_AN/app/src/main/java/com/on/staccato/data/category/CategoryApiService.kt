@@ -31,12 +31,12 @@ interface CategoryApiService {
         @Query(CURRENT_DATE) currentDate: String?,
     ): ApiResult<CategoriesResponse>
 
-    @POST(CATEGORIES_PATH)
+    @POST(CATEGORIES_PATH_V2)
     suspend fun postCategory(
         @Body categoryRequest: CategoryRequest,
     ): ApiResult<CategoryCreationResponse>
 
-    @PUT(CATEGORY_PATH_WITH_ID)
+    @PUT("$CATEGORIES_PATH_V2/{$CATEGORY_ID}")
     suspend fun putCategory(
         @Path(CATEGORY_ID) categoryId: Long,
         @Body categoryRequest: CategoryRequest,
@@ -48,6 +48,7 @@ interface CategoryApiService {
     ): ApiResult<Unit>
 
     companion object {
+        const val CATEGORIES_PATH_V2 = "/v2/categories"
         const val CATEGORIES_PATH = "/categories"
         private const val CANDIDATES_PATH = "/candidates"
         private const val CATEGORY_ID = "categoryId"

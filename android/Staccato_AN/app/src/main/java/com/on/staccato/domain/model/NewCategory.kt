@@ -8,4 +8,5 @@ data class NewCategory(
     val startAt: LocalDate? = null,
     val endAt: LocalDate? = null,
     val description: String? = null,
+    val color: String,
 )
