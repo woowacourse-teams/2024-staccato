@@ -19,6 +19,7 @@ import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
@@ -199,7 +200,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 CategoryRequestV2Fixtures.defaultCategoryRequestV2().build(), member);
 
         // when
-        CategoryDetailResponse categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
+        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
 
         // then
         assertAll(
@@ -218,7 +219,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 CategoryRequestV2Fixtures.defaultCategoryRequestV2().withTerm(null, null).build(), member);
 
         // when
-        CategoryDetailResponse categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
+        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
 
         // then
         assertAll(
@@ -265,7 +266,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
-        CategoryDetailResponse categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
+        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
 
         // then
         assertAll(
