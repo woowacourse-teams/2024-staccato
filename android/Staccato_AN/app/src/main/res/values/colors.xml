@@ -22,7 +22,7 @@
 
     <color name="red">#FFEC6161</color>
     <color name="orange">#FFFF976B</color>
-    <color name="yellow">#FFFFD467</color>
+    <color name="yellow">#FFFFCC4B</color>
     <color name="green">#FF8DC661</color>
     <color name="mint">#FF34DDB0</color>
     <color name="blue">#FF5BB1F7</color>
@@ -34,7 +34,7 @@
 
     <color name="light_red">#FFF48E8E</color>
     <color name="light_orange">#FFFFAE8C</color>
-    <color name="light_yellow">#FFF8DB90</color>
+    <color name="light_yellow">#FFFFDB7E</color>
     <color name="light_green">#FFC3E28D</color>
     <color name="light_mint">#FF98EBD5</color>
     <color name="light_blue">#FF98CDFF</color>
