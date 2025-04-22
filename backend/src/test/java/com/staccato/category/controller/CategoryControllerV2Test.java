@@ -254,10 +254,10 @@ class CategoryControllerV2Test extends ControllerTest {
                     "categoryId": null,
                     "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
                     "categoryTitle": "categoryTitle",
+                    "description": "categoryDescription",
                     "categoryColor": "pink",
                     "startAt": "2024-01-01",
                     "endAt": "2024-12-31",
-                    "description": "categoryDescription",
                     "mates": [
                         {
                             "memberId": null,
