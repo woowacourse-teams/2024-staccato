@@ -49,10 +49,14 @@ public class StaccatoImages {
     }
 
     private boolean isImagesChanged(StaccatoImages newStaccatoImages) {
-        if (this.images.size() != newStaccatoImages.images.size()) {
-            return true;
-        }
+        return isImagesSizeChanged(newStaccatoImages) || isImagesNotSameOrder(newStaccatoImages);
+    }
 
+    private boolean isImagesSizeChanged(StaccatoImages newStaccatoImages) {
+        return this.images.size() != newStaccatoImages.images.size();
+    }
+
+    private boolean isImagesNotSameOrder(StaccatoImages newStaccatoImages) {
         for (int i = 0; i < this.images.size(); i++) {
             String oldUrl = this.images.get(i).getImageUrl();
             String newUrl = newStaccatoImages.images.get(i).getImageUrl();
@@ -60,7 +64,6 @@ public class StaccatoImages {
                 return true;
             }
         }
-
         return false;
     }
 
