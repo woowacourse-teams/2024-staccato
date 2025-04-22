@@ -42,7 +42,7 @@ public class StaccatoImages {
 
     protected void update(StaccatoImages newStaccatoImages, Staccato staccato) {
         if (isImagesChanged(newStaccatoImages)) {
-            staccato.getCategory().setUpdatedAt(LocalDateTime.now());
+            staccato.updateCategoryModifiedDate();
         }
         images.clear();
         addAll(newStaccatoImages, staccato);

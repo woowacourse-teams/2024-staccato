@@ -122,4 +122,8 @@ public class Staccato extends BaseEntity {
     public List<StaccatoImage> existingImages() {
         return staccatoImages.getImages();
     }
+
+    public void updateCategoryModifiedDate() {
+        category.setUpdatedAt(LocalDateTime.now());
+    }
 }
