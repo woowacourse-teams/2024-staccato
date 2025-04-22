@@ -48,7 +48,7 @@ public record StaccatoRequest(
         long categoryId,
         @ArraySchema(
                 arraySchema = @Schema(example = SwaggerExamples.IMAGE_URLS))
-        @Size(max = 5, message = "사진은 5장까지만 추가할 수 있어요.")
+        @Size(max = 5, message = "사진은 8장까지만 추가할 수 있어요.")
         List<String> staccatoImageUrls
 ) {
     public StaccatoRequest {

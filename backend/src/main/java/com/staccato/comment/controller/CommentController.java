@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class CommentController implements CommentControllerDocs {
     private final CommentService commentService;
 
-    @PostMapping("/v2")
+    @PostMapping
     public ResponseEntity<Void> createComment(
             @LoginMember Member member,
             @Valid @RequestBody CommentRequest commentRequest
@@ -42,7 +42,7 @@ public class CommentController implements CommentControllerDocs {
                 .build();
     }
 
-    @GetMapping("/v2")
+    @GetMapping
     public ResponseEntity<CommentResponses> readCommentsByStaccatoId(
             @LoginMember Member member,
             @RequestParam @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId
