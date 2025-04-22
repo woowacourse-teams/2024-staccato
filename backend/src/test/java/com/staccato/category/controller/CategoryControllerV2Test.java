@@ -34,6 +34,7 @@ import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
@@ -233,6 +234,101 @@ class CategoryControllerV2Test extends ControllerTest {
                         .param("filters", "invalid"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categories.size()").value(2));
+    }
+
+    @DisplayName("사용자가 특정 카테고리를 조회하는 응답 직렬화에 성공한다.")
+    @Test
+    void readCategory() throws Exception {
+        // given
+        long categoryId = 1;
+        Member member = MemberFixtures.defaultMember().build();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        Category category = CategoryFixtures.defaultCategory().buildWithMember(member);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
+        CategoryDetailResponseV2 categoryDetailResponse = new CategoryDetailResponseV2(category, List.of(staccato));
+        when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
+        String expectedResponse = """
+                {
+                    "categoryId": null,
+                    "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
+                    "categoryTitle": "categoryTitle",
+                    "categoryColor": "pink",
+                    "startAt": "2024-01-01",
+                    "endAt": "2024-12-31",
+                    "description": "categoryDescription",
+                    "mates": [
+                        {
+                            "memberId": null,
+                            "nickname": "nickname",
+                            "memberImageUrl": "https://example.com/memberImage.png"
+                        }
+                    ],
+                    "staccatos": [
+                            {
+                                "staccatoId": null,
+                                "staccatoTitle": "staccatoTitle",
+                                "staccatoImageUrl": "https://example.com/staccatoImage.jpg",
+                                "visitedAt": "2024-06-01T00:00:00"
+                            }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/v2/categories/{categoryId}", categoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+
+    @DisplayName("사용자가 기간이 없는 특정 카테고리를 조회하는 응답 직렬화에 성공한다.")
+    @Test
+    void readCategoryWithoutTerm() throws Exception {
+        // given
+        long categoryId = 1;
+        Member member = MemberFixtures.defaultMember().build();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(null, null)
+                .buildWithMember(member);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
+        CategoryDetailResponseV2 categoryDetailResponse = new CategoryDetailResponseV2(category, List.of(staccato));
+        when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
+        String expectedResponse = """
+                {
+                    "categoryId": null,
+                    "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
+                    "categoryTitle": "categoryTitle",
+                    "description": "categoryDescription",
+                    "categoryColor": "pink",
+                    "mates": [
+                        {
+                            "memberId": null,
+                            "nickname": "nickname",
+                            "memberImageUrl": "https://example.com/memberImage.png"
+                        }
+                    ],
+                    "staccatos": [
+                            {
+                                "staccatoId": null,
+                                "staccatoTitle": "staccatoTitle",
+                                "staccatoImageUrl": "https://example.com/staccatoImage.jpg",
+                                "visitedAt": "2024-06-01T00:00:00"
+                            }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/v2/categories/{categoryId}", categoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
     }
 
     @DisplayName("적합한 경로변수와 데이터를 통해 스타카토 수정에 성공한다.")
