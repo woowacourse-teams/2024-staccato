@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StaccatoImages {
     private static final int MAX_COUNT = 8;
+
     @OneToMany(mappedBy = "staccato", cascade = CascadeType.PERSIST)
     private List<StaccatoImage> images = new ArrayList<>();
 
