@@ -21,6 +21,7 @@ import com.on.staccato.presentation.categorycreation.DateConverter.convertLongTo
 import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertCategoryUriToFile
@@ -69,6 +70,9 @@ class CategoryCreationViewModel
 
         private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
 
+        private val _color = MutableLiveData(CategoryColor.GRAY)
+        val color: LiveData<CategoryColor> get() = _color
+
         fun createThumbnailUrl(
             context: Context,
             uri: Uri,
@@ -101,6 +105,10 @@ class CategoryCreationViewModel
                     .onServerError(::handleCreateServerError)
                     .onException(::handleCreateException)
             }
+        }
+
+        fun setCategoryColor(color: CategoryColor) {
+            _color.value = color
         }
 
         private fun setThumbnailUri(uri: Uri?) {
@@ -158,6 +166,7 @@ class CategoryCreationViewModel
                 startAt = getDateByPeriodSetting(startDate),
                 endAt = getDateByPeriodSetting(endDate),
                 description = description.get(),
+                color = color.value?.label ?: CategoryColor.GRAY.label,
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {

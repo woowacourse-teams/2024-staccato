@@ -21,6 +21,7 @@ import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertCategoryUriToFile
@@ -70,6 +71,9 @@ class CategoryUpdateViewModel
         private val _errorMessage = MutableLiveData<String>()
         val errorMessage: LiveData<String> get() = _errorMessage
 
+        private val _color = MutableLiveData(CategoryColor.GRAY)
+        val color: LiveData<CategoryColor> get() = _color
+
         private val _error = MutableSingleLiveData<CategoryUpdateError>()
         val error: SingleLiveData<CategoryUpdateError> get() = _error
 
@@ -105,6 +109,10 @@ class CategoryUpdateViewModel
             _endDate.value = convertLongToLocalDate(endAt)
         }
 
+        fun setCategoryColor(color: CategoryColor) {
+            _color.value = color
+        }
+
         fun createThumbnailUrl(
             context: Context,
             uri: Uri,
@@ -138,6 +146,7 @@ class CategoryUpdateViewModel
                 startAt = getDateByPeriodSetting(startDate),
                 endAt = getDateByPeriodSetting(endDate),
                 description = description.get(),
+                color = color.value?.label ?: CategoryColor.GRAY.label,
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {

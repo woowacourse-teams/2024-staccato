@@ -4,8 +4,10 @@ import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.BindingAdapter
 import coil.load
@@ -13,6 +15,13 @@ import coil.transform.RoundedCornersTransformation
 import com.on.staccato.R
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.util.dpToPx
+
+@BindingAdapter("imageButtonIcon")
+fun ImageButton.setColorSelectionIcon(
+    @DrawableRes drawableRes: Int,
+) {
+    setImageResource(drawableRes)
+}
 
 @BindingAdapter("tintColorRes")
 fun ImageView.setTintColor(

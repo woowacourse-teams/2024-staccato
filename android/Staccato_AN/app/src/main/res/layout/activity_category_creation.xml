@@ -165,13 +165,33 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
-                    android:id="@+id/tv_category_creation_period_title"
+                    android:id="@+id/tv_category_creation_color"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="25dp"
-                    android:text="@string/category_creation_period_setting"
+                    android:text="@string/category_creation_color"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_category_creation_description" />
+
+                <ImageButton
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_category_creation_color"
+                    bind:imageButtonIcon="@{viewModel.color.markerRes}"
+                    tools:src="@drawable/icon_marker_2x_brown" />
+
+                <TextView
+                    android:id="@+id/tv_category_creation_period_title"
+                    style="@style/SubTitleStyle"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="60dp"
+                    android:text="@string/category_creation_period_setting"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_creation_color" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switch_category_creation_period_set"
@@ -223,11 +243,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_category_creation_period_selection"
-                    bind:isPeriodActive="@{viewModel.isPeriodActive}"
-                    bind:isPhotoUploading="@{viewModel.isPhotoPosting}"
                     bind:categoryEndDate="@{viewModel.endDate}"
                     bind:categoryStartDate="@{viewModel.startDate}"
-                    bind:categoryTitle="@{viewModel.title}" />
+                    bind:categoryTitle="@{viewModel.title}"
+                    bind:isPeriodActive="@{viewModel.isPeriodActive}"
+                    bind:isPhotoUploading="@{viewModel.isPhotoPosting}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
