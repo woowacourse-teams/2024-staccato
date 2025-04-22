@@ -21,11 +21,9 @@ class ColorSelectionDialogFragment : ColorSelectionHandler, BottomSheetDialogFra
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val categoryId = requireArguments().getLong(CATEGORY_ID)
         val selectedColor =
             requireArguments().getString(SELECTED_COLOR_LABEL)?.let(CategoryColor::getColorBy)
         if (selectedColor != null) {
-            viewModel.setCategoryId(categoryId)
             viewModel.selectCategoryColor(selectedColor)
         }
     }
@@ -64,7 +62,9 @@ class ColorSelectionDialogFragment : ColorSelectionHandler, BottomSheetDialogFra
 
     private fun initConfirmButtonListener() {
         binding.btnColorSelectionConfirm.setOnClickListener {
-            viewModel.changeCategoryColor()
+            val result = bundleOf(SELECTED_COLOR_LABEL to viewModel.selectedColor.value?.label)
+            parentFragmentManager.setFragmentResult(COLOR_SELECTION_REQUEST_KEY, result)
+            dismiss()
         }
     }
 
@@ -72,31 +72,17 @@ class ColorSelectionDialogFragment : ColorSelectionHandler, BottomSheetDialogFra
         viewModel.selectedColor.observe(viewLifecycleOwner) { selectedColor ->
             colorSelectionAdapter.changeSelectedItem(selectedColor)
         }
-        viewModel.colorSelectionResult.observe(viewLifecycleOwner) { colorChangeEvent ->
-            val result =
-                bundleOf(
-                    CATEGORY_ID to colorChangeEvent.categoryId,
-                    SELECTED_COLOR_LABEL to colorChangeEvent.categoryColor.label,
-                )
-            parentFragmentManager.setFragmentResult(COLOR_SELECTION_REQUEST_KEY, result)
-            dismiss()
-        }
     }
 
     companion object {
         const val TAG = "ColorSelectDialogFragment"
         const val COLOR_SELECTION_REQUEST_KEY = "color_result"
-        const val CATEGORY_ID = "CategoryId"
         const val SELECTED_COLOR_LABEL = "SelectedColorLabel"
 
-        fun newInstance(
-            categoryId: Long,
-            selectedColor: CategoryColor,
-        ): ColorSelectionDialogFragment {
+        fun newInstance(selectedColor: CategoryColor): ColorSelectionDialogFragment {
             return ColorSelectionDialogFragment().apply {
                 arguments =
                     Bundle().apply {
-                        putLong(CATEGORY_ID, categoryId)
                         putString(SELECTED_COLOR_LABEL, selectedColor.label)
                     }
             }
