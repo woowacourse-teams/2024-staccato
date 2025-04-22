@@ -17,6 +17,10 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment
+import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY
+import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.SELECTED_COLOR_LABEL
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
@@ -37,6 +41,7 @@ class CategoryCreationActivity :
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
+        initColorSelectionResultListener()
         navigateToMap()
         updateCategoryPeriod()
         observeCreatedCategoryId()
@@ -69,6 +74,26 @@ class CategoryCreationActivity :
     override fun onUrisSelected(vararg uris: Uri) {
         currentSnackBar?.dismiss()
         viewModel.createThumbnailUrl(this, uris.first())
+    }
+
+    override fun onCategoryColorClicked() {
+        val existing = fragmentManager.findFragmentByTag(ColorSelectionDialogFragment.TAG)
+        val selectedColor = viewModel.color.value
+        if (existing == null && selectedColor != null) {
+            ColorSelectionDialogFragment.newInstance(selectedColor)
+                .show(fragmentManager, ColorSelectionDialogFragment.TAG)
+        }
+    }
+
+    private fun initColorSelectionResultListener() {
+        fragmentManager.setFragmentResultListener(
+            COLOR_SELECTION_REQUEST_KEY,
+            this,
+        ) { _, bundle ->
+            bundle.getString(SELECTED_COLOR_LABEL)?.let {
+                viewModel.setCategoryColor(CategoryColor.getColorBy(it))
+            }
+        }
     }
 
     private fun buildDateRangePicker() =
