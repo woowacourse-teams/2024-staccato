@@ -22,18 +22,25 @@ fetch(`/staccatos/shared/${token}`)
         const formattedExpiredAt = `${expiredYear}년 ${expiredMonth}월 ${expiredDay}일`;
         document.querySelector('.staccato-header-expiration').innerText = `${formattedExpiredAt}까지 열람할 수 있어요!`;
 
+        const imageSlider = document.querySelector('.image-slider');
         const sliderWrapper = document.querySelector('.swiper-wrapper');
-        sliderWrapper.innerHTML = '';
-        staccatoImageUrls.forEach((url) => {
-            const slideElement = document.createElement('div');
-            slideElement.classList.add('swiper-slide');
-            slideElement.innerHTML = `<img src="${url}" alt="Staccato Image">`;
-            sliderWrapper.appendChild(slideElement);
-        });
 
-        swiper.update();
+        if (staccatoImageUrls.length === 0) {
+            imageSlider.style.display = 'none';
+        } else {
+            imageSlider.style.display = '';
+            sliderWrapper.innerHTML = '';
+            staccatoImageUrls.forEach((url) => {
+                const slideElement = document.createElement('div');
+                slideElement.classList.add('swiper-slide');
+                slideElement.innerHTML = `<img src="${url}" alt="Staccato Image">`;
+                sliderWrapper.appendChild(slideElement);
+            });
 
-        updateNavigationButtons(swiper);
+            swiper.update();
+
+            updateNavigationButtons(swiper);
+        }
 
         document.querySelector('.title h1').innerText = staccatoTitle;
 
