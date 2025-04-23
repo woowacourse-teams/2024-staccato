@@ -7,18 +7,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
+import com.staccato.member.domain.Member;
+import com.staccato.member.repository.MemberRepository;
+import com.staccato.staccato.repository.StaccatoRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 class StaccatoImagesTest {
     static Stream<Arguments> provideUpdateData() {
@@ -77,5 +90,75 @@ class StaccatoImagesTest {
 
         // then
         assertThat(images).containsExactlyElementsOf(updatedImageNames);
+    }
+
+    @Nested
+    @DisplayName("Category updatedAt는")
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+    @Transactional
+    class UpdateCategoryWhenImagesUpdatedTest {
+
+        @Autowired
+        private MemberRepository memberRepository;
+        @Autowired
+        private CategoryRepository categoryRepository;
+        @Autowired
+        private StaccatoRepository staccatoRepository;
+        @PersistenceContext
+        private EntityManager entityManager;
+
+        @Test
+        @DisplayName("이미지가 변경되지 않으면 바뀌지 않는다.")
+        void notChangeUpdatedAtWhenImagesAreSame() {
+            // given
+            Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+            Category category = CategoryFixtures.defaultCategory()
+                    .buildAndSaveWithMember(member, categoryRepository);
+            List<String> imageUrls = List.of("same1.jpg", "same2.jpg");
+
+            Staccato staccato = StaccatoFixtures.defaultStaccato()
+                    .withCategory(category)
+                    .withStaccatoImages(imageUrls).buildAndSave(staccatoRepository);
+            entityManager.flush();
+            entityManager.clear();
+            LocalDateTime before = category.getUpdatedAt();
+
+            // when
+            StaccatoImages sameImages = new StaccatoImages(imageUrls);
+            staccato.getStaccatoImages().update(sameImages, staccato);
+            entityManager.flush();
+            entityManager.clear();
+            LocalDateTime after = category.getUpdatedAt();
+
+            // then
+            assertThat(after).isEqualTo(before);
+        }
+
+        @Test
+        @DisplayName("이미지가 변경되면 갱신된다.")
+        void changeUpdatedAtWhenImagesAreDifferent() {
+            // given
+            Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+            Category category = CategoryFixtures.defaultCategory()
+                    .buildAndSaveWithMember(member, categoryRepository);
+            List<String> imageUrls = List.of("img1.jpg", "img2.jpg");
+
+            Staccato staccato = StaccatoFixtures.defaultStaccato()
+                    .withCategory(category)
+                    .withStaccatoImages(imageUrls).buildAndSave(staccatoRepository);
+            entityManager.flush();
+            entityManager.clear();
+            LocalDateTime before = category.getUpdatedAt();
+
+            // when
+            StaccatoImages updatedImages = new StaccatoImages(List.of("img2.jpg", "img1.jpg"));
+            staccato.getStaccatoImages().update(updatedImages, staccato);
+            entityManager.flush();
+            entityManager.clear();
+            LocalDateTime after = category.getUpdatedAt();
+
+            // then
+            assertThat(after).isAfter(before);
+        }
     }
 }
