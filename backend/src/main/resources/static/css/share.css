@@ -145,12 +145,6 @@ body {
 .feeling .emojis img {
     width: 50px;
     height: 50px;
-    cursor: default;
-    transition: transform 0.2s ease;
-}
-
-.feeling .emojis img:hover {
-    transform: scale(1.2);
 }
 
 .comments h2 {
