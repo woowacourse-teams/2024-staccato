@@ -20,6 +20,7 @@ fun CategoryResponse.toDomain() =
         startAt = startAt?.let { LocalDate.parse(startAt) },
         endAt = endAt?.let { LocalDate.parse(endAt) },
         description = description,
+        color = color,
         mates = mates.map { it.toDomain() },
         staccatos = staccatos.map { it.toDomain() },
     )

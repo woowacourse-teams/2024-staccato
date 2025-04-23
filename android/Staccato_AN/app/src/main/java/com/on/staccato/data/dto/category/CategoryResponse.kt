@@ -12,6 +12,7 @@ data class CategoryResponse(
     @SerialName("startAt") val startAt: String? = null,
     @SerialName("endAt") val endAt: String? = null,
     @SerialName("description") val description: String? = null,
+    @SerialName("categoryColor") val color: String,
     @SerialName("mates") val mates: List<MemberDto>,
     @SerialName("staccatos") val staccatos: List<CategoryStaccatoDto>,
 )

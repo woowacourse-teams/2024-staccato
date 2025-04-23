@@ -15,7 +15,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CategoryApiService {
-    @GET(CATEGORY_PATH_WITH_ID)
+    @GET(CATEGORY_PATH_WITH_ID_V2)
     suspend fun getCategory(
         @Path(CATEGORY_ID) categoryId: Long,
     ): ApiResult<CategoryResponse>
@@ -48,13 +48,14 @@ interface CategoryApiService {
     ): ApiResult<Unit>
 
     companion object {
-        const val CATEGORIES_PATH_V2 = "/v2/categories"
-        const val CATEGORIES_PATH = "/categories"
+        private const val CATEGORIES_PATH = "/categories"
         private const val CANDIDATES_PATH = "/candidates"
         private const val CATEGORY_ID = "categoryId"
         private const val CATEGORY_PATH_WITH_ID = "$CATEGORIES_PATH/{$CATEGORY_ID}"
         private const val CATEGORY_COLOR_CHANGE_PATH = "$CATEGORIES_PATH/{$CATEGORY_ID}/colors"
         private const val CATEGORY_PATH_WITH_CANDIDATES = "$CATEGORIES_PATH$CANDIDATES_PATH"
         private const val CURRENT_DATE = "currentDate"
+        private const val CATEGORIES_PATH_V2 = "/v2${CATEGORIES_PATH}"
+        private const val CATEGORY_PATH_WITH_ID_V2 = "/v2$CATEGORIES_PATH/{$CATEGORY_ID}"
     }
 }
