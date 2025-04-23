@@ -22,18 +22,25 @@ fetch(`/staccatos/shared/${token}`)
         const formattedExpiredAt = `${expiredYear}년 ${expiredMonth}월 ${expiredDay}일`;
         document.querySelector('.staccato-header-expiration').innerText = `${formattedExpiredAt}까지 열람할 수 있어요!`;
 
+        const imageSlider = document.querySelector('.image-slider');
         const sliderWrapper = document.querySelector('.swiper-wrapper');
-        sliderWrapper.innerHTML = '';
-        staccatoImageUrls.forEach((url) => {
-            const slideElement = document.createElement('div');
-            slideElement.classList.add('swiper-slide');
-            slideElement.innerHTML = `<img src="${url}" alt="Staccato Image">`;
-            sliderWrapper.appendChild(slideElement);
-        });
 
-        swiper.update();
+        if (staccatoImageUrls.length === 0) {
+            imageSlider.style.display = 'none';
+        } else {
+            imageSlider.style.display = '';
+            sliderWrapper.innerHTML = '';
+            staccatoImageUrls.forEach((url) => {
+                const slideElement = document.createElement('div');
+                slideElement.classList.add('swiper-slide');
+                slideElement.innerHTML = `<img src="${url}" alt="Staccato Image">`;
+                sliderWrapper.appendChild(slideElement);
+            });
 
-        updateNavigationButtons(swiper);
+            swiper.update();
+
+            updateNavigationButtons(swiper);
+        }
 
         document.querySelector('.title h1').innerText = staccatoTitle;
 
@@ -73,7 +80,7 @@ fetch(`/staccatos/shared/${token}`)
             commentsContainer.innerHTML = `
                 <div class="empty-comments-container">
                     <img class="empty-comments-image" src="https://image.staccato.kr/web/share/frame.png" alt="Frame Image">
-                    <p class="empty-comments-text">코멘트가 없어요! 코멘트를 달아보세요.</p>
+                    <p class="empty-comments-text">아직 코멘트가 없어요!</p>
                 </div>
             `;
         } else {
