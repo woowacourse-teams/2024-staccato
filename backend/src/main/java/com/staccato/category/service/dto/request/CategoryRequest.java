@@ -1,6 +1,7 @@
 package com.staccato.category.service.dto.request;
 
 import com.staccato.category.domain.Category;
+import com.staccato.category.domain.Color;
 import com.staccato.config.swagger.SwaggerExamples;
 
 import java.time.LocalDate;
@@ -41,8 +42,20 @@ public record CategoryRequest(
                 .thumbnailUrl(categoryThumbnailUrl)
                 .title(categoryTitle)
                 .description(description)
+                .color(Color.GRAY.getName())
                 .startAt(startAt)
                 .endAt(endAt)
                 .build();
+    }
+
+    public CategoryRequestV2 toCategoryRequestV2() {
+        return new CategoryRequestV2(
+                categoryThumbnailUrl,
+                categoryTitle,
+                description,
+                Color.GRAY.getName(),
+                startAt,
+                endAt
+        );
     }
 }

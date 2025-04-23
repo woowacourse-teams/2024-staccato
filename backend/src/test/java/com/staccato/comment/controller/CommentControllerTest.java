@@ -64,7 +64,7 @@ public class CommentControllerTest extends ControllerTest {
 
     @DisplayName("댓글 생성 요청/응답에 대한 직렬화/역직렬화에 성공한다.")
     @Test
-    void createCommentV2() throws Exception {
+    void createComment() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
         String commentRequest = """
@@ -76,7 +76,7 @@ public class CommentControllerTest extends ControllerTest {
         when(commentService.createComment(any(), any())).thenReturn(1L);
 
         // when & then
-        mockMvc.perform(post("/comments/v2")
+        mockMvc.perform(post("/comments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(commentRequest)
                 .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -87,7 +87,7 @@ public class CommentControllerTest extends ControllerTest {
     @DisplayName("올바르지 않은 형식으로 정보를 입력하면, 댓글을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidCommentRequestProvider")
-    void createCommentFailV2(CommentRequest commentRequest, String expectedMessage)
+    void createCommentFail(CommentRequest commentRequest, String expectedMessage)
         throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
@@ -95,7 +95,7 @@ public class CommentControllerTest extends ControllerTest {
             HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
-        mockMvc.perform(post("/comments/v2")
+        mockMvc.perform(post("/comments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(commentRequest))
                 .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -105,7 +105,7 @@ public class CommentControllerTest extends ControllerTest {
 
     @DisplayName("댓글을 조회했을 때 응답 직렬화에 성공한다.")
     @Test
-    void readCommentsByStaccatoIdV2() throws Exception {
+    void readCommentsByStaccatoId() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
         CommentResponse commentResponse = new CommentResponse(1L, 1L, "member", "image.jpg", "내용");
@@ -126,7 +126,7 @@ public class CommentControllerTest extends ControllerTest {
             """;
 
         // when & then
-        mockMvc.perform(get("/comments/v2")
+        mockMvc.perform(get("/comments")
                 .param("staccatoId", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -136,14 +136,14 @@ public class CommentControllerTest extends ControllerTest {
 
     @DisplayName("스타카토 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
     @Test
-    void readCommentsByStaccatoIdFailV2() throws Exception {
+    void readCommentsByStaccatoIdFail() throws Exception {
         // given
         when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(get("/comments/v2")
+        mockMvc.perform(get("/comments")
                 .param("staccatoId", "0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "token"))

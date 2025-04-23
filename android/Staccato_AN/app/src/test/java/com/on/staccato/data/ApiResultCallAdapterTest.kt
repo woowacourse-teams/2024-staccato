@@ -3,9 +3,12 @@ package com.on.staccato.data
 import com.on.staccato.CoroutinesTestExtension
 import com.on.staccato.StaccatoApplication.Companion.retrofit
 import com.on.staccato.data.dto.GetResponse
+import com.on.staccato.data.dto.ImagePostResponse
 import com.on.staccato.data.dto.PostResponse
-import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.image.ImageApiService
+import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.Exception
+import com.on.staccato.data.network.ServerError
+import com.on.staccato.data.network.Success
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
@@ -22,7 +25,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 class ApiResultCallAdapterTest {
     private val mockWebServer: MockWebServer = MockWebServer()
 
-    private lateinit var imageApiService: ImageApiService
     private lateinit var fakeApiService: FakeApiService
 
     @BeforeEach
@@ -30,7 +32,6 @@ class ApiResultCallAdapterTest {
         mockWebServer.start()
 
         retrofit = buildRetrofitFor(mockWebServer)
-        imageApiService = retrofit.create(ImageApiService::class.java)
         fakeApiService = retrofit.create(FakeApiService::class.java)
     }
 
@@ -124,7 +125,7 @@ class ApiResultCallAdapterTest {
         mockWebServer.enqueue(serverError)
 
         runTest {
-            val actual: ApiResult<ImageResponse> = imageApiService.postImage(imageFile = createFakeImageFile())
+            val actual: ApiResult<ImagePostResponse> = fakeApiService.postImage(imageFile = createFakeImageFile())
 
             assertThat(actual).isInstanceOf(ServerError::class.java)
         }

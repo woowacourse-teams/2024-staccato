@@ -1,7 +1,7 @@
 package com.on.staccato.data.timeline
 
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.timeline.TimelineResponse
+import com.on.staccato.data.network.ApiResult
 import javax.inject.Inject
 
 class TimelineRemoteDataSource
