@@ -51,8 +51,13 @@ class StaccatoViewModel
         private val _shareEvent = MutableSingleLiveData<StaccatoShareEvent>()
         val shareEvent: SingleLiveData<StaccatoShareEvent> get() = _shareEvent
 
-        fun createStaccatoShareLink(staccatoId: Long) {
+        fun createStaccatoShareLink() {
             val nickname = getUserNickname()
+            val staccatoId = staccatoDetail.value?.id
+            if (staccatoId == null) {
+                handleException(ExceptionState.UnknownError)
+                return
+            }
             viewModelScope.launch {
                 staccatoRepository.createStaccatoShareLink(staccatoId)
                     .onSuccess { postShareEvent(nickname.await(), it) }

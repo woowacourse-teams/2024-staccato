@@ -1,5 +1,5 @@
 package com.on.staccato.presentation.staccato
 
 interface StaccatoShareHandler {
-    fun onStaccatoShare()
+    fun onStaccatoShareClicked()
 }

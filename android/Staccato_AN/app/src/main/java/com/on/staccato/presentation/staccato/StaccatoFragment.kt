@@ -97,8 +97,8 @@ class StaccatoFragment :
         )
     }
 
-    override fun onStaccatoShare() {
-        staccatoViewModel.createStaccatoShareLink(staccatoId)
+    override fun onStaccatoShareClicked() {
+        staccatoViewModel.createStaccatoShareLink()
     }
 
     private fun setUpBinding() {
@@ -165,7 +165,6 @@ class StaccatoFragment :
     private fun observeStaccatoShareLink() {
         staccatoViewModel.shareEvent.observe(viewLifecycleOwner) { data ->
             shareManager.shareStaccato(
-                context = requireContext(),
                 staccatoTitle = data.staccatoTitle,
                 nickname = data.nickname,
                 url = data.url,

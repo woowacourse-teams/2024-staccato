@@ -55,7 +55,7 @@ interface StaccatoApiService {
         private const val STACCATOS_PATH = "/staccatos"
         private const val STACCATO_ID = "staccatoId"
         private const val STACCATO_PATH_WITH_ID = "$STACCATOS_PATH/{$STACCATO_ID}"
-        private const val STACCATO_SHARE_LINK_PATH = "$STACCATOS_PATH/{$STACCATO_ID}/share"
+        private const val STACCATO_SHARE_LINK_PATH = "$STACCATO_PATH_WITH_ID/share"
         private const val FEELING_PATH = "$STACCATO_PATH_WITH_ID/feeling"
     }
 }
