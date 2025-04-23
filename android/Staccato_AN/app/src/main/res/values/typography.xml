@@ -10,7 +10,7 @@
     <style name="Typography.Title1" parent="Typography">
         <item name="fontFamily">@font/pretendard_bold</item>
         <item name="android:textSize">20sp</item>
-        <item name="lineHeight">20sp</item>
+        <item name="lineHeight">25sp</item>
     </style>
 
     <style name="Typography.Title1.Not.Resizable" parent="Typography">

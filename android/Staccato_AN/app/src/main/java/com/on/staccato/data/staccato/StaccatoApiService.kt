@@ -5,6 +5,7 @@ import com.on.staccato.data.dto.staccato.StaccatoCreationRequest
 import com.on.staccato.data.dto.staccato.StaccatoCreationResponse
 import com.on.staccato.data.dto.staccato.StaccatoLocationResponse
 import com.on.staccato.data.dto.staccato.StaccatoResponse
+import com.on.staccato.data.dto.staccato.StaccatoShareLinkResponse
 import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
 import com.on.staccato.data.network.ApiResult
 import retrofit2.http.Body
@@ -22,6 +23,11 @@ interface StaccatoApiService {
     suspend fun getStaccato(
         @Path(value = STACCATO_ID) staccatoId: Long,
     ): ApiResult<StaccatoResponse>
+
+    @POST(STACCATO_SHARE_LINK_PATH)
+    suspend fun postStaccatoShareLink(
+        @Path(value = STACCATO_ID) staccatoId: Long,
+    ): ApiResult<StaccatoShareLinkResponse>
 
     @POST(STACCATOS_PATH)
     suspend fun postStaccato(
@@ -50,6 +56,7 @@ interface StaccatoApiService {
         private const val STACCATOS_PATH = "/staccatos"
         private const val STACCATO_ID = "staccatoId"
         private const val STACCATO_PATH_WITH_ID = "$STACCATOS_PATH/{$STACCATO_ID}"
+        private const val STACCATO_SHARE_LINK_PATH = "$STACCATO_PATH_WITH_ID/share"
         private const val FEELING_PATH = "$STACCATO_PATH_WITH_ID/feeling"
     }
 }

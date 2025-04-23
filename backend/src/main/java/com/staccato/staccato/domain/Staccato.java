@@ -110,6 +110,10 @@ public class Staccato extends BaseEntity {
         return staccatoImages.getImages();
     }
 
+    public void updateCategoryModifiedDate() {
+        category.setUpdatedAt(LocalDateTime.now());
+    }
+  
     public Color getColor() {
         return category.getColor();
     }

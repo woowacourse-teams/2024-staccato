@@ -5,12 +5,15 @@ import com.on.staccato.data.network.ApiResult
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
 import com.on.staccato.domain.model.StaccatoLocation
+import com.on.staccato.domain.model.StaccatoShareLink
 import java.time.LocalDateTime
 
 interface StaccatoRepository {
     suspend fun getStaccatos(): ApiResult<List<StaccatoLocation>>
 
     suspend fun getStaccato(staccatoId: Long): ApiResult<Staccato>
+
+    suspend fun createStaccatoShareLink(staccatoId: Long): ApiResult<StaccatoShareLink>
 
     suspend fun createStaccato(
         categoryId: Long,

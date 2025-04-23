@@ -15,6 +15,7 @@ import com.on.staccato.R
 import com.on.staccato.databinding.FragmentStaccatoBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
+import com.on.staccato.presentation.common.ShareManager
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.comments.CommentsAdapter
@@ -33,9 +34,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class StaccatoFragment :
-    BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato), StaccatoToolbarHandler {
+    BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato),
+    StaccatoShareHandler,
+    StaccatoToolbarHandler {
     @Inject
     lateinit var loggingManager: LoggingManager
+
+    @Inject
+    lateinit var shareManager: ShareManager
 
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val staccatoViewModel: StaccatoViewModel by viewModels()
@@ -49,6 +55,7 @@ class StaccatoFragment :
     private val staccatoId by lazy {
         arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID
     }
+
     private val isStaccatoCreated by lazy {
         arguments?.getBoolean(CREATED_STACCATO_KEY) ?: false
     }
@@ -90,9 +97,14 @@ class StaccatoFragment :
         )
     }
 
+    override fun onStaccatoShareClicked() {
+        staccatoViewModel.createStaccatoShareLink()
+    }
+
     private fun setUpBinding() {
         binding.lifecycleOwner = this
         binding.toolbarHandler = this
+        binding.shareHandler = this
         binding.commentHandler = commentsViewModel
         binding.staccatoViewModel = staccatoViewModel
         binding.commentsViewModel = commentsViewModel
@@ -128,12 +140,16 @@ class StaccatoFragment :
     private fun observeStaccatoViewModel() {
         observeStaccatoDetail()
         observeStaccatoDelete()
+        observeStaccatoShareLink()
     }
 
     private fun observeStaccatoDetail() {
         staccatoViewModel.staccatoDetail.observe(viewLifecycleOwner) { staccatoDetail ->
             pagePhotoAdapter.submitList(staccatoDetail.staccatoImageUrls)
-            sharedViewModel.updateStaccatoLocation(staccatoDetail.latitude, staccatoDetail.longitude)
+            sharedViewModel.updateStaccatoLocation(
+                staccatoDetail.latitude,
+                staccatoDetail.longitude,
+            )
         }
     }
 
@@ -143,6 +159,16 @@ class StaccatoFragment :
                 sharedViewModel.setStaccatosHasUpdated()
                 findNavController().popBackStack()
             }
+        }
+    }
+
+    private fun observeStaccatoShareLink() {
+        staccatoViewModel.shareEvent.observe(viewLifecycleOwner) { data ->
+            shareManager.shareStaccato(
+                staccatoTitle = data.staccatoTitle,
+                nickname = data.nickname,
+                url = data.url,
+            )
         }
     }
 
