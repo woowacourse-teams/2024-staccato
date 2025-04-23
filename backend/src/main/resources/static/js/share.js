@@ -73,7 +73,7 @@ fetch(`/staccatos/shared/${token}`)
             commentsContainer.innerHTML = `
                 <div class="empty-comments-container">
                     <img class="empty-comments-image" src="https://image.staccato.kr/web/share/frame.png" alt="Frame Image">
-                    <p class="empty-comments-text">코멘트가 없어요! 코멘트를 달아보세요.</p>
+                    <p class="empty-comments-text">아직 코멘트가 없어요!</p>
                 </div>
             `;
         } else {
