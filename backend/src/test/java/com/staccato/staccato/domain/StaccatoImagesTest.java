@@ -31,9 +31,9 @@ class StaccatoImagesTest {
         );
     }
 
-    @DisplayName("생성하려는 사진의 갯수가 0장 이상, 5장 이하이면 생성에 성공한다.")
+    @DisplayName("생성하려는 사진의 갯수가 0장 이상, 8장 이하이면 생성에 성공한다.")
     @ParameterizedTest
-    @ValueSource(ints = {0, 5})
+    @ValueSource(ints = {0, 8})
     void addStaccatoImages(int size) {
         // given
         List<String> images = new ArrayList<>();
@@ -45,22 +45,19 @@ class StaccatoImagesTest {
         assertThatNoException().isThrownBy(() -> new StaccatoImages(images));
     }
 
-    @DisplayName("생성하려는 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
+    @DisplayName("사진을 추가할 때 총 사진의 갯수가 8장을 초과할 시 예외가 발생한다.")
     @Test
     void failAddStaccatoImages() {
-        // given & when & then
-        assertThatThrownBy(() -> new StaccatoImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
-                .isInstanceOf(StaccatoException.class)
-                .hasMessage("사진은 5장을 초과할 수 없습니다.");
-    }
+        // given
+        List<String> images = new ArrayList<>();
+        for (int count = 1; count <= 9; count++) {
+            images.add("image" + count + ".jpg");
+        }
 
-    @DisplayName("사진을 추가할 때 총 사진의 갯수가 5장을 초과할 시 예외가 발생한다.")
-    @Test
-    void failUpdateStaccatoImages() {
-        // given & when & then
-        assertThatThrownBy(() -> new StaccatoImages(List.of("picture1", "picture2", "picture3", "picture4", "picture5", "picture6")))
+        // when & then
+        assertThatThrownBy(() -> new StaccatoImages(images))
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("사진은 5장을 초과할 수 없습니다.");
+                .hasMessage("사진은 8장을 초과할 수 없습니다.");
     }
 
     @DisplayName("사진들의 순서를 변경하거나 새로운 사진이 추가될 때 기존 사진을 전부 삭제 후 추가한다.")

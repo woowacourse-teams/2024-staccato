@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -294,18 +295,19 @@ class StaccatoControllerTest extends ControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("추가하려는 사진이 5장이 넘는다면 스타카토 수정에 실패한다.")
+    @DisplayName("추가하려는 사진이 8장이 넘는다면 스타카토 수정에 실패한다.")
     @Test
     void failUpdateStaccatoByImagesSize() throws Exception {
         // given
         long staccatoId = 1L;
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                HttpStatus.BAD_REQUEST.toString(), "사진은 5장까지만 추가할 수 있어요.");
+                HttpStatus.BAD_REQUEST.toString(), "사진은 8장까지만 추가할 수 있어요.");
+        List<String> images = new ArrayList<>();
+        for (int count = 1; count <= 9; count++) {
+            images.add("image" + count + ".jpg");
+        }
         StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
-                .withStaccatoImageUrls(List.of(
-                        "https://example.com/staccatoImage1.jpg", "https://example.com/staccatoImage2.jpg",
-                        "https://example.com/staccatoImage3.jpg", "https://example.com/staccatoImage4.jpg",
-                        "https://example.com/staccatoImage5.jpg", "https://example.com/staccatoImage6.jpg")).build();
+                .withStaccatoImageUrls(images).build();
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
 
         // when & then

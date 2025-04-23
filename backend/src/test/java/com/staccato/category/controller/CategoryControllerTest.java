@@ -18,6 +18,7 @@ import com.staccato.category.domain.Color;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
@@ -280,7 +281,7 @@ class CategoryControllerTest extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(staccato));
+        CategoryDetailResponseV2 categoryDetailResponse = new CategoryDetailResponseV2(category, List.of(staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
@@ -329,7 +330,7 @@ class CategoryControllerTest extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryDetailResponse categoryDetailResponse = new CategoryDetailResponse(category, List.of(staccato));
+        CategoryDetailResponseV2 categoryDetailResponse = new CategoryDetailResponseV2(category, List.of(staccato));
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {

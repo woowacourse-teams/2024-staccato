@@ -22,6 +22,7 @@ import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
@@ -71,8 +72,8 @@ public class CategoryController implements CategoryControllerDocs {
     public ResponseEntity<CategoryDetailResponse> readCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
-        CategoryDetailResponse categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
-        return ResponseEntity.ok(categoryDetailResponse);
+        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
+        return ResponseEntity.ok(categoryDetailResponse.toCategoryDetailResponse());
     }
 
     @PutMapping("/{categoryId}")
