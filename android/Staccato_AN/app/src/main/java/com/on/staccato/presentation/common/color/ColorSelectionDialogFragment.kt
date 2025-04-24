@@ -79,13 +79,9 @@ class ColorSelectionDialogFragment : ColorSelectionHandler, BottomSheetDialogFra
         const val COLOR_SELECTION_REQUEST_KEY = "color_result"
         const val SELECTED_COLOR_LABEL = "SelectedColorLabel"
 
-        fun newInstance(selectedColor: CategoryColor): ColorSelectionDialogFragment {
-            return ColorSelectionDialogFragment().apply {
-                arguments =
-                    Bundle().apply {
-                        putString(SELECTED_COLOR_LABEL, selectedColor.label)
-                    }
+        fun newInstance(selectedColor: CategoryColor): ColorSelectionDialogFragment =
+            ColorSelectionDialogFragment().apply {
+                arguments = bundleOf(SELECTED_COLOR_LABEL to selectedColor.label)
             }
-        }
     }
 }
