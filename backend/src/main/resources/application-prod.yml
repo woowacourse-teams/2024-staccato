@@ -122,6 +122,10 @@ otel:
   exporter:
     otlp:
       endpoint: ENC(5UpVPijgUP3POMXJfpiN7mp3Q66ywOmvb3uelGeLu/hlRD7JTJPcXKoTPDkpxDjUY+mco4EZy0g0njZynWHDCw==)
+  resource:
+    attributes:
+      service.name: staccato-backend
+      deployment.environment: prod
 
 server:
   tomcat:
