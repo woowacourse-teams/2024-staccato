@@ -80,16 +80,16 @@ class CategoryCreationActivity :
     }
 
     override fun onColorSelectionClicked() {
-        val existing = fragmentManager.findFragmentByTag(ColorSelectionDialogFragment.TAG)
+        val existing = supportFragmentManager.findFragmentByTag(ColorSelectionDialogFragment.TAG)
         val selectedColor = viewModel.color.value
         if (existing == null && selectedColor != null) {
             ColorSelectionDialogFragment.newInstance(selectedColor)
-                .show(fragmentManager, ColorSelectionDialogFragment.TAG)
+                .show(supportFragmentManager, ColorSelectionDialogFragment.TAG)
         }
     }
 
     private fun initColorSelectionResultListener() {
-        fragmentManager.setFragmentResultListener(
+        supportFragmentManager.setFragmentResultListener(
             COLOR_SELECTION_REQUEST_KEY,
             this,
         ) { _, bundle ->

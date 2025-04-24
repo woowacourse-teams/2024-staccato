@@ -12,7 +12,6 @@ import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.libraries.places.api.model.Place
@@ -65,7 +64,6 @@ class StaccatoUpdateActivity :
     private val photoAttachFragment by lazy {
         PhotoAttachFragment().apply { setMultipleAbleOption(true) }
     }
-    private val fragmentManager: FragmentManager = supportFragmentManager
     private lateinit var photoAttachAdapter: PhotoAttachAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
     private val staccatoId by lazy { intent.getLongExtra(STACCATO_ID_KEY, 0L) }
@@ -117,7 +115,7 @@ class StaccatoUpdateActivity :
     override fun onCategorySelectionClicked() {
         if (!categorySelectionFragment.isAdded) {
             categorySelectionFragment.show(
-                fragmentManager,
+                supportFragmentManager,
                 CategorySelectionFragment.TAG,
             )
         }
@@ -129,7 +127,7 @@ class StaccatoUpdateActivity :
                 visitedAtSelectionFragment.updateSelectedVisitedAt(it)
             }
             visitedAtSelectionFragment.show(
-                fragmentManager,
+                supportFragmentManager,
                 VisitedAtSelectionFragment.TAG,
             )
         }
@@ -257,7 +255,7 @@ class StaccatoUpdateActivity :
     private fun observePhotoData() {
         viewModel.isAddPhotoClicked.observe(this) {
             if (!photoAttachFragment.isAdded && it) {
-                photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+                photoAttachFragment.show(supportFragmentManager, PhotoAttachFragment.TAG)
             }
         }
         viewModel.pendingPhotos.observe(this) {
