@@ -8,7 +8,6 @@ import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.core.util.Pair
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
@@ -17,7 +16,10 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.photo.FileUiModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
+import com.on.staccato.presentation.util.ExceptionState2
+import com.on.staccato.presentation.util.convertCategoryUriToFile
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,15 +33,15 @@ class CategoryCreationActivity :
     private val viewModel: CategoryCreationViewModel by viewModels()
 
     private val photoAttachFragment = PhotoAttachFragment()
-    private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
     private var currentSnackBar: Snackbar? = null
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
-        navigateToMap()
+        navigateToHome()
         updateCategoryPeriod()
         observeCreatedCategoryId()
+        observeIsPosting()
         showErrorToast()
         handleError()
     }
@@ -51,13 +53,12 @@ class CategoryCreationActivity :
     }
 
     override fun onSaveClicked() {
-        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         viewModel.createCategory()
     }
 
     override fun onPhotoAttachClicked() {
         if (!photoAttachFragment.isAdded) {
-            photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+            photoAttachFragment.show(supportFragmentManager, PhotoAttachFragment.TAG)
         }
     }
 
@@ -68,7 +69,9 @@ class CategoryCreationActivity :
 
     override fun onUrisSelected(vararg uris: Uri) {
         currentSnackBar?.dismiss()
-        viewModel.createThumbnailUrl(this, uris.first())
+        val uri = uris.first()
+        val file: FileUiModel = convertCategoryUriToFile(this, uri)
+        viewModel.createThumbnailUrl(uri, file)
     }
 
     private fun buildDateRangePicker() =
@@ -87,7 +90,7 @@ class CategoryCreationActivity :
         binding.handler = this
     }
 
-    private fun navigateToMap() {
+    private fun navigateToHome() {
         binding.toolbarCategoryCreation.setNavigationOnClickListener {
             finish()
         }
@@ -106,14 +109,22 @@ class CategoryCreationActivity :
             val resultIntent = Intent()
             resultIntent.putExtra(CATEGORY_ID_KEY, categoryId)
             setResult(RESULT_OK, resultIntent)
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
+        }
+    }
+
+    private fun observeIsPosting() {
+        viewModel.isPosting.observe(this) {
+            if (it) {
+                window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
+            } else {
+                window.clearFlags(FLAG_NOT_TOUCHABLE)
+            }
         }
     }
 
     private fun showErrorToast() {
         viewModel.errorMessage.observe(this) {
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
     }
@@ -128,29 +139,31 @@ class CategoryCreationActivity :
     }
 
     private fun handleCreatePhotoUrlFail(error: CategoryCreationError.Thumbnail) {
-        showExceptionSnackBar(error.message) { reCreateThumbnailUrl(error.uri) }
+        showExceptionSnackBar(error.state) { reCreateThumbnailUrl(error.uri, error.file) }
     }
 
     private fun handleCreateException(error: CategoryCreationError.CategoryCreation) {
-        window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(error.message) { recreateCategory() }
+        showExceptionSnackBar(error.state) { reCreateCategory() }
     }
 
-    private fun reCreateThumbnailUrl(uri: Uri) {
-        viewModel.createThumbnailUrl(this, uri)
+    private fun reCreateThumbnailUrl(
+        uri: Uri,
+        file: FileUiModel,
+    ) {
+        viewModel.createThumbnailUrl(uri, file)
     }
 
-    private fun recreateCategory() {
+    private fun reCreateCategory() {
         viewModel.createCategory()
     }
 
     private fun showExceptionSnackBar(
-        message: String,
+        state: ExceptionState2,
         onRetryAction: () -> Unit,
     ) {
         currentSnackBar =
             binding.root.getSnackBarWithAction(
-                message = message,
+                message = getString(state.messageId),
                 actionLabel = R.string.all_retry,
                 onAction = onRetryAction,
                 length = Snackbar.LENGTH_INDEFINITE,

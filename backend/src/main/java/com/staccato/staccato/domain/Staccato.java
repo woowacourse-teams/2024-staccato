@@ -19,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
+import com.staccato.category.domain.Color;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import lombok.AccessLevel;
@@ -69,20 +70,6 @@ public class Staccato extends BaseEntity {
         this.category = category;
     }
 
-    public Staccato(
-            Long id,
-            LocalDateTime visitedAt,
-            String title,
-            String placeName,
-            String address,
-            BigDecimal latitude,
-            BigDecimal longitude,
-            StaccatoImages staccatoImages,
-            Category category) {
-        this(visitedAt, title, placeName, address, latitude, longitude, staccatoImages, category);
-        this.id = id;
-    }
-
     private void validateIsWithinCategoryTerm(LocalDateTime visitedAt, Category category) {
         if (category.isWithoutDuration(visitedAt)) {
             throw new StaccatoException("카테고리에 포함되지 않는 날짜입니다.");
@@ -121,5 +108,13 @@ public class Staccato extends BaseEntity {
 
     public List<StaccatoImage> existingImages() {
         return staccatoImages.getImages();
+    }
+
+    public void updateCategoryModifiedDate() {
+        category.setUpdatedAt(LocalDateTime.now());
+    }
+  
+    public Color getColor() {
+        return category.getColor();
     }
 }

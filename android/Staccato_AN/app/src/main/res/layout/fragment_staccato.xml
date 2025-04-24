@@ -13,6 +13,10 @@
             type="com.on.staccato.presentation.staccato.StaccatoToolbarHandler" />
 
         <variable
+            name="shareHandler"
+            type="com.on.staccato.presentation.staccato.StaccatoShareHandler" />
+
+        <variable
             name="commentHandler"
             type="com.on.staccato.presentation.staccato.comments.CommentHandler" />
 
@@ -102,14 +106,29 @@
                     android:id="@+id/tv_staccato_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="20dp"
                     android:text="@{staccatoViewModel.staccatoDetail.staccatoTitle}"
                     android:textAppearance="@style/Typography.Title1"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/iv_staccato_share"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tab_staccato_photo_horizontal"
-                    tools:text="스타카토 제목" />
+                    tools:text="가나다라마바사아자차카타파하정확하게삼십글자를만들기위해노력" />
+
+                <ImageButton
+                    android:id="@+id/iv_staccato_share"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/staccato_share"
+                    android:onClick="@{()-> shareHandler.onStaccatoShareClicked()}"
+                    android:padding="6dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_share"
+                    app:layout_constraintBottom_toBottomOf="@id/divider_staccato_first"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tab_staccato_photo_horizontal" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider_staccato_first"

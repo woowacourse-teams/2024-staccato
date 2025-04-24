@@ -2,6 +2,7 @@ package com.staccato.fixture.category;
 
 import java.time.LocalDate;
 
+import com.staccato.category.domain.Color;
 import com.staccato.category.service.dto.request.CategoryRequest;
 
 public class CategoryRequestFixtures {
@@ -16,11 +17,11 @@ public class CategoryRequestFixtures {
     }
 
     public static class CategoryRequestBuilder {
-        String categoryThumbnailUrl;
-        String categoryTitle;
-        String description;
-        LocalDate startAt;
-        LocalDate endAt;
+        private String categoryThumbnailUrl;
+        private String categoryTitle;
+        private String description;
+        private LocalDate startAt;
+        private LocalDate endAt;
 
         public CategoryRequestBuilder withCategoryThumbnailUrl(String categoryThumbnailUrl) {
             this.categoryThumbnailUrl = categoryThumbnailUrl;
