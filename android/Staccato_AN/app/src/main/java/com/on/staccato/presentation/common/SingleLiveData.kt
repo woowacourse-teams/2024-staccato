@@ -29,6 +29,10 @@ abstract class SingleLiveData<T> {
         liveData.observe(owner) { it.getContentIfNotHandled()?.let(onResult) }
     }
 
+    fun observeForever(onResult: (T) -> Unit) {
+        liveData.observeForever { it.getContentIfNotHandled()?.let(onResult) }
+    }
+
     fun observePeek(
         owner: LifecycleOwner,
         onResult: (T) -> Unit,

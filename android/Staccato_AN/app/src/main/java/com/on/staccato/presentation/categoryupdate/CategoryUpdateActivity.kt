@@ -8,7 +8,6 @@ import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.core.util.Pair
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
@@ -17,7 +16,10 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categoryupdate.viewmodel.CategoryUpdateViewModel
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.photo.FileUiModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
+import com.on.staccato.presentation.util.ExceptionState2
+import com.on.staccato.presentation.util.convertCategoryUriToFile
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +34,6 @@ class CategoryUpdateActivity :
     private val viewModel: CategoryUpdateViewModel by viewModels()
 
     private val photoAttachFragment = PhotoAttachFragment()
-    private val fragmentManager: FragmentManager = supportFragmentManager
     private val dateRangePicker = buildDateRangePicker()
     private var currentSnackBar: Snackbar? = null
 
@@ -42,6 +43,7 @@ class CategoryUpdateActivity :
         fetchCategory()
         updateCategoryPeriod()
         observeIsUpdateSuccess()
+        observeIsPosting()
         showErrorToast()
         handleError()
     }
@@ -53,13 +55,12 @@ class CategoryUpdateActivity :
     }
 
     override fun onSaveClicked() {
-        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         viewModel.updateCategory()
     }
 
     override fun onPhotoAttachClicked() {
         if (!photoAttachFragment.isAdded) {
-            photoAttachFragment.show(fragmentManager, PhotoAttachFragment.TAG)
+            photoAttachFragment.show(supportFragmentManager, PhotoAttachFragment.TAG)
         }
     }
 
@@ -70,7 +71,9 @@ class CategoryUpdateActivity :
 
     override fun onUrisSelected(vararg uris: Uri) {
         currentSnackBar?.dismiss()
-        viewModel.createThumbnailUrl(this, uris.first())
+        val uri = uris.first()
+        val file: FileUiModel = convertCategoryUriToFile(this, uri)
+        viewModel.createThumbnailUrl(uri, file)
     }
 
     private fun buildDateRangePicker() =
@@ -111,18 +114,26 @@ class CategoryUpdateActivity :
         }
     }
 
+    private fun observeIsPosting() {
+        viewModel.isPosting.observe(this) {
+            if (it) {
+                window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
+            } else {
+                window.clearFlags(FLAG_NOT_TOUCHABLE)
+            }
+        }
+    }
+
     private fun navigateToCategory(isUpdateSuccess: Boolean) {
         if (isUpdateSuccess) {
             val intent = Intent().putExtra(CATEGORY_ID_KEY, categoryId)
             setResult(RESULT_OK, intent)
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
         }
     }
 
     private fun showErrorToast() {
         viewModel.errorMessage.observe(this) {
-            window.clearFlags(FLAG_NOT_TOUCHABLE)
             showToast(it)
         }
     }
@@ -139,33 +150,35 @@ class CategoryUpdateActivity :
 
     private fun handleInitializeFail(error: CategoryUpdateError.CategoryInitialization) {
         finish()
-        showToast(error.message)
+        showToast(getString(error.state.messageId))
     }
 
     private fun handleCreatePhotoUrlFail(error: CategoryUpdateError.Thumbnail) {
-        showExceptionSnackBar(error.message) { recreateThumbnailUrl(error.uri) }
+        showExceptionSnackBar(error.state) { reCreateThumbnailUrl(error.uri, error.file) }
     }
 
     private fun handleCategoryUpdateFail(error: CategoryUpdateError.CategoryUpdate) {
-        window.clearFlags(FLAG_NOT_TOUCHABLE)
-        showExceptionSnackBar(error.message) { reupdateCategory() }
+        showExceptionSnackBar(error.state) { reUpdateCategory() }
     }
 
-    private fun recreateThumbnailUrl(uri: Uri) {
-        viewModel.createThumbnailUrl(this, uri)
+    private fun reCreateThumbnailUrl(
+        uri: Uri,
+        file: FileUiModel,
+    ) {
+        viewModel.createThumbnailUrl(uri, file)
     }
 
-    private fun reupdateCategory() {
+    private fun reUpdateCategory() {
         viewModel.updateCategory()
     }
 
     private fun showExceptionSnackBar(
-        message: String,
+        state: ExceptionState2,
         onRetryAction: () -> Unit,
     ) {
         currentSnackBar =
             binding.root.getSnackBarWithAction(
-                message = message,
+                message = getString(state.messageId),
                 actionLabel = R.string.all_retry,
                 onAction = onRetryAction,
                 length = Snackbar.LENGTH_INDEFINITE,
