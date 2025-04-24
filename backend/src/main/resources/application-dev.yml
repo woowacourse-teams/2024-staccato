@@ -78,6 +78,14 @@ management:
       percentiles:
         http.server.requests: 0.5, 0.9, 0.95, 0.99
 
+  tracing:
+    sampling:
+      probability: 1.0
+
+otel:
+  exporter:
+    otlp:
+      endpoint: ENC(5UpVPijgUP3POMXJfpiN7mp3Q66ywOmvb3uelGeLu/hlRD7JTJPcXKoTPDkpxDjUY+mco4EZy0g0njZynWHDCw==)
 
 server:
   tomcat:
