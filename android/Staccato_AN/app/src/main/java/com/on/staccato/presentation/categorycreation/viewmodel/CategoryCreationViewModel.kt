@@ -1,18 +1,16 @@
 package com.on.staccato.presentation.categorycreation.viewmodel
 
-import android.content.Context
 import android.net.Uri
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.dto.image.ImageResponse
-import com.on.staccato.data.onException
-import com.on.staccato.data.onServerError
-import com.on.staccato.data.onSuccess
+import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.onException2
+import com.on.staccato.data.network.onServerError
+import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
@@ -21,12 +19,19 @@ import com.on.staccato.presentation.categorycreation.DateConverter.convertLongTo
 import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.common.photo.FileUiModel
+import com.on.staccato.presentation.util.CATEGORY_FILE_CHILD_NAME
+import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
-import com.on.staccato.presentation.util.convertCategoryUriToFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -39,8 +44,8 @@ class CategoryCreationViewModel
         private val categoryRepository: CategoryRepository,
         private val imageRepository: ImageRepository,
     ) : ViewModel() {
-        val title = ObservableField<String>()
-        val description = ObservableField<String>()
+        val title = MutableLiveData<String>()
+        val description = MutableLiveData<String>()
         val isPeriodActive = MutableLiveData<Boolean>(false)
 
         private val _startDate = MutableLiveData<LocalDate?>(null)
@@ -69,13 +74,16 @@ class CategoryCreationViewModel
 
         private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
 
+        private val _color = MutableLiveData(CategoryColor.GRAY)
+        val color: LiveData<CategoryColor> get() = _color
+
         fun createThumbnailUrl(
-            context: Context,
             uri: Uri,
+            file: FileUiModel,
         ) {
             _isPhotoPosting.value = true
             setThumbnailUri(uri)
-            registerThumbnailJob(context, uri)
+            registerThumbnailJob(uri, file)
         }
 
         fun clearThumbnail() {
@@ -99,8 +107,12 @@ class CategoryCreationViewModel
                 result
                     .onSuccess(::setCreatedCategoryId)
                     .onServerError(::handleCreateServerError)
-                    .onException(::handleCreateException)
+                    .onException2(::handleCreateException)
             }
+        }
+
+        fun updateCategoryColor(color: CategoryColor) {
+            _color.value = color
         }
 
         private fun setThumbnailUri(uri: Uri?) {
@@ -114,10 +126,10 @@ class CategoryCreationViewModel
         private fun isNewUri(uri: Uri?): Boolean = _thumbnail.value?.isEqualUri(uri) == false
 
         private fun registerThumbnailJob(
-            context: Context,
             uri: Uri,
+            file: FileUiModel,
         ) {
-            val job = createFetchingThumbnailJob(context, uri)
+            val job = createFetchingThumbnailJob(uri, file)
             job.invokeOnCompletion {
                 thumbnailJobs.remove(uri)
             }
@@ -125,20 +137,32 @@ class CategoryCreationViewModel
         }
 
         private fun createFetchingThumbnailJob(
-            context: Context,
             uri: Uri,
+            file: FileUiModel,
         ): Job {
-            val thumbnailFile = convertCategoryUriToFile(context, uri, IMAGE_FORM_DATA_NAME)
+            val formData = createFormData(file)
+
             return viewModelScope.launch {
                 val result: ApiResult<ImageResponse> =
-                    imageRepository.convertImageFileToUrl(thumbnailFile)
+                    imageRepository.convertImageFileToUrl(formData)
                 result
                     .onSuccess(::setThumbnailUrl)
                     .onServerError(::handlePhotoError)
-                    .onException { state ->
-                        handlePhotoException(state, uri)
+                    .onException2 { state ->
+                        handlePhotoException(state, uri, file)
                     }
             }
+        }
+
+        private fun createFormData(fileUiModel: FileUiModel): MultipartBody.Part {
+            val mediaType: MediaType? = fileUiModel.contentType?.toMediaTypeOrNull()
+            val requestFile: RequestBody = fileUiModel.file.asRequestBody(mediaType)
+
+            return MultipartBody.Part.createFormData(
+                IMAGE_FORM_DATA_NAME,
+                CATEGORY_FILE_CHILD_NAME,
+                requestFile,
+            )
         }
 
         private fun setThumbnailUrl(imageResponse: ImageResponse) {
@@ -148,16 +172,18 @@ class CategoryCreationViewModel
         }
 
         private fun setCreatedCategoryId(categoryCreationResponse: CategoryCreationResponse) {
+            _isPosting.value = false
             _createdCategoryId.value = categoryCreationResponse.categoryId
         }
 
         private fun makeNewCategory() =
             NewCategory(
                 categoryThumbnailUrl = _thumbnail.value?.url,
-                categoryTitle = title.get() ?: throw IllegalArgumentException(),
+                categoryTitle = title.value ?: throw IllegalArgumentException(),
                 startAt = getDateByPeriodSetting(startDate),
                 endAt = getDateByPeriodSetting(endDate),
-                description = description.get(),
+                description = description.value,
+                color = color.value?.label ?: CategoryColor.GRAY.label,
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {
@@ -173,11 +199,12 @@ class CategoryCreationViewModel
         }
 
         private fun handlePhotoException(
-            state: ExceptionState,
+            state: ExceptionState2,
             uri: Uri,
+            fileUiModel: FileUiModel,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(CategoryCreationError.Thumbnail(state.message, uri))
+                _error.setValue(CategoryCreationError.Thumbnail(state, uri, fileUiModel))
             }
         }
 
@@ -186,8 +213,8 @@ class CategoryCreationViewModel
             _errorMessage.postValue(message)
         }
 
-        private fun handleCreateException(state: ExceptionState) {
+        private fun handleCreateException(state: ExceptionState2) {
             _isPosting.value = false
-            _error.setValue(CategoryCreationError.CategoryCreation(state.message))
+            _error.setValue(CategoryCreationError.CategoryCreation(state))
         }
     }

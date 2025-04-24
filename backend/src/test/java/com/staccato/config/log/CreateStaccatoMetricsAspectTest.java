@@ -1,16 +1,19 @@
 package com.staccato.config.log;
 
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoRequestFixtures;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
-import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.category.CategoryFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.domain.Category;
@@ -33,18 +36,31 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
     @Autowired
     private MeterRegistry meterRegistry;
 
+    @BeforeEach
+    void clearMeterRegistry() {
+        meterRegistry.clear();
+    }
+
     @DisplayName("기록 상의 날짜를 현재를 기준으로 과거 혹은 미래 인지 매트릭을 통해 표현 할 수 있습니다.")
     @TestFactory
     List<DynamicTest> createStaccatoMetricsAspect() {
-        Member member = saveMember();
-        Category category = saveCategory(member);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(null, null)
+                .buildAndSaveWithMember(member, categoryRepository);
         LocalDateTime now = LocalDateTime.now();
 
         return List.of(
                 dynamicTest("기록 상의 날짜가 과거인 기록과 미래인 기록을 매트릭에 등록합니다.", () -> {
                     // given
-                    StaccatoRequest pastRequest = createRequest(category.getId(), now.minusDays(2));
-                    StaccatoRequest futureRequest = createRequest(category.getId(), now.plusDays(2));
+                    StaccatoRequest pastRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withVisitedAt(now.minusDays(2))
+                            .withCategoryId(category.getId())
+                            .build();
+                    StaccatoRequest futureRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withVisitedAt(now.plusDays(2))
+                            .withCategoryId(category.getId())
+                            .build();
 
                     //when
                     staccatoService.createStaccato(pastRequest, member);
@@ -58,7 +74,10 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
                 }),
                 dynamicTest("기록 상의 날짜가 과거인 기록 작성 요청 → 누적: past:2.0, future:1.0", () -> {
                     // given
-                    StaccatoRequest staccatoRequest = createRequest(category.getId(), now.minusDays(3));
+                    StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
+                            .withVisitedAt(now.minusDays(3))
+                            .withCategoryId(category.getId())
+                            .build();
 
                     // when
                     staccatoService.createStaccato(staccatoRequest, member);
@@ -72,16 +91,6 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
         );
     }
 
-    private Member saveMember() {
-        return memberRepository.save(MemberFixture.create());
-    }
-
-    private Category saveCategory(Member member) {
-        Category category = CategoryFixture.create();
-        category.addCategoryMember(member);
-        return categoryRepository.save(category);
-    }
-
     private double getFutureCount() {
         return meterRegistry.get("staccato_record_viewpoint")
                 .tag("viewPoint", "future")
@@ -92,17 +101,5 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
         return meterRegistry.get("staccato_record_viewpoint")
                 .tag("viewPoint", "past")
                 .counter().count();
-    }
-
-    private StaccatoRequest createRequest(Long categoryId, LocalDateTime localDateTime) {
-        return new StaccatoRequest(
-                "staccatoTitle",
-                "placeName",
-                "address",
-                BigDecimal.ONE,
-                BigDecimal.ONE,
-                localDateTime,
-            categoryId,
-                List.of());
     }
 }

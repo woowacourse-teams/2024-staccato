@@ -11,14 +11,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.staccato.ControllerTest;
-import com.staccato.comment.service.dto.request.CommentRequestV2;
+import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponse;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.comment.CommentUpdateRequestFixture;
 
-import com.staccato.fixture.member.MemberFixture;
+import com.staccato.fixture.comment.CommentRequestFixtures;
+import com.staccato.fixture.comment.CommentUpdateRequestFixtures;
+import com.staccato.fixture.member.MemberFixtures;
+
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -39,38 +41,32 @@ public class CommentControllerTest extends ControllerTest {
 
     static Stream<Arguments> invalidCommentRequestProvider() {
         return Stream.of(
-            Arguments.of(
-                new CommentRequestV2(null, "예시 댓글 내용"),
-                "스타카토를 선택해주세요."
-            ),
-            Arguments.of(
-                new CommentRequestV2(MIN_STACCATO_ID - 1, "예시 댓글 내용"),
-                "스타카토 식별자는 양수로 이루어져야 합니다."
-            ),
-            Arguments.of(
-                new CommentRequestV2(MIN_STACCATO_ID, null),
-                "댓글 내용을 입력해주세요."
-            ),
-            Arguments.of(
-                new CommentRequestV2(MIN_STACCATO_ID, ""),
-                "댓글 내용을 입력해주세요."
-            ),
-            Arguments.of(
-                new CommentRequestV2(MIN_STACCATO_ID, " "),
-                "댓글 내용을 입력해주세요."
-            ),
-            Arguments.of(
-                new CommentRequestV2(MIN_STACCATO_ID, "1".repeat(MAX_CONTENT_LENGTH + 1)),
-                "댓글은 공백 포함 500자 이하로 입력해주세요."
-            )
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withStaccatoId(null).build(),
+                    "스타카토를 선택해주세요."),
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withStaccatoId(MIN_STACCATO_ID - 1).build(),
+                    "스타카토 식별자는 양수로 이루어져야 합니다."),
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withContent(null).build(),
+                    "댓글 내용을 입력해주세요."),
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withContent("").build(),
+                    "댓글 내용을 입력해주세요."),
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withContent("  ").build(),
+                    "댓글 내용을 입력해주세요."),
+            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
+                            .withContent("1".repeat(MAX_CONTENT_LENGTH + 1)).build(),
+                    "댓글은 공백 포함 500자 이하로 입력해주세요.")
         );
     }
 
     @DisplayName("댓글 생성 요청/응답에 대한 직렬화/역직렬화에 성공한다.")
     @Test
-    void createCommentV2() throws Exception {
+    void createComment() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
         String commentRequest = """
             {
                 "staccatoId": 1,
@@ -80,7 +76,7 @@ public class CommentControllerTest extends ControllerTest {
         when(commentService.createComment(any(), any())).thenReturn(1L);
 
         // when & then
-        mockMvc.perform(post("/comments/v2")
+        mockMvc.perform(post("/comments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(commentRequest)
                 .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -91,17 +87,17 @@ public class CommentControllerTest extends ControllerTest {
     @DisplayName("올바르지 않은 형식으로 정보를 입력하면, 댓글을 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidCommentRequestProvider")
-    void createCommentFailV2(CommentRequestV2 commentRequestV2, String expectedMessage)
+    void createCommentFail(CommentRequest commentRequest, String expectedMessage)
         throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), expectedMessage);
 
         // when & then
-        mockMvc.perform(post("/comments/v2")
+        mockMvc.perform(post("/comments")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(commentRequestV2))
+                .content(objectMapper.writeValueAsString(commentRequest))
                 .header(HttpHeaders.AUTHORIZATION, "token"))
             .andExpect(status().isBadRequest())
             .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
@@ -109,9 +105,9 @@ public class CommentControllerTest extends ControllerTest {
 
     @DisplayName("댓글을 조회했을 때 응답 직렬화에 성공한다.")
     @Test
-    void readCommentsByStaccatoIdV2() throws Exception {
+    void readCommentsByStaccatoId() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
         CommentResponse commentResponse = new CommentResponse(1L, 1L, "member", "image.jpg", "내용");
         CommentResponses commentResponses = new CommentResponses(List.of(commentResponse));
         when(commentService.readAllCommentsByStaccatoId(any(), any())).thenReturn(commentResponses);
@@ -130,7 +126,7 @@ public class CommentControllerTest extends ControllerTest {
             """;
 
         // when & then
-        mockMvc.perform(get("/comments/v2")
+        mockMvc.perform(get("/comments")
                 .param("staccatoId", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -140,14 +136,14 @@ public class CommentControllerTest extends ControllerTest {
 
     @DisplayName("스타카토 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
     @Test
-    void readCommentsByStaccatoIdFailV2() throws Exception {
+    void readCommentsByStaccatoIdFail() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "스타카토 식별자는 양수로 이루어져야 합니다.");
 
         // when & then
-        mockMvc.perform(get("/comments/v2")
+        mockMvc.perform(get("/comments")
                 .param("staccatoId", "0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "token"))
@@ -159,7 +155,7 @@ public class CommentControllerTest extends ControllerTest {
     @Test
     void updateComment() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
         String commentUpdateRequest = """
             {
                 "content": "content"
@@ -178,8 +174,8 @@ public class CommentControllerTest extends ControllerTest {
     @Test
     void updateCommentFail() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
-        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixture.create();
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest().build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
 
@@ -198,8 +194,9 @@ public class CommentControllerTest extends ControllerTest {
     @ValueSource(strings = {"", " "})
     void updateCommentFailByBlank(String updatedContent) throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
-        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updatedContent);
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
+        CommentUpdateRequest commentUpdateRequest = CommentUpdateRequestFixtures.defaultCommentUpdateRequest()
+                .withContent(updatedContent).build();
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "댓글 내용을 입력해주세요.");
 
@@ -216,7 +213,7 @@ public class CommentControllerTest extends ControllerTest {
     @Test
     void deleteComment() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
 
         // when & then
         mockMvc.perform(delete("/comments/{commentId}", 1)
@@ -229,7 +226,7 @@ public class CommentControllerTest extends ControllerTest {
     @Test
     void deleteCommentFail() throws Exception {
         // given
-        when(authService.extractFromToken(any())).thenReturn(MemberFixture.create());
+        when(authService.extractFromToken(any())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.toString(), "댓글 식별자는 양수로 이루어져야 합니다.");
 

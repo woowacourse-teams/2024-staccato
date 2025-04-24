@@ -1,10 +1,12 @@
 package com.on.staccato.data.category
 
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.category.CategoriesResponse
+import com.on.staccato.data.dto.category.CategoryColorRequest
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.dto.category.CategoryResponse
 import com.on.staccato.data.dto.mapper.toDto
+import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.handle
 import com.on.staccato.domain.model.NewCategory
 import javax.inject.Inject
 
@@ -17,6 +19,11 @@ class CategoryRemoteDataSource
             categoryApiService.getCategory(
                 categoryId,
             )
+
+        override suspend fun changeCategoryColor(
+            categoryId: Long,
+            color: String,
+        ): ApiResult<Unit> = categoryApiService.putCategoryColor(categoryId, CategoryColorRequest(color)).handle()
 
         override suspend fun getCategories(currentDate: String?): ApiResult<CategoriesResponse> =
             categoryApiService.getCategories(

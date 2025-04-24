@@ -11,8 +11,8 @@ import com.staccato.auth.service.dto.response.LoginResponse;
 import com.staccato.config.jwt.MemberTokenProvider;
 import com.staccato.exception.StaccatoException;
 import com.staccato.exception.UnauthorizedException;
-import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.auth.LoginRequestFixture;
+import com.staccato.fixture.auth.LoginRequestFixtures;
+import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +34,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void login() {
         // given
-        LoginRequest loginRequest = LoginRequestFixture.create();
+        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest().build();
 
         // when
         LoginResponse loginResponse = authService.login(loginRequest);
@@ -50,7 +50,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void loginThenCreateBasicCategory() {
         // given
-        LoginRequest loginRequest = LoginRequestFixture.create();
+        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest().build();
 
         // when
         LoginResponse loginResponse = authService.login(loginRequest);
@@ -67,8 +67,10 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void cannotLoginByDuplicated() {
         // given
-        memberRepository.save(MemberFixture.create());
-        LoginRequest loginRequest = LoginRequestFixture.create();
+        MemberFixtures.defaultMember()
+                .withNickname("nickname").buildAndSave(memberRepository);
+        LoginRequest loginRequest = LoginRequestFixtures.defaultLoginRequest()
+                .withNickname("nickname").build();
 
         // when & then
         assertThatThrownBy(() -> authService.login(loginRequest))
@@ -80,7 +82,7 @@ class AuthServiceTest extends ServiceSliceTest {
     @Test
     void cannotExtractMemberByUnknown() {
         // given
-        memberRepository.save(MemberFixture.create());
+        MemberFixtures.defaultMember().buildAndSave(memberRepository);
 
         // when & then
         assertThatThrownBy(() -> authService.extractFromToken(null))
@@ -93,11 +95,8 @@ class AuthServiceTest extends ServiceSliceTest {
     void createTokenByCode() {
         // given
         String code = UUID.randomUUID().toString();
-        Member member = Member.builder()
-            .nickname("staccato")
-            .code(code)
-            .build();
-        memberRepository.save(member);
+        Member member = MemberFixtures.defaultMember()
+                .withCode(code).buildAndSave(memberRepository);
 
         // when
         LoginResponse loginResponse = authService.loginByCode(code);

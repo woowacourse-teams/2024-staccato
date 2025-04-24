@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staccato</title>
 
+    <meta property="og:image" th:content="${thumbnailUrl}" />
+
     <link rel="stylesheet" href="/css/share.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 
@@ -14,8 +16,8 @@
 <body>
 <div class="container">
     <div class="staccato-header">
-        <h1 class="staccato-title"></h1>
-        <p class="staccato-subtitle"></p>
+        <h1 class="staccato-header-title"></h1>
+        <p class="staccato-header-expiration"></p>
     </div>
 
     <div class="image-slider">
@@ -56,7 +58,6 @@
     </div>
 
     <div class="promotion">
-        <h2>더 많은 추억을 남기고 싶다면?</h2>
         <a href="https://play.google.com/store/apps/details?id=com.on.staccato&pcampaignid=web_share" target="_blank" class="google-play-link">
             <img th:src="${'https://image.staccato.kr/web/share/google-play-badge.png'}" alt="Get it on Google Play">
         </a>

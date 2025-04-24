@@ -1,26 +1,28 @@
 package com.staccato.category.service;
 
-import com.staccato.category.domain.Category;
-import com.staccato.category.repository.CategoryMemberRepository;
-import com.staccato.category.service.dto.request.CategoryReadRequest;
-import com.staccato.category.service.dto.request.CategoryRequest;
-import com.staccato.category.service.dto.response.CategoryDetailResponse;
-import com.staccato.category.service.dto.response.CategoryIdResponse;
-import com.staccato.category.service.dto.response.CategoryNameResponses;
-import com.staccato.category.service.dto.response.CategoryResponses;
-import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.staccato.category.domain.Category;
+import com.staccato.category.domain.CategoryMember;
+import com.staccato.category.repository.CategoryMemberRepository;
+import com.staccato.category.repository.CategoryRepository;
+import com.staccato.category.service.dto.request.CategoryColorRequest;
+import com.staccato.category.service.dto.request.CategoryReadRequest;
+import com.staccato.category.service.dto.request.CategoryRequestV2;
+import com.staccato.category.service.dto.response.CategoryDetailResponse;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
+import com.staccato.category.service.dto.response.CategoryIdResponse;
+import com.staccato.category.service.dto.response.CategoryNameResponses;
+import com.staccato.category.service.dto.response.CategoryResponsesV2;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.category.domain.CategoryMember;
-import com.staccato.category.repository.CategoryRepository;
+import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +42,7 @@ public class CategoryService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CategoryIdResponse createCategory(CategoryRequest categoryRequest, Member member) {
+    public CategoryIdResponse createCategory(CategoryRequestV2 categoryRequest, Member member) {
         Category category = categoryRequest.toCategory();
         validateCategoryTitle(category, member);
         category.addCategoryMember(member);
@@ -48,18 +50,18 @@ public class CategoryService {
         return new CategoryIdResponse(category.getId());
     }
 
-    public CategoryResponses readAllCategories(Member member, CategoryReadRequest categoryReadRequest) {
+    public CategoryResponsesV2 readAllCategories(Member member, CategoryReadRequest categoryReadRequest) {
         List<Category> rawCategories = getCategories(categoryMemberRepository.findAllByMemberId(member.getId()));
         List<Category> categories = filterAndSort(rawCategories, categoryReadRequest.getFilters(), categoryReadRequest.getSort());
 
-        return CategoryResponses.from(categories);
+        return CategoryResponsesV2.from(categories);
     }
 
     public CategoryNameResponses readAllCategoriesByDate(Member member, LocalDate currentDate) {
         List<Category> rawCategories = getCategories(
-            categoryMemberRepository.findAllByMemberIdAndDate(member.getId(), currentDate));
+                categoryMemberRepository.findAllByMemberIdAndDate(member.getId(), currentDate));
         List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER,
-            DEFAULT_CATEGORY_SORT);
+                DEFAULT_CATEGORY_SORT);
 
         return CategoryNameResponses.from(categories);
     }
@@ -75,15 +77,15 @@ public class CategoryService {
         return sort.apply(categories);
     }
 
-    public CategoryDetailResponse readCategoryById(long categoryId, Member member) {
+    public CategoryDetailResponseV2 readCategoryById(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
         validateOwner(category, member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
-        return new CategoryDetailResponse(category, staccatos);
+        return new CategoryDetailResponseV2(category, staccatos);
     }
 
     @Transactional
-    public void updateCategory(CategoryRequest categoryRequest, Long categoryId, Member member) {
+    public void updateCategory(CategoryRequestV2 categoryRequest, Long categoryId, Member member) {
         Category originCategory = getCategoryById(categoryId);
         validateOwner(originCategory, member);
         Category updatedCategory = categoryRequest.toCategory();
@@ -92,6 +94,13 @@ public class CategoryService {
         }
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryId(categoryId);
         originCategory.update(updatedCategory, staccatos);
+    }
+
+    @Transactional
+    public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
+        Category category = getCategoryById(categoryId);
+        validateOwner(category, member);
+        category.changeColor(categoryColorRequest.toColor());
     }
 
     private Category getCategoryById(long categoryId) {

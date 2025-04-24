@@ -4,22 +4,23 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.category.domain.Category;
+import com.staccato.config.swagger.SwaggerExamples;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "카테고리 목록 조회 시 각각의 카테고리에 대한 응답 형식입니다.")
 public record CategoryResponse(
-        @Schema(example = "1")
+        @Schema(example = SwaggerExamples.CATEGORY_ID)
         Long categoryId,
-        @Schema(example = "https://example.com/categories/geumohrm.jpg")
+        @Schema(example = SwaggerExamples.IMAGE_URL)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String categoryThumbnailUrl,
-        @Schema(example = "런던 여행")
+        @Schema(example = SwaggerExamples.CATEGORY_TITLE)
         String categoryTitle,
-        @Schema(example = "2024-07-27")
+        @Schema(example = SwaggerExamples.CATEGORY_START_AT)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate startAt,
-        @Schema(example = "2024-07-29")
+        @Schema(example = SwaggerExamples.CATEGORY_END_AT)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate endAt
 ) {

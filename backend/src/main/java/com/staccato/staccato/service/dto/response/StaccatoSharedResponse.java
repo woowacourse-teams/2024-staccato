@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.staccato.comment.domain.Comment;
+import com.staccato.config.swagger.SwaggerExamples;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.domain.StaccatoImage;
@@ -13,37 +14,32 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "스타카토를 공유했을 때 응답 형식입니다.")
 public record StaccatoSharedResponse(
-        @Schema(example = "1")
-        long staccatoId,
-        @Schema(example = "2024-09-30T17:00:00")
+        @Schema(example = SwaggerExamples.STACCATO_ID)
+        Long staccatoId,
+        @Schema(example = SwaggerExamples.EXPIRED_AT)
         LocalDateTime expiredAt,
-        @Schema(example = "staccato")
+        @Schema(example = SwaggerExamples.MEMBER_NICKNAME)
         String nickname,
-        @ArraySchema(arraySchema = @Schema(example = "[" +
-                "\"https://image.staccato.kr/dev/squirrel.png\"," +
-                "\"https://image.staccato.kr/dev/squirrel.png\"," +
-                "\"https://image.staccato.kr/dev/squirrel.png\"," +
-                "\"https://image.staccato.kr/dev/squirrel.png\"," +
-                "\"https://image.staccato.kr/dev/%E1%84%80%E1%85%B5%E1%84%87%E1%85%AE%E1%84%82%E1%85%B5%E1%84%83%E1%85%B3%E1%86%AF.jpeg\"]"))
+        @ArraySchema(arraySchema = @Schema(example = SwaggerExamples.IMAGE_URLS))
         List<String> staccatoImageUrls,
-        @Schema(example = "귀여운 스타카토 키링")
+        @Schema(example = SwaggerExamples.STACCATO_TITLE)
         String staccatoTitle,
-        @Schema(example = "한국 루터회관 8층")
+        @Schema(example = SwaggerExamples.STACCATO_PLACE_NAME)
         String placeName,
-        @Schema(example = "대한민국 서울특별시 송파구 올림픽로35다길 42 한국루터회관 8층")
+        @Schema(example = SwaggerExamples.STACCATO_ADDRESS)
         String address,
-        @Schema(example = "2024-09-29T17:00:00")
+        @Schema(example = SwaggerExamples.STACCATO_VISITED_AT)
         LocalDateTime visitedAt,
-        @Schema(example = "scared")
+        @Schema(example = SwaggerExamples.FEELING)
         String feeling,
         List<CommentShareResponse> comments
 ) {
-    public StaccatoSharedResponse(LocalDateTime expiredAt, Staccato staccato, Member member, List<StaccatoImage> staccatoImages, List<Comment> comments) {
+    public StaccatoSharedResponse(LocalDateTime expiredAt, Staccato staccato, Member member, List<Comment> comments) {
         this(
                 staccato.getId(),
                 expiredAt,
                 member.getNickname().getNickname(),
-                toStaccatoImageUrls(staccatoImages),
+                toStaccatoImageUrls(staccato.getStaccatoImages().getImages()),
                 staccato.getTitle(),
                 staccato.getSpot().getPlaceName(),
                 staccato.getSpot().getAddress(),

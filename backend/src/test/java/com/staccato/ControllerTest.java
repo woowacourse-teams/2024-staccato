@@ -12,6 +12,7 @@ import com.staccato.image.service.ImageService;
 import com.staccato.member.service.MemberService;
 import com.staccato.category.service.CategoryService;
 import com.staccato.staccato.service.StaccatoService;
+import com.staccato.staccato.service.StaccatoShareService;
 
 @WebMvcTest
 public abstract class ControllerTest {
@@ -31,4 +32,6 @@ public abstract class ControllerTest {
     protected AuthService authService;
     @MockBean
     protected CommentService commentService;
+    @MockBean
+    protected StaccatoShareService staccatoShareService;
 }

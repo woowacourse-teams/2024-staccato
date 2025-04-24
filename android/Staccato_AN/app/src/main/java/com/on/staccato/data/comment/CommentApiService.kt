@@ -1,9 +1,9 @@
 package com.on.staccato.data.comment
 
-import com.on.staccato.data.ApiResult
 import com.on.staccato.data.dto.comment.CommentRequest
 import com.on.staccato.data.dto.comment.CommentUpdateRequest
 import com.on.staccato.data.dto.comment.CommentsResponse
+import com.on.staccato.data.network.ApiResult
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -13,12 +13,12 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CommentApiService {
-    @GET(COMMENTS_PATH_V2)
+    @GET(COMMENTS_PATH)
     suspend fun getComments(
         @Query(STACCATO_ID) staccatoId: Long,
     ): ApiResult<CommentsResponse>
 
-    @POST(COMMENTS_PATH_V2)
+    @POST(COMMENTS_PATH)
     suspend fun postComment(
         @Body commentRequest: CommentRequest,
     ): ApiResult<Unit>
@@ -36,7 +36,6 @@ interface CommentApiService {
 
     companion object {
         private const val COMMENTS_PATH = "/comments"
-        private const val COMMENTS_PATH_V2 = "$COMMENTS_PATH/v2"
         private const val STACCATO_ID = "staccatoId"
         private const val COMMENT_ID = "commentId"
         private const val COMMENTS_PATH_WITH_COMMENT_ID = "$COMMENTS_PATH/{$COMMENT_ID}"

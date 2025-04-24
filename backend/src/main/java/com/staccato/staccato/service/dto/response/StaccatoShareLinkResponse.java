@@ -1,16 +1,17 @@
 package com.staccato.staccato.service.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.staccato.config.swagger.SwaggerExamples;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record StaccatoShareLinkResponse(
-        @Schema(example = "1")
+        @Schema(example = SwaggerExamples.STACCATO_ID)
         long staccatoId,
-        @Schema(example = "https://staccato.kr/share/sample-token")
-        String shareLink
+        @Schema(example = SwaggerExamples.SHARE_LINK)
+        String shareLink,
+        @JsonIgnore
+        String token
 ) {
-        private static final String SHARE_LINK_PREFIX = "https://staccato.kr/share/";
-
-        public String getToken() {
-                return shareLink.substring(SHARE_LINK_PREFIX.length());
-        }
 }

@@ -21,11 +21,13 @@ import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.controller.docs.StaccatoControllerDocs;
 import com.staccato.staccato.service.StaccatoService;
+import com.staccato.staccato.service.StaccatoShareService;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
 import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
 
@@ -38,6 +40,7 @@ import lombok.RequiredArgsConstructor;
 @Validated
 public class StaccatoController implements StaccatoControllerDocs {
     private final StaccatoService staccatoService;
+    private final StaccatoShareService staccatoShareService;
 
     @PostMapping
     public ResponseEntity<StaccatoIdResponse> createStaccato(
@@ -51,8 +54,8 @@ public class StaccatoController implements StaccatoControllerDocs {
 
     @GetMapping
     public ResponseEntity<StaccatoLocationResponses> readAllStaccato(@LoginMember Member member) {
-        StaccatoLocationResponses staccatoLocationResponses = staccatoService.readAllStaccato(member);
-        return ResponseEntity.ok().body(staccatoLocationResponses);
+        StaccatoLocationResponsesV2 staccatoLocationResponses = staccatoService.readAllStaccato(member);
+        return ResponseEntity.ok().body(staccatoLocationResponses.toStaccatoLocationResponses());
     }
 
     @GetMapping("/{staccatoId}")
@@ -97,14 +100,14 @@ public class StaccatoController implements StaccatoControllerDocs {
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId
     ) {
-        StaccatoShareLinkResponse staccatoShareLinkResponse = staccatoService.createStaccatoShareLink(staccatoId, member);
-        return ResponseEntity.created(URI.create("/staccatos/shared/" + staccatoShareLinkResponse.getToken()))
+        StaccatoShareLinkResponse staccatoShareLinkResponse = staccatoShareService.createStaccatoShareLink(staccatoId, member);
+        return ResponseEntity.created(URI.create("/staccatos/shared/" + staccatoShareLinkResponse.token()))
                 .body(staccatoShareLinkResponse);
     }
 
     @GetMapping("/shared/{token}")
     public ResponseEntity<StaccatoSharedResponse> readSharedStaccatoByToken(@PathVariable String token) {
-        StaccatoSharedResponse staccatoSharedResponse = staccatoService.readSharedStaccatoByToken(token);
+        StaccatoSharedResponse staccatoSharedResponse = staccatoShareService.readSharedStaccatoByToken(token);
         return ResponseEntity.ok().body(staccatoSharedResponse);
     }
 }

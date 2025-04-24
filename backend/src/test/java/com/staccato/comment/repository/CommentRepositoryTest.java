@@ -1,6 +1,10 @@
 package com.staccato.comment.repository;
 
 import com.staccato.category.domain.Category;
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.comment.CommentFixtures;
+import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.staccato.domain.Staccato;
 import java.util.List;
 import jakarta.persistence.EntityManager;
@@ -9,10 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
-import com.staccato.fixture.member.MemberFixture;
-import com.staccato.fixture.comment.CommentFixture;
-import com.staccato.fixture.category.CategoryFixture;
-import com.staccato.fixture.staccato.StaccatoFixture;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.category.repository.CategoryRepository;
@@ -36,14 +36,18 @@ class CommentRepositoryTest extends RepositoryTest {
     @Test
     void deleteAllByStaccatoIdInBulk() {
         // given
-        Member member = memberRepository.save(MemberFixture.create());
-        Category category = categoryRepository.save(CategoryFixture.create(null, null));
-        Staccato staccato1 = StaccatoFixture.create(category);
-        CommentFixture.create(staccato1, member);
-        Staccato staccato2 = StaccatoFixture.create(category);
-        CommentFixture.create(staccato2, member);
-        staccatoRepository.save(staccato1);
-        staccatoRepository.save(staccato2);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
+        Staccato staccato1 = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
+        CommentFixtures.defaultComment()
+                .withStaccato(staccato1)
+                .withMember(member).build();
+        CommentFixtures.defaultComment()
+                .withStaccato(staccato2)
+                .withMember(member).build();
 
         // when
         commentRepository.deleteAllByStaccatoIdInBulk(List.of(staccato1.getId(), staccato2.getId()));

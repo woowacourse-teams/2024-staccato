@@ -1,6 +1,6 @@
 package com.staccato.comment.controller.docs;
 
-import com.staccato.comment.service.dto.request.CommentRequestV2;
+import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.member.domain.Member;
@@ -36,7 +36,7 @@ public interface CommentControllerDocs {
     })
     ResponseEntity<Void> createComment(
         @Parameter(hidden = true) Member member,
-        @Parameter(description = "댓글 생성 시 요구 형식") @Valid CommentRequestV2 commentRequest);
+        @Parameter(description = "댓글 생성 시 요구 형식") @Valid CommentRequest commentRequest);
 
     @Operation(summary = "댓글 조회", description = "스타카토에 속한 모든 댓글을 생성 순으로 조회합니다.")
     @ApiResponses(value = {

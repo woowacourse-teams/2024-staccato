@@ -1,12 +1,13 @@
 package study
 
-import com.on.staccato.data.ApiResult
-import com.on.staccato.data.Exception
-import com.on.staccato.data.ServerError
-import com.on.staccato.data.Success
+import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.Exception
+import com.on.staccato.data.network.ServerError
+import com.on.staccato.data.network.Success
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryStaccato
 import com.on.staccato.domain.model.Member
+import com.on.staccato.presentation.common.color.CategoryColor
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -15,35 +16,35 @@ import kotlin.time.measureTime
 class InlineStudyTest {
     @Test
     fun `inline 사용 유무에 따른 소요 시간 비교`() {
-        val nonInlineTime1 = measureTime { createFakeMemory().noInlineFunction { it } }
-        val inlineTime1 = measureTime { createFakeMemory().inlineFunction { it } }
+        val nonInlineTime1 = measureTime { createFakeCategory().noInlineFunction { it } }
+        val inlineTime1 = measureTime { createFakeCategory().inlineFunction { it } }
 
-        val inlineTime2 = measureTime { createFakeMemory().inlineFunction { it } }
-        val nonInlineTime2 = measureTime { createFakeMemory().noInlineFunction { it } }
+        val inlineTime2 = measureTime { createFakeCategory().inlineFunction { it } }
+        val nonInlineTime2 = measureTime { createFakeCategory().noInlineFunction { it } }
 
-        val inlineTime3 = measureTime { createFakeMemory().inlineFunction { it } }
-        val nonInlineTime3 = measureTime { createFakeMemory().noInlineFunction { it } }
+        val inlineTime3 = measureTime { createFakeCategory().inlineFunction { it } }
+        val nonInlineTime3 = measureTime { createFakeCategory().noInlineFunction { it } }
 
-        val nonInlineTime4 = measureTime { createFakeMemory().noInlineFunction { it } }
-        val inlineTime4 = measureTime { createFakeMemory().inlineFunction { it } }
+        val nonInlineTime4 = measureTime { createFakeCategory().noInlineFunction { it } }
+        val inlineTime4 = measureTime { createFakeCategory().inlineFunction { it } }
 
-        val nonInlineTime5 = measureTime { createFakeMemory().noInlineFunction { it } }
-        val inlineTime5 = measureTime { createFakeMemory().inlineFunction { it } }
+        val nonInlineTime5 = measureTime { createFakeCategory().noInlineFunction { it } }
+        val inlineTime5 = measureTime { createFakeCategory().inlineFunction { it } }
 
-        val inlineTime6 = measureTime { createFakeMemory().inlineFunction { it } }
-        val nonInlineTime6 = measureTime { createFakeMemory().noInlineFunction { it } }
+        val inlineTime6 = measureTime { createFakeCategory().inlineFunction { it } }
+        val nonInlineTime6 = measureTime { createFakeCategory().noInlineFunction { it } }
 
-        val inlineTime7 = measureTime { createFakeMemory().inlineFunction { it } }
-        val nonInlineTime7 = measureTime { createFakeMemory().noInlineFunction { it } }
+        val inlineTime7 = measureTime { createFakeCategory().inlineFunction { it } }
+        val nonInlineTime7 = measureTime { createFakeCategory().noInlineFunction { it } }
 
-        val inlineTime8 = measureTime { createFakeMemory().inlineFunction { it } }
-        val nonInlineTime8 = measureTime { createFakeMemory().noInlineFunction { it } }
+        val inlineTime8 = measureTime { createFakeCategory().inlineFunction { it } }
+        val nonInlineTime8 = measureTime { createFakeCategory().noInlineFunction { it } }
 
-        val nonInlineTime9 = measureTime { createFakeMemory().noInlineFunction { it } }
-        val inlineTime9 = measureTime { createFakeMemory().inlineFunction { it } }
+        val nonInlineTime9 = measureTime { createFakeCategory().noInlineFunction { it } }
+        val inlineTime9 = measureTime { createFakeCategory().inlineFunction { it } }
 
-        val nonInlineTime10 = measureTime { createFakeMemory().noInlineFunction { it } }
-        val inlineTime10 = measureTime { createFakeMemory().inlineFunction { it } }
+        val nonInlineTime10 = measureTime { createFakeCategory().noInlineFunction { it } }
+        val inlineTime10 = measureTime { createFakeCategory().inlineFunction { it } }
 
         println("Inline: $inlineTime1 -> $inlineTime2 -> $inlineTime3 -> $inlineTime4 -> $inlineTime5")
         println("        -> $inlineTime6 -> $inlineTime7 -> $inlineTime8 -> $inlineTime9 -> $inlineTime10")
@@ -66,7 +67,7 @@ class InlineStudyTest {
     }
 }
 
-fun createFakeMemory(): Success<Category> {
+fun createFakeCategory(): Success<Category> {
     return Success(
         Category(
             categoryId = 1L,
@@ -75,6 +76,7 @@ fun createFakeMemory(): Success<Category> {
             startAt = LocalDate.of(2025, 1, 1),
             endAt = LocalDate.of(2025, 12, 31),
             description = "This is a fake memory description used for testing.",
+            color = CategoryColor.GRAY.label,
             mates =
                 listOf(
                     Member(1L, "Member 1"),
