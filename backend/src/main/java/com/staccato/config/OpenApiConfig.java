@@ -2,6 +2,7 @@ package com.staccato.config;
 
 import java.util.Arrays;
 
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -33,5 +34,21 @@ public class OpenApiConfig {
                         .type(Type.APIKEY)
                         .in(In.HEADER)
                         .description("Enter your token in the Authorization header"));
+    }
+
+    @Bean
+    public GroupedOpenApi v1Api() {
+        return GroupedOpenApi.builder()
+                .group("V1 API")
+                .pathsToExclude("/v2/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi v2Api() {
+        return GroupedOpenApi.builder()
+                .group("V2 API")
+                .pathsToMatch("/v2/**")
+                .build();
     }
 }
