@@ -109,7 +109,7 @@ class CategoryUpdateViewModel
             _endDate.value = convertLongToLocalDate(endAt)
         }
 
-        fun setCategoryColor(color: CategoryColor) {
+        fun updateCategoryColor(color: CategoryColor) {
             _color.value = color
         }
 

@@ -78,7 +78,7 @@ class CategoryUpdateActivity :
         viewModel.createThumbnailUrl(this, uris.first())
     }
 
-    override fun onCategoryColorClicked() {
+    override fun onColorSelectionClicked() {
         val existing = fragmentManager.findFragmentByTag(ColorSelectionDialogFragment.TAG)
         val selectedColor = viewModel.color.value
         if (existing == null && selectedColor != null) {
@@ -93,7 +93,7 @@ class CategoryUpdateActivity :
             this,
         ) { _, bundle ->
             bundle.getString(SELECTED_COLOR_LABEL)?.let {
-                viewModel.setCategoryColor(CategoryColor.getColorBy(it))
+                viewModel.updateCategoryColor(CategoryColor.getColorBy(it))
             }
         }
     }

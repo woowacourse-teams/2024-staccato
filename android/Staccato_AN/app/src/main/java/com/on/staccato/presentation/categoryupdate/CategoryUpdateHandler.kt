@@ -9,5 +9,5 @@ interface CategoryUpdateHandler {
 
     fun onPhotoDeletionClicked()
 
-    fun onCategoryColorClicked()
+    fun onColorSelectionClicked()
 }

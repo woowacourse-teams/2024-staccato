@@ -177,7 +177,7 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="24dp"
-                    android:onClick="@{()->handler.onCategoryColorClicked()}"
+                    android:onClick="@{()->handler.onColorSelectionClicked()}"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -107,7 +107,7 @@ class CategoryCreationViewModel
             }
         }
 
-        fun setCategoryColor(color: CategoryColor) {
+        fun updateCategoryColor(color: CategoryColor) {
             _color.value = color
         }
 

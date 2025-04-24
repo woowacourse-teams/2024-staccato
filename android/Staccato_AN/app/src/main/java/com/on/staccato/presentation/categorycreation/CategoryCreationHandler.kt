@@ -9,5 +9,5 @@ interface CategoryCreationHandler {
 
     fun onImageDeletionClicked()
 
-    fun onCategoryColorClicked()
+    fun onColorSelectionClicked()
 }
