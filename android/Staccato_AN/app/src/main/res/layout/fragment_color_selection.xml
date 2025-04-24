@@ -18,7 +18,7 @@
         android:padding="24dp">
 
         <TextView
-            android:id="@+id/tv_visited_at_title"
+            android:id="@+id/tv_color_selection_title"
             style="@style/SubTitleStyle"
             android:text="@string/all_please_select_color"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_visited_at_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_color_selection_title"
             tools:listitem="@layout/item_color_selection" />
 
         <androidx.appcompat.widget.AppCompatButton
