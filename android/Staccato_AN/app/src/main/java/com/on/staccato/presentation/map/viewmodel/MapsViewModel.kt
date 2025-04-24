@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.network.onException
+import com.on.staccato.data.network.onException2
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.StaccatoLocation
@@ -14,7 +14,7 @@ import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.map.model.MarkerUiModel
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,6 +39,9 @@ class MapsViewModel
 
         private val _focusLocation = MutableLiveData<LocationUiModel>()
         val focusLocation: LiveData<LocationUiModel> get() = _focusLocation
+
+        private val _exception = MutableSingleLiveData<ExceptionState2>()
+        val exception: SingleLiveData<ExceptionState2> get() = _exception
 
         fun getCurrentLocation() {
             val currentLocation = locationRepository.getCurrentLocation()
@@ -66,7 +69,7 @@ class MapsViewModel
                 val result = staccatoRepository.getStaccatos()
                 result.onSuccess(::setStaccatoLocations)
                     .onServerError(::handleServerError)
-                    .onException(::handelException)
+                    .onException2(::handelException)
             }
         }
 
@@ -91,7 +94,7 @@ class MapsViewModel
             _errorMessage.setValue(message)
         }
 
-        private fun handelException(state: ExceptionState) {
-            _errorMessage.setValue(state.message)
+        private fun handelException(state: ExceptionState2) {
+            _exception.setValue(state)
         }
     }

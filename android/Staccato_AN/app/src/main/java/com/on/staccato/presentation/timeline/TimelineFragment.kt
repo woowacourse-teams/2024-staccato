@@ -8,7 +8,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentTimelineBinding
 import com.on.staccato.presentation.base.BindingFragment
@@ -19,7 +18,6 @@ import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.timeline.adapter.TimelineAdapter
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
-import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_FRAGMENT_PAGE
 import com.on.staccato.util.logging.LoggingManager
@@ -100,14 +98,8 @@ class TimelineFragment :
             showToast(message)
         }
 
-        timelineViewModel.exceptionMessage.observe(viewLifecycleOwner) { message ->
-            view?.showSnackBarWithAction(
-                message = message,
-                actionLabel = R.string.all_retry,
-                onAction = ::onRetryAction,
-                Snackbar.LENGTH_INDEFINITE,
-            )
-        }
+        observeException()
+        observeIsRetry()
 
         sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) { isUpdated ->
             if (isUpdated) {
@@ -117,6 +109,18 @@ class TimelineFragment :
 
         sharedViewModel.memberProfile.observe(viewLifecycleOwner) { memberProfile ->
             binding.nickname = memberProfile.nickname
+        }
+    }
+
+    private fun observeException() {
+        timelineViewModel.exception.observe(viewLifecycleOwner) { state ->
+            sharedViewModel.updateException(state)
+        }
+    }
+
+    private fun observeIsRetry() {
+        sharedViewModel.isRetry.observe(viewLifecycleOwner) {
+            if (it) timelineViewModel.loadTimeline()
         }
     }
 
@@ -139,10 +143,6 @@ class TimelineFragment :
             timelineViewModel.sortTimeline(sortType)
             false
         }
-    }
-
-    private fun onRetryAction() {
-        timelineViewModel.loadTimeline()
     }
 
     private fun logAccess() {

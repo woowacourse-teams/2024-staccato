@@ -18,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPS
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_DRAGGING
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HALF_EXPANDED
+import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.presentation.base.BindingActivity
@@ -27,6 +28,7 @@ import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
+import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_BOTTOM_SHEET
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_STACCATO_CREATION
@@ -68,6 +70,7 @@ class MainActivity :
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
         loadMemberProfile()
+        observeException()
         observeStaccatoId()
         setupBottomSheetController()
         setupBackPressedHandler()
@@ -104,6 +107,21 @@ class MainActivity :
 
     private fun loadMemberProfile() {
         sharedViewModel.fetchMemberProfile()
+    }
+
+    private fun observeException() {
+        sharedViewModel.exception.observe(this) { state ->
+            binding.root.showSnackBarWithAction(
+                message = getString(state.messageId),
+                actionLabel = R.string.all_retry,
+                onAction = ::onRetryAction,
+                length = Snackbar.LENGTH_INDEFINITE,
+            )
+        }
+    }
+
+    private fun onRetryAction() {
+        sharedViewModel.updateIsRetry()
     }
 
     private fun observeStaccatoId() {

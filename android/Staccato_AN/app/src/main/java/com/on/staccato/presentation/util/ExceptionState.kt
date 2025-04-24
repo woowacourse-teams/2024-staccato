@@ -18,8 +18,8 @@ enum class ExceptionState(val message: String) {
 enum class ExceptionState2(
     @StringRes val messageId: Int,
 ) {
-    NetworkError(R.string.network_error_message),
-    RequiredValuesMissing(R.string.required_values_error_message),
-    ImageUploadError(R.string.image_upload_error_message),
-    UnknownError(R.string.unknown_error_message),
+    NetworkError(R.string.error_message_network),
+    RequiredValuesMissing(R.string.error_message_required_values),
+    ImageUploadError(R.string.error_message_image_upload),
+    UnknownError(R.string.error_message_unknown),
 }
