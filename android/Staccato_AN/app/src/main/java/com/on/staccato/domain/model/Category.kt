@@ -9,6 +9,7 @@ data class Category(
     val startAt: LocalDate? = null,
     val endAt: LocalDate? = null,
     val description: String? = null,
+    val color: String,
     val mates: List<Member>,
     val staccatos: List<CategoryStaccato>,
 )

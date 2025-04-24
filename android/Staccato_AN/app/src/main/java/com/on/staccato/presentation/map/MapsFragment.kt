@@ -17,9 +17,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.on.staccato.R
+import com.on.staccato.domain.model.StaccatoLocation
+import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.PermissionCancelListener
@@ -104,7 +105,8 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun setupMap() {
-        val map: SupportMapFragment? = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        val map: SupportMapFragment? =
+            childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         map?.getMapAsync(callback)
     }
 
@@ -205,7 +207,8 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun GoogleMap.setMapPadding() {
         sharedViewModel.isBottomSheetHalf.observe(viewLifecycleOwner) { isBottomSheetHalf ->
-            val mapPaddingBottom = if (isBottomSheetHalf) (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt() else DEFAULT_MAP_PADDING
+            val mapPaddingBottom =
+                if (isBottomSheetHalf) (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt() else DEFAULT_MAP_PADDING
             val yPixel = if (isBottomSheetHalf) yPixel else -yPixel
 
             setPadding(
@@ -219,25 +222,39 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun observeMarkerOptions() {
-        mapsViewModel.markersOptions.observe(viewLifecycleOwner) { markersOptions ->
+        mapsViewModel.staccatoLocations.observe(viewLifecycleOwner) { staccatoLocations ->
             if (this::map.isInitialized) {
                 map.clear()
-                val markers: List<Marker>? = addMarkers(markersOptions)
-                if (markers != null) mapsViewModel.updateMarkers(markers)
+                addMarkersAndGetIds(staccatoLocations)?.let { markerIds ->
+                    mapsViewModel.updateMarkers(
+                        markerIds,
+                        staccatoLocations.map { it.staccatoId },
+                    )
+                }
             }
         }
     }
 
-    private fun addMarkers(markerOptions: List<MarkerOptions>): List<Marker>? =
-        markerOptions.map {
-            val marker: Marker? = map.addMarker(it.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_pin_3x)))
-            if (marker == null) {
-                map.clear()
-                requireView().showSnackBar(getString(R.string.maps_markers_loading_error))
-                return null
-            }
-            marker
+    private fun addMarkersAndGetIds(staccatoLocation: List<StaccatoLocation>): List<String>? =
+        staccatoLocation.map {
+            val markerOption = it.toMarkerOption()
+            val addedMarker =
+                map.addMarker(markerOption) ?: run {
+                    handleMarkerError()
+                    return null
+                }
+            addedMarker.id
         }
+
+    private fun StaccatoLocation.toMarkerOption() =
+        MarkerOptions()
+            .position(LatLng(latitude, longitude))
+            .icon(BitmapDescriptorFactory.fromResource(CategoryColor.getMarkerResBy(color)))
+
+    private fun handleMarkerError() {
+        map.clear()
+        requireView().showSnackBar(getString(R.string.maps_markers_loading_error))
+    }
 
     private fun GoogleMap.onMarkerClicked() {
         setOnMarkerClickListener { marker ->

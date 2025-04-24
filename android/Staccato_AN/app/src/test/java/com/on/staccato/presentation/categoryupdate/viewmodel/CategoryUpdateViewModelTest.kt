@@ -6,11 +6,11 @@ import com.on.staccato.data.dto.Status
 import com.on.staccato.data.network.Exception
 import com.on.staccato.data.network.ServerError
 import com.on.staccato.data.network.Success
-import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.presentation.category.VALID_ID
 import com.on.staccato.presentation.category.category
+import com.on.staccato.presentation.categorycreation.newCategory
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
 import com.on.staccato.presentation.getOrAwaitValue
 import com.on.staccato.presentation.util.ExceptionState2
@@ -231,11 +231,8 @@ class CategoryUpdateViewModelTest {
     }
 
     private fun getNewCategory() =
-        NewCategory(
-            categoryThumbnailUrl = null,
+        newCategory.copy(
             categoryTitle = viewModel.title.getOrAwaitValue(),
-            startAt = null,
-            endAt = null,
             description = viewModel.description.getOrAwaitValue(),
         )
 }

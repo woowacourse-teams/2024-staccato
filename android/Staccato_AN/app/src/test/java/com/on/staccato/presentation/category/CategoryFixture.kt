@@ -2,6 +2,7 @@ package com.on.staccato.presentation.category
 
 import com.on.staccato.domain.model.Category
 import com.on.staccato.presentation.category.model.CategoryUiModel
+import com.on.staccato.presentation.common.color.CategoryColor
 
 const val VALID_ID = 1L
 const val INVALID_ID = 0L
@@ -14,6 +15,7 @@ val category =
         startAt = null,
         endAt = null,
         description = null,
+        color = CategoryColor.GRAY.label,
         mates = listOf(),
         staccatos = listOf(),
     )
@@ -26,6 +28,7 @@ val categoryUiModel =
         startAt = null,
         endAt = null,
         description = null,
+        color = CategoryColor.GRAY.label,
         mates = listOf(),
         staccatos = listOf(),
     )

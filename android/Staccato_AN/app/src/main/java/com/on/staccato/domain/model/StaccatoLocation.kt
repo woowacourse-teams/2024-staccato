@@ -4,4 +4,5 @@ data class StaccatoLocation(
     val staccatoId: Long,
     val latitude: Double,
     val longitude: Double,
+    val color: String,
 )

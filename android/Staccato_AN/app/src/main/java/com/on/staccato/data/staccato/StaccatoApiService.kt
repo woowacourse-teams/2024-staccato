@@ -16,7 +16,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface StaccatoApiService {
-    @GET(STACCATOS_PATH)
+    @GET(STACCATOS_PATH_V2)
     suspend fun getStaccatos(): ApiResult<StaccatoLocationResponse>
 
     @GET(STACCATO_PATH_WITH_ID)
@@ -52,6 +52,7 @@ interface StaccatoApiService {
     ): ApiResult<Unit>
 
     companion object {
+        private const val STACCATOS_PATH_V2 = "/v2/staccatos"
         private const val STACCATOS_PATH = "/staccatos"
         private const val STACCATO_ID = "staccatoId"
         private const val STACCATO_PATH_WITH_ID = "$STACCATOS_PATH/{$STACCATO_ID}"
