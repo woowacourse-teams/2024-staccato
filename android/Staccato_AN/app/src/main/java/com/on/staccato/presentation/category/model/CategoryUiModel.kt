@@ -10,6 +10,7 @@ data class CategoryUiModel(
     val startAt: LocalDate? = null,
     val endAt: LocalDate? = null,
     val description: String? = null,
+    val color: String,
     val mates: List<MemberUiModel>,
     val staccatos: List<CategoryStaccatoUiModel>,
 ) {

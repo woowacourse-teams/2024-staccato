@@ -8,4 +8,6 @@ interface CategoryCreationHandler {
     fun onPhotoAttachClicked()
 
     fun onImageDeletionClicked()
+
+    fun onColorSelectionClicked()
 }

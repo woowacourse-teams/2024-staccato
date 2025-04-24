@@ -20,74 +20,77 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="6dp"
-        android:background="@drawable/shape_all_stroke_gray1_4dp"
-        android:onClickListener="@{() -> eventHandler.onCategoryClicked(category.categoryId)}"
-        android:padding="9dp">
+        android:layout_marginVertical="6dp">
 
-        <ImageView
-            android:id="@+id/iv_timeline_folder"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:contentDescription="@string/timeline_category_icon_description"
-            android:src="@drawable/icon_folder"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider_timeline"
-            android:layout_width="1dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            app:dividerColor="@color/gray2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_timeline_folder"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_timeline_category_title"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@{category.categoryTitle}"
-            android:textAppearance="@style/Typography.Title3"
-            app:layout_constraintEnd_toStartOf="@id/iv_timeline_category_thumbnail"
-            app:layout_constraintStart_toEndOf="@id/divider_timeline"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="제주도 가족 여행" />
-
-        <TextView
-            android:id="@+id/tv_timeline_category_period"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="9dp"
-            android:textAppearance="@style/Typography.Body4"
-            app:layout_constraintEnd_toStartOf="@id/iv_timeline_category_thumbnail"
-            app:layout_constraintStart_toStartOf="@id/divider_timeline"
-            app:layout_constraintTop_toBottomOf="@id/tv_timeline_category_title"
-            bind:endAt="@{category.endAt}"
-            bind:startAt="@{category.startAt}"
-            tools:text="2024.7.23 ~ 2024.9.30" />
-
-        <ImageView
-            android:id="@+id/iv_timeline_category_thumbnail"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:contentDescription="@string/all_category_thumbnail_photo_description"
-            android:scaleType="centerCrop"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/shape_all_stroke_gray1_4dp"
+            android:onClickListener="@{() -> eventHandler.onCategoryClicked(category.categoryId)}"
+            android:padding="9dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="10:7"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_timeline_category_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{category.categoryTitle}"
+                android:textAppearance="@style/Typography.Title3"
+                app:layout_constraintEnd_toStartOf="@id/iv_timeline_category_thumbnail"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="제주도 가족 여행" />
+
+            <TextView
+                android:id="@+id/tv_timeline_category_period"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="9dp"
+                android:textAppearance="@style/Typography.Body4"
+                app:layout_constraintEnd_toStartOf="@id/iv_timeline_category_thumbnail"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_timeline_category_title"
+                bind:endAt="@{category.endAt}"
+                bind:startAt="@{category.startAt}"
+                tools:text="2024.7.23 ~ 2024.9.30" />
+
+            <ImageView
+                android:id="@+id/iv_timeline_category_thumbnail"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/all_category_thumbnail_photo_description"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="10:7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.35"
+                bind:coilRoundedCornerImageUrl="@{category.categoryThumbnailUrl}"
+                bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+                bind:coilRoundingRadiusDp="@{4f}"
+                bind:visibleOrGone="@{category.categoryThumbnailUrl != null}"
+                tools:src="@drawable/shape_all_gray2_4dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/iv_timeline_color_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/timeline_category_icon_description"
+            android:onClick="@{()-> eventHandler.onCategoryClicked(category.categoryId)}"
+            android:src="@drawable/icon_timeline_color_bar"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.35"
-            bind:coilRoundedCornerImageUrl="@{category.categoryThumbnailUrl}"
-            bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
-            bind:coilRoundingRadiusDp="@{4f}"
-            bind:visibleOrGone="@{category.categoryThumbnailUrl != null}"
-            tools:src="@drawable/shape_all_gray2_4dp" />
+            bind:tintColorRes="@{category.color}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

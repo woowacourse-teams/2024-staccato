@@ -7,10 +7,10 @@ import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.network.Exception
 import com.on.staccato.data.network.ServerError
 import com.on.staccato.data.network.Success
-import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.presentation.categorycreation.CategoryCreationError
+import com.on.staccato.presentation.categorycreation.newCategory
 import com.on.staccato.presentation.getOrAwaitValue
 import com.on.staccato.presentation.util.ExceptionState2
 import io.mockk.MockKAnnotations
@@ -54,15 +54,7 @@ class CategoryCreationViewModelTest {
         runTest {
             // given
             coEvery {
-                categoryRepository.createCategory(
-                    NewCategory(
-                        categoryThumbnailUrl = null,
-                        categoryTitle = viewModel.title.getOrAwaitValue(),
-                        startAt = null,
-                        endAt = null,
-                        description = null,
-                    ),
-                )
+                categoryRepository.createCategory(newCategory.copy(categoryTitle = viewModel.title.getOrAwaitValue()))
             } returns
                 Success(
                     CategoryCreationResponse(categoryId = 1L),
@@ -81,15 +73,7 @@ class CategoryCreationViewModelTest {
         runTest {
             // given
             coEvery {
-                categoryRepository.createCategory(
-                    NewCategory(
-                        categoryThumbnailUrl = null,
-                        categoryTitle = viewModel.title.getOrAwaitValue(),
-                        startAt = null,
-                        endAt = null,
-                        description = null,
-                    ),
-                )
+                categoryRepository.createCategory(newCategory.copy(categoryTitle = viewModel.title.getOrAwaitValue()))
             } returns ServerError(Status.Code(400), "Bad Request")
 
             // when
@@ -105,15 +89,7 @@ class CategoryCreationViewModelTest {
         runTest {
             // given
             coEvery {
-                categoryRepository.createCategory(
-                    NewCategory(
-                        categoryThumbnailUrl = null,
-                        categoryTitle = viewModel.title.getOrAwaitValue(),
-                        startAt = null,
-                        endAt = null,
-                        description = null,
-                    ),
-                )
+                categoryRepository.createCategory(newCategory.copy(categoryTitle = viewModel.title.getOrAwaitValue()))
             } returns Exception.NetworkError()
 
             // when
@@ -129,15 +105,7 @@ class CategoryCreationViewModelTest {
         runTest {
             // given
             coEvery {
-                categoryRepository.createCategory(
-                    NewCategory(
-                        categoryThumbnailUrl = null,
-                        categoryTitle = viewModel.title.getOrAwaitValue(),
-                        startAt = null,
-                        endAt = null,
-                        description = null,
-                    ),
-                )
+                categoryRepository.createCategory(newCategory.copy(categoryTitle = viewModel.title.getOrAwaitValue()))
             } returns Exception.UnknownError()
 
             // when

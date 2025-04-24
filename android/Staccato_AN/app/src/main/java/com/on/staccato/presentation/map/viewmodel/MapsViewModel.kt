@@ -4,9 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.on.staccato.data.network.onException
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
@@ -29,7 +26,9 @@ class MapsViewModel
         private val staccatoRepository: StaccatoRepository,
         private val locationRepository: LocationRepository,
     ) : ViewModel() {
-        private val staccatoLocations = MutableLiveData<List<StaccatoLocation>>()
+        private val _staccatoLocations = MutableLiveData<List<StaccatoLocation>>()
+        val staccatoLocations: LiveData<List<StaccatoLocation>> get() = _staccatoLocations
+
         private val markerUiModels = MutableLiveData<List<MarkerUiModel>>()
 
         private val _errorMessage = MutableSingleLiveData<String>()
@@ -40,9 +39,6 @@ class MapsViewModel
 
         private val _focusLocation = MutableLiveData<LocationUiModel>()
         val focusLocation: LiveData<LocationUiModel> get() = _focusLocation
-
-        private val _markersOptions = MutableLiveData<List<MarkerOptions>>()
-        val markersOptions: LiveData<List<MarkerOptions>> get() = _markersOptions
 
         fun getCurrentLocation() {
             val currentLocation = locationRepository.getCurrentLocation()
@@ -74,23 +70,21 @@ class MapsViewModel
             }
         }
 
-        fun updateMarkers(markers: List<Marker>) {
-            staccatoLocations.value?.let { locations ->
-                markerUiModels.value =
-                    locations.zip(markers) { location, marker ->
-                        MarkerUiModel(location.staccatoId, marker.id)
-                    }
-            }
+        fun updateMarkers(
+            markerIds: List<String>,
+            staccatoIds: List<Long>,
+        ) {
+            markerUiModels.value =
+                markerIds.zip(staccatoIds) { markerId, staccatoId ->
+                    MarkerUiModel(
+                        staccatoId = staccatoId,
+                        markerId = markerId,
+                    )
+                }
         }
 
         private fun setStaccatoLocations(locations: List<StaccatoLocation>) {
-            staccatoLocations.value = locations
-            _markersOptions.value =
-                staccatoLocations.value?.map {
-                    val latLng = LatLng(it.latitude, it.longitude)
-                    val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
-                    markerOptions
-                }
+            _staccatoLocations.value = locations
         }
 
         private fun handleServerError(message: String) {

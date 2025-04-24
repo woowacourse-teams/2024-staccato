@@ -10,4 +10,5 @@ data class CategoryRequest(
     @SerialName("description") val description: String? = null,
     @SerialName("startAt") val startAt: String? = null,
     @SerialName("endAt") val endAt: String? = null,
+    @SerialName("categoryColor") val color: String? = null,
 )

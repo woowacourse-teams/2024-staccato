@@ -19,6 +19,7 @@ import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.common.photo.FileUiModel
 import com.on.staccato.presentation.util.CATEGORY_FILE_CHILD_NAME
 import com.on.staccato.presentation.util.ExceptionState2
@@ -74,6 +75,9 @@ class CategoryUpdateViewModel
         private val _errorMessage = MutableLiveData<String>()
         val errorMessage: LiveData<String> get() = _errorMessage
 
+        private val _color = MutableLiveData(CategoryColor.GRAY)
+        val color: LiveData<CategoryColor> get() = _color
+
         private val _error = MutableSingleLiveData<CategoryUpdateError>()
         val error: SingleLiveData<CategoryUpdateError> get() = _error
 
@@ -109,6 +113,10 @@ class CategoryUpdateViewModel
             _endDate.value = convertLongToLocalDate(endAt)
         }
 
+        fun updateCategoryColor(color: CategoryColor) {
+            _color.value = color
+        }
+
         fun createThumbnailUrl(
             uri: Uri,
             file: FileUiModel,
@@ -128,6 +136,7 @@ class CategoryUpdateViewModel
             description.value = category.description
             _startDate.value = category.startAt
             _endDate.value = category.endAt
+            _color.value = CategoryColor.getColorBy(category.color)
             checkCategoryHasPeriod(category)
         }
 
@@ -142,6 +151,7 @@ class CategoryUpdateViewModel
                 startAt = getDateByPeriodSetting(startDate),
                 endAt = getDateByPeriodSetting(endDate),
                 description = description.value,
+                color = color.value?.label ?: CategoryColor.GRAY.label,
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {

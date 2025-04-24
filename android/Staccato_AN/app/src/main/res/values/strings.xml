@@ -14,6 +14,7 @@
     <string name="all_photo_attach">사진을 첨부해 보세요</string>
     <string name="all_visited_at">날짜 및 시간</string>
     <string name="all_please_select_visited_at">날짜 및 시간을 선택해 주세요</string>
+    <string name="all_please_select_color">색상을 선택해 주세요</string>
     <string name="all_date_dots_format">%s. %s. %s</string>
     <string name="all_date_kr_format">%s년 %s월 %s일</string>
     <string name="all_date_time_am_pm_kr_format">%s년 %s월 %s일  %s %s시</string>
@@ -80,6 +81,7 @@
     <string name="category_creation_title_hint">제목을 입력해 주세요</string>
     <string name="category_creation_description">카테고리 소개</string>
     <string name="category_creation_description_hint">소개를 입력해 주세요</string>
+    <string name="category_creation_color">마커 색상</string>
     <string name="category_creation_period_setting">기간 설정</string>
     <string name="category_creation_period_hint">기간을 선택해 주세요</string>
     <string name="category_creation_selected_period">%s ~ %s</string>
