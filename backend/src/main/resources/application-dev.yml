@@ -74,7 +74,7 @@ management:
   metrics:
     distribution:
       percentiles-histogram:
-        http.server.requests: true   # 히스토그램 활성화
+        http.server.requests: true
       percentiles:
         http.server.requests: 0.5, 0.9, 0.95, 0.99
 
