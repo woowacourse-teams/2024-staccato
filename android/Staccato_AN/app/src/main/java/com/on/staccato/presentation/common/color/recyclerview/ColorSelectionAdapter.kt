@@ -13,11 +13,11 @@ class ColorSelectionAdapter(
     private var fromIndex: Int? = 0
 
     fun changeSelectedItem(newItem: CategoryColor) {
-        if (fromIndex != newItem.ordinal) {
+        if (fromIndex != newItem.index) {
             notifyItemChanged(fromIndex ?: 0)
-            notifyItemChanged(newItem.ordinal)
+            notifyItemChanged(newItem.index)
         }
-        fromIndex = newItem.ordinal
+        fromIndex = newItem.index
     }
 
     override fun onCreateViewHolder(
