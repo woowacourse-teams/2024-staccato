@@ -85,7 +85,7 @@ management:
 otel:
   exporter:
     otlp:
-      endpoint: ENC(p9SZe9jGr9l5kni0ACUNc0uTDK4U5lRbOC1vJg1OiLO7SLGo1NMgWEPOrUIq0yE79sxpIng4sBd1kyrD7qIr+A==)
+      endpoint: ENC(kKKPaBuuy/E4BbnbsLCKR1xFlP8Hi+BmDmdHX2W1S6iEewk8wxaJqTIeT9B8/+2GasBWrrCF47STnXAfdoi1lA==)
     logging:
       enabled: true
   resource:
