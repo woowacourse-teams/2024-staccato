@@ -86,6 +86,8 @@ otel:
   exporter:
     otlp:
       endpoint: ENC(5UpVPijgUP3POMXJfpiN7mp3Q66ywOmvb3uelGeLu/hlRD7JTJPcXKoTPDkpxDjUY+mco4EZy0g0njZynWHDCw==)
+    logging:
+      enabled: true
   resource:
     attributes:
       service.name: staccato-backend
