@@ -38,9 +38,9 @@ dependencies {
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
-	implementation 'io.micrometer:micrometer-tracing:1.1.4'
-	implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.1.4'
 	implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+	implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter:2.0.0'
+	implementation 'io.opentelemetry.instrumentation:opentelemetry-jdbc:2.0.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
@@ -54,7 +54,6 @@ dependencies {
 
 	testImplementation 'io.rest-assured:rest-assured:5.3.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.micrometer:micrometer-tracing-test:1.1.4'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
