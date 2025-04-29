@@ -13,7 +13,13 @@ class JasyptConfigTest {
         //given
         StandardPBEStringEncryptor jasypt = new StandardPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
+        /**
+         * 해당 부분은 테스트용 jasypt key 이므로 실제 key로 변경 후 암호화 값 추출 바랍니다.
+         * RandomPassword -> 실제 key
+         */
         config.setPassword("RandomPassword");
+
+
         config.setAlgorithm("PBEWithHMACSHA512AndAES_256");
         config.setKeyObtentionIterations("210000");
         config.setPoolSize("2");
