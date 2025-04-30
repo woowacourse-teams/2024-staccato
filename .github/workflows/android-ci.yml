@@ -161,9 +161,9 @@ jobs:
       matrix:
         include:
           - api-level: 28
-            profile: "Pixel 4"
+            profile: "pixel_4"
           - api-level: 34
-            profile: "Pixel 6"
+            profile: "pixel_6"
           - api-level: 34
             profile: "Nexus 7"
       fail-fast: false
