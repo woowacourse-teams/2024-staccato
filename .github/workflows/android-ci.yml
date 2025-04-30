@@ -52,12 +52,9 @@ jobs:
       - name: Create Config Files
         run: |
           echo "base_url=\"$BASE_URL\"" >> local.properties
-          echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
           echo $SECRETS_PROPERTIES > secrets.properties
           echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
-          mkdir ./app/signing
-          echo "$UPLOAD_KEY_STORE_JKS" | base64 --decode > ./app/signing/upload_key_store.jks
-          echo "$KEY_STORE_PROPERTIES" > ./app/signing/keystore.properties
+          echo $GOOGLE_SERVICES_JSON > app/google-services.json
 
       - name: Upload Config Files
         id: upload-files
@@ -65,12 +62,12 @@ jobs:
         with:
           name: config-files
           path: |
-            local.properties
-            secrets.properties
-            local.defaults.properties
-            app/google-services.json
-            app/signing/
+            android/Staccato_AN/local.properties
+            android/Staccato_AN/secrets.properties
+            android/Staccato_AN/local.defaults.properties
+            android/Staccato_AN/app/google-services.json
           retention-days: 1
+          overwrite: 'true'
 
   unit-tests:
     name: Run Unit Tests
@@ -103,6 +100,13 @@ jobs:
         with:
           name: config-files
           path: .
+
+      - name: Check Downloaded Files
+        run: |
+          test -f local.properties && echo "local.properties exists"
+          test -f secrets.properties && echo "secrets.properties exists"
+          test -f local.defaults.properties && echo "local.defaults.properties exists"
+          test -f app/google-services.json && echo "app/google-services.json exists"
 
       - name: Grant Execute Permission for Gradlew
         run: chmod +x gradlew
@@ -161,6 +165,13 @@ jobs:
         with:
           name: config-files
           path: .
+
+      - name: Check Downloaded Files
+        run: |
+          test -f local.properties && echo "local.properties exists"
+          test -f secrets.properties && echo "secrets.properties exists"
+          test -f local.defaults.properties && echo "local.defaults.properties exists"
+          test -f app/google-services.json && echo "app/google-services.json exists"
 
       - name: Enable KVM
         run: |
