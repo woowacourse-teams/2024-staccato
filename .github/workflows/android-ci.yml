@@ -57,7 +57,6 @@ jobs:
           echo $GOOGLE_SERVICES_JSON > app/google-services.json
 
       - name: Upload Config Files
-        id: upload-files
         uses: actions/upload-artifact@v4
         with:
           name: config-files
@@ -99,7 +98,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: config-files
-          path: .
+          path: ./android/Staccato_AN
 
       - name: Check Downloaded Files
         run: |
@@ -161,7 +160,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: config-files
-          path: .
+          path: ./android/Staccato_AN
 
       - name: Check Downloaded Files
         run: |
