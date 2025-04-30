@@ -120,7 +120,7 @@ jobs:
           files: '**/build/test-results/**/*.xml'
 
   ui-tests:
-    name: Run UI Test on [${{ matrix.profile }} - API ${{ matrix.api-level }}]
+    name: Run UI Test on [API ${{ matrix.api-level }} - ${{ matrix.profile }}]
     runs-on: ubuntu-latest
     needs: setup
     defaults:
@@ -130,13 +130,14 @@ jobs:
 
     strategy:
       matrix:
-        api-level: [ 28, 34 ]
-        profile: [ "Pixel_6", "Pixel_4", "Nexus_7" ]
+        include:
+          - api-level: 28
+            profile: "Pixel_4"
+          - api-level: 34
+            profile: "Pixel_6"
+          - api-level: 34
+            profile: "Nexus_7"
       fail-fast: false
-
-    # api-level 28 과 Pixel 6 조합은 skip
-    if: >
-      !(matrix.api-level == 28 && matrix.profile == 'Pixel 6')
 
     permissions:
       contents: read
