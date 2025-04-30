@@ -3,6 +3,7 @@ package com.on.staccato.presentation.bindingadapter
 import android.view.View
 import android.widget.ScrollView
 import androidx.databinding.BindingAdapter
+import com.on.staccato.presentation.category.model.CategoryStaccatoUiModel
 import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
@@ -58,6 +59,11 @@ fun View.setVisibilityByTimelineAndFilter(
             null -> getVisibilityForAllCategories(timeLine, isEmptyView, isTimelineLoading)
             else -> getVisibilityForFilteredCategories(isEmptyView)
         }
+}
+
+@BindingAdapter("visibilityByStaccatos")
+fun View.setVisibilityByStaccatos(staccatos: List<CategoryStaccatoUiModel>?) {
+    visibility = if (staccatos.isNullOrEmpty()) View.VISIBLE else View.GONE
 }
 
 private fun getVisibilityForFilteredCategories(isEmptyView: Boolean?) = if (isEmptyView == true) View.GONE else View.VISIBLE

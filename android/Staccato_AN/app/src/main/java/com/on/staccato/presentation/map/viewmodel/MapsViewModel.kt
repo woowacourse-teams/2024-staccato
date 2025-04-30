@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
-import com.on.staccato.data.network.onException
+import com.on.staccato.data.network.onException2
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.StaccatoLocation
@@ -17,7 +14,7 @@ import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.map.model.MarkerUiModel
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,7 +26,9 @@ class MapsViewModel
         private val staccatoRepository: StaccatoRepository,
         private val locationRepository: LocationRepository,
     ) : ViewModel() {
-        private val staccatoLocations = MutableLiveData<List<StaccatoLocation>>()
+        private val _staccatoLocations = MutableLiveData<List<StaccatoLocation>>()
+        val staccatoLocations: LiveData<List<StaccatoLocation>> get() = _staccatoLocations
+
         private val markerUiModels = MutableLiveData<List<MarkerUiModel>>()
 
         private val _errorMessage = MutableSingleLiveData<String>()
@@ -41,8 +40,8 @@ class MapsViewModel
         private val _focusLocation = MutableLiveData<LocationUiModel>()
         val focusLocation: LiveData<LocationUiModel> get() = _focusLocation
 
-        private val _markersOptions = MutableLiveData<List<MarkerOptions>>()
-        val markersOptions: LiveData<List<MarkerOptions>> get() = _markersOptions
+        private val _exception = MutableSingleLiveData<ExceptionState2>()
+        val exception: SingleLiveData<ExceptionState2> get() = _exception
 
         fun getCurrentLocation() {
             val currentLocation = locationRepository.getCurrentLocation()
@@ -70,34 +69,32 @@ class MapsViewModel
                 val result = staccatoRepository.getStaccatos()
                 result.onSuccess(::setStaccatoLocations)
                     .onServerError(::handleServerError)
-                    .onException(::handelException)
+                    .onException2(::handelException)
             }
         }
 
-        fun updateMarkers(markers: List<Marker>) {
-            staccatoLocations.value?.let { locations ->
-                markerUiModels.value =
-                    locations.zip(markers) { location, marker ->
-                        MarkerUiModel(location.staccatoId, marker.id)
-                    }
-            }
+        fun updateMarkers(
+            markerIds: List<String>,
+            staccatoIds: List<Long>,
+        ) {
+            markerUiModels.value =
+                markerIds.zip(staccatoIds) { markerId, staccatoId ->
+                    MarkerUiModel(
+                        staccatoId = staccatoId,
+                        markerId = markerId,
+                    )
+                }
         }
 
         private fun setStaccatoLocations(locations: List<StaccatoLocation>) {
-            staccatoLocations.value = locations
-            _markersOptions.value =
-                staccatoLocations.value?.map {
-                    val latLng = LatLng(it.latitude, it.longitude)
-                    val markerOptions: MarkerOptions = MarkerOptions().position(latLng)
-                    markerOptions
-                }
+            _staccatoLocations.value = locations
         }
 
         private fun handleServerError(message: String) {
             _errorMessage.setValue(message)
         }
 
-        private fun handelException(state: ExceptionState) {
-            _errorMessage.setValue(state.message)
+        private fun handelException(state: ExceptionState2) {
+            _exception.setValue(state)
         }
     }

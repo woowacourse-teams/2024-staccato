@@ -4,18 +4,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.on.staccato.StaccatoApplication
 import com.on.staccato.data.network.onException
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.Feeling
+import com.on.staccato.domain.model.StaccatoShareLink
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toStaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.comments.CommentUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
+import com.on.staccato.presentation.staccato.detail.StaccatoShareEvent
 import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,6 +47,43 @@ class StaccatoViewModel
 
         private val _exceptionMessage: MutableSingleLiveData<String> = MutableSingleLiveData()
         val exceptionMessage: SingleLiveData<String> get() = _exceptionMessage
+
+        private val _shareEvent = MutableSingleLiveData<StaccatoShareEvent>()
+        val shareEvent: SingleLiveData<StaccatoShareEvent> get() = _shareEvent
+
+        fun createStaccatoShareLink() {
+            val nickname = getUserNickname()
+            val staccatoId = staccatoDetail.value?.id
+            if (staccatoId == null) {
+                handleException(ExceptionState.UnknownError)
+                return
+            }
+            viewModelScope.launch {
+                staccatoRepository.createStaccatoShareLink(staccatoId)
+                    .onSuccess { postShareEvent(nickname.await(), it) }
+                    .onException(::handleException)
+                    .onServerError(::handleServerError)
+            }
+        }
+
+        private fun getUserNickname(): Deferred<String> =
+            viewModelScope.async {
+                StaccatoApplication.userInfoPrefsManager.getMemberProfile().nickname
+            }
+
+        private fun postShareEvent(
+            nickname: String,
+            url: StaccatoShareLink,
+        ) {
+            val staccatoTitle = staccatoDetail.value?.staccatoTitle ?: return
+            _shareEvent.postValue(
+                StaccatoShareEvent(
+                    staccatoTitle = staccatoTitle,
+                    nickname = nickname,
+                    url = url.shareLink,
+                ),
+            )
+        }
 
         fun loadStaccato(staccatoId: Long) {
             fetchStaccatoData(staccatoId)

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.network.onException
+import com.on.staccato.data.network.onException2
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.MemberProfile
@@ -12,7 +12,7 @@ import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -50,12 +50,18 @@ class SharedViewModel
         private val _staccatoLocation = MutableLiveData<LocationUiModel>()
         val staccatoLocation: LiveData<LocationUiModel> get() = _staccatoLocation
 
+        private val _exception = MutableLiveData<ExceptionState2>()
+        val exception: LiveData<ExceptionState2> get() = _exception
+
+        private val _isRetry = MutableLiveData<Boolean>()
+        val isRetry: LiveData<Boolean> get() = _isRetry
+
         private val isDragging = MutableLiveData<Boolean>(false)
 
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = myPageRepository.getMemberProfile()
-                result.onException(::handleException)
+                result.onException2(::handleException)
                     .onServerError(::handleServerError)
                     .onSuccess(::setMemberProfile)
             }
@@ -98,6 +104,14 @@ class SharedViewModel
             isDragging.value = state
         }
 
+        fun updateException(state: ExceptionState2) {
+            _exception.value = state
+        }
+
+        fun updateIsRetry() {
+            _isRetry.value = true
+        }
+
         private fun setMemberProfile(memberProfile: MemberProfile) {
             _memberProfile.value = memberProfile
         }
@@ -106,7 +120,7 @@ class SharedViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(exceptionState: ExceptionState) {
-            _errorMessage.postValue(exceptionState.message)
+        private fun handleException(state: ExceptionState2) {
+            _exception.postValue(state)
         }
     }

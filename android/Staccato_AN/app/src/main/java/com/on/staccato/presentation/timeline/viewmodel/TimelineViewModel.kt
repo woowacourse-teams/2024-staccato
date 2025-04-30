@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.network.onException
+import com.on.staccato.data.network.onException2
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.Timeline
@@ -16,7 +16,7 @@ import com.on.staccato.presentation.mapper.toTimelineUiModel
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -48,9 +48,9 @@ class TimelineViewModel
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
 
-        private val _exceptionMessage = MutableSingleLiveData<String>()
-        val exceptionMessage: SingleLiveData<String>
-            get() = _exceptionMessage
+        private val _exception = MutableSingleLiveData<ExceptionState2>()
+        val exception: SingleLiveData<ExceptionState2>
+            get() = _exception
 
         private val coroutineExceptionHandler =
             CoroutineExceptionHandler { context, throwable ->
@@ -72,7 +72,7 @@ class TimelineViewModel
                     filter = filterType.value?.name,
                 ).onSuccess(::setTimelineUiModels)
                     .onServerError(::handleServerError)
-                    .onException(::handleException)
+                    .onException2(::handleException)
             }
         }
 
@@ -95,7 +95,7 @@ class TimelineViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(state: ExceptionState) {
-            _exceptionMessage.postValue(state.message)
+        private fun handleException(state: ExceptionState2) {
+            _exception.postValue(state)
         }
     }

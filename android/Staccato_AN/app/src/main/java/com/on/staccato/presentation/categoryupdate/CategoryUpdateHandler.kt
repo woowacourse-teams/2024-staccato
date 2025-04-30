@@ -8,4 +8,6 @@ interface CategoryUpdateHandler {
     fun onPhotoAttachClicked()
 
     fun onPhotoDeletionClicked()
+
+    fun onColorSelectionClicked()
 }

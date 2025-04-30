@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 data class TimelineCategoryDto(
     @SerialName("categoryId") val categoryId: Long,
     @SerialName("categoryTitle") val categoryTitle: String,
+    @SerialName("categoryColor") val color: String,
     @SerialName("categoryThumbnailUrl") val categoryThumbnailUrl: String? = null,
     @SerialName("startAt") val startAt: String? = null,
     @SerialName("endAt") val endAt: String? = null,

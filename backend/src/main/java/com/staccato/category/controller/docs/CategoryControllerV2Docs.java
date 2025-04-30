@@ -12,6 +12,7 @@ import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
@@ -24,7 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Category", description = "Category API V2")
+@Tag(name = "Category V2", description = "Category API V2")
 public interface CategoryControllerV2Docs {
     @Operation(summary = "카테고리 생성", description = "카테고리(썸네일, 제목, 내용, 기간)을 생성합니다.")
     @ApiResponses(value = {
@@ -56,6 +57,22 @@ public interface CategoryControllerV2Docs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "정렬 기준은 생략하거나 유효하지 않은 값에 대해서는 최근 수정 순(UPDATED)이 기본 정렬로 적용됩니다. 필터링 조건은 생략하거나 유효하지 않은 값이 들어오면 적용되지 않습니다.") CategoryReadRequest categoryReadRequest
     );
+
+    @Operation(summary = "카테고리 조회", description = "사용자의 카테고리을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "카테고리 조회 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                    
+                    (1) 존재하지 않는 카테고리을 조회하려고 했을 때
+                    
+                    (2) Path Variable 형식이 잘못되었을 때
+                    """,
+                    responseCode = "400")
+    })
+    ResponseEntity<CategoryDetailResponseV2> readCategory(
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "카테고리 ID", example = "1") @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId);
 
     @Operation(summary = "카테고리 수정", description = "카테고리 정보(썸네일, 제목, 내용, 기간)를 수정합니다.")
     @ApiResponses(value = {

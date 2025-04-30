@@ -3,6 +3,7 @@ package com.on.staccato.presentation.util
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
+import com.on.staccato.presentation.common.photo.FileUiModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -10,10 +11,30 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 const val IMAGE_FORM_DATA_NAME = "imageFile"
-private const val CATEGORY_FILE_CHILD_NAME = "category"
+const val CATEGORY_FILE_CHILD_NAME = "category"
 private const val STACCATO_FILE_CHILD_NAME = "staccato"
 
 fun convertCategoryUriToFile(
+    context: Context,
+    uri: Uri,
+): FileUiModel {
+    val contextResolver: ContentResolver = context.contentResolver
+    // 파일 이름과 MIME 타입 가져오기
+    val contentType = contextResolver.getType(uri)
+    // Uri로부터 InputStream을 얻고, 임시 파일로 복사
+    val inputStream = contextResolver.openInputStream(uri)
+
+    val file = File(context.cacheDir, CATEGORY_FILE_CHILD_NAME)
+    inputStream.use { input ->
+        file.outputStream().use { output ->
+            input?.copyTo(output)
+        }
+    }
+
+    return FileUiModel(file, contentType)
+}
+
+fun convertMyPageUriToFile(
     context: Context,
     uri: Uri,
     name: String,

@@ -39,6 +39,9 @@ jasypt:
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    persist-authorization: true
+
 security:
   jwt:
     token:
@@ -67,6 +70,28 @@ management:
     web:
       exposure:
         include: info, health, metrics, env, beans, threaddump, loggers, prometheus
+
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5, 0.9, 0.95, 0.99
+
+  tracing:
+    sampling:
+      probability: 1.0
+
+otel:
+  exporter:
+    otlp:
+      endpoint: ENC(kKKPaBuuy/E4BbnbsLCKR1xFlP8Hi+BmDmdHX2W1S6iEewk8wxaJqTIeT9B8/+2GasBWrrCF47STnXAfdoi1lA==)
+    logging:
+      enabled: true
+  resource:
+    attributes:
+      service.name: staccato-backend
+      deployment.environment: dev
 
 server:
   tomcat:
