@@ -161,11 +161,11 @@ jobs:
       matrix:
         include:
           - api-level: 28
-            profile: "Pixel_4"
+            profile: "Pixel 4"
           - api-level: 34
-            profile: "Pixel_6"
+            profile: "Pixel 6"
           - api-level: 34
-            profile: "Nexus_7"
+            profile: "Nexus 7"
       fail-fast: false
 
     permissions:
