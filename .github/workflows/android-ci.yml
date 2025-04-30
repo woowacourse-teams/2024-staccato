@@ -235,6 +235,7 @@ jobs:
           arch: x86_64
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
+          working-directory: ./android/Staccato_AN
           script: ./gradlew connectedCheck --stacktrace
 
       - name: Upload UI Test Results
