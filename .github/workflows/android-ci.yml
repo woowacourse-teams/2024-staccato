@@ -69,7 +69,7 @@ jobs:
           overwrite: 'true'
 
   ktlint-check:
-    name: Run Unit Tests
+    name: Check Ktlint
     runs-on: ubuntu-latest
     needs: setup
     defaults:
