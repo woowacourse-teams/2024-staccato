@@ -170,6 +170,7 @@ jobs:
 
     permissions:
       contents: read
+      actions: read
       checks: write
       pull-requests: write
 
@@ -245,3 +246,15 @@ jobs:
           path: |
             **/build/reports/*
             **/build/outputs/*/connected/*
+
+      - name: Publish UI Test Results
+        uses: dorny/test-reporter@v2
+        if: always()
+        with:
+          name: UI Tests
+          badge-title: 'UI Tests'
+          reporter: java-junit
+          working-directory: ./android/Staccato_AN
+          path: '**/build/outputs/androidTest-results/connected/**/*.xml'
+          fail-on-empty: 'false'
+          fail-on-error: 'false'
