@@ -1,29 +1,36 @@
 package com.staccato.staccato.service;
 
-import java.util.List;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
-import com.staccato.category.repository.CategoryRepository;
+import com.staccato.staccato.domain.Staccato;
+import com.staccato.staccato.service.dto.request.ReadStaccatoRequest;
+import com.staccato.staccato.service.dto.request.StaccatoRequest;
+import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
+import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.staccato.domain.Feeling;
-import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.domain.StaccatoImage;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
-import com.staccato.staccato.service.dto.request.ReadStaccatoRequest;
-import com.staccato.staccato.service.dto.request.StaccatoRequest;
-import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
-import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -50,26 +57,18 @@ public class StaccatoService {
     }
 
     public StaccatoLocationResponsesV2 readAllStaccato(Member member, ReadStaccatoRequest readStaccatoRequest) {
-/*        List<Staccato> staccatos = staccatoRepository.findAllByCategory_CategoryMembers_Member(member);
+        List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRange(
+                member,
+                readStaccatoRequest.swLat(),
+                readStaccatoRequest.neLat(),
+                readStaccatoRequest.swLng(),
+                readStaccatoRequest.neLng()
+        );
         List<StaccatoLocationResponseV2> responses = new ArrayList<>();
         for (Staccato staccato : staccatos) {
             responses.add(new StaccatoLocationResponseV2(staccato, staccato.getCategory().getColor()));
         }
-        return new StaccatoLocationResponsesV2(responses);*/
-        List<CategoryMember> categoryMembers = categoryMemberRepository.findAllByMemberId(member.getId());
-        List<Long> categoryIds = getCategoryIds(categoryMembers);
-        List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdIn(categoryIds);
-        List<StaccatoLocationResponseV2> staccatoLocationResponses = staccatos.stream()
-                .map(staccato -> new StaccatoLocationResponseV2(staccato, staccato.getColor()))
-                .toList();
-        return new StaccatoLocationResponsesV2(staccatoLocationResponses);
-    }
-
-    private static List<Long> getCategoryIds(List<CategoryMember> categoryMembers) {
-        return categoryMembers.stream()
-                .map(CategoryMember::getCategory)
-                .map(Category::getId)
-                .toList();
+        return new StaccatoLocationResponsesV2(responses);
     }
 
     public StaccatoDetailResponse readStaccatoById(long staccatoId, Member member) {
