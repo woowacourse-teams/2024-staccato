@@ -19,21 +19,19 @@ public interface StaccatoRepository extends JpaRepository<Staccato, Long> {
             JOIN s.category c
             JOIN c.categoryMembers cm
             WHERE cm.member = :member
-              AND (
-                    (:minLat IS NULL OR :maxLat IS NULL)\s
-                    OR s.spot.latitude BETWEEN :minLat AND :maxLat
-                  )
-              AND (
-                    (:minLng IS NULL OR :maxLng IS NULL)\s
-                    OR s.spot.longitude BETWEEN :minLng AND :maxLng
-                  )
+            AND (
+              (:minLat IS NULL OR :maxLat IS NULL OR :minLng IS NULL OR :maxLng IS NULL)
+              OR (s.spot.latitude BETWEEN :minLat AND :maxLat AND s.spot.longitude BETWEEN :minLng AND :maxLng)
+            )
+            AND (:categoryId IS NULL OR c.id = :categoryId)
             """)
-    List<Staccato> findByMemberAndLocationRange(
+    List<Staccato> findByMemberAndLocationRangeAndCategory(
             @Param("member") Member member,
             @Param("minLat") BigDecimal swLat,
             @Param("maxLat") BigDecimal neLat,
             @Param("minLng") BigDecimal swLng,
-            @Param("maxLng") BigDecimal neLng
+            @Param("maxLng") BigDecimal neLng,
+            @Param("categoryId") Long categoryId
     );
 
     List<Staccato> findAllByCategoryId(long categoryId);

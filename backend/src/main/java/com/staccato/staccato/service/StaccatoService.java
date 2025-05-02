@@ -1,7 +1,6 @@
 package com.staccato.staccato.service;
 
 import com.staccato.category.domain.Category;
-import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
@@ -53,12 +52,13 @@ public class StaccatoService {
     }
 
     public StaccatoLocationResponsesV2 readAllStaccato(Member member, StaccatoLocationRangeRequest staccatoLocationRangeRequest) {
-        List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRange(
+        List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRangeAndCategory(
                 member,
                 staccatoLocationRangeRequest.swLat(),
                 staccatoLocationRangeRequest.neLat(),
                 staccatoLocationRangeRequest.swLng(),
-                staccatoLocationRangeRequest.neLng()
+                staccatoLocationRangeRequest.neLng(),
+                staccatoLocationRangeRequest.categoryId()
         );
         List<StaccatoLocationResponseV2> responses = new ArrayList<>();
         for (Staccato staccato : staccatos) {
