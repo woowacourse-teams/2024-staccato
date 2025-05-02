@@ -189,6 +189,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
 
         // when
         StaccatoLocationRangeRequest request = new StaccatoLocationRangeRequest(
+                null,
                 new BigDecimal("37.5"),
                 new BigDecimal("127.5"),
                 new BigDecimal("36.5"),

@@ -40,7 +40,6 @@ public class StaccatoService {
     private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
     private final StaccatoImageRepository staccatoImageRepository;
-    private final CategoryMemberRepository categoryMemberRepository;
 
     @Transactional
     public StaccatoIdResponse createStaccato(StaccatoRequest staccatoRequest, Member member) {

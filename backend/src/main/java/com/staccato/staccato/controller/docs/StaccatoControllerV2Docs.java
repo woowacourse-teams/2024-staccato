@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Staccato V2", description = "Staccato API V2")
 public interface StaccatoControllerV2Docs {
-    @Operation(summary = "스타카토 목록 조회", description = "스타카토 목록을 조회합니다.")
+    @Operation(summary = "스타카토 목록 조회", description = "주어진 카테고리와 위경도 범위가 있다면, 그에 해당하는 모든 스타카토 목록을 조회하고, 조건이 없다면 모든 스타카토를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "스타카토 목록 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
@@ -22,6 +22,7 @@ public interface StaccatoControllerV2Docs {
             
             (1) 쿼리 파라미터로 제공된 위도 또는 경도가 유효한 범위를 벗어난 경우
             (2) 위도는 -90.0 이상 90.0 이하, 경도는 -180.0 이상 180.0 이하여야 함
+            (3) 잘못된 카테고리 식별자가 주어지는 경우
             """,
                     responseCode = "400")
     })
