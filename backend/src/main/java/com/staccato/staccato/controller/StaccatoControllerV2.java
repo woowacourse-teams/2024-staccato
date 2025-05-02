@@ -27,7 +27,7 @@ public class StaccatoControllerV2 implements StaccatoControllerV2Docs {
     public ResponseEntity<StaccatoLocationResponsesV2> readAllStaccato(
             @LoginMember Member member, @Validated @ModelAttribute ReadStaccatoRequest readStaccatoRequest
     ) {
-        StaccatoLocationResponsesV2 staccatoLocationResponses = staccatoService.readAllStaccato(member);
+        StaccatoLocationResponsesV2 staccatoLocationResponses = staccatoService.readAllStaccato(member, readStaccatoRequest);
         return ResponseEntity.ok().body(staccatoLocationResponses);
     }
 }

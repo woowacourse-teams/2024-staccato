@@ -26,4 +26,7 @@ public record ReadStaccatoRequest(
         BigDecimal swLng
 ) {
 
+    public static ReadStaccatoRequest empty() {
+        return new ReadStaccatoRequest(null, null, null, null);
+    }
 }

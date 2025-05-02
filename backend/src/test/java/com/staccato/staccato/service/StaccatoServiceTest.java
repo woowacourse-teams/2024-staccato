@@ -142,7 +142,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .withCategory(category2).buildAndSave(staccatoRepository);
 
         // when
-        StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member);
+        StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member, ReadStaccatoRequest.empty());
 
         // then
         long blueCount = responses.staccatoLocationResponses().stream()
