@@ -1,16 +1,13 @@
 package com.staccato.staccato.service;
 
 import com.staccato.category.domain.Category;
-import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.staccato.domain.Staccato;
-import com.staccato.staccato.service.dto.request.ReadStaccatoRequest;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +53,13 @@ public class StaccatoService {
         return new StaccatoIdResponse(staccato.getId());
     }
 
-    public StaccatoLocationResponsesV2 readAllStaccato(Member member, ReadStaccatoRequest readStaccatoRequest) {
+    public StaccatoLocationResponsesV2 readAllStaccato(Member member, StaccatoLocationRangeRequest staccatoLocationRangeRequest) {
         List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRange(
                 member,
-                readStaccatoRequest.swLat(),
-                readStaccatoRequest.neLat(),
-                readStaccatoRequest.swLng(),
-                readStaccatoRequest.neLng()
+                staccatoLocationRangeRequest.swLat(),
+                staccatoLocationRangeRequest.neLat(),
+                staccatoLocationRangeRequest.swLng(),
+                staccatoLocationRangeRequest.neLng()
         );
         List<StaccatoLocationResponseV2> responses = new ArrayList<>();
         for (Staccato staccato : staccatos) {

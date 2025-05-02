@@ -32,12 +32,10 @@ import com.staccato.staccato.domain.StaccatoImage;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
-import com.staccato.staccato.service.dto.request.ReadStaccatoRequest;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
 class StaccatoServiceTest extends ServiceSliceTest {
@@ -144,7 +142,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .withCategory(category2).buildAndSave(staccatoRepository);
 
         // when
-        StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member, ReadStaccatoRequest.empty());
+        StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member, StaccatoLocationRangeRequest.empty());
 
         // then
         long blueCount = responses.staccatoLocationResponses().stream()
@@ -190,7 +188,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .buildAndSave(staccatoRepository);
 
         // when
-        ReadStaccatoRequest request = new ReadStaccatoRequest(
+        StaccatoLocationRangeRequest request = new StaccatoLocationRangeRequest(
                 new BigDecimal("37.5"),
                 new BigDecimal("127.5"),
                 new BigDecimal("36.5"),

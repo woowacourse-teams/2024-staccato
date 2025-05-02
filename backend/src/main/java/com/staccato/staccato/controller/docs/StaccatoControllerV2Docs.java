@@ -1,11 +1,10 @@
 package com.staccato.staccato.controller.docs;
 
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import com.staccato.member.domain.Member;
-import com.staccato.staccato.service.dto.request.ReadStaccatoRequest;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,5 +26,5 @@ public interface StaccatoControllerV2Docs {
                     responseCode = "400")
     })
     ResponseEntity<StaccatoLocationResponsesV2> readAllStaccato(
-            @Parameter(hidden = true) Member member, @Validated @ModelAttribute ReadStaccatoRequest readStaccatoRequest);
+            @Parameter(hidden = true) Member member, @Validated @ModelAttribute StaccatoLocationRangeRequest staccatoLocationRangeRequest);
 }

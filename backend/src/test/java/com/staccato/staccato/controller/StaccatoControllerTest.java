@@ -42,13 +42,11 @@ import com.staccato.fixture.staccato.StaccatoRequestFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
-import com.staccato.staccato.service.dto.request.ReadStaccatoRequest;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
 import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
@@ -190,7 +188,7 @@ class StaccatoControllerTest extends ControllerTest {
         );
         StaccatoLocationResponsesV2 responses = new StaccatoLocationResponsesV2(List.of(response1, response2));
 
-        when(staccatoService.readAllStaccato(any(Member.class), any(ReadStaccatoRequest.class))).thenReturn(responses);
+        when(staccatoService.readAllStaccato(any(Member.class), any(StaccatoLocationRangeRequest.class))).thenReturn(responses);
         String expectedResponse = """
                 {
                     "staccatoLocationResponses": [

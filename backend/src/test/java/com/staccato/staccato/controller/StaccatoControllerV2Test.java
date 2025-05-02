@@ -18,7 +18,7 @@ import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
-import com.staccato.staccato.service.dto.request.ReadStaccatoRequest;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
@@ -60,7 +60,7 @@ class StaccatoControllerV2Test extends ControllerTest {
         );
         StaccatoLocationResponsesV2 responses = new StaccatoLocationResponsesV2(List.of(response1, response2));
 
-        when(staccatoService.readAllStaccato(any(Member.class), any(ReadStaccatoRequest.class))).thenReturn(responses);
+        when(staccatoService.readAllStaccato(any(Member.class), any(StaccatoLocationRangeRequest.class))).thenReturn(responses);
         String expectedResponse = """
                 {
                     "staccatoLocationResponses": [
@@ -107,7 +107,7 @@ class StaccatoControllerV2Test extends ControllerTest {
         );
         StaccatoLocationResponsesV2 responses = new StaccatoLocationResponsesV2(List.of(response1, response2));
 
-        when(staccatoService.readAllStaccato(any(Member.class), any(ReadStaccatoRequest.class))).thenReturn(responses);
+        when(staccatoService.readAllStaccato(any(Member.class), any(StaccatoLocationRangeRequest.class))).thenReturn(responses);
         String expectedResponse = """
                 {
                     "staccatoLocationResponses": [

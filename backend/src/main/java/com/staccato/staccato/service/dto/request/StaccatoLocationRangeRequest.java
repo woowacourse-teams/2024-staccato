@@ -7,7 +7,7 @@ import com.staccato.config.swagger.SwaggerExamples;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "스타카토 조회 시 위경도 query String 형식입니다.")
-public record ReadStaccatoRequest(
+public record StaccatoLocationRangeRequest(
         @Schema(description = "북동쪽 위도", example = SwaggerExamples.STACCATO_LATITUDE)
         @DecimalMin(value = "-90.0", message = "위도는 -90.0 이상이어야 합니다.")
         @DecimalMax(value = "90.0", message = "위도는 90.0 이하여야 합니다.")
@@ -26,7 +26,7 @@ public record ReadStaccatoRequest(
         BigDecimal swLng
 ) {
 
-    public static ReadStaccatoRequest empty() {
-        return new ReadStaccatoRequest(null, null, null, null);
+    public static StaccatoLocationRangeRequest empty() {
+        return new StaccatoLocationRangeRequest(null, null, null, null);
     }
 }

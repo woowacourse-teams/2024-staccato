@@ -23,7 +23,7 @@ import com.staccato.staccato.controller.docs.StaccatoControllerDocs;
 import com.staccato.staccato.service.StaccatoService;
 import com.staccato.staccato.service.StaccatoShareService;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
-import com.staccato.staccato.service.dto.request.ReadStaccatoRequest;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
@@ -55,7 +55,7 @@ public class StaccatoController implements StaccatoControllerDocs {
 
     @GetMapping
     public ResponseEntity<StaccatoLocationResponses> readAllStaccato(@LoginMember Member member) {
-        StaccatoLocationResponsesV2 staccatoLocationResponses = staccatoService.readAllStaccato(member, ReadStaccatoRequest.empty());
+        StaccatoLocationResponsesV2 staccatoLocationResponses = staccatoService.readAllStaccato(member, StaccatoLocationRangeRequest.empty());
         return ResponseEntity.ok().body(staccatoLocationResponses.toStaccatoLocationResponses());
     }
 

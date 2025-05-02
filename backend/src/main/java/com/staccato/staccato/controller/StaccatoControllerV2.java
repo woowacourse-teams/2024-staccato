@@ -11,7 +11,7 @@ import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.controller.docs.StaccatoControllerV2Docs;
 import com.staccato.staccato.service.StaccatoService;
-import com.staccato.staccato.service.dto.request.ReadStaccatoRequest;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 import lombok.RequiredArgsConstructor;
 
@@ -25,9 +25,9 @@ public class StaccatoControllerV2 implements StaccatoControllerV2Docs {
 
     @GetMapping
     public ResponseEntity<StaccatoLocationResponsesV2> readAllStaccato(
-            @LoginMember Member member, @Validated @ModelAttribute ReadStaccatoRequest readStaccatoRequest
+            @LoginMember Member member, @Validated @ModelAttribute StaccatoLocationRangeRequest staccatoLocationRangeRequest
     ) {
-        StaccatoLocationResponsesV2 staccatoLocationResponses = staccatoService.readAllStaccato(member, readStaccatoRequest);
+        StaccatoLocationResponsesV2 staccatoLocationResponses = staccatoService.readAllStaccato(member, staccatoLocationRangeRequest);
         return ResponseEntity.ok().body(staccatoLocationResponses);
     }
 }
