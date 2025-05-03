@@ -24,6 +24,7 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModelProvider
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.PERMISSION_CANCEL_KEY
 import com.on.staccato.presentation.common.location.LocationPermissionManager
@@ -47,13 +48,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class StaccatoCreationActivity :
+    CategorySelectionViewModelProvider,
     GooglePlaceFragmentEventHandler,
     CurrentLocationHandler,
     OnUrisSelectedListener,
     StaccatoCreationHandler,
     BindingActivity<ActivityStaccatoCreationBinding>() {
     override val layoutResourceId = R.layout.activity_staccato_creation
-    private val viewModel: StaccatoCreationViewModel by viewModels()
+    override val viewModel: StaccatoCreationViewModel by viewModels()
     private val categorySelectionFragment by lazy {
         CategorySelectionFragment()
     }
@@ -92,7 +94,6 @@ class StaccatoCreationActivity :
         initAdapter()
         initItemTouchHelper()
         initToolbar()
-        initCategorySelectionFragment()
         initVisitedAtSelectionFragment()
         observeViewModelData()
         initGooglePlaceSearch()
@@ -247,12 +248,6 @@ class StaccatoCreationActivity :
         }
     }
 
-    private fun initCategorySelectionFragment() {
-        categorySelectionFragment.setOnCategorySelected { selectedCategory ->
-            viewModel.selectCategory(selectedCategory)
-        }
-    }
-
     private fun initVisitedAtSelectionFragment() {
         visitedAtSelectionFragment.setOnVisitedAtSelected { selectedVisitedAt ->
             viewModel.selectedVisitedAt(selectedVisitedAt)
@@ -311,14 +306,8 @@ class StaccatoCreationActivity :
                 viewModel.initCategoryAndVisitedAt(categoryId, LocalDateTime.now())
             }
         }
-        viewModel.selectableCategories.observe(this) {
-            it?.let {
-                categorySelectionFragment.setItems(it.categoryCandidates)
-            }
-        }
         viewModel.selectedCategory.observe(this) {
             it?.let {
-                categorySelectionFragment.updateKeyCategory(it)
                 if (categoryId != DEFAULT_CATEGORY_ID) {
                     visitedAtSelectionFragment.initCalendarByPeriod(
                         it.startAt,
