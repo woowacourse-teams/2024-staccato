@@ -164,21 +164,21 @@ class CategoryCreationActivity :
     }
 
     private fun handleCreatePhotoUrlFail(error: CategoryCreationError.Thumbnail) {
-        showExceptionSnackBar(error.state) { reCreateThumbnailUrl(error.uri, error.file) }
+        showExceptionSnackBar(error.state) { recreateThumbnailUrl(error.uri, error.file) }
     }
 
     private fun handleCreateException(error: CategoryCreationError.CategoryCreation) {
-        showExceptionSnackBar(error.state) { reCreateCategory() }
+        showExceptionSnackBar(error.state) { recreateCategory() }
     }
 
-    private fun reCreateThumbnailUrl(
+    private fun recreateThumbnailUrl(
         uri: Uri,
         file: FileUiModel,
     ) {
         viewModel.createThumbnailUrl(uri, file)
     }
 
-    private fun reCreateCategory() {
+    private fun recreateCategory() {
         viewModel.createCategory()
     }
 
