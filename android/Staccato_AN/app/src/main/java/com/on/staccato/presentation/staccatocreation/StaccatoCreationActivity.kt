@@ -24,6 +24,7 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.categoryselection.CategorySelectionFragment
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModelProvider
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.PERMISSION_CANCEL_KEY
@@ -34,7 +35,6 @@ import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.staccatocreation.dialog.CategorySelectionFragment
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel

@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.staccatocreation.dialog
+package com.on.staccato.presentation.common.categoryselection
 
 import android.content.Context
 import android.os.Bundle
@@ -9,8 +9,6 @@ import android.widget.NumberPicker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.on.staccato.databinding.FragmentCategorySelectionBinding
 import com.on.staccato.domain.model.CategoryCandidate
-import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
-import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
