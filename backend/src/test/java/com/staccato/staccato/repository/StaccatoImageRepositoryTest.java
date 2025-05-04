@@ -1,11 +1,5 @@
 package com.staccato.staccato.repository;
 
-import com.staccato.category.domain.Category;
-import com.staccato.fixture.category.CategoryFixtures;
-import com.staccato.fixture.staccato.StaccatoFixtures;
-import com.staccato.staccato.domain.Staccato;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -13,7 +7,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
+import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
+import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.domain.StaccatoImage;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,10 +34,12 @@ class StaccatoImageRepositoryTest extends RepositoryTest {
         Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
         Staccato staccato1 = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
-                .buildAndSaveWithStaccatoImages(List.of("url1", "url2"), staccatoRepository);
+                .withStaccatoImages(List.of("url1", "url2"))
+                .buildAndSave(staccatoRepository);
         Staccato staccato2 = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
-                .buildAndSaveWithStaccatoImages(List.of("url1", "url2"), staccatoRepository);
+                .withStaccatoImages(List.of("url1", "url2"))
+                .buildAndSave(staccatoRepository);
 
         // when
         staccatoImageRepository.deleteAllByStaccatoIdInBulk(List.of(staccato1.getId(), staccato2.getId()));
@@ -62,7 +62,8 @@ class StaccatoImageRepositoryTest extends RepositoryTest {
         Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
-                .buildAndSaveWithStaccatoImages(List.of("url1", "url2", "url3"), staccatoRepository);
+                .withStaccatoImages(List.of("url1", "url2", "url3"))
+                .buildAndSave(staccatoRepository);
 
         List<Long> imageIds = staccato.getStaccatoImages()
                 .getImages()

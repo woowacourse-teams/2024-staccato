@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-
 import com.staccato.category.domain.Category;
-import com.staccato.staccato.domain.Feeling;
 import com.staccato.staccato.domain.Spot;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.domain.StaccatoImages;
@@ -61,12 +59,6 @@ public class StaccatoFixtures {
 
         public Staccato buildAndSave(StaccatoRepository repository) {
             Staccato staccato = build();
-            return repository.save(staccato);
-        }
-
-        public Staccato buildAndSaveWithStaccatoImages(List<String> staccatoImages, StaccatoRepository repository) {
-            Staccato staccato = build();
-            this.staccatoImages.addAll(new StaccatoImages(staccatoImages), staccato);
             return repository.save(staccato);
         }
     }
