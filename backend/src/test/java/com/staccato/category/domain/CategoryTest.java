@@ -22,7 +22,11 @@ class CategoryTest {
         String expectedTitle = "title";
 
         // when
-        Category category = Category.builder().title(" title ").color(Color.BLUE.getName()).build();
+        Category category = Category.builder()
+                .title(" title ")
+                .color(Color.BLUE.getName())
+                .isShared(false)
+                .build();
 
         // then
         assertThat(category.getTitle()).isEqualTo(expectedTitle);
@@ -112,6 +116,7 @@ class CategoryTest {
         Category category = Category.builder()
                 .title("title")
                 .color(Color.GREEN.getName())
+                .isShared(false)
                 .build();
 
         // when
