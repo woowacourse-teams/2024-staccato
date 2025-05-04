@@ -101,13 +101,26 @@ class CategoryFragment :
     }
 
     override fun onStaccatoCreationClicked(
-        category: CategoryUiModel,
+        category: CategoryUiModel?,
         isPermissionCanceled: Boolean,
     ) {
         loggingManager.logEvent(
             NAME_STACCATO_CREATION,
             Param(KEY_IS_CREATED_IN_MAIN, false),
         )
+
+        if (category == null) {
+            showToast(getString(R.string.category_error_staccato_record_impossible))
+            findNavController().popBackStack()
+        } else {
+            navigateToStaccatoCreation(category, isPermissionCanceled)
+        }
+    }
+
+    private fun navigateToStaccatoCreation(
+        category: CategoryUiModel,
+        isPermissionCanceled: Boolean,
+    ) {
         val staccatoCreationLauncher = (activity as MainActivity).staccatoCreationLauncher
         StaccatoCreationActivity.startWithResultLauncher(
             context = requireContext(),
