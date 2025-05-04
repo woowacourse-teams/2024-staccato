@@ -53,18 +53,20 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
     private List<CategoryMember> categoryMembers = new ArrayList<>();
 
-    public Category(String thumbnailUrl, @NonNull String title, String description, Color color, LocalDate startAt, LocalDate endAt) {
+    public Category(String thumbnailUrl, @NonNull String title, String description, Color color, LocalDate startAt,
+                    LocalDate endAt, @NonNull Boolean isShared) {
         this.thumbnailUrl = thumbnailUrl;
         this.title = title.trim();
         this.description = description;
         this.color = color;
         this.term = new Term(startAt, endAt);
-        this.isShared = false;
+        this.isShared = isShared;
     }
 
     @Builder
-    public Category(String thumbnailUrl, @NonNull String title, String description, @NonNull String color, LocalDate startAt, LocalDate endAt) {
-        this(thumbnailUrl, title, description, Color.findByName(color), startAt, endAt);
+    public Category(String thumbnailUrl, @NonNull String title, String description, @NonNull String color,
+                    LocalDate startAt, LocalDate endAt, @NonNull Boolean isShared) {
+        this(thumbnailUrl, title, description, Color.findByName(color), startAt, endAt, isShared);
     }
 
     public static Category basic(Nickname memberNickname) {
@@ -72,6 +74,7 @@ public class Category extends BaseEntity {
                 .title(memberNickname.getNickname() + DEFAULT_SUBTITLE)
                 .description(DEFAULT_DESCRIPTION)
                 .color(DEFAULT_COLOR)
+                .isShared(false)
                 .build();
     }
 

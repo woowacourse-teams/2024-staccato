@@ -20,7 +20,8 @@ public class CategoryFixtures {
                 .withDescription("categoryDescription")
                 .withColor(Color.PINK)
                 .withTerm(LocalDate.of(2024, 1, 1),
-                        LocalDate.of(2024, 12, 31));
+                        LocalDate.of(2024, 12, 31))
+                .withIsShared(false);
     }
 
     public static class CategoryBuilder {
@@ -30,7 +31,7 @@ public class CategoryFixtures {
         private String description;
         private Color color;
         private Term term;
-        private final List<CategoryMember> members = new ArrayList<>();
+        private Boolean isShared;
 
         public CategoryBuilder withThumbnailUrl(String thumbnailUrl) {
             this.thumbnailUrl = thumbnailUrl;
@@ -57,8 +58,13 @@ public class CategoryFixtures {
             return this;
         }
 
+        public CategoryBuilder withIsShared(Boolean isShared) {
+            this.isShared = isShared;
+            return this;
+        }
+
         public Category build() {
-            return new Category(thumbnailUrl, title, description, color, term.getStartAt(), term.getEndAt());
+            return new Category(thumbnailUrl, title, description, color, term.getStartAt(), term.getEndAt(), isShared);
         }
 
         public Category buildWithMember(Member member) {
