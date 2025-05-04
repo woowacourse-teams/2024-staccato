@@ -1,5 +1,7 @@
 package com.staccato.image.infrastructure;
 
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -7,8 +9,12 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 @Component
 public class S3ObjectClient {
@@ -53,5 +59,34 @@ public class S3ObjectClient {
         String url = s3Client.utilities().getUrl(request).toString();
 
         return url.replace(endPoint, cloudFrontEndPoint);
+    }
+
+    public String extractKeyFromUrl(String url) {
+        return url.replace(cloudFrontEndPoint + "/", "");
+    }
+
+    public int deleteUnusedObjects(Set<String> usedKeys) {
+        String continuationToken = null;
+        AtomicInteger deleteCount = new AtomicInteger(0);
+        do {
+            ListObjectsV2Request request = ListObjectsV2Request.builder()
+                    .bucket(bucketName)
+                    .continuationToken(continuationToken)
+                    .build();
+
+            ListObjectsV2Response response = s3Client.listObjectsV2(request);
+            for (S3Object object : response.contents()) {
+                String key = object.key();
+                if (!usedKeys.contains(key)) {
+                    s3Client.deleteObject(DeleteObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(key)
+                            .build());
+                    deleteCount.incrementAndGet();
+                }
+            }
+            continuationToken = response.nextContinuationToken();
+        } while (continuationToken != null);
+        return deleteCount.get();
     }
 }
