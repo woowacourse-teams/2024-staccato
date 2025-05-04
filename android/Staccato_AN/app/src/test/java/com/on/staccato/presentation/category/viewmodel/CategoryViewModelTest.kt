@@ -121,7 +121,7 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val actual = viewModel.isDeleteSuccess.getOrAwaitValue()
+            val actual = viewModel.isDeleted.getOrAwaitValue()
             assertThat(actual).isTrue()
         }
 

@@ -35,8 +35,8 @@ class CategoryViewModel
         private val _exceptionState = MutableSingleLiveData<ExceptionState2>()
         val exceptionState: SingleLiveData<ExceptionState2> get() = _exceptionState
 
-        private val _isDeleteSuccess = MutableSingleLiveData<Boolean>()
-        val isDeleteSuccess: SingleLiveData<Boolean> get() = _isDeleteSuccess
+        private val _isDeleted = MutableSingleLiveData<Boolean>()
+        val isDeleted: SingleLiveData<Boolean> get() = _isDeleted
 
         fun loadCategory(id: Long) {
             if (id <= DEFAULT_CATEGORY_ID) {
@@ -56,7 +56,7 @@ class CategoryViewModel
             viewModelScope.launch {
                 val id = _category.value?.id
                 if (id == null) {
-                    _isDeleteSuccess.setValue(false)
+                    _isDeleted.setValue(false)
                     return@launch
                 }
 
@@ -72,7 +72,7 @@ class CategoryViewModel
         }
 
         private fun updateIsDeleteSuccess() {
-            _isDeleteSuccess.setValue(true)
+            _isDeleted.setValue(true)
         }
 
         private fun handleServerError(message: String) {

@@ -164,7 +164,7 @@ class CategoryFragment :
     }
 
     private fun observeIsDeleteSuccess() {
-        viewModel.isDeleteSuccess.observe(viewLifecycleOwner) { isDeleteSuccess ->
+        viewModel.isDeleted.observe(viewLifecycleOwner) { isDeleteSuccess ->
             if (isDeleteSuccess) {
                 sharedViewModel.setTimelineHasUpdated()
                 showToast(getString(R.string.category_delete_complete))
