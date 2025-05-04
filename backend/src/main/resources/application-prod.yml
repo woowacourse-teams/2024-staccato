@@ -118,14 +118,14 @@ management:
     sampling:
       probability: 1.0
 
-otel:
-  exporter:
-    otlp:
-      endpoint: ENC(U3urPEVoc+GI9KW11w8LjmFVsaD5DZizSW293SRSdMXUh9UZGB4g1A86hqKsSSj9WWT9pufiQ8ZQUg9PRNOaHw==)
-  resource:
-    attributes:
-      service.name: staccato-backend
-      deployment.environment: prod
+#otel:
+#  exporter:
+#    otlp:
+#      endpoint: ENC(U3urPEVoc+GI9KW11w8LjmFVsaD5DZizSW293SRSdMXUh9UZGB4g1A86hqKsSSj9WWT9pufiQ8ZQUg9PRNOaHw==)
+#  resource:
+#    attributes:
+#      service.name: staccato-backend
+#      deployment.environment: prod
 
 server:
   tomcat:
