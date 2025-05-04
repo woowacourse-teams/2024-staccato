@@ -82,16 +82,16 @@ management:
     sampling:
       probability: 1.0
 
-otel:
-  exporter:
-    otlp:
-      endpoint: ENC(kKKPaBuuy/E4BbnbsLCKR1xFlP8Hi+BmDmdHX2W1S6iEewk8wxaJqTIeT9B8/+2GasBWrrCF47STnXAfdoi1lA==)
-    logging:
-      enabled: true
-  resource:
-    attributes:
-      service.name: staccato-backend
-      deployment.environment: dev
+#otel:
+#  exporter:
+#    otlp:
+#      endpoint: ENC(kKKPaBuuy/E4BbnbsLCKR1xFlP8Hi+BmDmdHX2W1S6iEewk8wxaJqTIeT9B8/+2GasBWrrCF47STnXAfdoi1lA==)
+#    logging:
+#      enabled: true
+#  resource:
+#    attributes:
+#      service.name: staccato-backend
+#      deployment.environment: dev
 
 server:
   tomcat:
