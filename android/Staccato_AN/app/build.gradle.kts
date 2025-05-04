@@ -55,6 +55,7 @@ android {
         defaultConfig {
             buildConfig = true
         }
+        compose = true
     }
 
     buildTypes {
@@ -91,6 +92,10 @@ android {
 
     kapt {
         correctErrorTypes = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
 }
 
@@ -208,6 +213,21 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.extension)
+
+    // Compose
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+
+    // Material Design 3
+    implementation(libs.androidx.material3)
+
+    // Android Studio Preview support
+    implementation(libs.androidx.ui.tooling.preview)
+
+    // Compose UI Test
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
 
 secrets {
