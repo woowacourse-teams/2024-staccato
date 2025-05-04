@@ -35,7 +35,7 @@ class CategoryViewModel
         private val _exceptionState = MutableSingleLiveData<ExceptionState2>()
         val exceptionState: SingleLiveData<ExceptionState2> get() = _exceptionState
 
-        private val _isDeleteSuccess = MutableSingleLiveData<Boolean>(false)
+        private val _isDeleteSuccess = MutableSingleLiveData<Boolean>()
         val isDeleteSuccess: SingleLiveData<Boolean> get() = _isDeleteSuccess
 
         fun loadCategory(id: Long) {
@@ -54,7 +54,12 @@ class CategoryViewModel
 
         fun deleteCategory() {
             viewModelScope.launch {
-                val id = _category.value?.id ?: return@launch
+                val id = _category.value?.id
+                if (id == null) {
+                    _isDeleteSuccess.setValue(false)
+                    return@launch
+                }
+
                 val result: ApiResult<Unit> = categoryRepository.deleteCategory(id)
                 result.onSuccess { updateIsDeleteSuccess() }
                     .onServerError(::handleServerError)

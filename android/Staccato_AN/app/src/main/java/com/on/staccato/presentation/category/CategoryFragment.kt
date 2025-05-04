@@ -167,9 +167,11 @@ class CategoryFragment :
         viewModel.isDeleteSuccess.observe(viewLifecycleOwner) { isDeleteSuccess ->
             if (isDeleteSuccess) {
                 sharedViewModel.setTimelineHasUpdated()
-                findNavController().popBackStack()
                 showToast(getString(R.string.category_delete_complete))
+            } else {
+                showToast(getString(R.string.category_delete_title))
             }
+            findNavController().popBackStack()
         }
     }
 
