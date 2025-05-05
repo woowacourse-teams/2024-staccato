@@ -36,6 +36,7 @@ import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryCreateRequestFixtures;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.category.CategoryUpdateRequestFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
@@ -504,5 +505,20 @@ class CategoryServiceTest extends ServiceSliceTest {
         CategoryMember categoryMember = categoryMemberRepository.findAllByMemberId(member.getId()).get(0);
 
         assertThat(categoryMember.getRole()).isEqualTo(Role.HOST);
+    }
+
+    @DisplayName("GUEST가 카테고리 수정을 시도한 경우, 예외를 발생한다.")
+    @Test
+    void failUpdateCategoryIfGuestMemberTried() {
+        // given
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .buildAndSaveWithGuestMember(member, categoryRepository);
+        CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest().build();
+
+        // when & then
+        assertThatThrownBy(() -> categoryService.updateCategory(categoryUpdateRequest, category.getId(), member))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
 }
