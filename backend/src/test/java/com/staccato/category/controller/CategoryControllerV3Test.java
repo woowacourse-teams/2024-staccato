@@ -22,11 +22,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import com.staccato.ControllerTest;
-import com.staccato.category.service.dto.request.CategoryRequestV2;
 import com.staccato.category.service.dto.request.CategoryRequestV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.category.CategoryRequestV2Fixtures;
 import com.staccato.fixture.category.CategoryRequestV3Fixtures;
 import com.staccato.fixture.member.MemberFixtures;
 
@@ -61,7 +59,7 @@ class CategoryControllerV3Test extends ControllerTest {
                                 .withDescription("가".repeat(501)).build(),
                         "내용의 최대 허용 글자수는 공백 포함 500자입니다."),
                 Arguments.of(CategoryRequestV3Fixtures.defaultCategoryRequestV3()
-                        .withIsShared(null).build(),
+                                .withIsShared(null).build(),
                         "카테고리 공개 여부를 입력해주세요.")
         );
     }
