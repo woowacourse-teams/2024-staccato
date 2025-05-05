@@ -20,6 +20,7 @@ import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.domain.Color;
+import com.staccato.category.domain.Role;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
@@ -471,5 +472,21 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> categoryService.deleteCategory(categoryIdResponse.categoryId(), otherMember))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("카테고리 생성 시 생성된 CategoryMember의 역할은 HOST이다.")
+    @Test
+    void createCategorySetsMemberRoleAsHost() {
+        // given
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        CategoryRequestV3 categoryRequestV3 = CategoryRequestV3Fixtures.defaultCategoryRequestV3().build();
+
+        // when
+        categoryService.createCategory(categoryRequestV3, member);
+
+        // then
+        CategoryMember categoryMember = categoryMemberRepository.findAllByMemberId(member.getId()).get(0);
+
+        assertThat(categoryMember.getRole()).isEqualTo(Role.HOST);
     }
 }

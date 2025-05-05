@@ -40,10 +40,10 @@ public class CategoryMember extends BaseEntity {
     private Category category;
 
     @Builder
-    public CategoryMember(@NonNull Member member, @NonNull Category category) {
+    public CategoryMember(@NonNull Member member, @NonNull Category category, @NonNull Role role) {
         this.member = member;
         this.category = category;
-        this.role = Role.HOST;
+        this.role = role;
     }
 
     public boolean isMember(Member member) {
