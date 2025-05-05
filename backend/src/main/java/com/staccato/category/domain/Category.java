@@ -119,6 +119,12 @@ public class Category extends BaseEntity {
                 .noneMatch(categoryMember -> categoryMember.isMember(member));
     }
 
+    public boolean editPermissionDeniedFor(Member member) {
+        return categoryMembers.stream()
+                .filter(categoryMember -> categoryMember.isMember(member))
+                .anyMatch(CategoryMember::isGuest);
+    }
+
     public boolean isNotSameTitle(String title) {
         return !this.title.equals(title);
     }

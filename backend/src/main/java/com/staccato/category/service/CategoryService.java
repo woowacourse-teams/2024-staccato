@@ -90,13 +90,30 @@ public class CategoryService {
     @Transactional
     public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
         Category originCategory = getCategoryById(categoryId);
-        validateOwner(originCategory, member);
+        validateEditableBy(originCategory, member);
         Category updatedCategory = categoryUpdateRequest.toCategory(originCategory);
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
             validateCategoryTitle(updatedCategory, member);
         }
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryId(categoryId);
         originCategory.update(updatedCategory, staccatos);
+    }
+
+    private void validateEditableBy(Category category, Member member) {
+        validateOwner(category, member);
+        validateHost(category, member);
+    }
+
+    private void validateOwner(Category category, Member member) {
+        if (category.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private void validateHost(Category category, Member member) {
+        if (category.editPermissionDeniedFor(member)) {
+            throw new ForbiddenException();
+        }
     }
 
     @Transactional
@@ -124,12 +141,6 @@ public class CategoryService {
             deleteAllRelatedCategory(categoryId);
             categoryRepository.deleteById(categoryId);
         });
-    }
-
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
     }
 
     private void deleteAllRelatedCategory(long categoryId) {
