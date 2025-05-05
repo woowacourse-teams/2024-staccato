@@ -12,12 +12,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
 import com.staccato.ControllerTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
-import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
@@ -277,7 +277,7 @@ class CategoryControllerTest extends ControllerTest {
         long categoryId = 1;
         Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
-        Category category = CategoryFixtures.defaultCategory().buildWithMember(member);
+        Category category = CategoryFixtures.defaultCategory().buildWithHostMember(member);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
@@ -326,7 +326,7 @@ class CategoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(null, null)
-                .buildWithMember(member);
+                .buildWithHostMember(member);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();

@@ -78,11 +78,11 @@ public class Category extends BaseEntity {
                 .build();
     }
 
-    public void addCategoryMember(Member member) {
+    public void addCategoryMember(Member member, Role role) {
         CategoryMember categoryMember = CategoryMember.builder()
                 .category(this)
                 .member(member)
-                .role(Role.HOST)
+                .role(role)
                 .build();
         categoryMembers.add(categoryMember);
     }
