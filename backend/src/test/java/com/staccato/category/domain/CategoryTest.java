@@ -2,6 +2,7 @@ package com.staccato.category.domain;
 
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
+import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -124,5 +125,11 @@ class CategoryTest {
 
         // then
         assertThat(category.getColor()).isEqualTo(Color.BLUE);
+    }
+
+    @DisplayName("")
+    @Test
+    void editPermissionDeniedFor() {
+
     }
 }

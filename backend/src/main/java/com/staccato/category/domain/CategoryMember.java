@@ -46,8 +46,8 @@ public class CategoryMember extends BaseEntity {
         this.role = Role.HOST;
     }
 
-    public boolean isMember(Member member) {
-        return Objects.equals(this.member, member);
+    public boolean isMember(Long memberId) {
+        return Objects.equals(this.member.getId(), memberId);
     }
 
     public boolean isGuest() {

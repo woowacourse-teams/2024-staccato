@@ -114,14 +114,14 @@ public class Category extends BaseEntity {
                 .toList();
     }
 
-    public boolean isNotOwnedBy(Member member) {
+    public boolean isNotOwnedBy(Long memberId) {
         return categoryMembers.stream()
-                .noneMatch(categoryMember -> categoryMember.isMember(member));
+                .noneMatch(categoryMember -> categoryMember.isMember(memberId));
     }
 
-    public boolean editPermissionDeniedFor(Member member) {
+    public boolean editPermissionDeniedFor(Long memberId) {
         return categoryMembers.stream()
-                .filter(categoryMember -> categoryMember.isMember(member))
+                .filter(categoryMember -> categoryMember.isMember(memberId))
                 .anyMatch(CategoryMember::isGuest);
     }
 

@@ -82,7 +82,7 @@ public class CategoryService {
 
     public CategoryDetailResponseV2 readCategoryById(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
-        validateOwner(category, member);
+        validateOwner(category, member.getId());
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
         return new CategoryDetailResponseV2(category, staccatos);
     }
@@ -90,7 +90,7 @@ public class CategoryService {
     @Transactional
     public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
         Category originCategory = getCategoryById(categoryId);
-        validateEditableBy(originCategory, member);
+        validateEditableBy(originCategory, member.getId());
         Category updatedCategory = categoryUpdateRequest.toCategory(originCategory);
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
             validateCategoryTitle(updatedCategory, member);
@@ -99,19 +99,19 @@ public class CategoryService {
         originCategory.update(updatedCategory, staccatos);
     }
 
-    private void validateEditableBy(Category category, Member member) {
-        validateOwner(category, member);
-        validateHost(category, member);
+    private void validateEditableBy(Category category, Long memberId) {
+        validateOwner(category, memberId);
+        validateHost(category, memberId);
     }
 
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
+    private void validateOwner(Category category, Long memberId) {
+        if (category.isNotOwnedBy(memberId)) {
             throw new ForbiddenException();
         }
     }
 
-    private void validateHost(Category category, Member member) {
-        if (category.editPermissionDeniedFor(member)) {
+    private void validateHost(Category category, Long memberId) {
+        if (category.editPermissionDeniedFor(memberId)) {
             throw new ForbiddenException();
         }
     }
@@ -119,7 +119,7 @@ public class CategoryService {
     @Transactional
     public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
         Category category = getCategoryById(categoryId);
-        validateOwner(category, member);
+        validateOwner(category, member.getId());
         category.changeColor(categoryColorRequest.toColor());
     }
 
@@ -137,7 +137,7 @@ public class CategoryService {
     @Transactional
     public void deleteCategory(long categoryId, Member member) {
         categoryRepository.findById(categoryId).ifPresent(category -> {
-            validateOwner(category, member);
+            validateOwner(category, member.getId());
             deleteAllRelatedCategory(categoryId);
             categoryRepository.deleteById(categoryId);
         });

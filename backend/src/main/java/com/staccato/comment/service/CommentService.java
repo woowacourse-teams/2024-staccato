@@ -32,7 +32,7 @@ public class CommentService {
     @Transactional
     public long createComment(CommentRequest commentRequest, Member member) {
         Staccato staccato = getStaccato(commentRequest.staccatoId());
-        validateOwner(staccato.getCategory(), member);
+        validateOwner(staccato.getCategory(), member.getId());
         Comment comment = commentRequest.toComment(staccato, member);
 
         return commentRepository.save(comment).getId();
@@ -40,7 +40,7 @@ public class CommentService {
 
     public CommentResponses readAllCommentsByStaccatoId(Member member, Long staccatoId) {
         Staccato staccato = getStaccato(staccatoId);
-        validateOwner(staccato.getCategory(), member);
+        validateOwner(staccato.getCategory(), member.getId());
         List<Comment> comments = commentRepository.findAllByStaccatoId(staccatoId);
         sortByCreatedAtAscending(comments);
 
@@ -52,8 +52,8 @@ public class CommentService {
             .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
+    private void validateOwner(Category category, Long memberId) {
+        if (category.isNotOwnedBy(memberId)) {
             throw new ForbiddenException();
         }
     }
