@@ -3,8 +3,10 @@ package com.staccato.category.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
@@ -12,6 +14,7 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
+import com.staccato.category.service.dto.request.CategoryRequestV3;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
@@ -24,6 +27,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -41,7 +45,7 @@ public class CategoryService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CategoryIdResponse createCategory(CategoryRequestV2 categoryRequest, Member member) {
+    public CategoryIdResponse createCategory(CategoryRequestV3 categoryRequest, Member member) {
         Category category = categoryRequest.toCategory();
         validateCategoryTitle(category, member);
         category.addCategoryMember(member);
@@ -87,7 +91,7 @@ public class CategoryService {
     public void updateCategory(CategoryRequestV2 categoryRequest, Long categoryId, Member member) {
         Category originCategory = getCategoryById(categoryId);
         validateOwner(originCategory, member);
-        Category updatedCategory = categoryRequest.toCategory();
+        Category updatedCategory = categoryRequest.toCategoryRequestV3().toCategory();
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
             validateCategoryTitle(updatedCategory, member);
         }

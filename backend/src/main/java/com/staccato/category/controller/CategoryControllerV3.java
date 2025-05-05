@@ -34,7 +34,7 @@ public class CategoryControllerV3 implements CategoryControllerV3Docs {
             @Valid @RequestBody CategoryRequestV3 categoryRequest,
             @LoginMember Member member
     ) {
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest.toCategoryV2(), member);
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest, member);
         return ResponseEntity.created(URI.create("/categories/" + categoryIdResponse.categoryId()))
                 .body(categoryIdResponse);
     }

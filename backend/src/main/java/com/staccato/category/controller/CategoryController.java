@@ -45,7 +45,7 @@ public class CategoryController implements CategoryControllerDocs {
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member
     ) {
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest.toCategoryRequestV2(), member);
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest.toCategoryRequestV3(), member);
         return ResponseEntity.created(URI.create("/categories/" + categoryIdResponse.categoryId()))
                 .body(categoryIdResponse);
     }
