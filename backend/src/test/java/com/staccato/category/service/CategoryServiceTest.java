@@ -494,10 +494,11 @@ class CategoryServiceTest extends ServiceSliceTest {
     void createCategorySetsMemberRoleAsHost() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        CategoryRequestV3 categoryRequestV3 = CategoryRequestV3Fixtures.defaultCategoryRequestV3().build();
+        CategoryCreateRequest categoryCreateRequest = CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
+                .build();
 
         // when
-        categoryService.createCategory(categoryRequestV3, member);
+        categoryService.createCategory(categoryCreateRequest, member);
 
         // then
         CategoryMember categoryMember = categoryMemberRepository.findAllByMemberId(member.getId()).get(0);
