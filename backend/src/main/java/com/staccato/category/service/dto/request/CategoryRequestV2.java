@@ -38,8 +38,8 @@ public record CategoryRequestV2(
         }
     }
 
-    public CategoryRequestV3 toCategoryRequestV3() {
-        return new CategoryRequestV3(
+    public CategoryCreateRequest toCategoryRequestV3() {
+        return new CategoryCreateRequest(
                 categoryThumbnailUrl,
                 categoryTitle,
                 description,

@@ -3,7 +3,7 @@ package com.staccato.fixture.category;
 import java.time.LocalDate;
 
 import com.staccato.category.domain.Color;
-import com.staccato.category.service.dto.request.CategoryRequestV3;
+import com.staccato.category.service.dto.request.CategoryCreateRequest;
 
 public class CategoryRequestV3Fixtures {
 
@@ -58,8 +58,8 @@ public class CategoryRequestV3Fixtures {
             return this;
         }
 
-        public CategoryRequestV3 build() {
-            return new CategoryRequestV3(categoryThumbnailUrl, categoryTitle, description, color, startAt, endAt, isShared);
+        public CategoryCreateRequest build() {
+            return new CategoryCreateRequest(categoryThumbnailUrl, categoryTitle, description, color, startAt, endAt, isShared);
         }
     }
 }

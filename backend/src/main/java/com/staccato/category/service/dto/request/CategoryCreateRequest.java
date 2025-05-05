@@ -15,7 +15,7 @@ import com.staccato.config.swagger.SwaggerExamples;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "카테고리를 생성/수정하기 위한 요청 형식입니다.")
-public record CategoryRequestV3(
+public record CategoryCreateRequest(
         @Schema(example = SwaggerExamples.IMAGE_URL)
         String categoryThumbnailUrl,
         @Schema(example = SwaggerExamples.CATEGORY_TITLE)
@@ -37,7 +37,7 @@ public record CategoryRequestV3(
         @Schema(example = "false")
         @NotNull(message = "카테고리 공개 여부를 입력해주세요.")
         Boolean isShared) {
-    public CategoryRequestV3 {
+    public CategoryCreateRequest {
         if (Objects.nonNull(categoryTitle)) {
             categoryTitle = categoryTitle.trim();
         }

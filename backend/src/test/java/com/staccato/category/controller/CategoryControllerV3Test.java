@@ -22,7 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import com.staccato.ControllerTest;
-import com.staccato.category.service.dto.request.CategoryRequestV3;
+import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.category.CategoryRequestV3Fixtures;
@@ -30,7 +30,7 @@ import com.staccato.fixture.member.MemberFixtures;
 
 class CategoryControllerV3Test extends ControllerTest {
 
-    static Stream<CategoryRequestV3> categoryRequestProvider() {
+    static Stream<CategoryCreateRequest> categoryRequestProvider() {
         return Stream.of(
                 CategoryRequestV3Fixtures.defaultCategoryRequestV3()
                         .withTerm(LocalDate.of(2024, 1, 1),
@@ -131,7 +131,7 @@ class CategoryControllerV3Test extends ControllerTest {
     @DisplayName("사용자가 선택적으로 카테고리 정보를 입력하면, 새로운 카테고리를 생성한다.")
     @ParameterizedTest
     @MethodSource("categoryRequestProvider")
-    void createCategoryWithoutOption(CategoryRequestV3 categoryRequest) throws Exception {
+    void createCategoryWithoutOption(CategoryCreateRequest categoryCreateRequest) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         when(categoryService.createCategory(any(), any())).thenReturn(new CategoryIdResponse(1));
@@ -139,7 +139,7 @@ class CategoryControllerV3Test extends ControllerTest {
         // when & then
         mockMvc.perform(post("/v3/categories")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(categoryRequest))
+                        .content(objectMapper.writeValueAsString(categoryCreateRequest))
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/categories/1"))
@@ -149,7 +149,7 @@ class CategoryControllerV3Test extends ControllerTest {
     @DisplayName("사용자가 잘못된 형식으로 정보를 입력하면, 카테고리를 생성할 수 없다.")
     @ParameterizedTest
     @MethodSource("invalidCategoryRequestProvider")
-    void failCreateCategory(CategoryRequestV3 categoryRequest, String expectedMessage) throws Exception {
+    void failCreateCategory(CategoryCreateRequest categoryCreateRequest, String expectedMessage) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), expectedMessage);
@@ -157,7 +157,7 @@ class CategoryControllerV3Test extends ControllerTest {
         // when & then
         mockMvc.perform(post("/v3/categories")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(categoryRequest))
+                        .content(objectMapper.writeValueAsString(categoryCreateRequest))
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));

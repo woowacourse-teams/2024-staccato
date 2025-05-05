@@ -23,9 +23,9 @@ import com.staccato.category.domain.Color;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
+import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
-import com.staccato.category.service.dto.request.CategoryRequestV3;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
@@ -82,17 +82,18 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void createCategory() {
         // given
-        CategoryRequestV3 categoryRequest = CategoryRequestV3Fixtures.defaultCategoryRequestV3().build();
+        CategoryCreateRequest categoryCreateRequest = CategoryRequestV3Fixtures.defaultCategoryRequestV3().build();
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
 
         // when
-        categoryService.createCategory(categoryRequest, member);
+        categoryService.createCategory(categoryCreateRequest, member);
         CategoryMember categoryMember = categoryMemberRepository.findAllByMemberId(member.getId()).get(0);
 
         // then
         assertAll(
                 () -> assertThat(categoryMember.getMember().getId()).isEqualTo(member.getId()),
-                () -> assertThat(categoryMember.getCategory().getTitle()).isEqualTo(categoryRequest.categoryTitle())
+                () -> assertThat(categoryMember.getCategory()
+                        .getTitle()).isEqualTo(categoryCreateRequest.categoryTitle())
         );
     }
 
@@ -100,12 +101,12 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void createCategoryWithoutTerm() {
         // given
-        CategoryRequestV3 categoryRequest = CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+        CategoryCreateRequest categoryCreateRequest = CategoryRequestV3Fixtures.defaultCategoryRequestV3()
                 .withTerm(null, null).build();
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
 
         // when
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest, member);
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryCreateRequest, member);
         CategoryMember categoryMember = categoryMemberRepository.findAllByMemberId(member.getId())
                 .get(0);
 
@@ -120,12 +121,12 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void cannotCreateCategoryByDuplicatedTitle() {
         // given
-        CategoryRequestV3 categoryRequest = CategoryRequestV3Fixtures.defaultCategoryRequestV3().build();
+        CategoryCreateRequest categoryCreateRequest = CategoryRequestV3Fixtures.defaultCategoryRequestV3().build();
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        categoryService.createCategory(categoryRequest, member);
+        categoryService.createCategory(categoryCreateRequest, member);
 
         // when & then
-        assertThatThrownBy(() -> categoryService.createCategory(categoryRequest, member))
+        assertThatThrownBy(() -> categoryService.createCategory(categoryCreateRequest, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("같은 이름을 가진 카테고리가 있어요. 다른 이름으로 설정해주세요.");
     }
@@ -134,13 +135,13 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void canCreateCategoryByDuplicatedTitleOfOther() {
         // given
-        CategoryRequestV3 categoryRequest = CategoryRequestV3Fixtures.defaultCategoryRequestV3().build();
+        CategoryCreateRequest categoryCreateRequest = CategoryRequestV3Fixtures.defaultCategoryRequestV3().build();
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        categoryService.createCategory(categoryRequest, otherMember);
+        categoryService.createCategory(categoryCreateRequest, otherMember);
 
         // when & then
-        assertThatNoException().isThrownBy(() -> categoryService.createCategory(categoryRequest, member));
+        assertThatNoException().isThrownBy(() -> categoryService.createCategory(categoryCreateRequest, member));
     }
 
     @DisplayName("현재 날짜를 포함하는 모든 카테고리 목록을 조회한다.")
@@ -374,8 +375,8 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         CategoryColorRequest categoryColorRequest = new CategoryColorRequest(Color.PINK.getName());
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        CategoryRequestV3 categoryRequest = CategoryRequestV3Fixtures.defaultCategoryRequestV3().build();
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest, member);
+        CategoryCreateRequest categoryCreateRequest = CategoryRequestV3Fixtures.defaultCategoryRequestV3().build();
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryCreateRequest, member);
 
         // when
         categoryService.updateCategoryColor(categoryIdResponse.categoryId(), categoryColorRequest, member);
@@ -401,15 +402,15 @@ class CategoryServiceTest extends ServiceSliceTest {
     void cannotUpdateCategoryByDuplicatedTitle() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        CategoryRequestV3 categoryRequest1 = CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+        CategoryCreateRequest categoryCreateRequest1 = CategoryRequestV3Fixtures.defaultCategoryRequestV3()
                 .withCategoryTitle("existingTitle").build();
-        categoryService.createCategory(categoryRequest1, member);
-        CategoryRequestV3 categoryRequest2 = CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+        categoryService.createCategory(categoryCreateRequest1, member);
+        CategoryCreateRequest categoryCreateRequest2 = CategoryRequestV3Fixtures.defaultCategoryRequestV3()
                 .withCategoryTitle("otherTitle").build();
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest2, member);
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryCreateRequest2, member);
 
         // when & then
-        assertThatThrownBy(() -> categoryService.updateCategory(categoryRequest1.toCategoryV2(), categoryIdResponse.categoryId(), member))
+        assertThatThrownBy(() -> categoryService.updateCategory(categoryCreateRequest1.toCategoryV2(), categoryIdResponse.categoryId(), member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("같은 이름을 가진 카테고리가 있어요. 다른 이름으로 설정해주세요.");
     }

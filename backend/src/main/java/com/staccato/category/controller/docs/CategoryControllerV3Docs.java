@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 
-import com.staccato.category.service.dto.request.CategoryRequestV3;
+import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.member.domain.Member;
 
@@ -37,6 +37,6 @@ public interface CategoryControllerV3Docs {
                     responseCode = "400")
     })
     ResponseEntity<CategoryIdResponse> createCategory(
-            @Parameter(required = true) @Valid CategoryRequestV3 categoryRequest,
+            @Parameter(required = true) @Valid CategoryCreateRequest categoryCreateRequest,
             @Parameter(hidden = true) Member member);
 }

@@ -12,9 +12,9 @@ import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
+import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
-import com.staccato.category.service.dto.request.CategoryRequestV3;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
@@ -45,8 +45,8 @@ public class CategoryService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CategoryIdResponse createCategory(CategoryRequestV3 categoryRequest, Member member) {
-        Category category = categoryRequest.toCategory();
+    public CategoryIdResponse createCategory(CategoryCreateRequest categoryCreateRequest, Member member) {
+        Category category = categoryCreateRequest.toCategory();
         validateCategoryTitle(category, member);
         category.addCategoryMember(member);
         categoryRepository.save(category);
