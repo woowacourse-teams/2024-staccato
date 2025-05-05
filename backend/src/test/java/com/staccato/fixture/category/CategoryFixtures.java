@@ -1,12 +1,10 @@
 package com.staccato.fixture.category;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.staccato.category.domain.Category;
-import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.domain.Color;
+import com.staccato.category.domain.Role;
 import com.staccato.category.domain.Term;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.member.domain.Member;
@@ -67,9 +65,15 @@ public class CategoryFixtures {
             return new Category(thumbnailUrl, title, description, color, term.getStartAt(), term.getEndAt(), isShared);
         }
 
-        public Category buildWithMember(Member member) {
+        public Category buildWithHostMember(Member member) {
             Category category = build();
-            category.addCategoryMember(member);
+            category.addCategoryMember(member, Role.HOST);
+            return category;
+        }
+
+        public Category buildWithGuestMember(Member member) {
+            Category category = build();
+            category.addCategoryMember(member, Role.GUEST);
             return category;
         }
 
@@ -78,8 +82,13 @@ public class CategoryFixtures {
             return repository.save(category);
         }
 
-        public Category buildAndSaveWithMember(Member member, CategoryRepository repository) {
-            Category category = buildWithMember(member);
+        public Category buildAndSaveWithHostMember(Member member, CategoryRepository repository) {
+            Category category = buildWithHostMember(member);
+            return repository.save(category);
+        }
+
+        public Category buildAndSaveWithGuestMember(Member member, CategoryRepository repository) {
+            Category category = buildWithGuestMember(member);
             return repository.save(category);
         }
     }
