@@ -4,16 +4,18 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.staccato.category.domain.Category;
 import com.staccato.config.swagger.SwaggerExamples;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "카테고리를 생성/수정하기 위한 요청 형식입니다.")
-public record CategoryRequestV2(
+public record CategoryRequestV3(
         @Schema(example = SwaggerExamples.IMAGE_URL)
         String categoryThumbnailUrl,
         @Schema(example = SwaggerExamples.CATEGORY_TITLE)
@@ -31,22 +33,29 @@ public record CategoryRequestV2(
         LocalDate startAt,
         @Schema(example = SwaggerExamples.CATEGORY_END_AT)
         @DateTimeFormat(pattern = "yyyy-MM-dd")
-        LocalDate endAt) {
-    public CategoryRequestV2 {
+        LocalDate endAt,
+        @Schema(example = "false")
+        @NotNull(message = "카테고리 공개 여부를 입력해주세요.")
+        Boolean isShared) {
+    public CategoryRequestV3 {
         if (Objects.nonNull(categoryTitle)) {
             categoryTitle = categoryTitle.trim();
         }
     }
 
-    public CategoryRequestV3 toCategoryRequestV3() {
-        return new CategoryRequestV3(
-                categoryThumbnailUrl,
-                categoryTitle,
-                description,
-                categoryColor,
-                startAt,
-                endAt,
-                false
-        );
+    public Category toCategory() {
+        return Category.builder()
+                .thumbnailUrl(categoryThumbnailUrl)
+                .title(categoryTitle)
+                .description(description)
+                .color(categoryColor)
+                .startAt(startAt)
+                .endAt(endAt)
+                .isShared(isShared)
+                .build();
+    }
+
+    public CategoryRequestV2 toCategoryV2() {
+        return new CategoryRequestV2(categoryThumbnailUrl, categoryTitle, description, categoryColor, startAt, endAt);
     }
 }

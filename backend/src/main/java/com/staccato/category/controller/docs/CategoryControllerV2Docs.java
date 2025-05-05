@@ -1,21 +1,14 @@
 package com.staccato.category.controller.docs;
 
-import java.time.LocalDate;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 import org.springframework.http.ResponseEntity;
 
-import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
-import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
-import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
-import com.staccato.category.service.dto.response.CategoryNameResponses;
-import com.staccato.category.service.dto.response.CategoryResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
 import com.staccato.member.domain.Member;
 
