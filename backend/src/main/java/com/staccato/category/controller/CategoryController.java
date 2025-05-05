@@ -2,8 +2,10 @@ package com.staccato.category.controller;
 
 import java.net.URI;
 import java.time.LocalDate;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.staccato.category.controller.docs.CategoryControllerDocs;
 import com.staccato.category.service.CategoryService;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
@@ -30,6 +33,7 @@ import com.staccato.category.service.dto.response.CategoryResponsesV2;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -45,7 +49,7 @@ public class CategoryController implements CategoryControllerDocs {
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member
     ) {
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest.toCategoryRequestV3(), member);
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest.toCategoryCreateRequest(), member);
         return ResponseEntity.created(URI.create("/categories/" + categoryIdResponse.categoryId()))
                 .body(categoryIdResponse);
     }

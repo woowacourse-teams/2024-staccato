@@ -59,7 +59,7 @@ public record CategoryRequest(
         );
     }
 
-    public CategoryCreateRequest toCategoryRequestV3() {
+    public CategoryCreateRequest toCategoryCreateRequest() {
         return new CategoryCreateRequest(
                 categoryThumbnailUrl,
                 categoryTitle,

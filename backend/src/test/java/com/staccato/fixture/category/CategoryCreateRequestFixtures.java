@@ -5,10 +5,10 @@ import java.time.LocalDate;
 import com.staccato.category.domain.Color;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
 
-public class CategoryRequestV3Fixtures {
+public class CategoryCreateRequestFixtures {
 
-    public static CategoryRequestV3Builder defaultCategoryRequestV3() {
-        return new CategoryRequestV3Builder()
+    public static CategoryCreateRequestBuilder defaultCategoryCreateRequest() {
+        return new CategoryCreateRequestBuilder()
                 .withCategoryThumbnailUrl("https://example.com/categoryThumbnailUrl.jpg")
                 .withCategoryTitle("categoryTitle")
                 .withDescription("categoryDescription")
@@ -18,7 +18,7 @@ public class CategoryRequestV3Fixtures {
                 .withIsShared(false);
     }
 
-    public static class CategoryRequestV3Builder {
+    public static class CategoryCreateRequestBuilder {
         private String categoryThumbnailUrl;
         private String categoryTitle;
         private String description;
@@ -27,33 +27,33 @@ public class CategoryRequestV3Fixtures {
         private LocalDate endAt;
         private Boolean isShared;
 
-        public CategoryRequestV3Builder withCategoryThumbnailUrl(String categoryThumbnailUrl) {
+        public CategoryCreateRequestBuilder withCategoryThumbnailUrl(String categoryThumbnailUrl) {
             this.categoryThumbnailUrl = categoryThumbnailUrl;
             return this;
         }
 
-        public CategoryRequestV3Builder withCategoryTitle(String categoryTitle) {
+        public CategoryCreateRequestBuilder withCategoryTitle(String categoryTitle) {
             this.categoryTitle = categoryTitle;
             return this;
         }
 
-        public CategoryRequestV3Builder withDescription(String description) {
+        public CategoryCreateRequestBuilder withDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public CategoryRequestV3Builder withTerm(LocalDate startAt, LocalDate endAt) {
+        public CategoryCreateRequestBuilder withTerm(LocalDate startAt, LocalDate endAt) {
             this.startAt = startAt;
             this.endAt = endAt;
             return this;
         }
 
-        public CategoryRequestV3Builder withColor(String color) {
+        public CategoryCreateRequestBuilder withColor(String color) {
             this.color = color;
             return this;
         }
 
-        public CategoryRequestV3Builder withIsShared(Boolean isShared) {
+        public CategoryCreateRequestBuilder withIsShared(Boolean isShared) {
             this.isShared = isShared;
             return this;
         }

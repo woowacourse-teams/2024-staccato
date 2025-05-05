@@ -25,40 +25,40 @@ import com.staccato.ControllerTest;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.category.CategoryRequestV3Fixtures;
+import com.staccato.fixture.category.CategoryCreateRequestFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 
 class CategoryControllerV3Test extends ControllerTest {
 
     static Stream<CategoryCreateRequest> categoryRequestProvider() {
         return Stream.of(
-                CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+                CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                         .withTerm(LocalDate.of(2024, 1, 1),
                                 LocalDate.of(2024, 12, 31)).build(),
-                CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+                CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                         .withTerm(null, null).build(),
-                CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+                CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                         .withIsShared(false).build(),
-                CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+                CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                         .withIsShared(true).build()
         );
     }
 
     static Stream<Arguments> invalidCategoryRequestProvider() {
         return Stream.of(
-                Arguments.of(CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+                Arguments.of(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                                 .withCategoryTitle(null).build(),
                         "카테고리 제목을 입력해주세요."),
-                Arguments.of(CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+                Arguments.of(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                                 .withCategoryTitle("  ").build(),
                         "카테고리 제목을 입력해주세요."),
-                Arguments.of(CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+                Arguments.of(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                                 .withCategoryTitle("가".repeat(31)).build(),
                         "제목은 공백 포함 30자 이하로 설정해주세요."),
-                Arguments.of(CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+                Arguments.of(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                                 .withDescription("가".repeat(501)).build(),
                         "내용의 최대 허용 글자수는 공백 포함 500자입니다."),
-                Arguments.of(CategoryRequestV3Fixtures.defaultCategoryRequestV3()
+                Arguments.of(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                                 .withIsShared(null).build(),
                         "카테고리 공개 여부를 입력해주세요.")
         );
