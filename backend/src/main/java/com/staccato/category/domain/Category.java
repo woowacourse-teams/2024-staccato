@@ -82,6 +82,7 @@ public class Category extends BaseEntity {
         CategoryMember categoryMember = CategoryMember.builder()
                 .category(this)
                 .member(member)
+                .role(Role.HOST)
                 .build();
         categoryMembers.add(categoryMember);
     }
