@@ -11,7 +11,7 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitparams = "1.1.0"
 junit5 = "5.10.2"
-junit5AndroidTest="1.3.0"
+junit5AndroidTest = "1.3.0"
 androidxJunitVersion = "1.2.1"
 androidxTestRunner = "1.4.0"
 androidxTestRules = "1.4.0"
@@ -49,6 +49,9 @@ camerax = "1.1.0-beta01"
 androidJUnit5 = "1.10.0.0"
 activityCompose = "1.9.1"
 composeBom = "2024.06.00"
+compose-rules = "0.4.5"
+navigationCompose = "2.8.6"
+hilt-navigation-compose = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -109,9 +112,15 @@ androidx-camera-extension = { group = "androidx.camera", name = "camera-extensio
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
