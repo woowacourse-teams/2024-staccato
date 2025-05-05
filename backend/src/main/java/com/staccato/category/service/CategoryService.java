@@ -14,7 +14,7 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
-import com.staccato.category.service.dto.request.CategoryRequestV2;
+import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
@@ -88,10 +88,10 @@ public class CategoryService {
     }
 
     @Transactional
-    public void updateCategory(CategoryRequestV2 categoryRequest, Long categoryId, Member member) {
+    public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
         Category originCategory = getCategoryById(categoryId);
         validateOwner(originCategory, member);
-        Category updatedCategory = categoryRequest.toCategoryRequestV3().toCategory();
+        Category updatedCategory = categoryUpdateRequest.toCategory(originCategory);
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
             validateCategoryTitle(updatedCategory, member);
         }

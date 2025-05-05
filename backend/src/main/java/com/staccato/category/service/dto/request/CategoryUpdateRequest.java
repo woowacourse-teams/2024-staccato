@@ -9,13 +9,12 @@ import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.staccato.category.domain.Category;
-import com.staccato.category.domain.Color;
 import com.staccato.config.swagger.SwaggerExamples;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "카테고리를 생성/수정하기 위한 요청 형식입니다.")
-public record CategoryRequest(
+public record CategoryUpdateRequest(
         @Schema(example = SwaggerExamples.IMAGE_URL)
         String categoryThumbnailUrl,
         @Schema(example = SwaggerExamples.CATEGORY_TITLE)
@@ -25,38 +24,31 @@ public record CategoryRequest(
         @Schema(example = SwaggerExamples.CATEGORY_DESCRIPTION)
         @Size(max = 500, message = "내용의 최대 허용 글자수는 공백 포함 500자입니다.")
         String description,
+        @Schema(example = SwaggerExamples.CATEGORY_COLOR)
+        @NotBlank(message = "카테고리 색상을 선택해주세요.")
+        String categoryColor,
         @Schema(example = SwaggerExamples.CATEGORY_START_AT)
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate startAt,
         @Schema(example = SwaggerExamples.CATEGORY_END_AT)
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate endAt) {
-    public CategoryRequest {
+    public CategoryUpdateRequest {
         if (Objects.nonNull(categoryTitle)) {
             categoryTitle = categoryTitle.trim();
         }
     }
 
-    public Category toCategory() {
+    public Category toCategory(Category originCategory) {
         return Category.builder()
                 .thumbnailUrl(categoryThumbnailUrl)
                 .title(categoryTitle)
                 .description(description)
-                .color(Color.GRAY.getName())
+                .color(categoryColor)
                 .startAt(startAt)
                 .endAt(endAt)
+                .isShared(originCategory.getIsShared())
                 .build();
-    }
-
-    public CategoryUpdateRequest toCategoryUpdateRequest() {
-        return new CategoryUpdateRequest(
-                categoryThumbnailUrl,
-                categoryTitle,
-                description,
-                Color.GRAY.getName(),
-                startAt,
-                endAt
-        );
     }
 
     public CategoryCreateRequest toCategoryCreateRequest() {
@@ -64,7 +56,7 @@ public record CategoryRequest(
                 categoryThumbnailUrl,
                 categoryTitle,
                 description,
-                Color.GRAY.getName(),
+                categoryColor,
                 startAt,
                 endAt,
                 false

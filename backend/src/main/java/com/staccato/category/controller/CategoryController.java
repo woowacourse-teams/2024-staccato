@@ -85,7 +85,7 @@ public class CategoryController implements CategoryControllerDocs {
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member) {
-        categoryService.updateCategory(categoryRequest.toCategoryRequestV2(), categoryId, member);
+        categoryService.updateCategory(categoryRequest.toCategoryUpdateRequest(), categoryId, member);
         return ResponseEntity.ok().build();
     }
 
