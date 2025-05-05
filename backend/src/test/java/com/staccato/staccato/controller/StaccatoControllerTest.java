@@ -177,14 +177,12 @@ class StaccatoControllerTest extends ControllerTest {
         StaccatoLocationResponseV2 response1 = new StaccatoLocationResponseV2(
                 StaccatoFixtures.defaultStaccato()
                         .withCategory(category)
-                        .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build(),
-                category.getColor()
+                        .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build()
         );
         StaccatoLocationResponseV2 response2 = new StaccatoLocationResponseV2(
                 StaccatoFixtures.defaultStaccato()
                         .withCategory(category)
-                        .withSpot(new BigDecimal("123.456789"), new BigDecimal("123.456789")).build(),
-                category.getColor()
+                        .withSpot(new BigDecimal("123.456789"), new BigDecimal("123.456789")).build()
         );
         StaccatoLocationResponsesV2 responses = new StaccatoLocationResponsesV2(List.of(response1, response2));
 

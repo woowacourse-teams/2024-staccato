@@ -60,11 +60,8 @@ public class StaccatoService {
                 staccatoLocationRangeRequest.neLng(),
                 staccatoLocationRangeRequest.categoryId()
         );
-        List<StaccatoLocationResponseV2> responses = new ArrayList<>();
-        for (Staccato staccato : staccatos) {
-            responses.add(new StaccatoLocationResponseV2(staccato, staccato.getCategory().getColor()));
-        }
-        return new StaccatoLocationResponsesV2(responses);
+
+        return StaccatoLocationResponsesV2.of(staccatos);
     }
 
     public StaccatoDetailResponse readStaccatoById(long staccatoId, Member member) {

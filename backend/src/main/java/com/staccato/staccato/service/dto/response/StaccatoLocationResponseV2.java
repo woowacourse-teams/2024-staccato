@@ -17,8 +17,8 @@ public record StaccatoLocationResponseV2(
         @Schema(example = SwaggerExamples.STACCATO_LONGITUDE)
         BigDecimal longitude) {
 
-    public StaccatoLocationResponseV2(Staccato staccato, Color color) {
-        this(staccato.getId(), color.getName(), staccato.getSpot().getLatitude(), staccato.getSpot().getLongitude());
+    public StaccatoLocationResponseV2(Staccato staccato) {
+        this(staccato.getId(), staccato.getColor().getName(), staccato.getSpot().getLatitude(), staccato.getSpot().getLongitude());
     }
 
     public StaccatoLocationResponse toStaccatoLocationResponse() {
