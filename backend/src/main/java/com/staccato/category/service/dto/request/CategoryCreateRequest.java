@@ -54,8 +54,4 @@ public record CategoryCreateRequest(
                 .isShared(isShared)
                 .build();
     }
-
-    public CategoryRequestV2 toCategoryV2() {
-        return new CategoryRequestV2(categoryThumbnailUrl, categoryTitle, description, categoryColor, startAt, endAt);
-    }
 }

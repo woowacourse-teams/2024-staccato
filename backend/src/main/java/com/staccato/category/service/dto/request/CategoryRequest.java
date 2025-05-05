@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.config.swagger.SwaggerExamples;
 
@@ -35,17 +34,6 @@ public record CategoryRequest(
         if (Objects.nonNull(categoryTitle)) {
             categoryTitle = categoryTitle.trim();
         }
-    }
-
-    public Category toCategory() {
-        return Category.builder()
-                .thumbnailUrl(categoryThumbnailUrl)
-                .title(categoryTitle)
-                .description(description)
-                .color(Color.GRAY.getName())
-                .startAt(startAt)
-                .endAt(endAt)
-                .build();
     }
 
     public CategoryUpdateRequest toCategoryUpdateRequest() {

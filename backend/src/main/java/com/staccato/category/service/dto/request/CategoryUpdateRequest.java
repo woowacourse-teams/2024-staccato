@@ -50,16 +50,4 @@ public record CategoryUpdateRequest(
                 .isShared(originCategory.getIsShared())
                 .build();
     }
-
-    public CategoryCreateRequest toCategoryCreateRequest() {
-        return new CategoryCreateRequest(
-                categoryThumbnailUrl,
-                categoryTitle,
-                description,
-                categoryColor,
-                startAt,
-                endAt,
-                false
-        );
-    }
 }
