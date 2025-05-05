@@ -84,6 +84,6 @@ class CategorySelectionFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "CategorySelectionModalBottomSheet"
-        const val MESSAGE_IMPLEMENT_VIEWMODEL_EXCEPTION = "Activity must implement ProvidesCategorySelectorViewModel"
+        const val MESSAGE_IMPLEMENT_VIEWMODEL_EXCEPTION = "Activity must implement CategorySelectionViewModelProvider"
     }
 }
