@@ -37,6 +37,7 @@ class MyPageActivity :
     }
 
     override fun initStartView(savedInstanceState: Bundle?) {
+        setContents()
         initToolbar()
         initBindings()
         loadMemberProfile()
@@ -75,6 +76,16 @@ class MyPageActivity :
             startActivity(intent)
         } else {
             showToast(getString(R.string.mypage_error_can_not_open_instagram_page))
+        }
+    }
+
+    private fun setContents() {
+        setDividerContent()
+    }
+
+    private fun setDividerContent() {
+        binding.dividerMypageMiddle.setContent {
+            MiddleDivider()
         }
     }
 

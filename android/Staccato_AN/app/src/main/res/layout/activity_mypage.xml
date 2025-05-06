@@ -127,10 +127,10 @@
             app:layout_constraintTop_toBottomOf="@id/divider_mypage_profile" />
         -->
 
-        <com.google.android.material.divider.MaterialDivider
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/divider_mypage_middle"
-            style="@style/DividerStyle.Middle"
-            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_mypage_menu_category_invitation_management" />
