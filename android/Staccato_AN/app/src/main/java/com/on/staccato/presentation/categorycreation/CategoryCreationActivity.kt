@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.util.Pair
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
@@ -55,10 +56,10 @@ class CategoryCreationActivity :
         showErrorToast()
         handleError()
         binding.composeViewCategoryCreationPeriodSet.setContent {
-            PeriodActiveSwitch(viewModel)
+            PeriodActiveSwitch()
         }
         binding.composeViewCategoryCreationShare.setContent {
-            CategoryShareSection(viewModel)
+            CategoryShareSection()
         }
     }
 
@@ -219,7 +220,7 @@ class CategoryCreationActivity :
 }
 
 @Composable
-private fun PeriodActiveSwitch(viewModel: CategoryCreationViewModel) {
+private fun PeriodActiveSwitch(viewModel: CategoryCreationViewModel = hiltViewModel()) {
     val isPeriodActive by viewModel.isPeriodActive.collectAsState()
     CustomSwitchComponent(
         checked = isPeriodActive,
@@ -227,7 +228,7 @@ private fun PeriodActiveSwitch(viewModel: CategoryCreationViewModel) {
 }
 
 @Composable
-private fun CategoryShareSection(viewModel: CategoryCreationViewModel) {
+private fun CategoryShareSection(viewModel: CategoryCreationViewModel = hiltViewModel()) {
     val isShared by viewModel.isShared.collectAsState()
     CategoryShareSection(
         checked = isShared,
