@@ -90,6 +90,7 @@ mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "moc
 mockk-agent = { group = "io.mockk", name = "mockk-agent-jvm", version.ref = "mockk" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
