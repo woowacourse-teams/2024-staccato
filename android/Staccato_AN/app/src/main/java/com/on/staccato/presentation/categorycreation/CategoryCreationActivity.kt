@@ -54,11 +54,10 @@ class CategoryCreationActivity :
         observeIsPosting()
         showErrorToast()
         handleError()
-        binding.switchCategoryCreationPeriodSet.setContent {
+        binding.composeViewCategoryCreationPeriodSet.setContent {
             PeriodActiveSwitch(viewModel)
         }
-
-        binding.composeViewSharingSection.setContent {
+        binding.composeViewCategoryCreationShare.setContent {
             CategoryShareSection(viewModel)
         }
     }

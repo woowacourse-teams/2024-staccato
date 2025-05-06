@@ -195,7 +195,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_category_creation_color" />
 
                 <androidx.compose.ui.platform.ComposeView
-                    android:id="@+id/switch_category_creation_period_set"
+                    android:id="@+id/compose_view_category_creation_period_set"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
@@ -227,7 +227,7 @@
                     bind:visibleOrGone="@{viewModel.isPeriodActive}" />
 
                 <androidx.compose.ui.platform.ComposeView
-                    android:id="@+id/compose_view_sharing_section"
+                    android:id="@+id/compose_view_category_creation_share"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_category_creation_period_selection"
@@ -243,7 +243,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/compose_view_sharing_section"
+                    app:layout_constraintTop_toBottomOf="@id/compose_view_category_creation_share"
                     bind:categoryEndDate="@{viewModel.endDate}"
                     bind:categoryStartDate="@{viewModel.startDate}"
                     bind:categoryTitle="@{viewModel.title}"
