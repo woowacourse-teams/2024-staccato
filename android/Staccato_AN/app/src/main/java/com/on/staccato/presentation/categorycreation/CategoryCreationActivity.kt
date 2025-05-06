@@ -221,9 +221,9 @@ class CategoryCreationActivity :
 
 @Composable
 private fun PeriodActiveSwitch(viewModel: CategoryCreationViewModel) {
-    val checked by viewModel.isPeriodActive.collectAsState()
+    val isPeriodActive by viewModel.isPeriodActive.collectAsState()
     CustomSwitchComponent(
-        checked = checked,
+        checked = isPeriodActive,
     ) { viewModel.updateIsPeriodActive(it) }
 }
 
