@@ -82,6 +82,9 @@ class CategoryCreationViewModel
         private val _color = MutableLiveData(CategoryColor.GRAY)
         val color: LiveData<CategoryColor> get() = _color
 
+        private val _isShared = MutableStateFlow<Boolean>(false)
+        val isShared: StateFlow<Boolean> = _isShared.asStateFlow()
+
         fun createThumbnailUrl(
             uri: Uri,
             file: FileUiModel,
@@ -122,6 +125,10 @@ class CategoryCreationViewModel
 
         fun updateIsPeriodActive(value: Boolean) {
             _isPeriodActive.value = value
+        }
+
+        fun updateIsShared(value: Boolean) {
+            _isShared.value = value
         }
 
         private fun setThumbnailUri(uri: Uri?) {

@@ -59,7 +59,7 @@ class CategoryCreationActivity :
         }
 
         binding.composeViewSharingSection.setContent {
-            CategoryShareSection()
+            CategoryShareSection(viewModel)
         }
     }
 
@@ -228,8 +228,9 @@ private fun PeriodActiveSwitch(viewModel: CategoryCreationViewModel) {
 }
 
 @Composable
-private fun CategoryShareSection() {
+private fun CategoryShareSection(viewModel: CategoryCreationViewModel) {
+    val isShared by viewModel.isShared.collectAsState()
     CategoryShareSection(
-        checked = false,
-    ) {}
+        checked = isShared,
+    ) { viewModel.updateIsShared(it) }
 }
