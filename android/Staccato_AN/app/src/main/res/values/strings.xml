@@ -85,7 +85,7 @@
     <string name="category_creation_period_setting">기간 설정</string>
     <string name="category_creation_period_hint">기간을 선택해 주세요</string>
     <string name="category_creation_selected_period">%s ~ %s</string>
-    <string name="category_creation_period_description">여행과 프로젝트처럼 시작일과 종료일을 설정할 수 있어요.</string>
+    <string name="category_creation_period_description">여행처럼 시작일과 종료일을 설정할 수 있어요.</string>
     <string name="category_creation_toolbar_title">카테고리 만들기</string>
     <string name="category_creation_toolbar_subtitle">스타카토를 담을 카테고리를 만들어 보세요!</string>
 
