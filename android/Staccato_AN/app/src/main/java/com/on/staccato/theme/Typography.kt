@@ -8,12 +8,13 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.on.staccato.R
 
-val pretendard = FontFamily(
-    Font(R.font.pretendard_regular),
-    Font(R.font.pretendard_medium),
-    Font(R.font.pretendard_semibold),
-    Font(R.font.pretendard_bold),
-)
+val pretendard =
+    FontFamily(
+        Font(R.font.pretendard_regular),
+        Font(R.font.pretendard_medium),
+        Font(R.font.pretendard_semibold),
+        Font(R.font.pretendard_bold),
+    )
 
 val title1 =
     defaultTextStyle(
