@@ -177,8 +177,8 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="24dp"
-                    android:onClick="@{()->handler.onColorSelectionClicked()}"
                     android:background="@android:color/transparent"
+                    android:onClick="@{()->handler.onColorSelectionClicked()}"
                     android:scaleType="fitCenter"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_category_creation_color"
@@ -194,22 +194,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_category_creation_color" />
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
+                <androidx.compose.ui.platform.ComposeView
                     android:id="@+id/switch_category_creation_period_set"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    android:background="@android:color/transparent"
-                    android:checked="@={viewModel.isPeriodActive}"
-                    android:thumb="@drawable/shape_switch_thumb_oval"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_category_creation_period_title"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_category_creation_period_description"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_category_creation_period_title"
-                    app:switchMinWidth="48dp"
-                    app:thumbTint="@color/white"
-                    app:track="@drawable/shape_switch_track_50dp"
-                    app:trackTint="@drawable/selector_switch_track_colors"
-                    app:trackTintMode="src_in" />
+                    app:layout_constraintTop_toTopOf="@id/tv_category_creation_period_title" />
 
                 <TextView
                     android:id="@+id/tv_category_creation_period_description"

@@ -26,6 +26,9 @@ import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -46,7 +49,9 @@ class CategoryCreationViewModel
     ) : ViewModel() {
         val title = MutableLiveData<String>()
         val description = MutableLiveData<String>()
-        val isPeriodActive = MutableLiveData<Boolean>(false)
+
+        private val _isPeriodActive = MutableStateFlow<Boolean>(false)
+        val isPeriodActive: StateFlow<Boolean> = _isPeriodActive.asStateFlow()
 
         private val _startDate = MutableLiveData<LocalDate?>(null)
         val startDate: LiveData<LocalDate?> get() = _startDate
@@ -113,6 +118,10 @@ class CategoryCreationViewModel
 
         fun updateCategoryColor(color: CategoryColor) {
             _color.value = color
+        }
+
+        fun updateIsPeriodActive(value: Boolean) {
+            _isPeriodActive.value = value
         }
 
         private fun setThumbnailUri(uri: Uri?) {

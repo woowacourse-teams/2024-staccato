@@ -5,8 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.util.Pair
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
@@ -21,6 +25,7 @@ import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.SELECTED_COLOR_LABEL
 import com.on.staccato.presentation.common.photo.FileUiModel
+import com.on.staccato.presentation.component.CustomSwitchComponent
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.convertCategoryUriToFile
@@ -49,6 +54,9 @@ class CategoryCreationActivity :
         observeIsPosting()
         showErrorToast()
         handleError()
+        binding.switchCategoryCreationPeriodSet.setContent {
+            PeriodActiveSwitch(viewModel)
+        }
     }
 
     override fun onPeriodSelectionClicked() {
@@ -205,4 +213,12 @@ class CategoryCreationActivity :
             }
         }
     }
+}
+
+@Composable
+private fun PeriodActiveSwitch(viewModel: CategoryCreationViewModel) {
+    val checked by viewModel.isPeriodActive.collectAsState()
+    CustomSwitchComponent(
+        checked = checked,
+    ) { viewModel.updateIsPeriodActive(it) }
 }
