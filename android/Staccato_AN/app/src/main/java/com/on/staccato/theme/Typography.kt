@@ -10,10 +10,10 @@ import com.on.staccato.R
 
 val pretendard =
     FontFamily(
-        Font(R.font.pretendard_regular),
-        Font(R.font.pretendard_medium),
-        Font(R.font.pretendard_semibold),
-        Font(R.font.pretendard_bold),
+        Font(R.font.pretendard_regular, weight = FontWeight.Normal),
+        Font(R.font.pretendard_medium, weight = FontWeight.Medium),
+        Font(R.font.pretendard_semibold, weight = FontWeight.SemiBold),
+        Font(R.font.pretendard_bold, weight = FontWeight.Bold),
     )
 
 val title1 =
