@@ -103,7 +103,7 @@ public class CategoryService {
     @Transactional
     public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
         Category category = getCategoryById(categoryId);
-        validateOwner(category, member.getId());
+        validateModificationPermission(category, member.getId());
         category.changeColor(categoryColorRequest.toColor());
     }
 

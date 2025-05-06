@@ -535,4 +535,19 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
+
+    @DisplayName("GUEST가 카테고리 색상 변경을 시도한 경우, 예외를 발생한다.")
+    @Test
+    void failUpdateCategoryColorIfGuestMemberTried() {
+        // given
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .buildAndSaveWithGuestMember(member, categoryRepository);
+        CategoryColorRequest categoryColorRequest = new CategoryColorRequest(Color.BLUE.getName());
+
+        // when & then
+        assertThatThrownBy(() -> categoryService.updateCategoryColor(category.getId(), categoryColorRequest, member))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
 }
