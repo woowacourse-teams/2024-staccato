@@ -521,4 +521,18 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
+
+    @DisplayName("GUEST가 카테고리 삭제를 시도한 경우, 예외를 발생한다.")
+    @Test
+    void failDeleteCategoryIfGuestMemberTried() {
+        // given
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .buildAndSaveWithGuestMember(member, categoryRepository);
+
+        // when & then
+        assertThatThrownBy(() -> categoryService.deleteCategory(category.getId(), member))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
 }

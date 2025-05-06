@@ -91,7 +91,7 @@ public class CategoryService {
     @Transactional
     public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
         Category originCategory = getCategoryById(categoryId);
-        validateEditableBy(originCategory, member.getId());
+        validateModificationPermission(originCategory, member.getId());
         Category updatedCategory = categoryUpdateRequest.toCategory(originCategory);
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
             validateCategoryTitle(updatedCategory, member);
@@ -100,7 +100,33 @@ public class CategoryService {
         originCategory.update(updatedCategory, staccatos);
     }
 
-    private void validateEditableBy(Category category, Long memberId) {
+    @Transactional
+    public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
+        Category category = getCategoryById(categoryId);
+        validateOwner(category, member.getId());
+        category.changeColor(categoryColorRequest.toColor());
+    }
+
+    private void validateCategoryTitle(Category category, Member member) {
+        if (categoryMemberRepository.existsByMemberAndCategoryTitle(member, category.getTitle())) {
+            throw new StaccatoException("같은 이름을 가진 카테고리가 있어요. 다른 이름으로 설정해주세요.");
+        }
+    }
+
+    @Transactional
+    public void deleteCategory(long categoryId, Member member) {
+        Category category = getCategoryById(categoryId);
+        validateModificationPermission(category, member.getId());
+        deleteAllRelatedCategory(categoryId);
+        categoryRepository.deleteById(categoryId);
+    }
+
+    private Category getCategoryById(long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
+    }
+
+    private void validateModificationPermission(Category category, Long memberId) {
         validateOwner(category, memberId);
         validateHost(category, memberId);
     }
@@ -115,33 +141,6 @@ public class CategoryService {
         if (category.editPermissionDeniedFor(memberId)) {
             throw new ForbiddenException();
         }
-    }
-
-    @Transactional
-    public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
-        Category category = getCategoryById(categoryId);
-        validateOwner(category, member.getId());
-        category.changeColor(categoryColorRequest.toColor());
-    }
-
-    private Category getCategoryById(long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-    }
-
-    private void validateCategoryTitle(Category category, Member member) {
-        if (categoryMemberRepository.existsByMemberAndCategoryTitle(member, category.getTitle())) {
-            throw new StaccatoException("같은 이름을 가진 카테고리가 있어요. 다른 이름으로 설정해주세요.");
-        }
-    }
-
-    @Transactional
-    public void deleteCategory(long categoryId, Member member) {
-        categoryRepository.findById(categoryId).ifPresent(category -> {
-            validateOwner(category, member.getId());
-            deleteAllRelatedCategory(categoryId);
-            categoryRepository.deleteById(categoryId);
-        });
     }
 
     private void deleteAllRelatedCategory(long categoryId) {
