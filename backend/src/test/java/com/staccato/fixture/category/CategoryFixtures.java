@@ -1,6 +1,8 @@
 package com.staccato.fixture.category;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
@@ -30,6 +32,7 @@ public class CategoryFixtures {
         private Color color;
         private Term term;
         private Boolean isShared;
+        private List<MemberRolePair> memberRoles = new ArrayList<>();
 
         public CategoryBuilder withThumbnailUrl(String thumbnailUrl) {
             this.thumbnailUrl = thumbnailUrl;
@@ -61,8 +64,15 @@ public class CategoryFixtures {
             return this;
         }
 
+        public CategoryBuilder addCategoryMember(Member member, Role role) {
+            memberRoles.add(new MemberRolePair(member, role));
+            return this;
+        }
+
         public Category build() {
-            return new Category(thumbnailUrl, title, description, color, term.getStartAt(), term.getEndAt(), isShared);
+            Category category = new Category(thumbnailUrl, title, description, color, term.getStartAt(), term.getEndAt(), isShared);
+            memberRoles.forEach(pair -> category.addCategoryMember(pair.member(), pair.role()));
+            return category;
         }
 
         public Category buildWithHostMember(Member member) {
@@ -90,6 +100,9 @@ public class CategoryFixtures {
         public Category buildAndSaveWithGuestMember(Member member, CategoryRepository repository) {
             Category category = buildWithGuestMember(member);
             return repository.save(category);
+        }
+
+        private record MemberRolePair(Member member, Role role) {
         }
     }
 }

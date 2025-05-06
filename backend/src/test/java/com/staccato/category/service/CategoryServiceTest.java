@@ -514,7 +514,8 @@ class CategoryServiceTest extends ServiceSliceTest {
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .buildAndSaveWithGuestMember(member, categoryRepository);
-        CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest().build();
+        CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest()
+                .build();
 
         // when & then
         assertThatThrownBy(() -> categoryService.updateCategory(categoryUpdateRequest, category.getId(), member))
@@ -549,5 +550,28 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> categoryService.updateCategoryColor(category.getId(), categoryColorRequest, member))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("HOST가 카테고리를 삭제하면, 카테고리와 연관된 모든 카테고리멤버가 삭제된다.")
+    @Test
+    void deleteCategoryAlsoDeletesAllRelatedCategoryMembers() {
+        // given
+        Member hostMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member guestMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .addCategoryMember(hostMember, Role.HOST)
+                .addCategoryMember(guestMember, Role.GUEST)
+                .buildAndSave(categoryRepository);
+
+        // when
+        categoryService.deleteCategory(category.getId(), hostMember);
+
+        // then
+        assertAll(
+                () -> assertThat(categoryMemberRepository.findAllByCategoryId(category.getId())).isEmpty(),
+                () -> assertThat(categoryMemberRepository.findAllByMemberId(hostMember.getId())).isEmpty(),
+                () -> assertThat(categoryMemberRepository.findAllByMemberId(guestMember.getId())).isEmpty(),
+                () -> assertThat(categoryRepository.findById(category.getId())).isEmpty()
+        );
     }
 }
