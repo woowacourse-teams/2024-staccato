@@ -113,7 +113,7 @@ class StaccatoImagesTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithHostMember(member, categoryRepository);
+                    .buildAndSaveWithMember(member, categoryRepository);
             List<String> imageUrls = List.of("same1.jpg", "same2.jpg");
 
             Staccato staccato = StaccatoFixtures.defaultStaccato()
@@ -140,7 +140,7 @@ class StaccatoImagesTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithHostMember(member, categoryRepository);
+                    .buildAndSaveWithMember(member, categoryRepository);
             List<String> imageUrls = List.of("img1.jpg", "img2.jpg");
 
             Staccato staccato = StaccatoFixtures.defaultStaccato()

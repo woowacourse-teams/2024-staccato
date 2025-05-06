@@ -80,12 +80,12 @@ class CategoryFilterTest extends ServiceSliceTest {
         Category category1 = CategoryFixtures.defaultCategory()
                 .withTitle("first")
                 .withTerm(null, null)
-                .buildAndSaveWithHostMember(member, categoryRepository);
+                .buildAndSaveWithMember(member, categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
                 .withTitle("second")
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
-                .buildAndSaveWithHostMember(member, categoryRepository);
+                .buildAndSaveWithMember(member, categoryRepository);
         List<Category> categories = new ArrayList<>();
         categories.add(category1);
         categories.add(category2);
@@ -108,12 +108,12 @@ class CategoryFilterTest extends ServiceSliceTest {
         Category category1 = CategoryFixtures.defaultCategory()
                 .withTitle("first")
                 .withTerm(null, null)
-                .buildAndSaveWithHostMember(member, categoryRepository);
+                .buildAndSaveWithMember(member, categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
                 .withTitle("second")
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
-                .buildAndSaveWithHostMember(member, categoryRepository);
+                .buildAndSaveWithMember(member, categoryRepository);
         List<Category> categories = new ArrayList<>();
         categories.add(category1);
         categories.add(category2);

@@ -47,7 +47,7 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(null, null)
-                .buildAndSaveWithHostMember(member, categoryRepository);
+                .buildAndSaveWithMember(member, categoryRepository);
         LocalDateTime now = LocalDateTime.now();
 
         return List.of(

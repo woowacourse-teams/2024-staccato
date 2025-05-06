@@ -277,7 +277,7 @@ class CategoryControllerTest extends ControllerTest {
         long categoryId = 1;
         Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
-        Category category = CategoryFixtures.defaultCategory().buildWithHostMember(member);
+        Category category = CategoryFixtures.defaultCategory().buildWithMember(member);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
@@ -326,7 +326,7 @@ class CategoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(null, null)
-                .buildWithHostMember(member);
+                .buildWithMember(member);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();

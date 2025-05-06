@@ -65,10 +65,10 @@ public class CategorySortTest extends ServiceSliceTest {
         List<Category> categories = new ArrayList<>();
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("first")
-                .buildAndSaveWithHostMember(member, categoryRepository));
+                .buildAndSaveWithMember(member, categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("second")
-                .buildAndSaveWithHostMember(member, categoryRepository));
+                .buildAndSaveWithMember(member, categoryRepository));
 
         // when
         List<Category> result = CategorySort.UPDATED.apply(categories);

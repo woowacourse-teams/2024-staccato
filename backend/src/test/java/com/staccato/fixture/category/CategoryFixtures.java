@@ -75,15 +75,9 @@ public class CategoryFixtures {
             return category;
         }
 
-        public Category buildWithHostMember(Member member) {
+        public Category buildWithMember(Member member) {
             Category category = build();
             category.addCategoryMember(member, Role.HOST);
-            return category;
-        }
-
-        public Category buildWithGuestMember(Member member) {
-            Category category = build();
-            category.addCategoryMember(member, Role.GUEST);
             return category;
         }
 
@@ -92,13 +86,8 @@ public class CategoryFixtures {
             return repository.save(category);
         }
 
-        public Category buildAndSaveWithHostMember(Member member, CategoryRepository repository) {
-            Category category = buildWithHostMember(member);
-            return repository.save(category);
-        }
-
-        public Category buildAndSaveWithGuestMember(Member member, CategoryRepository repository) {
-            Category category = buildWithGuestMember(member);
+        public Category buildAndSaveWithMember(Member member, CategoryRepository repository) {
+            Category category = buildWithMember(member);
             return repository.save(category);
         }
 

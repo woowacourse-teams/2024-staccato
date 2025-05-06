@@ -513,7 +513,8 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithGuestMember(member, categoryRepository);
+                .addCategoryMember(member, Role.GUEST)
+                .buildAndSave(categoryRepository);
         CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest()
                 .build();
 
@@ -529,7 +530,8 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithGuestMember(member, categoryRepository);
+                .addCategoryMember(member, Role.GUEST)
+                .buildAndSave(categoryRepository);
 
         // when & then
         assertThatThrownBy(() -> categoryService.deleteCategory(category.getId(), member))
@@ -543,7 +545,8 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithGuestMember(member, categoryRepository);
+                .addCategoryMember(member, Role.GUEST)
+                .buildAndSave(categoryRepository);
         CategoryColorRequest categoryColorRequest = new CategoryColorRequest(Color.BLUE.getName());
 
         // when & then
