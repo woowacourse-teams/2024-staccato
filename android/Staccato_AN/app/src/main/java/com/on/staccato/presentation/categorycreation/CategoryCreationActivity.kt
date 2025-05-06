@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
@@ -18,6 +17,7 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityCategoryCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
+import com.on.staccato.presentation.categorycreation.compose.CategoryShareSection
 import com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.common.color.CategoryColor
@@ -56,6 +56,10 @@ class CategoryCreationActivity :
         handleError()
         binding.switchCategoryCreationPeriodSet.setContent {
             PeriodActiveSwitch(viewModel)
+        }
+
+        binding.composeViewSharingSection.setContent {
+            CategoryShareSection()
         }
     }
 
@@ -221,4 +225,11 @@ private fun PeriodActiveSwitch(viewModel: CategoryCreationViewModel) {
     CustomSwitchComponent(
         checked = checked,
     ) { viewModel.updateIsPeriodActive(it) }
+}
+
+@Composable
+private fun CategoryShareSection() {
+    CategoryShareSection(
+        checked = false,
+    ) {}
 }

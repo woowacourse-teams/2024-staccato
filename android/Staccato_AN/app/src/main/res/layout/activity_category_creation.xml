@@ -176,7 +176,7 @@
                 <ImageButton
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:layout_marginEnd="24dp"
+                    android:layout_marginEnd="20dp"
                     android:background="@android:color/transparent"
                     android:onClick="@{()->handler.onColorSelectionClicked()}"
                     android:scaleType="fitCenter"
@@ -198,7 +198,7 @@
                     android:id="@+id/switch_category_creation_period_set"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
+                    android:layout_marginEnd="20dp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_category_creation_period_description"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_category_creation_period_title" />
@@ -226,6 +226,14 @@
                     bind:startDate="@{viewModel.startDate}"
                     bind:visibleOrGone="@{viewModel.isPeriodActive}" />
 
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/compose_view_sharing_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_creation_period_selection"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_category_creation_save"
                     style="@style/ButtonStyle.Save"
@@ -235,7 +243,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_category_creation_period_selection"
+                    app:layout_constraintTop_toBottomOf="@id/compose_view_sharing_section"
                     bind:categoryEndDate="@{viewModel.endDate}"
                     bind:categoryStartDate="@{viewModel.startDate}"
                     bind:categoryTitle="@{viewModel.title}"
