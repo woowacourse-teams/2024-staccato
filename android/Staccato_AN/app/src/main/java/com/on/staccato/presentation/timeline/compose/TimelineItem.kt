@@ -46,6 +46,7 @@ fun TimelineItem(timeline: TimelineUiModel) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ImageComponent(
+            modifier = Modifier.size(86.dp),
             url = timeline.categoryThumbnailUrl,
             placeHolder = R.drawable.default_image,
             contentDescription = stringResource(R.string.all_category_thumbnail_photo_description),
