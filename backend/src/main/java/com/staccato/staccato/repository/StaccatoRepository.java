@@ -14,10 +14,10 @@ public interface StaccatoRepository extends JpaRepository<Staccato, Long> {
     List<Staccato> findAllByCategoryIdOrdered(long categoryId);
 
     @Query("""
-            SELECT s
+            SELECT DISTINCT s
             FROM Staccato s
-            JOIN s.category c
-            JOIN c.categoryMembers cm
+            JOIN FETCH s.category c
+            JOIN FETCH c.categoryMembers cm
             WHERE cm.member = :member
             AND (
               (:minLat IS NULL OR :maxLat IS NULL OR :minLng IS NULL OR :maxLng IS NULL)
