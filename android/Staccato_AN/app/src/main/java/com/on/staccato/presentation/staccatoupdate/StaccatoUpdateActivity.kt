@@ -24,6 +24,8 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.categoryselection.CategorySelectionFragment
+import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModelProvider
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
@@ -33,7 +35,6 @@ import com.on.staccato.presentation.staccatocreation.CurrentLocationHandler
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.staccatocreation.dialog.CategorySelectionFragment
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
@@ -48,12 +49,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class StaccatoUpdateActivity :
     GooglePlaceFragmentEventHandler,
+    CategorySelectionViewModelProvider,
     CurrentLocationHandler,
     OnUrisSelectedListener,
     StaccatoUpdateHandler,
     BindingActivity<ActivityStaccatoUpdateBinding>() {
     override val layoutResourceId = R.layout.activity_staccato_update
-    private val viewModel: StaccatoUpdateViewModel by viewModels()
+    override val viewModel: StaccatoUpdateViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
     private val categorySelectionFragment by lazy {
         CategorySelectionFragment()
@@ -142,7 +144,6 @@ class StaccatoUpdateActivity :
         setupPermissionRequestLauncher()
         initBinding()
         initToolbar()
-        initCategorySelectionFragment()
         initVisitedAtSelectionFragment()
         initAdapter()
         initItemTouchHelper()
@@ -231,12 +232,6 @@ class StaccatoUpdateActivity :
         }
     }
 
-    private fun initCategorySelectionFragment() {
-        categorySelectionFragment.setOnCategorySelected { selectedCategory ->
-            viewModel.selectCategory(selectedCategory)
-        }
-    }
-
     private fun initVisitedAtSelectionFragment() {
         visitedAtSelectionFragment.setOnVisitedAtSelected { selectedVisitedAt ->
             viewModel.selectVisitedAt(selectedVisitedAt)
@@ -247,7 +242,6 @@ class StaccatoUpdateActivity :
         observePhotoData()
         observePlaceData()
         observeVisitedAtData()
-        observeCategoryData()
         observeIsUpdateComplete()
         observeCurrentLocation()
     }
@@ -280,19 +274,6 @@ class StaccatoUpdateActivity :
             it?.let {
                 visitedAtSelectionFragment.initCalendarByVisitedAt(it)
                 viewModel.updateCategorySelectionBy(it)
-            }
-        }
-    }
-
-    private fun observeCategoryData() {
-        viewModel.selectableCategories.observe(this) {
-            it?.let {
-                categorySelectionFragment.setItems(it.categoryCandidates)
-            }
-        }
-        viewModel.selectedCategory.observe(this) {
-            it?.let {
-                categorySelectionFragment.updateKeyCategory(it)
             }
         }
     }

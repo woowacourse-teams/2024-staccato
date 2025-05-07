@@ -7,11 +7,6 @@ val localProperties =
         load(FileInputStream(rootProject.file("local.properties")))
     }
 
-val keystoreProperties =
-    Properties().apply {
-        load(FileInputStream(rootProject.file("app/signing/keystore.properties")))
-    }
-
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -42,19 +37,29 @@ android {
         buildConfigField("String", "TOKEN", "${localProperties["token"]}")
     }
 
-    signingConfigs {
-        create("release") {
-            storeFile = file("${keystoreProperties["store_file"]}")
-            keyAlias = "${keystoreProperties["key_alias"]}"
-            keyPassword = "${keystoreProperties["key_password"]}"
-            storePassword = "${keystoreProperties["keystore_password"]}"
+    val signingFile = rootProject.file("app/.signing/keystore.properties")
+    val releaseSigningConfig =
+        if (signingFile.exists()) {
+            val keystoreProperties =
+                Properties().apply {
+                    load(FileInputStream(signingFile))
+                }
+
+            signingConfigs.create("release") {
+                storeFile = file("${keystoreProperties["store_file"]}")
+                keyAlias = "${keystoreProperties["key_alias"]}"
+                keyPassword = "${keystoreProperties["key_password"]}"
+                storePassword = "${keystoreProperties["keystore_password"]}"
+            }
+        } else {
+            null
         }
-    }
 
     buildFeatures {
         defaultConfig {
             buildConfig = true
         }
+        compose = true
     }
 
     buildTypes {
@@ -73,7 +78,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            signingConfig = signingConfigs.getByName("release")
+            if (releaseSigningConfig != null) {
+                signingConfig = releaseSigningConfig
+            }
         }
     }
 
@@ -91,6 +98,10 @@ android {
 
     kapt {
         correctErrorTypes = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
 }
 
@@ -208,6 +219,31 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.extension)
+
+    // Compose 기본 설정
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+
+    // Material Design 3
+    implementation(libs.androidx.material3)
+
+    // Compose core UI
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.ui.tooling.preview)
+
+    // Hilt & Navigation
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
+
+    // coil
+    implementation(libs.coil.compose)
+
+    // Compose UI Test
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
 
 secrets {

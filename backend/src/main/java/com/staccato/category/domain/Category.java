@@ -48,6 +48,8 @@ public class Category extends BaseEntity {
     @Column
     @Embedded
     private Term term;
+    @Column(nullable = false)
+    private Boolean isShared;
     @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
     private List<CategoryMember> categoryMembers = new ArrayList<>();
 
@@ -57,6 +59,7 @@ public class Category extends BaseEntity {
         this.description = description;
         this.color = color;
         this.term = new Term(startAt, endAt);
+        this.isShared = false;
     }
 
     @Builder

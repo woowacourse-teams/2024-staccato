@@ -18,28 +18,28 @@ spring:
       idle-timeout: 600000
       connection-timeout: 8000
       max-lifetime: 1800000
-#    writer:
-#      hikari:
-#        maximum-pool-size: 10
-#        minimum-idle: 10
-#        idle-timeout: 600000
-#        connection-timeout: 8000
-#        max-lifetime: 1800000
-#      driver-class-name: com.mysql.cj.jdbc.Driver
-#      jdbcUrl: ${SPRING_WRITER_DATASOURCE_URL}
-#      username: ${SPRING_DATASOURCE_USERNAME}
-#      password: ${SPRING_DATASOURCE_PASSWORD}
-#    reader:
-#      hikari:
-#        maximum-pool-size: 10
-#        minimum-idle: 10
-#        idle-timeout: 600000
-#        connection-timeout: 8000
-#        max-lifetime: 1800000
-#      driver-class-name: com.mysql.cj.jdbc.Driver
-#      jdbcUrl: ${SPRING_READER_DATASOURCE_URL}
-#      username: ${SPRING_DATASOURCE_USERNAME}
-#      password: ${SPRING_DATASOURCE_PASSWORD}
+  #    writer:
+  #      hikari:
+  #        maximum-pool-size: 10
+  #        minimum-idle: 10
+  #        idle-timeout: 600000
+  #        connection-timeout: 8000
+  #        max-lifetime: 1800000
+  #      driver-class-name: com.mysql.cj.jdbc.Driver
+  #      jdbcUrl: ${SPRING_WRITER_DATASOURCE_URL}
+  #      username: ${SPRING_DATASOURCE_USERNAME}
+  #      password: ${SPRING_DATASOURCE_PASSWORD}
+  #    reader:
+  #      hikari:
+  #        maximum-pool-size: 10
+  #        minimum-idle: 10
+  #        idle-timeout: 600000
+  #        connection-timeout: 8000
+  #        max-lifetime: 1800000
+  #      driver-class-name: com.mysql.cj.jdbc.Driver
+  #      jdbcUrl: ${SPRING_READER_DATASOURCE_URL}
+  #      username: ${SPRING_DATASOURCE_USERNAME}
+  #      password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     database: MYSQL
     show-sql: true
@@ -118,14 +118,14 @@ management:
     sampling:
       probability: 1.0
 
-otel:
-  exporter:
-    otlp:
-      endpoint: ENC(5UpVPijgUP3POMXJfpiN7mp3Q66ywOmvb3uelGeLu/hlRD7JTJPcXKoTPDkpxDjUY+mco4EZy0g0njZynWHDCw==)
-  resource:
-    attributes:
-      service.name: staccato-backend
-      deployment.environment: prod
+#otel:
+#  exporter:
+#    otlp:
+#      endpoint: ENC(U3urPEVoc+GI9KW11w8LjmFVsaD5DZizSW293SRSdMXUh9UZGB4g1A86hqKsSSj9WWT9pufiQ8ZQUg9PRNOaHw==)
+#  resource:
+#    attributes:
+#      service.name: staccato-backend
+#      deployment.environment: prod
 
 server:
   tomcat:
