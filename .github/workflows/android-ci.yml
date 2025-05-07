@@ -160,7 +160,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - api-level: 26
+          - api-level: 28
             profile: "pixel_4"
           - api-level: 34
             profile: "pixel_6"
