@@ -28,6 +28,7 @@ fun ImageComponent(
                     .placeholder(placeHolder)
                     .build(),
         )
+
     Image(
         modifier = modifier,
         painter = painter,
@@ -38,7 +39,7 @@ fun ImageComponent(
 
 @Preview
 @Composable
-fun ImageComponentPreview() {
+private fun ImageComponentPreview() {
     ImageComponent(
         url = "https://avatars.githubusercontent.com/u/103019852?v=4",
         placeHolder = R.drawable.default_image,
