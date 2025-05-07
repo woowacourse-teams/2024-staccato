@@ -110,7 +110,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
                     .buildAndSave(staccatoRepository);
             Staccato overMaxLongitude = StaccatoFixtures.defaultStaccato()
                     .withCategory(category1ByMember)
-                    .withSpot(MIN_LONGITUDE, MAX_LONGITUDE.add(threshold))
+                    .withSpot(MIN_LATITUDE, MAX_LONGITUDE.add(threshold))
                     .buildAndSave(staccatoRepository);
 
             // when
