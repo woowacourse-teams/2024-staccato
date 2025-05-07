@@ -120,7 +120,7 @@
                     tools:text="(추억 소개) Lorem Ipsum is simply dummy text of the printing and typesetting industry. " />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_category_second"
+                    android:id="@+id/divider_category_description"
                     style="@style/DividerStyle"
                     android:layout_marginTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -134,30 +134,26 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/category_mates"
-                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_category_second" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_category_description" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_category_mates"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="18dp"
                     android:clipToPadding="false"
                     android:orientation="horizontal"
                     android:paddingHorizontal="20dp"
-                    android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_category_mates"
-                    tools:listitem="@layout/item_mates" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_mates" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_category_third"
+                    android:id="@+id/divider_category_mates"
                     style="@style/DividerStyle"
                     android:layout_marginTop="16dp"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_category_mates" />
@@ -169,7 +165,7 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/category_staccatos"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_category_third" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_category_mates" />
 
                 <FrameLayout
                     android:id="@+id/frame_category_add_staccatos"

@@ -63,14 +63,15 @@
     // fragment_category
     <string name="category_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
     <string name="category_period_dot">%s. %s. %s ~ %s. %s. %s</string>
-    <string name="category_mates">함께 한 사람들</string>
+    <string name="category_mates">함께하는 사람들</string>
     <string name="category_staccatos">스타카토</string>
     <string name="category_delete_complete">카테고리가 삭제되었습니다.</string>
     <string name="category_staccato_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
     <string name="category_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
 
     // item_mates
-    <string name="mates_profile_image_description">함께 한 사람 프로필 이미지</string>
+    <string name="mates_profile_image_description">함께하는 사람 프로필 이미지</string>
+    <string name="mates_invite_description">함께 한 사람 초대 버튼</string>
 
     // item_staccatos
     <string name="staccatos_calendar_icon_description">달력 아이콘</string>

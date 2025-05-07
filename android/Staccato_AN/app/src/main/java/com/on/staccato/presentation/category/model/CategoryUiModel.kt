@@ -1,6 +1,6 @@
 package com.on.staccato.presentation.category.model
 
-import com.on.staccato.presentation.common.MemberUiModel
+import com.on.staccato.domain.model.Member
 import java.time.LocalDate
 
 data class CategoryUiModel(
@@ -11,7 +11,7 @@ data class CategoryUiModel(
     val endAt: LocalDate? = null,
     val description: String? = null,
     val color: String,
-    val mates: List<MemberUiModel>,
+    val members: List<Member>,
     val staccatos: List<CategoryStaccatoUiModel>,
 ) {
     companion object {

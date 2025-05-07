@@ -9,6 +9,8 @@ import com.on.staccato.data.network.onException2
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.Category
+import com.on.staccato.domain.model.Members
+import com.on.staccato.domain.model.Members.Companion.emptyMembers
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
@@ -17,6 +19,8 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,6 +41,11 @@ class CategoryViewModel
 
         private val _isDeleteSuccess = MutableSingleLiveData<Boolean>(false)
         val isDeleteSuccess: SingleLiveData<Boolean> get() = _isDeleteSuccess
+
+        private var _isInviteMode = MutableStateFlow(false)
+        val isInviteMode: StateFlow<Boolean> get() = _isInviteMode
+
+        private var participatingMembers = MutableStateFlow(emptyMembers)
 
         fun loadCategory(id: Long) {
             if (id <= DEFAULT_CATEGORY_ID) {
@@ -64,6 +73,9 @@ class CategoryViewModel
 
         private fun updateCategory(category: Category) {
             _category.value = category.toUiModel()
+            viewModelScope.launch {
+                participatingMembers.emit(Members(category.mates))
+            }
         }
 
         private fun updateIsDeleteSuccess() {

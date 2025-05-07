@@ -10,7 +10,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentCategoryBinding
 import com.on.staccato.presentation.base.BindingFragment
-import com.on.staccato.presentation.category.adapter.MatesAdapter
+import com.on.staccato.presentation.category.adapter.MembersAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
@@ -53,7 +53,12 @@ class CategoryFragment :
     @Inject
     lateinit var loggingManager: LoggingManager
 
-    private val matesAdapter by lazy { MatesAdapter() }
+    private val membersAdapter by lazy {
+        MembersAdapter {
+            viewModel.changeInviteMode(true)
+        }
+    }
+
     private val staccatosAdapter by lazy { StaccatosAdapter(handler = this) }
 
     override fun onViewCreated(
@@ -139,13 +144,13 @@ class CategoryFragment :
     }
 
     private fun initAdapter() {
-        binding.rvCategoryMates.adapter = matesAdapter
+        binding.rvCategoryMates.adapter = membersAdapter
         binding.rvCategoryStaccatos.adapter = staccatosAdapter
     }
 
     private fun observeCategory() {
         viewModel.category.observe(viewLifecycleOwner) { category ->
-            matesAdapter.updateMates(category.mates)
+            membersAdapter.updateMembers(category.members)
             staccatosAdapter.updateStaccatos(category.staccatos)
         }
     }
