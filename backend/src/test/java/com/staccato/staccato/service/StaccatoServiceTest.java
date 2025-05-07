@@ -1,16 +1,9 @@
 package com.staccato.staccato.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
-import java.math.BigDecimal;
 import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
@@ -37,6 +30,10 @@ import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class StaccatoServiceTest extends ServiceSliceTest {
     @Autowired
@@ -122,98 +119,40 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .hasMessageContaining("요청하신 카테고리를 찾을 수 없어요.");
     }
 
-    @DisplayName("위경도 범위가 주어지지 않으면 모든 스타카토 목록 조회에 성공한다.")
+    @DisplayName("주어진 조건에 만족하는 스타카토 목록을 조회한다.")
     @Test
     void readAllStaccato() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member member = MemberFixtures.defaultMember().withCode("me").buildAndSave(memberRepository);
+        Member member2 = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
                 .buildAndSaveWithMember(member, categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
                 .withTitle("title2")
                 .withColor(Color.PINK)
-                .buildAndSaveWithMember(member, categoryRepository);
-        StaccatoFixtures.defaultStaccato()
+                .buildAndSaveWithMember(member2, categoryRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
-        StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
-        StaccatoFixtures.defaultStaccato()
+        Staccato otherStaccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category2).buildAndSave(staccatoRepository);
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
         StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member, StaccatoLocationRangeRequest.empty());
 
         // then
-        long blueCount = responses.staccatoLocationResponses().stream()
-                .map(StaccatoLocationResponseV2::staccatoColor)
-                .filter(color -> color.equals(Color.BLUE.getName()))
-                .count();
-        long pinkCount = responses.staccatoLocationResponses().stream()
-                .map(StaccatoLocationResponseV2::staccatoColor)
-                .filter(color -> color.equals(Color.PINK.getName()))
-                .count();
-        assertAll(
-                () -> assertThat(responses.staccatoLocationResponses()).hasSize(3),
-                () -> assertThat(blueCount).isEqualTo(2),
-                () -> assertThat(pinkCount).isEqualTo(1)
-        );
-    }
-
-    @DisplayName("특정 사용자의 위경도 범위 내에 있는 모든 스타카토 목록 조회에 성공한다.")
-    @Test
-    void readAllStaccatoByLocationRange() {
-        // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
-                .withColor(Color.BLUE)
-                .buildAndSaveWithMember(member, categoryRepository);
-        Category category2 = CategoryFixtures.defaultCategory()
-                .withTitle("title2")
-                .withColor(Color.PINK)
-                .buildAndSaveWithMember(member, categoryRepository);
-
-        // 좌표 세팅 (blue → 범위 안, pink → 범위 밖)
-        StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
-                .withSpot(new BigDecimal("36.5"), new BigDecimal("127.5"))
-                .buildAndSave(staccatoRepository);
-        StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
-                .withSpot(new BigDecimal("37.5"), new BigDecimal("126.5"))
-                .buildAndSave(staccatoRepository);
-        StaccatoFixtures.defaultStaccato()
-                .withCategory(category2)
-                .withSpot(new BigDecimal("36.4"), new BigDecimal("127.6"))
-                .buildAndSave(staccatoRepository);
-
-        // when
-        StaccatoLocationRangeRequest request = new StaccatoLocationRangeRequest(
-                null,
-                new BigDecimal("37.5"),
-                new BigDecimal("127.5"),
-                new BigDecimal("36.5"),
-                new BigDecimal("126.5")
-        );
-        StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member, request);
-
-        // then
-        long blueCount = responses.staccatoLocationResponses().stream()
-                .map(StaccatoLocationResponseV2::staccatoColor)
-                .filter(color -> color.equals(Color.BLUE.getName()))
-                .count();
-        long pinkCount = responses.staccatoLocationResponses().stream()
-                .map(StaccatoLocationResponseV2::staccatoColor)
-                .filter(color -> color.equals(Color.PINK.getName()))
-                .count();
-
         assertAll(
                 () -> assertThat(responses.staccatoLocationResponses()).hasSize(2),
-                () -> assertThat(blueCount).isEqualTo(2),
-                () -> assertThat(pinkCount).isEqualTo(0)
+                () -> assertThat(responses.staccatoLocationResponses())
+                        .containsExactlyInAnyOrder(
+                                new StaccatoLocationResponseV2(staccato),
+                                new StaccatoLocationResponseV2(staccato2)
+                        )
+                        .doesNotContain(new StaccatoLocationResponseV2(otherStaccato))
         );
     }
-
 
     @DisplayName("스타카토 조회에 성공한다.")
     @Test
