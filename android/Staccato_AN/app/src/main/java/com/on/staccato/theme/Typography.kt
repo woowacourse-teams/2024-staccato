@@ -8,74 +8,75 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.on.staccato.R
 
-val pretendard =
-    FontFamily(
-        Font(R.font.pretendard_regular),
-        Font(R.font.pretendard_medium),
-        Font(R.font.pretendard_semibold),
-        Font(R.font.pretendard_bold),
-    )
-
-val title1 =
+val Title1 =
     defaultTextStyle(
         fontSize = 20.sp,
         fontWeight = FontWeight.Bold,
         lineHeight = 20.sp,
     )
 
-val title2 =
+val Title2 =
     defaultTextStyle(
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
         lineHeight = 20.sp,
     )
 
-val title3 =
+val Title3 =
     defaultTextStyle(
         fontSize = 14.sp,
         fontWeight = FontWeight.SemiBold,
     )
 
-val body1 =
+val Body1 =
     defaultTextStyle(
         fontSize = 17.sp,
         fontWeight = FontWeight.Normal,
     )
 
-val body2 =
+val Body2 =
     defaultTextStyle(
         fontSize = 15.sp,
         fontWeight = FontWeight.Medium,
         lineHeight = 20.sp,
     )
 
-val body3 =
+val Body3 =
     defaultTextStyle(
         fontSize = 14.sp,
         fontWeight = FontWeight.Normal,
         lineHeight = 18.sp,
     )
 
-val body4 =
+val Body4 =
     defaultTextStyle(
         fontSize = 13.sp,
         fontWeight = FontWeight.Normal,
     )
 
-val body5 =
+val Body5 =
     defaultTextStyle(
         fontSize = 10.sp,
         fontWeight = FontWeight.Normal,
     )
 
-fun defaultTextStyle(
+private val Pretendard =
+    FontFamily(
+        Font(R.font.pretendard_regular, weight = FontWeight.Normal),
+        Font(R.font.pretendard_medium, weight = FontWeight.Medium),
+        Font(R.font.pretendard_semibold, weight = FontWeight.SemiBold),
+        Font(R.font.pretendard_bold, weight = FontWeight.Bold),
+    )
+
+private fun defaultTextStyle(
     fontSize: TextUnit,
     fontWeight: FontWeight,
     lineHeight: TextUnit = TextUnit.Unspecified,
-) = TextStyle(
-    fontSize = fontSize,
-    fontWeight = fontWeight,
-    lineHeight = lineHeight,
-    fontFamily = pretendard,
-    letterSpacing = (-0.02).sp,
-)
+): TextStyle =
+    TextStyle(
+        fontSize = fontSize,
+        fontWeight = fontWeight,
+        lineHeight = lineHeight,
+        fontFamily = Pretendard,
+        letterSpacing = (-0.02).sp,
+    )
