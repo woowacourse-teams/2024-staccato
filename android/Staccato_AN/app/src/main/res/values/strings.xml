@@ -62,7 +62,7 @@
 
     // fragment_category
     <string name="category_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
-    <string name="category_period_dot">%s. %s. %s ~ %s. %s. %s</string>
+    <string name="category_period_dot">%s. %s. %s - %s. %s. %s</string>
     <string name="category_mates">함께 한 사람들</string>
     <string name="category_staccatos">스타카토</string>
     <string name="category_delete_complete">카테고리가 삭제되었습니다.</string>
