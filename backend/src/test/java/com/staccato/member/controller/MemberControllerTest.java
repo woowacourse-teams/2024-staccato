@@ -29,12 +29,12 @@ class MemberControllerTest extends ControllerTest {
                 {
                     "members": [
                         {
-                            "id": null,
+                            "memberId": null,
                             "nickname": "스타카토",
                             "memberImageUrl": "https://example.com/memberImage.png"
                         },
                         {
-                            "id": null,
+                            "memberId": null,
                             "nickname": "스타",
                             "memberImageUrl": "https://example.com/memberImage.png"
                         }
