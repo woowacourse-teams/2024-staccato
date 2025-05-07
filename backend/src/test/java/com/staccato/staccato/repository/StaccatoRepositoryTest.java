@@ -98,7 +98,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
         );
 
         // then
-        assertThat(result).hasSize(3).containsExactlyInAnyOrder(inside1, inside2)
+        assertThat(result).hasSize(2).containsExactlyInAnyOrder(inside1, inside2)
                 .doesNotContain(outsideLng, outsideLat);
     }
 
