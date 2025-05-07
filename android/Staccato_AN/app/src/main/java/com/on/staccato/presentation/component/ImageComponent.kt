@@ -3,7 +3,6 @@ package com.on.staccato.presentation.component
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -11,7 +10,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import coil.transform.RoundedCornersTransformation
 import com.on.staccato.R
+import com.on.staccato.presentation.util.dpToPx
 
 @Composable
 fun ImageComponent(
@@ -20,12 +21,14 @@ fun ImageComponent(
     @DrawableRes placeHolder: Int,
     contentDescription: String,
     contentScale: ContentScale = ContentScale.Crop,
+    radius: Float = 0f,
 ) {
     val painter =
         rememberAsyncImagePainter(
             model =
                 ImageRequest.Builder(LocalContext.current)
                     .data(url)
+                    .transformations(RoundedCornersTransformation(radius.dpToPx(LocalContext.current)))
                     .placeholder(placeHolder)
                     .fallback(placeHolder)
                     .build(),

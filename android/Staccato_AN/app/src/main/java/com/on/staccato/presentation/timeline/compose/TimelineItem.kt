@@ -49,6 +49,7 @@ fun TimelineItem(timeline: TimelineUiModel) {
             url = timeline.categoryThumbnailUrl,
             placeHolder = R.drawable.default_image,
             contentDescription = stringResource(R.string.all_category_thumbnail_photo_description),
+            radius = 4f,
         )
 
         Spacer(modifier = Modifier.width(15.dp))
