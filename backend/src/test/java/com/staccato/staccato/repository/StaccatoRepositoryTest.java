@@ -56,7 +56,8 @@ class StaccatoRepositoryTest extends RepositoryTest {
         List<Staccato> result = staccatoRepository.findByMemberAndLocationRangeAndCategory(member, null, null, null, null, null);
 
         // then
-        assertThat(result).hasSize(2).containsExactlyInAnyOrder(staccato1, staccato2);
+        assertThat(result).hasSize(2).containsExactlyInAnyOrder(staccato1, staccato2)
+                .doesNotContain(anotherStaccato);
     }
 
     @DisplayName("특정 사용자의 스타카토 조회 - 위경도 범위 내 (경계 포함)")
@@ -104,7 +105,8 @@ class StaccatoRepositoryTest extends RepositoryTest {
         );
 
         // then
-        assertThat(result).hasSize(3).containsExactlyInAnyOrder(inside1, inside2, inside3);
+        assertThat(result).hasSize(3).containsExactlyInAnyOrder(inside1, inside2, inside3)
+                .doesNotContain(outsideLng, outsideLat);
     }
 
     @DisplayName("특정 카테고리의 id를 가진 모든 스타카토를 삭제한다.")
@@ -239,6 +241,7 @@ class StaccatoRepositoryTest extends RepositoryTest {
         );
 
         // then
-        assertThat(result).hasSize(2).containsExactlyInAnyOrder(category1Inside1, category1Inside2);
+        assertThat(result).hasSize(2).containsExactlyInAnyOrder(category1Inside1, category1Inside2)
+                .doesNotContain(category1Outside, category2Inside);
     }
 }
