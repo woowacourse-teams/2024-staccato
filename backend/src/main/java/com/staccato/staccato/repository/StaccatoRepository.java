@@ -2,6 +2,8 @@ package com.staccato.staccato.repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -32,6 +34,25 @@ public interface StaccatoRepository extends JpaRepository<Staccato, Long> {
             @Param("minLng") BigDecimal swLng,
             @Param("maxLng") BigDecimal neLng,
             @Param("categoryId") Long categoryId
+    );
+
+    @Query("""
+            SELECT DISTINCT s
+            FROM Staccato s
+            JOIN FETCH s.category c
+            JOIN FETCH c.categoryMembers cm
+            WHERE cm.member = :member
+            AND (
+              (:minLat IS NULL OR :maxLat IS NULL OR :minLng IS NULL OR :maxLng IS NULL)
+              OR (s.spot.latitude BETWEEN :minLat AND :maxLat AND s.spot.longitude BETWEEN :minLng AND :maxLng)
+            )
+            """)
+    List<Staccato> findByMemberAndLocationRange(
+            @Param("member") Member member,
+            @Param("minLat") BigDecimal swLat,
+            @Param("maxLat") BigDecimal neLat,
+            @Param("minLng") BigDecimal swLng,
+            @Param("maxLng") BigDecimal neLng
     );
 
     List<Staccato> findAllByCategoryId(long categoryId);

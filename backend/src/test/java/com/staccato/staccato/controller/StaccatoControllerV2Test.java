@@ -96,7 +96,6 @@ class StaccatoControllerV2Test extends ControllerTest {
 
         // when & then
         mockMvc.perform(get("/v2/staccatos")
-                        .param("categoryId", "1")
                         .param("neLat", neLat)
                         .param("neLng", neLng)
                         .param("swLat", swLat)

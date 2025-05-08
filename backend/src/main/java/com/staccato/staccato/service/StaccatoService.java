@@ -52,13 +52,12 @@ public class StaccatoService {
     }
 
     public StaccatoLocationResponsesV2 readAllStaccato(Member member, StaccatoLocationRangeRequest staccatoLocationRangeRequest) {
-        List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRangeAndCategory(
+        List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRange(
                 member,
                 staccatoLocationRangeRequest.swLat(),
                 staccatoLocationRangeRequest.neLat(),
                 staccatoLocationRangeRequest.swLng(),
-                staccatoLocationRangeRequest.neLng(),
-                staccatoLocationRangeRequest.categoryId()
+                staccatoLocationRangeRequest.neLng()
         );
 
         return StaccatoLocationResponsesV2.of(staccatos);

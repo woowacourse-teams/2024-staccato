@@ -119,24 +119,23 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .hasMessageContaining("요청하신 카테고리를 찾을 수 없어요.");
     }
 
-    @DisplayName("주어진 조건에 만족하는 스타카토 목록을 조회한다.")
+    @DisplayName("위경도 조건이 없으므로, 사용자의 모든 스타카토 목록을 조회한다.")
     @Test
     void readAllStaccato() {
         // given
         Member member = MemberFixtures.defaultMember().withCode("me").buildAndSave(memberRepository);
-        Member member2 = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
                 .buildAndSaveWithMember(member, categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
                 .withTitle("title2")
                 .withColor(Color.PINK)
-                .buildAndSaveWithMember(member2, categoryRepository);
+                .buildAndSaveWithMember(member, categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
-        Staccato otherStaccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category2).buildAndSave(staccatoRepository);
         Staccato staccato2 = StaccatoFixtures.defaultStaccato()
+                .withCategory(category2).buildAndSave(staccatoRepository);
+        Staccato staccato3 = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
@@ -144,13 +143,13 @@ class StaccatoServiceTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> assertThat(responses.staccatoLocationResponses()).hasSize(2),
+                () -> assertThat(responses.staccatoLocationResponses()).hasSize(3),
                 () -> assertThat(responses.staccatoLocationResponses())
                         .containsExactlyInAnyOrder(
                                 new StaccatoLocationResponseV2(staccato),
-                                new StaccatoLocationResponseV2(staccato2)
+                                new StaccatoLocationResponseV2(staccato2),
+                                new StaccatoLocationResponseV2(staccato3)
                         )
-                        .doesNotContain(new StaccatoLocationResponseV2(otherStaccato))
         );
     }
 
