@@ -18,15 +18,19 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
+import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
+import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.category.service.dto.response.StaccatoResponse;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.category.CategoryRequestV2Fixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
@@ -37,6 +41,9 @@ import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.StaccatoService;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -289,6 +296,42 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> categoryService.readCategoryById(unknownId, member))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 카테고리를 찾을 수 없어요.");
+    }
+
+    @DisplayName("위경도 조건이 없으면 카테고리에 속한 모든 스타카토 목록을 조회한다.")
+    @Test
+    void readAllStaccato() {
+        // given
+        Member member = MemberFixtures.defaultMember().withCode("me").buildAndSave(memberRepository);
+        Member member2 = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withColor(Color.BLUE)
+                .buildAndSaveWithMember(member, categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory()
+                .withTitle("title2")
+                .withColor(Color.PINK)
+                .buildAndSaveWithMember(member2, categoryRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
+        Staccato otherStaccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category2).buildAndSave(staccatoRepository);
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
+
+        // when
+        CategoryStaccatoLocationResponses responses = categoryService.readAllStaccatoByCategory(
+                member, category.getId(), new CategoryStaccatoLocationRangeRequest(null, null, null, null));
+
+        // then
+        assertAll(
+                () -> assertThat(responses.categoryStaccatoLocationResponses()).hasSize(2),
+                () -> assertThat(responses.categoryStaccatoLocationResponses())
+                        .containsExactlyInAnyOrder(
+                                new CategoryStaccatoLocationResponse(staccato),
+                                new CategoryStaccatoLocationResponse(staccato2)
+                        )
+                        .doesNotContain(new CategoryStaccatoLocationResponse(otherStaccato))
+        );
     }
 
     @DisplayName("카테고리 정보를 기반으로, 카테고리를 수정한다.")

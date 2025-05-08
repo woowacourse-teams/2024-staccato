@@ -1,5 +1,6 @@
 package com.staccato.category.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
@@ -17,11 +18,14 @@ import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
+import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
+import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.category.CategoryRequestFixtures;
@@ -29,6 +33,9 @@ import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
+import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -358,6 +365,55 @@ class CategoryControllerTest extends ControllerTest {
 
         // when & then
         mockMvc.perform(get("/categories/{categoryId}", categoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("특정 카테고리에 속한 스타카토 목록 조회에 성공한다.")
+    @Test
+    void readAllStaccatoByCategory() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
+        CategoryStaccatoLocationResponse response1 = new CategoryStaccatoLocationResponse(
+                StaccatoFixtures.defaultStaccato()
+                        .withCategory(category)
+                        .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build()
+        );
+        CategoryStaccatoLocationResponse response2 = new CategoryStaccatoLocationResponse(
+                StaccatoFixtures.defaultStaccato()
+                        .withCategory(category)
+                        .withSpot(new BigDecimal("80.456789"), new BigDecimal("123.456789")).build()
+        );
+        CategoryStaccatoLocationResponses responses = new CategoryStaccatoLocationResponses(List.of(response1, response2));
+
+        when(categoryService.readAllStaccatoByCategory(any(Member.class), anyLong(), any(CategoryStaccatoLocationRangeRequest.class))).thenReturn(responses);
+        String expectedResponse = """
+                {
+                    "categoryStaccatoLocationResponses": [
+                         {
+                             "staccatoId": null,
+                             "staccatoColor": "pink",
+                             "latitude": 0,
+                             "longitude": 0
+                         },
+                         {
+                             "staccatoId": null,
+                             "staccatoColor": "pink",
+                             "latitude": 80.456789,
+                             "longitude": 123.456789
+                         }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/categories/1/staccatos")
+                        .param("neLat", "81")
+                        .param("neLng", "124")
+                        .param("swLat", "80")
+                        .param("swLng", "123")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
