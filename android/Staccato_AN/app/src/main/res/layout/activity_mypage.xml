@@ -108,16 +108,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_mypage_profile_uuid" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_mypage_menu_category_invitation_management"
-            style="@style/ButtonStyle.MyPage"
-            android:layout_marginTop="10dp"
-            android:text="카테고리 초대 관리"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_mypage_profile" />
-
-        <!--
         <androidx.compose.ui.platform.ComposeView
             android:id="@+id/btn_mypage_menu_category_invitation_management"
             android:layout_width="match_parent"
@@ -125,7 +115,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_mypage_profile" />
-        -->
 
         <androidx.compose.ui.platform.ComposeView
             android:id="@+id/divider_mypage_middle"

@@ -80,7 +80,14 @@ class MyPageActivity :
     }
 
     private fun setContents() {
+        setCategoryInvitationManagementButtonContent()
         setDividerContent()
+    }
+
+    private fun setCategoryInvitationManagementButtonContent() {
+        binding.btnMypageMenuCategoryInvitationManagement.setContent {
+            MenuButton(menuTitle = "카테고리 초대 관리") {}
+        }
     }
 
     private fun setDividerContent() {
