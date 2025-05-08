@@ -60,6 +60,9 @@ class MemberServiceTest extends ServiceSliceTest {
     @Test
     void readMembersByNickname() {
         // given
+        Member member = MemberFixtures.defaultMember()
+                .withNickname("사용자")
+                .buildAndSave(memberRepository);
         Member member1 = MemberFixtures.defaultMember()
                 .withNickname("스타카토")
                 .buildAndSave(memberRepository);
@@ -72,16 +75,41 @@ class MemberServiceTest extends ServiceSliceTest {
 
         // when
         String keyword = "스타";
-        MemberResponses result = memberService.readMembersByNickname(keyword);
+        MemberResponses result = memberService.readMembersByNickname(member, keyword);
 
         // then
-        List<Long> resultNicknames = result.members().stream()
+        List<Long> resultIds = result.members().stream()
                 .map(MemberResponse::memberId)
                 .toList();
 
-        assertThat(resultNicknames)
+        assertThat(resultIds)
                 .hasSize(2)
                 .containsExactlyInAnyOrder(member1.getId(), member2.getId())
-                .doesNotContain(member3.getId());
+                .doesNotContain(member.getId(), member3.getId());
+    }
+
+    @DisplayName("주어진 문자열을 포함하는 닉네임으로 사용자 목록을 반환 시 본인은 제외한다.")
+    @Test
+    void readMembersByNicknameWithoutMember() {
+        // given
+        Member member = MemberFixtures.defaultMember()
+                .withNickname("스타")
+                .buildAndSave(memberRepository);
+        Member member2 = MemberFixtures.defaultMember()
+                .withNickname("스타카토")
+                .buildAndSave(memberRepository);
+        // when
+        String keyword = "스타";
+        MemberResponses result = memberService.readMembersByNickname(member, keyword);
+
+        // then
+        List<Long> resultIds = result.members().stream()
+                .map(MemberResponse::memberId)
+                .toList();
+
+        assertThat(resultIds)
+                .hasSize(1)
+                .containsExactlyInAnyOrder(member2.getId())
+                .doesNotContain(member.getId());
     }
 }

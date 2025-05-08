@@ -11,5 +11,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByCode(String code);
 
-    List<Member> findByNicknameNicknameContains(String nickname);
+    List<Member> findByNicknameNicknameContainsAndIdNot(String nickname, long memberId);
 }

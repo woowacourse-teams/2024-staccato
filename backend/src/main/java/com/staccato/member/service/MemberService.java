@@ -28,8 +28,8 @@ public class MemberService {
                 .orElseThrow(() -> new StaccatoException("요청하신 사용자 정보를 찾을 수 없어요."));
     }
 
-    public MemberResponses readMembersByNickname(String nickname) {
-        List<Member> members = memberRepository.findByNicknameNicknameContains(nickname);
+    public MemberResponses readMembersByNickname(Member member, String nickname) {
+        List<Member> members = memberRepository.findByNicknameNicknameContainsAndIdNot(nickname, member.getId());
         return MemberResponses.of(members);
     }
 }
