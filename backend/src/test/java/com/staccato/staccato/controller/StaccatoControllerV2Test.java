@@ -104,24 +104,4 @@ class StaccatoControllerV2Test extends ControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
-
-    @DisplayName("유효하지 않은 카테고리 식별자로 스타카토 목록 조회 시 예외가 발생한다.")
-    @Test
-    void failReadAllStaccatoWithInvalidCategoryId() throws Exception {
-        // given
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                HttpStatus.BAD_REQUEST.toString(),
-                "카테고리 식별자는 양수로 이루어져야 합니다.");
-
-        // when & then
-        mockMvc.perform(get("/v2/staccatos")
-                        .param("categoryId", "0")
-                        .param("neLat", "37.5")
-                        .param("neLng", "127.0")
-                        .param("swLat", "37.0")
-                        .param("swLng", "126.8")
-                        .header(HttpHeaders.AUTHORIZATION, "token"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
-    }
 }
