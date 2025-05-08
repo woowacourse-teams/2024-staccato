@@ -28,6 +28,7 @@ import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.StaccatoBlack
 import com.on.staccato.theme.White
 
+// Todo: 버튼 색상 다크모드 대응 필요, 배경색은 투명 처리
 val MenuButtonColors =
     ButtonColors(
         containerColor = White,
