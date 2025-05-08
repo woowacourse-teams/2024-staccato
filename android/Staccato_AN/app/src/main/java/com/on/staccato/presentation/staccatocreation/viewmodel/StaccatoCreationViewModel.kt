@@ -15,12 +15,14 @@ import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
+import com.on.staccato.domain.model.CategoryCandidates.Companion.emptyCategoryCandidates
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationError
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
@@ -44,7 +46,7 @@ class StaccatoCreationViewModel
         private val staccatoRepository: StaccatoRepository,
         private val imageRepository: ImageDefaultRepository,
         private val locationRepository: LocationRepository,
-    ) : AttachedPhotoHandler, ViewModel() {
+    ) : ViewModel(), CategorySelectionViewModel, AttachedPhotoHandler {
         val staccatoTitle = ObservableField<String>()
 
         private val _placeName = MutableLiveData<String?>(null)
@@ -70,10 +72,10 @@ class StaccatoCreationViewModel
         private val longitude: LiveData<Double?> get() = _longitude
 
         private val _selectedCategory = MutableLiveData<CategoryCandidate>()
-        val selectedCategory: LiveData<CategoryCandidate> get() = _selectedCategory
+        override val selectedCategory: LiveData<CategoryCandidate> get() = _selectedCategory
 
         private val _selectableCategories = MutableLiveData<CategoryCandidates>()
-        val selectableCategories: LiveData<CategoryCandidates> get() = _selectableCategories
+        override val selectableCategories: LiveData<CategoryCandidates> get() = _selectableCategories
 
         private val _categoryCandidates = MutableLiveData<CategoryCandidates>()
         val categoryCandidates: LiveData<CategoryCandidates> get() = _categoryCandidates
@@ -131,8 +133,9 @@ class StaccatoCreationViewModel
             _selectedVisitedAt.value = visitedAt
         }
 
-        fun selectCategory(category: CategoryCandidate) {
-            _selectedCategory.value = category
+        override fun selectCategory(position: Int) {
+            _selectedCategory.value =
+                selectableCategories.value?.categoryCandidates?.get(position) ?: return
         }
 
         fun selectNewPlace(
@@ -195,8 +198,7 @@ class StaccatoCreationViewModel
 
         fun updateCategorySelectionBy(visitedAt: LocalDateTime) {
             val filteredCategories =
-                categoryCandidates.value?.filterBy(visitedAt.toLocalDate())
-                    ?: CategoryCandidates.emptyCategoryCandidates
+                categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
             _selectableCategories.value = filteredCategories
             _selectedCategory.value = filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
         }

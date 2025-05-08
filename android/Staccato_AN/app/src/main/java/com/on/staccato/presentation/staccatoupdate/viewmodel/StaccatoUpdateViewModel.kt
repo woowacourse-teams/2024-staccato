@@ -23,6 +23,7 @@ import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.createPhotosByUrls
@@ -49,7 +50,7 @@ class StaccatoUpdateViewModel
         private val staccatoRepository: StaccatoRepository,
         private val imageRepository: ImageRepository,
         private val locationRepository: LocationRepository,
-    ) : AttachedPhotoHandler, ViewModel() {
+    ) : ViewModel(), CategorySelectionViewModel, AttachedPhotoHandler {
         val staccatoTitle = ObservableField<String>()
 
         private val _placeName = MutableLiveData<String?>(null)
@@ -84,10 +85,10 @@ class StaccatoUpdateViewModel
         val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
 
         private val _selectedCategory = MutableLiveData<CategoryCandidate>()
-        val selectedCategory: LiveData<CategoryCandidate> get() = _selectedCategory
+        override val selectedCategory: LiveData<CategoryCandidate> get() = _selectedCategory
 
         private val _selectableCategories = MutableLiveData<CategoryCandidates>()
-        val selectableCategories: LiveData<CategoryCandidates> get() = _selectableCategories
+        override val selectableCategories: LiveData<CategoryCandidates> get() = _selectableCategories
 
         private val _isUpdateCompleted = MutableLiveData(false)
         val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
@@ -129,8 +130,9 @@ class StaccatoUpdateViewModel
             }
         }
 
-        fun selectCategory(category: CategoryCandidate) {
-            _selectedCategory.value = category
+        override fun selectCategory(position: Int) {
+            _selectedCategory.value =
+                selectableCategories.value?.categoryCandidates?.get(position) ?: return
         }
 
         fun selectVisitedAt(visitedAt: LocalDateTime) {
@@ -193,9 +195,11 @@ class StaccatoUpdateViewModel
         }
 
         fun updateCategorySelectionBy(visitedAt: LocalDateTime) {
-            val filteredCategories = categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
+            val filteredCategories =
+                categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
             _selectableCategories.value = filteredCategories
-            _selectedCategory.value = filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
+            _selectedCategory.value =
+                filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
         }
 
         fun updateStaccato(staccatoId: Long) {
@@ -206,7 +210,8 @@ class StaccatoUpdateViewModel
                 val latitudeValue = latitude.value ?: return@launch handleException()
                 val longitudeValue = longitude.value ?: return@launch handleException()
                 val visitedAtValue = selectedVisitedAt.value ?: return@launch handleException()
-                val categoryIdValue = selectedCategory.value?.categoryId ?: return@launch handleException()
+                val categoryIdValue =
+                    selectedCategory.value?.categoryId ?: return@launch handleException()
                 val staccatoImageUrlsValue =
                     currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
                         ?: emptyList()
