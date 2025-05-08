@@ -19,7 +19,6 @@ import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
-import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
@@ -41,9 +40,6 @@ import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.StaccatoService;
-import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;

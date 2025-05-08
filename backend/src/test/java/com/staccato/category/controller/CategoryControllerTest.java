@@ -19,7 +19,6 @@ import com.staccato.category.domain.Color;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
-import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
@@ -33,9 +32,6 @@ import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
-import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;

@@ -23,8 +23,6 @@ import com.staccato.category.service.dto.response.CategoryResponsesV2;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
-import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 import lombok.RequiredArgsConstructor;
 
 @Trace

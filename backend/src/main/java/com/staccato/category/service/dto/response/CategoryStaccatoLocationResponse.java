@@ -21,12 +21,4 @@ public record CategoryStaccatoLocationResponse(
     public CategoryStaccatoLocationResponse(Staccato staccato) {
         this(staccato.getId(), staccato.getColor().getName(), staccato.getSpot().getLatitude(), staccato.getSpot().getLongitude());
     }
-
-    public StaccatoLocationResponse toStaccatoLocationResponse() {
-        return new StaccatoLocationResponse(
-                staccatoId,
-                latitude,
-                longitude
-        );
-    }
 }

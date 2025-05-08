@@ -2,8 +2,6 @@ package com.staccato.staccato.repository;
 
 import java.math.BigDecimal;
 import java.util.List;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
