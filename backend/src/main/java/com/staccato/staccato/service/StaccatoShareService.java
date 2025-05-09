@@ -42,7 +42,7 @@ public class StaccatoShareService {
 
     public StaccatoShareLinkResponse createStaccatoShareLink(Long staccatoId, Member member) {
         Staccato staccato = getStaccatoById(staccatoId);
-        validateCategoryOwner(staccato.getCategory(), member.getId());
+        validateCategoryOwner(staccato.getCategory(), member);
 
         ShareTokenPayload shareTokenPayload = new ShareTokenPayload(staccatoId, member.getId());
         String token = shareTokenProvider.create(shareTokenPayload);
@@ -74,8 +74,8 @@ public class StaccatoShareService {
                 .orElseThrow(() -> new StaccatoException("요청하신 멤버를 찾을 수 없어요."));
     }
 
-    private void validateCategoryOwner(Category category, Long memberId) {
-        if (category.isNotOwnedBy(memberId)) {
+    private void validateCategoryOwner(Category category, Member member) {
+        if (category.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
     }

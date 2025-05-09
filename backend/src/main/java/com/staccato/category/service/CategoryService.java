@@ -83,7 +83,7 @@ public class CategoryService {
 
     public CategoryDetailResponseV2 readCategoryById(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
-        validateOwner(category, member.getId());
+        validateOwner(category, member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
         return new CategoryDetailResponseV2(category, staccatos);
     }
@@ -91,7 +91,7 @@ public class CategoryService {
     @Transactional
     public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
         Category originCategory = getCategoryById(categoryId);
-        validateModificationPermission(originCategory, member.getId());
+        validateModificationPermission(originCategory, member);
         Category updatedCategory = categoryUpdateRequest.toCategory(originCategory);
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
             validateCategoryTitle(updatedCategory, member);
@@ -103,7 +103,7 @@ public class CategoryService {
     @Transactional
     public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
         Category category = getCategoryById(categoryId);
-        validateModificationPermission(category, member.getId());
+        validateModificationPermission(category, member);
         category.changeColor(categoryColorRequest.toColor());
     }
 
@@ -116,7 +116,7 @@ public class CategoryService {
     @Transactional
     public void deleteCategory(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
-        validateModificationPermission(category, member.getId());
+        validateModificationPermission(category, member);
         deleteAllRelatedCategory(categoryId);
         categoryRepository.deleteById(categoryId);
     }
@@ -126,19 +126,19 @@ public class CategoryService {
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 
-    private void validateModificationPermission(Category category, Long memberId) {
-        validateOwner(category, memberId);
-        validateHost(category, memberId);
+    private void validateModificationPermission(Category category, Member member) {
+        validateOwner(category, member);
+        validateHost(category, member);
     }
 
-    private void validateOwner(Category category, Long memberId) {
-        if (category.isNotOwnedBy(memberId)) {
+    private void validateOwner(Category category, Member member) {
+        if (category.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
     }
 
-    private void validateHost(Category category, Long memberId) {
-        if (category.editPermissionDeniedFor(memberId)) {
+    private void validateHost(Category category, Member member) {
+        if (category.editPermissionDeniedFor(member)) {
             throw new ForbiddenException();
         }
     }

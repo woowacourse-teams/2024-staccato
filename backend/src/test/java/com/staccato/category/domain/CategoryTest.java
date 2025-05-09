@@ -143,7 +143,7 @@ class CategoryTest {
                 .build();
 
         // when
-        boolean isDenied = category.editPermissionDeniedFor(member.getId());
+        boolean isDenied = category.editPermissionDeniedFor(member);
 
         // then
         assertThat(isDenied).isEqualTo(true);
@@ -158,7 +158,7 @@ class CategoryTest {
                 .withHost(member).build();
 
         // when
-        boolean isDenied = category.editPermissionDeniedFor(member.getId());
+        boolean isDenied = category.editPermissionDeniedFor(member);
 
         // then
         assertThat(isDenied).isEqualTo(false);

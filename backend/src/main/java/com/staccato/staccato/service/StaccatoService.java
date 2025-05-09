@@ -47,7 +47,7 @@ public class StaccatoService {
     @Transactional
     public StaccatoIdResponse createStaccato(StaccatoRequest staccatoRequest, Member member) {
         Category category = getCategoryById(staccatoRequest.categoryId());
-        validateCategoryOwner(category, member.getId());
+        validateCategoryOwner(category, member);
         Staccato staccato = staccatoRequest.toStaccato(category);
 
         staccatoRepository.save(staccato);
@@ -80,7 +80,7 @@ public class StaccatoService {
 
     public StaccatoDetailResponse readStaccatoById(long staccatoId, Member member) {
         Staccato staccato = getStaccatoById(staccatoId);
-        validateCategoryOwner(staccato.getCategory(), member.getId());
+        validateCategoryOwner(staccato.getCategory(), member);
         return new StaccatoDetailResponse(staccato);
     }
 
@@ -91,10 +91,10 @@ public class StaccatoService {
             Member member
     ) {
         Staccato staccato = getStaccatoById(staccatoId);
-        validateCategoryOwner(staccato.getCategory(), member.getId());
+        validateCategoryOwner(staccato.getCategory(), member);
 
         Category targetCategory = getCategoryById(staccatoRequest.categoryId());
-        validateCategoryOwner(targetCategory, member.getId());
+        validateCategoryOwner(targetCategory, member);
 
         Staccato newStaccato = staccatoRequest.toStaccato(targetCategory);
         List<StaccatoImage> existingImages = staccato.existingImages();
@@ -117,7 +117,7 @@ public class StaccatoService {
     @Transactional
     public void deleteStaccatoById(long staccatoId, Member member) {
         staccatoRepository.findById(staccatoId).ifPresent(staccato -> {
-            validateCategoryOwner(staccato.getCategory(), member.getId());
+            validateCategoryOwner(staccato.getCategory(), member);
             commentRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
             staccatoImageRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
             staccatoRepository.deleteById(staccatoId);
@@ -127,7 +127,7 @@ public class StaccatoService {
     @Transactional
     public void updateStaccatoFeelingById(long staccatoId, Member member, FeelingRequest feelingRequest) {
         Staccato staccato = getStaccatoById(staccatoId);
-        validateCategoryOwner(staccato.getCategory(), member.getId());
+        validateCategoryOwner(staccato.getCategory(), member);
         Feeling feeling = feelingRequest.toFeeling();
         staccato.changeFeeling(feeling);
     }
@@ -137,8 +137,8 @@ public class StaccatoService {
                 .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 
-    private void validateCategoryOwner(Category category, Long memberId) {
-        if (category.isNotOwnedBy(memberId)) {
+    private void validateCategoryOwner(Category category, Member member) {
+        if (category.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }
     }
