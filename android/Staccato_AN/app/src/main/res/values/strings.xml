@@ -68,6 +68,7 @@
     <string name="category_delete_complete">카테고리가 삭제되었습니다.</string>
     <string name="category_staccato_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
     <string name="category_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
+    <string name="category_error_staccato_record_impossible">스타카토를 기록할 수 없어요.</string>
 
     // item_mates
     <string name="mates_profile_image_description">함께 한 사람 프로필 이미지</string>

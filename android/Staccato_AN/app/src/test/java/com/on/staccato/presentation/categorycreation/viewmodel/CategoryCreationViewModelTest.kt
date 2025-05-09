@@ -133,6 +133,7 @@ class CategoryCreationViewModelTest {
     @Test
     fun `카테고리 기간 설정 시 시작일과 종료일이 올바르게 변환된다`() {
         // when
+        // startAt = 1743798000000은 2025년 4월 5일, endAt = 1743967200000은 2025년 4월 7일
         viewModel.setCategoryPeriod(startAt = 1743798000000, endAt = 1743967200000)
 
         // then
