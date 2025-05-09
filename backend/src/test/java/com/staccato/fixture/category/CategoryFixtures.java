@@ -2,9 +2,8 @@ package com.staccato.fixture.category;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
+import java.util.Objects;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.category.domain.Term;
@@ -69,17 +68,17 @@ public class CategoryFixtures {
             return this;
         }
 
-        public CategoryBuilder withGuests(Member... members) {
-            this.guests.addAll(Arrays.asList(members));
+        public CategoryBuilder withGuests(List<Member> members) {
+            this.guests.addAll(members);
             return this;
         }
 
         public Category build() {
             Category category = new Category(thumbnailUrl, title, description, color, term.getStartAt(), term.getEndAt(), isShared);
-            if (host != null) {
+            if (Objects.nonNull(host)) {
                 category.addHost(host);
             }
-            guests.forEach(category::addGuest);
+            category.addGuests(guests);
             return category;
         }
 

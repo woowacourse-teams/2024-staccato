@@ -1,6 +1,5 @@
 package com.staccato.category.domain;
 
-import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import jakarta.persistence.OneToMany;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-
+import com.staccato.staccato.domain.Staccato;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -90,13 +89,15 @@ public class Category extends BaseEntity {
         categoryMembers.add(categoryMember);
     }
 
-    public void addGuest(Member member) {
-        CategoryMember categoryMember = CategoryMember.builder()
-                .category(this)
-                .member(member)
-                .role(Role.GUEST)
-                .build();
-        categoryMembers.add(categoryMember);
+    public void addGuests(List<Member> members) {
+        members.forEach(member -> {
+            CategoryMember categoryMember = CategoryMember.builder()
+                    .category(this)
+                    .member(member)
+                    .role(Role.GUEST)
+                    .build();
+            categoryMembers.add(categoryMember);
+        });
     }
 
     public void update(Category updatedCategory, List<Staccato> staccatos) {
@@ -148,7 +149,7 @@ public class Category extends BaseEntity {
         return term.isExist();
     }
 
-    public void changeColor(Color color){
+    public void changeColor(Color color) {
         this.color = color;
     }
 }
