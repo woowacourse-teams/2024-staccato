@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
-import com.staccato.category.domain.Role;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
@@ -138,7 +137,7 @@ public class CategoryService {
     }
 
     private void validateHost(Category category, Member member) {
-        if (category.editPermissionDeniedFor(member)) {
+        if (category.isGuest(member)) {
             throw new ForbiddenException();
         }
     }

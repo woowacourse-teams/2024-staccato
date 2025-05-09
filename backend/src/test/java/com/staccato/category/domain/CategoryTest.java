@@ -15,7 +15,6 @@ import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
-import com.staccato.member.domain.Nickname;
 import com.staccato.staccato.domain.Staccato;
 
 class CategoryTest {
@@ -135,7 +134,7 @@ class CategoryTest {
 
     @DisplayName("멤버가 GUEST이면, 참을 반환한다.")
     @Test
-    void editPermissionDeniedForReturnTrueIfGuestMember() {
+    void isGuestReturnTrueIfGuestMember() {
         // given
         Member member = MemberFixtures.defaultMember().build();
         Category category = CategoryFixtures.defaultCategory()
@@ -143,7 +142,7 @@ class CategoryTest {
                 .build();
 
         // when
-        boolean isDenied = category.editPermissionDeniedFor(member);
+        boolean isDenied = category.isGuest(member);
 
         // then
         assertThat(isDenied).isEqualTo(true);
@@ -151,14 +150,14 @@ class CategoryTest {
 
     @DisplayName("멤버가 HOST이면, 거짓을 반환한다.")
     @Test
-    void editPermissionDeniedForReturnFalseIfHostMember() {
+    void isGuestReturnFalseIfHostMember() {
         // given
         Member member = MemberFixtures.defaultMember().build();
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member).build();
 
         // when
-        boolean isDenied = category.editPermissionDeniedFor(member);
+        boolean isDenied = category.isGuest(member);
 
         // then
         assertThat(isDenied).isEqualTo(false);

@@ -18,7 +18,7 @@ import jakarta.persistence.OneToMany;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.member.domain.Nickname;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -132,7 +132,7 @@ public class Category extends BaseEntity {
                 .noneMatch(categoryMember -> categoryMember.isMember(member.getId()));
     }
 
-    public boolean editPermissionDeniedFor(Member member) {
+    public boolean isGuest(Member member) {
         return categoryMembers.stream()
                 .filter(categoryMember -> categoryMember.isMember(member.getId()))
                 .findFirst()
