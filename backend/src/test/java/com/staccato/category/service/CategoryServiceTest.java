@@ -1,21 +1,15 @@
 package com.staccato.category.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
@@ -25,6 +19,7 @@ import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
+import com.staccato.category.service.dto.request.CategoryInvitationRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.request.CategoryUpdateRequest;
@@ -50,6 +45,11 @@ import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.StaccatoService;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CategoryServiceTest extends ServiceSliceTest {
     @Autowired
@@ -554,7 +554,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .withGuests(member)
+                .withGuests(List.of(member))
                 .buildAndSave(categoryRepository);
         CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest()
                 .build();
@@ -571,7 +571,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .withGuests(member)
+                .withGuests(List.of(member))
                 .buildAndSave(categoryRepository);
 
         // when & then
@@ -586,7 +586,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .withGuests(member)
+                .withGuests(List.of(member))
                 .buildAndSave(categoryRepository);
         CategoryColorRequest categoryColorRequest = new CategoryColorRequest(Color.BLUE.getName());
 
@@ -606,7 +606,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withNickname("guest").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(hostMember)
-                .withGuests(guestMember)
+                .withGuests(List.of(guestMember))
                 .buildAndSave(categoryRepository);
 
         // when
@@ -619,5 +619,68 @@ class CategoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(categoryMemberRepository.findAllByMemberId(guestMember.getId())).isEmpty(),
                 () -> assertThat(categoryRepository.findById(category.getId())).isEmpty()
         );
+    }
+
+    @DisplayName("HOST가 닉네임 목록을 통해 카테고리에 멤버를 초대한다.")
+    @Test
+    void invitation() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        MemberFixtures.defaultMember().withNickname("guest1").buildAndSave(memberRepository);
+        MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .buildAndSave(categoryRepository);
+
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of("guest1", "guest2"));
+
+        // when
+        categoryService.invitation(category.getId(), host, invitationRequest);
+
+        // then
+        Category savedCategory = categoryRepository.findById(category.getId()).get();
+        List<CategoryMember> categoryMembers = categoryMemberRepository.findAllByCategoryId(savedCategory.getId());
+
+        assertThat(categoryMembers).hasSize(3);
+    }
+
+    @DisplayName("특정 카테고리의 HOST가 아닌 멤버가 카테고리 초대 요청을 보내면 예외가 발생한다.")
+    @Test
+    void failToInviteIfNotHost() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Member anotherUser = MemberFixtures.defaultMember().withNickname("anotherUser").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .buildAndSave(categoryRepository);
+
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of("guest"));
+
+        // when & then
+        assertThatThrownBy(() -> categoryService.invitation(category.getId(), anotherUser, invitationRequest))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("닉네임 목록 중 일부가 존재하지 않아도 존재하는 멤버만 초대된다.")
+    @Test
+    void inviteOnlyExistingMembers() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .buildAndSave(categoryRepository);
+
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of("guest", "nonexistent"));
+
+        // when
+        categoryService.invitation(category.getId(), host, invitationRequest);
+
+        // then
+        List<CategoryMember> categoryMembers = categoryMemberRepository.findAllByCategoryId(category.getId());
+
+        assertThat(categoryMembers).hasSize(2);
     }
 }
