@@ -41,9 +41,12 @@ class CategoryTest {
     void createBasicCategoryWithMemberNickname() {
         // given
         String nickname = "staccato";
+        Member member = MemberFixtures.defaultMember()
+                .withNickname(nickname)
+                .build();
 
         // when
-        Category category = Category.basic(new Nickname(nickname));
+        Category category = Category.basic(member);
 
         // then
         assertThat(category.getTitle()).isEqualTo(nickname + "의 추억");

@@ -49,8 +49,7 @@ public class AuthService {
     }
 
     private void createBasicCategory(Member member) {
-        Category category = Category.basic(member.getNickname());
-        category.addCategoryMember(member, Role.HOST);
+        Category category = Category.basic(member);
         categoryRepository.save(category);
     }
 

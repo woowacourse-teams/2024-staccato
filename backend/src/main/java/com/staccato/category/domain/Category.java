@@ -69,13 +69,16 @@ public class Category extends BaseEntity {
         this(thumbnailUrl, title, description, Color.findByName(color), startAt, endAt, isShared);
     }
 
-    public static Category basic(Nickname memberNickname) {
-        return Category.builder()
-                .title(memberNickname.getNickname() + DEFAULT_SUBTITLE)
+    public static Category basic(Member member) {
+        Category category = Category.builder()
+                .title(member.getNickname().getNickname() + DEFAULT_SUBTITLE)
                 .description(DEFAULT_DESCRIPTION)
                 .color(DEFAULT_COLOR)
                 .isShared(false)
                 .build();
+
+        category.addCategoryMember(member, Role.HOST);
+        return category;
     }
 
     public void addCategoryMember(Member member, Role role) {
