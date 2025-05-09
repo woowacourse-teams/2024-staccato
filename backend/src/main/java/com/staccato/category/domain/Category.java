@@ -135,7 +135,9 @@ public class Category extends BaseEntity {
     public boolean editPermissionDeniedFor(Long memberId) {
         return categoryMembers.stream()
                 .filter(categoryMember -> categoryMember.isMember(memberId))
-                .anyMatch(CategoryMember::isGuest);
+                .findFirst()
+                .map(CategoryMember::isGuest)
+                .orElse(false);
     }
 
     public boolean isNotSameTitle(String title) {
