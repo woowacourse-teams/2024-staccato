@@ -138,7 +138,7 @@ class CategoryTest {
         // given
         Member member = MemberFixtures.defaultMember().build();
         Category category = CategoryFixtures.defaultCategory()
-                .withGuest(member)
+                .withGuests(member)
                 .build();
 
         // when

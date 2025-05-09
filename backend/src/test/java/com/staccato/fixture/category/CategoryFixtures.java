@@ -2,6 +2,7 @@ package com.staccato.fixture.category;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.staccato.category.domain.Category;
@@ -68,8 +69,8 @@ public class CategoryFixtures {
             return this;
         }
 
-        public CategoryBuilder withGuest(Member member) {
-            this.guests.add(member);
+        public CategoryBuilder withGuests(Member... members) {
+            this.guests.addAll(Arrays.asList(members));
             return this;
         }
 
