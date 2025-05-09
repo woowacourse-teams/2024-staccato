@@ -77,15 +77,24 @@ public class Category extends BaseEntity {
                 .isShared(false)
                 .build();
 
-        category.addCategoryMember(member, Role.HOST);
+        category.addHost(member);
         return category;
     }
 
-    public void addCategoryMember(Member member, Role role) {
+    public void addHost(Member member) {
         CategoryMember categoryMember = CategoryMember.builder()
                 .category(this)
                 .member(member)
-                .role(role)
+                .role(Role.HOST)
+                .build();
+        categoryMembers.add(categoryMember);
+    }
+
+    public void addGuest(Member member) {
+        CategoryMember categoryMember = CategoryMember.builder()
+                .category(this)
+                .member(member)
+                .role(Role.GUEST)
                 .build();
         categoryMembers.add(categoryMember);
     }

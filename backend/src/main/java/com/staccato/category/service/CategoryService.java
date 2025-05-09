@@ -49,7 +49,7 @@ public class CategoryService {
     public CategoryIdResponse createCategory(CategoryCreateRequest categoryCreateRequest, Member member) {
         Category category = categoryCreateRequest.toCategory();
         validateCategoryTitle(category, member);
-        category.addCategoryMember(member, Role.HOST);
+        category.addHost(member);
         categoryRepository.save(category);
         return new CategoryIdResponse(category.getId());
     }

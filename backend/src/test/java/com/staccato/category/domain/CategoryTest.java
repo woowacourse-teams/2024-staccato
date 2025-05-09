@@ -139,7 +139,7 @@ class CategoryTest {
         // given
         Member member = MemberFixtures.defaultMember().build();
         Category category = CategoryFixtures.defaultCategory()
-                .addCategoryMember(member, Role.GUEST)
+                .withGuest(member)
                 .build();
 
         // when
@@ -155,7 +155,7 @@ class CategoryTest {
         // given
         Member member = MemberFixtures.defaultMember().build();
         Category category = CategoryFixtures.defaultCategory()
-                .buildWithMember(member);
+                .withHost(member).build();
 
         // when
         boolean isDenied = category.editPermissionDeniedFor(member.getId());

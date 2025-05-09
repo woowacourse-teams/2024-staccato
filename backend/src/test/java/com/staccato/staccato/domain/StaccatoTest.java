@@ -172,7 +172,8 @@ class StaccatoTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                .buildAndSave(categoryRepository);
             LocalDateTime beforeCreate = category.getUpdatedAt();
 
             // when
@@ -192,7 +193,8 @@ class StaccatoTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                .buildAndSave(categoryRepository);
             Staccato staccato = StaccatoFixtures.defaultStaccato()
                     .withCategory(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeUpdate = category.getUpdatedAt();
@@ -213,7 +215,8 @@ class StaccatoTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                .buildAndSave(categoryRepository);
             Staccato staccato = StaccatoFixtures.defaultStaccato()
                     .withCategory(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeDelete = category.getUpdatedAt();

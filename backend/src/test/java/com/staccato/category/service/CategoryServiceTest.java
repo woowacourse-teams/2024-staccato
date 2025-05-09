@@ -513,7 +513,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .addCategoryMember(member, Role.GUEST)
+                .withGuest(member)
                 .buildAndSave(categoryRepository);
         CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest()
                 .build();
@@ -530,7 +530,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .addCategoryMember(member, Role.GUEST)
+                .withGuest(member)
                 .buildAndSave(categoryRepository);
 
         // when & then
@@ -545,7 +545,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .addCategoryMember(member, Role.GUEST)
+                .withGuest(member)
                 .buildAndSave(categoryRepository);
         CategoryColorRequest categoryColorRequest = new CategoryColorRequest(Color.BLUE.getName());
 
@@ -559,11 +559,13 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Test
     void deleteCategoryAlsoDeletesAllRelatedCategoryMembers() {
         // given
-        Member hostMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member guestMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member hostMember = MemberFixtures.defaultMember()
+                .withNickname("host").buildAndSave(memberRepository);
+        Member guestMember = MemberFixtures.defaultMember()
+                .withNickname("guest").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .addCategoryMember(hostMember, Role.HOST)
-                .addCategoryMember(guestMember, Role.GUEST)
+                .withHost(hostMember)
+                .withGuest(guestMember)
                 .buildAndSave(categoryRepository);
 
         // when

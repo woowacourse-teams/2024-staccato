@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
-import com.staccato.category.domain.Role;
 import com.staccato.category.domain.Term;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.member.domain.Member;
@@ -25,14 +24,14 @@ public class CategoryFixtures {
     }
 
     public static class CategoryBuilder {
-        private Long id;
         private String thumbnailUrl;
         private String title;
         private String description;
         private Color color;
         private Term term;
         private Boolean isShared;
-        private List<MemberRolePair> memberRoles = new ArrayList<>();
+        private List<Member> hosts = new ArrayList<>();
+        private List<Member> guests = new ArrayList<>();
 
         public CategoryBuilder withThumbnailUrl(String thumbnailUrl) {
             this.thumbnailUrl = thumbnailUrl;
@@ -64,34 +63,26 @@ public class CategoryFixtures {
             return this;
         }
 
-        public CategoryBuilder addCategoryMember(Member member, Role role) {
-            memberRoles.add(new MemberRolePair(member, role));
+        public CategoryBuilder withHost(Member member) {
+            this.hosts.add(member);
+            return this;
+        }
+
+        public CategoryBuilder withGuest(Member member) {
+            this.guests.add(member);
             return this;
         }
 
         public Category build() {
             Category category = new Category(thumbnailUrl, title, description, color, term.getStartAt(), term.getEndAt(), isShared);
-            memberRoles.forEach(pair -> category.addCategoryMember(pair.member(), pair.role()));
-            return category;
-        }
-
-        public Category buildWithMember(Member member) {
-            Category category = build();
-            category.addCategoryMember(member, Role.HOST);
+            hosts.forEach(category::addHost);
+            guests.forEach(category::addGuest);
             return category;
         }
 
         public Category buildAndSave(CategoryRepository repository) {
             Category category = build();
             return repository.save(category);
-        }
-
-        public Category buildAndSaveWithMember(Member member, CategoryRepository repository) {
-            Category category = buildWithMember(member);
-            return repository.save(category);
-        }
-
-        private record MemberRolePair(Member member, Role role) {
         }
     }
 }
