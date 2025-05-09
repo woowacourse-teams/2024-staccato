@@ -1,7 +1,5 @@
 package com.staccato.category.domain;
 
-import java.util.Objects;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +13,6 @@ public enum Role {
     private final String role;
 
     boolean isGuest() {
-        return Objects.equals(this, Role.GUEST);
+        return this == Role.GUEST;
     }
 }
