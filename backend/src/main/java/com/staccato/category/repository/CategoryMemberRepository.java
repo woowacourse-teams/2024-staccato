@@ -14,6 +14,9 @@ public interface CategoryMemberRepository extends JpaRepository<CategoryMember, 
     @Query("SELECT mm FROM CategoryMember mm JOIN FETCH mm.category WHERE mm.member.id = :memberId")
     List<CategoryMember> findAllByMemberId(long memberId);
 
+    @Query("SELECT mm FROM CategoryMember mm JOIN FETCH mm.category WHERE mm.category.id = :categoryId")
+    List<CategoryMember> findAllByCategoryId(long categoryId);
+
     @Query("""
             SELECT mm FROM CategoryMember mm JOIN FETCH mm.category WHERE mm.member.id = :memberId
             AND ((mm.category.term.startAt is null AND mm.category.term.endAt is null)

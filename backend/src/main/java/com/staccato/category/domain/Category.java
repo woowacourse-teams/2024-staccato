@@ -18,7 +18,7 @@ import jakarta.persistence.OneToMany;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.member.domain.Nickname;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,32 +53,48 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
     private List<CategoryMember> categoryMembers = new ArrayList<>();
 
-    public Category(String thumbnailUrl, @NonNull String title, String description, Color color, LocalDate startAt, LocalDate endAt) {
+    public Category(String thumbnailUrl, @NonNull String title, String description, Color color, LocalDate startAt,
+                    LocalDate endAt, @NonNull Boolean isShared) {
         this.thumbnailUrl = thumbnailUrl;
         this.title = title.trim();
         this.description = description;
         this.color = color;
         this.term = new Term(startAt, endAt);
-        this.isShared = false;
+        this.isShared = isShared;
     }
 
     @Builder
-    public Category(String thumbnailUrl, @NonNull String title, String description, @NonNull String color, LocalDate startAt, LocalDate endAt) {
-        this(thumbnailUrl, title, description, Color.findByName(color), startAt, endAt);
+    public Category(String thumbnailUrl, @NonNull String title, String description, @NonNull String color,
+                    LocalDate startAt, LocalDate endAt, @NonNull Boolean isShared) {
+        this(thumbnailUrl, title, description, Color.findByName(color), startAt, endAt, isShared);
     }
 
-    public static Category basic(Nickname memberNickname) {
-        return Category.builder()
-                .title(memberNickname.getNickname() + DEFAULT_SUBTITLE)
+    public static Category basic(Member member) {
+        Category category = Category.builder()
+                .title(member.getNickname().getNickname() + DEFAULT_SUBTITLE)
                 .description(DEFAULT_DESCRIPTION)
                 .color(DEFAULT_COLOR)
+                .isShared(false)
                 .build();
+
+        category.addHost(member);
+        return category;
     }
 
-    public void addCategoryMember(Member member) {
+    public void addHost(Member member) {
         CategoryMember categoryMember = CategoryMember.builder()
                 .category(this)
                 .member(member)
+                .role(Role.HOST)
+                .build();
+        categoryMembers.add(categoryMember);
+    }
+
+    public void addGuest(Member member) {
+        CategoryMember categoryMember = CategoryMember.builder()
+                .category(this)
+                .member(member)
+                .role(Role.GUEST)
                 .build();
         categoryMembers.add(categoryMember);
     }
@@ -113,7 +129,15 @@ public class Category extends BaseEntity {
 
     public boolean isNotOwnedBy(Member member) {
         return categoryMembers.stream()
-                .noneMatch(categoryMember -> categoryMember.isMember(member));
+                .noneMatch(categoryMember -> categoryMember.isOwnedBy(member));
+    }
+
+    public boolean isGuest(Member member) {
+        return categoryMembers.stream()
+                .filter(categoryMember -> categoryMember.isOwnedBy(member))
+                .findFirst()
+                .map(CategoryMember::isGuest)
+                .orElse(false);
     }
 
     public boolean isNotSameTitle(String title) {

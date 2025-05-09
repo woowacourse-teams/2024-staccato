@@ -56,10 +56,12 @@ class StaccatoRepositoryTest extends RepositoryTest {
             member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             category1ByMember = CategoryFixtures.defaultCategory()
                     .withTitle("category1")
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                    .buildAndSave(categoryRepository);
             category2ByMember = CategoryFixtures.defaultCategory()
                     .withTitle("category2")
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                    .buildAndSave(categoryRepository);
             staccatoInCategory1 = StaccatoFixtures.defaultStaccato()
                     .withSpot(MIN_LATITUDE, MAX_LONGITUDE)
                     .withCategory(category1ByMember)
@@ -79,7 +81,8 @@ class StaccatoRepositoryTest extends RepositoryTest {
                 // given
                 Member anotherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
                 Category anotherCategory = CategoryFixtures.defaultCategory()
-                        .buildAndSaveWithMember(anotherMember, categoryRepository);
+                        .withHost(anotherMember)
+                        .buildAndSave(categoryRepository);
                 Staccato anotherStaccato = StaccatoFixtures.defaultStaccato()
                         .withCategory(anotherCategory)
                         .buildAndSave(staccatoRepository);

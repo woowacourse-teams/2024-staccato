@@ -4,7 +4,7 @@ import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoRequestFixtures;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
-import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,7 +47,8 @@ class CreateStaccatoMetricsAspectTest extends ServiceSliceTest {
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(null, null)
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         LocalDateTime now = LocalDateTime.now();
 
         return List.of(

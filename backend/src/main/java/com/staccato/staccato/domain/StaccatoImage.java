@@ -33,7 +33,7 @@ public class StaccatoImage {
         this.imageUrl = imageUrl;
     }
 
-    protected void belongTo(Staccato staccato) {
+    protected void assignTo(Staccato staccato) {
         this.staccato = staccato;
     }
 }

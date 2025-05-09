@@ -3,12 +3,12 @@ package com.staccato.fixture.category;
 import java.time.LocalDate;
 
 import com.staccato.category.domain.Color;
-import com.staccato.category.service.dto.request.CategoryRequestV2;
+import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 
-public class CategoryRequestV2Fixtures {
+public class CategoryUpdateRequestFixtures {
 
-    public static CategoryRequestV2Builder defaultCategoryRequestV2() {
-        return new CategoryRequestV2Builder()
+    public static CategoryUpdateRequestBuilder defaultCategoryUpdateRequest() {
+        return new CategoryUpdateRequestBuilder()
                 .withCategoryThumbnailUrl("https://example.com/categoryThumbnailUrl.jpg")
                 .withCategoryTitle("categoryTitle")
                 .withDescription("categoryDescription")
@@ -17,7 +17,7 @@ public class CategoryRequestV2Fixtures {
                         LocalDate.of(2024, 12, 31));
     }
 
-    public static class CategoryRequestV2Builder {
+    public static class CategoryUpdateRequestBuilder {
         private String categoryThumbnailUrl;
         private String categoryTitle;
         private String description;
@@ -25,34 +25,34 @@ public class CategoryRequestV2Fixtures {
         private LocalDate startAt;
         private LocalDate endAt;
 
-        public CategoryRequestV2Builder withCategoryThumbnailUrl(String categoryThumbnailUrl) {
+        public CategoryUpdateRequestBuilder withCategoryThumbnailUrl(String categoryThumbnailUrl) {
             this.categoryThumbnailUrl = categoryThumbnailUrl;
             return this;
         }
 
-        public CategoryRequestV2Builder withCategoryTitle(String categoryTitle) {
+        public CategoryUpdateRequestBuilder withCategoryTitle(String categoryTitle) {
             this.categoryTitle = categoryTitle;
             return this;
         }
 
-        public CategoryRequestV2Builder withDescription(String description) {
+        public CategoryUpdateRequestBuilder withDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public CategoryRequestV2Builder withTerm(LocalDate startAt, LocalDate endAt) {
+        public CategoryUpdateRequestBuilder withTerm(LocalDate startAt, LocalDate endAt) {
             this.startAt = startAt;
             this.endAt = endAt;
             return this;
         }
 
-        public CategoryRequestV2Builder withColor(String color) {
+        public CategoryUpdateRequestBuilder withColor(String color) {
             this.color = color;
             return this;
         }
 
-        public CategoryRequestV2 build() {
-            return new CategoryRequestV2(categoryThumbnailUrl, categoryTitle, description, color, startAt, endAt);
+        public CategoryUpdateRequest build() {
+            return new CategoryUpdateRequest(categoryThumbnailUrl, categoryTitle, description, color, startAt, endAt);
         }
     }
 }

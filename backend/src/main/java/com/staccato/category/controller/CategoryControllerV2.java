@@ -1,8 +1,10 @@
 package com.staccato.category.controller;
 
 import java.net.URI;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,16 +15,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.staccato.category.controller.docs.CategoryControllerV2Docs;
 import com.staccato.category.service.CategoryService;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
+import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -38,7 +43,7 @@ public class CategoryControllerV2 implements CategoryControllerV2Docs {
             @Valid @RequestBody CategoryRequestV2 categoryRequest,
             @LoginMember Member member
     ) {
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest, member);
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest.toCategoryCreateRequest(), member);
         return ResponseEntity.created(URI.create("/categories/" + categoryIdResponse.categoryId()))
                 .body(categoryIdResponse);
     }
@@ -63,9 +68,9 @@ public class CategoryControllerV2 implements CategoryControllerV2Docs {
     @PutMapping("/{categoryId}")
     public ResponseEntity<Void> updateCategory(
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
-            @Valid @RequestBody CategoryRequestV2 categoryRequest,
+            @Valid @RequestBody CategoryUpdateRequest categoryUpdateRequest,
             @LoginMember Member member) {
-        categoryService.updateCategory(categoryRequest, categoryId, member);
+        categoryService.updateCategory(categoryUpdateRequest, categoryId, member);
         return ResponseEntity.ok().build();
     }
 }
