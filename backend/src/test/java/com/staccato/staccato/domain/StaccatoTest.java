@@ -240,7 +240,8 @@ class StaccatoTest {
         Member member = MemberFixtures.defaultMember().build();
         Category category = CategoryFixtures.defaultCategory()
                 .withColor(Color.PINK)
-                .buildWithMember(member);
+                .withHost(member)
+                .build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).build();
 

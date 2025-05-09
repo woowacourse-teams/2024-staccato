@@ -26,9 +26,8 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
-import com.staccato.category.service.dto.request.CategoryUpdateRequest;
-import com.staccato.category.service.dto.request.CategoryRequestV2;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
+import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
@@ -42,8 +41,6 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryCreateRequestFixtures;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.category.CategoryUpdateRequestFixtures;
-import com.staccato.fixture.category.CategoryFixtures;
-import com.staccato.fixture.category.CategoryRequestV2Fixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
@@ -314,11 +311,13 @@ class CategoryServiceTest extends ServiceSliceTest {
         Member member2 = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
                 .withTitle("title2")
                 .withColor(Color.PINK)
-                .buildAndSaveWithMember(member2, categoryRepository);
+                .withHost(member2)
+                .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
         Staccato otherStaccato = StaccatoFixtures.defaultStaccato()
