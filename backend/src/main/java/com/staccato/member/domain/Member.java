@@ -25,7 +25,7 @@ import lombok.NonNull;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @SQLRestriction("is_deleted = false")
 public class Member extends BaseEntity {
     @Id
