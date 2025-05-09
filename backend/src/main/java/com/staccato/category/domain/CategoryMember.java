@@ -49,7 +49,7 @@ public class CategoryMember extends BaseEntity {
         this.role = role;
     }
 
-    public boolean belongsTo(Member member) {
+    public boolean isOwnedBy(Member member) {
         return Objects.equals(this.member, member);
     }
 

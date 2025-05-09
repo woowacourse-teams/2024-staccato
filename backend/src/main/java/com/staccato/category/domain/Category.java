@@ -129,12 +129,12 @@ public class Category extends BaseEntity {
 
     public boolean isNotOwnedBy(Member member) {
         return categoryMembers.stream()
-                .noneMatch(categoryMember -> categoryMember.belongsTo(member));
+                .noneMatch(categoryMember -> categoryMember.isOwnedBy(member));
     }
 
     public boolean isGuest(Member member) {
         return categoryMembers.stream()
-                .filter(categoryMember -> categoryMember.belongsTo(member))
+                .filter(categoryMember -> categoryMember.isOwnedBy(member))
                 .findFirst()
                 .map(CategoryMember::isGuest)
                 .orElse(false);
