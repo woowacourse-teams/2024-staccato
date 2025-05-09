@@ -1,15 +1,9 @@
 package com.staccato.staccato.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
@@ -31,10 +25,15 @@ import com.staccato.staccato.domain.StaccatoImage;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class StaccatoServiceTest extends ServiceSliceTest {
     @Autowired
@@ -123,11 +122,11 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .hasMessageContaining("요청하신 카테고리를 찾을 수 없어요.");
     }
 
-    @DisplayName("스타카토 목록 조회에 성공한다.")
+    @DisplayName("위경도 조건이 없으므로, 사용자의 모든 스타카토 목록을 조회한다.")
     @Test
     void readAllStaccato() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member member = MemberFixtures.defaultMember().withCode("me").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
                 .withHost(member)
@@ -137,29 +136,25 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .withColor(Color.PINK)
                 .withHost(member)
                 .buildAndSave(categoryRepository);
-        StaccatoFixtures.defaultStaccato()
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
-        StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
-        StaccatoFixtures.defaultStaccato()
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
                 .withCategory(category2).buildAndSave(staccatoRepository);
+        Staccato staccato3 = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
-        StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member);
+        StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member, StaccatoLocationRangeRequest.empty());
 
         // then
-        long blueCount = responses.staccatoLocationResponses().stream()
-                .map(StaccatoLocationResponseV2::staccatoColor)
-                .filter(color -> color.equals(Color.BLUE.getName()))
-                .count();
-        long pinkCount = responses.staccatoLocationResponses().stream()
-                .map(StaccatoLocationResponseV2::staccatoColor)
-                .filter(color -> color.equals(Color.PINK.getName()))
-                .count();
         assertAll(
                 () -> assertThat(responses.staccatoLocationResponses()).hasSize(3),
-                () -> assertThat(blueCount).isEqualTo(2),
-                () -> assertThat(pinkCount).isEqualTo(1)
+                () -> assertThat(responses.staccatoLocationResponses())
+                        .containsExactlyInAnyOrder(
+                                new StaccatoLocationResponseV2(staccato),
+                                new StaccatoLocationResponseV2(staccato2),
+                                new StaccatoLocationResponseV2(staccato3)
+                        )
         );
     }
 

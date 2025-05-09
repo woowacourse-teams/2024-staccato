@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import com.staccato.category.domain.Color;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
@@ -230,5 +231,23 @@ class StaccatoTest {
             // then
             assertThat(afterDelete).isAfter(beforeDelete);
         }
+    }
+
+    @DisplayName("스타카토의 색상은 카테고리의 색상을 따른다.")
+    @Test
+    void getColor() {
+        // given
+        Member member = MemberFixtures.defaultMember().build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withColor(Color.PINK)
+                .buildWithMember(member);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).build();
+
+        // when
+        Color color = staccato.getColor();
+
+        // then
+        assertThat(color).isEqualTo(Color.PINK);
     }
 }

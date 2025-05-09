@@ -24,12 +24,14 @@ import com.staccato.category.service.CategoryService;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
+import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
@@ -78,6 +80,17 @@ public class CategoryController implements CategoryControllerDocs {
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
         CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
         return ResponseEntity.ok(categoryDetailResponse.toCategoryDetailResponse());
+    }
+
+    @GetMapping("/{categoryId}/staccatos")
+    public ResponseEntity<CategoryStaccatoLocationResponses> readAllStaccatoByCategory(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @Validated @ModelAttribute CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest
+    ) {
+        CategoryStaccatoLocationResponses categoryStaccatoLocationResponses = categoryService.readAllStaccatoByCategory(
+                member, categoryId, categoryStaccatoLocationRangeRequest);
+        return ResponseEntity.ok().body(categoryStaccatoLocationResponses);
     }
 
     @PutMapping("/{categoryId}")
