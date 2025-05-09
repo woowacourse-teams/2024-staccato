@@ -22,7 +22,7 @@ public interface CategoryControllerV3Docs {
             @ApiResponse(description = """
                     <발생 가능한 케이스>
 
-                    (1) 필수 값(카테고리 제목, 색상)이 누락되었을 때
+                    (1) 필수 값(카테고리 제목, 색상, 카테고리 공개 여부)이 누락되었을 때
 
                     (2) 날짜 형식(yyyy-MM-dd)이 잘못되었을 때
 
