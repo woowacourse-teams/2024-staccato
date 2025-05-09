@@ -31,7 +31,7 @@ public class CategoryFixtures {
         private Color color;
         private Term term;
         private Boolean isShared;
-        private List<Member> hosts = new ArrayList<>();
+        private Member host;
         private List<Member> guests = new ArrayList<>();
 
         public CategoryBuilder withThumbnailUrl(String thumbnailUrl) {
@@ -65,7 +65,7 @@ public class CategoryFixtures {
         }
 
         public CategoryBuilder withHost(Member member) {
-            this.hosts.add(member);
+            this.host = member;
             return this;
         }
 
@@ -76,7 +76,9 @@ public class CategoryFixtures {
 
         public Category build() {
             Category category = new Category(thumbnailUrl, title, description, color, term.getStartAt(), term.getEndAt(), isShared);
-            hosts.forEach(category::addHost);
+            if (host != null) {
+                category.addHost(host);
+            }
             guests.forEach(category::addGuest);
             return category;
         }
