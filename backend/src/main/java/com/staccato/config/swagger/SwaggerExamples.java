@@ -27,4 +27,5 @@ public class SwaggerExamples {
     public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
     public static final String SHARE_LINK = "https://staccato.kr/share/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
     public static final String CATEGORY_COLOR = "PINK";
+    public static final String MEMBER_NICKNAMES = "[\"hodudu\", " + "\"Pokpopo\", " + "\"kargo\"]";
 }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.staccato.category.controller.docs.CategoryControllerDocs;
 import com.staccato.category.service.CategoryService;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
+import com.staccato.category.service.dto.request.CategoryInvitationRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
@@ -116,6 +117,15 @@ public class CategoryController implements CategoryControllerDocs {
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @LoginMember Member member) {
         categoryService.deleteCategory(categoryId, member);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PostMapping("/{categoryId}/invitations")
+    public ResponseEntity<Void> invitation(@PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
+                                           @LoginMember Member member,
+                                           @RequestBody CategoryInvitationRequest categoryInvitationRequest) {
+        categoryService.invitation(categoryId, member, categoryInvitationRequest);
         return ResponseEntity.ok().build();
     }
 }
