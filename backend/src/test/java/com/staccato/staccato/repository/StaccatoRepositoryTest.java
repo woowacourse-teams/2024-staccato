@@ -1,23 +1,26 @@
 package com.staccato.staccato.repository;
 
-import com.staccato.category.domain.Category;
-import com.staccato.category.repository.CategoryMemberRepository;
-import com.staccato.fixture.category.CategoryFixtures;
-import com.staccato.fixture.category.CategoryMemberFixtures;
-import com.staccato.fixture.member.MemberFixtures;
-import com.staccato.fixture.staccato.StaccatoFixtures;
-import com.staccato.staccato.domain.Staccato;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
+import com.staccato.category.domain.Category;
+import com.staccato.category.repository.CategoryMemberRepository;
+import com.staccato.category.repository.CategoryRepository;
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.category.CategoryMemberFixtures;
+import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.category.repository.CategoryRepository;
+import com.staccato.staccato.domain.Staccato;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -34,46 +37,141 @@ class StaccatoRepositoryTest extends RepositoryTest {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @DisplayName("사용자의 모든 스타카토를 조회한다.")
-    @Test
-    void findAllByCategory_CategoryMembers_Member() {
-        // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member anotherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category1 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        Category category2 = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        Category anotherMemberCategory = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
-                .withMember(member)
-                .withCategory(category1).buildAndSave(categoryMemberRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
-                .withMember(member)
-                .withCategory(category2).buildAndSave(categoryMemberRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
-                .withMember(anotherMember)
-                .withCategory(anotherMemberCategory).buildAndSave(categoryMemberRepository);
+    @Nested
+    @DisplayName("사용자(member)의 스타카토 목록 조회")
+    class FindAllStaccatosBy {
+        private static final BigDecimal MIN_LATITUDE = new BigDecimal("37.4");
+        private static final BigDecimal MAX_LATITUDE = new BigDecimal("37.5");
+        private static final BigDecimal MIN_LONGITUDE = new BigDecimal("127.1");
+        private static final BigDecimal MAX_LONGITUDE = new BigDecimal("127.2");
 
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category1).buildAndSave(staccatoRepository);
-        Staccato staccato1 = StaccatoFixtures.defaultStaccato()
-                .withCategory(category1).buildAndSave(staccatoRepository);
-        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
-                .withCategory(category1).buildAndSave(staccatoRepository);
-        Staccato anotherStaccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(anotherMemberCategory).buildAndSave(staccatoRepository);
+        Member member;
+        Category category1ByMember;
+        Category category2ByMember;
+        Staccato staccatoInCategory1;
+        Staccato staccatoInCategory2;
 
-        // when
-        List<Staccato> memberResult = staccatoRepository.findAllByCategory_CategoryMembers_Member(member);
-        List<Staccato> anotherMemberResult = staccatoRepository.findAllByCategory_CategoryMembers_Member(anotherMember);
+        @BeforeEach
+        void init() {
+            member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+            category1ByMember = CategoryFixtures.defaultCategory()
+                    .withTitle("category1")
+                    .buildAndSaveWithMember(member, categoryRepository);
+            category2ByMember = CategoryFixtures.defaultCategory()
+                    .withTitle("category2")
+                    .buildAndSaveWithMember(member, categoryRepository);
+            staccatoInCategory1 = StaccatoFixtures.defaultStaccato()
+                    .withSpot(MIN_LATITUDE, MAX_LONGITUDE)
+                    .withCategory(category1ByMember)
+                    .buildAndSave(staccatoRepository);
+            staccatoInCategory2 = StaccatoFixtures.defaultStaccato()
+                    .withSpot(MAX_LATITUDE, MIN_LONGITUDE)
+                    .withCategory(category2ByMember)
+                    .buildAndSave(staccatoRepository);
+        }
 
-        // then
-        assertAll(
-                () -> assertThat(memberResult.size()).isEqualTo(3),
-                () -> assertThat(memberResult).containsExactlyInAnyOrder(staccato, staccato1,
-                    staccato2),
-                () -> assertThat(anotherMemberResult.size()).isEqualTo(1),
-                () -> assertThat(anotherMemberResult).containsExactlyInAnyOrder(anotherStaccato)
-        );
+        @Nested
+        @DisplayName("findByMemberAndLocationRange()")
+        class FindByMemberAndLocationRange {
+            @DisplayName("아무 조건 없음 (staccatoInCategory1, staccatoInCategory2)")
+            @Test
+            void findAllStaccatoByMemberWithoutAnyCondition() {
+                // given
+                Member anotherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+                Category anotherCategory = CategoryFixtures.defaultCategory()
+                        .buildAndSaveWithMember(anotherMember, categoryRepository);
+                Staccato anotherStaccato = StaccatoFixtures.defaultStaccato()
+                        .withCategory(anotherCategory)
+                        .buildAndSave(staccatoRepository);
+
+                // when
+                List<Staccato> result = staccatoRepository.findByMemberAndLocationRange(member, null, null, null, null);
+
+                // then
+                assertThat(result).hasSize(2).containsExactlyInAnyOrder(staccatoInCategory1, staccatoInCategory2)
+                        .doesNotContain(anotherStaccato);
+            }
+
+            @DisplayName("위경도 범위 내 (staccatoInCategory1, staccatoInCategory2)")
+            @Test
+            void findAllStaccatoByMemberWithLocationRange() {
+                // given
+                BigDecimal threshold = new BigDecimal("0.01");
+                Staccato underMinLatitude = StaccatoFixtures.defaultStaccato()
+                        .withCategory(category1ByMember)
+                        .withSpot(MIN_LATITUDE.subtract(threshold), MAX_LONGITUDE)
+                        .buildAndSave(staccatoRepository);
+                Staccato overMaxLatitude = StaccatoFixtures.defaultStaccato()
+                        .withCategory(category1ByMember)
+                        .withSpot(MAX_LATITUDE.add(threshold), MIN_LONGITUDE)
+                        .buildAndSave(staccatoRepository);
+                Staccato underMinLongitude = StaccatoFixtures.defaultStaccato()
+                        .withCategory(category1ByMember)
+                        .withSpot(MAX_LATITUDE, MIN_LONGITUDE.subtract(threshold))
+                        .buildAndSave(staccatoRepository);
+                Staccato overMaxLongitude = StaccatoFixtures.defaultStaccato()
+                        .withCategory(category1ByMember)
+                        .withSpot(MIN_LATITUDE, MAX_LONGITUDE.add(threshold))
+                        .buildAndSave(staccatoRepository);
+
+                // when
+                List<Staccato> result = staccatoRepository.findByMemberAndLocationRange(
+                        member, MIN_LATITUDE, MAX_LATITUDE, MIN_LONGITUDE, MAX_LONGITUDE
+                );
+
+                // then
+                assertThat(result).hasSize(2).containsExactlyInAnyOrder(staccatoInCategory1, staccatoInCategory2)
+                        .doesNotContain(underMinLatitude, overMaxLatitude, underMinLongitude, overMaxLongitude);
+            }
+        }
+
+        @Nested
+        @DisplayName("findByMemberAndLocationRangeAndCategory()")
+        class FindByMemberAndLocationRangeAndCategory {
+            @DisplayName("특정 카테고리(category1ByMember)에 속한 모든 스타카토 (staccatoInCategory1)")
+            @Test
+            void findAllStaccatoByMemberWithCategory() {
+                // when
+                List<Staccato> result = staccatoRepository.findByMemberAndLocationRangeAndCategory(member, null, null, null, null, category1ByMember.getId());
+
+                // then
+                assertThat(result).hasSize(1)
+                        .containsExactlyInAnyOrder(staccatoInCategory1)
+                        .doesNotContain(staccatoInCategory2);
+            }
+
+            @DisplayName("특정 카테고리(category1ByMember)에 속하면서 위경도 범위 내 모든 스타카토 (staccatoInCategory1)")
+            @Test
+            void findAllStaccatoByMemberWithCategoryAndInRange() {
+                // given
+                BigDecimal threshold = new BigDecimal("0.01");
+                Staccato underMinLatitude = StaccatoFixtures.defaultStaccato()
+                        .withCategory(category1ByMember)
+                        .withSpot(MIN_LATITUDE.subtract(threshold), MAX_LONGITUDE)
+                        .buildAndSave(staccatoRepository);
+                Staccato overMaxLatitude = StaccatoFixtures.defaultStaccato()
+                        .withCategory(category1ByMember)
+                        .withSpot(MAX_LATITUDE.add(threshold), MIN_LONGITUDE)
+                        .buildAndSave(staccatoRepository);
+                Staccato underMinLongitude = StaccatoFixtures.defaultStaccato()
+                        .withCategory(category1ByMember)
+                        .withSpot(MAX_LATITUDE, MIN_LONGITUDE.subtract(threshold))
+                        .buildAndSave(staccatoRepository);
+                Staccato overMaxLongitude = StaccatoFixtures.defaultStaccato()
+                        .withCategory(category1ByMember)
+                        .withSpot(MIN_LATITUDE, MAX_LONGITUDE.add(threshold))
+                        .buildAndSave(staccatoRepository);
+
+                // when
+                List<Staccato> result = staccatoRepository.findByMemberAndLocationRangeAndCategory(
+                        member, MIN_LATITUDE, MAX_LATITUDE, MIN_LONGITUDE, MAX_LONGITUDE, category1ByMember.getId());
+
+                // then
+                assertThat(result).hasSize(1)
+                        .containsExactlyInAnyOrder(staccatoInCategory1)
+                        .doesNotContain(staccatoInCategory2, underMinLatitude, overMaxLatitude, underMinLongitude, overMaxLongitude);
+            }
+        }
     }
 
     @DisplayName("특정 카테고리의 id를 가진 모든 스타카토를 삭제한다.")

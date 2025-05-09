@@ -12,11 +12,12 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
-import com.staccato.category.service.dto.response.CategoryDetailResponse;
+import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
@@ -82,6 +83,22 @@ public class CategoryService {
         validateOwner(category, member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
         return new CategoryDetailResponseV2(category, staccatos);
+    }
+
+    public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
+            Member member, long categoryId, CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest) {
+        Category category = getCategoryById(categoryId);
+        validateOwner(category, member);
+        List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRangeAndCategory(
+                member,
+                categoryStaccatoLocationRangeRequest.swLat(),
+                categoryStaccatoLocationRangeRequest.neLat(),
+                categoryStaccatoLocationRangeRequest.swLng(),
+                categoryStaccatoLocationRangeRequest.neLng(),
+                categoryId
+        );
+
+        return CategoryStaccatoLocationResponses.of(staccatos);
     }
 
     @Transactional
