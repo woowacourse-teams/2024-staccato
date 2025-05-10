@@ -202,22 +202,45 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("특정 카테고리를 조회한다.")
+    @DisplayName("HOST는 본인이 속한 특정 카테고리를 조회할 수 있다.")
     @Test
-    void readCategoryById() {
+    void readCategoryByIdByHost() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), member);
+                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), host);
 
         // when
-        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
+        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), host);
 
         // then
         assertAll(
                 () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
                 () -> assertThat(categoryDetailResponse.mates()).hasSize(1)
+        );
+    }
+
+    @DisplayName("GUEST는 본인이 속한 특정 카테고리를 조회할 수 있다.")
+    @Test
+    void readCategoryByIdByGuest() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(
+                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), host);
+        // TODO: 함께하는 사람 추가 서비스 메서드로 교체?
+        Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
+        categoryMemberRepository.save(CategoryMember.builder().category(category).member(guest).role(Role.GUEST).build());
+
+        // when
+        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), host);
+
+        // then
+        assertAll(
+                () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
+                () -> assertThat(categoryDetailResponse.mates()).hasSize(2)
         );
     }
 
