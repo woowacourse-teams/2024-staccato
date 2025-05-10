@@ -1,10 +1,8 @@
 package com.staccato.category.controller;
 
 import java.net.URI;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,19 +13,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.staccato.category.controller.docs.CategoryControllerV2Docs;
 import com.staccato.category.service.CategoryService;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
 import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
-
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -61,8 +58,8 @@ public class CategoryControllerV2 implements CategoryControllerV2Docs {
     public ResponseEntity<CategoryDetailResponseV2> readCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
-        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
-        return ResponseEntity.ok(categoryDetailResponse);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
+        return ResponseEntity.ok(categoryDetailResponse.toCategoryDetailResponseV2());
     }
 
     @PutMapping("/{categoryId}")

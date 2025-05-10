@@ -89,7 +89,7 @@ public class StaccatoService {
     }
 
     private Category getCategoryById(long categoryId) {
-        return categoryRepository.findById(categoryId)
+        return categoryRepository.findWithCategoryMembersById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 
