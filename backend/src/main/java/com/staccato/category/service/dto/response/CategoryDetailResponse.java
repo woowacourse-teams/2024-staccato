@@ -1,6 +1,7 @@
 package com.staccato.category.service.dto.response;
 
 import com.staccato.category.domain.Category;
+import com.staccato.category.domain.CategoryMember;
 import com.staccato.config.swagger.SwaggerExamples;
 import com.staccato.staccato.domain.Staccato;
 import java.time.LocalDate;
@@ -47,7 +48,9 @@ public record CategoryDetailResponse(
   }
 
   private static List<MemberResponse> toMemberResponses(Category category) {
-    return category.getMates().stream().map(MemberResponse::new).toList();
+    return category.getMates().stream()
+            .map(CategoryMember::getMember)
+            .map(MemberResponse::new).toList();
   }
 
   private static List<StaccatoResponse> toStaccatoResponses(List<Staccato> staccatos) {
