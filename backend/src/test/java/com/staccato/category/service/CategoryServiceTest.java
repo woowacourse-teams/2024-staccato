@@ -626,13 +626,13 @@ class CategoryServiceTest extends ServiceSliceTest {
     void invitation() {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        MemberFixtures.defaultMember().withNickname("guest1").buildAndSave(memberRepository);
-        MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        Member guest1 = MemberFixtures.defaultMember().withNickname("guest1").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(host)
                 .buildAndSave(categoryRepository);
 
-        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of("guest1", "guest2"));
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of(guest1.getId(), guest2.getId()));
 
         // when
         categoryService.invitation(category.getId(), host, invitationRequest);
@@ -649,13 +649,13 @@ class CategoryServiceTest extends ServiceSliceTest {
     void failToInviteIfNotHost() {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
         Member anotherUser = MemberFixtures.defaultMember().withNickname("anotherUser").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(host)
                 .buildAndSave(categoryRepository);
 
-        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of("guest"));
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of(guest.getId()));
 
         // when & then
         assertThatThrownBy(() -> categoryService.invitation(category.getId(), anotherUser, invitationRequest))
@@ -668,12 +668,13 @@ class CategoryServiceTest extends ServiceSliceTest {
     void inviteOnlyExistingMembers() {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        long unknownId = 0;
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(host)
                 .buildAndSave(categoryRepository);
 
-        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of("guest", "nonexistent"));
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of(guest.getId(), unknownId));
 
         // when
         categoryService.invitation(category.getId(), host, invitationRequest);

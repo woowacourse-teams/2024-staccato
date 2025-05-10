@@ -15,9 +15,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findByNicknameNicknameContainsAndIdNot(String nickname, long memberId);
 
-    @Query("""
-            SELECT m FROM Member m
-            WHERE m.nickname.nickname IN :nicknames
-            """)
-    List<Member> findAllByNicknameIn(@Param("nicknames") List<String> nicknames);
+    List<Member> findAllByIdIn(List<Long> memberIds);
 }

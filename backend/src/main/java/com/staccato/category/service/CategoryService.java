@@ -179,8 +179,8 @@ public class CategoryService {
     public void invitation(long categoryId, Member member, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryId);
         validateModificationPermission(category, member);
-        List<String> nicknames = categoryInvitationRequest.nicknames();
-        List<Member> invitedMembers = memberRepository.findAllByNicknameIn(nicknames);
+        List<Long> memberIds = categoryInvitationRequest.memberIds();
+        List<Member> invitedMembers = memberRepository.findAllByIdIn(memberIds);
         category.addGuests(invitedMembers);
     }
 }

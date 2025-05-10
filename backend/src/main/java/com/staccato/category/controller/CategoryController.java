@@ -120,7 +120,6 @@ public class CategoryController implements CategoryControllerDocs {
         return ResponseEntity.ok().build();
     }
 
-
     @PostMapping("/{categoryId}/invitations")
     public ResponseEntity<Void> invitation(@PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
                                            @LoginMember Member member,

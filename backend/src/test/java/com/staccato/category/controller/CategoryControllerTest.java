@@ -507,7 +507,7 @@ class CategoryControllerTest extends ControllerTest {
 
         String requestBody = """
             {
-                "nicknames": ["userA", "userB"]
+                "memberIds": [2, 2]
             }
             """;
 
