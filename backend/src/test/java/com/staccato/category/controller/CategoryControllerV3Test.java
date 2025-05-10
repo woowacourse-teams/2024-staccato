@@ -1,8 +1,10 @@
 package com.staccato.category.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -10,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -22,11 +25,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import com.staccato.ControllerTest;
+import com.staccato.category.domain.Category;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.category.CategoryCreateRequestFixtures;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
+import com.staccato.member.domain.Member;
+import com.staccato.staccato.domain.Staccato;
 
 class CategoryControllerV3Test extends ControllerTest {
 
@@ -161,5 +170,110 @@ class CategoryControllerV3Test extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("사용자가 특정 카테고리를 조회하는 응답 직렬화에 성공한다.")
+    @Test
+    void readCategory() throws Exception {
+        // given
+        long categoryId = 1;
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        when(authService.extractFromToken(anyString())).thenReturn(host);
+        Category category = CategoryFixtures.defaultCategory().withHost(host).withGuests(guest).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
+        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato));
+        when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
+        String expectedResponse = """
+                {
+                    "categoryId": null,
+                    "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
+                    "categoryTitle": "categoryTitle",
+                    "description": "categoryDescription",
+                    "categoryColor": "pink",
+                    "startAt": "2024-01-01",
+                    "endAt": "2024-12-31",
+                    "mates": [
+                        {
+                            "memberId": null,
+                            "nickname": "host",
+                            "memberImageUrl": "https://example.com/memberImage.png",
+                            "memberRole": "host"
+                        },
+                        {
+                            "memberId": null,
+                            "nickname": "guest",
+                            "memberImageUrl": "https://example.com/memberImage.png",
+                            "memberRole": "guest"
+                        }
+                    ],
+                    "staccatos": [
+                            {
+                                "staccatoId": null,
+                                "staccatoTitle": "staccatoTitle",
+                                "staccatoImageUrl": "https://example.com/staccatoImage.jpg",
+                                "visitedAt": "2024-06-01T00:00:00"
+                            }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/v3/categories/{categoryId}", categoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+
+    @DisplayName("사용자가 기간이 없는 특정 카테고리를 조회하는 응답 직렬화에 성공한다.")
+    @Test
+    void readCategoryWithoutTerm() throws Exception {
+        // given
+        long categoryId = 1;
+        Member member = MemberFixtures.defaultMember().build();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(null, null)
+                .withHost(member)
+                .build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
+        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato));
+        when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
+        String expectedResponse = """
+                {
+                    "categoryId": null,
+                    "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
+                    "categoryTitle": "categoryTitle",
+                    "description": "categoryDescription",
+                    "categoryColor": "pink",
+                    "mates": [
+                        {
+                            "memberId": null,
+                            "nickname": "nickname",
+                            "memberImageUrl": "https://example.com/memberImage.png",
+                            "memberRole": "host"
+                        }
+                    ],
+                    "staccatos": [
+                            {
+                                "staccatoId": null,
+                                "staccatoTitle": "staccatoTitle",
+                                "staccatoImageUrl": "https://example.com/staccatoImage.jpg",
+                                "visitedAt": "2024-06-01T00:00:00"
+                            }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/v3/categories/{categoryId}", categoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
     }
 }

@@ -1,21 +1,14 @@
 package com.staccato.category.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
@@ -28,7 +21,7 @@ import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.request.CategoryUpdateRequest;
-import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
@@ -50,6 +43,11 @@ import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.StaccatoService;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CategoryServiceTest extends ServiceSliceTest {
     @Autowired
@@ -212,7 +210,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), host);
 
         // when
-        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), host);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), host);
 
         // then
         assertAll(
@@ -232,10 +230,11 @@ class CategoryServiceTest extends ServiceSliceTest {
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), host);
         // TODO: 함께하는 사람 추가 서비스 메서드로 교체?
         Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
-        categoryMemberRepository.save(CategoryMember.builder().category(category).member(guest).role(Role.GUEST).build());
+        categoryMemberRepository.save(CategoryMember.builder().category(category).member(guest).role(Role.GUEST)
+                .build());
 
         // when
-        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), host);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), host);
 
         // then
         assertAll(
@@ -254,7 +253,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest().withTerm(null, null).build(), member);
 
         // when
-        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
 
         // then
         assertAll(
@@ -301,7 +300,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
-        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryIdResponse.categoryId(), member);
 
         // then
         assertAll(

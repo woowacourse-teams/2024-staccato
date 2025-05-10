@@ -3,10 +3,8 @@ package com.staccato.category.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
@@ -14,10 +12,9 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
-import com.staccato.category.service.dto.request.CategoryUpdateRequest;
-import com.staccato.category.service.dto.request.CategoryRequestV2;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
-import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
+import com.staccato.category.service.dto.request.CategoryUpdateRequest;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
@@ -30,7 +27,6 @@ import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -83,11 +79,11 @@ public class CategoryService {
         return sort.apply(categories);
     }
 
-    public CategoryDetailResponseV2 readCategoryById(long categoryId, Member member) {
+    public CategoryDetailResponseV3 readCategoryById(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
         validateReadPermission(category, member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
-        return new CategoryDetailResponseV2(category, staccatos);
+        return new CategoryDetailResponseV3(category, staccatos);
     }
 
     public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
