@@ -221,7 +221,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category1)
-                .buildAndSaveWithStaccatoImages(List.of("https://example.com/staccatoImage1.jpg", "https://example.com/staccatoImage2.jpg"), staccatoRepository);
+                .withStaccatoImages(List.of("https://example.com/staccatoImage1.jpg", "https://example.com/staccatoImage2.jpg"))
+                .buildAndSave(staccatoRepository);
 
         // when
         StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
@@ -312,7 +313,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
-                .buildAndSaveWithStaccatoImages(List.of("https://example.com/staccatoImage1.jpg", "https://example.com/staccatoImage2.jpg"), staccatoRepository);
+                .withStaccatoImages(List.of("https://example.com/staccatoImage1.jpg", "https://example.com/staccatoImage2.jpg"))
+                .buildAndSave(staccatoRepository);
         Comment comment = CommentFixtures.defaultComment()
                 .withStaccato(staccato)
                 .withMember(member).buildAndSave(commentRepository);
