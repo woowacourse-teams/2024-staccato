@@ -147,23 +147,6 @@ public class CategoryService {
         validateOwner(category, member);
     }
 
-    private void validateModificationPermission(Category category, Member member) {
-        validateOwner(category, member);
-        validateHost(category, member);
-    }
-
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    private void validateHost(Category category, Member member) {
-        if (category.isGuest(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
     private void deleteAllRelatedCategory(long categoryId) {
         List<Long> staccatoIds = staccatoRepository.findAllByCategoryId(categoryId)
                 .stream()
@@ -182,5 +165,22 @@ public class CategoryService {
         List<Long> memberIds = categoryInvitationRequest.memberIds();
         List<Member> invitedMembers = memberRepository.findAllByIdIn(memberIds);
         category.addGuests(invitedMembers);
+    }
+
+    private void validateModificationPermission(Category category, Member member) {
+        validateOwner(category, member);
+        validateHost(category, member);
+    }
+
+    private void validateOwner(Category category, Member member) {
+        if (category.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private void validateHost(Category category, Member member) {
+        if (category.isGuest(member)) {
+            throw new ForbiddenException();
+        }
     }
 }
