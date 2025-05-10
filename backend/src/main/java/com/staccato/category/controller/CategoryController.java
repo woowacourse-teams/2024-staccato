@@ -124,7 +124,7 @@ public class CategoryController implements CategoryControllerDocs {
     public ResponseEntity<Void> invitation(@PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
                                            @LoginMember Member member,
                                            @RequestBody CategoryInvitationRequest categoryInvitationRequest) {
-        categoryService.invitation(categoryId, member, categoryInvitationRequest);
+        categoryService.inviteMembers(categoryId, member, categoryInvitationRequest);
         return ResponseEntity.ok().build();
     }
 }

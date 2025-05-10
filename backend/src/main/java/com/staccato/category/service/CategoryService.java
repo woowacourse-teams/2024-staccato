@@ -176,7 +176,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void invitation(long categoryId, Member member, CategoryInvitationRequest categoryInvitationRequest) {
+    public void inviteMembers(long categoryId, Member member, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryId);
         validateModificationPermission(category, member);
         List<Long> memberIds = categoryInvitationRequest.memberIds();

@@ -623,7 +623,7 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     @DisplayName("HOST가 닉네임 목록을 통해 카테고리에 멤버를 초대한다.")
     @Test
-    void invitation() {
+    void inviteMembers() {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
         Member guest1 = MemberFixtures.defaultMember().withNickname("guest1").buildAndSave(memberRepository);
@@ -635,7 +635,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of(guest1.getId(), guest2.getId()));
 
         // when
-        categoryService.invitation(category.getId(), host, invitationRequest);
+        categoryService.inviteMembers(category.getId(), host, invitationRequest);
 
         // then
         Category savedCategory = categoryRepository.findById(category.getId()).get();
@@ -658,7 +658,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of(guest.getId()));
 
         // when & then
-        assertThatThrownBy(() -> categoryService.invitation(category.getId(), anotherUser, invitationRequest))
+        assertThatThrownBy(() -> categoryService.inviteMembers(category.getId(), anotherUser, invitationRequest))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -677,7 +677,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of(guest.getId(), unknownId));
 
         // when
-        categoryService.invitation(category.getId(), host, invitationRequest);
+        categoryService.inviteMembers(category.getId(), host, invitationRequest);
 
         // then
         List<CategoryMember> categoryMembers = categoryMemberRepository.findAllByCategoryId(category.getId());
