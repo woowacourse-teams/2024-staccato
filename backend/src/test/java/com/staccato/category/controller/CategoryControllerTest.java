@@ -512,7 +512,7 @@ class CategoryControllerTest extends ControllerTest {
             """;
 
         // when & then
-        mockMvc.perform(post("/categories/{categoryId}/invitations", categoryId)
+        mockMvc.perform(post("/categories/{categoryId}/members", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
