@@ -205,7 +205,7 @@ class CategoryCreationViewModel
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {
-            return if (isPeriodActive.value == true) {
+            return if (isPeriodActive.value) {
                 date.value
             } else {
                 null
