@@ -149,10 +149,12 @@ out/
 build/
 
 # Signing files
-.signing/
+**/.signing/
 
 # Local configuration file (sdk path, etc)
 local.properties
+
+# API keys (Maps etc)
 local.defaults.properties
 secrets.properties
 
@@ -178,7 +180,6 @@ captures/
 # Keystore files
 *.jks
 *.keystore
-app/signing/keystore.properties
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
