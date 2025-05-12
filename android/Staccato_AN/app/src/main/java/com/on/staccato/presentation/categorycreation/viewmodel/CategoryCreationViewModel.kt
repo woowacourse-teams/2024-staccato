@@ -175,7 +175,7 @@ class CategoryCreationViewModel
             val mediaType: MediaType? = fileUiModel.contentType?.toMediaTypeOrNull()
             val requestFile: RequestBody = fileUiModel.file.asRequestBody(mediaType)
 
-            return MultipartBody.Part.createFormData(
+            return createFormData(
                 IMAGE_FORM_DATA_NAME,
                 CATEGORY_FILE_CHILD_NAME,
                 requestFile,
