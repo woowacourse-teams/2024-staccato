@@ -9,16 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.on.staccato.R
 import com.on.staccato.presentation.component.CustomSwitchComponent
 import com.on.staccato.presentation.component.TextComponent
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.Title2
-
-const val CATEGORY_SHARE_TITLE = "카테고리 공유"
-const val CATEGORY_SHARE_HINT = "친구들을 초대해 함께 카테고리를 채워보세요."
 
 @Composable
 fun CategoryShareSection(
@@ -37,13 +36,13 @@ fun CategoryShareSection(
             horizontalAlignment = AbsoluteAlignment.Left,
         ) {
             TextComponent(
-                description = CATEGORY_SHARE_TITLE,
+                description = stringResource(id = R.string.category_creation_share_title),
                 style = Title2,
             )
             Spacer(modifier = Modifier.padding(top = 8.dp))
             TextComponent(
                 color = Gray3,
-                description = CATEGORY_SHARE_HINT,
+                description = stringResource(id = R.string.category_creation_share_hint),
                 style = Body4,
             )
         }

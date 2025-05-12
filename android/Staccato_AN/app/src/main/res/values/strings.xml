@@ -88,6 +88,8 @@
     <string name="category_creation_period_description">여행처럼 시작일과 종료일을 설정할 수 있어요.</string>
     <string name="category_creation_toolbar_title">카테고리 만들기</string>
     <string name="category_creation_toolbar_subtitle">스타카토를 담을 카테고리를 만들어 보세요!</string>
+    <string name="category_creation_share_title">카테고리 공유</string>
+    <string name="category_creation_share_hint">친구들을 초대해 함께 카테고리를 채워보세요.</string>
 
     // activity_category_update
     <string name="category_update_toolbar_title">카테고리 수정하기</string>
@@ -211,6 +213,8 @@
     <string name="error_message_unknown">"예기치 못한 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요."</string>
     <string name="error_message_image_upload">"이미지 업로드에 실패했습니다."</string>
 
+    // custom_switch_component
     <string name="label_custom_switch_track_color">TrackColor</string>
     <string name="label_custom_switch_thumb_position">ThumbPosition</string>
+
 </resources>
