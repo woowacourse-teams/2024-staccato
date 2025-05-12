@@ -197,10 +197,11 @@ class CategoryCreationViewModel
             NewCategory(
                 categoryThumbnailUrl = _thumbnail.value?.url,
                 categoryTitle = title.value ?: throw IllegalArgumentException(),
-                startAt = getDateByPeriodSetting(startDate),
-                endAt = getDateByPeriodSetting(endDate),
                 description = description.value,
                 color = color.value?.label ?: CategoryColor.GRAY.label,
+                startAt = getDateByPeriodSetting(startDate),
+                endAt = getDateByPeriodSetting(endDate),
+                isShared = _isShared.value,
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {
