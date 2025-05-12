@@ -121,10 +121,6 @@ public class Category extends BaseEntity {
         return term.doesNotContain(date);
     }
 
-    public List<CategoryMember> getMates() {
-        return categoryMembers;
-    }
-
     public boolean isNotOwnedBy(Member member) {
         return categoryMembers.stream()
                 .noneMatch(categoryMember -> categoryMember.isOwnedBy(member));

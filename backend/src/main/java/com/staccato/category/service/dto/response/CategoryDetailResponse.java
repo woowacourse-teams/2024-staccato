@@ -48,7 +48,7 @@ public record CategoryDetailResponse(
   }
 
   private static List<MemberResponse> toMemberResponses(Category category) {
-    return category.getMates().stream()
+    return category.getCategoryMembers().stream()
             .map(CategoryMember::getMember)
             .map(MemberResponse::new).toList();
   }

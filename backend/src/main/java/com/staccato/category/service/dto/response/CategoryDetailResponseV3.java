@@ -50,7 +50,7 @@ public record CategoryDetailResponseV3(
     }
 
     private static List<MemberDetailResponse> toMemberDetailResponses(Category category) {
-        return category.getMates().stream()
+        return category.getCategoryMembers().stream()
                 .map(MemberDetailResponse::new)
                 .toList();
     }
