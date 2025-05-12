@@ -1,0 +1,48 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  sql:
+    init:
+      mode: always
+  jpa:
+    database: MYSQL
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        create_empty_composites.enabled: true
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    defer-datasource-initialization: false
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+jasypt:
+  encryptor:
+    password: mock
+
+security:
+  jwt:
+    token:
+      secret-key: mock
+cloud:
+  aws:
+    access-key: mock
+    secret-access-key: mock
+    s3:
+      bucket: mock
+      endpoint: mock
+    cloudfront:
+      endpoint: mock
+image:
+  folder:
+    name: mock/
+
+staccato:
+  share:
+    link-prefix: http://localhost:8080/share/
