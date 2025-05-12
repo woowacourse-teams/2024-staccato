@@ -31,25 +31,30 @@ fun CategoryShareSection(
                 .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(
-            modifier = Modifier.padding(start = 24.dp),
-            horizontalAlignment = AbsoluteAlignment.Left,
-        ) {
-            TextComponent(
-                description = stringResource(id = R.string.category_creation_share_title),
-                style = Title2,
-            )
-            Spacer(modifier = Modifier.padding(top = 8.dp))
-            TextComponent(
-                color = Gray3,
-                description = stringResource(id = R.string.category_creation_share_hint),
-                style = Body4,
-            )
-        }
+        CategoryShareTitleAndHint()
         Spacer(modifier = Modifier.weight(1f))
         CustomSwitchComponent(
             checked = checked,
             onCheckedChange = onCheckedChange,
+        )
+    }
+}
+
+@Composable
+private fun CategoryShareTitleAndHint() {
+    Column(
+        modifier = Modifier.padding(start = 24.dp),
+        horizontalAlignment = AbsoluteAlignment.Left,
+    ) {
+        TextComponent(
+            description = stringResource(id = R.string.category_creation_share_title),
+            style = Title2,
+        )
+        Spacer(modifier = Modifier.padding(top = 8.dp))
+        TextComponent(
+            color = Gray3,
+            description = stringResource(id = R.string.category_creation_share_hint),
+            style = Body4,
         )
     }
 }
