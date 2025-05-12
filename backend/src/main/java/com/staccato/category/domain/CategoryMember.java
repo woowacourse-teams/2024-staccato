@@ -12,6 +12,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.member.domain.Member;
@@ -27,6 +29,10 @@ import lombok.NonNull;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@Table(name = "category_member",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"category_id", "member_id"})
+        })
 public class CategoryMember extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
