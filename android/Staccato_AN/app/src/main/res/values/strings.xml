@@ -82,6 +82,7 @@
     <string name="category_creation_description">카테고리 소개</string>
     <string name="category_creation_description_hint">소개를 입력해 주세요</string>
     <string name="category_creation_color">마커 색상</string>
+    <string name="category_creation_color_hint">지도 위에서 보여질 마커의 색을 선택해주세요.</string>
     <string name="category_creation_period_setting">기간 설정</string>
     <string name="category_creation_period_hint">기간을 선택해 주세요</string>
     <string name="category_creation_selected_period">%s ~ %s</string>
