@@ -18,7 +18,7 @@ import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
-import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.category.CategoryRequestV2Fixtures;
@@ -177,7 +177,7 @@ class CategoryControllerV2Test extends ControllerTest {
         Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
                 .withTerm(null, null).build();
-        CategoryResponsesV2 categoryResponses = CategoryResponsesV2.from(List.of(categoryWithTerm, categoryWithoutTerm));
+        CategoryResponsesV3 categoryResponses = CategoryResponsesV3.from(List.of(categoryWithTerm, categoryWithoutTerm));
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
                 {
@@ -215,7 +215,7 @@ class CategoryControllerV2Test extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category1 = CategoryFixtures.defaultCategory().build();
         Category category2 = CategoryFixtures.defaultCategory().build();
-        CategoryResponsesV2 categoryResponses = CategoryResponsesV2.from(List.of(category1, category2));
+        CategoryResponsesV3 categoryResponses = CategoryResponsesV3.from(List.of(category1, category2));
 
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
 

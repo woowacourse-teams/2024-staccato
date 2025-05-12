@@ -4,8 +4,10 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
+import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -54,4 +56,11 @@ public interface CategoryControllerV3Docs {
     ResponseEntity<CategoryDetailResponseV3> readCategory(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "카테고리 ID", example = "1") @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId);
+
+    @Operation(summary = "카테고리 목록 조회", description = "사용자의 모든 카테고리 목록을 조회합니다.")
+    @ApiResponse(description = "카테고리 목록 조회 성공", responseCode = "200")
+    ResponseEntity<CategoryResponsesV3> readAllCategories(
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "정렬 기준은 생략하거나 유효하지 않은 값에 대해서는 최근 수정 순(UPDATED)이 기본 정렬로 적용됩니다. 필터링 조건은 생략하거나 유효하지 않은 값이 들어오면 적용되지 않습니다.") CategoryReadRequest categoryReadRequest
+    );
 }

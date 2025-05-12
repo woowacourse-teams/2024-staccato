@@ -24,7 +24,7 @@ import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
-import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.category.service.dto.response.StaccatoResponse;
@@ -191,7 +191,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         CategoryReadRequest categoryReadRequest = new CategoryReadRequest("false", null);
 
         // when
-        CategoryResponsesV2 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
+        CategoryResponsesV3 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
 
         // then
         assertAll(

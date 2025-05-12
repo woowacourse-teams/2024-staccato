@@ -17,7 +17,7 @@ import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
-import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
@@ -52,11 +52,11 @@ public class CategoryService {
         return new CategoryIdResponse(category.getId());
     }
 
-    public CategoryResponsesV2 readAllCategories(Member member, CategoryReadRequest categoryReadRequest) {
+    public CategoryResponsesV3 readAllCategories(Member member, CategoryReadRequest categoryReadRequest) {
         List<Category> rawCategories = getCategories(categoryMemberRepository.findAllByMemberId(member.getId()));
         List<Category> categories = filterAndSort(rawCategories, categoryReadRequest.getFilters(), categoryReadRequest.getSort());
 
-        return CategoryResponsesV2.from(categories);
+        return CategoryResponsesV3.from(categories);
     }
 
     public CategoryNameResponses readAllCategoriesByDate(Member member, LocalDate currentDate) {
