@@ -1,17 +1,17 @@
 package com.staccato.category.service.dto.response;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.category.domain.Category;
-import com.staccato.category.domain.CategoryMember;
 import com.staccato.config.swagger.SwaggerExamples;
 import com.staccato.member.service.dto.response.MemberResponse;
 import com.staccato.staccato.domain.Staccato;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "카테고리에 대한 응답 형식입니다.")
-public record CategoryDetailResponseV2(
+public record CategoryDetailResponseV3(
         @Schema(example = SwaggerExamples.CATEGORY_ID)
         Long categoryId,
         @Schema(example = SwaggerExamples.IMAGE_URL)
@@ -31,11 +31,11 @@ public record CategoryDetailResponseV2(
         @Schema(example = SwaggerExamples.CATEGORY_END_AT)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate endAt,
-        List<MemberResponse> mates,
+        List<MemberDetailResponse> mates,
         List<StaccatoResponse> staccatos
 ) {
 
-    public CategoryDetailResponseV2(Category category, List<Staccato> staccatos) {
+    public CategoryDetailResponseV3(Category category, List<Staccato> staccatos) {
         this(
                 category.getId(),
                 category.getThumbnailUrl(),
@@ -44,15 +44,14 @@ public record CategoryDetailResponseV2(
                 category.getColor().getName(),
                 category.getTerm().getStartAt(),
                 category.getTerm().getEndAt(),
-                toMemberResponses(category),
+                toMemberDetailResponses(category),
                 toStaccatoResponses(staccatos)
         );
     }
 
-    private static List<MemberResponse> toMemberResponses(Category category) {
+    private static List<MemberDetailResponse> toMemberDetailResponses(Category category) {
         return category.getCategoryMembers().stream()
-                .map(CategoryMember::getMember)
-                .map(MemberResponse::new)
+                .map(MemberDetailResponse::new)
                 .toList();
     }
 
@@ -68,8 +67,31 @@ public record CategoryDetailResponseV2(
                 description,
                 startAt,
                 endAt,
-                mates,
+                toMemberResponses(mates),
                 staccatos
         );
     }
+
+    public CategoryDetailResponseV2 toCategoryDetailResponseV2() {
+        return new CategoryDetailResponseV2(
+                categoryId,
+                categoryThumbnailUrl,
+                categoryTitle,
+                description,
+                categoryColor,
+                startAt,
+                endAt,
+                toMemberResponses(mates),
+                staccatos
+        );
+    }
+
+    private List<MemberResponse> toMemberResponses(List<MemberDetailResponse> mates) {
+        List<MemberResponse> memberResponses = new ArrayList<>();
+        for (MemberDetailResponse mate : mates) {
+            memberResponses.add(new MemberResponse(mate.memberId(), mate.nickname(), mate.memberImageUrl()));
+        }
+        return memberResponses;
+    }
 }
+
