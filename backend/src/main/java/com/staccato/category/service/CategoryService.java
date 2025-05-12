@@ -80,7 +80,9 @@ public class CategoryService {
     }
 
     public CategoryDetailResponseV3 readCategoryById(long categoryId, Member member) {
-        Category category = getCategoryById(categoryId);
+        Category category = categoryRepository.findWithCategoryMembersById(categoryId)
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
+        ;
         validateReadPermission(category, member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
         return new CategoryDetailResponseV3(category, staccatos);
@@ -136,7 +138,7 @@ public class CategoryService {
     }
 
     private Category getCategoryById(long categoryId) {
-        return categoryRepository.findWithCategoryMembersById(categoryId)
+        return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 
