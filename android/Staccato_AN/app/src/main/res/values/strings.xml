@@ -211,4 +211,6 @@
     <string name="error_message_unknown">"예기치 못한 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요."</string>
     <string name="error_message_image_upload">"이미지 업로드에 실패했습니다."</string>
 
+    <string name="label_custom_switch_track_color">TrackColor</string>
+    <string name="label_custom_switch_thumb_position">ThumbPosition</string>
 </resources>
