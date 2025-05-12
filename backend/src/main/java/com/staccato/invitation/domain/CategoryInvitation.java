@@ -1,6 +1,4 @@
-package com.staccato.category.domain;
-
-import java.util.Objects;
+package com.staccato.invitation.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,54 +10,38 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-
+import com.staccato.category.domain.Category;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.member.domain.Member;
-
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Entity
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-@Table(name = "category_member",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"category_id", "member_id"})
-        })
-public class CategoryMember extends BaseEntity {
+public class CategoryInvitation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inviter_id", nullable = false)
+    private Member inviter;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invitee_id", nullable = false)
+    private Member invitee;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private InvitationStatus status;
 
-    @Builder
-    public CategoryMember(@NonNull Member member, @NonNull Category category, @NonNull Role role) {
-        this.member = member;
+    public CategoryInvitation(Category category, Member inviter, Member invitee, InvitationStatus status) {
         this.category = category;
-        this.role = role;
-    }
-
-    public boolean isOwnedBy(Member member) {
-        return Objects.equals(this.member, member);
-    }
-
-    public boolean isGuest() {
-        return role.isGuest();
+        this.inviter = inviter;
+        this.invitee = invitee;
+        this.status = status;
     }
 }
