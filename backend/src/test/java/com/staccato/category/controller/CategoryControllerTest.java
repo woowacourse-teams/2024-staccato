@@ -22,6 +22,7 @@ import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRe
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
+import com.staccato.category.service.dto.response.CategoryResponseV3;
 import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
@@ -182,7 +183,10 @@ class CategoryControllerTest extends ControllerTest {
         Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
                 .withTerm(null, null).build();
-        CategoryResponsesV3 categoryResponses = CategoryResponsesV3.from(List.of(categoryWithTerm, categoryWithoutTerm));
+        CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
+                new CategoryResponseV3(categoryWithTerm, 0),
+                new CategoryResponseV3(categoryWithoutTerm,0))
+        );
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
                 {
@@ -218,8 +222,10 @@ class CategoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category1 = CategoryFixtures.defaultCategory().build();
         Category category2 = CategoryFixtures.defaultCategory().build();
-        CategoryResponsesV3 categoryResponses = CategoryResponsesV3.from(List.of(category1, category2));
-
+        CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
+                new CategoryResponseV3(category1, 0),
+                new CategoryResponseV3(category2,0))
+        );
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
 
         // when & then

@@ -363,6 +363,30 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("카테고리 목록 조회 시 각 카테고리에 해당하는 스타카토 개수가 포함된다.")
+    @Test
+    void readAllCategoriesContainsStaccatoCount() {
+        // given
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(member)
+                .buildAndSave(categoryRepository);
+
+        StaccatoFixtures.defaultStaccato().withCategory(category).buildAndSave(staccatoRepository);
+        StaccatoFixtures.defaultStaccato().withCategory(category).buildAndSave(staccatoRepository);
+
+        CategoryReadRequest request = new CategoryReadRequest(null, null);
+
+        // when
+        CategoryResponsesV3 categoryResponses = categoryService.readAllCategories(member, request);
+
+        // then
+        assertAll(
+                () -> assertThat(categoryResponses.categories()).hasSize(1),
+                () -> assertThat(categoryResponses.categories().get(0).staccatoCount()).isEqualTo(2L)
+        );
+    }
+
     @DisplayName("카테고리 정보를 기반으로, 카테고리를 수정한다.")
     @MethodSource("updateCategoryProvider")
     @ParameterizedTest

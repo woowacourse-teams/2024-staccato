@@ -30,7 +30,7 @@ public record CategoryResponseV3(
         @Schema(example = SwaggerExamples.STACCATO_COUNT)
         Long staccatoCount
 ) {
-    public CategoryResponseV3(Category category) {
+    public CategoryResponseV3(Category category, long staccatoCount) {
         this(
                 category.getId(),
                 category.getThumbnailUrl(),
@@ -39,8 +39,7 @@ public record CategoryResponseV3(
                 category.getTerm().getStartAt(),
                 category.getTerm().getEndAt(),
                 toMemberResponses(category.getCategoryMembers()),
-                //TODO: 스타카토 개수 실제 값 반영
-                0L
+                staccatoCount
         );
     }
 
