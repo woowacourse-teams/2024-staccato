@@ -1,9 +1,12 @@
 package com.staccato.category.service.dto.response;
 
 import java.time.LocalDate;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.category.domain.Category;
+import com.staccato.category.domain.CategoryMember;
 import com.staccato.config.swagger.SwaggerExamples;
+import com.staccato.member.service.dto.response.MemberResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "카테고리 목록 조회 시 각각의 카테고리에 대한 응답 형식입니다.")
@@ -22,7 +25,10 @@ public record CategoryResponseV3(
         LocalDate startAt,
         @Schema(example = SwaggerExamples.CATEGORY_END_AT)
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        LocalDate endAt
+        LocalDate endAt,
+        List<MemberResponse> members,
+        @Schema(example = SwaggerExamples.STACCATO_COUNT)
+        Long staccatoCount
 ) {
     public CategoryResponseV3(Category category) {
         this(
@@ -31,8 +37,18 @@ public record CategoryResponseV3(
                 category.getTitle(),
                 category.getColor().getName(),
                 category.getTerm().getStartAt(),
-                category.getTerm().getEndAt()
+                category.getTerm().getEndAt(),
+                toMemberResponses(category.getCategoryMembers()),
+                //TODO: 스타카토 개수 실제 값 반영
+                0L
         );
+    }
+
+    private static List<MemberResponse> toMemberResponses(List<CategoryMember> categoryMembers) {
+        return categoryMembers.stream()
+                .map(CategoryMember::getMember)
+                .map(MemberResponse::new)
+                .toList();
     }
 
     public CategoryResponse toCategoryResponse() {

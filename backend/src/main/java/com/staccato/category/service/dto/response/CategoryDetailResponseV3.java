@@ -31,7 +31,7 @@ public record CategoryDetailResponseV3(
         @Schema(example = SwaggerExamples.CATEGORY_END_AT)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate endAt,
-        List<MemberDetailResponse> mates,
+        List<MemberDetailResponse> members,
         List<StaccatoResponse> staccatos
 ) {
 
@@ -67,7 +67,7 @@ public record CategoryDetailResponseV3(
                 description,
                 startAt,
                 endAt,
-                toMemberResponses(mates),
+                toMemberResponses(members),
                 staccatos
         );
     }
@@ -81,7 +81,7 @@ public record CategoryDetailResponseV3(
                 categoryColor,
                 startAt,
                 endAt,
-                toMemberResponses(mates),
+                toMemberResponses(members),
                 staccatos
         );
     }

@@ -215,7 +215,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.mates()).hasSize(1)
+                () -> assertThat(categoryDetailResponse.members()).hasSize(1)
         );
     }
 
@@ -239,7 +239,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.mates()).hasSize(2)
+                () -> assertThat(categoryDetailResponse.members()).hasSize(2)
         );
     }
 
@@ -258,7 +258,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.mates()).hasSize(1),
+                () -> assertThat(categoryDetailResponse.members()).hasSize(1),
                 () -> assertThat(categoryDetailResponse.startAt()).isNull(),
                 () -> assertThat(categoryDetailResponse.endAt()).isNull()
         );
