@@ -26,6 +26,9 @@ import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -66,7 +69,8 @@ class CategoryUpdateViewModel
         private val _isPhotoPosting = MutableLiveData<Boolean>(false)
         val isPhotoPosting: LiveData<Boolean> get() = _isPhotoPosting
 
-        val isPeriodActive = MutableLiveData<Boolean>()
+        private val _isPeriodActive = MutableStateFlow<Boolean>(false)
+        val isPeriodActive: StateFlow<Boolean> = _isPeriodActive.asStateFlow()
 
         private var categoryId: Long = 0L
 
@@ -115,6 +119,10 @@ class CategoryUpdateViewModel
             _color.value = color
         }
 
+        fun updateIsPeriodActive(value: Boolean) {
+            _isPeriodActive.value = value
+        }
+
         fun createThumbnailUrl(
             uri: Uri,
             file: FileUiModel,
@@ -135,12 +143,10 @@ class CategoryUpdateViewModel
             _startDate.value = category.startAt
             _endDate.value = category.endAt
             _color.value = CategoryColor.getColorBy(category.color)
-            checkCategoryHasPeriod(category)
+            updateIsPeriodActive(hasPeriod(category))
         }
 
-        private fun checkCategoryHasPeriod(category: Category) {
-            isPeriodActive.value = category.startAt != null && category.endAt != null
-        }
+        private fun hasPeriod(category: Category): Boolean = category.startAt != null && category.endAt != null
 
         private fun makeNewCategory() =
             NewCategory(
@@ -153,7 +159,7 @@ class CategoryUpdateViewModel
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {
-            return if (isPeriodActive.value == true) {
+            return if (isPeriodActive.value) {
                 date.value
             } else {
                 null
