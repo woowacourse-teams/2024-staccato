@@ -1,5 +1,3 @@
-@file:JvmName("CategoryShareKt")
-
 package com.on.staccato.presentation.categorycreation.component
 
 import androidx.compose.runtime.Composable
