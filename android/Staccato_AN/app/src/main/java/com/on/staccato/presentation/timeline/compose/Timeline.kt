@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.timeline.compose
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
@@ -13,12 +12,16 @@ import com.on.staccato.theme.Gray1
 import java.time.LocalDate
 
 @Composable
-fun Timeline(timeline: List<TimelineUiModel>) {
-    LazyColumn(
-        contentPadding = PaddingValues(2.dp),
-    ) {
+fun Timeline(
+    timeline: List<TimelineUiModel>,
+    onCategoryClicked: (Long) -> Unit,
+) {
+    LazyColumn {
         items(timeline) { timelineCategory ->
-            TimelineItem(timeline = timelineCategory)
+            TimelineItem(
+                timeline = timelineCategory,
+                onCategoryClicked = onCategoryClicked,
+            )
             HorizontalDivider(thickness = 1.dp, color = Gray1)
         }
     }
@@ -27,7 +30,10 @@ fun Timeline(timeline: List<TimelineUiModel>) {
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 private fun TimelinePreview() {
-    Timeline(timeline = timeline)
+    Timeline(
+        timeline = timeline,
+        onCategoryClicked = {},
+    )
 }
 
 val timeline =

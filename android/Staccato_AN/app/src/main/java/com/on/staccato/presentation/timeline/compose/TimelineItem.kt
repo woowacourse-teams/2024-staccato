@@ -2,6 +2,7 @@ package com.on.staccato.presentation.timeline.compose
 
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,12 +36,16 @@ import com.on.staccato.theme.Title3
 import java.time.LocalDate
 
 @Composable
-fun TimelineItem(timeline: TimelineUiModel) {
+fun TimelineItem(
+    timeline: TimelineUiModel,
+    onCategoryClicked: (Long) -> Unit,
+) {
     Row(
         modifier =
             Modifier
                 .padding(horizontal = 18.dp, vertical = 13.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .clickable { onCategoryClicked(timeline.categoryId) },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // TODO: size 90으로 수정
@@ -174,7 +179,10 @@ private fun TimelineItemPreview(
     @PreviewParameter(TimelineItemPreviewParameterProvider::class)
     category: TimelineUiModel,
 ) {
-    TimelineItem(category)
+    TimelineItem(
+        category,
+        onCategoryClicked = {},
+    )
 }
 
 class TimelineItemPreviewParameterProvider : PreviewParameterProvider<TimelineUiModel> {
