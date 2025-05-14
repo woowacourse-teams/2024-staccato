@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
+import com.staccato.category.domain.Role;
 import com.staccato.config.jwt.MemberTokenProvider;
 import com.staccato.config.log.LogForm;
 import com.staccato.config.log.annotation.Trace;
@@ -48,8 +49,7 @@ public class AuthService {
     }
 
     private void createBasicCategory(Member member) {
-        Category category = Category.basic(member.getNickname());
-        category.addCategoryMember(member);
+        Category category = Category.basic(member);
         categoryRepository.save(category);
     }
 

@@ -1,9 +1,5 @@
 package com.staccato.category.service.dto.request;
 
-import com.staccato.category.domain.Category;
-import com.staccato.category.domain.Color;
-import com.staccato.config.swagger.SwaggerExamples;
-
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -11,6 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.staccato.category.domain.Color;
+import com.staccato.config.swagger.SwaggerExamples;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -37,25 +36,26 @@ public record CategoryRequest(
         }
     }
 
-    public Category toCategory() {
-        return Category.builder()
-                .thumbnailUrl(categoryThumbnailUrl)
-                .title(categoryTitle)
-                .description(description)
-                .color(Color.GRAY.getName())
-                .startAt(startAt)
-                .endAt(endAt)
-                .build();
-    }
-
-    public CategoryRequestV2 toCategoryRequestV2() {
-        return new CategoryRequestV2(
+    public CategoryUpdateRequest toCategoryUpdateRequest() {
+        return new CategoryUpdateRequest(
                 categoryThumbnailUrl,
                 categoryTitle,
                 description,
                 Color.GRAY.getName(),
                 startAt,
                 endAt
+        );
+    }
+
+    public CategoryCreateRequest toCategoryCreateRequest() {
+        return new CategoryCreateRequest(
+                categoryThumbnailUrl,
+                categoryTitle,
+                description,
+                Color.GRAY.getName(),
+                startAt,
+                endAt,
+                false
         );
     }
 }
