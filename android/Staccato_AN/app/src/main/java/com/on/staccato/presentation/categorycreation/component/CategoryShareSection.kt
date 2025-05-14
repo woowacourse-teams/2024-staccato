@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.categorycreation.compose
+package com.on.staccato.presentation.categorycreation.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
