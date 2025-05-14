@@ -14,7 +14,6 @@ import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
-import com.on.staccato.presentation.categorycreation.DateConverter.convertLongToLocalDate
 import com.on.staccato.presentation.categorycreation.model.CategoryCreationError
 import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -24,6 +23,7 @@ import com.on.staccato.presentation.common.photo.FileUiModel
 import com.on.staccato.presentation.util.CATEGORY_FILE_CHILD_NAME
 import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
+import com.on.staccato.presentation.util.convertLongToLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
