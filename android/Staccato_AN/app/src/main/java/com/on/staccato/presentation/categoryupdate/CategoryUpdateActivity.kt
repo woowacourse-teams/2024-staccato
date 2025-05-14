@@ -113,6 +113,7 @@ class CategoryUpdateActivity :
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.handler = this
+        binding.textInputCategoryUpdateTitle.clearFocus()
     }
 
     private fun navigateToCategory() {
