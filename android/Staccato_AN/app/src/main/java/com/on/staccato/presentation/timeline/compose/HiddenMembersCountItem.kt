@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +17,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
-import com.on.staccato.presentation.component.TextComponent
 import com.on.staccato.theme.Body6
 import com.on.staccato.theme.White
 
@@ -34,7 +34,11 @@ fun HiddenMembersCountItem(
                 .border(width = 1.dp, color = White, shape = CircleShape),
         contentAlignment = Alignment.Center,
     ) {
-        TextComponent(description = "+$count", color = White, style = Body6)
+        Text(
+            text = "+$count",
+            color = White,
+            style = Body6,
+        )
     }
 }
 

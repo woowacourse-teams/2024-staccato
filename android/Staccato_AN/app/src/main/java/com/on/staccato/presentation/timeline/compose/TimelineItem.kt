@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +28,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
-import com.on.staccato.presentation.component.TextComponent
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Body5
@@ -142,15 +142,15 @@ private fun CategoryPeriodAndTitle(
 
     Column {
         if (period != null) {
-            TextComponent(
+            Text(
+                text = period,
                 color = Gray3,
-                description = period,
                 style = Body5,
             )
         }
         Spacer(modifier = Modifier.size(2.dp))
-        TextComponent(
-            description = categoryTitle,
+        Text(
+            text = categoryTitle,
             style = Title3,
         )
     }
@@ -168,7 +168,11 @@ private fun StaccatosCount(count: Int = 0) {
             tint = Color.Unspecified,
         )
         Spacer(modifier = Modifier.width(3.dp))
-        TextComponent(color = Gray3, description = count.toString(), style = Body4)
+        Text(
+            text = count.toString(),
+            color = Gray3,
+            style = Body4,
+        )
     }
 }
 
