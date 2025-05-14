@@ -30,6 +30,7 @@ import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.component.TextComponent
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.theme.Body4
+import com.on.staccato.theme.Body5
 import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.Title3
@@ -48,7 +49,6 @@ fun TimelineItem(
                 .clickable { onCategoryClicked(timeline.categoryId) },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // TODO: size 90으로 수정
         DefaultAsyncImage(
             modifier = Modifier.size(90.dp),
             bitmapPixelSize = 150,
@@ -103,11 +103,10 @@ private fun CategoryColor(
     @ColorRes color: Int = R.color.gray3,
 ) {
     // TODO: Box 백그라운드 컬러 번경 필요
-    // TODO: size 36.dp로 변경
     Box(
         modifier =
             Modifier
-                .size(32.dp)
+                .size(36.dp)
                 .background(color = Gray1, shape = CircleShape),
         contentAlignment = Alignment.Center,
     ) {
@@ -146,10 +145,10 @@ private fun CategoryPeriodAndTitle(
             TextComponent(
                 color = Gray3,
                 description = period,
-                style = Body4, // TODO: style Body5로 수정
+                style = Body5,
             )
         }
-        // TODO: Spacer 추가 size 2.dp
+        Spacer(modifier = Modifier.size(2.dp))
         TextComponent(
             description = categoryTitle,
             style = Title3,

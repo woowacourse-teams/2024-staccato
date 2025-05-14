@@ -62,7 +62,7 @@ val Body5 =
 
 val Body6 =
     defaultTextStyle(
-        fontSize = 7.sp,
+        fontSize = 9.sp,
         fontWeight = FontWeight.SemiBold,
     )
 

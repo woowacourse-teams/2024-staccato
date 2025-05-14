@@ -28,7 +28,7 @@ fun HiddenMembersCountItem(
     Box(
         modifier =
             Modifier
-                .size(17.dp)
+                .size(19.dp)
                 .shadow(2.dp, shape = CircleShape, clip = false)
                 .background(color = colorResource(id = color), shape = CircleShape)
                 .border(width = 1.dp, color = White, shape = CircleShape),
