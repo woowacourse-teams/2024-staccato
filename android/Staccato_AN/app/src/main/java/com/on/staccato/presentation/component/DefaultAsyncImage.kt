@@ -1,6 +1,7 @@
 package com.on.staccato.presentation.component
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,11 +16,12 @@ import com.on.staccato.R
 import com.on.staccato.presentation.util.dpToPx
 
 @Composable
-fun ImageComponent(
+fun DefaultAsyncImage(
     modifier: Modifier = Modifier,
+    bitmapPixelSize: Int,
     url: String? = null,
     @DrawableRes placeHolder: Int,
-    contentDescription: String,
+    @StringRes contentDescription: Int,
     contentScale: ContentScale = ContentScale.Crop,
     radius: Float = 0f,
 ) {
@@ -29,25 +31,28 @@ fun ImageComponent(
                 ImageRequest.Builder(LocalContext.current)
                     .data(url)
                     .transformations(RoundedCornersTransformation(radius.dpToPx(LocalContext.current)))
+                    .size(bitmapPixelSize)
                     .placeholder(placeHolder)
                     .fallback(placeHolder)
+                    .error(placeHolder)
                     .build(),
         )
 
     Image(
         modifier = modifier,
         painter = painter,
-        contentDescription = contentDescription,
+        contentDescription = stringResource(contentDescription),
         contentScale = contentScale,
     )
 }
 
 @Preview
 @Composable
-private fun ImageComponentPreview() {
-    ImageComponent(
+private fun DefaultAsyncImagePreview() {
+    DefaultAsyncImage(
+        bitmapPixelSize = 150,
         url = "https://avatars.githubusercontent.com/u/103019852?v=4",
-        placeHolder = R.drawable.default_image,
-        contentDescription = stringResource(id = R.string.all_category_thumbnail_photo_description),
+        placeHolder = R.drawable.icon_member,
+        contentDescription = R.string.all_category_thumbnail_photo_description,
     )
 }
