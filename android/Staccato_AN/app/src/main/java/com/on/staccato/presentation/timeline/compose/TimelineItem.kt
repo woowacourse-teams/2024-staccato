@@ -145,7 +145,7 @@ private fun CategoryPeriodAndTitle(
             Text(
                 text = period,
                 color = Gray3,
-                style = Body5,
+                style = Body4,
             )
         }
         Spacer(modifier = Modifier.size(2.dp))
