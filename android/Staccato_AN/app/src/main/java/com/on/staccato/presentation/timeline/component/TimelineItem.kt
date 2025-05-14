@@ -1,9 +1,6 @@
 package com.on.staccato.presentation.timeline.component
 
-import androidx.annotation.ColorRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +26,6 @@ import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.model.dummyTimelineUiModel
 import com.on.staccato.theme.Body4
-import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.Title3
 import java.time.LocalDate
@@ -94,27 +88,6 @@ fun TimelineItem(
                 StaccatosCount(count = 21) // TODO: 서버에서 주는 값으로 변경
             }
         }
-    }
-}
-
-// TODO: 파라미터 Enum Class 타입으로 변경 필요
-@Composable
-private fun CategoryColor(
-    @ColorRes color: Int = R.color.gray3,
-) {
-    // TODO: Box 백그라운드 컬러 번경 필요
-    Box(
-        modifier =
-            Modifier
-                .size(36.dp)
-                .background(color = Gray1, shape = CircleShape),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.icon_folder),
-            contentDescription = stringResource(id = R.string.category_creation_color),
-            tint = colorResource(id = color),
-        )
     }
 }
 
