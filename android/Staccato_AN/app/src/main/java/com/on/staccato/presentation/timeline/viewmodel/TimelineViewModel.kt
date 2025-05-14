@@ -19,6 +19,9 @@ import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,9 +39,9 @@ class TimelineViewModel
         val filterType: LiveData<FilterType?>
             get() = _filterType
 
-        private val _timeline = MutableLiveData<List<TimelineUiModel>>(emptyList())
-        val timeline: LiveData<List<TimelineUiModel>>
-            get() = _timeline
+        private val _timeline = MutableStateFlow<List<TimelineUiModel>>(emptyList())
+        val timeline: StateFlow<List<TimelineUiModel>>
+            get() = _timeline.asStateFlow()
 
         private val _isTimelineLoading = MutableLiveData(false)
         val isTimelineLoading: LiveData<Boolean>

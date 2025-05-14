@@ -137,20 +137,14 @@
                 tools:text="기간 있는 카테고리만" />
         </LinearLayout>
 
-
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/rv_timeline"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:paddingHorizontal="18dp"
-            android:paddingBottom="10dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linear_timeline_sort_categories"
-            tools:listitem="@layout/item_timeline" />
+            app:layout_constraintTop_toBottomOf="@id/linear_timeline_sort_categories" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_timeline_loading"
