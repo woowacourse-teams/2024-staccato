@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.category.domain.Category;
+import com.staccato.category.domain.CategoryMember;
 import com.staccato.config.swagger.SwaggerExamples;
 import com.staccato.member.service.dto.response.MemberResponse;
 import com.staccato.staccato.domain.Staccato;
@@ -49,7 +50,10 @@ public record CategoryDetailResponseV2(
     }
 
     private static List<MemberResponse> toMemberResponses(Category category) {
-        return category.getMates().stream().map(MemberResponse::new).toList();
+        return category.getCategoryMembers().stream()
+                .map(CategoryMember::getMember)
+                .map(MemberResponse::new)
+                .toList();
     }
 
     private static List<StaccatoResponse> toStaccatoResponses(List<Staccato> staccatos) {

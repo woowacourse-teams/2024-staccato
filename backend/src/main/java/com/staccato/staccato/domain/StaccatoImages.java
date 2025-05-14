@@ -1,6 +1,5 @@
 package com.staccato.staccato.domain;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +69,7 @@ public class StaccatoImages {
     public void addAll(StaccatoImages newStaccatoImages, Staccato staccato) {
         newStaccatoImages.images.forEach(image -> {
             this.images.add(image);
-            image.belongTo(staccato);
+            image.assignTo(staccato);
         });
     }
 }

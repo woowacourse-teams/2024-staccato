@@ -10,11 +10,10 @@ import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import com.staccato.category.domain.Color;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
@@ -25,7 +24,6 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -175,7 +173,8 @@ class StaccatoTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                .buildAndSave(categoryRepository);
             LocalDateTime beforeCreate = category.getUpdatedAt();
 
             // when
@@ -195,7 +194,8 @@ class StaccatoTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                .buildAndSave(categoryRepository);
             Staccato staccato = StaccatoFixtures.defaultStaccato()
                     .withCategory(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeUpdate = category.getUpdatedAt();
@@ -216,7 +216,8 @@ class StaccatoTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                .buildAndSave(categoryRepository);
             Staccato staccato = StaccatoFixtures.defaultStaccato()
                     .withCategory(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeDelete = category.getUpdatedAt();
@@ -230,5 +231,24 @@ class StaccatoTest {
             // then
             assertThat(afterDelete).isAfter(beforeDelete);
         }
+    }
+
+    @DisplayName("스타카토의 색상은 카테고리의 색상을 따른다.")
+    @Test
+    void getColor() {
+        // given
+        Member member = MemberFixtures.defaultMember().build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withColor(Color.PINK)
+                .withHost(member)
+                .build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).build();
+
+        // when
+        Color color = staccato.getColor();
+
+        // then
+        assertThat(color).isEqualTo(Color.PINK);
     }
 }
