@@ -20,7 +20,7 @@ import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.Title2
 
 @Composable
-fun CategoryShareSection(
+fun CategoryShare(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
 ) {
@@ -62,5 +62,5 @@ private fun CategoryShareTitleAndHint() {
 @Preview(showBackground = true)
 @Composable
 private fun CategoryShareSectionPreview() {
-    CategoryShareSection(false) {}
+    CategoryShare(false) {}
 }
