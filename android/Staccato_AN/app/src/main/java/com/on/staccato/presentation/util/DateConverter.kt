@@ -5,8 +5,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-fun convertLongToLocalDate(date: Long): LocalDate =
+fun Long.toLocalDate(): LocalDate =
     LocalDateTime.ofInstant(
-        Instant.ofEpochMilli(date),
+        Instant.ofEpochMilli(this),
         ZoneId.systemDefault(),
     ).toLocalDate()

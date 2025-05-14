@@ -23,7 +23,7 @@ import com.on.staccato.presentation.common.photo.FileUiModel
 import com.on.staccato.presentation.util.CATEGORY_FILE_CHILD_NAME
 import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
-import com.on.staccato.presentation.util.convertLongToLocalDate
+import com.on.staccato.presentation.util.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -109,8 +109,8 @@ class CategoryUpdateViewModel
             startAt: Long,
             endAt: Long,
         ) {
-            _startDate.value = convertLongToLocalDate(startAt)
-            _endDate.value = convertLongToLocalDate(endAt)
+            _startDate.value = startAt.toLocalDate()
+            _endDate.value = endAt.toLocalDate()
         }
 
         fun updateCategoryColor(color: CategoryColor) {
