@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.on.staccato.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
+import com.on.staccato.presentation.timeline.model.dummyTimelineUiModel
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray3
@@ -189,5 +190,5 @@ private fun TimelineItemPreview(
 
 class TimelineItemPreviewParameterProvider : PreviewParameterProvider<TimelineUiModel> {
     override val values: Sequence<TimelineUiModel> =
-        sequenceOf(*timeline.toTypedArray())
+        sequenceOf(*dummyTimelineUiModel.toTypedArray())
 }
