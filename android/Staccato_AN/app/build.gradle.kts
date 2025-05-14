@@ -9,7 +9,7 @@ val localProperties =
 
 val keystoreProperties =
     Properties().apply {
-        load(FileInputStream(rootProject.file("app/signing/keystore.properties")))
+        load(FileInputStream(rootProject.file("app/.signing/keystore.properties")))
     }
 
 plugins {
@@ -42,14 +42,23 @@ android {
         buildConfigField("String", "TOKEN", "${localProperties["token"]}")
     }
 
-    signingConfigs {
-        create("release") {
-            storeFile = file("${keystoreProperties["store_file"]}")
-            keyAlias = "${keystoreProperties["key_alias"]}"
-            keyPassword = "${keystoreProperties["key_password"]}"
-            storePassword = "${keystoreProperties["keystore_password"]}"
+    val signingFile = rootProject.file("app/.signing/keystore.properties")
+    val releaseSigningConfig =
+        if (signingFile.exists()) {
+            val keystoreProperties =
+                Properties().apply {
+                    load(FileInputStream(signingFile))
+                }
+
+            signingConfigs.create("release") {
+                storeFile = file("${keystoreProperties["store_file"]}")
+                keyAlias = "${keystoreProperties["key_alias"]}"
+                keyPassword = "${keystoreProperties["key_password"]}"
+                storePassword = "${keystoreProperties["keystore_password"]}"
+            }
+        } else {
+            null
         }
-    }
 
     buildFeatures {
         defaultConfig {
@@ -74,7 +83,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            signingConfig = signingConfigs.getByName("release")
+            if (releaseSigningConfig != null) {
+                signingConfig = releaseSigningConfig
+            }
         }
     }
 

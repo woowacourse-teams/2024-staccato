@@ -1,18 +1,21 @@
 package com.staccato.category.domain;
 
-import com.staccato.fixture.category.CategoryFixtures;
-import com.staccato.fixture.staccato.StaccatoFixtures;
-import com.staccato.staccato.domain.Staccato;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.staccato.exception.StaccatoException;
-import com.staccato.member.domain.Nickname;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
+import com.staccato.member.domain.Member;
+import com.staccato.staccato.domain.Staccato;
 
 class CategoryTest {
     @DisplayName("카테고리 생성 시 제목에는 앞뒤 공백이 잘린다.")
@@ -22,7 +25,11 @@ class CategoryTest {
         String expectedTitle = "title";
 
         // when
-        Category category = Category.builder().title(" title ").color(Color.BLUE.getName()).build();
+        Category category = Category.builder()
+                .title(" title ")
+                .color(Color.BLUE.getName())
+                .isShared(false)
+                .build();
 
         // then
         assertThat(category.getTitle()).isEqualTo(expectedTitle);
@@ -33,9 +40,12 @@ class CategoryTest {
     void createBasicCategoryWithMemberNickname() {
         // given
         String nickname = "staccato";
+        Member member = MemberFixtures.defaultMember()
+                .withNickname(nickname)
+                .build();
 
         // when
-        Category category = Category.basic(new Nickname(nickname));
+        Category category = Category.basic(member);
 
         // then
         assertThat(category.getTitle()).isEqualTo(nickname + "의 추억");
@@ -112,6 +122,7 @@ class CategoryTest {
         Category category = Category.builder()
                 .title("title")
                 .color(Color.GREEN.getName())
+                .isShared(false)
                 .build();
 
         // when
@@ -119,5 +130,36 @@ class CategoryTest {
 
         // then
         assertThat(category.getColor()).isEqualTo(Color.BLUE);
+    }
+
+    @DisplayName("멤버가 GUEST이면, 참을 반환한다.")
+    @Test
+    void isGuestReturnTrueIfGuestMember() {
+        // given
+        Member member = MemberFixtures.defaultMember().build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withGuests(member)
+                .build();
+
+        // when
+        boolean isDenied = category.isGuest(member);
+
+        // then
+        assertThat(isDenied).isEqualTo(true);
+    }
+
+    @DisplayName("멤버가 HOST이면, 거짓을 반환한다.")
+    @Test
+    void isGuestReturnFalseIfHostMember() {
+        // given
+        Member member = MemberFixtures.defaultMember().build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(member).build();
+
+        // when
+        boolean isDenied = category.isGuest(member);
+
+        // then
+        assertThat(isDenied).isEqualTo(false);
     }
 }

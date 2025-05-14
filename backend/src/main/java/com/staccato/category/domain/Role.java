@@ -11,4 +11,8 @@ public enum Role {
     GUEST("guest");
 
     private final String role;
+
+    boolean isGuest() {
+        return this == Role.GUEST;
+    }
 }
