@@ -1,0 +1,2 @@
+[*.{kt,kts}]
+ktlint_function_naming_ignore_wㅆhen_annotated_with=Composable
