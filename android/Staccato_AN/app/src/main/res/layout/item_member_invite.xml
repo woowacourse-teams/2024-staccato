@@ -18,7 +18,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/icon_invite"
-            android:contentDescription="@string/mates_invite_description"
+            android:contentDescription="@string/category_invite_description"
             android:onClick="@{()->handler.onClicked()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

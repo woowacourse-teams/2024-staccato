@@ -68,10 +68,7 @@
     <string name="category_delete_complete">카테고리가 삭제되었습니다.</string>
     <string name="category_staccato_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
     <string name="category_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
-
-    // item_mates
-    <string name="mates_profile_image_description">함께하는 사람 프로필 이미지</string>
-    <string name="mates_invite_description">함께 한 사람 초대 버튼</string>
+    <string name="category_invite_description">카테고리 초대 버튼</string>
 
     // item_staccatos
     <string name="staccatos_calendar_icon_description">달력 아이콘</string>
@@ -211,5 +208,16 @@
     <string name="error_message_network">"네트워크 연결이 불안정합니다.\n연결을 재설정한 후 다시 시도해 주세요."</string>
     <string name="error_message_unknown">"예기치 못한 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요."</string>
     <string name="error_message_image_upload">"이미지 업로드에 실패했습니다."</string>
+
+    // member invite
+    <string name="profile_image_description">사용자 프로필 이미지</string>
+    <string name="default_profile_image_description">기본 프로필 이미지</string>
+
+    <string name="invite_member_title">초대할 사람들</string>
+    <string name="invite_member_search_nickname">닉네임을 검색해주세요.</string>
+    <string name="invite_member_search_description">검색 아이콘</string>
+    <string name="invite_member_selected_description">선택됨</string>
+    <string name="invite_member_unselected_description">선택안됨</string>
+    <string name="invite_member_participating_description">참여중</string>
 
 </resources>
