@@ -35,8 +35,6 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.time.LocalDate
 import javax.inject.Inject
 
-private typealias ThumbnailUri = Uri
-
 @HiltViewModel
 class CategoryUpdateViewModel
     @Inject
@@ -81,7 +79,7 @@ class CategoryUpdateViewModel
         private val _error = MutableSingleLiveData<CategoryUpdateError>()
         val error: SingleLiveData<CategoryUpdateError> get() = _error
 
-        private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
+        private val thumbnailJobs = mutableMapOf<Uri, Job>()
 
         fun fetchCategory(id: Long) {
             categoryId = id

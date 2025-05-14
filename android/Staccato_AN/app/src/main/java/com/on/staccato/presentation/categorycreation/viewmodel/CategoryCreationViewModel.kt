@@ -39,8 +39,6 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.time.LocalDate
 import javax.inject.Inject
 
-private typealias ThumbnailUri = Uri
-
 @HiltViewModel
 class CategoryCreationViewModel
     @Inject
@@ -78,7 +76,7 @@ class CategoryCreationViewModel
         private val _error = MutableSingleLiveData<CategoryCreationError>()
         val error: SingleLiveData<CategoryCreationError> get() = _error
 
-        private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
+        private val thumbnailJobs = mutableMapOf<Uri, Job>()
 
         private val _color = MutableLiveData(CategoryColor.GRAY)
         val color: LiveData<CategoryColor> get() = _color
