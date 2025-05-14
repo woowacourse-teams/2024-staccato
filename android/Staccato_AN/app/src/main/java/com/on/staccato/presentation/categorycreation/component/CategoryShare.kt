@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
@@ -14,9 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
 import com.on.staccato.presentation.component.DefaultSwitch
-import com.on.staccato.presentation.component.TextComponent
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray3
+import com.on.staccato.theme.StaccatoBlack
 import com.on.staccato.theme.Title2
 
 @Composable
@@ -46,14 +47,15 @@ private fun CategoryShareTitleAndHint() {
         modifier = Modifier.padding(start = 24.dp),
         horizontalAlignment = AbsoluteAlignment.Left,
     ) {
-        TextComponent(
-            description = stringResource(id = R.string.category_creation_share_title),
+        Text(
+            text = stringResource(id = R.string.category_creation_share_title),
+            color = StaccatoBlack,
             style = Title2,
         )
         Spacer(modifier = Modifier.padding(top = 8.dp))
-        TextComponent(
+        Text(
+            text = stringResource(id = R.string.category_creation_share_hint),
             color = Gray3,
-            description = stringResource(id = R.string.category_creation_share_hint),
             style = Body4,
         )
     }
