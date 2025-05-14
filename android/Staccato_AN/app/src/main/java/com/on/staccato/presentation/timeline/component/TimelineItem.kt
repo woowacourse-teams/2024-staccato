@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.timeline.compose
+package com.on.staccato.presentation.timeline.component
 
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
@@ -30,7 +30,6 @@ import com.on.staccato.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.theme.Body4
-import com.on.staccato.theme.Body5
 import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.Title3

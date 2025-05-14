@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.timeline.compose
+package com.on.staccato.presentation.timeline.component
 
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.layout.Arrangement

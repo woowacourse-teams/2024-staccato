@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.timeline.compose
+package com.on.staccato.presentation.timeline.component
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items

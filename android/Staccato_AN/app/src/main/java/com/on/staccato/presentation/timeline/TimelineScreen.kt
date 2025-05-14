@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.on.staccato.presentation.timeline.compose.Timeline
+import com.on.staccato.presentation.timeline.component.Timeline
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
 
 @Composable
