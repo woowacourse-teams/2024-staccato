@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.common.component
+package com.on.staccato.presentation.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
