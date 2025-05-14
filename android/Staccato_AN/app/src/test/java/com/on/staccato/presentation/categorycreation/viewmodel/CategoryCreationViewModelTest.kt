@@ -9,7 +9,7 @@ import com.on.staccato.data.network.ServerError
 import com.on.staccato.data.network.Success
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
-import com.on.staccato.presentation.categorycreation.CategoryCreationError
+import com.on.staccato.presentation.categorycreation.model.CategoryCreationError
 import com.on.staccato.presentation.categorycreation.newCategory
 import com.on.staccato.presentation.getOrAwaitValue
 import com.on.staccato.presentation.util.ExceptionState2

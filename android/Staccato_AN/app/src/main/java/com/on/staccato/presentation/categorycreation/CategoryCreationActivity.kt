@@ -19,6 +19,7 @@ import com.on.staccato.databinding.ActivityCategoryCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categorycreation.component.CategoryShare
+import com.on.staccato.presentation.categorycreation.model.CategoryCreationError
 import com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.common.color.CategoryColor

@@ -15,7 +15,7 @@ import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.presentation.categorycreation.DateConverter.convertLongToLocalDate
-import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
+import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
