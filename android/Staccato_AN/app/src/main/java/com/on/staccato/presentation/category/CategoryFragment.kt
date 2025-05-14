@@ -12,6 +12,7 @@ import com.on.staccato.databinding.FragmentCategoryBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.adapter.MembersAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
+import com.on.staccato.presentation.category.invite.InviteScreen
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
@@ -128,6 +129,7 @@ class CategoryFragment :
         binding.viewModel = viewModel
         binding.toolbarHandler = this
         binding.categoryHandler = this
+        binding.cvMemberInvite.setContent { InviteScreen() }
         observeIsPermissionCanceled()
     }
 
