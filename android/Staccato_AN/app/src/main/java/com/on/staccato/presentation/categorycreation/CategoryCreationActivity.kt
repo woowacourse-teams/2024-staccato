@@ -26,7 +26,7 @@ import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.SELECTED_COLOR_LABEL
 import com.on.staccato.presentation.common.photo.FileUiModel
-import com.on.staccato.presentation.component.CustomSwitchComponent
+import com.on.staccato.presentation.component.DefaultSwitch
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.convertCategoryUriToFile
@@ -222,7 +222,7 @@ class CategoryCreationActivity :
 @Composable
 private fun PeriodActiveSwitch(viewModel: CategoryCreationViewModel = hiltViewModel()) {
     val isPeriodActive by viewModel.isPeriodActive.collectAsState()
-    CustomSwitchComponent(
+    DefaultSwitch(
         checked = isPeriodActive,
     ) { viewModel.updateIsPeriodActive(it) }
 }

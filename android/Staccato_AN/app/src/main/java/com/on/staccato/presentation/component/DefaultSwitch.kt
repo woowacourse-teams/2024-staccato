@@ -27,7 +27,7 @@ import com.on.staccato.theme.StaccatoBlue70
 import com.on.staccato.theme.White
 
 @Composable
-fun CustomSwitchComponent(
+fun DefaultSwitch(
     modifier: Modifier = Modifier,
     checked: Boolean = false,
     checkedTrackColor: Color = StaccatoBlue70,
@@ -73,7 +73,7 @@ private fun CustomSwitchPreview(
     @PreviewParameter(SwitchPreviewParameterProvider::class)
     checked: Boolean,
 ) {
-    CustomSwitchComponent(
+    DefaultSwitch(
         checked = checked,
     ) {}
 }
