@@ -25,12 +25,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
-import com.on.staccato.presentation.common.color.CategoryColor
-import com.on.staccato.presentation.component.ImageComponent
+import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.component.TextComponent
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.theme.Body4
-import com.on.staccato.theme.Body5
 import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.Title3
@@ -45,11 +43,13 @@ fun TimelineItem(timeline: TimelineUiModel) {
                 .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ImageComponent(
-            modifier = Modifier.size(86.dp),
+        // TODO: size 90으로 수정
+        DefaultAsyncImage(
+            modifier = Modifier.size(90.dp),
+            bitmapPixelSize = 150,
             url = timeline.categoryThumbnailUrl,
             placeHolder = R.drawable.default_image,
-            contentDescription = stringResource(R.string.all_category_thumbnail_photo_description),
+            contentDescription = R.string.all_category_thumbnail_photo_description,
             radius = 4f,
         )
 
@@ -98,6 +98,7 @@ private fun CategoryColor(
     @ColorRes color: Int = R.color.gray3,
 ) {
     // TODO: Box 백그라운드 컬러 번경 필요
+    // TODO: size 36.dp로 변경
     Box(
         modifier =
             Modifier
@@ -140,9 +141,10 @@ private fun CategoryPeriodAndTitle(
             TextComponent(
                 color = Gray3,
                 description = period,
-                style = Body5,
+                style = Body4, // TODO: style Body5로 수정
             )
         }
+        // TODO: Spacer 추가 size 2.dp
         TextComponent(
             description = categoryTitle,
             style = Title3,
