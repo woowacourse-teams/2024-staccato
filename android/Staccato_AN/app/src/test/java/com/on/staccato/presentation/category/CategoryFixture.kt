@@ -35,7 +35,7 @@ val categoryUiModel =
         endAt = null,
         description = null,
         color = CategoryColor.GRAY.label,
-        members = listOf(),
+        members = dummyMembers.members,
         staccatos = listOf(),
     )
 
