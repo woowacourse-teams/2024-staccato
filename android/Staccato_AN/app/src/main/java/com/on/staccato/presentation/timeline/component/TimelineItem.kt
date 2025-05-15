@@ -129,26 +129,6 @@ private fun CategoryPeriodAndTitle(
     }
 }
 
-@Composable
-private fun StaccatosCount(count: Int = 0) {
-    Row(
-        modifier = Modifier.padding(bottom = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.icon_marker),
-            contentDescription = "Marker Icon",
-            tint = Color.Unspecified,
-        )
-        Spacer(modifier = Modifier.width(3.dp))
-        Text(
-            text = count.toString(),
-            color = Gray3,
-            style = Body4,
-        )
-    }
-}
-
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 private fun TimelineItemPreview(
