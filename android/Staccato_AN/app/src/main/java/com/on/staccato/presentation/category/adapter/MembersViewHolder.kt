@@ -4,7 +4,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.on.staccato.databinding.ItemMemberInviteBinding
 import com.on.staccato.databinding.ItemMemberProfileBinding
-import com.on.staccato.domain.model.Member
+import com.on.staccato.domain.model.Participant
 
 sealed class MembersViewHolder(binding: ViewDataBinding) : ViewHolder(binding.root) {
     class MemberInviteViewHolder(
@@ -19,8 +19,8 @@ sealed class MembersViewHolder(binding: ViewDataBinding) : ViewHolder(binding.ro
     class MemberProfileViewHolder(
         private val binding: ItemMemberProfileBinding,
     ) : MembersViewHolder(binding) {
-        fun bind(mate: Member) {
-            binding.member = mate
+        fun bind(member: Participant) {
+            binding.member = member
         }
     }
 }

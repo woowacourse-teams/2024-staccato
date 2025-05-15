@@ -14,7 +14,7 @@ fun Category.toUiModel() =
         endAt = endAt,
         description = description,
         color = color,
-        members = mates,
+        members = mates.map { it.member },
         staccatos = staccatos.map { it.toUiModel() },
     )
 

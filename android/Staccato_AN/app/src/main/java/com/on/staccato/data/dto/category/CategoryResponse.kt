@@ -1,6 +1,6 @@
 package com.on.staccato.data.dto.category
 
-import com.on.staccato.data.dto.member.MemberDto
+import com.on.staccato.data.dto.member.ParticipantDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -13,6 +13,6 @@ data class CategoryResponse(
     @SerialName("endAt") val endAt: String? = null,
     @SerialName("description") val description: String? = null,
     @SerialName("categoryColor") val color: String,
-    @SerialName("mates") val mates: List<MemberDto>,
+    @SerialName("mates") val participants: List<ParticipantDto>,
     @SerialName("staccatos") val staccatos: List<CategoryStaccatoDto>,
 )

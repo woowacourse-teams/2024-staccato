@@ -10,8 +10,10 @@ import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.Member
-import com.on.staccato.domain.model.Members
+import com.on.staccato.domain.model.Participants
 import com.on.staccato.domain.model.emptyMembers
+import com.on.staccato.domain.model.emptyParticipants
+import com.on.staccato.domain.model.toMembers
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.category.invite.model.InviteState
@@ -52,7 +54,7 @@ class CategoryViewModel
         private var _isInviteMode = MutableStateFlow(false)
         val isInviteMode: StateFlow<Boolean> get() = _isInviteMode
 
-        private var participatingMembers = MutableStateFlow(emptyMembers)
+        var participatingMembers = MutableStateFlow(emptyParticipants)
 
         private var searchedMembers = MutableStateFlow(emptyMembers)
 
@@ -67,7 +69,7 @@ class CategoryViewModel
             ) { participating, searched, selected ->
                 searched.toUiModel()
                     .changeStates(selected, InviteState.SELECTED)
-                    .changeStates(participating, InviteState.PARTICIPATING)
+                    .changeStates(participating.toMembers(), InviteState.PARTICIPATING)
             }
 
         fun inviteMemberBy(id: Long) {
@@ -146,7 +148,7 @@ class CategoryViewModel
 
         private suspend fun updateCategory(category: Category) {
             _category.value = category.toUiModel()
-            participatingMembers.emit(Members(category.mates))
+            participatingMembers.emit(Participants(category.mates))
         }
 
         private fun updateIsDeleteSuccess() {

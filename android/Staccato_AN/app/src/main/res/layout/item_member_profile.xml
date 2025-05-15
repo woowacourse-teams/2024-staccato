@@ -8,7 +8,7 @@
 
         <variable
             name="member"
-            type="com.on.staccato.domain.model.Member" />
+            type="com.on.staccato.domain.model.Participant" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +33,7 @@
                 app:layout_constraintEnd_toEndOf="@id/tv_mates_nickname"
                 app:layout_constraintStart_toStartOf="@id/tv_mates_nickname"
                 app:layout_constraintTop_toTopOf="parent"
-                bind:coilCircleImageUrl="@{member.memberImage}"
+                bind:coilCircleImageUrl="@{member.member.memberImage}"
                 bind:coilPlaceHolder="@{@drawable/shape_place_holder_oval}"
                 tools:src="@drawable/shape_place_holder_oval" />
         </LinearLayout>
@@ -45,7 +45,7 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{member.nickname}"
+            android:text="@{member.member.nickname}"
             android:textAppearance="@style/Typography.Body5.Not.Resizable"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

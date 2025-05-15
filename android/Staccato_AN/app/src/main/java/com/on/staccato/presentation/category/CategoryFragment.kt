@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
@@ -36,6 +37,7 @@ import com.on.staccato.util.logging.Param.Companion.KEY_IS_CREATED_IN_MAIN
 import com.on.staccato.util.logging.Param.Companion.KEY_IS_VIEWED_BY_MARKER
 import com.on.staccato.util.logging.Param.Companion.PARAM_CATEGORY_FRAGMENT
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -55,7 +57,7 @@ class CategoryFragment :
     lateinit var loggingManager: LoggingManager
 
     private val membersAdapter by lazy {
-        MembersAdapter {
+        MembersAdapter(true) {
             viewModel.changeInviteMode(true)
         }
     }
@@ -152,8 +154,13 @@ class CategoryFragment :
 
     private fun observeCategory() {
         viewModel.category.observe(viewLifecycleOwner) { category ->
-            membersAdapter.updateMembers(category.members)
             staccatosAdapter.updateStaccatos(category.staccatos)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.participatingMembers.collect {
+                membersAdapter.updateMembers(it.members)
+            }
         }
     }
 
