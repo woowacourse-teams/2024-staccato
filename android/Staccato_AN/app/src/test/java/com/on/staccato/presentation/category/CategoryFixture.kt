@@ -1,6 +1,12 @@
 package com.on.staccato.presentation.category
 
 import com.on.staccato.domain.model.Category
+import com.on.staccato.domain.model.Member
+import com.on.staccato.domain.model.Members
+import com.on.staccato.domain.model.dummyMembers
+import com.on.staccato.presentation.category.invite.model.InviteState
+import com.on.staccato.presentation.category.invite.model.MemberUiModel
+import com.on.staccato.presentation.category.invite.model.MembersUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.common.color.CategoryColor
 
@@ -16,7 +22,7 @@ val category =
         endAt = null,
         description = null,
         color = CategoryColor.GRAY.label,
-        mates = listOf(),
+        mates = dummyMembers.members,
         staccatos = listOf(),
     )
 
@@ -31,4 +37,49 @@ val categoryUiModel =
         color = CategoryColor.GRAY.label,
         members = listOf(),
         staccatos = listOf(),
+    )
+
+val bingti =
+    Member(
+        memberId = 0L,
+        nickname = "빙나",
+        memberImage = "",
+    )
+val hannah =
+    Member(
+        memberId = 1L,
+        nickname = "해나",
+        memberImage = "",
+    )
+val hodu =
+    Member(
+        memberId = 2L,
+        nickname = "호두",
+        memberImage = "",
+    )
+val nana =
+    Member(
+        memberId = 4L,
+        nickname = "나나",
+        memberImage = "",
+    )
+
+val staccatoMembers = Members(listOf(bingti, hannah, hodu))
+
+val naMembers = Members(listOf(hannah, nana))
+
+val naMembersUiModel =
+    MembersUiModel(
+        listOf(
+            MemberUiModel(hannah, InviteState.PARTICIPATING),
+            MemberUiModel(nana, InviteState.UNSELECTED),
+        ),
+    )
+
+val selectedNaMembersUiModel =
+    MembersUiModel(
+        listOf(
+            MemberUiModel(hannah, InviteState.PARTICIPATING),
+            MemberUiModel(nana, InviteState.SELECTED),
+        ),
     )
