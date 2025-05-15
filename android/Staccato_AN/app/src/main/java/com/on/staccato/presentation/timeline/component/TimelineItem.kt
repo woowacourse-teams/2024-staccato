@@ -23,12 +23,13 @@ import com.on.staccato.theme.Title3
 
 @Composable
 fun TimelineItem(
+    modifier: Modifier = Modifier,
     timeline: TimelineUiModel,
     onCategoryClicked: (Long) -> Unit,
 ) {
     ConstraintLayout(
         modifier =
-            Modifier
+            modifier
                 .padding(horizontal = 18.dp, vertical = 13.dp)
                 .fillMaxWidth()
                 .clickable { onCategoryClicked(timeline.categoryId) },
@@ -140,7 +141,7 @@ private fun TimelineItemPreview(
     category: TimelineUiModel,
 ) {
     TimelineItem(
-        category,
+        timeline = category,
         onCategoryClicked = {},
     )
 }
