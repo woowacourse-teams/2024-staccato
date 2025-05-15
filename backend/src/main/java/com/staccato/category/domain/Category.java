@@ -20,6 +20,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -27,6 +28,7 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Category extends BaseEntity {
     private static final String DEFAULT_SUBTITLE = "의 추억";
     private static final String DEFAULT_DESCRIPTION = "스타카토를 카테고리에 담아보세요.";
@@ -34,6 +36,7 @@ public class Category extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
     @Column(columnDefinition = "TEXT")
     private String thumbnailUrl;
@@ -120,12 +123,6 @@ public class Category extends BaseEntity {
 
     public boolean isWithoutDuration(LocalDateTime date) {
         return term.doesNotContain(date);
-    }
-
-    public List<Member> getMates() {
-        return categoryMembers.stream()
-                .map(CategoryMember::getMember)
-                .toList();
     }
 
     public boolean isNotOwnedBy(Member member) {

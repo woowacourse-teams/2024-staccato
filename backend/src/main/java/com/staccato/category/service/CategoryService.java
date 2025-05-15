@@ -15,7 +15,7 @@ import com.staccato.category.service.dto.request.CategoryInvitationRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.request.CategoryUpdateRequest;
-import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
@@ -82,11 +82,12 @@ public class CategoryService {
         return sort.apply(categories);
     }
 
-    public CategoryDetailResponseV2 readCategoryById(long categoryId, Member member) {
-        Category category = getCategoryById(categoryId);
+    public CategoryDetailResponseV3 readCategoryById(long categoryId, Member member) {
+        Category category = categoryRepository.findWithCategoryMembersById(categoryId)
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
         validateReadPermission(category, member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
-        return new CategoryDetailResponseV2(category, staccatos);
+        return new CategoryDetailResponseV3(category, staccatos);
     }
 
     public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
