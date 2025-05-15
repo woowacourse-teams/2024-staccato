@@ -12,7 +12,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp">
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="2.5dp">
 
         <ImageButton
             android:layout_width="45dp"

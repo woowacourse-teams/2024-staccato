@@ -88,7 +88,7 @@ class MembersAdapter(
         val inviteButton by lazy {
             Participant(
                 dummyMember,
-                Role.Guest,
+                Role.GUEST,
             )
         }
     }

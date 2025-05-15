@@ -1,15 +1,15 @@
 package com.on.staccato.domain.model
 
 enum class Role(val value: String) {
-    Host("host"),
-    Guest("guest"),
+    HOST("host"),
+    GUEST("guest"),
     ;
 
     companion object {
         fun of(value: String) =
             when (value) {
-                "host" -> Host
-                "guest" -> Guest
+                "host" -> HOST
+                "guest" -> GUEST
                 else -> throw IllegalArgumentException("유효하지 않은 Role 입니다.")
             }
     }
