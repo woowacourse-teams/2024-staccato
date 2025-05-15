@@ -247,6 +247,9 @@ dependencies {
 
     // Compose ViewModel
     implementation(libs.lifecycle.viewmodel.compose)
+
+    // Compose ConstraintLayout
+    implementation(libs.androidx.constraintlayout.compose)
 }
 
 secrets {
