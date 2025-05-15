@@ -97,8 +97,8 @@ class StaccatoCreationViewModel
 
         private val photoJobs = mutableMapOf<String, Job>()
 
-        private val _isPlaceSearchClicked = MutableLiveData(false)
-        val isPlaceSearchClicked: LiveData<Boolean> get() = _isPlaceSearchClicked
+        private val _isPlaceSearchClicked = MutableSingleLiveData(false)
+        val isPlaceSearchClicked: SingleLiveData<Boolean> get() = _isPlaceSearchClicked
 
         private val _warningMessage = MutableSingleLiveData<String>()
         val warningMessage: SingleLiveData<String> get() = _warningMessage
@@ -146,6 +146,7 @@ class StaccatoCreationViewModel
             longitude: Double,
             latitude: Double,
         ) {
+            _isPlaceSearchClicked.setValue(true)
             _placeName.value = name
             _address.value = address
             _longitude.value = longitude
@@ -212,10 +213,6 @@ class StaccatoCreationViewModel
 
         private fun setClosestDateTimeAs(visitedAt: LocalDateTime) {
             _selectedVisitedAt.value = selectedCategory.value?.getClosestDateTime(visitedAt)
-        }
-
-        fun setIsPlaceSearchClicked(value: Boolean) {
-            _isPlaceSearchClicked.value = value
         }
 
         fun updateSelectedImageUris(newUris: Array<Uri>) {
