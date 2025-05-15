@@ -20,12 +20,13 @@ import com.on.staccato.theme.Gray1
 // TODO: 파라미터 Enum Class 타입으로 변경 필요
 @Composable
 fun CategoryColor(
+    modifier: Modifier = Modifier,
     @ColorRes color: Int = R.color.gray3,
 ) {
     // TODO: Box 백그라운드 컬러 번경 필요
     Box(
         modifier =
-            Modifier
+            modifier
                 .size(36.dp)
                 .background(color = Gray1, shape = CircleShape),
         contentAlignment = Alignment.Center,

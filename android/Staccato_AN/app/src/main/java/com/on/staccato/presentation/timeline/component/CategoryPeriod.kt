@@ -2,6 +2,7 @@ package com.on.staccato.presentation.timeline.component
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -13,6 +14,7 @@ import java.time.LocalDate
 
 @Composable
 fun CategoryPeriod(
+    modifier: Modifier = Modifier,
     startAt: LocalDate? = null,
     endAt: LocalDate? = null,
 ) {
@@ -34,6 +36,7 @@ fun CategoryPeriod(
 
     if (period != null) {
         Text(
+            modifier = modifier,
             text = period,
             color = Gray3,
             style = Body4,
@@ -48,8 +51,8 @@ private fun CategoryPeriodPreview(
     period: Pair<LocalDate?, LocalDate?>,
 ) {
     CategoryPeriod(
-        period.first,
-        period.second,
+        startAt = period.first,
+        endAt = period.second,
     )
 }
 

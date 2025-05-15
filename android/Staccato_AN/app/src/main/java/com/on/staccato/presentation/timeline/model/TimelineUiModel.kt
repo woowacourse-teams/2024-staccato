@@ -31,5 +31,13 @@ val dummyTimelineUiModel =
             endAt = LocalDate.of(2025, 12, 31),
             color = CategoryColor.GRAY.colorRes,
         ),
+        TimelineUiModel(
+            categoryId = 3,
+            categoryThumbnailUrl = null,
+            categoryTitle = "아주아주아주아주아주아주아주아주아주아주아주긴카테고리제목~",
+            startAt = LocalDate.of(2025, 1, 1),
+            endAt = LocalDate.of(2025, 12, 31),
+            color = CategoryColor.GRAY.colorRes,
+        ),
         // TODO: 서버 API 변경 되면 개인 카테고리 Preview 데이터 작성(함께하는 사람들 X)
     )

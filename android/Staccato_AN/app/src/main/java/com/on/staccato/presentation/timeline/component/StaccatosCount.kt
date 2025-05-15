@@ -21,9 +21,12 @@ import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray3
 
 @Composable
-fun StaccatosCount(count: Int = 0) {
+fun StaccatosCount(
+    modifier: Modifier = Modifier,
+    count: Int = 0,
+) {
     Row(
-        modifier = Modifier.padding(bottom = 4.dp),
+        modifier = modifier.padding(bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -46,7 +49,7 @@ private fun StaccatosCountPreview(
     @PreviewParameter(StaccatosCountPreviewParameterProvider::class)
     count: Int,
 ) {
-    StaccatosCount(count)
+    StaccatosCount(count = count)
 }
 
 private class StaccatosCountPreviewParameterProvider() : PreviewParameterProvider<Int> {
