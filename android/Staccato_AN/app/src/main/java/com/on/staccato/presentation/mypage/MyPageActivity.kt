@@ -15,6 +15,8 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMypageBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.mypage.component.MenuButton
+import com.on.staccato.presentation.mypage.component.MiddleDivider
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME

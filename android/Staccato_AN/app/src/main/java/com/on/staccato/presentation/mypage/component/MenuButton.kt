@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.mypage
+package com.on.staccato.presentation.mypage.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,25 +11,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
-import com.on.staccato.presentation.component.DefaultDivider
-import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray2
 import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.StaccatoBlack
 import com.on.staccato.theme.White
 
-// Todo: 버튼 색상 다크모드 대응 필요, 배경색은 투명 처리
-val MenuButtonColors =
+private val MenuButtonColors =
     ButtonColors(
         containerColor = White,
         contentColor = StaccatoBlack,
@@ -37,7 +32,7 @@ val MenuButtonColors =
         disabledContentColor = Gray3,
     )
 
-val MenuPaddingValues = PaddingValues(
+private val MenuPaddingValues = PaddingValues(
     top = 18.dp,
     bottom = 18.dp,
     start = 24.dp,
@@ -76,14 +71,6 @@ fun MenuButton(
     }
 }
 
-class MenuTitlePreviewParameterProvider : PreviewParameterProvider<String> {
-    override val values = sequenceOf(
-        "카테고리 초대 관리",
-        "개인정보처리방침",
-        "피드백으로 혼내주기",
-    )
-}
-
 @Preview(
     showBackground = true,
     backgroundColor = 0L,
@@ -97,21 +84,10 @@ fun MenuButtonPreview(
     ) {}
 }
 
-@Composable
-fun MiddleDivider(
-    modifier: Modifier = Modifier,
-    thickness: Dp = 10.dp,
-    color: Color = Gray1,
-) {
-    DefaultDivider(
-        modifier = modifier,
-        thickness = thickness,
-        color = color,
+class MenuTitlePreviewParameterProvider : PreviewParameterProvider<String> {
+    override val values = sequenceOf(
+        "카테고리 초대 관리",
+        "개인정보처리방침",
+        "피드백으로 혼내주기",
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MiddleDividerPreview() {
-    MiddleDivider()
 }
