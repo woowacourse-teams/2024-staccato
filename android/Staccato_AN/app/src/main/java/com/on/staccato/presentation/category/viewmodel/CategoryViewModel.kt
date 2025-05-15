@@ -104,9 +104,8 @@ class CategoryViewModel
                 handelException(ExceptionState2.UnknownError)
             } else {
                 viewModelScope.launch {
-                    val result: ApiResult<Category> = categoryRepository.getCategory(id)
-                    result
-                        .onSuccess(::updateCategory)
+                    categoryRepository.getCategory(id)
+                        .onSuccess { updateCategory(it) }
                         .onServerError(::handleServerError)
                         .onException2(::handelException)
                 }
@@ -145,11 +144,9 @@ class CategoryViewModel
             }
         }
 
-        private fun updateCategory(category: Category) {
+        private suspend fun updateCategory(category: Category) {
             _category.value = category.toUiModel()
-            viewModelScope.launch {
-                participatingMembers.emit(Members(category.mates))
-            }
+            participatingMembers.emit(Members(category.mates))
         }
 
         private fun updateIsDeleteSuccess() {
