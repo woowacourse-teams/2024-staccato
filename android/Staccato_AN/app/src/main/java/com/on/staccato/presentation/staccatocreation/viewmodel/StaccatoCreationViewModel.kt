@@ -83,7 +83,7 @@ class StaccatoCreationViewModel
         private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
 
-        private val _isCurrentLocationLoading = MutableLiveData<Boolean>()
+        private val _isCurrentLocationLoading = MutableLiveData<Boolean>(false)
         val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
 
         private val _createdStaccatoId = MutableSingleLiveData<Long>()
@@ -122,10 +122,11 @@ class StaccatoCreationViewModel
         }
 
         fun getCurrentLocation() {
-            _isCurrentLocationLoading.postValue(true)
+            _isCurrentLocationLoading.value = true
             val currentLocation: Task<Location> = locationRepository.getCurrentLocation()
             currentLocation.addOnSuccessListener {
                 _currentLocation.value = it
+                _isCurrentLocationLoading.value = false
             }
         }
 
