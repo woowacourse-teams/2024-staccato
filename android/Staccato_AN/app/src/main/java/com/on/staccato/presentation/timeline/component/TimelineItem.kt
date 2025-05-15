@@ -8,15 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -25,10 +20,7 @@ import com.on.staccato.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.model.dummyTimelineUiModel
-import com.on.staccato.theme.Body4
-import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.Title3
-import java.time.LocalDate
 
 @Composable
 fun TimelineItem(
@@ -62,11 +54,14 @@ fun TimelineItem(
 
                 Spacer(modifier = Modifier.width(10.dp))
 
-                CategoryPeriodAndTitle(
-                    timeline.startAt,
-                    timeline.endAt,
-                    timeline.categoryTitle,
-                )
+                Column {
+                    CategoryPeriod()
+                    Spacer(modifier = Modifier.size(2.dp))
+                    Text(
+                        text = timeline.categoryTitle,
+                        style = Title3,
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.size(22.dp))
@@ -88,44 +83,6 @@ fun TimelineItem(
                 StaccatosCount(count = 21) // TODO: 서버에서 주는 값으로 변경
             }
         }
-    }
-}
-
-@Composable
-private fun CategoryPeriodAndTitle(
-    startAt: LocalDate? = null,
-    endAt: LocalDate? = null,
-    categoryTitle: String,
-) {
-    // TODO: 년도에 따라 형식 수정
-    val period =
-        if (startAt != null && endAt != null) {
-            stringResource(
-                R.string.category_period_dot,
-                startAt.year,
-                startAt.monthValue,
-                startAt.dayOfMonth,
-                endAt.year,
-                endAt.monthValue,
-                endAt.dayOfMonth,
-            )
-        } else {
-            null
-        }
-
-    Column {
-        if (period != null) {
-            Text(
-                text = period,
-                color = Gray3,
-                style = Body4,
-            )
-        }
-        Spacer(modifier = Modifier.size(2.dp))
-        Text(
-            text = categoryTitle,
-            style = Title3,
-        )
     }
 }
 
