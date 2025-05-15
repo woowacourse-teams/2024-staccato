@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.component
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,13 +9,13 @@ import androidx.compose.ui.unit.dp
 import com.on.staccato.theme.Gray2
 
 @Composable
-fun Divider(
+fun DefaultDivider(
     modifier: Modifier = Modifier,
-    thickness: Dp = 0.5.dp,
+    thickness: Dp = 1.dp,
     color: Color = Gray2,
 ) {
     HorizontalDivider(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         thickness = thickness,
         color = color,
     )

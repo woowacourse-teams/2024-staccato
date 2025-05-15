@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
-import com.on.staccato.presentation.component.Divider
+import com.on.staccato.presentation.component.DefaultDivider
 import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray2
 import com.on.staccato.theme.Gray3
@@ -103,7 +103,7 @@ fun MiddleDivider(
     thickness: Dp = 10.dp,
     color: Color = Gray1,
 ) {
-    Divider(
+    DefaultDivider(
         modifier = modifier,
         thickness = thickness,
         color = color,
