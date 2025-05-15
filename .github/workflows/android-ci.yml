@@ -138,6 +138,7 @@ jobs:
     name: Run UI Test on [API ${{ matrix.api-level }} - ${{ matrix.profile }}]
     runs-on: ubuntu-latest
     needs: setup
+    timeout-minutes: 60
     defaults:
       run:
         shell: bash
