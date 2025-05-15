@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.component
+package com.on.staccato.presentation.component.topbar
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
@@ -112,7 +112,7 @@ private fun NavigationIcon(
 
 @Preview(showBackground = true)
 @Composable
-fun TopBarComponentsPreview() {
+private fun TopBarComponentsPreview() {
     Column {
         DefaultNavigationTopBar(
             title = "상단 앱 바 제목",
