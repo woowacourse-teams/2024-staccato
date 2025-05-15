@@ -66,7 +66,7 @@
     <string name="category_mates">함께하는 사람들</string>
     <string name="category_staccatos">스타카토</string>
     <string name="category_delete_complete">카테고리가 삭제되었습니다.</string>
-    <string name="category_staccato_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
+    <string name="category_staccato_empty">카테고리가 비어있어요.\n스타카토를 찍어볼까요?</string>
     <string name="category_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
     <string name="category_invite_description">카테고리 초대 버튼</string>
 
