@@ -217,7 +217,7 @@
     <string name="invite_member_search_nickname">닉네임을 검색해주세요.</string>
     <string name="invite_member_search_description">검색 아이콘</string>
     <string name="invite_member_selected_description">선택됨</string>
-    <string name="invite_member_unselected_description">선택안됨</string>
+    <string name="invite_member_unselected_description">선택 가능</string>
     <string name="invite_member_participating_description">참여중</string>
 
 </resources>
