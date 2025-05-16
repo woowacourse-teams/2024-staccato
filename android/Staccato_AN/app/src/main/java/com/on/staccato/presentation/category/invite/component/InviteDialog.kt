@@ -58,6 +58,7 @@ fun InviteDialog(
             ) {
                 InviteTopBar(
                     onDismissRequest = onClose,
+                    participantsNumber = selectedMembers.members.size,
                 )
                 StaccatoSearchTextField(
                     value = searchKeyword,
