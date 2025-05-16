@@ -11,6 +11,7 @@ import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.main.BottomSheetState
 import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,8 +48,8 @@ class SharedViewModel
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
 
-        private val _isBottomSheetHalf = MutableLiveData(true)
-        val isBottomSheetHalf: LiveData<Boolean> get() = _isBottomSheetHalf
+        private val _bottomSheetState = MutableLiveData<BottomSheetState>(BottomSheetState.HALF_EXPANDED)
+        val bottomSheetState: LiveData<BottomSheetState> get() = _bottomSheetState
 
         private val _staccatoId = MutableLiveData<Long>()
         val staccatoId: LiveData<Long> get() = _staccatoId
@@ -94,9 +95,9 @@ class SharedViewModel
             _isSettingClicked.value = isSettingClicked
         }
 
-        fun setIsBottomSheetHalf(isBottomSheetHalf: Boolean) {
-            val isDifferent = isBottomSheetHalf != _isBottomSheetHalf.value
-            if (isDifferent && isDragging.value == false) _isBottomSheetHalf.value = isBottomSheetHalf
+        fun updateBottomSheet(state: BottomSheetState) {
+            val isDifferent = state != _bottomSheetState.value
+            if (isDifferent && isDragging.value == false) _bottomSheetState.value = state
         }
 
         fun updateStaccatoId(id: Long) {

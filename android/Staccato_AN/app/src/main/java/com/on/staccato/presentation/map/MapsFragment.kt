@@ -24,6 +24,7 @@ import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.PermissionCancelListener
+import com.on.staccato.presentation.main.BottomSheetState
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
 import com.on.staccato.presentation.util.showSnackBar
@@ -206,10 +207,14 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun GoogleMap.setMapPadding() {
-        sharedViewModel.isBottomSheetHalf.observe(viewLifecycleOwner) { isBottomSheetHalf ->
+        sharedViewModel.bottomSheetState.observe(viewLifecycleOwner) { state ->
             val mapPaddingBottom =
-                if (isBottomSheetHalf) (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt() else DEFAULT_MAP_PADDING
-            val yPixel = if (isBottomSheetHalf) yPixel else -yPixel
+                if (state == BottomSheetState.HALF_EXPANDED) {
+                    (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt()
+                } else {
+                    DEFAULT_MAP_PADDING
+                }
+            val yPixel = if (state == BottomSheetState.HALF_EXPANDED) yPixel else -yPixel
 
             setPadding(
                 DEFAULT_MAP_PADDING,
