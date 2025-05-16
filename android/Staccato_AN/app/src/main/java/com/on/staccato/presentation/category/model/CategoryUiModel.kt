@@ -13,6 +13,7 @@ data class CategoryUiModel(
     val color: String,
     val members: List<Member>,
     val staccatos: List<CategoryStaccatoUiModel>,
+    val isShared: Boolean,
 ) {
     companion object {
         const val DEFAULT_CATEGORY_ID = 0L

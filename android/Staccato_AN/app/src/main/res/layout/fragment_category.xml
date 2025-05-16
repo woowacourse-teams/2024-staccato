@@ -135,7 +135,8 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/category_mates"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_category_description" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_category_description"
+                    bind:visibleOrGone="@{viewModel.category.isShared}" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_category_mates"
@@ -148,7 +149,8 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_category_mates" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_mates"
+                    bind:visibleOrGone="@{viewModel.category.isShared}" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider_category_mates"
@@ -156,7 +158,8 @@
                     android:layout_marginTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rv_category_mates" />
+                    app:layout_constraintTop_toBottomOf="@id/rv_category_mates"
+                    bind:visibleOrGone="@{viewModel.category.isShared}" />
 
                 <TextView
                     android:id="@+id/tv_category_staccatos"

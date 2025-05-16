@@ -12,4 +12,5 @@ data class Category(
     val color: String,
     val mates: List<Participant>,
     val staccatos: List<CategoryStaccato>,
+    val isShared: Boolean,
 )

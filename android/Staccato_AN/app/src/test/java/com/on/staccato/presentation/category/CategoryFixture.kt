@@ -72,6 +72,7 @@ val category =
         color = CategoryColor.GRAY.label,
         mates = participants,
         staccatos = listOf(),
+        isShared = false,
     )
 
 val categoryUiModel =
@@ -85,4 +86,5 @@ val categoryUiModel =
         color = CategoryColor.GRAY.label,
         members = staccatoMembers.members,
         staccatos = listOf(),
+        isShared = false,
     )
