@@ -26,7 +26,7 @@ fun SearchEmptyView(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center,
     ) {
         Image(
-            painter = painterResource(R.drawable.staccato_chracter_gray),
+            painter = painterResource(R.drawable.staccato_character_gray),
             contentDescription = null,
             modifier = Modifier.size(110.dp),
         )
