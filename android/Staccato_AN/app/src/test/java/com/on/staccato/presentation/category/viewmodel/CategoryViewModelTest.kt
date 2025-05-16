@@ -15,8 +15,8 @@ import com.on.staccato.presentation.category.categoryUiModel
 import com.on.staccato.presentation.category.naMembers
 import com.on.staccato.presentation.category.naMembersUiModel
 import com.on.staccato.presentation.category.nana
+import com.on.staccato.presentation.category.participants
 import com.on.staccato.presentation.category.selectedNaMembersUiModel
-import com.on.staccato.presentation.category.staccatoMembers
 import com.on.staccato.presentation.getOrAwaitValue
 import com.on.staccato.presentation.util.ExceptionState2
 import io.mockk.MockKAnnotations
@@ -211,7 +211,7 @@ class CategoryViewModelTest {
             coEvery { categoryRepository.getCategory(VALID_ID) } returns
                 Success(
                     category.copy(
-                        mates = staccatoMembers.members,
+                        mates = participants,
                     ),
                 )
             coEvery { memberRepository.searchMembersBy("나") } returns MutableStateFlow(Success(naMembers))
@@ -232,7 +232,7 @@ class CategoryViewModelTest {
             coEvery { categoryRepository.getCategory(VALID_ID) } returns
                 Success(
                     category.copy(
-                        mates = staccatoMembers.members,
+                        mates = participants,
                     ),
                 )
             coEvery { memberRepository.searchMembersBy("나") } returns MutableStateFlow(Success(naMembers))

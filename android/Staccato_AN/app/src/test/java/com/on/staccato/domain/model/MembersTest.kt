@@ -1,5 +1,6 @@
 package com.on.staccato.domain.model
 
+import com.on.staccato.presentation.category.staccatoMembers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -15,21 +16,21 @@ class MembersTest {
             )
 
         // when
-        val newMembers = dummyMembers.addFirst(newMember)
+        val newMembers = staccatoMembers.addFirst(newMember)
 
         // then
         val actual = newMembers.members.first()
         assertThat(actual).isEqualTo(newMember)
-        assertThat(newMembers.members.size).isEqualTo(dummyMembers.members.size + 1)
+        assertThat(newMembers.members.size).isEqualTo(staccatoMembers.members.size + 1)
     }
 
     @Test
     fun `특정 멤버로 필터링하면 해당 멤버를 포함하지 않는다`() {
         // given
-        val target = dummyMembers.members.first()
+        val target = staccatoMembers.members.first()
 
         // when
-        val filteredMembers = dummyMembers.filter(target)
+        val filteredMembers = staccatoMembers.filter(target)
 
         // then
         assertThat(target).isNotIn(filteredMembers.members)
