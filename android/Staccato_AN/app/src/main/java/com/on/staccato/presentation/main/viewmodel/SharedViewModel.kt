@@ -14,6 +14,9 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +24,9 @@ import javax.inject.Inject
 class SharedViewModel
     @Inject
     constructor(private val myPageRepository: MyPageRepository) : ViewModel() {
+        private val _isTimelineAtTop = MutableStateFlow<Boolean>(true)
+        val isTimelineAtTop: StateFlow<Boolean> get() = _isTimelineAtTop.asStateFlow()
+
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile> get() = _memberProfile
 
@@ -65,6 +71,10 @@ class SharedViewModel
                     .onServerError(::handleServerError)
                     .onSuccess(::setMemberProfile)
             }
+        }
+
+        fun updateIsTimelineAtTop(value: Boolean) {
+            _isTimelineAtTop.value = value
         }
 
         fun setTimelineHasUpdated() {
