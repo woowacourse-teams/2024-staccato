@@ -77,21 +77,13 @@ class MainActivity :
         loadMemberProfile()
         observeException()
         observeStaccatoId()
+        observeFirstVisibleCategoryIndex()
+        observeRecentFirstVisibleCategoryIndex()
+        observeIsHalfModeRequested()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
         setUpBottomSheetStateListener()
-        observeTimelineIsTop()
-    }
-
-    private fun observeTimelineIsTop() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.isTimelineAtTop.collect { isTimelineAtTop ->
-                    behavior.isDraggable = isTimelineAtTop
-                }
-            }
-        }
     }
 
     override fun onStop() {
@@ -159,6 +151,29 @@ class MainActivity :
             bundleOf(STACCATO_ID_KEY to staccatoId)
 
         navController.navigate(R.id.staccatoFragment, bundle, navOptions)
+    }
+
+    private fun observeFirstVisibleCategoryIndex() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.firstVisibleCategoryIndex.collect { draggable ->
+                    behavior.isDraggable = draggable == 0
+                }
+            }
+        }
+    }
+
+    private fun observeRecentFirstVisibleCategoryIndex() {
+        sharedViewModel.recentFirstVisibleCategoryIndex.observe(this) {
+            behavior.isDraggable = it == 0
+        }
+    }
+
+    private fun observeIsHalfModeRequested() {
+        sharedViewModel.isHalfModeRequested.observe(this) {
+            if (it) behavior.state = STATE_HALF_EXPANDED
+            behavior.isDraggable = true
+        }
     }
 
     private fun setupBackPressedHandler() {

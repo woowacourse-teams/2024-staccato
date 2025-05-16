@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.bindingadapter
 
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.databinding.BindingAdapter
@@ -9,6 +10,7 @@ import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.common.InputState
 import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.main.BottomSheetState
 import com.on.staccato.presentation.mapper.toInputState
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import java.time.LocalDate
@@ -133,6 +135,33 @@ fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
 @BindingAdapter("sendButtonEnabled")
 fun ImageButton.setSendButtonEnabled(value: String?) {
     isEnabled = !value.isNullOrBlank()
+}
+
+@BindingAdapter("visibilityByBottomSheetState")
+fun ImageButton.setVisibilityBy(bottomSheetState: BottomSheetState?) {
+    if (bottomSheetState == BottomSheetState.EXPANDED) {
+        fadeIn()
+    } else {
+        fadeOut()
+    }
+}
+
+private fun View.fadeIn(duration: Long = 300) {
+    alpha = 0f
+    visibility = View.VISIBLE
+    animate()
+        .alpha(1f)
+        .setDuration(duration)
+        .setListener(null)
+}
+
+private fun View.fadeOut(duration: Long = 300) {
+    animate()
+        .alpha(0f)
+        .setDuration(duration)
+        .withEndAction {
+            visibility = View.GONE
+        }
 }
 
 private const val MAX_RECOVERY_CODE = 36

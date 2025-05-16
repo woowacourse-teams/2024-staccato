@@ -25,8 +25,14 @@ import javax.inject.Inject
 class SharedViewModel
     @Inject
     constructor(private val myPageRepository: MyPageRepository) : ViewModel() {
-        private val _isTimelineAtTop = MutableStateFlow<Boolean>(true)
-        val isTimelineAtTop: StateFlow<Boolean> get() = _isTimelineAtTop.asStateFlow()
+        private val _isHalfModeRequested = MutableLiveData<Boolean>(false)
+        val isHalfModeRequested: LiveData<Boolean> get() = _isHalfModeRequested
+
+        private val _firstVisibleCategoryIndex = MutableStateFlow<Int>(0)
+        val firstVisibleCategoryIndex: StateFlow<Int> get() = _firstVisibleCategoryIndex.asStateFlow()
+
+        private val _recentFirstVisibleCategoryIndex = MutableLiveData<Int>()
+        val recentFirstVisibleCategoryIndex: LiveData<Int> get() = _recentFirstVisibleCategoryIndex
 
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile> get() = _memberProfile
@@ -74,8 +80,12 @@ class SharedViewModel
             }
         }
 
-        fun updateIsTimelineAtTop(value: Boolean) {
-            _isTimelineAtTop.value = value
+        fun updateFirstVisibleCategoryIndex(value: Int) {
+            _firstVisibleCategoryIndex.value = value
+        }
+
+        fun updateRecentFirstVisibleCategoryIndex() {
+            _recentFirstVisibleCategoryIndex.value = _firstVisibleCategoryIndex.value
         }
 
         fun setTimelineHasUpdated() {
@@ -98,6 +108,11 @@ class SharedViewModel
         fun updateBottomSheet(state: BottomSheetState) {
             val isDifferent = state != _bottomSheetState.value
             if (isDifferent && isDragging.value == false) _bottomSheetState.value = state
+            if (state == BottomSheetState.HALF_EXPANDED) updateIsHalfModeRequested(false)
+        }
+
+        fun updateIsHalfModeRequested(state: Boolean) {
+            _isHalfModeRequested.value = state
         }
 
         fun updateStaccatoId(id: Long) {

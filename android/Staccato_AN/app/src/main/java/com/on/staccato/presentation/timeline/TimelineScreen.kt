@@ -18,6 +18,6 @@ fun TimelineScreen(
     Timeline(
         timeline = timeline,
         onCategoryClicked = onCategoryClicked,
-        updateIsTimelineAtTop = { sharedViewModel.updateIsTimelineAtTop(it) },
+        updateFirstVisibleCategoryIndex = { sharedViewModel.updateFirstVisibleCategoryIndex(it) },
     )
 }

@@ -14,22 +14,20 @@ import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.model.dummyTimelineUiModel
 import com.on.staccato.theme.Gray1
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 
 @Composable
 fun Timeline(
     timeline: List<TimelineUiModel>,
     onCategoryClicked: (Long) -> Unit,
-    updateIsTimelineAtTop: (Boolean) -> Unit,
+    updateFirstVisibleCategoryIndex: (Int) -> Unit,
 ) {
     val listState = rememberLazyListState()
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
-            .map { index -> index == 0 }
             .distinctUntilChanged()
             .collect {
-                updateIsTimelineAtTop(it)
+                updateFirstVisibleCategoryIndex(it)
             }
     }
 
@@ -51,6 +49,6 @@ private fun TimelinePreview() {
     Timeline(
         timeline = dummyTimelineUiModel,
         onCategoryClicked = {},
-        updateIsTimelineAtTop = {},
+        updateFirstVisibleCategoryIndex = {},
     )
 }

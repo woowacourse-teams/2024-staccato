@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.PopupMenu
-import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -14,6 +13,7 @@ import com.on.staccato.databinding.FragmentTimelineBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity
+import com.on.staccato.presentation.main.BottomSheetState
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.timeline.model.SortType
@@ -70,6 +70,10 @@ class TimelineFragment :
         timelineViewModel.changeFilterState()
     }
 
+    override fun onChangeToHalfClicked() {
+        sharedViewModel.updateIsHalfModeRequested(true)
+    }
+
     private fun setupBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = timelineViewModel
@@ -101,6 +105,11 @@ class TimelineFragment :
 
         sharedViewModel.memberProfile.observe(viewLifecycleOwner) { memberProfile ->
             binding.nickname = memberProfile.nickname
+        }
+
+        sharedViewModel.bottomSheetState.observe(viewLifecycleOwner) {
+            binding.bottomSheetState = it
+            if (it == BottomSheetState.EXPANDED) sharedViewModel.updateRecentFirstVisibleCategoryIndex()
         }
     }
 
