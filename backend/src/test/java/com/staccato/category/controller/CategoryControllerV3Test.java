@@ -199,6 +199,7 @@ class CategoryControllerV3Test extends ControllerTest {
                     "categoryColor": "pink",
                     "startAt": "2024-01-01",
                     "endAt": "2024-12-31",
+                    "isShared": false,
                     "members": [
                         {
                             "memberId": null,
