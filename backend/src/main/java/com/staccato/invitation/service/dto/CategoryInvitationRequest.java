@@ -1,6 +1,8 @@
-package com.staccato.category.service.dto.request;
+package com.staccato.invitation.service.dto;
 
 import java.util.List;
+import jakarta.validation.constraints.Min;
+import com.staccato.config.swagger.SwaggerExamples;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -13,5 +15,6 @@ public record CategoryInvitationRequest(
                         description = "초대할 멤버 식별자 목록",
                         example = MEMBER_IDS
                 ))
-        List<Long> memberIds) {
+        List<Long> memberIds
+) {
 }

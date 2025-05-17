@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staccato.auth.service.AuthService;
 import com.staccato.comment.service.CommentService;
 import com.staccato.image.service.ImageService;
+import com.staccato.invitation.service.InvitationService;
 import com.staccato.member.service.MemberService;
 import com.staccato.category.service.CategoryService;
 import com.staccato.staccato.service.StaccatoService;
@@ -34,4 +35,6 @@ public abstract class ControllerTest {
     protected CommentService commentService;
     @MockBean
     protected StaccatoShareService staccatoShareService;
+    @MockBean
+    protected InvitationService invitationService;
 }

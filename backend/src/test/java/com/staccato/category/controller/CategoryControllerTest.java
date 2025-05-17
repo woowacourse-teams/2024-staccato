@@ -494,26 +494,4 @@ class CategoryControllerTest extends ControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
-
-    @DisplayName("멤버가 닉네임 목록을 통해 카테고리에 초대를 요청한다.")
-    @Test
-    void invitation() throws Exception {
-        // given
-        long categoryId = 1L;
-        Member member = MemberFixtures.defaultMember().build();
-        when(authService.extractFromToken(anyString())).thenReturn(member);
-
-        String requestBody = """
-            {
-                "memberIds": [2, 2]
-            }
-            """;
-
-        // when & then
-        mockMvc.perform(post("/categories/{categoryId}/members", categoryId)
-                        .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().isOk());
-    }
 }

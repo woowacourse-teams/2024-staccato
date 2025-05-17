@@ -11,7 +11,6 @@ import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
-import com.staccato.category.service.dto.request.CategoryInvitationRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.request.CategoryUpdateRequest;
@@ -157,15 +156,6 @@ public class CategoryService {
         commentRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
         staccatoRepository.deleteAllByCategoryIdInBulk(categoryId);
         categoryMemberRepository.deleteAllByCategoryIdInBulk(categoryId);
-    }
-
-    @Transactional
-    public void inviteMembers(long categoryId, Member member, CategoryInvitationRequest categoryInvitationRequest) {
-        Category category = getCategoryById(categoryId);
-        validateModificationPermission(category, member);
-        List<Long> memberIds = categoryInvitationRequest.memberIds();
-        List<Member> invitedMembers = memberRepository.findAllByIdIn(memberIds);
-        category.addGuests(invitedMembers);
     }
 
     private void validateModificationPermission(Category category, Member member) {

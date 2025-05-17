@@ -1,0 +1,30 @@
+package com.staccato.invitation.controller.docs;
+
+import jakarta.validation.constraints.Min;
+import org.springframework.http.ResponseEntity;
+import com.staccato.invitation.service.dto.CategoryInvitationRequest;
+import com.staccato.member.domain.Member;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
+public interface InvitationControllerDocs {
+    @Operation(summary = "카테고리 멤버 초대", description = "지정된 카테고리에 다른 멤버들을 초대합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "카테고리 초대 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                                                    
+                    (1) 초대하려는 카테고리가 존재하지 않을 때
+                                    
+                    (2) Path Variable 형식이 잘못되었을 때
+                    """,
+                    responseCode = "400")
+    })
+    ResponseEntity<Void> inviteMembers(
+            @Parameter(description = "카테고리 ID", example = "1") @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @Parameter(hidden = true) Member member,
+            @Parameter(required = true) CategoryInvitationRequest categoryInvitationRequest
+    );
+}
