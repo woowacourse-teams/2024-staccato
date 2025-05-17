@@ -29,7 +29,7 @@ class SharedViewModel
         val isHalfModeRequested: LiveData<Boolean> get() = _isHalfModeRequested
 
         private val _isDraggable = MutableStateFlow<Boolean>(true)
-        val isDraggable: StateFlow<Boolean> get() = _isDraggable.asStateFlow()
+        val isDraggable: StateFlow<Boolean> = _isDraggable.asStateFlow()
 
         private val _latestIsDraggable = MutableLiveData<Boolean>()
         val latestIsDraggable: LiveData<Boolean> get() = _latestIsDraggable

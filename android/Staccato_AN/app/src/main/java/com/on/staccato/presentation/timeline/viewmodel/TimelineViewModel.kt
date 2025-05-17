@@ -40,8 +40,7 @@ class TimelineViewModel
             get() = _filterType
 
         private val _timeline = MutableStateFlow<List<TimelineUiModel>>(emptyList())
-        val timeline: StateFlow<List<TimelineUiModel>>
-            get() = _timeline.asStateFlow()
+        val timeline: StateFlow<List<TimelineUiModel>> = _timeline.asStateFlow()
 
         private val _isTimelineLoading = MutableLiveData(false)
         val isTimelineLoading: LiveData<Boolean>
