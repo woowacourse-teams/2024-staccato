@@ -20,7 +20,7 @@ fun MemberItem(memberImageUrl: String? = null) {
                 .shadow(2.dp, shape = CircleShape, clip = false)
                 .border(width = 1.dp, color = White, shape = CircleShape)
                 .size(25.dp),
-        bitmapPixelSize = 150, // TODO: 값 설정 기준 알아보고 수정하기
+        bitmapPixelSize = 150,
         url = memberImageUrl,
         placeHolder = R.drawable.icon_member,
         contentDescription = R.string.mates_profile_image_description,

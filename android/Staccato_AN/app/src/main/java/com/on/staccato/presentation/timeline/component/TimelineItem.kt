@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -19,6 +20,7 @@ import com.on.staccato.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.model.dummyTimelineUiModel
+import com.on.staccato.presentation.util.dpToPx
 import com.on.staccato.theme.Title3
 
 @Composable
@@ -53,11 +55,11 @@ fun TimelineItem(
                     .constrainAs(thumbnail) {
                         top.linkTo(parent.top)
                     },
-            bitmapPixelSize = 150,
+            bitmapPixelSize = 500,
             url = timeline.categoryThumbnailUrl,
             placeHolder = R.drawable.default_image,
             contentDescription = R.string.all_category_thumbnail_photo_description,
-            radius = 4f,
+            radius = 4f.dpToPx(LocalContext.current),
         )
 
         Spacer(modifier = Modifier.constrainAs(firstSpacer) { start.linkTo(thumbnail.end) }.size(15.dp))
