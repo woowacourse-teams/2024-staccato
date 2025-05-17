@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.categorycreation
+package com.on.staccato.presentation.categorycreation.model
 
 import android.net.Uri
 

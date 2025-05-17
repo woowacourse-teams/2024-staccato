@@ -7,8 +7,9 @@ val newCategory =
     NewCategory(
         categoryThumbnailUrl = null,
         categoryTitle = "",
-        startAt = null,
-        endAt = null,
         description = null,
         color = CategoryColor.GRAY.label,
+        startAt = null,
+        endAt = null,
+        isShared = false,
     )
