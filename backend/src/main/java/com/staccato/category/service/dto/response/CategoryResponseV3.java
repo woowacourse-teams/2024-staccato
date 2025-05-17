@@ -26,6 +26,8 @@ public record CategoryResponseV3(
         @Schema(example = SwaggerExamples.CATEGORY_END_AT)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate endAt,
+        @Schema(example = SwaggerExamples.CATEGORY_IS_SHARED)
+        boolean isShared,
         List<MemberResponse> members,
         @Schema(example = SwaggerExamples.STACCATO_COUNT)
         Long staccatoCount
@@ -38,6 +40,7 @@ public record CategoryResponseV3(
                 category.getColor().getName(),
                 category.getTerm().getStartAt(),
                 category.getTerm().getEndAt(),
+                category.getIsShared(),
                 toMemberResponses(category.getCategoryMembers()),
                 staccatoCount
         );
