@@ -107,8 +107,14 @@ class SharedViewModel
 
         fun updateBottomSheet(state: BottomSheetState) {
             val isDifferent = state != _bottomSheetState.value
-            if (isDifferent && isDragging.value == false) _bottomSheetState.value = state
-            if (state == BottomSheetState.HALF_EXPANDED) updateIsHalfModeRequested(false)
+            val isExpanded = state == BottomSheetState.EXPANDED
+            val isHalfExpanded = state == BottomSheetState.HALF_EXPANDED
+
+            when {
+                isDifferent && isDragging.value == false -> _bottomSheetState.value = state
+                isDifferent && isExpanded -> _bottomSheetState.value = state
+                isHalfExpanded -> updateIsHalfModeRequested(false)
+            }
         }
 
         fun updateIsHalfModeRequested(state: Boolean) {
