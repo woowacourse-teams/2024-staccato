@@ -6,7 +6,7 @@ import com.on.staccato.data.network.ServerError
 import com.on.staccato.data.network.Success
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryStaccato
-import com.on.staccato.domain.model.Member
+import com.on.staccato.presentation.category.participants
 import com.on.staccato.presentation.common.color.CategoryColor
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -77,11 +77,7 @@ fun createFakeCategory(): Success<Category> {
             endAt = LocalDate.of(2025, 12, 31),
             description = "This is a fake memory description used for testing.",
             color = CategoryColor.GRAY.label,
-            mates =
-                listOf(
-                    Member(1L, "Member 1"),
-                    Member(2L, "Member 2"),
-                ),
+            mates = participants,
             staccatos =
                 (1..20).map { id ->
                     CategoryStaccato(
