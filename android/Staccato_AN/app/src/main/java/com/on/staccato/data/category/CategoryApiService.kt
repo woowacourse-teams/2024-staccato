@@ -5,6 +5,7 @@ import com.on.staccato.data.dto.category.CategoryColorRequest
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.dto.category.CategoryRequest
 import com.on.staccato.data.dto.category.CategoryResponse
+import com.on.staccato.data.dto.timeline.TimelineResponse
 import com.on.staccato.data.network.ApiResult
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -25,6 +26,12 @@ interface CategoryApiService {
         @Path(CATEGORY_ID) categoryId: Long,
         @Body color: CategoryColorRequest,
     ): ApiResult<Unit>
+
+    @GET(CATEGORIES_PATH_V2)
+    suspend fun getCategories(
+        @Query(SORT) sort: String? = null,
+        @Query(FILTERS) filter: String? = null,
+    ): ApiResult<TimelineResponse>
 
     // TODO: 현재 사용 되지 않음
     @GET(CATEGORY_PATH_WITH_CANDIDATES)
@@ -58,5 +65,7 @@ interface CategoryApiService {
         private const val CURRENT_DATE = "currentDate"
         private const val CATEGORIES_PATH_V2 = "/v2${CATEGORIES_PATH}"
         private const val CATEGORY_PATH_WITH_ID_V2 = "/v2$CATEGORIES_PATH/{$CATEGORY_ID}"
+        private const val SORT = "sort"
+        private const val FILTERS = "filters"
     }
 }
