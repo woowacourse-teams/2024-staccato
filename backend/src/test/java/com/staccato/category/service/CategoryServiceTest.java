@@ -24,7 +24,7 @@ import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
-import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.category.service.dto.response.StaccatoResponse;
@@ -191,7 +191,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         CategoryReadRequest categoryReadRequest = new CategoryReadRequest("false", null);
 
         // when
-        CategoryResponsesV2 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
+        CategoryResponsesV3 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
 
         // then
         assertAll(
@@ -215,7 +215,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.mates()).hasSize(1)
+                () -> assertThat(categoryDetailResponse.members()).hasSize(1)
         );
     }
 
@@ -239,7 +239,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.mates()).hasSize(2)
+                () -> assertThat(categoryDetailResponse.members()).hasSize(2)
         );
     }
 
@@ -258,7 +258,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.mates()).hasSize(1),
+                () -> assertThat(categoryDetailResponse.members()).hasSize(1),
                 () -> assertThat(categoryDetailResponse.startAt()).isNull(),
                 () -> assertThat(categoryDetailResponse.endAt()).isNull()
         );
@@ -360,6 +360,30 @@ class CategoryServiceTest extends ServiceSliceTest {
                                 new CategoryStaccatoLocationResponse(staccato2)
                         )
                         .doesNotContain(new CategoryStaccatoLocationResponse(otherStaccato))
+        );
+    }
+
+    @DisplayName("카테고리 목록 조회 시 각 카테고리에 해당하는 스타카토 개수가 포함된다.")
+    @Test
+    void readAllCategoriesContainsStaccatoCount() {
+        // given
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(member)
+                .buildAndSave(categoryRepository);
+
+        StaccatoFixtures.defaultStaccato().withCategory(category).buildAndSave(staccatoRepository);
+        StaccatoFixtures.defaultStaccato().withCategory(category).buildAndSave(staccatoRepository);
+
+        CategoryReadRequest request = new CategoryReadRequest(null, null);
+
+        // when
+        CategoryResponsesV3 categoryResponses = categoryService.readAllCategories(member, request);
+
+        // then
+        assertAll(
+                () -> assertThat(categoryResponses.categories()).hasSize(1),
+                () -> assertThat(categoryResponses.categories().get(0).staccatoCount()).isEqualTo(2L)
         );
     }
 

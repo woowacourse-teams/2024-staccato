@@ -1,6 +1,7 @@
 package com.staccato.category.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
-import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryResponseV3;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
@@ -52,11 +54,19 @@ public class CategoryService {
         return new CategoryIdResponse(category.getId());
     }
 
-    public CategoryResponsesV2 readAllCategories(Member member, CategoryReadRequest categoryReadRequest) {
+    public CategoryResponsesV3 readAllCategories(Member member, CategoryReadRequest categoryReadRequest) {
         List<Category> rawCategories = getCategories(categoryMemberRepository.findAllByMemberId(member.getId()));
         List<Category> categories = filterAndSort(rawCategories, categoryReadRequest.getFilters(), categoryReadRequest.getSort());
+        return getCategoryResponsesV3(categories);
+    }
 
-        return CategoryResponsesV2.from(categories);
+    private CategoryResponsesV3 getCategoryResponsesV3(List<Category> categories) {
+        List<CategoryResponseV3> responses = new ArrayList<>();
+        for (Category category : categories) {
+            long staccatoCount = staccatoRepository.countAllByCategoryId(category.getId());
+            responses.add(new CategoryResponseV3(category, staccatoCount));
+        }
+        return new CategoryResponsesV3(responses);
     }
 
     public CategoryNameResponses readAllCategoriesByDate(Member member, LocalDate currentDate) {

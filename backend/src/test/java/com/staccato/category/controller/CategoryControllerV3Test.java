@@ -26,9 +26,13 @@ import org.springframework.http.MediaType;
 
 import com.staccato.ControllerTest;
 import com.staccato.category.domain.Category;
+import com.staccato.category.domain.Color;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
+import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
+import com.staccato.category.service.dto.response.CategoryResponseV3;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.category.CategoryCreateRequestFixtures;
 import com.staccato.fixture.category.CategoryFixtures;
@@ -195,7 +199,8 @@ class CategoryControllerV3Test extends ControllerTest {
                     "categoryColor": "pink",
                     "startAt": "2024-01-01",
                     "endAt": "2024-12-31",
-                    "mates": [
+                    "isShared": true,
+                    "members": [
                         {
                             "memberId": null,
                             "nickname": "host",
@@ -251,7 +256,7 @@ class CategoryControllerV3Test extends ControllerTest {
                     "categoryTitle": "categoryTitle",
                     "description": "categoryDescription",
                     "categoryColor": "pink",
-                    "mates": [
+                    "members": [
                         {
                             "memberId": null,
                             "nickname": "nickname",
@@ -275,5 +280,91 @@ class CategoryControllerV3Test extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("사용자가 모든 카테고리 목록을 조회하는 응답 직렬화에 성공한다.")
+    @Test
+    void readAllCategory() throws Exception {
+        // given
+        Member member = MemberFixtures.defaultMember().build();
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category categoryWithTerm = CategoryFixtures.defaultCategory()
+                .withColor(Color.PINK)
+                .withHost(member)
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31)).build();
+        Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
+                .withColor(Color.BLUE)
+                .withHost(member)
+                .withTerm(null, null).build();
+        CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
+                new CategoryResponseV3(categoryWithTerm, 0),
+                new CategoryResponseV3(categoryWithoutTerm,0))
+        );
+        when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
+        String expectedResponse = """
+                {
+                    "categories": [
+                        {
+                            "categoryId": null,
+                            "categoryTitle": "categoryTitle",
+                            "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
+                            "categoryColor": "pink",
+                            "startAt": "2024-01-01",
+                            "endAt": "2024-12-31",
+                            "members": [
+                                {
+                                    "memberId": null,
+                                    "nickname": "nickname",
+                                    "memberImageUrl": "https://example.com/memberImage.png"
+                                }
+                            ],
+                            "staccatoCount": 0
+                        },
+                        {
+                            "categoryId": null,
+                            "categoryTitle": "categoryTitle",
+                            "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
+                            "categoryColor": "blue",
+                            "members": [
+                                {
+                                    "memberId": null,
+                                    "nickname": "nickname",
+                                    "memberImageUrl": "https://example.com/memberImage.png"
+                                }
+                            ],
+                            "staccatoCount": 0
+                        }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/v3/categories")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("유효하지 않은 필터링 조건은 무시하고, 모든 카테고리 목록을 조회한다.")
+    @Test
+    void readAllCategoryIgnoringInvalidFilter() throws Exception {
+        // given
+        Member member = MemberFixtures.defaultMember().build();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        Category category1 = CategoryFixtures.defaultCategory().build();
+        Category category2 = CategoryFixtures.defaultCategory().build();
+        CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
+                new CategoryResponseV3(category1, 0),
+                new CategoryResponseV3(category2,0))
+        );
+        when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
+
+        // when & then
+        mockMvc.perform(get("/v3/categories")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("filters", "invalid"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.categories.size()").value(2));
     }
 }
