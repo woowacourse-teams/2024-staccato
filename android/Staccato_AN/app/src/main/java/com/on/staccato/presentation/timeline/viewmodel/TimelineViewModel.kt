@@ -9,7 +9,7 @@ import com.on.staccato.data.network.onException2
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.Timeline
-import com.on.staccato.domain.repository.TimelineRepository
+import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toTimelineUiModel
@@ -29,7 +29,7 @@ import javax.inject.Inject
 class TimelineViewModel
     @Inject
     constructor(
-        private val timelineRepository: TimelineRepository,
+        private val categoryRepository: CategoryRepository,
     ) : ViewModel() {
         private val _sortType = MutableLiveData(SortType.UPDATED)
         val sortType: LiveData<SortType>
@@ -69,7 +69,7 @@ class TimelineViewModel
         fun loadTimeline() {
             _isTimelineLoading.value = true
             viewModelScope.launch(coroutineExceptionHandler) {
-                timelineRepository.getTimeline(
+                categoryRepository.getCategories(
                     sort = sortType.value?.name,
                     filter = filterType.value?.name,
                 ).onSuccess(::setTimelineUiModels)

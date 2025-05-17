@@ -16,9 +16,9 @@ import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.CategoryCandidates.Companion.emptyCategoryCandidates
+import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
-import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
@@ -42,7 +42,7 @@ import javax.inject.Inject
 class StaccatoCreationViewModel
     @Inject
     constructor(
-        private val timelineRepository: TimelineRepository,
+        private val categoryRepository: CategoryRepository,
         private val staccatoRepository: StaccatoRepository,
         private val imageRepository: ImageDefaultRepository,
         private val locationRepository: LocationRepository,
@@ -170,7 +170,7 @@ class StaccatoCreationViewModel
 
         fun fetchCategoryCandidates() {
             viewModelScope.launch {
-                timelineRepository.getCategoryCandidates()
+                categoryRepository.getCategoryCandidates()
                     .onSuccess {
                         _categoryCandidates.value = it
                     }

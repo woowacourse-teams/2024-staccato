@@ -15,6 +15,7 @@ interface CategoryDataSource {
         color: String,
     ): ApiResult<Unit>
 
+    // TODO: 현재 사용 되지 않음
     suspend fun getCategories(
         sort: String? = null,
         filter: String? = null,
