@@ -17,7 +17,9 @@ import com.staccato.category.controller.docs.CategoryControllerV2Docs;
 import com.staccato.category.service.CategoryService;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
+import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
 import com.staccato.config.auth.LoginMember;
@@ -38,7 +40,7 @@ public class CategoryControllerV2 implements CategoryControllerV2Docs {
             @Valid @RequestBody CategoryRequestV2 categoryRequest,
             @LoginMember Member member
     ) {
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest, member);
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest.toCategoryCreateRequest(), member);
         return ResponseEntity.created(URI.create("/categories/" + categoryIdResponse.categoryId()))
                 .body(categoryIdResponse);
     }
@@ -56,16 +58,16 @@ public class CategoryControllerV2 implements CategoryControllerV2Docs {
     public ResponseEntity<CategoryDetailResponseV2> readCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
-        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
-        return ResponseEntity.ok(categoryDetailResponse);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
+        return ResponseEntity.ok(categoryDetailResponse.toCategoryDetailResponseV2());
     }
 
     @PutMapping("/{categoryId}")
     public ResponseEntity<Void> updateCategory(
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
-            @Valid @RequestBody CategoryRequestV2 categoryRequest,
+            @Valid @RequestBody CategoryUpdateRequest categoryUpdateRequest,
             @LoginMember Member member) {
-        categoryService.updateCategory(categoryRequest, categoryId, member);
+        categoryService.updateCategory(categoryUpdateRequest, categoryId, member);
         return ResponseEntity.ok().build();
     }
 }
