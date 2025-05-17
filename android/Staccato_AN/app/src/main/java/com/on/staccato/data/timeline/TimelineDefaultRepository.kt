@@ -1,5 +1,6 @@
 package com.on.staccato.data.timeline
 
+import com.on.staccato.data.category.CategoryDataSource
 import com.on.staccato.data.dto.mapper.toCategoryCandidates
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.network.ApiResult
@@ -12,17 +13,17 @@ import javax.inject.Inject
 class TimelineDefaultRepository
     @Inject
     constructor(
-        private val timelineDataSource: TimelineDataSource,
+        private val categoryDataSource: CategoryDataSource,
     ) : TimelineRepository {
         override suspend fun getTimeline(
             sort: String?,
             filter: String?,
         ): ApiResult<Timeline> =
-            timelineDataSource.getTimeline(sort, filter)
+            categoryDataSource.getCategories(sort, filter)
                 .handle { it.toDomain() }
 
         override suspend fun getCategoryCandidates(): ApiResult<CategoryCandidates> =
-            timelineDataSource.getTimeline().handle {
+            categoryDataSource.getCategories().handle {
                 it.toCategoryCandidates()
             }
     }
