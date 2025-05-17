@@ -71,7 +71,7 @@ public class CategoryFixtures {
 
         public CategoryBuilder withGuests(Member... members) {
             this.guests.addAll(Arrays.asList(members));
-            this.isShared = false;
+            this.isShared = true;
             return this;
         }
 
