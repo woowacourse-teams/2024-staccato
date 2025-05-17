@@ -15,6 +15,7 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMypageBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.invitation.InvitationManagementActivity
 import com.on.staccato.presentation.mypage.component.MenuButton
 import com.on.staccato.presentation.mypage.component.MiddleDivider
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
@@ -88,7 +89,9 @@ class MyPageActivity :
 
     private fun setCategoryInvitationManagementButtonContent() {
         binding.btnMypageMenuCategoryInvitationManagement.setContent {
-            MenuButton(menuTitle = "카테고리 초대 관리") {}
+            MenuButton(menuTitle = "카테고리 초대 관리") {
+                InvitationManagementActivity.launch(this)
+            }
         }
     }
 
