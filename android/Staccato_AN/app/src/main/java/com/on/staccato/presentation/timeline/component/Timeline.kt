@@ -19,15 +19,15 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 fun Timeline(
     timeline: List<TimelineUiModel>,
     onCategoryClicked: (Long) -> Unit,
-    updateFirstVisibleCategoryIndex: (Int) -> Unit,
+    updateIsDraggable: (Boolean) -> Unit,
 ) {
     val listState = rememberLazyListState()
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
             .distinctUntilChanged()
-            .collect {
-                updateFirstVisibleCategoryIndex(it)
+            .collect { index ->
+                updateIsDraggable(index == 0)
             }
     }
 
@@ -49,6 +49,6 @@ private fun TimelinePreview() {
     Timeline(
         timeline = dummyTimelineUiModel,
         onCategoryClicked = {},
-        updateFirstVisibleCategoryIndex = {},
+        updateIsDraggable = {},
     )
 }

@@ -77,8 +77,8 @@ class MainActivity :
         loadMemberProfile()
         observeException()
         observeStaccatoId()
-        observeFirstVisibleCategoryIndex()
-        observeRecentFirstVisibleCategoryIndex()
+        observeIsDraggable()
+        observeLatestIsDraggable()
         observeIsHalfModeRequested()
         setupBottomSheetController()
         setupBackPressedHandler()
@@ -153,19 +153,19 @@ class MainActivity :
         navController.navigate(R.id.staccatoFragment, bundle, navOptions)
     }
 
-    private fun observeFirstVisibleCategoryIndex() {
+    private fun observeIsDraggable() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.firstVisibleCategoryIndex.collect { draggable ->
-                    behavior.isDraggable = draggable == 0
+                sharedViewModel.isDraggable.collect {
+                    behavior.isDraggable = it
                 }
             }
         }
     }
 
-    private fun observeRecentFirstVisibleCategoryIndex() {
-        sharedViewModel.recentFirstVisibleCategoryIndex.observe(this) {
-            behavior.isDraggable = it == 0
+    private fun observeLatestIsDraggable() {
+        sharedViewModel.latestIsDraggable.observe(this) {
+            behavior.isDraggable = it
         }
     }
 

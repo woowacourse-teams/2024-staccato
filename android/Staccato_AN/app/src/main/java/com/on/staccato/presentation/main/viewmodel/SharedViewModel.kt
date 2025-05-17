@@ -28,11 +28,11 @@ class SharedViewModel
         private val _isHalfModeRequested = MutableLiveData<Boolean>(false)
         val isHalfModeRequested: LiveData<Boolean> get() = _isHalfModeRequested
 
-        private val _firstVisibleCategoryIndex = MutableStateFlow<Int>(0)
-        val firstVisibleCategoryIndex: StateFlow<Int> get() = _firstVisibleCategoryIndex.asStateFlow()
+        private val _isDraggable = MutableStateFlow<Boolean>(true)
+        val isDraggable: StateFlow<Boolean> get() = _isDraggable.asStateFlow()
 
-        private val _recentFirstVisibleCategoryIndex = MutableLiveData<Int>()
-        val recentFirstVisibleCategoryIndex: LiveData<Int> get() = _recentFirstVisibleCategoryIndex
+        private val _latestIsDraggable = MutableLiveData<Boolean>()
+        val latestIsDraggable: LiveData<Boolean> get() = _latestIsDraggable
 
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile> get() = _memberProfile
@@ -80,12 +80,12 @@ class SharedViewModel
             }
         }
 
-        fun updateFirstVisibleCategoryIndex(value: Int) {
-            _firstVisibleCategoryIndex.value = value
+        fun updateIsDraggable(value: Boolean) {
+            _isDraggable.value = value
         }
 
-        fun updateRecentFirstVisibleCategoryIndex() {
-            _recentFirstVisibleCategoryIndex.value = _firstVisibleCategoryIndex.value
+        fun updateLatestIsDraggable() {
+            _latestIsDraggable.value = _isDraggable.value
         }
 
         fun setTimelineHasUpdated() {

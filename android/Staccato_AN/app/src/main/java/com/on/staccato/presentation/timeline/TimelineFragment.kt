@@ -109,7 +109,7 @@ class TimelineFragment :
 
         sharedViewModel.bottomSheetState.observe(viewLifecycleOwner) {
             binding.bottomSheetState = it
-            if (it == BottomSheetState.EXPANDED) sharedViewModel.updateRecentFirstVisibleCategoryIndex()
+            if (it == BottomSheetState.EXPANDED) sharedViewModel.updateLatestIsDraggable()
         }
     }
 
