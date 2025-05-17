@@ -1,9 +1,9 @@
-package com.on.staccato.presentation.invitation
+package com.on.staccato.presentation.invitation.model
 
 import androidx.annotation.DrawableRes
 import com.on.staccato.R
 
-enum class InvitationMenuItems(
+enum class InvitationSelectionMenuItems(
     val menuId: Int,
     val title: String,
     @DrawableRes val iconResId: Int,
