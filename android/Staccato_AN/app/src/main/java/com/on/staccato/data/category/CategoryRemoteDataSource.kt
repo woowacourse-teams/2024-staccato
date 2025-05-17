@@ -25,8 +25,8 @@ class CategoryRemoteDataSource
             color: String,
         ): ApiResult<Unit> = categoryApiService.putCategoryColor(categoryId, CategoryColorRequest(color)).handle()
 
-        override suspend fun getCategories(currentDate: String?): ApiResult<CategoriesResponse> =
-            categoryApiService.getCategories(
+        override suspend fun getCategoriesBy(currentDate: String?): ApiResult<CategoriesResponse> =
+            categoryApiService.getCategoriesBy(
                 currentDate,
             )
 

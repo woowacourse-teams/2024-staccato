@@ -26,8 +26,9 @@ interface CategoryApiService {
         @Body color: CategoryColorRequest,
     ): ApiResult<Unit>
 
+    // TODO: 현재 사용 되지 않음
     @GET(CATEGORY_PATH_WITH_CANDIDATES)
-    suspend fun getCategories(
+    suspend fun getCategoriesBy(
         @Query(CURRENT_DATE) currentDate: String?,
     ): ApiResult<CategoriesResponse>
 

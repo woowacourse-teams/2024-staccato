@@ -2,6 +2,7 @@ package com.on.staccato.presentation.map
 
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -210,11 +211,20 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         sharedViewModel.bottomSheetState.observe(viewLifecycleOwner) { state ->
             val mapPaddingBottom =
                 if (state == BottomSheetState.HALF_EXPANDED) {
+                    Log.d("hye: mapPaddingBottom if", "$state")
                     (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt()
                 } else {
+                    Log.d("hye: mapPaddingBottom else", "$state")
                     DEFAULT_MAP_PADDING
                 }
-            val yPixel = if (state == BottomSheetState.HALF_EXPANDED) yPixel else -yPixel
+            val yPixel =
+                if (state == BottomSheetState.HALF_EXPANDED) {
+                    Log.d("hye: yPixel if", "$state")
+                    yPixel
+                } else {
+                    Log.d("hye: yPixel else", "$state")
+                    -yPixel
+                }
 
             setPadding(
                 DEFAULT_MAP_PADDING,

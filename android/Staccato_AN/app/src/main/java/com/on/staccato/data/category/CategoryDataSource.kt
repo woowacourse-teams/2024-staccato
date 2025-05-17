@@ -14,7 +14,7 @@ interface CategoryDataSource {
         color: String,
     ): ApiResult<Unit>
 
-    suspend fun getCategories(currentDate: String?): ApiResult<CategoriesResponse>
+    suspend fun getCategoriesBy(currentDate: String?): ApiResult<CategoriesResponse>
 
     suspend fun createCategory(newCategory: NewCategory): ApiResult<CategoryCreationResponse>
 

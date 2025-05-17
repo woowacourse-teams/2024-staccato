@@ -23,8 +23,8 @@ class CategoryDefaultRepository
             color: String,
         ): ApiResult<Unit> = categoryDataSource.changeCategoryColor(categoryId, color)
 
-        override suspend fun getCategories(currentDate: String?): ApiResult<CategoryCandidates> =
-            categoryDataSource.getCategories(currentDate).handle { it.toDomain() }
+        override suspend fun getCategoriesBy(currentDate: String?): ApiResult<CategoryCandidates> =
+            categoryDataSource.getCategoriesBy(currentDate).handle { it.toDomain() }
 
         override suspend fun createCategory(newCategory: NewCategory): ApiResult<CategoryCreationResponse> =
             categoryDataSource.createCategory(newCategory).handle { it }
