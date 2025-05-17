@@ -1,6 +1,5 @@
 package com.staccato.invitation.controller.docs;
 
-import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import com.staccato.invitation.service.dto.CategoryInvitationRequest;
 import com.staccato.member.domain.Member;
@@ -15,15 +14,14 @@ public interface InvitationControllerDocs {
             @ApiResponse(description = "카테고리 초대 성공", responseCode = "200"),
             @ApiResponse(description = """
                     <발생 가능한 케이스>
-                                                    
+                    
                     (1) 초대하려는 카테고리가 존재하지 않을 때
-                                    
+                    
                     (2) Path Variable 형식이 잘못되었을 때
                     """,
                     responseCode = "400")
     })
     ResponseEntity<Void> inviteMembers(
-            @Parameter(description = "카테고리 ID", example = "1") @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Parameter(hidden = true) Member member,
             @Parameter(required = true) CategoryInvitationRequest categoryInvitationRequest
     );

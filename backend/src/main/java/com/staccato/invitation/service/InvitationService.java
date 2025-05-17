@@ -1,6 +1,7 @@
 package com.staccato.invitation.service;
 
 import java.util.List;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
@@ -19,10 +20,10 @@ public class InvitationService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void inviteMembers(long categoryId, Member member, CategoryInvitationRequest categoryInvitationRequest) {
-        Category category = getCategoryById(categoryId);
+    public void inviteMembers(Member member, CategoryInvitationRequest categoryInvitationRequest) {
+        Category category = getCategoryById(categoryInvitationRequest.categoryId());
         validateModificationPermission(category, member);
-        List<Long> memberIds = categoryInvitationRequest.memberIds();
+        Set<Long> memberIds = categoryInvitationRequest.memberIds();
         List<Member> invitedMembers = memberRepository.findAllByIdIn(memberIds);
         category.addGuests(invitedMembers);
     }

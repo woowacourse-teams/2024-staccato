@@ -25,12 +25,13 @@ class InvitationControllerTest extends ControllerTest {
 
         String requestBody = """
                 {
-                    "memberIds": [2, 2]
+                    "categoryId": 1,
+                    "memberIds": [2, 3]
                 }
                 """;
 
         // when & then
-        mockMvc.perform(post("/categories/{categoryId}/members", categoryId)
+        mockMvc.perform(post("/invitations/invite", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))

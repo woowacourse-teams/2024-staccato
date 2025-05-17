@@ -1,6 +1,6 @@
 package com.staccato.invitation.service;
 
-import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +36,10 @@ class InvitationServiceTest extends ServiceSliceTest {
                 .withHost(host)
                 .buildAndSave(categoryRepository);
 
-        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of(guest1.getId(), guest2.getId()));
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest1.getId(), guest2.getId()));
 
         // when
-        invitationService.inviteMembers(category.getId(), host, invitationRequest);
+        invitationService.inviteMembers(host, invitationRequest);
 
         // then
         Category savedCategory = categoryRepository.findWithCategoryMembersById(category.getId()).get();
@@ -58,10 +58,10 @@ class InvitationServiceTest extends ServiceSliceTest {
                 .withHost(host)
                 .buildAndSave(categoryRepository);
 
-        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of(guest.getId()));
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
 
         // when & then
-        assertThatThrownBy(() -> invitationService.inviteMembers(category.getId(), anotherUser, invitationRequest))
+        assertThatThrownBy(() -> invitationService.inviteMembers(anotherUser, invitationRequest))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -77,10 +77,10 @@ class InvitationServiceTest extends ServiceSliceTest {
                 .withHost(host)
                 .buildAndSave(categoryRepository);
 
-        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(List.of(guest.getId(), unknownId));
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId(), unknownId));
 
         // when
-        invitationService.inviteMembers(category.getId(), host, invitationRequest);
+        invitationService.inviteMembers(host, invitationRequest);
 
         // then
         Category result = categoryRepository.findWithCategoryMembersById(category.getId()).get();

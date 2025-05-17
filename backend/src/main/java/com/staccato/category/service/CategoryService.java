@@ -24,7 +24,6 @@ import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
@@ -43,7 +42,6 @@ public class CategoryService {
     private final StaccatoRepository staccatoRepository;
     private final StaccatoImageRepository staccatoImageRepository;
     private final CommentRepository commentRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
     public CategoryIdResponse createCategory(CategoryCreateRequest categoryCreateRequest, Member member) {
