@@ -35,7 +35,7 @@ fun Timeline(
         items(timeline, key = { it.categoryId }) { timelineCategory ->
             TimelineItem(
                 modifier = Modifier.animateItem(),
-                timeline = timelineCategory,
+                category = timelineCategory,
                 onCategoryClicked = onCategoryClicked,
             )
             HorizontalDivider(thickness = 1.dp, color = Gray1)

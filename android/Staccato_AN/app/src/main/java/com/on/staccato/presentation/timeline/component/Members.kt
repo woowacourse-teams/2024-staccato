@@ -11,12 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
-import com.on.staccato.domain.model.Member
+import com.on.staccato.presentation.common.MemberUiModel
+import com.on.staccato.presentation.common.dummyMembersUiModel
 
 @Composable
 fun Members(
     modifier: Modifier = Modifier,
-    members: List<Member>,
+    members: List<MemberUiModel>,
     hiddenMembersCount: Int,
     @ColorRes color: Int,
 ) {
@@ -40,16 +41,8 @@ fun Members(
 @Composable
 private fun MembersPreview() {
     Members(
-        members = members,
+        members = dummyMembersUiModel,
         hiddenMembersCount = 3,
         color = R.color.gray3,
     )
 }
-
-// TODO: 서버 API 변경 후 제거
-val members =
-    listOf(
-        Member(memberId = 1, nickname = "빙티", memberImage = "https://avatars.githubusercontent.com/u/46596035?v=4"),
-        Member(memberId = 2, nickname = "해나", memberImage = "https://avatars.githubusercontent.com/u/103019852?v=4"),
-        Member(memberId = 3, nickname = "호두"),
-    )

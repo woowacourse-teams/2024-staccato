@@ -27,7 +27,7 @@ interface CategoryApiService {
         @Body color: CategoryColorRequest,
     ): ApiResult<Unit>
 
-    @GET(CATEGORIES_PATH_V2)
+    @GET(CATEGORIES_PATH_V3)
     suspend fun getCategories(
         @Query(SORT) sort: String? = null,
         @Query(FILTERS) filter: String? = null,
@@ -65,6 +65,7 @@ interface CategoryApiService {
         private const val CURRENT_DATE = "currentDate"
         private const val CATEGORIES_PATH_V2 = "/v2${CATEGORIES_PATH}"
         private const val CATEGORY_PATH_WITH_ID_V2 = "/v2$CATEGORIES_PATH/{$CATEGORY_ID}"
+        private const val CATEGORIES_PATH_V3 = "/v3${CATEGORIES_PATH}"
         private const val SORT = "sort"
         private const val FILTERS = "filters"
     }

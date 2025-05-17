@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -26,7 +25,7 @@ import com.on.staccato.theme.Title3
 @Composable
 fun TimelineItem(
     modifier: Modifier = Modifier,
-    timeline: TimelineUiModel,
+    category: TimelineUiModel,
     onCategoryClicked: (Long) -> Unit,
 ) {
     ConstraintLayout(
@@ -34,7 +33,7 @@ fun TimelineItem(
             modifier
                 .padding(horizontal = 18.dp, vertical = 13.dp)
                 .fillMaxWidth()
-                .clickable { onCategoryClicked(timeline.categoryId) },
+                .clickable { onCategoryClicked(category.categoryId) },
     ) {
         val (
             thumbnail,
@@ -56,7 +55,7 @@ fun TimelineItem(
                         top.linkTo(parent.top)
                     },
             bitmapPixelSize = 500,
-            url = timeline.categoryThumbnailUrl,
+            url = category.categoryThumbnailUrl,
             placeHolder = R.drawable.default_image,
             contentDescription = R.string.all_category_thumbnail_photo_description,
             radius = 4f.dpToPx(LocalContext.current),
@@ -70,7 +69,7 @@ fun TimelineItem(
                     start.linkTo(firstSpacer.end)
                     top.linkTo(period.top)
                 },
-            color = timeline.color,
+            color = category.color,
         )
 
         Spacer(modifier = Modifier.constrainAs(secondSpacer) { start.linkTo(color.end) }.size(10.dp))
@@ -84,8 +83,8 @@ fun TimelineItem(
                     end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
                 },
-            startAt = timeline.startAt,
-            endAt = timeline.endAt,
+            startAt = category.startAt,
+            endAt = category.endAt,
         )
 
         Text(
@@ -97,20 +96,19 @@ fun TimelineItem(
                     width = Dimension.fillToConstraints
                     height = Dimension.preferredWrapContent
 
-                    if (timeline.startAt == null && timeline.endAt == null) {
+                    if (category.startAt == null && category.endAt == null) {
                         top.linkTo(parent.top)
                     } else {
                         top.linkTo(period.bottom)
                     }
                 },
-            text = timeline.categoryTitle,
+            text = category.categoryTitle,
             style = Title3,
         )
 
         Spacer(modifier = Modifier.size(22.dp).constrainAs(thirdSpacer) { top.linkTo(title.bottom) })
 
-        // TODO: members 서버에서 주는 값으로 변경
-        if (members.isNotEmpty()) {
+        if (category.isShared) {
             Members(
                 modifier =
                     Modifier.constrainAs(participants) {
@@ -118,20 +116,19 @@ fun TimelineItem(
                         top.linkTo(thirdSpacer.bottom)
                         bottom.linkTo(parent.bottom)
                     },
-                members = members,
+                members = category.participants,
                 hiddenMembersCount = 3,
-                color = timeline.color,
+                color = category.color,
             )
         }
 
-        // TODO: 서버에서 주는 값으로 변경
         StaccatosCount(
             modifier =
                 Modifier.constrainAs(staccatosCount) {
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)
                 },
-            count = 21,
+            count = category.staccatoCount,
         )
     }
 }
@@ -143,7 +140,7 @@ private fun TimelineItemPreview(
     category: TimelineUiModel,
 ) {
     TimelineItem(
-        timeline = category,
+        category = category,
         onCategoryClicked = {},
     )
 }

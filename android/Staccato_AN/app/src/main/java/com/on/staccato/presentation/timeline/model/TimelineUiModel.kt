@@ -1,16 +1,21 @@
 package com.on.staccato.presentation.timeline.model
 
 import androidx.annotation.ColorRes
+import com.on.staccato.presentation.common.MemberUiModel
 import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.common.dummyMembersUiModel
 import java.time.LocalDate
 
 data class TimelineUiModel(
     val categoryId: Long,
     val categoryTitle: String,
     val categoryThumbnailUrl: String? = null,
+    @ColorRes val color: Int,
     val startAt: LocalDate? = null,
     val endAt: LocalDate? = null,
-    @ColorRes val color: Int,
+    val isShared: Boolean,
+    val participants: List<MemberUiModel>,
+    val staccatoCount: Int,
 )
 
 val dummyTimelineUiModel =
@@ -21,7 +26,10 @@ val dummyTimelineUiModel =
             categoryTitle = "카테고리 제목 1",
             startAt = null,
             endAt = null,
+            isShared = true,
             color = com.on.staccato.presentation.common.color.CategoryColor.GRAY.colorRes,
+            participants = dummyMembersUiModel,
+            staccatoCount = 10,
         ),
         TimelineUiModel(
             categoryId = 2,
@@ -29,7 +37,10 @@ val dummyTimelineUiModel =
             categoryTitle = "카테고리 제목 2",
             startAt = LocalDate.of(2025, 1, 1),
             endAt = LocalDate.of(2025, 12, 31),
+            isShared = true,
             color = CategoryColor.GRAY.colorRes,
+            participants = dummyMembersUiModel,
+            staccatoCount = 100,
         ),
         TimelineUiModel(
             categoryId = 3,
@@ -37,7 +48,20 @@ val dummyTimelineUiModel =
             categoryTitle = "아주아주아주아주아주아주아주아주아주아주아주긴카테고리제목~",
             startAt = LocalDate.of(2025, 1, 1),
             endAt = LocalDate.of(2025, 12, 31),
+            isShared = true,
             color = CategoryColor.GRAY.colorRes,
+            participants = dummyMembersUiModel,
+            staccatoCount = 10,
         ),
-        // TODO: 서버 API 변경 되면 개인 카테고리 Preview 데이터 작성(함께하는 사람들 X)
+        TimelineUiModel(
+            categoryId = 4,
+            categoryThumbnailUrl = null,
+            categoryTitle = "아주아주아주아주아주아주아주아주아주아주아주긴카테고리제목~",
+            startAt = LocalDate.of(2025, 1, 1),
+            endAt = LocalDate.of(2025, 12, 31),
+            isShared = false,
+            color = CategoryColor.GRAY.colorRes,
+            participants = dummyMembersUiModel,
+            staccatoCount = 10,
+        ),
     )
