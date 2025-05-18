@@ -26,7 +26,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.createPhotosByUrls
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.toSuccessPhotos
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel.Companion.FAIL_IMAGE_UPLOAD_MESSAGE
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateError
@@ -238,7 +238,7 @@ class StaccatoUpdateViewModel
                 staccatoRepository.getStaccato(staccatoId = staccatoId)
                     .onSuccess { staccato ->
                         staccatoTitle.set(staccato.staccatoTitle)
-                        _currentPhotos.value = createPhotosByUrls(staccato.staccatoImageUrls)
+                        _currentPhotos.value = staccato.staccatoImageUrls.toSuccessPhotos()
                         initializePlaceBy(staccato)
                         selectVisitedAt(staccato.visitedAt)
                         initCategory(staccato)
@@ -293,7 +293,7 @@ class StaccatoUpdateViewModel
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
                 }.onException { state ->
-                    if (this.isActive) handleUpdatePhotoException(state)
+                    if (this.isActive) handlePhotoException(photo, state)
                 }
                 .onServerError(::handleServerError)
         }
@@ -308,7 +308,7 @@ class StaccatoUpdateViewModel
             targetPhoto: AttachedPhotoUiModel,
             url: String,
         ) {
-            val updatedPhoto = targetPhoto.updateUrl(url)
+            val updatedPhoto = targetPhoto.toSuccessPhotoWith(url)
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
         }
 
@@ -317,7 +317,12 @@ class StaccatoUpdateViewModel
             _warningMessage.setValue(message)
         }
 
-        private fun handleUpdatePhotoException(exceptionState: ExceptionState = ExceptionState.ImageUploadError) {
+        private fun handlePhotoException(
+            photo: AttachedPhotoUiModel,
+            exceptionState: ExceptionState,
+        ) {
+            val updatedPhoto = photo.updateFail()
+            _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
             _warningMessage.setValue(exceptionState.message)
         }
 

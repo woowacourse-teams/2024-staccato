@@ -1,6 +1,8 @@
 package com.on.staccato.presentation.staccatocreation.model
 
 import android.net.Uri
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel.Companion.toLoadingPhoto
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel.Companion.toSuccessPhoto
 
 data class AttachedPhotosUiModel(
     val attachedPhotos: List<AttachedPhotoUiModel>,
@@ -25,7 +27,7 @@ data class AttachedPhotosUiModel(
             uris.filterNot { uri ->
                 currentUris.contains(uri)
             }
-        val combinedPhotos = attachedPhotos + newUris.map { AttachedPhotoUiModel(uri = it) }
+        val combinedPhotos = attachedPhotos + newUris.map { newUri -> newUri.toLoadingPhoto() }
         return AttachedPhotosUiModel(combinedPhotos.take(MAX_PHOTO_NUMBER))
     }
 
@@ -44,8 +46,8 @@ data class AttachedPhotosUiModel(
     companion object {
         private const val MAX_PHOTO_NUMBER = 5
 
-        fun createPhotosByUrls(urls: List<String>): AttachedPhotosUiModel {
-            return AttachedPhotosUiModel(urls.map { AttachedPhotoUiModel(imageUrl = it) })
-        }
+        fun ImageUrls.toSuccessPhotos() = AttachedPhotosUiModel(map { url -> url.toSuccessPhoto() })
     }
 }
+
+private typealias ImageUrls = List<String>

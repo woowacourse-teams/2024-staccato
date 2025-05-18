@@ -13,6 +13,10 @@
             type="com.on.staccato.presentation.common.AttachedPhotoHandler" />
 
         <variable
+            name="state"
+            type="com.on.staccato.presentation.common.photo.AttachedPhotoState" />
+
+        <variable
             name="attachedPhoto"
             type="com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel" />
     </data>
@@ -44,18 +48,29 @@
             app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
             app:layout_constraintStart_toStartOf="@id/iv_attached_photo"
             app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
-            bind:visibleOrGone="@{attachedPhoto.imageUrl == null}"
-            tools:visibility="visible" />
+            bind:backgroundVisibilityByState="@{attachedPhoto.state}" />
 
         <com.airbnb.lottie.LottieAnimationView
             style="@style/LottieStyle"
             app:layout_constraintBaseline_toBottomOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/iv_attached_photo"
             app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
-            bind:visibleOrGone="@{attachedPhoto.imageUrl == null}"
-            tools:visibility="visible" />
+            app:tint="@color/black_20"
+            bind:loadingVisibilityByState="@{attachedPhoto.state}" />
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/icon_retry_exclamation_mark"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/iv_attached_photo"
+            app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
+            app:layout_constraintStart_toStartOf="@id/iv_attached_photo"
+            app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
+            app:tint="@color/black_20"
+            bind:failVisibilityByState="@{attachedPhoto.state}" />
 
         <ImageView
             android:id="@+id/iv_delete_photo"

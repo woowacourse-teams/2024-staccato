@@ -1,26 +1,50 @@
 package com.on.staccato.presentation.staccatocreation.model
 
 import android.net.Uri
+import androidx.core.net.toUri
+import com.on.staccato.presentation.common.photo.AttachedPhotoState
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter.Companion.ADD_PHOTO_BUTTON_URI
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter.Companion.ADD_PHOTO_BUTTON_URL
 
 data class AttachedPhotoUiModel(
     val uri: Uri? = null,
     val imageUrl: String? = null,
+    val state: AttachedPhotoState,
 ) {
-    fun updateUrl(newUrl: String): AttachedPhotoUiModel {
+    fun toSuccessPhotoWith(newUrl: String): AttachedPhotoUiModel {
         return this.copy(
-            uri = uri,
             imageUrl = newUrl,
+            state = AttachedPhotoState.Success,
+        )
+    }
+
+    fun updateFail(): AttachedPhotoUiModel {
+        return this.copy(
+            state = AttachedPhotoState.Fail,
         )
     }
 
     companion object {
         val addPhotoButton by lazy {
             AttachedPhotoUiModel(
-                Uri.parse(ADD_PHOTO_BUTTON_URI),
+                ADD_PHOTO_BUTTON_URI.toUri(),
                 ADD_PHOTO_BUTTON_URL,
+                AttachedPhotoState.Success,
             )
         }
+
+        fun ImageUrl.toSuccessPhoto(): AttachedPhotoUiModel =
+            AttachedPhotoUiModel(
+                imageUrl = this,
+                state = AttachedPhotoState.Success,
+            )
+
+        fun Uri.toLoadingPhoto(): AttachedPhotoUiModel =
+            AttachedPhotoUiModel(
+                uri = this,
+                state = AttachedPhotoState.Loading,
+            )
     }
 }
+
+private typealias ImageUrl = String
