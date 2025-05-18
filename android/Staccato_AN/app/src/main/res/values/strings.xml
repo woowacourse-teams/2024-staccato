@@ -11,7 +11,7 @@
     <string name="all_confirm">확인</string>
     <string name="all_photo">사진</string>
     <string name="all_photo_number">(%s/%s)</string>
-    <string name="all_photo_attach">사진을 첨부해 보세요</string>
+    <string name="all_photo_attach">사진 첨부하기</string>
     <string name="all_visited_at">날짜 및 시간</string>
     <string name="all_please_select_visited_at">날짜 및 시간을 선택해 주세요</string>
     <string name="all_please_select_color">색상을 선택해 주세요</string>

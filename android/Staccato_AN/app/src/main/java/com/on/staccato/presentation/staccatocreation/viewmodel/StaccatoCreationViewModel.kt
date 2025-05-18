@@ -27,6 +27,7 @@ import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity.Co
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationError
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
 import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertStaccatoUriToFile
@@ -314,7 +315,6 @@ class StaccatoCreationViewModel
         }
 
         companion object {
-            const val MAX_PHOTO_NUMBER = 5
             const val MAX_PHOTO_NUMBER_MESSAGE = "사진은 최대 ${MAX_PHOTO_NUMBER}장만 첨부할 수 있어요!"
             const val FAIL_IMAGE_UPLOAD_MESSAGE = "이미지 업로드에 실패했습니다."
         }

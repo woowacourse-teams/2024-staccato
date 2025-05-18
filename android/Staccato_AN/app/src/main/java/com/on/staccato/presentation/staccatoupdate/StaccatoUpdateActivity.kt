@@ -37,7 +37,7 @@ import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTo
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
-import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
 import com.on.staccato.presentation.staccatoupdate.viewmodel.StaccatoUpdateViewModel
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
@@ -256,7 +256,7 @@ class StaccatoUpdateActivity :
             viewModel.fetchPhotosUrlsByUris(this)
         }
         viewModel.currentPhotos.observe(this) { photos ->
-            photoAttachFragment.setCurrentImageCount(StaccatoCreationViewModel.MAX_PHOTO_NUMBER - photos.size)
+            photoAttachFragment.setCurrentImageCount(MAX_PHOTO_NUMBER - photos.size)
             photoAttachAdapter.submitList(
                 listOf(AttachedPhotoUiModel.addPhotoButton, *photos.attachedPhotos.toTypedArray()),
             )

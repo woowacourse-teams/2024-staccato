@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -22,14 +21,13 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_width="110dp"
+        android:layout_height="110dp">
 
         <ImageView
             android:id="@+id/iv_attached_photo"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:contentDescription="@string/attached_photo_staccato_photo_description"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -61,8 +59,8 @@
             bind:loadingVisibilityByState="@{attachedPhoto.state}" />
 
         <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/icon_retry_exclamation_mark"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/iv_attached_photo"
@@ -74,15 +72,14 @@
 
         <ImageView
             android:id="@+id/iv_delete_photo"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="130dp"
-            android:layout_marginBottom="130dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="3dp"
             android:contentDescription="@string/all_delete_image"
             android:onClick="@{() -> selectedPhotoHandler.onDeleteClicked(attachedPhoto)}"
             android:src="@drawable/icon_delete"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -26,6 +26,7 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
+import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.toSuccessPhotos
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel.Companion.FAIL_IMAGE_UPLOAD_MESSAGE
@@ -108,7 +109,7 @@ class StaccatoUpdateViewModel
         val error: SingleLiveData<StaccatoUpdateError> get() = _error
 
         override fun onAddClicked() {
-            if ((currentPhotos.value?.size ?: 0) == StaccatoCreationViewModel.MAX_PHOTO_NUMBER) {
+            if ((currentPhotos.value?.size ?: 0) == MAX_PHOTO_NUMBER) {
                 _warningMessage.postValue(StaccatoCreationViewModel.MAX_PHOTO_NUMBER_MESSAGE)
             } else {
                 _isAddPhotoClicked.postValue(true)

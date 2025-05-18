@@ -44,7 +44,7 @@ data class AttachedPhotosUiModel(
     }
 
     companion object {
-        private const val MAX_PHOTO_NUMBER = 5
+        const val MAX_PHOTO_NUMBER = 8
 
         fun ImageUrls.toSuccessPhotos() = AttachedPhotosUiModel(map { url -> url.toSuccessPhoto() })
     }
