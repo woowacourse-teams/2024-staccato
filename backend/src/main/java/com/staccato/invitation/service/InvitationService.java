@@ -8,6 +8,8 @@ import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.invitation.domain.CategoryInvitation;
+import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.CategoryInvitationRequest;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -15,9 +17,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class InvitationService {
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
+    private final CategoryInvitationRepository categoryInvitationRepository;
 
     @Transactional
     public void inviteMembers(Member member, CategoryInvitationRequest categoryInvitationRequest) {
@@ -48,5 +52,10 @@ public class InvitationService {
         if (category.isGuest(member)) {
             throw new ForbiddenException();
         }
+    }
+
+    //TODO: 초대 요청 목록 조회 API 구현
+    public List<CategoryInvitation> readInvitations(Member inviter){
+        return categoryInvitationRepository.findAllWithCategoryAndMembersByInviterId(inviter.getId());
     }
 }

@@ -1,0 +1,19 @@
+package com.staccato.invitation.repository;
+
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import com.staccato.invitation.domain.CategoryInvitation;
+
+public interface CategoryInvitationRepository extends JpaRepository<CategoryInvitation, Long> {
+    @Query("""
+            SELECT ci
+            from CategoryInvitation ci
+            join fetch ci.category
+            join fetch ci.inviter
+            join fetch ci.invitee
+            where ci.inviter.id = :inviterId
+            """)
+    List<CategoryInvitation> findAllWithCategoryAndMembersByInviterId(@Param("inviterId") long inviterId);
+}
