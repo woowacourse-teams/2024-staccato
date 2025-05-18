@@ -204,28 +204,17 @@ class StaccatoUpdateViewModel
 
         fun updateStaccato(staccatoId: Long) {
             viewModelScope.launch {
-                val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleException()
-                val placeNameValue = placeName.value ?: return@launch handleException()
-                val addressValue = address.value ?: return@launch handleException()
-                val latitudeValue = latitude.value ?: return@launch handleException()
-                val longitudeValue = longitude.value ?: return@launch handleException()
-                val visitedAtValue = selectedVisitedAt.value ?: return@launch handleException()
-                val categoryIdValue =
-                    selectedCategory.value?.categoryId ?: return@launch handleException()
-                val staccatoImageUrlsValue =
-                    currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
-                        ?: emptyList()
                 _isPosting.value = true
                 staccatoRepository.updateStaccato(
                     staccatoId = staccatoId,
-                    staccatoTitle = staccatoTitleValue,
-                    placeName = placeNameValue,
-                    address = addressValue,
-                    latitude = latitudeValue,
-                    longitude = longitudeValue,
-                    visitedAt = visitedAtValue,
-                    categoryId = categoryIdValue,
-                    staccatoImageUrls = staccatoImageUrlsValue,
+                    staccatoTitle = staccatoTitle.get() ?: return@launch handleException(),
+                    placeName = placeName.value ?: return@launch handleException(),
+                    address = address.value ?: return@launch handleException(),
+                    latitude = latitude.value ?: return@launch handleException(),
+                    longitude = longitude.value ?: return@launch handleException(),
+                    visitedAt = selectedVisitedAt.value ?: return@launch handleException(),
+                    categoryId = selectedCategory.value?.categoryId ?: return@launch handleException(),
+                    staccatoImageUrls = currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! } ?: emptyList(),
                 ).onSuccess {
                     _isUpdateCompleted.postValue(true)
                 }.onException(::handleUpdateException)
@@ -293,9 +282,11 @@ class StaccatoUpdateViewModel
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
                 }.onException { state ->
-                    if (this.isActive) handlePhotoException(photo, state)
+                    if (this.isActive) handlePhotoException(photo, state.message)
                 }
-                .onServerError(::handleServerError)
+                .onServerError { message ->
+                    if (this.isActive) handlePhotoException(photo, message)
+                }
         }
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
@@ -319,11 +310,11 @@ class StaccatoUpdateViewModel
 
         private fun handlePhotoException(
             photo: AttachedPhotoUiModel,
-            exceptionState: ExceptionState,
+            message: String,
         ) {
             val updatedPhoto = photo.updateFail()
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
-            _warningMessage.setValue(exceptionState.message)
+            _warningMessage.setValue(message)
         }
 
         private fun handleException(state: ExceptionState = ExceptionState.RequiredValuesMissing) {

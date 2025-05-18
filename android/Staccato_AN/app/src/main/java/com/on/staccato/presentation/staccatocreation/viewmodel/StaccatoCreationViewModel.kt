@@ -241,14 +241,14 @@ class StaccatoCreationViewModel
             viewModelScope.launch {
                 _isPosting.value = true
                 staccatoRepository.createStaccato(
+                    staccatoTitle = staccatoTitle.get() ?: return@launch handleException(),
+                    placeName = placeName.value ?: return@launch handleException(),
+                    latitude = latitude.value ?: return@launch handleException(),
+                    longitude = longitude.value ?: return@launch handleException(),
+                    address = address.value ?: return@launch handleException(),
+                    visitedAt = selectedVisitedAt.value ?: return@launch handleException(),
                     categoryId = selectedCategory.value!!.categoryId,
-                    staccatoTitle = staccatoTitle.get() ?: return@launch,
-                    placeName = placeName.value ?: return@launch,
-                    latitude = latitude.value ?: return@launch,
-                    longitude = longitude.value ?: return@launch,
-                    address = address.value ?: return@launch,
-                    visitedAt = selectedVisitedAt.value ?: return@launch,
-                    staccatoImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
+                    staccatoImageUrls = currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! } ?: emptyList(),
                 ).onSuccess { response ->
                     _createdStaccatoId.postValue(response.staccatoId)
                 }.onException(::handleCreateException)
@@ -264,9 +264,11 @@ class StaccatoCreationViewModel
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
                 }.onException { state ->
-                    if (this.isActive) handlePhotoException(photo, state)
+                    if (this.isActive) handlePhotoException(photo, state.message)
                 }
-                .onServerError(::handleServerError)
+                .onServerError { message ->
+                    if (this.isActive) handlePhotoException(photo, message)
+                }
         }
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
@@ -288,18 +290,18 @@ class StaccatoCreationViewModel
             _warningMessage.postValue(errorMessage)
         }
 
-        private fun handleException(exceptionState: ExceptionState) {
+        private fun handleException(exceptionState: ExceptionState = ExceptionState.RequiredValuesMissing) {
             _isPosting.value = false
-            _warningMessage.postValue(exceptionState.message)
+            _warningMessage.setValue(exceptionState.message)
         }
 
         private fun handlePhotoException(
             photo: AttachedPhotoUiModel,
-            exceptionState: ExceptionState,
+            message: String,
         ) {
             val updatedPhoto = photo.updateFail()
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
-            _warningMessage.setValue(exceptionState.message)
+            _warningMessage.setValue(message)
         }
 
         private fun handleCategoryCandidatesException(exceptionState: ExceptionState) {
