@@ -6,7 +6,7 @@ interface CategoryHandler {
     fun onStaccatoClicked(staccatoId: Long)
 
     fun onStaccatoCreationClicked(
-        category: CategoryUiModel,
+        category: CategoryUiModel?,
         isPermissionCanceled: Boolean,
     )
 }

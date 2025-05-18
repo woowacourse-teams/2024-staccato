@@ -162,4 +162,36 @@ class CategoryTest {
         // then
         assertThat(isDenied).isEqualTo(false);
     }
+/*
+    @DisplayName("처음 카테고리를 생성했을 때 스타카토는 0개이다.")
+    @Test
+    void createCategoryAndStaccatoCountIsZero() {
+        // given
+        Category category = Category.builder()
+                .title("category")
+                .isShared(false)
+                .color(Color.LIGHT_GRAY.getName())
+                .build();
+
+        // when
+        long result = category.getStaccatoCount();
+
+        // then
+        assertThat(result).isZero();
+    }
+
+    @DisplayName("카테고리를 수정해도, 스타카토 개수는 영향을 받지 않는다.")
+    @Test
+    void updateCategoryWithoutStaccatoCount() {
+        // given
+        Category category = Category.builder()
+                .title("category")
+                .isShared(false)
+                .color(Color.LIGHT_GRAY.getName())
+                .build();
+        category.increaseStaccatoCount();
+
+        // when
+
+    }*/
 }

@@ -29,4 +29,6 @@ public class SwaggerExamples {
     public static final String CATEGORY_COLOR = "PINK";
     public static final String CATEGORY_ROLE = "host";
     public static final String MEMBER_IDS = "[1, 2, 3]";
+    public static final String STACCATO_COUNT = "42";
+    public static final String CATEGORY_IS_SHARED = "false";
 }

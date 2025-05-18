@@ -41,6 +41,7 @@ public class OpenApiConfig {
         return GroupedOpenApi.builder()
                 .group("V1 API")
                 .pathsToExclude("/v2/**")
+                .pathsToExclude("/v3/**")
                 .build();
     }
 
@@ -49,6 +50,14 @@ public class OpenApiConfig {
         return GroupedOpenApi.builder()
                 .group("V2 API")
                 .pathsToMatch("/v2/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi v3Api() {
+        return GroupedOpenApi.builder()
+                .group("V3 API")
+                .pathsToMatch("/v3/**")
                 .build();
     }
 }

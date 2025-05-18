@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -54,6 +55,8 @@ public class Category extends BaseEntity {
     private Boolean isShared;
     @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
     private List<CategoryMember> categoryMembers = new ArrayList<>();
+/*    @Column
+    private Long staccatoCount;*/
 
     public Category(String thumbnailUrl, @NonNull String title, String description, Color color, LocalDate startAt,
                     LocalDate endAt, @NonNull Boolean isShared) {
@@ -63,6 +66,9 @@ public class Category extends BaseEntity {
         this.color = color;
         this.term = new Term(startAt, endAt);
         this.isShared = isShared;
+/*        if (Objects.isNull(this.staccatoCount)) {
+            this.staccatoCount = 0L;
+        }*/
     }
 
     @Builder
@@ -149,4 +155,15 @@ public class Category extends BaseEntity {
     public void changeColor(Color color) {
         this.color = color;
     }
+
+/*    public void increaseStaccatoCount() {
+        staccatoCount = staccatoCount + 1;
+    }
+
+    public void decreaseStaccatoCount() {
+        if (staccatoCount == 0) {
+            return;
+        }
+        staccatoCount = staccatoCount - 1;
+    }*/
 }

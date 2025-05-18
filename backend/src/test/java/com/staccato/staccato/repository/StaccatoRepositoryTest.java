@@ -9,6 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
 import com.staccato.category.domain.Category;
@@ -263,5 +266,27 @@ class StaccatoRepositoryTest extends RepositoryTest {
                 () -> assertThat(staccatos.size()).isEqualTo(2),
                 () -> assertThat(staccatos).containsExactly(staccato2, staccato1)
         );
+    }
+
+    @DisplayName("카테고리에 속한 스타카토의 개수을 조회한다.")
+    @ParameterizedTest
+    @ValueSource(ints = {0, 2})
+    void countAllByCategoryWhenZero(int staccatoCount) {
+        //given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .buildAndSave(categoryRepository);
+        for (int count = 1; count <= staccatoCount; count++) {
+            StaccatoFixtures.defaultStaccato()
+                    .withCategory(category)
+                    .buildAndSave(staccatoRepository);
+        }
+
+        // when
+        long result = staccatoRepository.countAllByCategoryId(category.getId());
+
+        // then
+        assertThat(result).isEqualTo(result);
     }
 }
