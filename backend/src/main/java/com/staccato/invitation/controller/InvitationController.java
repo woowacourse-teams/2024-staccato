@@ -9,7 +9,8 @@ import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.invitation.controller.docs.InvitationControllerDocs;
 import com.staccato.invitation.service.InvitationService;
-import com.staccato.invitation.service.dto.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.response.InvitationIdResponse;
 import com.staccato.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
@@ -20,10 +21,10 @@ import lombok.RequiredArgsConstructor;
 public class InvitationController implements InvitationControllerDocs {
     private final InvitationService invitationService;
 
-    @PostMapping("/invite")
-    public ResponseEntity<Void> inviteMembers(@LoginMember Member member,
+    @PostMapping
+    public ResponseEntity<InvitationIdResponse> inviteMembers(@LoginMember Member member,
                                               @RequestBody CategoryInvitationRequest categoryInvitationRequest) {
-        invitationService.inviteMembers(member, categoryInvitationRequest);
-        return ResponseEntity.ok().build();
+        InvitationIdResponse invitationIdResponse = invitationService.inviteMembers(member, categoryInvitationRequest);
+        return ResponseEntity.ok(invitationIdResponse);
     }
 }

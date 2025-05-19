@@ -3,6 +3,7 @@ package com.staccato.invitation.service;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
-import com.staccato.invitation.service.dto.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
@@ -34,18 +35,25 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Autowired
     private CategoryInvitationRepository categoryInvitationRepository;
 
-    @DisplayName("HOST가 카테고리에 guest1과 guest2에 초대 요청(REQUESTED)을 한다.")
+    private Member host;
+    private Member guest;
+    private Category category;
+
+    @BeforeEach
+    void init() {
+        host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .buildAndSave(categoryRepository);
+    }
+
+    @DisplayName("HOST가 카테고리에 guest과 guest2에 초대 요청(REQUESTED)을 한다.")
     @Test
     void inviteMembers() {
         // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        Member guest1 = MemberFixtures.defaultMember().withNickname("guest1").buildAndSave(memberRepository);
         Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
-                .withHost(host)
-                .buildAndSave(categoryRepository);
-
-        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest1.getId(), guest2.getId()));
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId(), guest2.getId()));
 
         // when
         invitationService.inviteMembers(host, invitationRequest);
@@ -54,21 +62,19 @@ class InvitationServiceTest extends ServiceSliceTest {
         List<CategoryMember> categoryMembers = categoryRepository.findWithCategoryMembersById(category.getId()).get()
                 .getCategoryMembers();
         List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndMembersByInviterId(host.getId());
+        Set<Member> inviters = invitations.stream().map(CategoryInvitation::getInviter).collect(Collectors.toSet());
+        List<Member> invitees = invitations.stream().map(CategoryInvitation::getInvitee).collect(Collectors.toList());
+        Set<Category> categories = invitations.stream().map(CategoryInvitation::getCategory)
+                .collect(Collectors.toSet());
+        Set<InvitationStatus> statuses = invitations.stream().map(CategoryInvitation::getStatus)
+                .collect(Collectors.toSet());
 
         assertAll(
                 () -> assertThat(categoryMembers).hasSize(1),
-                () -> assertThat(invitations.stream().map(CategoryInvitation::getCategory).collect(Collectors.toSet()))
-                        .hasSize(1)
-                        .containsExactlyInAnyOrder(category),
-                () -> assertThat(invitations.stream().map(CategoryInvitation::getInviter).collect(Collectors.toSet()))
-                        .hasSize(1)
-                        .containsExactlyInAnyOrder(host),
-                () -> assertThat(invitations.stream().map(CategoryInvitation::getInvitee).collect(Collectors.toList()))
-                        .hasSize(2)
-                        .containsExactlyInAnyOrder(guest1, guest2),
-                () -> assertThat(invitations.stream().map(CategoryInvitation::getStatus).collect(Collectors.toSet()))
-                        .hasSize(1)
-                        .containsExactlyInAnyOrder(InvitationStatus.REQUESTED)
+                () -> assertThat(invitees).containsExactlyInAnyOrder(guest, guest2),
+                () -> assertThat(inviters).containsExactly(host),
+                () -> assertThat(categories).containsExactly(category),
+                () -> assertThat(statuses).containsExactly(InvitationStatus.REQUESTED)
         );
     }
 
@@ -76,13 +82,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void failToInviteIfNotHost() {
         // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
         Member anotherUser = MemberFixtures.defaultMember().withNickname("anotherUser").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
-                .withHost(host)
-                .buildAndSave(categoryRepository);
-
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
 
         // when & then
@@ -95,13 +95,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void inviteOnlyExistingMembers() {
         // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
         long unknownId = 0;
-        Category category = CategoryFixtures.defaultCategory()
-                .withHost(host)
-                .buildAndSave(categoryRepository);
-
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId(), unknownId));
 
         // when

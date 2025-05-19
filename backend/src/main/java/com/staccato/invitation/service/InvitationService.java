@@ -10,7 +10,8 @@ import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
-import com.staccato.invitation.service.dto.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.response.InvitationIdResponse;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +25,17 @@ public class InvitationService {
     private final CategoryInvitationRepository categoryInvitationRepository;
 
     @Transactional
-    public void inviteMembers(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
+    public InvitationIdResponse inviteMembers(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryInvitationRequest.categoryId());
         validateModificationPermission(category, inviter);
-        Set<Long> memberIds = categoryInvitationRequest.memberIds();
-        List<Member> invitedMembers = memberRepository.findAllByIdIn(memberIds);
+        Set<Long> inviteeIds = categoryInvitationRequest.inviteeIds();
+        List<Member> invitedMembers = memberRepository.findAllByIdIn(inviteeIds);
         List<CategoryInvitation> invitations = invitedMembers.stream()
                 .map(invitedMember -> CategoryInvitation.invite(category, inviter, invitedMember))
                 .toList();
-        categoryInvitationRepository.saveAll(invitations);
+        List<CategoryInvitation> categoryInvitations = categoryInvitationRepository.saveAll(invitations);
+
+        return InvitationIdResponse.from(categoryInvitations);
     }
 
     private Category getCategoryById(long categoryId) {

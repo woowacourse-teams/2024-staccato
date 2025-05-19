@@ -1,4 +1,4 @@
-package com.staccato.invitation.service.dto;
+package com.staccato.invitation.service.dto.request;
 
 import java.util.Set;
 import jakarta.validation.constraints.Min;
@@ -18,6 +18,6 @@ public record CategoryInvitationRequest(
                         description = "초대할 멤버 식별자 목록, 중복 값은 무시",
                         example = MEMBER_IDS
                 ))
-        Set<Long> memberIds
+        Set<Long> inviteeIds
 ) {
 }
