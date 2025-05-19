@@ -39,7 +39,7 @@ public record CategoryDetailResponseV2(
         this(
                 category.getId(),
                 category.getThumbnailUrl(),
-                category.getTitle(),
+                category.getTitle().getTitle(),
                 category.getDescription().getDescription(),
                 category.getColor().getName(),
                 category.getTerm().getStartAt(),

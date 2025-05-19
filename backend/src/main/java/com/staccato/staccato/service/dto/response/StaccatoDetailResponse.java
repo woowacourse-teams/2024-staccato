@@ -4,12 +4,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.config.swagger.SwaggerExamples;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.domain.StaccatoImage;
-
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -48,7 +46,7 @@ public record StaccatoDetailResponse(
         this(
                 staccato.getId(),
                 staccato.getCategory().getId(),
-                staccato.getCategory().getTitle(),
+                staccato.getCategory().getTitle().getTitle(),
                 staccato.getCategory().getTerm().getStartAt(),
                 staccato.getCategory().getTerm().getEndAt(),
                 staccato.getTitle(),

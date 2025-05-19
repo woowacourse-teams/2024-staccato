@@ -97,7 +97,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(categoryMember.getMember().getId()).isEqualTo(member.getId()),
                 () -> assertThat(categoryMember.getCategory()
-                        .getTitle()).isEqualTo(categoryCreateRequest.categoryTitle())
+                        .getTitle().getTitle()).isEqualTo(categoryCreateRequest.categoryTitle())
         );
     }
 
@@ -403,7 +403,8 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(foundedCategory.getId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(foundedCategory.getTitle()).isEqualTo(categoryUpdateRequest.categoryTitle()),
+                () -> assertThat(foundedCategory.getTitle()
+                        .getTitle()).isEqualTo(categoryUpdateRequest.categoryTitle()),
                 () -> assertThat(foundedCategory.getDescription()
                         .getDescription()).isEqualTo(categoryUpdateRequest.description()),
                 () -> assertThat(foundedCategory.getTerm().getStartAt()).isEqualTo(categoryUpdateRequest.startAt()),
