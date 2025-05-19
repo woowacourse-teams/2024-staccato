@@ -2,11 +2,13 @@ package com.on.staccato.presentation.staccatocreation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.on.staccato.databinding.ItemAddPhotoBinding
 import com.on.staccato.databinding.ItemAttachedPhotoBinding
 import com.on.staccato.presentation.common.AttachedPhotoHandler
+import com.on.staccato.presentation.common.photo.AttachedPhotoState
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 
 class PhotoAttachAdapter(
@@ -15,7 +17,7 @@ class PhotoAttachAdapter(
 ) :
     ItemMoveListener, ListAdapter<AttachedPhotoUiModel, PhotoAttachViewHolder>(diffUtil) {
     init {
-        submitList(listOf(AttachedPhotoUiModel.addPhotoButton))
+        submitList(listOf(addPhotoButton))
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -76,7 +78,7 @@ class PhotoAttachAdapter(
     }
 
     override fun onStopDrag() {
-        dragListener.onStopDrag(currentList.filterNot { it == AttachedPhotoUiModel.addPhotoButton })
+        dragListener.onStopDrag(currentList.filterNot { it == addPhotoButton })
     }
 
     companion object {
@@ -85,6 +87,14 @@ class PhotoAttachAdapter(
         const val ADD_PHOTO_POSITION = 0
         const val VIEW_TYPE_ADD_PHOTO = 0
         const val VIEW_TYPE_ATTACHED_PHOTO = 1
+
+        val addPhotoButton by lazy {
+            AttachedPhotoUiModel(
+                ADD_PHOTO_BUTTON_URI.toUri(),
+                ADD_PHOTO_BUTTON_URL,
+                AttachedPhotoState.Success,
+            )
+        }
 
         val diffUtil =
             object : DiffUtil.ItemCallback<AttachedPhotoUiModel>() {
