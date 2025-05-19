@@ -51,7 +51,7 @@ fun Button.setStaccatoSaveButtonEnabled(
             staccatoAddress == null ||
             staccatoCategory == null ||
             staccatoVisitedAt == null ||
-            staccatoPhotos?.isLoading() == true
+            staccatoPhotos?.hasNotSuccessPhoto() == true
         ) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false

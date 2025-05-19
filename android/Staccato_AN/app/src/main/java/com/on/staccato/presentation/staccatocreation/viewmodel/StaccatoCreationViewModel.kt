@@ -221,7 +221,7 @@ class StaccatoCreationViewModel
         fun updateSelectedImageUris(newUris: Array<Uri>) {
             val updatedPhotos = currentPhotos.value!!.addPhotosByUris(newUris.toList())
             _currentPhotos.value = updatedPhotos
-            _pendingPhotos.postValue(updatedPhotos.getPhotosWithoutUrls())
+            _pendingPhotos.postValue(updatedPhotos.getLoadingPhotosWithoutUrls())
         }
 
         fun setUrisWithNewOrder(list: List<AttachedPhotoUiModel>) {

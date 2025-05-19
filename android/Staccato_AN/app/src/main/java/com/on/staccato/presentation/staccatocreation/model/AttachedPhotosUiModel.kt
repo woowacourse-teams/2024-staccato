@@ -1,6 +1,7 @@
 package com.on.staccato.presentation.staccatocreation.model
 
 import android.net.Uri
+import com.on.staccato.presentation.common.photo.AttachedPhotoState
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel.Companion.toLoadingPhoto
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel.Companion.toSuccessPhoto
 
@@ -35,13 +36,11 @@ data class AttachedPhotosUiModel(
         return AttachedPhotosUiModel(attachedPhotos.filterNot { it == targetPhoto })
     }
 
-    fun getPhotosWithoutUrls(): List<AttachedPhotoUiModel> {
-        return attachedPhotos.filter { it.imageUrl == null }
+    fun getLoadingPhotosWithoutUrls(): List<AttachedPhotoUiModel> {
+        return attachedPhotos.filter { it.imageUrl == null && it.state == AttachedPhotoState.Loading }
     }
 
-    fun isLoading(): Boolean {
-        return (attachedPhotos.isNotEmpty()) && (getPhotosWithoutUrls().isNotEmpty())
-    }
+    fun hasNotSuccessPhoto(): Boolean = attachedPhotos.isNotEmpty() && attachedPhotos.any { it.state != AttachedPhotoState.Success }
 
     companion object {
         const val MAX_PHOTO_NUMBER = 8
