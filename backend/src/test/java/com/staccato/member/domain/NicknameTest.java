@@ -2,12 +2,9 @@ package com.staccato.member.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.staccato.exception.StaccatoException;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Value;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.N;
+import com.staccato.exception.StaccatoException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -53,8 +50,8 @@ class NicknameTest {
 
     @DisplayName("닉네임은 1자 이상, 10자 이하로 생성할 수 있다.")
     @ParameterizedTest
-    @ValueSource(ints = {1,10})
-    void createNicknameLengthInRange(int count){
+    @ValueSource(ints = {1, 10})
+    void createNicknameLengthInRange(int count) {
         // given
         String nickname = "가".repeat(count);
 
@@ -64,8 +61,8 @@ class NicknameTest {
 
     @DisplayName("닉네임은 1자 미만, 10자 초과로 생성할 수 없다.")
     @ParameterizedTest
-    @ValueSource(ints = {0,11})
-    void cannotCreateNicknameLengthOutOfRange(int count){
+    @ValueSource(ints = {0, 11})
+    void cannotCreateNicknameLengthOutOfRange(int count) {
         // given
         String nickname = "가".repeat(count);
 

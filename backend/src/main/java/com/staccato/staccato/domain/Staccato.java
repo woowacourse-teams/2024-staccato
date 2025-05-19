@@ -1,6 +1,5 @@
 package com.staccato.staccato.domain;
 
-import com.staccato.category.domain.Category;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -19,6 +18,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
+import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
@@ -45,7 +45,6 @@ public class Staccato extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Feeling feeling = Feeling.NOTHING;
-    @Column(nullable = false)
     @Embedded
     private Spot spot;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -116,7 +115,7 @@ public class Staccato extends BaseEntity {
     public void updateCategoryModifiedDate() {
         category.setUpdatedAt(LocalDateTime.now());
     }
-  
+
     public Color getColor() {
         return category.getColor();
     }

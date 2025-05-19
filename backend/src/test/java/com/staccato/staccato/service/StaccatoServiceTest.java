@@ -1,15 +1,9 @@
 package com.staccato.staccato.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
@@ -36,6 +30,10 @@ import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class StaccatoServiceTest extends ServiceSliceTest {
     @Autowired
@@ -97,7 +95,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     void cannotCreateStaccatoIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
@@ -183,7 +181,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     void cannotReadStaccatoByIdIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
@@ -248,7 +246,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     void failToUpdateStaccatoOfOther() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
@@ -268,7 +266,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     void failToUpdateStaccatoToOtherCategory() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
@@ -334,7 +332,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
     void cannotDeleteStaccatoByIdIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);

@@ -1,18 +1,16 @@
 package com.staccato.member.domain;
 
 import java.util.regex.Pattern;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-
 import com.staccato.exception.StaccatoException;
-
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 @EqualsAndHashCode
 public class Nickname {
@@ -20,7 +18,7 @@ public class Nickname {
     private static final int COLUMN_MAX_LENGTH = 20;
     private static final int NICKNAME_MAX_LENGTH = 10;
 
-    @Column(nullable = false, length = COLUMN_MAX_LENGTH)
+    @Column(nullable = false, unique = true, length = COLUMN_MAX_LENGTH)
     private String nickname;
 
     public Nickname(String nickname) {
@@ -31,7 +29,7 @@ public class Nickname {
     }
 
     private void validateLength(String trimmedNickname) {
-        if(trimmedNickname.isEmpty() || trimmedNickname.length()>NICKNAME_MAX_LENGTH){
+        if (trimmedNickname.isEmpty() || trimmedNickname.length() > NICKNAME_MAX_LENGTH) {
             throw new StaccatoException("1자 이상 10자 이하의 닉네임으로 설정해주세요.");
         }
     }
