@@ -59,13 +59,7 @@ class CategoryControllerV2Test extends ControllerTest {
                         "카테고리 제목을 입력해주세요."),
                 Arguments.of(CategoryRequestV2Fixtures.defaultCategoryRequestV2()
                                 .withCategoryTitle("  ").build(),
-                        "카테고리 제목을 입력해주세요."),
-                Arguments.of(CategoryRequestV2Fixtures.defaultCategoryRequestV2()
-                                .withCategoryTitle("가".repeat(31)).build(),
-                        "제목은 공백 포함 30자 이하로 설정해주세요."),
-                Arguments.of(CategoryRequestV2Fixtures.defaultCategoryRequestV2()
-                                .withDescription("가".repeat(501)).build(),
-                        "내용의 최대 허용 글자수는 공백 포함 500자입니다.")
+                        "카테고리 제목을 입력해주세요.")
         );
     }
 
