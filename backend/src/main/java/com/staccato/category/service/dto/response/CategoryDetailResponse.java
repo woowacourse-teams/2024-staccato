@@ -39,7 +39,7 @@ public record CategoryDetailResponse(
         category.getId(),
         category.getThumbnailUrl(),
         category.getTitle(),
-        category.getDescription(),
+        category.getDescription().getDescription(),
         category.getTerm().getStartAt(),
         category.getTerm().getEndAt(),
         toMemberResponses(category),
