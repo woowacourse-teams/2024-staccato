@@ -49,7 +49,7 @@ public record StaccatoDetailResponse(
                 staccato.getCategory().getTitle().getTitle(),
                 staccato.getCategory().getTerm().getStartAt(),
                 staccato.getCategory().getTerm().getEndAt(),
-                staccato.getTitle(),
+                staccato.getTitle().getTitle(),
                 staccato.getStaccatoImages().getImages().stream().map(StaccatoImage::getImageUrl).toList(),
                 staccato.getVisitedAt(),
                 staccato.getFeeling().getValue(),

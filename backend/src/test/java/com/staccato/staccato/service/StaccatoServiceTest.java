@@ -233,7 +233,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Staccato foundedStaccato = staccatoRepository.findById(staccato.getId()).get();
         List<StaccatoImage> images = staccatoImageRepository.findAll();
         assertAll(
-                () -> assertThat(foundedStaccato.getTitle()).isEqualTo("newStaccatoTitle"),
+                () -> assertThat(foundedStaccato.getTitle().getTitle()).isEqualTo(staccatoRequest.staccatoTitle()),
                 () -> assertThat(foundedStaccato.getCategory().getId()).isEqualTo(category2.getId()),
                 () -> assertThat(images.size()).isEqualTo(2),
                 () -> assertThat(images.get(0).getImageUrl()).isEqualTo("https://example.com/staccatoImage2.jpg"),

@@ -40,8 +40,8 @@ public class Staccato extends BaseEntity {
     private Long id;
     @Column(nullable = false)
     private LocalDateTime visitedAt;
-    @Column(nullable = false)
-    private String title;
+    @Embedded
+    private Title title;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Feeling feeling = Feeling.NOTHING;
@@ -66,7 +66,7 @@ public class Staccato extends BaseEntity {
     ) {
         validateIsWithinCategoryTerm(visitedAt, category);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
-        this.title = title.trim();
+        this.title = new Title(title);
         this.spot = new Spot(placeName, address, latitude, longitude);
         this.staccatoImages.addAll(staccatoImages, this);
         this.category = category;
