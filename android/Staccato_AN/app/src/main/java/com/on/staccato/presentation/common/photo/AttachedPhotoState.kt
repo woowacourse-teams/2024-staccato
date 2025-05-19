@@ -6,4 +6,6 @@ sealed interface AttachedPhotoState {
     data object Success : AttachedPhotoState
 
     data object Fail : AttachedPhotoState
+
+    data object Retry : AttachedPhotoState
 }

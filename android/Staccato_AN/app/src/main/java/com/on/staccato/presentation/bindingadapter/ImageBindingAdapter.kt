@@ -128,10 +128,10 @@ fun ImageView.setCategoryFilter(filterType: FilterType?) {
     imageTintList = ColorStateList.valueOf(color)
 }
 
-@BindingAdapter("failVisibilityByState")
-fun ImageView.setFailVisibilityByPhotoState(photoState: AttachedPhotoState) {
+@BindingAdapter("retryVisibilityByState")
+fun ImageView.setRetryVisibilityByPhotoState(photoState: AttachedPhotoState) {
     visibility =
-        if (photoState == AttachedPhotoState.Fail) {
+        if (photoState == AttachedPhotoState.Retry) {
             View.VISIBLE
         } else {
             View.GONE

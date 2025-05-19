@@ -39,6 +39,7 @@
             bind:coilRoundingRadiusDp="@{5f}" />
 
         <View
+            android:id="@+id/view_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/shape_attached_photo_5dp"
@@ -55,19 +56,32 @@
             app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
             app:layout_constraintStart_toStartOf="@id/iv_attached_photo"
             app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
-            app:tint="@color/black_20"
             bind:loadingVisibilityByState="@{attachedPhoto.state}" />
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/iv_retry"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/icon_retry_exclamation_mark"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/iv_attached_photo"
             app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
             app:layout_constraintStart_toStartOf="@id/iv_attached_photo"
             app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
-            app:tint="@color/black_20"
+            android:alpha="0.3"
+            bind:retryVisibilityByState="@{attachedPhoto.state}" />
+
+        <TextView
+            android:id="@+id/tv_large_photo_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray5"
+            android:gravity="center"
+            android:text="@string/all_large_photo_warning"
+            style="@style/HintTextStyle"
+            app:layout_constraintBottom_toBottomOf="@id/iv_attached_photo"
+            app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
+            app:layout_constraintStart_toStartOf="@id/iv_attached_photo"
+            app:layout_constraintTop_toTopOf="@id/iv_attached_photo"
             bind:failVisibilityByState="@{attachedPhoto.state}" />
 
         <ImageView

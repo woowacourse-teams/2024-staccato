@@ -134,6 +134,7 @@
 
     // item_attached_photo
     <string name="attached_photo_staccato_photo_description">스타카토 사진</string>
+    <string name="all_large_photo_warning">10MB보다\n작은 사진을\n올려주세요</string>
 
     // activity_staccato_update
     <string name="staccato_update_toolbar_subtitle">기억하고 싶은 순간을 수정해 보세요!</string>

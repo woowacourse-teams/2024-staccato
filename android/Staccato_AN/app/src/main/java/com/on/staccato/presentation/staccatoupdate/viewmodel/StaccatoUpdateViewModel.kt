@@ -283,10 +283,10 @@ class StaccatoUpdateViewModel
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
                 }.onException { state ->
-                    if (this.isActive) handlePhotoException(photo, state.message)
+                    if (this.isActive) handlePhotoException(photo.toRetry(), state.message)
                 }
                 .onServerError { message ->
-                    if (this.isActive) handlePhotoException(photo, message)
+                    if (this.isActive) handlePhotoException(photo.toFail(), message)
                 }
         }
 
@@ -313,8 +313,7 @@ class StaccatoUpdateViewModel
             photo: AttachedPhotoUiModel,
             message: String,
         ) {
-            val updatedPhoto = photo.updateFail()
-            _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
+            _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(photo)
             _warningMessage.setValue(message)
         }
 

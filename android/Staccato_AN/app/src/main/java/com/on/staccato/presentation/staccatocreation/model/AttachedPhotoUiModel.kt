@@ -11,18 +11,15 @@ data class AttachedPhotoUiModel(
     val imageUrl: String? = null,
     val state: AttachedPhotoState,
 ) {
-    fun toSuccessPhotoWith(newUrl: String): AttachedPhotoUiModel {
-        return this.copy(
+    fun toSuccessPhotoWith(newUrl: String) =
+        copy(
             imageUrl = newUrl,
             state = AttachedPhotoState.Success,
         )
-    }
 
-    fun updateFail(): AttachedPhotoUiModel {
-        return this.copy(
-            state = AttachedPhotoState.Fail,
-        )
-    }
+    fun toRetry() = copy(state = AttachedPhotoState.Retry)
+
+    fun toFail() = copy(state = AttachedPhotoState.Fail)
 
     companion object {
         val addPhotoButton by lazy {
