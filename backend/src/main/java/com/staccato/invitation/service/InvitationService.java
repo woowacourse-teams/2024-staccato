@@ -24,12 +24,15 @@ public class InvitationService {
     private final CategoryInvitationRepository categoryInvitationRepository;
 
     @Transactional
-    public void inviteMembers(Member member, CategoryInvitationRequest categoryInvitationRequest) {
+    public void inviteMembers(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryInvitationRequest.categoryId());
-        validateModificationPermission(category, member);
+        validateModificationPermission(category, inviter);
         Set<Long> memberIds = categoryInvitationRequest.memberIds();
         List<Member> invitedMembers = memberRepository.findAllByIdIn(memberIds);
-        category.addGuests(invitedMembers);
+        List<CategoryInvitation> invitations = invitedMembers.stream()
+                .map(invitedMember -> CategoryInvitation.invite(category, inviter, invitedMember))
+                .toList();
+        categoryInvitationRepository.saveAll(invitations);
     }
 
     private Category getCategoryById(long categoryId) {
