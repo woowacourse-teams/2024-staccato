@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Description {
     private static final int MAX_LENGTH = 500;
 
-    @Column(columnDefinition = "TEXT", length = MAX_LENGTH)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     public Description(String description) {
@@ -24,7 +24,7 @@ public class Description {
     }
 
     private void validateLength(String description) {
-        if(description.length()>MAX_LENGTH){
+        if (description.length() > MAX_LENGTH) {
             throw new StaccatoException("내용의 최대 허용 글자수는 공백 포함 500자입니다.");
         }
     }
