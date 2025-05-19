@@ -34,42 +34,4 @@ public record CategoryDetailResponseV2(
         List<MemberResponse> mates,
         List<StaccatoResponse> staccatos
 ) {
-
-    public CategoryDetailResponseV2(Category category, List<Staccato> staccatos) {
-        this(
-                category.getId(),
-                category.getThumbnailUrl(),
-                category.getTitle().getTitle(),
-                category.getDescription().getDescription(),
-                category.getColor().getName(),
-                category.getTerm().getStartAt(),
-                category.getTerm().getEndAt(),
-                toMemberResponses(category),
-                toStaccatoResponses(staccatos)
-        );
-    }
-
-    private static List<MemberResponse> toMemberResponses(Category category) {
-        return category.getCategoryMembers().stream()
-                .map(CategoryMember::getMember)
-                .map(MemberResponse::new)
-                .toList();
-    }
-
-    private static List<StaccatoResponse> toStaccatoResponses(List<Staccato> staccatos) {
-        return staccatos.stream().map(StaccatoResponse::new).toList();
-    }
-
-    public CategoryDetailResponse toCategoryDetailResponse() {
-        return new CategoryDetailResponse(
-                categoryId,
-                categoryThumbnailUrl,
-                categoryTitle,
-                description,
-                startAt,
-                endAt,
-                mates,
-                staccatos
-        );
-    }
 }

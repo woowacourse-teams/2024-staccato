@@ -34,14 +34,4 @@ public record CategoryResponseV2(
                 category.getTerm().getEndAt()
         );
     }
-
-    public CategoryResponse toCategoryResponse() {
-        return new CategoryResponse(
-                categoryId,
-                categoryThumbnailUrl,
-                categoryTitle,
-                startAt,
-                endAt
-        );
-    }
 }
