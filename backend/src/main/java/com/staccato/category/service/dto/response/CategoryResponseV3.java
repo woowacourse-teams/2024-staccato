@@ -28,10 +28,15 @@ public record CategoryResponseV3(
         LocalDate endAt,
         @Schema(example = SwaggerExamples.CATEGORY_IS_SHARED)
         boolean isShared,
+        @Schema(example = SwaggerExamples.CATEGORY_MEMBER_COUNT)
+        long totalMemberCount,
         List<MemberResponse> members,
         @Schema(example = SwaggerExamples.STACCATO_COUNT)
         Long staccatoCount
 ) {
+
+    public static final int MEMBER_VIEW_COUNT = 3;
+
     public CategoryResponseV3(Category category, long staccatoCount) {
         this(
                 category.getId(),
@@ -41,6 +46,7 @@ public record CategoryResponseV3(
                 category.getTerm().getStartAt(),
                 category.getTerm().getEndAt(),
                 category.getIsShared(),
+                category.getCategoryMemberCount(),
                 toMemberResponses(category.getCategoryMembers()),
                 staccatoCount
         );
@@ -48,6 +54,7 @@ public record CategoryResponseV3(
 
     private static List<MemberResponse> toMemberResponses(List<CategoryMember> categoryMembers) {
         return categoryMembers.stream()
+                .limit(MEMBER_VIEW_COUNT)
                 .map(CategoryMember::getMember)
                 .map(MemberResponse::new)
                 .toList();

@@ -162,6 +162,10 @@ public class Category extends BaseEntity {
                 .orElseThrow(ForbiddenException::new);
     }
 
+    public long getCategoryMemberCount() {
+        return categoryMembers.size();
+    }
+
 /*    public void increaseStaccatoCount() {
         staccatoCount = staccatoCount + 1;
     }

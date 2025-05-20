@@ -182,7 +182,9 @@ class CategoryControllerV3Test extends ControllerTest {
         Member host = MemberFixtures.defaultMember().withNickname("host").build();
         Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
         when(authService.extractFromToken(anyString())).thenReturn(host);
-        Category category = CategoryFixtures.defaultCategory().withHost(host).withGuests(guest).build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(guest).build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
@@ -285,16 +287,20 @@ class CategoryControllerV3Test extends ControllerTest {
     @Test
     void readAllCategory() throws Exception {
         // given
-        Member member = MemberFixtures.defaultMember().build();
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").build();
+        Member guest3 = MemberFixtures.defaultMember().withNickname("guest3").build();
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category categoryWithTerm = CategoryFixtures.defaultCategory()
                 .withColor(Color.PINK)
-                .withHost(member)
+                .withHost(host)
+                .withGuests(guest, guest2, guest3)
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
         Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
-                .withHost(member)
+                .withHost(host)
                 .withTerm(null, null).build();
         CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
                 new CategoryResponseV3(categoryWithTerm, 0),
@@ -311,11 +317,22 @@ class CategoryControllerV3Test extends ControllerTest {
                             "categoryColor": "pink",
                             "startAt": "2024-01-01",
                             "endAt": "2024-12-31",
-                            "isShared": false,
+                            "isShared": true,
+                            "totalMemberCount": 4,
                             "members": [
                                 {
                                     "memberId": null,
-                                    "nickname": "nickname",
+                                    "nickname": "host",
+                                    "memberImageUrl": "https://example.com/memberImage.png"
+                                },
+                                {
+                                    "memberId": null,
+                                    "nickname": "guest",
+                                    "memberImageUrl": "https://example.com/memberImage.png"
+                                },
+                                {
+                                    "memberId": null,
+                                    "nickname": "guest2",
                                     "memberImageUrl": "https://example.com/memberImage.png"
                                 }
                             ],
@@ -327,10 +344,11 @@ class CategoryControllerV3Test extends ControllerTest {
                             "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
                             "categoryColor": "blue",
                             "isShared": false,
+                            "totalMemberCount": 1,
                             "members": [
                                 {
                                     "memberId": null,
-                                    "nickname": "nickname",
+                                    "nickname": "host",
                                     "memberImageUrl": "https://example.com/memberImage.png"
                                 }
                             ],

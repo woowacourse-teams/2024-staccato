@@ -30,4 +30,5 @@ public class SwaggerExamples {
     public static final String CATEGORY_ROLE = "host";
     public static final String STACCATO_COUNT = "42";
     public static final String CATEGORY_IS_SHARED = "false";
+    public static final String CATEGORY_MEMBER_COUNT = "11";
 }
