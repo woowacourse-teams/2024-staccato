@@ -122,6 +122,10 @@ class StaccatoCreationViewModel
             }
         }
 
+        override fun onRetryClicked(deletedPhoto: AttachedPhotoUiModel) {
+            _pendingPhotos.postValue(listOf(deletedPhoto))
+        }
+
         fun getCurrentLocation() {
             _isCurrentLocationLoading.postValue(true)
             val currentLocation: Task<Location> = locationRepository.getCurrentLocation()

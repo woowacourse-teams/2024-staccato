@@ -62,6 +62,7 @@
             android:id="@+id/iv_retry"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:onClick="@{() -> selectedPhotoHandler.onRetryClicked(attachedPhoto)}"
             android:src="@drawable/icon_retry_exclamation_mark"
             app:layout_constraintBottom_toBottomOf="@id/iv_attached_photo"
             app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
