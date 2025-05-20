@@ -1,8 +1,11 @@
 package com.on.staccato.presentation.bindingadapter
 
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ScrollView
+import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
+import com.on.staccato.R
 import com.on.staccato.presentation.category.model.CategoryStaccatoUiModel
 import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
 import com.on.staccato.presentation.timeline.model.FilterType
@@ -64,6 +67,20 @@ fun View.setVisibilityByTimelineAndFilter(
 @BindingAdapter("visibilityByStaccatos")
 fun View.setVisibilityByStaccatos(staccatos: List<CategoryStaccatoUiModel>?) {
     visibility = if (staccatos.isNullOrEmpty()) View.VISIBLE else View.GONE
+}
+
+@BindingAdapter("visibilityByIsBottomSheetExpanded")
+fun View.setVisibilityBy(isBottomSheetExpanded: Boolean) {
+    visibility = if (isBottomSheetExpanded) View.INVISIBLE else View.VISIBLE
+}
+
+@BindingAdapter("backgroundByIsBottomSheetExpanded")
+fun ViewGroup.setBackgroundBy(isBottomSheetExpanded: Boolean) {
+    @DrawableRes val id: Int =
+        if (isBottomSheetExpanded) R.drawable.shape_bottom_sheet_square else R.drawable.shape_bottom_sheet_20dp
+    setBackgroundResource(
+        id,
+    )
 }
 
 private fun getVisibilityForFilteredCategories(isEmptyView: Boolean?) = if (isEmptyView == true) View.GONE else View.VISIBLE

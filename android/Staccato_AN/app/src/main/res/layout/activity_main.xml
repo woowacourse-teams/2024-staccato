@@ -88,7 +88,8 @@
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            bind:backgroundByIsBottomSheetExpanded="@{sharedViewModel.isBottomSheetExpanded}">
 
             <View
                 android:id="@+id/view_main_drag_bar"
@@ -97,7 +98,8 @@
                 app:layout_constraintBottom_toTopOf="@id/fragment_container_view_main_bottom_sheet"
                 app:layout_constraintEnd_toEndOf="@id/constraint_main_bottom_sheet"
                 app:layout_constraintStart_toStartOf="@id/constraint_main_bottom_sheet"
-                app:layout_constraintTop_toTopOf="@id/constraint_main_bottom_sheet" />
+                app:layout_constraintTop_toTopOf="@id/constraint_main_bottom_sheet"
+                bind:visibilityByIsBottomSheetExpanded="@{sharedViewModel.isBottomSheetExpanded}"/>
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragment_container_view_main_bottom_sheet"

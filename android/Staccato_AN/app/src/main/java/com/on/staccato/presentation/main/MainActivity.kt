@@ -279,11 +279,6 @@ class MainActivity :
                         when (newState) {
                             STATE_EXPANDED -> {
                                 sharedViewModel.updateBottomSheetState(isExpanded = true, isHalfExpanded = false)
-                                binding.viewMainDragBar.visibility =
-                                    View.INVISIBLE
-                                binding.constraintMainBottomSheet.setBackgroundResource(
-                                    R.drawable.shape_bottom_sheet_square,
-                                )
                                 changeSkipCollapsed(skipCollapsed = false)
                                 logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_EXPANDED)
                             }
@@ -301,10 +296,6 @@ class MainActivity :
                             }
 
                             else -> {
-                                binding.viewMainDragBar.visibility = View.VISIBLE
-                                binding.constraintMainBottomSheet.setBackgroundResource(
-                                    R.drawable.shape_bottom_sheet_20dp,
-                                )
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
                             }
                         }
