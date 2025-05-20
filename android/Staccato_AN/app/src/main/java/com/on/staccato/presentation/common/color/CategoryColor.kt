@@ -262,7 +262,7 @@ enum class CategoryColor(
     companion object {
         fun getAllColors() = entries.toList()
 
-        fun getColorBy(label: String) = entries.firstOrNull { it.label == label } ?: GRAY
+        fun getCategoryColorBy(label: String) = entries.firstOrNull { it.label == label } ?: GRAY
 
         fun getMarkerResBy(label: String) = entries.firstOrNull { it.label == label }?.markerRes ?: GRAY.markerRes
 

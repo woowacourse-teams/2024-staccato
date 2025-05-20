@@ -136,7 +136,7 @@ class CategoryUpdateViewModel
             description.value = category.description
             _startDate.value = category.startAt
             _endDate.value = category.endAt
-            _color.value = CategoryColor.getColorBy(category.color)
+            _color.value = CategoryColor.getCategoryColorBy(category.color)
             checkCategoryHasPeriod(category)
         }
 

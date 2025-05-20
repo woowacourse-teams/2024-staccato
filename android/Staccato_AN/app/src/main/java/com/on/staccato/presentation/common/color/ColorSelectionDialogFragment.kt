@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.on.staccato.databinding.FragmentColorSelectionBinding
+import com.on.staccato.presentation.common.color.CategoryColor.Companion.getCategoryColorBy
 import com.on.staccato.presentation.common.color.recyclerview.ColorSelectionAdapter
 import com.on.staccato.presentation.common.color.recyclerview.ColorSelectionHandler
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +23,7 @@ class ColorSelectionDialogFragment : ColorSelectionHandler, BottomSheetDialogFra
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val selectedColor =
-            requireArguments().getString(SELECTED_COLOR_LABEL)?.let(CategoryColor::getColorBy)
+            requireArguments().getString(SELECTED_COLOR_LABEL)?.let(::getCategoryColorBy)
         if (selectedColor != null) {
             viewModel.selectCategoryColor(selectedColor)
         }
