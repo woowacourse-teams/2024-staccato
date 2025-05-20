@@ -33,11 +33,33 @@ public class InvitationService {
     @Transactional
     public InvitationResultResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryInvitationRequest.categoryId());
-        validateModificationPermission(category, inviter);
+        validateCancelPermission(category, inviter);
         List<Member> invitees = memberRepository.findAllByIdIn(categoryInvitationRequest.inviteeIds());
         InvitationResultResponses responses = createInvitations(category, inviter, invitees);
 
         return responses;
+    }
+
+    private Category getCategoryById(long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
+    }
+
+    private void validateCancelPermission(Category category, Member member) {
+        validateOwner(category, member);
+        validateHost(category, member);
+    }
+
+    private void validateOwner(Category category, Member member) {
+        if (category.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private void validateHost(Category category, Member member) {
+        if (category.isGuest(member)) {
+            throw new ForbiddenException();
+        }
     }
 
     private InvitationResultResponses createInvitations(Category category, Member inviter, List<Member> invitees) {
@@ -74,30 +96,22 @@ public class InvitationService {
         }
     }
 
-    private Category getCategoryById(long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-    }
-
-    private void validateModificationPermission(Category category, Member member) {
-        validateOwner(category, member);
-        validateHost(category, member);
-    }
-
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    private void validateHost(Category category, Member member) {
-        if (category.isGuest(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
     //TODO: 초대 요청 목록 조회 API 구현
     public List<CategoryInvitation> readInvitations(Member inviter) {
         return categoryInvitationRepository.findAllWithCategoryAndMembersByInviterId(inviter.getId());
+    }
+
+    @Transactional
+    public void cancel(Member inviter, long invitationId) {
+        CategoryInvitation invitation = categoryInvitationRepository.findById(invitationId)
+                .orElseThrow(() -> new StaccatoException("요청하신 초대 정보를 찾을 수 없어요."));
+        validateCancelPermission(invitation, inviter);
+        invitation.cancel();
+    }
+
+    private void validateCancelPermission(CategoryInvitation invitation, Member inviter) {
+        if (invitation.isNotBy(inviter)) {
+            throw new ForbiddenException();
+        }
     }
 }

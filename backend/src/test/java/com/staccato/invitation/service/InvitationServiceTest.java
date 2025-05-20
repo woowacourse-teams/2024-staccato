@@ -13,6 +13,7 @@ import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.exception.ForbiddenException;
+import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.invitation.domain.CategoryInvitation;
@@ -147,5 +148,56 @@ class InvitationServiceTest extends ServiceSliceTest {
         // then
         assertThat(responses.invitationResults()).hasSize(1)
                 .containsExactly(InvitationResultResponse.fail(guest, "이미 초대 요청을 보낸 사용자입니다."));
+    }
+
+    // TODO: 응답 구현
+    @DisplayName("초대 요청 목록을 조회하면, 최근에 요청을 보낸 사용자 순으로 보여준다.")
+    @Test
+    void readAllInvitationRequested() {
+        // given
+        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+        CategoryInvitation invitation2 = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest2));
+
+        // when
+        invitationService.readInvitations(host);
+    }
+
+    @DisplayName("inviter는 본인이 보낸 초대 요청을 취소할 수 있다.")
+    @Test
+    void cancelInvitation() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when
+        invitationService.cancel(host, invitation.getId());
+
+        // then
+        assertThat(categoryInvitationRepository.findById(invitation.getId()).get()
+                .getStatus()).isEqualTo(InvitationStatus.CANCELED);
+    }
+
+    @DisplayName("초대 요청을 보낸 사용자가 아닌 다른 사용자가 초대 요청을 취소하면 예외가 발생한다.")
+    @Test
+    void failToCancelIfNotInviter() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when & then
+        assertThatThrownBy(() -> invitationService.cancel(guest, invitation.getId()))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("존재하지 않는 초대 요청을 취소하면 예외가 발생한다.")
+    @Test
+    void failToCancelIfNotExists() {
+        // given
+        long unknownId = 0;
+
+        // then
+        assertThatThrownBy(() -> invitationService.cancel(host, unknownId))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("요청하신 초대 정보를 찾을 수 없어요.");
     }
 }

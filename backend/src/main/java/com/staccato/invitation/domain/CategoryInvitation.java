@@ -55,4 +55,8 @@ public class CategoryInvitation extends BaseEntity {
     public boolean isNotBy(Member inviter) {
         return !this.inviter.equals(inviter);
     }
+
+    public void cancel() {
+        status = InvitationStatus.CANCELED;
+    }
 }
