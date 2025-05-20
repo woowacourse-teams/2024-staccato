@@ -1,5 +1,6 @@
 package com.staccato.invitation.controller.docs;
 
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.InvitationResultResponses;
@@ -25,5 +26,24 @@ public interface InvitationControllerDocs {
     ResponseEntity<InvitationResultResponses> inviteMembers(
             @Parameter(hidden = true) Member member,
             @Parameter(required = true) CategoryInvitationRequest categoryInvitationRequest
+    );
+
+    @Operation(summary = "초대 요청 취소", description = "사용자의 초대 요청을 취소합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "초대 취소 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                    
+                    (1) 취소하려는 초대 존재하지 않을 때
+                    
+                    (2) Path Variable 형식이 잘못되었을 때
+                    
+                    (3) 이미 수락/거절된 초대 요청일 때
+                    """,
+                    responseCode = "400")
+    })
+    ResponseEntity<Void> cancelInvitation(
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "초대 ID", example = "1") @Min(value = 1L, message = "초대 식별자는 양수로 이루어져야 합니다.") long invitationId
     );
 }
