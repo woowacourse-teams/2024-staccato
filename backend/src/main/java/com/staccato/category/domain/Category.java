@@ -135,11 +135,11 @@ public class Category extends BaseEntity {
     }
 
     public boolean isGuest(Member member) {
-        return categoryMembers.stream()
-                .filter(categoryMember -> categoryMember.isOwnedBy(member))
+        CategoryMember categoryMember = categoryMembers.stream()
+                .filter(cm -> cm.isOwnedBy(member))
                 .findFirst()
-                .map(CategoryMember::isGuest)
-                .orElse(false);
+                .orElseThrow(ForbiddenException::new);
+        return categoryMember.isGuest();
     }
 
     public boolean isNotSameTitle(String title) {
