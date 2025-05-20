@@ -51,4 +51,8 @@ public class CategoryInvitation extends BaseEntity {
         this.invitee = invitee;
         this.status = status;
     }
+
+    public boolean isNotBy(Member inviter) {
+        return !this.inviter.equals(inviter);
+    }
 }
