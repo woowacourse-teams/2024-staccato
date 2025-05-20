@@ -191,7 +191,7 @@ class MainActivity :
     }
 
     private fun handleBackPressedTwice(backPressedTime: Long): Long {
-        val currentTime = System.currentTimeMillis()
+        val currentTime = currentTimeMillis()
         if (currentTime - backPressedTime >= 3000L) {
             showToast(getString(R.string.main_end))
         } else {
@@ -285,31 +285,19 @@ class MainActivity :
                                     R.drawable.shape_bottom_sheet_square,
                                 )
                                 changeSkipCollapsed(skipCollapsed = false)
-                                loggingManager.logEvent(
-                                    NAME_BOTTOM_SHEET,
-                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_EXPANDED),
-                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
-                                )
+                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_EXPANDED)
                             }
 
                             STATE_HALF_EXPANDED -> {
                                 sharedViewModel.updateBottomSheetState(isExpanded = false, isHalfExpanded = true)
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
                                 changeSkipCollapsed()
-                                loggingManager.logEvent(
-                                    NAME_BOTTOM_SHEET,
-                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_HALF_EXPANDED),
-                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
-                                )
+                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_HALF_EXPANDED)
                             }
 
                             STATE_COLLAPSED -> {
                                 sharedViewModel.updateBottomSheetState(isExpanded = false, isHalfExpanded = false)
-                                loggingManager.logEvent(
-                                    NAME_BOTTOM_SHEET,
-                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_COLLAPSED),
-                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
-                                )
+                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_COLLAPSED)
                             }
 
                             else -> {
@@ -343,6 +331,14 @@ class MainActivity :
     ) {
         this.isHideable = isHideable
         this.skipCollapsed = skipCollapsed
+    }
+
+    private fun logEventForBottomSheet(stateParam: String) {
+        loggingManager.logEvent(
+            NAME_BOTTOM_SHEET,
+            Param(KEY_BOTTOM_SHEET_STATE, stateParam),
+            Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
+        )
     }
 
     private fun setUpBottomSheetStateListener() {
