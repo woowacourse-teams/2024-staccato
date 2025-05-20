@@ -76,13 +76,11 @@ class MainActivity :
         loadMemberProfile()
         observeException()
         observeStaccatoId()
-        observeIsDraggable()
-        observeLatestIsDraggable()
-        observeIsHalfModeRequested()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
         setUpBottomSheetStateListener()
+        updateBottomSheetIsDraggable()
     }
 
     override fun onStop() {
@@ -150,6 +148,21 @@ class MainActivity :
             bundleOf(STACCATO_ID_KEY to staccatoId)
 
         navController.navigate(R.id.staccatoFragment, bundle, navOptions)
+    }
+
+    private fun updateBottomSheetIsDraggable() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val isTimeline = destination.id == R.id.timelineFragment
+            behavior.isDraggable = !isTimeline
+
+            if (isTimeline) observeBottomSheetIsDraggable()
+        }
+    }
+
+    private fun observeBottomSheetIsDraggable() {
+        observeIsDraggable()
+        observeLatestIsDraggable()
+        observeIsHalfModeRequested()
     }
 
     private fun observeIsDraggable() {
