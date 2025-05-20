@@ -97,8 +97,8 @@ public class InvitationService {
     }
 
     //TODO: 초대 요청 목록 조회 API 구현
-    public List<CategoryInvitation> readInvitations(Member inviter) {
-        return categoryInvitationRepository.findAllWithCategoryAndMembersByInviterId(inviter.getId());
+    public CategoryInvitationRequestedResponses readInvitations(Member inviter) {
+        return categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(inviter.getId());
     }
 
     @Transactional

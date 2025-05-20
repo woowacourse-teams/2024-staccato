@@ -28,7 +28,7 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
     private Member guest;
 
     @BeforeEach
-    void init(){
+    void init() {
         host = MemberFixtures.defaultMember()
                 .withNickname("host")
                 .buildAndSave(memberRepository);
@@ -37,9 +37,9 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
                 .buildAndSave(memberRepository);
     }
 
-    @DisplayName("특정 사용자가 요청(REQUESTED)한 초대 목록을 조회한다.")
+    @DisplayName("특정 사용자가 요청(REQUESTED)한 초대 목록을 최신순으로 조회한다.")
     @Test
-    void readAllByInviter(){
+    void readAllByInviter() {
         // given
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(host)
@@ -56,11 +56,11 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
         categoryInvitationRepository.saveAll(List.of(invitation, invitation2, otherInvitation));
 
         // when
-        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndMembersByInviterId(host.getId());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
 
         // then
         assertThat(invitations).hasSize(2)
-                .containsExactlyInAnyOrder(invitation, invitation2)
+                .containsExactly(invitation2, invitation)
                 .doesNotContain(otherInvitation);
     }
 }

@@ -12,11 +12,11 @@ public interface CategoryInvitationRepository extends JpaRepository<CategoryInvi
             SELECT ci
             from CategoryInvitation ci
             join fetch ci.category
-            join fetch ci.inviter
             join fetch ci.invitee
             where ci.inviter.id = :inviterId
+            ORDER BY ci.createdAt DESC
             """)
-    List<CategoryInvitation> findAllWithCategoryAndMembersByInviterId(@Param("inviterId") long inviterId);
+    List<CategoryInvitation> findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(@Param("inviterId") long inviterId);
 
     boolean existsByCategoryIdAndInviterIdAndInviteeIdAndStatus(long categoryId, long inviterId, long inviteeId, InvitationStatus status);
 }

@@ -20,6 +20,8 @@ import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponse;
+import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
 import com.staccato.invitation.service.dto.response.InvitationResultResponse;
 import com.staccato.invitation.service.dto.response.InvitationResultResponses;
 import com.staccato.member.domain.Member;
@@ -65,8 +67,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         // then
         List<CategoryMember> categoryMembers = categoryRepository.findWithCategoryMembersById(category.getId()).get()
                 .getCategoryMembers();
-        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndMembersByInviterId(host.getId());
-        Set<Member> inviters = invitations.stream().map(CategoryInvitation::getInviter).collect(Collectors.toSet());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
         List<Member> invitees = invitations.stream().map(CategoryInvitation::getInvitee).collect(Collectors.toList());
         Set<Category> categories = invitations.stream().map(CategoryInvitation::getCategory)
                 .collect(Collectors.toSet());
@@ -79,7 +80,6 @@ class InvitationServiceTest extends ServiceSliceTest {
                 () -> assertThat(responses.invitationResults().get(1).statusCode()).isEqualTo(HttpStatus.OK.toString()),
                 () -> assertThat(categoryMembers).hasSize(1),
                 () -> assertThat(invitees).containsExactlyInAnyOrder(guest, guest2),
-                () -> assertThat(inviters).containsExactly(host),
                 () -> assertThat(categories).containsExactly(category),
                 () -> assertThat(statuses).containsExactly(InvitationStatus.REQUESTED)
         );
@@ -109,7 +109,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         invitationService.invite(host, invitationRequest);
 
         // then
-        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndMembersByInviterId(host.getId());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
 
         assertAll(
                 () -> assertThat(invitations).hasSize(1),
