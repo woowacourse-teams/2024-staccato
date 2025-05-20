@@ -14,6 +14,7 @@ import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.model.dummyTimelineUiModel
 import com.on.staccato.theme.Gray1
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 @Composable
 fun Timeline(
@@ -25,9 +26,10 @@ fun Timeline(
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
+            .map { it == 0 }
             .distinctUntilChanged()
-            .collect { index ->
-                updateIsDraggable(index == 0)
+            .collect {
+                updateIsDraggable(it)
             }
     }
 

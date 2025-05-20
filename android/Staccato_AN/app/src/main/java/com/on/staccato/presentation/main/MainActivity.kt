@@ -26,7 +26,6 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
-import com.on.staccato.presentation.main.BottomSheetState.Companion.toBottomSheetState
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
@@ -277,10 +276,9 @@ class MainActivity :
                         bottomSheet: View,
                         newState: Int,
                     ) {
-                        updateBottomSheetState(newState)
-
                         when (newState) {
                             STATE_EXPANDED -> {
+                                sharedViewModel.updateBottomSheetState(isExpanded = true, isHalfExpanded = false)
                                 binding.viewMainDragBar.visibility =
                                     View.INVISIBLE
                                 binding.constraintMainBottomSheet.setBackgroundResource(
@@ -295,6 +293,7 @@ class MainActivity :
                             }
 
                             STATE_HALF_EXPANDED -> {
+                                sharedViewModel.updateBottomSheetState(isExpanded = false, isHalfExpanded = true)
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
                                 changeSkipCollapsed()
                                 loggingManager.logEvent(
@@ -305,6 +304,7 @@ class MainActivity :
                             }
 
                             STATE_COLLAPSED -> {
+                                sharedViewModel.updateBottomSheetState(isExpanded = false, isHalfExpanded = false)
                                 loggingManager.logEvent(
                                     NAME_BOTTOM_SHEET,
                                     Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_COLLAPSED),
@@ -334,14 +334,6 @@ class MainActivity :
                     }
                 },
             )
-        }
-    }
-
-    private fun updateBottomSheetState(newState: Int) {
-        val bottomSheetState: BottomSheetState = newState.toBottomSheetState()
-
-        if (bottomSheetState != BottomSheetState.NONE) {
-            sharedViewModel.updateBottomSheet(bottomSheetState)
         }
     }
 

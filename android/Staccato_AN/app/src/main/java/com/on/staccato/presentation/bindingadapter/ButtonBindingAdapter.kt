@@ -10,7 +10,6 @@ import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.common.InputState
 import com.on.staccato.presentation.common.color.CategoryColor
-import com.on.staccato.presentation.main.BottomSheetState
 import com.on.staccato.presentation.mapper.toInputState
 import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import java.time.LocalDate
@@ -137,9 +136,9 @@ fun ImageButton.setSendButtonEnabled(value: String?) {
     isEnabled = !value.isNullOrBlank()
 }
 
-@BindingAdapter("visibilityByBottomSheetState")
-fun ImageButton.setVisibilityBy(bottomSheetState: BottomSheetState?) {
-    if (bottomSheetState == BottomSheetState.EXPANDED) {
+@BindingAdapter("visibilityByIsBottomSheetExpanded")
+fun ImageButton.setVisibilityBy(isBottomSheetExpanded: Boolean?) {
+    if (isBottomSheetExpanded == true) {
         fadeIn()
     } else {
         fadeOut()

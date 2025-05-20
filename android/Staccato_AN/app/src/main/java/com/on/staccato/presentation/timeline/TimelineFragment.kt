@@ -13,7 +13,6 @@ import com.on.staccato.databinding.FragmentTimelineBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity
-import com.on.staccato.presentation.main.BottomSheetState
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.timeline.model.SortType
@@ -107,9 +106,9 @@ class TimelineFragment :
             binding.nickname = memberProfile.nickname
         }
 
-        sharedViewModel.bottomSheetState.observe(viewLifecycleOwner) {
-            binding.bottomSheetState = it
-            if (it == BottomSheetState.EXPANDED) sharedViewModel.updateLatestIsDraggable()
+        sharedViewModel.isBottomSheetExpanded.observe(viewLifecycleOwner) {
+            binding.isBottomSheetExpanded = it
+            if (it) sharedViewModel.updateLatestIsDraggable()
         }
     }
 

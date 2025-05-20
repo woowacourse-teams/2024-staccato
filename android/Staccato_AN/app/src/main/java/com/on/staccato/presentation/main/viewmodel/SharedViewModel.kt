@@ -11,7 +11,6 @@ import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.repository.MyPageRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.main.BottomSheetState
 import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,8 +53,11 @@ class SharedViewModel
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
 
-        private val _bottomSheetState = MutableLiveData<BottomSheetState>(BottomSheetState.HALF_EXPANDED)
-        val bottomSheetState: LiveData<BottomSheetState> get() = _bottomSheetState
+        private val _isBottomSheetExpanded = MutableLiveData<Boolean>(false)
+        val isBottomSheetExpanded: LiveData<Boolean> get() = _isBottomSheetExpanded
+
+        private val _isBottomSheetHalfExpanded = MutableLiveData(true)
+        val isBottomSheetHalfExpanded: LiveData<Boolean> get() = _isBottomSheetHalfExpanded
 
         private val _staccatoId = MutableLiveData<Long>()
         val staccatoId: LiveData<Long> get() = _staccatoId
@@ -105,16 +107,13 @@ class SharedViewModel
             _isSettingClicked.value = isSettingClicked
         }
 
-        fun updateBottomSheet(state: BottomSheetState) {
-            val isDifferent = state != _bottomSheetState.value
-            val isExpanded = state == BottomSheetState.EXPANDED
-            val isHalfExpanded = state == BottomSheetState.HALF_EXPANDED
-
-            when {
-                isDifferent && isDragging.value == false -> _bottomSheetState.value = state
-                isDifferent && isExpanded -> _bottomSheetState.value = state
-                isHalfExpanded -> updateIsHalfModeRequested(false)
-            }
+        fun updateBottomSheetState(
+            isExpanded: Boolean,
+            isHalfExpanded: Boolean,
+        ) {
+            val isDifferent = isHalfExpanded != _isBottomSheetHalfExpanded.value
+            if (isDifferent && isDragging.value == false) _isBottomSheetHalfExpanded.value = isHalfExpanded
+            _isBottomSheetExpanded.value = isExpanded
         }
 
         fun updateIsHalfModeRequested(state: Boolean) {

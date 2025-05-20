@@ -15,6 +15,7 @@ fun TimelineScreen(
     onCategoryClicked: (Long) -> Unit,
 ) {
     val timeline by timelineViewModel.timeline.collectAsState()
+
     Timeline(
         timeline = timeline,
         onCategoryClicked = onCategoryClicked,

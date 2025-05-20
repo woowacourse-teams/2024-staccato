@@ -16,7 +16,6 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categoryupdate.viewmodel.CategoryUpdateViewModel
 import com.on.staccato.presentation.common.PhotoAttachFragment
-import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.common.color.CategoryColor.Companion.getCategoryColorBy
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY

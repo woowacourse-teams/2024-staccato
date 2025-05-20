@@ -2,7 +2,6 @@ package com.on.staccato.presentation.map
 
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,6 @@ import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.PermissionCancelListener
-import com.on.staccato.presentation.main.BottomSheetState
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
 import com.on.staccato.presentation.util.showSnackBar
@@ -208,23 +206,10 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun GoogleMap.setMapPadding() {
-        sharedViewModel.bottomSheetState.observe(viewLifecycleOwner) { state ->
+        sharedViewModel.isBottomSheetHalfExpanded.observe(viewLifecycleOwner) { isHalfExpanded ->
             val mapPaddingBottom =
-                if (state == BottomSheetState.HALF_EXPANDED) {
-                    Log.d("hye: mapPaddingBottom if", "$state")
-                    (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt()
-                } else {
-                    Log.d("hye: mapPaddingBottom else", "$state")
-                    DEFAULT_MAP_PADDING
-                }
-            val yPixel =
-                if (state == BottomSheetState.HALF_EXPANDED) {
-                    Log.d("hye: yPixel if", "$state")
-                    yPixel
-                } else {
-                    Log.d("hye: yPixel else", "$state")
-                    -yPixel
-                }
+                if (isHalfExpanded) (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt() else DEFAULT_MAP_PADDING
+            val yPixel = if (isHalfExpanded) yPixel else -yPixel
 
             setPadding(
                 DEFAULT_MAP_PADDING,

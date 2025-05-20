@@ -13,8 +13,8 @@
             type="java.lang.String" />
 
         <variable
-            name="bottomSheetState"
-            type="com.on.staccato.presentation.main.BottomSheetState" />
+            name="isBottomSheetExpanded"
+            type="Boolean" />
 
         <variable
             name="viewModel"
@@ -44,7 +44,7 @@
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:visibilityByBottomSheetState="@{bottomSheetState}" />
+            bind:visibilityByIsBottomSheetExpanded="@{isBottomSheetExpanded}" />
 
         <TextView
             android:id="@+id/tv_timeline_my_timeline"
