@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.category.domain.Category;
 import com.staccato.config.swagger.SwaggerExamples;
+import com.staccato.member.domain.Member;
 import com.staccato.member.service.dto.response.MemberResponse;
 import com.staccato.staccato.domain.Staccato;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,11 +34,13 @@ public record CategoryDetailResponseV3(
         LocalDate endAt,
         @Schema(example = SwaggerExamples.CATEGORY_IS_SHARED)
         boolean isShared,
+        @Schema(example = SwaggerExamples.CATEGORY_ROLE)
+        String myRole,
         List<MemberDetailResponse> members,
         List<StaccatoResponse> staccatos
 ) {
 
-    public CategoryDetailResponseV3(Category category, List<Staccato> staccatos) {
+    public CategoryDetailResponseV3(Category category, List<Staccato> staccatos, Member member) {
         this(
                 category.getId(),
                 category.getThumbnailUrl(),
@@ -47,6 +50,7 @@ public record CategoryDetailResponseV3(
                 category.getTerm().getStartAt(),
                 category.getTerm().getEndAt(),
                 category.getIsShared(),
+                category.getRoleOfMember(member).getRole(),
                 toMemberDetailResponses(category),
                 toStaccatoResponses(staccatos)
         );

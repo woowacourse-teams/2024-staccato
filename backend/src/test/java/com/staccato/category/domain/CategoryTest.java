@@ -1,21 +1,19 @@
 package com.staccato.category.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CategoryTest {
     @DisplayName("카테고리 생성 시 제목에는 앞뒤 공백이 잘린다.")
@@ -162,6 +160,7 @@ class CategoryTest {
         // then
         assertThat(isDenied).isEqualTo(false);
     }
+
 /*
     @DisplayName("처음 카테고리를 생성했을 때 스타카토는 0개이다.")
     @Test

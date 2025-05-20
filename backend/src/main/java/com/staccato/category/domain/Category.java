@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -16,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import com.staccato.config.domain.BaseEntity;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
@@ -152,6 +152,14 @@ public class Category extends BaseEntity {
 
     public void changeColor(Color color) {
         this.color = color;
+    }
+
+    public Role getRoleOfMember(Member member) {
+        return categoryMembers.stream()
+                .filter(categoryMember -> categoryMember.isOwnedBy(member))
+                .findFirst()
+                .map(CategoryMember::getRole)
+                .orElseThrow(ForbiddenException::new);
     }
 
 /*    public void increaseStaccatoCount() {
