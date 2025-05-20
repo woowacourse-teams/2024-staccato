@@ -5,6 +5,13 @@ public enum InvitationStatus {
     REQUESTED,
     CANCELED,
     ACCEPTED,
-    REJECTED
-    ;
+    REJECTED;
+
+    public boolean isAccepted() {
+        return this == ACCEPTED;
+    }
+
+    public boolean isRejected() {
+        return this == REJECTED;
+    }
 }

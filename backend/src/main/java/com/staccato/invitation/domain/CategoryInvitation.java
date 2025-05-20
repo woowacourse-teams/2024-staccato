@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import com.staccato.category.domain.Category;
 import com.staccato.config.domain.BaseEntity;
+import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -57,6 +58,21 @@ public class CategoryInvitation extends BaseEntity {
     }
 
     public void cancel() {
+        validate(status);
         status = InvitationStatus.CANCELED;
+    }
+
+    private void validate(InvitationStatus status) {
+        if (status.isAccepted() || status.isRejected()) {
+            throw new StaccatoException("이미 상대가 수락/거절한 초대 요청은 취소할 수 없어요.");
+        }
+    }
+
+    public void accept() {
+        status = InvitationStatus.ACCEPTED;
+    }
+
+    public void reject() {
+        status = InvitationStatus.REJECTED;
     }
 }
