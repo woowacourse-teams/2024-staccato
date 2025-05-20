@@ -16,7 +16,7 @@ fun TimeLineCategory.toTimelineUiModel(): TimelineUiModel {
         categoryId = categoryId,
         categoryThumbnailUrl = categoryThumbnailUrl,
         categoryTitle = categoryTitle,
-        color = CategoryColor.getColorResBy(color),
+        color = CategoryColor.getCategoryColorBy(color),
         isShared = isShared,
         startAt = startAt,
         endAt = endAt,

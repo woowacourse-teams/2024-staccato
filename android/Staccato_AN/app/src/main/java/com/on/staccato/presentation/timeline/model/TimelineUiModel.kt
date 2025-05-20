@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.timeline.model
 
-import androidx.annotation.ColorRes
 import com.on.staccato.presentation.common.MemberUiModel
 import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.common.dummyMembersUiModel
@@ -10,7 +9,7 @@ data class TimelineUiModel(
     val categoryId: Long,
     val categoryTitle: String,
     val categoryThumbnailUrl: String? = null,
-    @ColorRes val color: Int,
+    val color: CategoryColor,
     val startAt: LocalDate? = null,
     val endAt: LocalDate? = null,
     val isShared: Boolean,
@@ -27,7 +26,7 @@ val dummyTimelineUiModel =
             startAt = null,
             endAt = null,
             isShared = true,
-            color = com.on.staccato.presentation.common.color.CategoryColor.GRAY.colorRes,
+            color = CategoryColor.GRAY,
             participants = dummyMembersUiModel,
             staccatoCount = 10,
         ),
@@ -38,7 +37,7 @@ val dummyTimelineUiModel =
             startAt = LocalDate.of(2025, 1, 1),
             endAt = LocalDate.of(2025, 12, 31),
             isShared = true,
-            color = CategoryColor.GRAY.colorRes,
+            color = CategoryColor.GRAY,
             participants = dummyMembersUiModel,
             staccatoCount = 100,
         ),
@@ -49,7 +48,7 @@ val dummyTimelineUiModel =
             startAt = LocalDate.of(2025, 1, 1),
             endAt = LocalDate.of(2025, 12, 31),
             isShared = true,
-            color = CategoryColor.GRAY.colorRes,
+            color = CategoryColor.GRAY,
             participants = dummyMembersUiModel,
             staccatoCount = 10,
         ),
@@ -60,7 +59,7 @@ val dummyTimelineUiModel =
             startAt = LocalDate.of(2025, 1, 1),
             endAt = LocalDate.of(2025, 12, 31),
             isShared = false,
-            color = CategoryColor.GRAY.colorRes,
+            color = CategoryColor.GRAY,
             participants = dummyMembersUiModel,
             staccatoCount = 10,
         ),

@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.timeline.component
 
-import androidx.annotation.ColorRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyRow
@@ -10,8 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.on.staccato.R
 import com.on.staccato.presentation.common.MemberUiModel
+import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.common.dummyMembersUiModel
 
 @Composable
@@ -19,7 +18,7 @@ fun Members(
     modifier: Modifier = Modifier,
     members: List<MemberUiModel>,
     hiddenMembersCount: Int,
-    @ColorRes color: Int,
+    colorLabel: String,
 ) {
     LazyRow(
         modifier = modifier,
@@ -32,7 +31,7 @@ fun Members(
         }
 
         item {
-            HiddenMembersCountItem(hiddenMembersCount, color = color)
+            HiddenMembersCountItem(hiddenMembersCount, colorLabel = colorLabel)
         }
     }
 }
@@ -43,6 +42,6 @@ private fun MembersPreview() {
     Members(
         members = dummyMembersUiModel,
         hiddenMembersCount = 3,
-        color = R.color.gray3,
+        colorLabel = CategoryColor.GRAY.label,
     )
 }
