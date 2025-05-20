@@ -8,7 +8,8 @@ import org.springframework.http.MediaType;
 import com.staccato.ControllerTest;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
-import com.staccato.invitation.service.dto.response.InvitationIdResponse;
+import com.staccato.invitation.service.dto.response.InvitationResultResponse;
+import com.staccato.invitation.service.dto.response.InvitationResultResponses;
 import com.staccato.member.domain.Member;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -33,10 +34,32 @@ class InvitationControllerTest extends ControllerTest {
                     "inviteeIds": [2, 3]
                 }
                 """;
-        when(invitationService.inviteMembers(any(Member.class), any(CategoryInvitationRequest.class))).thenReturn(new InvitationIdResponse(List.of(1L)));
+        when(invitationService.inviteMembers(any(Member.class), any(CategoryInvitationRequest.class)))
+                .thenReturn(new InvitationResultResponses(List.of(
+                        new InvitationResultResponse(1L, "200 OK", "초대 요청에 성공하였습니다.", 1L),
+                        new InvitationResultResponse(2L, "400 BAD_REQUEST", "이미 카테고리에 함께하고 있는 사용자입니다.", null),
+                        new InvitationResultResponse(3L, "400 BAD_REQUEST", "해당 사용자를 찾을 수 없어요.", null)
+                )));
         String expectedResponse = """
                 {
-                    "invitationIds" : [1]
+                  "invitationResults": [
+                    {
+                      "inviteeId": 1,
+                      "statusCode": "200 OK",
+                      "message": "초대 요청에 성공하였습니다.",
+                      "invitationId": 1
+                    },
+                    {
+                      "inviteeId": 2,
+                      "statusCode": "400 BAD_REQUEST",
+                      "message": "이미 카테고리에 함께하고 있는 사용자입니다."
+                    },
+                    {
+                      "inviteeId": 3,
+                      "statusCode": "400 BAD_REQUEST",
+                      "message": "해당 사용자를 찾을 수 없어요."
+                    }
+                  ]
                 }
                 """;
 

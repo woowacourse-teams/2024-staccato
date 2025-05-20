@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
@@ -18,6 +19,8 @@ import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.response.InvitationResultResponse;
+import com.staccato.invitation.service.dto.response.InvitationResultResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
@@ -56,7 +59,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId(), guest2.getId()));
 
         // when
-        invitationService.inviteMembers(host, invitationRequest);
+        InvitationResultResponses responses = invitationService.inviteMembers(host, invitationRequest);
 
         // then
         List<CategoryMember> categoryMembers = categoryRepository.findWithCategoryMembersById(category.getId()).get()
@@ -70,6 +73,9 @@ class InvitationServiceTest extends ServiceSliceTest {
                 .collect(Collectors.toSet());
 
         assertAll(
+                () -> assertThat(responses.invitationResults()).hasSize(2),
+                () -> assertThat(responses.invitationResults().get(0).statusCode()).isEqualTo(HttpStatus.OK.toString()),
+                () -> assertThat(responses.invitationResults().get(1).statusCode()).isEqualTo(HttpStatus.OK.toString()),
                 () -> assertThat(categoryMembers).hasSize(1),
                 () -> assertThat(invitees).containsExactlyInAnyOrder(guest, guest2),
                 () -> assertThat(inviters).containsExactly(host),
@@ -108,5 +114,38 @@ class InvitationServiceTest extends ServiceSliceTest {
                 () -> assertThat(invitations).hasSize(1),
                 () -> assertThat(invitations.get(0).getInvitee()).isEqualTo(guest)
         );
+    }
+
+    @DisplayName("이미 함께하는 사람을 다시 초대하려고 하면 예외를 반환한다.")
+    @Test
+    void cannotInviteIfAlreadyCategoryMember() {
+        // given
+        category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
+
+        // when
+        InvitationResultResponses responses = invitationService.inviteMembers(host, invitationRequest);
+
+        // then
+        assertThat(responses.invitationResults()).hasSize(1)
+                .containsExactly(InvitationResultResponse.fail(guest, "이미 카테고리에 함께하고 있는 사용자입니다."));
+    }
+
+    @DisplayName("초대 요청을 한 사용자를 다시 초대하려고 하면 예외를 반환한다.")
+    @Test
+    void cannotInviteIfAlreadyRequested() {
+        // given
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
+        invitationService.inviteMembers(host, invitationRequest);
+
+        // when
+        InvitationResultResponses responses = invitationService.inviteMembers(host, invitationRequest);
+
+        // then
+        assertThat(responses.invitationResults()).hasSize(1)
+                .containsExactly(InvitationResultResponse.fail(guest, "이미 초대 요청을 보낸 사용자입니다."));
     }
 }

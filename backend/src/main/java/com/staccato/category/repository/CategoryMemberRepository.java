@@ -1,12 +1,12 @@
 package com.staccato.category.repository;
 
-import com.staccato.category.domain.CategoryMember;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import com.staccato.category.domain.CategoryMember;
 import com.staccato.member.domain.Member;
 
 public interface CategoryMemberRepository extends JpaRepository<CategoryMember, Long> {
@@ -22,6 +22,8 @@ public interface CategoryMemberRepository extends JpaRepository<CategoryMember, 
     List<CategoryMember> findAllByMemberIdAndDate(@Param("memberId") long memberId, @Param("date") LocalDate date);
 
     boolean existsByMemberAndCategoryTitle(Member member, String title);
+
+    boolean existsByCategoryIdAndMemberId(long categoryId, long memberId);
 
     @Modifying
     @Query("DELETE FROM CategoryMember mm WHERE mm.category.id = :categoryId")
