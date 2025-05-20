@@ -34,7 +34,7 @@ class InvitationControllerTest extends ControllerTest {
                     "inviteeIds": [2, 3]
                 }
                 """;
-        when(invitationService.inviteMembers(any(Member.class), any(CategoryInvitationRequest.class)))
+        when(invitationService.invite(any(Member.class), any(CategoryInvitationRequest.class)))
                 .thenReturn(new InvitationResultResponses(List.of(
                         new InvitationResultResponse(1L, "200 OK", "초대 요청에 성공하였습니다.", 1L),
                         new InvitationResultResponse(2L, "400 BAD_REQUEST", "이미 카테고리에 함께하고 있는 사용자입니다.", null),

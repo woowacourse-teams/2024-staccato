@@ -53,13 +53,13 @@ class InvitationServiceTest extends ServiceSliceTest {
 
     @DisplayName("HOST가 카테고리에 guest과 guest2에 초대 요청(REQUESTED)을 한다.")
     @Test
-    void inviteMembers() {
+    void invite() {
         // given
         Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId(), guest2.getId()));
 
         // when
-        InvitationResultResponses responses = invitationService.inviteMembers(host, invitationRequest);
+        InvitationResultResponses responses = invitationService.invite(host, invitationRequest);
 
         // then
         List<CategoryMember> categoryMembers = categoryRepository.findWithCategoryMembersById(category.getId()).get()
@@ -92,7 +92,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
 
         // when & then
-        assertThatThrownBy(() -> invitationService.inviteMembers(anotherUser, invitationRequest))
+        assertThatThrownBy(() -> invitationService.invite(anotherUser, invitationRequest))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
@@ -105,7 +105,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId(), unknownId));
 
         // when
-        invitationService.inviteMembers(host, invitationRequest);
+        invitationService.invite(host, invitationRequest);
 
         // then
         List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndMembersByInviterId(host.getId());
@@ -127,7 +127,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
 
         // when
-        InvitationResultResponses responses = invitationService.inviteMembers(host, invitationRequest);
+        InvitationResultResponses responses = invitationService.invite(host, invitationRequest);
 
         // then
         assertThat(responses.invitationResults()).hasSize(1)
@@ -139,10 +139,10 @@ class InvitationServiceTest extends ServiceSliceTest {
     void cannotInviteIfAlreadyRequested() {
         // given
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
-        invitationService.inviteMembers(host, invitationRequest);
+        invitationService.invite(host, invitationRequest);
 
         // when
-        InvitationResultResponses responses = invitationService.inviteMembers(host, invitationRequest);
+        InvitationResultResponses responses = invitationService.invite(host, invitationRequest);
 
         // then
         assertThat(responses.invitationResults()).hasSize(1)

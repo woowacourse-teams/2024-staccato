@@ -31,7 +31,7 @@ public class InvitationService {
     private final CategoryMemberRepository categoryMemberRepository;
 
     @Transactional
-    public InvitationResultResponses inviteMembers(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
+    public InvitationResultResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryInvitationRequest.categoryId());
         validateModificationPermission(category, inviter);
         List<Member> invitees = memberRepository.findAllByIdIn(categoryInvitationRequest.inviteeIds());

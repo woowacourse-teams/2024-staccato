@@ -24,7 +24,7 @@ public class InvitationController implements InvitationControllerDocs {
     @PostMapping
     public ResponseEntity<InvitationResultResponses> inviteMembers(@LoginMember Member member,
                                                                    @RequestBody CategoryInvitationRequest categoryInvitationRequest) {
-        InvitationResultResponses invitationResultResponses = invitationService.inviteMembers(member, categoryInvitationRequest);
+        InvitationResultResponses invitationResultResponses = invitationService.invite(member, categoryInvitationRequest);
         return ResponseEntity.ok(invitationResultResponses);
     }
 }
