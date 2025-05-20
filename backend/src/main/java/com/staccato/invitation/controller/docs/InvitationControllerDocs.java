@@ -2,7 +2,9 @@ package com.staccato.invitation.controller.docs;
 
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
+import com.staccato.config.auth.LoginMember;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
 import com.staccato.invitation.service.dto.response.InvitationResultResponses;
 import com.staccato.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,4 +48,11 @@ public interface InvitationControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "초대 ID", example = "1") @Min(value = 1L, message = "초대 식별자는 양수로 이루어져야 합니다.") long invitationId
     );
+
+    @Operation(summary = "사용자가 요청한 초대 목록 조회", description = "특정 사용자가 보낸 모든 요청 상태의 초대 목록을 최신순으로 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "보낸 초대 목록 조회 성공", responseCode = "200")
+    })
+    public ResponseEntity<CategoryInvitationRequestedResponses> readRequestedInvitations(
+            @Parameter(hidden = true) @LoginMember Member member);
 }

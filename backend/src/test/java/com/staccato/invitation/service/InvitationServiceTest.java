@@ -150,7 +150,6 @@ class InvitationServiceTest extends ServiceSliceTest {
                 .containsExactly(InvitationResultResponse.fail(guest, "이미 초대 요청을 보낸 사용자입니다."));
     }
 
-    // TODO: 응답 구현
     @DisplayName("초대 요청 목록을 조회하면, 최근에 요청을 보낸 사용자 순으로 보여준다.")
     @Test
     void readAllInvitationRequested() {
@@ -160,7 +159,16 @@ class InvitationServiceTest extends ServiceSliceTest {
         CategoryInvitation invitation2 = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest2));
 
         // when
-        invitationService.readInvitations(host);
+        CategoryInvitationRequestedResponses responses = invitationService.readInvitations(host);
+
+        // then
+        assertAll(
+                () -> assertThat(responses.invitations()).hasSize(2),
+                () -> assertThat(responses.invitations()).containsExactly(
+                        new CategoryInvitationRequestedResponse(invitation2),
+                        new CategoryInvitationRequestedResponse(invitation)
+                )
+        );
     }
 
     @DisplayName("inviter는 본인이 보낸 초대 요청을 취소할 수 있다.")

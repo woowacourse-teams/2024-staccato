@@ -13,6 +13,7 @@ import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
 import com.staccato.invitation.service.dto.response.InvitationResultResponse;
 import com.staccato.invitation.service.dto.response.InvitationResultResponses;
 import com.staccato.member.domain.Member;
@@ -96,9 +97,9 @@ public class InvitationService {
         }
     }
 
-    //TODO: 초대 요청 목록 조회 API 구현
     public CategoryInvitationRequestedResponses readInvitations(Member inviter) {
-        return categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(inviter.getId());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(inviter.getId());
+        return CategoryInvitationRequestedResponses.from(invitations);
     }
 
     @Transactional

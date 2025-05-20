@@ -10,13 +10,18 @@ import com.staccato.ControllerTest;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponse;
+import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
 import com.staccato.invitation.service.dto.response.InvitationResultResponse;
 import com.staccato.invitation.service.dto.response.InvitationResultResponses;
+import com.staccato.invitation.service.dto.response.InvitedCategoryResponse;
+import com.staccato.invitation.service.dto.response.InviteeResponse;
 import com.staccato.member.domain.Member;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -100,5 +105,60 @@ class InvitationControllerTest extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("요청자는 자신에게 온 초대 요청 목록을 조회할 수 있다.")
+    @Test
+    void readRequestedInvitations() throws Exception {
+        // given
+        Member member = MemberFixtures.defaultMember().build();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+
+        when(invitationService.readInvitations(any(Member.class)))
+                .thenReturn(new CategoryInvitationRequestedResponses(List.of(
+                        new CategoryInvitationRequestedResponse(
+                                new InviteeResponse(2L, "초대한사람", "https://example.com/images/profile1.png"),
+                                new InvitedCategoryResponse(10L, "여름 방학 여행")
+                        ),
+                        new CategoryInvitationRequestedResponse(
+                                new InviteeResponse(3L, "다른사용자", "https://example.com/images/profile2.png"),
+                                new InvitedCategoryResponse(11L, "겨울 맛집 탐방")
+                        )
+                )));
+
+        String expectedResponse = """
+                {
+                  "invitations": [
+                    {
+                      "invitee": {
+                        "id": 2,
+                        "nickname": "초대한사람",
+                        "profileImageUrl": "https://example.com/images/profile1.png"
+                      },
+                      "category": {
+                        "id": 10,
+                        "title": "여름 방학 여행"
+                      }
+                    },
+                    {
+                      "invitee": {
+                        "id": 3,
+                        "nickname": "다른사용자",
+                        "profileImageUrl": "https://example.com/images/profile2.png"
+                      },
+                      "category": {
+                        "id": 11,
+                        "title": "겨울 맛집 탐방"
+                      }
+                    }
+                  ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/invitations")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
     }
 }
