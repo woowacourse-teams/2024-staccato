@@ -14,8 +14,6 @@ import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedR
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
 import com.staccato.invitation.service.dto.response.InvitationResultResponse;
 import com.staccato.invitation.service.dto.response.InvitationResultResponses;
-import com.staccato.invitation.service.dto.response.InvitedCategoryResponse;
-import com.staccato.invitation.service.dto.response.InviteeResponse;
 import com.staccato.member.domain.Member;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -116,40 +114,26 @@ class InvitationControllerTest extends ControllerTest {
 
         when(invitationService.readInvitations(any(Member.class)))
                 .thenReturn(new CategoryInvitationRequestedResponses(List.of(
-                        new CategoryInvitationRequestedResponse(
-                                new InviteeResponse(2L, "초대한사람", "https://example.com/images/profile1.png"),
-                                new InvitedCategoryResponse(10L, "여름 방학 여행")
-                        ),
-                        new CategoryInvitationRequestedResponse(
-                                new InviteeResponse(3L, "다른사용자", "https://example.com/images/profile2.png"),
-                                new InvitedCategoryResponse(11L, "겨울 맛집 탐방")
-                        )
+                        new CategoryInvitationRequestedResponse(2L, "초대한사람", "https://example.com/images/profile1.png", 10L, "여름 방학 여행"),
+                        new CategoryInvitationRequestedResponse(3L, "다른사용자", "https://example.com/images/profile2.png", 11L, "겨울 맛집 탐방")
                 )));
 
         String expectedResponse = """
                 {
                   "invitations": [
                     {
-                      "invitee": {
-                        "id": 2,
-                        "nickname": "초대한사람",
-                        "profileImageUrl": "https://example.com/images/profile1.png"
-                      },
-                      "category": {
-                        "id": 10,
-                        "title": "여름 방학 여행"
-                      }
+                      "inviteeId": 2,
+                      "inviteeNickname": "초대한사람",
+                      "inviteeProfileImageUrl": "https://example.com/images/profile1.png",
+                      "categoryId": 10,
+                      "categoryTitle": "여름 방학 여행"
                     },
                     {
-                      "invitee": {
-                        "id": 3,
-                        "nickname": "다른사용자",
-                        "profileImageUrl": "https://example.com/images/profile2.png"
-                      },
-                      "category": {
-                        "id": 11,
-                        "title": "겨울 맛집 탐방"
-                      }
+                      "inviteeId": 3,
+                      "inviteeNickname": "다른사용자",
+                      "inviteeProfileImageUrl": "https://example.com/images/profile2.png",
+                      "categoryId": 11,
+                      "categoryTitle": "겨울 맛집 탐방"
                     }
                   ]
                 }
