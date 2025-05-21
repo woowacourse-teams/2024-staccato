@@ -29,7 +29,7 @@ public class InvitationService {
 
     public InvitationResultResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryInvitationRequest.categoryId());
-        validateCancelPermission(category, inviter);
+        validateInvitePermission(category, inviter);
         List<Member> invitees = memberRepository.findAllByIdIn(categoryInvitationRequest.inviteeIds());
         InvitationResultResponses responses = createInvitations(category, inviter, invitees);
 
@@ -41,7 +41,7 @@ public class InvitationService {
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 
-    private void validateCancelPermission(Category category, Member member) {
+    private void validateInvitePermission(Category category, Member member) {
         validateOwner(category, member);
         validateHost(category, member);
     }
