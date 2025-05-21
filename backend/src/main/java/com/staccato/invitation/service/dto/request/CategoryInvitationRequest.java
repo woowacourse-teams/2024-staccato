@@ -12,7 +12,7 @@ import static com.staccato.config.swagger.SwaggerExamples.MEMBER_IDS;
 public record CategoryInvitationRequest(
         @Schema(example = SwaggerExamples.CATEGORY_ID)
         @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.")
-        Long categoryId,
+        long categoryId,
         @ArraySchema(
                 arraySchema = @Schema(
                         description = "초대할 멤버 식별자 목록, 중복 값은 무시",
