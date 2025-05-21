@@ -1,6 +1,7 @@
 package com.staccato.invitation.controller;
 
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -75,6 +76,24 @@ class InvitationControllerTest extends ControllerTest {
                         .content(invitationRequest))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("유효하지 않은 카테고리 식별자로 초대 요청 시 예외가 발생한다.")
+    @Test
+    void cannotInviteMembersByInvalidCategoryId() throws Exception {
+        // given
+        long invalidCategoryId = 0;
+        CategoryInvitationRequest request = new CategoryInvitationRequest(invalidCategoryId, Set.of(2L));
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "카테고리 식별자는 양수로 이루어져야 합니다.");
+
+        // when & then
+        mockMvc.perform(post("/invitations")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("초대 ID로 초대 요청을 취소한다.")

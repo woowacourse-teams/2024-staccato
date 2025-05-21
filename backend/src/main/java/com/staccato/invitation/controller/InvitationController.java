@@ -1,5 +1,6 @@
 package com.staccato.invitation.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -29,7 +30,7 @@ public class InvitationController implements InvitationControllerDocs {
 
     @PostMapping
     public ResponseEntity<InvitationResultResponses> inviteMembers(@LoginMember Member member,
-                                                                   @RequestBody CategoryInvitationRequest categoryInvitationRequest) {
+                                                                   @Valid @RequestBody CategoryInvitationRequest categoryInvitationRequest) {
         InvitationResultResponses invitationResultResponses = invitationService.invite(member, categoryInvitationRequest);
         return ResponseEntity.ok(invitationResultResponses);
     }

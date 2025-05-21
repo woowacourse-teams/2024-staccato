@@ -1,5 +1,6 @@
 package com.staccato.invitation.controller.docs;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import com.staccato.config.auth.LoginMember;
@@ -11,7 +12,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Invitation", description = "Invitation API")
 public interface InvitationControllerDocs {
     @Operation(summary = "카테고리 멤버 초대", description = "지정된 카테고리에 다른 멤버들을 초대하면, 각 멤버 초대에 대한 성공/실패 결과를 배열로 반환합니다.")
     @ApiResponses(value = {
@@ -27,7 +30,7 @@ public interface InvitationControllerDocs {
     })
     ResponseEntity<InvitationResultResponses> inviteMembers(
             @Parameter(hidden = true) Member member,
-            @Parameter(required = true) CategoryInvitationRequest categoryInvitationRequest
+            @Parameter(required = true) @Valid CategoryInvitationRequest categoryInvitationRequest
     );
 
     @Operation(summary = "초대 요청 취소", description = "사용자의 초대 요청을 취소합니다.")
