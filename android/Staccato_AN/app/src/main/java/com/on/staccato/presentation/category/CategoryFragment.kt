@@ -10,7 +10,9 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentCategoryBinding
+import com.on.staccato.domain.model.Role
 import com.on.staccato.presentation.base.BindingFragment
+import com.on.staccato.presentation.category.adapter.MemberInviteHandler
 import com.on.staccato.presentation.category.adapter.MembersAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
 import com.on.staccato.presentation.category.invite.InviteScreen
@@ -45,6 +47,7 @@ class CategoryFragment :
     BindingFragment<FragmentCategoryBinding>(R.layout.fragment_category),
     ToolbarHandler,
     CategoryHandler,
+    MemberInviteHandler,
     DialogHandler {
     private val categoryId: Long by lazy {
         arguments?.getLong(CATEGORY_ID_KEY) ?: DEFAULT_CATEGORY_ID
@@ -56,11 +59,7 @@ class CategoryFragment :
     @Inject
     lateinit var loggingManager: LoggingManager
 
-    private val membersAdapter by lazy {
-        MembersAdapter(true) {
-            viewModel.changeInviteMode(true)
-        }
-    }
+    private val membersAdapter by lazy { MembersAdapter(this) }
 
     private val staccatosAdapter by lazy { StaccatosAdapter(handler = this) }
 
@@ -106,6 +105,10 @@ class CategoryFragment :
 
     override fun onConfirmClicked() {
         viewModel.deleteCategory()
+    }
+
+    override fun onInviteClicked() {
+        viewModel.toggleInviteMode(true)
     }
 
     override fun onStaccatoCreationClicked(
@@ -155,11 +158,12 @@ class CategoryFragment :
     private fun observeCategory() {
         viewModel.category.observe(viewLifecycleOwner) { category ->
             staccatosAdapter.updateStaccatos(category.staccatos)
+            membersAdapter.updateInvitable(category.myRole == Role.HOST)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.participatingMembers.collect {
-                membersAdapter.updateMembers(it.members)
+                membersAdapter.submitMembers(it.members)
             }
         }
     }

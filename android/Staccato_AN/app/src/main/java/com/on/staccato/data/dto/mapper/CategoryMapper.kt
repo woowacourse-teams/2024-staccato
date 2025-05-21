@@ -28,6 +28,7 @@ fun CategoryResponse.toDomain() =
         mates = participants.map { it.toDomain() },
         staccatos = staccatos.map { it.toDomain() },
         isShared = isShared,
+        myRole = Role.of(myRole),
     )
 
 fun CategoriesResponse.toDomain(): CategoryCandidates =

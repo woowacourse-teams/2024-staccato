@@ -11,6 +11,7 @@ import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.Member
 import com.on.staccato.domain.model.Participants
+import com.on.staccato.domain.model.Role
 import com.on.staccato.domain.model.emptyMembers
 import com.on.staccato.domain.model.emptyParticipants
 import com.on.staccato.domain.model.toMembers
@@ -124,8 +125,8 @@ class CategoryViewModel
             }
         }
 
-        fun changeInviteMode(isInviteMode: Boolean) {
-            _isInviteMode.value = isInviteMode
+        fun toggleInviteMode(isInviteMode: Boolean) {
+            _isInviteMode.value = isInviteMode && category.value?.myRole == Role.HOST
             if (!isInviteMode) clearAllMembers()
         }
 

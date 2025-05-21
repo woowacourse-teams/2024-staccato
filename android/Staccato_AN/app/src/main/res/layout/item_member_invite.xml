@@ -20,7 +20,7 @@
             android:layout_height="45dp"
             android:background="@drawable/icon_invite"
             android:contentDescription="@string/category_invite_description"
-            android:onClick="@{()->handler.onClicked()}"
+            android:onClick="@{()->handler.onInviteClicked()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -13,4 +13,5 @@ data class Category(
     val mates: List<Participant>,
     val staccatos: List<CategoryStaccato>,
     val isShared: Boolean,
+    val myRole: Role,
 )

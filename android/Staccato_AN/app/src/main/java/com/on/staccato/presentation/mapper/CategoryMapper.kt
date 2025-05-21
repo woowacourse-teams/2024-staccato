@@ -17,6 +17,7 @@ fun Category.toUiModel() =
         members = mates.map { it.member },
         staccatos = staccatos.map { it.toUiModel() },
         isShared = isShared,
+        myRole = myRole,
     )
 
 fun CategoryStaccato.toUiModel() =

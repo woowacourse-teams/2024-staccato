@@ -15,16 +15,17 @@ import com.on.staccato.presentation.category.adapter.MembersViewType.MEMBER_INVI
 import com.on.staccato.presentation.category.adapter.MembersViewType.MEMBER_PROFILE
 
 class MembersAdapter(
-    private val isHost: Boolean,
-    private val memberInviteHandler: MemberInviteHandler,
+    private val handler: MemberInviteHandler,
 ) :
     ListAdapter<Participant, MembersViewHolder>(diffUtil) {
+    private var isInvitable: Boolean = false
+
     init {
-        updateMembers(emptyList())
+        submitMembers(emptyList())
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (isHost && position == INVITE_BUTTON_POSITION) {
+        return if (isInvitable && position == INVITE_BUTTON_POSITION) {
             MEMBER_INVITE.viewType
         } else {
             MEMBER_PROFILE.viewType
@@ -39,7 +40,7 @@ class MembersAdapter(
         return when (MembersViewType.from(viewType)) {
             MEMBER_INVITE -> {
                 val binding = ItemMemberInviteBinding.inflate(inflater, parent, false)
-                MemberInviteViewHolder(binding, memberInviteHandler)
+                MemberInviteViewHolder(binding, handler)
             }
 
             MEMBER_PROFILE -> {
@@ -59,14 +60,18 @@ class MembersAdapter(
         }
     }
 
-    fun updateMembers(members: List<Participant>) {
+    fun submitMembers(members: List<Participant>) {
         submitList(
-            if (isHost) {
+            if (isInvitable) {
                 listOf(inviteButton) + members
             } else {
                 members
             },
         )
+    }
+
+    fun updateInvitable(isHost: Boolean) {
+        isInvitable = isHost
     }
 
     companion object {

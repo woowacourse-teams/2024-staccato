@@ -11,7 +11,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.on.staccato.presentation.category.invite.component.InviteDialog
 import com.on.staccato.presentation.category.invite.model.MembersUiModel
-import com.on.staccato.presentation.category.invite.model.MembersUiModel.Companion.emptyMembersUiModel
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -44,7 +43,7 @@ fun InviteScreen(viewModel: CategoryViewModel = hiltViewModel()) {
             searchedMembers = searchedMembers,
             onValueChanged = { newValue -> searchKeyword = newValue },
             onClose = {
-                viewModel.changeInviteMode(false)
+                viewModel.toggleInviteMode(false)
                 searchKeyword = ""
             },
             onMemberSelected = { selectedMate -> viewModel.select(selectedMate) },

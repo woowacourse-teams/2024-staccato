@@ -16,4 +16,5 @@ data class CategoryResponse(
     @SerialName("members") val participants: List<ParticipantDto>,
     @SerialName("staccatos") val staccatos: List<CategoryStaccatoDto>,
     @SerialName("isShared") val isShared: Boolean,
+    @SerialName("myRole") val myRole: String,
 )
