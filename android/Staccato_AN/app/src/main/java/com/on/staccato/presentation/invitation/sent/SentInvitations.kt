@@ -6,12 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.staccato.presentation.component.DefaultDivider
-import com.on.staccato.presentation.invitation.model.InvitationUiModel
-import com.on.staccato.presentation.invitation.model.dummyInvitationUiModels
+import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
+import com.on.staccato.presentation.invitation.model.dummySentInvitationUiModels
 
 @Composable
 fun SentInvitations(
-    sentInvitations: List<InvitationUiModel>,
+    sentInvitations: List<SentInvitationUiModel>,
     onCancelClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -32,7 +32,7 @@ fun SentInvitations(
 @Composable
 private fun SentInvitationPreview() {
     SentInvitations(
-        sentInvitations = dummyInvitationUiModels,
+        sentInvitations = dummySentInvitationUiModels,
         onCancelClick = {},
     )
 }

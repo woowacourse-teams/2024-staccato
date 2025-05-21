@@ -19,7 +19,7 @@ import com.on.staccato.presentation.component.DefaultTextButton
 import com.on.staccato.presentation.invitation.component.CategoryTitle
 import com.on.staccato.presentation.invitation.component.NicknameText
 import com.on.staccato.presentation.invitation.component.ProfileImage
-import com.on.staccato.presentation.invitation.model.InvitationUiModel
+import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
 import com.on.staccato.presentation.invitation.received.CategoryPreviewProvider
 import com.on.staccato.theme.Accents4
 import com.on.staccato.theme.Body4
@@ -31,7 +31,7 @@ import com.on.staccato.theme.White
 @Composable
 fun SentInvitationItem(
     modifier: Modifier = Modifier,
-    categoryInvitation: InvitationUiModel,
+    categoryInvitation: SentInvitationUiModel,
     onCancelClick: () -> Unit,
 ) {
     ConstraintLayout(
@@ -51,7 +51,7 @@ fun SentInvitationItem(
                     centerVerticallyTo(parent)
                     start.linkTo(parent.start, margin = 20.dp)
                 },
-            url = categoryInvitation.inviterProfileImageUrl,
+            url = categoryInvitation.inviteeProfileImageUrl,
         )
 
         Column(
@@ -63,7 +63,7 @@ fun SentInvitationItem(
             }
         ) {
             NicknameText(
-                nickname = categoryInvitation.inviterNickname,
+                nickname = categoryInvitation.inviteeNickname,
                 style = Title3,
                 color = StaccatoBlack,
             )
@@ -135,7 +135,7 @@ private fun InviteeNicknameWithCategoryTitlePreview() {
 private fun SentInvitationItemPreview(
     @PreviewParameter(
         provider = CategoryPreviewProvider::class,
-    ) categoryInvitation: InvitationUiModel,
+    ) categoryInvitation: SentInvitationUiModel,
 ) {
     Box(modifier = Modifier.padding(10.dp)) {
         SentInvitationItem(categoryInvitation = categoryInvitation) {}
