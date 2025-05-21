@@ -117,37 +117,51 @@ class InvitationServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("이미 함께하는 사람을 다시 초대하려고 하면 예외를 반환한다.")
+    @DisplayName("여러 명 초대 시 일부는 성공, 일부는 실패할 수 있다.")
     @Test
-    void cannotInviteIfAlreadyCategoryMember() {
+    void inviteMixedSuccessAndFailure() {
         // given
+        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        Member guest3 = MemberFixtures.defaultMember().withNickname("guest3").buildAndSave(memberRepository);
+
         category = CategoryFixtures.defaultCategory()
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
-        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
+
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(
+                category.getId(),
+                Set.of(guest.getId(), guest2.getId(), guest3.getId())
+        );
 
         // when
-        InvitationResultResponses responses = invitationService.invite(host, invitationRequest);
+        InvitationResultResponses resultResponses = invitationService.invite(host, invitationRequest);
 
         // then
-        assertThat(responses.invitationResults()).hasSize(1)
-                .containsExactly(InvitationResultResponse.fail(guest, "이미 카테고리에 함께하고 있는 사용자입니다."));
+        InvitationResultResponse guestResult = findResult(resultResponses, guest.getId());
+        InvitationResultResponse guest2Result = findResult(resultResponses, guest2.getId());
+        InvitationResultResponse guest3Result = findResult(resultResponses, guest3.getId());
+
+        assertAll(
+                () -> assertThat(resultResponses.invitationResults()).hasSize(3),
+                () -> assertThat(categoryInvitationRepository.findAll()).hasSize(2),
+                () -> assertThat(guestResult.statusCode()).isEqualTo("400 BAD_REQUEST"),
+                () -> assertThat(guestResult.message()).contains("이미 카테고리에 함께하고 있는 사용자입니다."),
+                () -> assertThat(guestResult.invitationId()).isNull(),
+
+                () -> assertThat(guest2Result.statusCode()).isEqualTo("200 OK"),
+                () -> assertThat(guest2Result.invitationId()).isNotNull(),
+
+                () -> assertThat(guest3Result.statusCode()).isEqualTo("200 OK"),
+                () -> assertThat(guest3Result.invitationId()).isNotNull()
+        );
     }
 
-    @DisplayName("초대 요청을 한 사용자를 다시 초대하려고 하면 예외를 반환한다.")
-    @Test
-    void cannotInviteIfAlreadyRequested() {
-        // given
-        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
-        invitationService.invite(host, invitationRequest);
-
-        // when
-        InvitationResultResponses responses = invitationService.invite(host, invitationRequest);
-
-        // then
-        assertThat(responses.invitationResults()).hasSize(1)
-                .containsExactly(InvitationResultResponse.fail(guest, "이미 초대 요청을 보낸 사용자입니다."));
+    private InvitationResultResponse findResult(InvitationResultResponses responses, Long inviteeId) {
+        return responses.invitationResults().stream()
+                .filter(r -> r.inviteeId().equals(inviteeId))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("해당 inviteeId 결과 없음: " + inviteeId));
     }
 
     @DisplayName("초대 요청 목록을 조회하면, 최근에 요청을 보낸 사용자 순으로 보여준다.")

@@ -5,12 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
-import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.domain.CategoryInvitation;
-import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
@@ -19,9 +17,7 @@ import com.staccato.invitation.service.dto.response.InvitationResultResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -29,9 +25,8 @@ public class InvitationService {
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
     private final CategoryInvitationRepository categoryInvitationRepository;
-    private final CategoryMemberRepository categoryMemberRepository;
+    private final InviteProcessor inviteProcessor;
 
-    @Transactional
     public InvitationResultResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryInvitationRequest.categoryId());
         validateCancelPermission(category, inviter);
@@ -66,35 +61,9 @@ public class InvitationService {
     private InvitationResultResponses createInvitations(Category category, Member inviter, List<Member> invitees) {
         List<InvitationResultResponse> responses = new ArrayList<>();
         for (Member invitee : invitees) {
-            responses.add(invite(category, inviter, invitee));
+            responses.add(inviteProcessor.process(category, inviter, invitee));
         }
         return new InvitationResultResponses(responses);
-    }
-
-    private InvitationResultResponse invite(Category category, Member inviter, Member invitee) {
-        try {
-            validateIfAlreadyCategoryMember(category, invitee);
-            validateIfAlreadyRequested(category, inviter, invitee);
-            CategoryInvitation categoryInvitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, inviter, invitee));
-            return InvitationResultResponse.success(categoryInvitation);
-        } catch (Exception e) {
-            log.error("Invitation failed for categoryId({}), inviterId({}), inviteeId({}), for Reason: {}",
-                    category.getId(), inviter.getId(), invitee.getId(), e.getMessage());
-            return InvitationResultResponse.fail(invitee, e.getMessage());
-        }
-    }
-
-    private void validateIfAlreadyCategoryMember(Category category, Member invitee) {
-        if (categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), invitee.getId())) {
-            throw new StaccatoException("이미 카테고리에 함께하고 있는 사용자입니다.");
-        }
-    }
-
-    private void validateIfAlreadyRequested(Category category, Member inviter, Member invitee) {
-        if (categoryInvitationRepository.existsByCategoryIdAndInviterIdAndInviteeIdAndStatus(
-                category.getId(), inviter.getId(), invitee.getId(), InvitationStatus.REQUESTED)) {
-            throw new StaccatoException("이미 초대 요청을 보낸 사용자입니다.");
-        }
     }
 
     public CategoryInvitationRequestedResponses readInvitations(Member inviter) {
