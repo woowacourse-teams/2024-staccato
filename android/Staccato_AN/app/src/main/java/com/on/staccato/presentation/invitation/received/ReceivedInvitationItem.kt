@@ -19,8 +19,8 @@ import com.on.staccato.presentation.component.DefaultTextButton
 import com.on.staccato.presentation.invitation.component.CategoryTitle
 import com.on.staccato.presentation.invitation.component.NicknameText
 import com.on.staccato.presentation.invitation.component.ProfileImage
-import com.on.staccato.presentation.invitation.model.InvitationUiModel
-import com.on.staccato.presentation.invitation.model.dummyInvitationUiModels
+import com.on.staccato.presentation.invitation.model.ReceivedInvitationUiModel
+import com.on.staccato.presentation.invitation.model.dummyReceivedInvitationUiModels
 import com.on.staccato.theme.Gray2
 import com.on.staccato.theme.StaccatoBlack
 import com.on.staccato.theme.StaccatoBlue
@@ -29,7 +29,7 @@ import com.on.staccato.theme.White
 @Composable
 fun ReceivedInvitationItem(
     modifier: Modifier = Modifier,
-    categoryInvitation: InvitationUiModel,
+    categoryInvitation: ReceivedInvitationUiModel,
     onRejectClick: () -> Unit,
     onAcceptClick: () -> Unit,
 ) {
@@ -159,7 +159,7 @@ private fun RejectButtonPreview() {
 private fun ReceivedInvitationItemPreview(
     @PreviewParameter(
         provider = CategoryPreviewProvider::class,
-    ) categoryInvitation: InvitationUiModel,
+    ) categoryInvitation: ReceivedInvitationUiModel,
 ) {
     ReceivedInvitationItem(
         categoryInvitation = categoryInvitation,
@@ -168,7 +168,7 @@ private fun ReceivedInvitationItemPreview(
     )
 }
 
-class CategoryPreviewProvider : PreviewParameterProvider<InvitationUiModel> {
-    override val values: Sequence<InvitationUiModel>
-        get() = dummyInvitationUiModels.asSequence()
+class CategoryPreviewProvider : PreviewParameterProvider<ReceivedInvitationUiModel> {
+    override val values: Sequence<ReceivedInvitationUiModel>
+        get() = dummyReceivedInvitationUiModels.asSequence()
 }
