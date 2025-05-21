@@ -29,7 +29,7 @@ public class InviteProcessor {
             CategoryInvitation categoryInvitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, inviter, invitee));
             return InvitationResultResponse.success(categoryInvitation);
         } catch (Exception e) {
-            log.error("Invitation failed for categoryId({}), inviterId({}), inviteeId({}), for Reason: {}",
+            log.warn("Invitation failed for categoryId({}), inviterId({}), inviteeId({}), for Reason: {}",
                     category.getId(), inviter.getId(), invitee.getId(), e.getMessage());
             return InvitationResultResponse.fail(invitee, e.getMessage());
         }
