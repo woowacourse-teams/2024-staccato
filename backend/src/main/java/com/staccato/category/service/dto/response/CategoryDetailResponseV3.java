@@ -31,7 +31,9 @@ public record CategoryDetailResponseV3(
         @Schema(example = SwaggerExamples.CATEGORY_END_AT)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate endAt,
-        List<MemberDetailResponse> mates,
+        @Schema(example = SwaggerExamples.CATEGORY_IS_SHARED)
+        boolean isShared,
+        List<MemberDetailResponse> members,
         List<StaccatoResponse> staccatos
 ) {
 
@@ -44,6 +46,7 @@ public record CategoryDetailResponseV3(
                 category.getColor().getName(),
                 category.getTerm().getStartAt(),
                 category.getTerm().getEndAt(),
+                category.getIsShared(),
                 toMemberDetailResponses(category),
                 toStaccatoResponses(staccatos)
         );
@@ -67,7 +70,7 @@ public record CategoryDetailResponseV3(
                 description,
                 startAt,
                 endAt,
-                toMemberResponses(mates),
+                toMemberResponses(members),
                 staccatos
         );
     }
@@ -81,7 +84,7 @@ public record CategoryDetailResponseV3(
                 categoryColor,
                 startAt,
                 endAt,
-                toMemberResponses(mates),
+                toMemberResponses(members),
                 staccatos
         );
     }
