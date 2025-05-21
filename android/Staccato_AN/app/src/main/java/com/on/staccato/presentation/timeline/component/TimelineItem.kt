@@ -20,7 +20,7 @@ import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.model.dummyTimelineUiModel
 import com.on.staccato.presentation.util.dpToPx
-import com.on.staccato.theme.Title3
+import com.on.staccato.theme.SemiBold13
 
 @Composable
 fun TimelineItem(
@@ -28,6 +28,8 @@ fun TimelineItem(
     category: TimelineUiModel,
     onCategoryClicked: (Long) -> Unit,
 ) {
+    val hasPeriod = category.startAt != null && category.endAt != null
+
     ConstraintLayout(
         modifier =
             modifier
@@ -67,19 +69,39 @@ fun TimelineItem(
             modifier =
                 Modifier.constrainAs(color) {
                     start.linkTo(firstSpacer.end)
-                    top.linkTo(period.top)
+                    top.linkTo(thumbnail.top)
                 },
             color = category.color.label,
         )
 
         Spacer(modifier = Modifier.constrainAs(secondSpacer) { start.linkTo(color.end) }.size(10.dp))
 
+        Text(
+            modifier =
+                Modifier.constrainAs(title) {
+                    start.linkTo(secondSpacer.end)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.preferredWrapContent
+
+                    if (hasPeriod) {
+                        top.linkTo(color.top)
+                        bottom.linkTo(period.top)
+                    } else {
+                        top.linkTo(color.top)
+                        bottom.linkTo(color.bottom)
+                    }
+                },
+            text = category.categoryTitle,
+            style = SemiBold13,
+        )
+
         CategoryPeriod(
             modifier =
                 Modifier.constrainAs(period) {
                     start.linkTo(secondSpacer.end)
-                    top.linkTo(thumbnail.top, margin = 4.dp)
-                    bottom.linkTo(title.top)
+                    top.linkTo(title.bottom, margin = 3.dp)
+                    bottom.linkTo(color.bottom)
                     end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
                 },
@@ -87,26 +109,17 @@ fun TimelineItem(
             endAt = category.endAt,
         )
 
-        Text(
+        Spacer(
             modifier =
-                Modifier.constrainAs(title) {
-                    start.linkTo(secondSpacer.end)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(color.bottom)
-                    width = Dimension.fillToConstraints
-                    height = Dimension.preferredWrapContent
-
-                    if (category.startAt == null && category.endAt == null) {
-                        top.linkTo(parent.top)
-                    } else {
-                        top.linkTo(period.bottom)
-                    }
-                },
-            text = category.categoryTitle,
-            style = Title3,
+                Modifier.size(22.dp)
+                    .constrainAs(thirdSpacer) {
+                        if (hasPeriod) {
+                            top.linkTo(period.bottom)
+                        } else {
+                            top.linkTo(title.bottom)
+                        }
+                    },
         )
-
-        Spacer(modifier = Modifier.size(22.dp).constrainAs(thirdSpacer) { top.linkTo(title.bottom) })
 
         if (category.isShared) {
             Members(

@@ -6,8 +6,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.on.staccato.theme.Body4
-import com.on.staccato.theme.Gray3
+import com.on.staccato.theme.Gray5
+import com.on.staccato.theme.Regular11
 import java.time.LocalDate
 
 @Composable
@@ -22,8 +22,8 @@ fun CategoryPeriod(
         Text(
             modifier = modifier,
             text = period,
-            color = Gray3,
-            style = Body4,
+            color = Gray5,
+            style = Regular11,
         )
     }
 }
