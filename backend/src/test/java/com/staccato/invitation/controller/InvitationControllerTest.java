@@ -78,6 +78,28 @@ class InvitationControllerTest extends ControllerTest {
                 .andExpect(content().json(expectedResponse));
     }
 
+    @DisplayName("요청한 모든 사용자에 대한 초대가 실패한다면, statusCode는 400을 반환한다.")
+    @Test
+    void inviteMembersFailure() throws Exception {
+        // given
+        long categoryId = 1L;
+        Member member = MemberFixtures.defaultMember().build();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(categoryId, Set.of(1L, 2L));
+        when(invitationService.invite(any(Member.class), any(CategoryInvitationRequest.class)))
+                .thenReturn(new InvitationResultResponses(List.of(
+                        new InvitationResultResponse(1L, "400 BAD_REQUEST", "이미 카테고리에 함께하고 있는 사용자입니다.", null),
+                        new InvitationResultResponse(2L, "400 BAD_REQUEST", "해당 사용자를 찾을 수 없어요.", null)
+                )));
+
+        // when & then
+        mockMvc.perform(post("/invitations", categoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invitationRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
     @DisplayName("유효하지 않은 카테고리 식별자로 초대 요청 시 예외가 발생한다.")
     @Test
     void cannotInviteMembersByInvalidCategoryId() throws Exception {

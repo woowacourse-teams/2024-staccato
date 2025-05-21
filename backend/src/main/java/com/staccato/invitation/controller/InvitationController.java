@@ -32,7 +32,7 @@ public class InvitationController implements InvitationControllerDocs {
     public ResponseEntity<InvitationResultResponses> inviteMembers(@LoginMember Member member,
                                                                    @Valid @RequestBody CategoryInvitationRequest categoryInvitationRequest) {
         InvitationResultResponses invitationResultResponses = invitationService.invite(member, categoryInvitationRequest);
-        return ResponseEntity.ok(invitationResultResponses);
+        return new ResponseEntity<>(invitationResultResponses, invitationResultResponses.statusCode());
     }
 
     @PostMapping("/{invitationId}/cancel")

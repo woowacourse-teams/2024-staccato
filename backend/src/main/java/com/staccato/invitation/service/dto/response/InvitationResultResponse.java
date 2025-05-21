@@ -25,4 +25,8 @@ public record InvitationResultResponse(
     public static InvitationResultResponse fail(Member invitee, String message) {
         return new InvitationResultResponse(invitee.getId(), HttpStatus.BAD_REQUEST.toString(), message, null);
     }
+
+    public boolean isOk() {
+        return statusCode.equals(HttpStatus.OK.toString());
+    }
 }
