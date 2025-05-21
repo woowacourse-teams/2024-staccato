@@ -77,7 +77,7 @@ class TimelineFragment :
         binding.lifecycleOwner = this
         binding.viewModel = timelineViewModel
         binding.handler = this
-        binding.rvTimeline.setContent {
+        binding.cvTimelineCategories.setContent {
             TimelineScreen(sharedViewModel = sharedViewModel) {
                 onCategoryClicked(it)
             }

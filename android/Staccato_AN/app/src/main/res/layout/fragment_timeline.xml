@@ -35,7 +35,7 @@
             android:id="@+id/btn_timeline_change_to_half"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="18dp"
             android:layout_marginTop="13dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/timeline_expand_to_half"
@@ -50,14 +50,14 @@
             android:id="@+id/tv_timeline_my_timeline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="10dp"
             android:textAppearance="@style/Typography.Title1"
             app:layout_constraintEnd_toStartOf="@id/linear_timeline_add_category"
             app:layout_constraintStart_toEndOf="@id/btn_timeline_change_to_half"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_goneMarginStart="20dp"
+            app:layout_goneMarginStart="18dp"
             bind:timelineNickname="@{nickname}"
             tools:text="긴긴이름을가진사용자의 추억" />
 
@@ -65,7 +65,7 @@
             android:id="@+id/linear_timeline_add_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="18dp"
             android:onClick="@{() -> handler.onCategoryCreationClicked()}"
             android:paddingVertical="10dp"
             app:layout_constraintBottom_toBottomOf="@id/tv_timeline_my_timeline"
@@ -89,8 +89,8 @@
             android:id="@+id/linear_timeline_sort_categories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="20dp"
             android:gravity="center_vertical"
             android:onClick="@{() -> handler.onSortClicked()}"
             android:paddingVertical="10dp"
@@ -122,19 +122,19 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="8dp"
                 android:src="@drawable/icon_arrow_drop_down" />
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linear_timeline_filter_categories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="20dp"
             android:gravity="center_vertical"
             android:onClick="@{() -> handler.onFilterClicked()}"
             android:orientation="horizontal"
             android:paddingVertical="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/linear_timeline_add_category"
             app:layout_constraintTop_toBottomOf="@id/tv_timeline_my_timeline"
             bind:isEmptyView="@{false}"
             bind:isTimelineLoading="@{viewModel.isTimelineLoading}"
@@ -155,12 +155,14 @@
                 android:textAppearance="@style/Typography.Body4.Not.Resizable"
                 bind:categoryFilter="@{viewModel.filterType}"
                 tools:text="기간 있는 카테고리만" />
+
         </LinearLayout>
 
         <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/rv_timeline"
+            android:id="@+id/cv_timeline_categories"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

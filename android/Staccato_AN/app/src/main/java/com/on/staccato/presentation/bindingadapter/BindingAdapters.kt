@@ -77,7 +77,7 @@ fun View.setVisibilityBy(isBottomSheetExpanded: Boolean) {
 @BindingAdapter("backgroundByIsBottomSheetExpanded")
 fun ViewGroup.setBackgroundBy(isBottomSheetExpanded: Boolean) {
     @DrawableRes val id: Int =
-        if (isBottomSheetExpanded) R.drawable.shape_bottom_sheet_square else R.drawable.shape_bottom_sheet_20dp
+        if (isBottomSheetExpanded) R.drawable.shape_bottom_sheet_square else R.drawable.shape_bottom_sheet_16dp
     setBackgroundResource(
         id,
     )
