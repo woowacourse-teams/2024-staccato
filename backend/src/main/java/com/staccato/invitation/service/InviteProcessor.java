@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
+import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Trace
 @Service
 @RequiredArgsConstructor
 public class InviteProcessor {
