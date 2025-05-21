@@ -1,6 +1,8 @@
 package com.staccato.invitation.service.dto.response;
 
 import org.springframework.http.HttpStatus;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.member.domain.Member;
 
@@ -8,6 +10,7 @@ public record InvitationResultResponse(
         Long inviteeId,
         String statusCode,
         String message,
+        @JsonInclude(Include.NON_NULL)
         Long invitationId
 ) {
     public static InvitationResultResponse success(CategoryInvitation categoryInvitation) {
