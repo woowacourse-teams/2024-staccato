@@ -20,7 +20,7 @@ import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.model.dummyTimelineUiModel
 import com.on.staccato.presentation.util.dpToPx
-import com.on.staccato.theme.SemiBold13
+import com.on.staccato.theme.Title3
 
 @Composable
 fun TimelineItem(
@@ -93,7 +93,7 @@ fun TimelineItem(
                     }
                 },
             text = category.categoryTitle,
-            style = SemiBold13,
+            style = Title3,
         )
 
         CategoryPeriod(
