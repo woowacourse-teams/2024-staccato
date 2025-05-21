@@ -42,7 +42,7 @@ public class Category extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String thumbnailUrl;
     @Embedded
-    private Title title;
+    private CategoryTitle title;
     @Embedded
     private Description description;
     @Enumerated(EnumType.STRING)
@@ -60,7 +60,7 @@ public class Category extends BaseEntity {
     public Category(String thumbnailUrl, @NonNull String title, String description, Color color, LocalDate startAt,
                     LocalDate endAt, @NonNull Boolean isShared) {
         this.thumbnailUrl = thumbnailUrl;
-        this.title = new Title(title);
+        this.title = new CategoryTitle(title);
         this.description = toDescriptionOrNull(description);
         this.color = color;
         this.term = new Term(startAt, endAt);
@@ -148,7 +148,7 @@ public class Category extends BaseEntity {
                 .orElse(false);
     }
 
-    public boolean isNotSameTitle(Title title) {
+    public boolean isNotSameTitle(CategoryTitle title) {
         return !this.title.isSame(title);
     }
 
