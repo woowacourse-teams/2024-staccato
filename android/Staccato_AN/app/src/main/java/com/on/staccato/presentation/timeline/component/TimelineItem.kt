@@ -44,7 +44,7 @@ fun TimelineItem(
             title,
             thirdSpacer,
             participants,
-            staccatosCount,
+            staccatoCount,
         ) = createRefs()
 
         DefaultAsyncImage(
@@ -122,9 +122,9 @@ fun TimelineItem(
             )
         }
 
-        StaccatosCount(
+        StaccatoCount(
             modifier =
-                Modifier.constrainAs(staccatosCount) {
+                Modifier.constrainAs(staccatoCount) {
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)
                 },

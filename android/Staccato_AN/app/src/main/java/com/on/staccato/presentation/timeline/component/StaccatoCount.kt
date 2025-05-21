@@ -21,7 +21,7 @@ import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray3
 
 @Composable
-fun StaccatosCount(
+fun StaccatoCount(
     modifier: Modifier = Modifier,
     count: Int = 0,
 ) {
@@ -45,14 +45,14 @@ fun StaccatosCount(
 
 @Preview
 @Composable
-private fun StaccatosCountPreview(
-    @PreviewParameter(StaccatosCountPreviewParameterProvider::class)
+private fun StaccatoCountPreview(
+    @PreviewParameter(StaccatoCountPreviewParameterProvider::class)
     count: Int,
 ) {
-    StaccatosCount(count = count)
+    StaccatoCount(count = count)
 }
 
-private class StaccatosCountPreviewParameterProvider() : PreviewParameterProvider<Int> {
+private class StaccatoCountPreviewParameterProvider() : PreviewParameterProvider<Int> {
     override val values: Sequence<Int>
         get() =
             sequenceOf(
