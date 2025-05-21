@@ -7,11 +7,6 @@ val localProperties =
         load(FileInputStream(rootProject.file("local.properties")))
     }
 
-val keystoreProperties =
-    Properties().apply {
-        load(FileInputStream(rootProject.file("app/.signing/keystore.properties")))
-    }
-
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
