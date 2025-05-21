@@ -31,6 +31,8 @@
     <string name="all_delete_image">사진 삭제 버튼</string>
     <string name="all_photo_attach_icon_description">사진 첨부란</string>
     <string name="all_category_thumbnail_photo_description">카테고리 썸네일 사진</string>
+    <string name="all_period_dot_different_year">%s. %s. %s - %s. %s. %s</string>
+    <string name="all_period_dot_same_year">%s. %s. %s - %s. %s</string>
 
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
@@ -63,7 +65,6 @@
 
     // fragment_category
     <string name="category_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
-    <string name="category_period_dot">%s. %s. %s - %s. %s. %s</string>
     <string name="category_mates">함께 한 사람들</string>
     <string name="category_staccatos">스타카토</string>
     <string name="category_delete_complete">카테고리가 삭제되었습니다.</string>
