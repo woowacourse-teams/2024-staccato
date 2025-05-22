@@ -28,7 +28,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -133,12 +132,12 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val actual = viewModel.isDeleteSuccess.getOrAwaitValue()
+            val actual = viewModel.isDeleted.getOrAwaitValue()
             assertThat(actual).isTrue()
         }
 
     @Test
-    fun `카테고리 삭제 중 서버 오류가 발생하면 삭제 성공 상태를 설정하지 않고 에러 메시지를 설정한다`() =
+    fun `카테고리 삭제 중 서버 오류가 발생하면 에러 메시지를 설정한다`() =
         runTest {
             // given
             coEvery { categoryRepository.getCategory(VALID_ID) } returns Success(category)
@@ -153,17 +152,12 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val isDeleteSuccess = viewModel.isDeleteSuccess.getOrAwaitValue()
             val errorMessage = viewModel.errorMessage.getOrAwaitValue()
-
-            assertAll(
-                { assertThat(isDeleteSuccess).isFalse() },
-                { assertThat(errorMessage).isEqualTo("Bad Request") },
-            )
+            assertThat(errorMessage).isEqualTo("Bad Request")
         }
 
     @Test
-    fun `카테고리 삭제 중 네트워크 오류가 발생하면 삭제 성공 상태를 설정하지 않고 예외 상태를 설정한다`() =
+    fun `카테고리 삭제 중 네트워크 오류가 발생하면 예외 상태를 설정한다`() =
         runTest {
             // given
             coEvery { categoryRepository.getCategory(VALID_ID) } returns Success(category)
@@ -174,17 +168,12 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val isDeleteSuccess = viewModel.isDeleteSuccess.getOrAwaitValue()
             val exceptionState = viewModel.exceptionState.getOrAwaitValue()
-
-            assertAll(
-                { assertThat(isDeleteSuccess).isFalse() },
-                { assertThat(exceptionState).isInstanceOf(ExceptionState2.NetworkError::class.java) },
-            )
+            assertThat(exceptionState).isInstanceOf(ExceptionState2.NetworkError::class.java)
         }
 
     @Test
-    fun `카테고리 삭제 중 알 수 없는 오류가 발생하면 삭제 성공 상태를 설정하지 않고 예외 상태를 설정한다`() =
+    fun `카테고리 삭제 중 알 수 없는 오류가 발생하면 예외 상태를 설정한다`() =
         runTest {
             // given
             coEvery { categoryRepository.getCategory(VALID_ID) } returns Success(category)
@@ -195,13 +184,8 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val isDeleteSuccess = viewModel.isDeleteSuccess.getOrAwaitValue()
             val exceptionState = viewModel.exceptionState.getOrAwaitValue()
-
-            assertAll(
-                { assertThat(isDeleteSuccess).isFalse() },
-                { assertThat(exceptionState).isInstanceOf(ExceptionState2.UnknownError::class.java) },
-            )
+            assertThat(exceptionState).isInstanceOf(ExceptionState2.UnknownError::class.java)
         }
 
     @Test
