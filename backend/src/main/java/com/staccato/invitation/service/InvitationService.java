@@ -29,6 +29,7 @@ public class InvitationService {
     private final CategoryInvitationRepository categoryInvitationRepository;
     private final InviteProcessor inviteProcessor;
 
+    @Transactional
     public InvitationResultResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryInvitationRequest.categoryId());
         validateInvitePermission(category, inviter);

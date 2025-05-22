@@ -23,7 +23,6 @@ public class InviteProcessor {
     private final CategoryMemberRepository categoryMemberRepository;
     private final CategoryInvitationRepository categoryInvitationRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public InvitationResultResponse process(Category category, Member inviter, Member invitee) {
         try {
             validateIfAlreadyCategoryMember(category, invitee);
