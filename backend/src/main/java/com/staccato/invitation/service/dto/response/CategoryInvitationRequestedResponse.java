@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "보낸 초대 목록에서 각 초대의 응답 형식입니다.")
 public record CategoryInvitationRequestedResponse(
+        @Schema(example = SwaggerExamples.INVITATION_ID)
+        Long invitationId,
         @Schema(example = SwaggerExamples.MEMBER_ID)
         Long inviteeId,
         @Schema(example = SwaggerExamples.MEMBER_NICKNAME)
@@ -19,6 +21,7 @@ public record CategoryInvitationRequestedResponse(
 ) {
     public CategoryInvitationRequestedResponse(CategoryInvitation categoryInvitation) {
         this(
+                categoryInvitation.getId(),
                 categoryInvitation.getInvitee().getId(),
                 categoryInvitation.getInvitee().getNickname().getNickname(),
                 categoryInvitation.getInvitee().getImageUrl(),
