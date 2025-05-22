@@ -3,15 +3,29 @@ package com.on.staccato.presentation.invitation.sent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -20,7 +34,7 @@ import com.on.staccato.presentation.invitation.component.CategoryTitle
 import com.on.staccato.presentation.invitation.component.NicknameText
 import com.on.staccato.presentation.invitation.component.ProfileImage
 import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
-import com.on.staccato.presentation.invitation.received.CategoryPreviewProvider
+import com.on.staccato.presentation.invitation.model.dummySentInvitationUiModels
 import com.on.staccato.theme.Accents4
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray3
@@ -36,29 +50,30 @@ fun SentInvitationItem(
 ) {
     ConstraintLayout(
         modifier = modifier
-            .height(80.dp)
             .fillMaxWidth()
             .background(
                 color = White,
             ),
     ) {
         val (inviteeProfileImage, inviteeNicknameWithCategoryTitle, cancelButton) = createRefs()
+        var cancelButtonStartX by remember { mutableFloatStateOf(0f) }
 
         ProfileImage(
             modifier = modifier
                 .size(40.dp)
                 .constrainAs(inviteeProfileImage) {
-                    centerVerticallyTo(parent)
                     start.linkTo(parent.start, margin = 20.dp)
+                    top.linkTo(parent.top, margin = 20.dp)
+                    bottom.linkTo(parent.bottom, margin = 20.dp)
                 },
             url = categoryInvitation.inviteeProfileImageUrl,
         )
 
         Column(
             modifier = modifier.constrainAs(inviteeNicknameWithCategoryTitle) {
-                centerVerticallyTo(inviteeProfileImage)
                 start.linkTo(inviteeProfileImage.end, margin = 10.dp)
-                end.linkTo(cancelButton.start, margin = 16.dp)
+                end.linkTo(cancelButton.start, margin = 22.dp)
+                centerVerticallyTo(inviteeProfileImage)
                 width = Dimension.fillToConstraints
             }
         ) {
@@ -68,22 +83,71 @@ fun SentInvitationItem(
                 color = StaccatoBlack,
             )
 
-            CategoryTitle(
-                title = categoryInvitation.categoryTitle,
-                style = Body4,
-                color = Gray3,
+            CategoryTitleLayout(
+                categoryTitle = categoryInvitation.categoryTitle,
+                cancelButtonStartX = cancelButtonStartX,
             )
         }
 
         CancelButton(
             modifier = modifier.constrainAs(cancelButton) {
-                centerVerticallyTo(parent)
                 end.linkTo(parent.end, margin = 20.dp)
+                centerVerticallyTo(parent)
+            }.onGloballyPositioned { coordinates ->
+                cancelButtonStartX = coordinates.positionInParent().x
             },
             onClick = onCancelClick,
         )
     }
 }
+
+@Composable
+fun CategoryTitleLayout(
+    categoryTitle: String,
+    modifier: Modifier = Modifier,
+    cancelButtonStartX: Float,
+    endMargin: Dp = 22.dp,
+) {
+    val density = LocalDensity.current
+
+    var layoutStartX by remember { mutableFloatStateOf(0f) }
+    var text2WidthPx by remember { mutableIntStateOf(0) }
+
+    val titleMaxWidthDp = remember(layoutStartX, text2WidthPx) {
+        with(density) {
+            val usableWidthPx = cancelButtonStartX - layoutStartX - text2WidthPx - endMargin.toPx()
+            usableWidthPx.coerceAtLeast(0f).toDp()
+        }
+    }
+
+    Row(
+        modifier = modifier.onGloballyPositioned { coordinates ->
+                layoutStartX = coordinates.positionInRoot().x
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        CategoryTitle(
+            title = categoryTitle,
+            modifier = Modifier.widthIn(
+                max = titleMaxWidthDp
+            ),
+            style = Body4,
+            color = Gray3,
+        )
+
+        Text(
+            text = "에 초대했어요.",
+            modifier = Modifier
+                .onGloballyPositioned {
+                    text2WidthPx = it.size.width
+                },
+            maxLines = 1,
+            style = Body4,
+            color = Gray3,
+        )
+    }
+}
+
 
 @Composable
 private fun CancelButton(
