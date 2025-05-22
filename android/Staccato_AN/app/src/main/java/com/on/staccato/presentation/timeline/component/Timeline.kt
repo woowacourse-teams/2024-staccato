@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.staccato.presentation.component.DefaultDivider
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
-import com.on.staccato.presentation.timeline.model.dummyTimelineUiModel
+import com.on.staccato.presentation.timeline.model.dummyTimelineUiModels
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
@@ -47,7 +47,7 @@ fun Timeline(
 @Composable
 private fun TimelinePreview() {
     Timeline(
-        timeline = dummyTimelineUiModel,
+        timeline = dummyTimelineUiModels,
         onCategoryClicked = {},
         updateIsDraggable = {},
     )

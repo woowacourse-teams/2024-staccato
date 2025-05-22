@@ -18,7 +18,7 @@ import com.on.staccato.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.component.clickableWithoutRipple
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
-import com.on.staccato.presentation.timeline.model.dummyTimelineUiModel
+import com.on.staccato.presentation.timeline.model.dummyTimelineUiModels
 import com.on.staccato.presentation.util.dpToPx
 import com.on.staccato.theme.Title3
 
@@ -159,5 +159,5 @@ private fun TimelineItemPreview(
 
 class TimelineItemPreviewParameterProvider(
     override val values: Sequence<TimelineUiModel> =
-        sequenceOf(*dummyTimelineUiModel.toTypedArray()),
+        sequenceOf(*dummyTimelineUiModels.toTypedArray()),
 ) : PreviewParameterProvider<TimelineUiModel>

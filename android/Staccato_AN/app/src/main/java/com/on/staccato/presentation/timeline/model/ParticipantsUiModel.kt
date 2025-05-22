@@ -27,7 +27,7 @@ val dummyProfileImageUrls =
         "https://avatars.githubusercontent.com/u/92203597?v=4",
     )
 
-private val participantsUiModel = ParticipantsUiModel(dummyProfileImageUrls, 0)
+val participantsUiModel = ParticipantsUiModel(dummyProfileImageUrls, 0)
 
 val dummyParticipantsUiModels: List<ParticipantsUiModel> =
     listOf(
