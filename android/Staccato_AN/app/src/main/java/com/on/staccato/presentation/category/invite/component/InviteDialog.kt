@@ -30,7 +30,7 @@ fun InviteDialog(
     selectedMembers: Members,
     searchedMembers: MembersUiModel,
     onValueChanged: (String) -> Unit,
-    onInviteConfirmed: (Long) -> Unit,
+    onInviteConfirmed: () -> Unit,
     onClose: () -> Unit,
     onMemberSelected: (Member) -> Unit,
     onMemberDeselected: (Member) -> Unit,
@@ -59,6 +59,7 @@ fun InviteDialog(
                 InviteTopBar(
                     onDismissRequest = onClose,
                     participantsNumber = selectedMembers.members.size,
+                    onInviteConfirmed = onInviteConfirmed,
                 )
                 StaccatoSearchTextField(
                     value = searchKeyword,

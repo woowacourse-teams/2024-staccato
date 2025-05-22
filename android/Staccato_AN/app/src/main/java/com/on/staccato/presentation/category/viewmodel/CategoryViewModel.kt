@@ -16,6 +16,7 @@ import com.on.staccato.domain.model.emptyMembers
 import com.on.staccato.domain.model.emptyParticipants
 import com.on.staccato.domain.model.toMembers
 import com.on.staccato.domain.repository.CategoryRepository
+import com.on.staccato.domain.repository.InvitationRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.category.invite.model.InviteState
 import com.on.staccato.presentation.category.invite.model.toUiModel
@@ -39,6 +40,7 @@ class CategoryViewModel
     constructor(
         private val categoryRepository: CategoryRepository,
         private val memberRepository: MemberRepository,
+        private val invitationRepository: InvitationRepository,
     ) : ViewModel() {
         private val _category = MutableLiveData<CategoryUiModel>()
         val category: LiveData<CategoryUiModel> get() = _category
@@ -73,8 +75,16 @@ class CategoryViewModel
                     .changeStates(participating.toMembers(), InviteState.PARTICIPATING)
             }
 
-        fun inviteMemberBy(id: Long) {
-            // 유저 초대 API
+        fun inviteMemberBy(ids: List<Long>) {
+            category.value?.id?.let { categoryId ->
+                viewModelScope.launch {
+                    invitationRepository.invite(categoryId, ids).onSuccess {
+                        _errorMessage.setValue("${ids.size}명을 초대했어요!") // stringRes로 빼기
+                        toggleInviteMode(false)
+                    }.onServerError(::handleServerError)
+                        .onException2(::handelException)
+                }
+            }
         }
 
         fun unselect(member: Member) {

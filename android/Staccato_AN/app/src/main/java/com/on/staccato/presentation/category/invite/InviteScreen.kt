@@ -48,7 +48,9 @@ fun InviteScreen(viewModel: CategoryViewModel = hiltViewModel()) {
             },
             onMemberSelected = { selectedMate -> viewModel.select(selectedMate) },
             onMemberDeselected = { unselectedMate -> viewModel.unselect(unselectedMate) },
-            onInviteConfirmed = { mateId -> viewModel.inviteMemberBy(mateId) },
+            onInviteConfirmed = { viewModel.inviteMemberBy(selectedMembers.members.map { it.memberId }) },
         )
+    } else {
+        searchKeyword = ""
     }
 }
