@@ -1,19 +1,12 @@
 package com.staccato.invitation.service.dto.response;
 
 import java.util.List;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+import com.staccato.invitation.domain.CategoryInvitation;
 
-public record CategoryInvitationCreateResponses(List<CategoryInvitationCreateResponse> invitationResults) {
-    public HttpStatusCode statusCode() {
-        if (isAllBadRequest()) {
-            return HttpStatus.BAD_REQUEST;
-        }
-        return HttpStatus.OK;
-    }
-
-    private boolean isAllBadRequest() {
-        return invitationResults.stream()
-                .noneMatch(CategoryInvitationCreateResponse::isOk);
+public record CategoryInvitationCreateResponses(List<Long> invitationIds) {
+    public static CategoryInvitationCreateResponses from(List<CategoryInvitation> invitations) {
+        return new CategoryInvitationCreateResponses(invitations.stream()
+                .map(CategoryInvitation::getId)
+                .toList());
     }
 }

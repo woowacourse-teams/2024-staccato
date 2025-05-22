@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
@@ -22,8 +21,6 @@ import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponse;
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
-import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponse;
-import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
@@ -54,7 +51,7 @@ class InvitationServiceTest extends ServiceSliceTest {
                 .buildAndSave(categoryRepository);
     }
 
-    @DisplayName("HOST가 카테고리에 guest과 guest2에 초대 요청(REQUESTED)을 한다.")
+    @DisplayName("HOST가 guest와 guest2에게 카테고리 초대 요청(REQUESTED)을 한다.")
     @Test
     void invite() {
         // given
@@ -62,24 +59,22 @@ class InvitationServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId(), guest2.getId()));
 
         // when
-        CategoryInvitationCreateResponses responses = invitationService.invite(host, invitationRequest);
+        invitationService.invite(host, invitationRequest);
 
         // then
         List<CategoryMember> categoryMembers = categoryRepository.findWithCategoryMembersById(category.getId()).get()
                 .getCategoryMembers();
         List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
-        List<Member> invitees = invitations.stream().map(CategoryInvitation::getInvitee).collect(Collectors.toList());
         Set<Category> categories = invitations.stream().map(CategoryInvitation::getCategory)
                 .collect(Collectors.toSet());
         Set<InvitationStatus> statuses = invitations.stream().map(CategoryInvitation::getStatus)
                 .collect(Collectors.toSet());
 
         assertAll(
-                () -> assertThat(responses.invitationResults()).hasSize(2),
-                () -> assertThat(responses.invitationResults().get(0).statusCode()).isEqualTo(HttpStatus.OK.toString()),
-                () -> assertThat(responses.invitationResults().get(1).statusCode()).isEqualTo(HttpStatus.OK.toString()),
                 () -> assertThat(categoryMembers).hasSize(1),
-                () -> assertThat(invitees).containsExactlyInAnyOrder(guest, guest2),
+                () -> assertThat(invitations)
+                        .extracting(CategoryInvitation::getInvitee)
+                        .containsExactlyInAnyOrder(guest, guest2),
                 () -> assertThat(categories).containsExactly(category),
                 () -> assertThat(statuses).containsExactly(InvitationStatus.REQUESTED)
         );
@@ -117,26 +112,6 @@ class InvitationServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("초대 요청이 성공하면 성공 응답을 반환한다.")
-    @Test
-    void processSuccess() {
-        //given
-        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
-
-        // when
-        CategoryInvitationCreateResponses results = invitationService.invite(host, invitationRequest);
-
-        // then
-        assertAll(
-                () -> assertThat(results.invitationResults()).hasSize(1),
-                () -> assertThat(results.invitationResults().get(0).inviteeId()).isEqualTo(guest.getId()),
-                () -> assertThat(results.invitationResults().get(0).statusCode()).isEqualTo("200 OK"),
-                () -> assertThat(results.invitationResults().get(0).message()).isEqualTo("초대 요청에 성공하였습니다."),
-                () -> assertThat(results.invitationResults().get(0).invitationId()).isNotNull(),
-                () -> assertThat(categoryInvitationRepository.findAll()).hasSize(1)
-        );
-    }
-
     @DisplayName("이미 카테고리 멤버인 경우 실패 응답을 반환한다.")
     @Test
     void failIfAlreadyCategoryMember() {
@@ -147,14 +122,11 @@ class InvitationServiceTest extends ServiceSliceTest {
                 .buildAndSave(categoryRepository);
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
 
-        // when
-        CategoryInvitationCreateResponses results = invitationService.invite(host, invitationRequest);
-
-        // then
+        // when & then
         assertAll(
-                () -> assertThat(results.invitationResults()).hasSize(1),
-                () -> assertThat(results.invitationResults().get(0).statusCode()).isEqualTo("400 BAD_REQUEST"),
-                () -> assertThat(results.invitationResults().get(0).message()).contains("이미 카테고리에 함께하고 있는 사용자입니다."),
+                () -> assertThatThrownBy(() -> invitationService.invite(host, invitationRequest))
+                        .isInstanceOf(StaccatoException.class)
+                        .hasMessage("이미 카테고리에 함께하고 있는 사용자입니다."),
                 () -> assertThat(categoryInvitationRepository.findAll()).hasSize(0)
         );
     }
@@ -166,19 +138,16 @@ class InvitationServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
         invitationService.invite(host, invitationRequest);
 
-        // when
-        CategoryInvitationCreateResponses results = invitationService.invite(host, invitationRequest);
-
-        // then
+        // when & then
         assertAll(
-                () -> assertThat(results.invitationResults()).hasSize(1),
-                () -> assertThat(results.invitationResults().get(0).statusCode()).isEqualTo("400 BAD_REQUEST"),
-                () -> assertThat(results.invitationResults().get(0).message()).contains("이미 초대 요청을 보낸 사용자입니다."),
+                () -> assertThatThrownBy(() -> invitationService.invite(host, invitationRequest))
+                        .isInstanceOf(StaccatoException.class)
+                        .hasMessage("이미 초대 요청을 보낸 사용자입니다."),
                 () -> assertThat(categoryInvitationRepository.findAll()).hasSize(1)
         );
     }
 
-    @DisplayName("여러 명 초대 시 일부는 성공, 일부는 실패할 수 있다.")
+    @DisplayName("여러 명 초대 시 일부는 성공, 일부는 실패 시 전부 실패 처리된다.")
     @Test
     void inviteMixedSuccessAndFailure() {
         // given
@@ -195,34 +164,12 @@ class InvitationServiceTest extends ServiceSliceTest {
                 Set.of(guest.getId(), guest2.getId(), guest3.getId())
         );
 
-        // when
-        CategoryInvitationCreateResponses resultResponses = invitationService.invite(host, invitationRequest);
-
-        // then
-        CategoryInvitationCreateResponse guestResult = findResult(resultResponses, guest.getId());
-        CategoryInvitationCreateResponse guest2Result = findResult(resultResponses, guest2.getId());
-        CategoryInvitationCreateResponse guest3Result = findResult(resultResponses, guest3.getId());
-
+        // when & then
         assertAll(
-                () -> assertThat(resultResponses.invitationResults()).hasSize(3),
-                () -> assertThat(categoryInvitationRepository.findAll()).hasSize(2),
-                () -> assertThat(guestResult.statusCode()).isEqualTo("400 BAD_REQUEST"),
-                () -> assertThat(guestResult.message()).contains("이미 카테고리에 함께하고 있는 사용자입니다."),
-                () -> assertThat(guestResult.invitationId()).isNull(),
-
-                () -> assertThat(guest2Result.statusCode()).isEqualTo("200 OK"),
-                () -> assertThat(guest2Result.invitationId()).isNotNull(),
-
-                () -> assertThat(guest3Result.statusCode()).isEqualTo("200 OK"),
-                () -> assertThat(guest3Result.invitationId()).isNotNull()
+                () -> assertThatThrownBy(() -> invitationService.invite(host, invitationRequest))
+                        .isInstanceOf(StaccatoException.class),
+                () -> assertThat(categoryInvitationRepository.findAll()).hasSize(0)
         );
-    }
-
-    private CategoryInvitationCreateResponse findResult(CategoryInvitationCreateResponses responses, Long inviteeId) {
-        return responses.invitationResults().stream()
-                .filter(r -> r.inviteeId().equals(inviteeId))
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("해당 inviteeId 결과 없음: " + inviteeId));
     }
 
     @DisplayName("초대 요청 목록을 조회하면, 최근에 요청을 보낸 사용자 순으로 보여준다.")

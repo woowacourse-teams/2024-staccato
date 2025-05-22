@@ -11,10 +11,9 @@ import com.staccato.ControllerTest;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponse;
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
-import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponse;
-import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
 import com.staccato.member.domain.Member;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -41,31 +40,10 @@ class InvitationControllerTest extends ControllerTest {
                 }
                 """;
         when(invitationService.invite(any(Member.class), any(CategoryInvitationRequest.class)))
-                .thenReturn(new CategoryInvitationCreateResponses(List.of(
-                        new CategoryInvitationCreateResponse(1L, "200 OK", "초대 요청에 성공하였습니다.", 1L),
-                        new CategoryInvitationCreateResponse(2L, "400 BAD_REQUEST", "이미 카테고리에 함께하고 있는 사용자입니다.", null),
-                        new CategoryInvitationCreateResponse(3L, "400 BAD_REQUEST", "해당 사용자를 찾을 수 없어요.", null)
-                )));
+                .thenReturn(new CategoryInvitationCreateResponses(List.of(1L, 2L)));
         String expectedResponse = """
                 {
-                  "invitationResults": [
-                    {
-                      "inviteeId": 1,
-                      "statusCode": "200 OK",
-                      "message": "초대 요청에 성공하였습니다.",
-                      "invitationId": 1
-                    },
-                    {
-                      "inviteeId": 2,
-                      "statusCode": "400 BAD_REQUEST",
-                      "message": "이미 카테고리에 함께하고 있는 사용자입니다."
-                    },
-                    {
-                      "inviteeId": 3,
-                      "statusCode": "400 BAD_REQUEST",
-                      "message": "해당 사용자를 찾을 수 없어요."
-                    }
-                  ]
+                  "invitationIds": [1, 2]
                 }
                 """;
 
@@ -76,28 +54,6 @@ class InvitationControllerTest extends ControllerTest {
                         .content(invitationRequest))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
-    }
-
-    @DisplayName("요청한 모든 사용자에 대한 초대가 실패한다면, statusCode는 400을 반환한다.")
-    @Test
-    void inviteMembersFailure() throws Exception {
-        // given
-        long categoryId = 1L;
-        Member member = MemberFixtures.defaultMember().build();
-        when(authService.extractFromToken(anyString())).thenReturn(member);
-        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(categoryId, Set.of(1L, 2L));
-        when(invitationService.invite(any(Member.class), any(CategoryInvitationRequest.class)))
-                .thenReturn(new CategoryInvitationCreateResponses(List.of(
-                        new CategoryInvitationCreateResponse(1L, "400 BAD_REQUEST", "이미 카테고리에 함께하고 있는 사용자입니다.", null),
-                        new CategoryInvitationCreateResponse(2L, "400 BAD_REQUEST", "해당 사용자를 찾을 수 없어요.", null)
-                )));
-
-        // when & then
-        mockMvc.perform(post("/invitations", categoryId)
-                        .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invitationRequest)))
-                .andExpect(status().isBadRequest());
     }
 
     @DisplayName("유효하지 않은 카테고리 식별자로 초대 요청 시 예외가 발생한다.")
@@ -146,7 +102,7 @@ class InvitationControllerTest extends ControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
-    @DisplayName("요청자는 자신에게 온 초대 요청 목록을 조회할 수 있다.")
+    @DisplayName("요청자는 자신이 보낸 초대 요청 목록을 조회할 수 있다.")
     @Test
     void readRequestedInvitations() throws Exception {
         // given

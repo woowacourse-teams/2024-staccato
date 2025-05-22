@@ -58,11 +58,11 @@ public class CategoryInvitation extends BaseEntity {
     }
 
     public void cancel() {
-        validate(status);
+        validateCancel(status);
         status = InvitationStatus.CANCELED;
     }
 
-    private void validate(InvitationStatus status) {
+    private void validateCancel(InvitationStatus status) {
         if (status.isAccepted() || status.isRejected()) {
             throw new StaccatoException("이미 상대가 수락/거절한 초대 요청은 취소할 수 없어요.");
         }

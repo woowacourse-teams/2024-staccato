@@ -15,8 +15,8 @@ import com.staccato.config.log.annotation.Trace;
 import com.staccato.invitation.controller.docs.InvitationControllerDocs;
 import com.staccato.invitation.service.InvitationService;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
-import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
 import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
 import com.staccato.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +32,7 @@ public class InvitationController implements InvitationControllerDocs {
     public ResponseEntity<CategoryInvitationCreateResponses> inviteMembers(@LoginMember Member member,
                                                                            @Valid @RequestBody CategoryInvitationRequest categoryInvitationRequest) {
         CategoryInvitationCreateResponses categoryInvitationCreateResponses = invitationService.invite(member, categoryInvitationRequest);
-        return new ResponseEntity<>(categoryInvitationCreateResponses, categoryInvitationCreateResponses.statusCode());
+        return ResponseEntity.ok(categoryInvitationCreateResponses);
     }
 
     @PostMapping("/{invitationId}/cancel")
