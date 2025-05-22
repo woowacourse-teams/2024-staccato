@@ -129,7 +129,7 @@ fun TimelineItem(
                         top.linkTo(thirdSpacer.bottom)
                         bottom.linkTo(parent.bottom)
                     },
-                members = category.participants,
+                participants = category.participants,
                 hiddenMembersCount = 3,
                 colorLabel = category.color.label,
             )

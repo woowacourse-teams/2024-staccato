@@ -20,7 +20,7 @@ fun TimeLineCategory.toTimelineUiModel(): TimelineUiModel {
         isShared = isShared,
         startAt = startAt,
         endAt = endAt,
-        participants = participants.map { members -> members.toUiModel() },
+        participants = participants.map { members -> members },
         staccatoCount = staccatoCount,
     )
 }

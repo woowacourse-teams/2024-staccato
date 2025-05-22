@@ -8,7 +8,7 @@
 
         <variable
             name="mate"
-            type="com.on.staccato.presentation.common.MemberUiModel" />
+            type="com.on.staccato.domain.model.Member" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
