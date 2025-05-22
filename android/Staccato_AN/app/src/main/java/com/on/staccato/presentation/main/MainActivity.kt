@@ -191,13 +191,18 @@ class MainActivity :
     private fun setupBackPressedHandler() {
         var backPressedTime = 0L
         onBackPressedDispatcher.addCallback {
-            if (behavior.state == STATE_EXPANDED) {
-                behavior.state = STATE_HALF_EXPANDED
-            } else if (behavior.state == STATE_HALF_EXPANDED) {
-                behavior.state = STATE_COLLAPSED
-            } else {
-                handleBackPressedTwice(backPressedTime).also {
-                    backPressedTime = it
+            when (behavior.state) {
+                STATE_EXPANDED -> {
+                    behavior.state = STATE_HALF_EXPANDED
+                    behavior.isDraggable = true
+                }
+                STATE_HALF_EXPANDED -> {
+                    behavior.state = STATE_COLLAPSED
+                }
+                else -> {
+                    handleBackPressedTwice(backPressedTime).also {
+                        backPressedTime = it
+                    }
                 }
             }
         }
