@@ -117,6 +117,67 @@ class InvitationServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("초대 요청이 성공하면 성공 응답을 반환한다.")
+    @Test
+    void processSuccess() {
+        //given
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
+
+        // when
+        InvitationResultResponses results = invitationService.invite(host, invitationRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(results.invitationResults()).hasSize(1),
+                () -> assertThat(results.invitationResults().get(0).inviteeId()).isEqualTo(guest.getId()),
+                () -> assertThat(results.invitationResults().get(0).statusCode()).isEqualTo("200 OK"),
+                () -> assertThat(results.invitationResults().get(0).message()).isEqualTo("초대 요청에 성공하였습니다."),
+                () -> assertThat(results.invitationResults().get(0).invitationId()).isNotNull(),
+                () -> assertThat(categoryInvitationRepository.findAll()).hasSize(1)
+        );
+    }
+
+    @DisplayName("이미 카테고리 멤버인 경우 실패 응답을 반환한다.")
+    @Test
+    void failIfAlreadyCategoryMember() {
+        // given
+        category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
+
+        // when
+        InvitationResultResponses results = invitationService.invite(host, invitationRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(results.invitationResults()).hasSize(1),
+                () -> assertThat(results.invitationResults().get(0).statusCode()).isEqualTo("400 BAD_REQUEST"),
+                () -> assertThat(results.invitationResults().get(0).message()).contains("이미 카테고리에 함께하고 있는 사용자입니다."),
+                () -> assertThat(categoryInvitationRepository.findAll()).hasSize(0)
+        );
+    }
+
+    @DisplayName("이미 초대 요청을 보낸 경우 실패 응답을 반환한다.")
+    @Test
+    void failIfAlreadyRequested() {
+        // given
+        CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
+        invitationService.invite(host, invitationRequest);
+
+        // when
+        InvitationResultResponses results = invitationService.invite(host, invitationRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(results.invitationResults()).hasSize(1),
+                () -> assertThat(results.invitationResults().get(0).statusCode()).isEqualTo("400 BAD_REQUEST"),
+                () -> assertThat(results.invitationResults().get(0).message()).contains("이미 초대 요청을 보낸 사용자입니다."),
+                () -> assertThat(categoryInvitationRepository.findAll()).hasSize(1)
+        );
+    }
+
     @DisplayName("여러 명 초대 시 일부는 성공, 일부는 실패할 수 있다.")
     @Test
     void inviteMixedSuccessAndFailure() {
