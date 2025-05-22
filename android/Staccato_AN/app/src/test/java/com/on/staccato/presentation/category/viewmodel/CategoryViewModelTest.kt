@@ -7,6 +7,7 @@ import com.on.staccato.data.network.Exception
 import com.on.staccato.data.network.ServerError
 import com.on.staccato.data.network.Success
 import com.on.staccato.domain.repository.CategoryRepository
+import com.on.staccato.domain.repository.InvitationRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.category.INVALID_ID
 import com.on.staccato.presentation.category.VALID_ID
@@ -41,6 +42,9 @@ class CategoryViewModelTest {
 
     @MockK
     private lateinit var memberRepository: MemberRepository
+
+    @MockK
+    private lateinit var invitationRepository: InvitationRepository
 
     @InjectMockKs
     private lateinit var viewModel: CategoryViewModel

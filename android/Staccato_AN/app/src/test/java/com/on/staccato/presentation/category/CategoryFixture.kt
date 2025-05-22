@@ -73,6 +73,7 @@ val category =
         mates = participants,
         staccatos = listOf(),
         isShared = false,
+        myRole = Role.HOST,
     )
 
 val categoryUiModel =
@@ -87,4 +88,5 @@ val categoryUiModel =
         members = staccatoMembers.members,
         staccatos = listOf(),
         isShared = false,
+        myRole = Role.HOST,
     )
