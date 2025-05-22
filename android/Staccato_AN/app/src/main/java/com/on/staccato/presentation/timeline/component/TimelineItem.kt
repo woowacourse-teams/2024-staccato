@@ -1,6 +1,5 @@
 package com.on.staccato.presentation.timeline.component
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +16,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.on.staccato.R
 import com.on.staccato.presentation.component.DefaultAsyncImage
+import com.on.staccato.presentation.component.clickableWithoutRipple
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.model.dummyTimelineUiModel
 import com.on.staccato.presentation.util.dpToPx
@@ -35,7 +35,7 @@ fun TimelineItem(
             modifier
                 .padding(horizontal = 18.dp, vertical = 13.dp)
                 .fillMaxWidth()
-                .clickable { onCategoryClicked(category.categoryId) },
+                .clickableWithoutRipple { onCategoryClicked(category.categoryId) },
     ) {
         val (
             thumbnail,
