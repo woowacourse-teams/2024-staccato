@@ -16,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import com.staccato.config.domain.BaseEntity;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
@@ -143,11 +144,11 @@ public class Category extends BaseEntity {
     }
 
     public boolean isGuest(Member member) {
-        return categoryMembers.stream()
-                .filter(categoryMember -> categoryMember.isOwnedBy(member))
+        CategoryMember categoryMember = categoryMembers.stream()
+                .filter(cm -> cm.isOwnedBy(member))
                 .findFirst()
-                .map(CategoryMember::isGuest)
-                .orElse(false);
+                .orElseThrow(ForbiddenException::new);
+        return categoryMember.isGuest();
     }
 
     public boolean isNotSameTitle(CategoryTitle title) {
@@ -160,6 +161,18 @@ public class Category extends BaseEntity {
 
     public void changeColor(Color color) {
         this.color = color;
+    }
+
+    public Role getRoleOfMember(Member member) {
+        return categoryMembers.stream()
+                .filter(categoryMember -> categoryMember.isOwnedBy(member))
+                .findFirst()
+                .map(CategoryMember::getRole)
+                .orElseThrow(ForbiddenException::new);
+    }
+
+    public long getCategoryMemberCount() {
+        return categoryMembers.size();
     }
 
 /*    public void increaseStaccatoCount() {

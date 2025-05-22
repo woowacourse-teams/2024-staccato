@@ -143,6 +143,7 @@ class CategoryTest {
         // then
         assertThat(isDenied).isEqualTo(false);
     }
+
 /*
     @DisplayName("처음 카테고리를 생성했을 때 스타카토는 0개이다.")
     @Test

@@ -94,7 +94,8 @@ public class CategoryService {
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
         validateReadPermission(category, member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
-        return new CategoryDetailResponseV3(category, staccatos);
+
+        return new CategoryDetailResponseV3(category, staccatos, member);
     }
 
     public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
