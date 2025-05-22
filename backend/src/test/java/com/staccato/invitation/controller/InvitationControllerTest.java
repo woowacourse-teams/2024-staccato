@@ -111,14 +111,15 @@ class InvitationControllerTest extends ControllerTest {
 
         when(invitationService.readInvitations(any(Member.class)))
                 .thenReturn(new CategoryInvitationRequestedResponses(List.of(
-                        new CategoryInvitationRequestedResponse(2L, "초대한사람", "https://example.com/images/profile1.png", 10L, "여름 방학 여행"),
-                        new CategoryInvitationRequestedResponse(3L, "다른사용자", "https://example.com/images/profile2.png", 11L, "겨울 맛집 탐방")
+                        new CategoryInvitationRequestedResponse(1L, 2L, "초대한사람", "https://example.com/images/profile1.png", 10L, "여름 방학 여행"),
+                        new CategoryInvitationRequestedResponse(2L, 3L, "다른사용자", "https://example.com/images/profile2.png", 11L, "겨울 맛집 탐방")
                 )));
 
         String expectedResponse = """
                 {
                   "invitations": [
                     {
+                      "invitationId": 1,
                       "inviteeId": 2,
                       "inviteeNickname": "초대한사람",
                       "inviteeProfileImageUrl": "https://example.com/images/profile1.png",
@@ -126,6 +127,7 @@ class InvitationControllerTest extends ControllerTest {
                       "categoryTitle": "여름 방학 여행"
                     },
                     {
+                      "invitationId": 2,
                       "inviteeId": 3,
                       "inviteeNickname": "다른사용자",
                       "inviteeProfileImageUrl": "https://example.com/images/profile2.png",
