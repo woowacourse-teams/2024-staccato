@@ -101,7 +101,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(categoryMember.getMember().getId()).isEqualTo(member.getId()),
                 () -> assertThat(categoryMember.getCategory()
-                        .getTitle()).isEqualTo(categoryCreateRequest.categoryTitle())
+                        .getTitle().getTitle()).isEqualTo(categoryCreateRequest.categoryTitle())
         );
     }
 
@@ -147,7 +147,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         CategoryCreateRequest categoryCreateRequest = CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                 .build();
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         categoryService.createCategory(categoryCreateRequest, otherMember);
 
         // when & then
@@ -272,7 +272,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     void cannotReadCategoryByIdIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), member);
@@ -406,8 +406,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(foundedCategory.getId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(foundedCategory.getTitle()).isEqualTo(categoryUpdateRequest.categoryTitle()),
-                () -> assertThat(foundedCategory.getDescription()).isEqualTo(categoryUpdateRequest.description()),
+                () -> assertThat(foundedCategory.getTitle()
+                        .getTitle()).isEqualTo(categoryUpdateRequest.categoryTitle()),
+                () -> assertThat(foundedCategory.getDescription()
+                        .getDescription()).isEqualTo(categoryUpdateRequest.description()),
                 () -> assertThat(foundedCategory.getTerm().getStartAt()).isEqualTo(categoryUpdateRequest.startAt()),
                 () -> assertThat(foundedCategory.getTerm().getEndAt()).isEqualTo(categoryUpdateRequest.endAt()),
                 () -> assertThat(foundedCategory.getThumbnailUrl()).isEqualTo(expected)
@@ -454,7 +456,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     void cannotUpdateCategoryIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest()
                 .build();
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
@@ -570,7 +572,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     void cannotDeleteCategoryIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), member);
 

@@ -23,7 +23,7 @@ public record CategoryInvitationRequestedResponse(
                 categoryInvitation.getInvitee().getNickname().getNickname(),
                 categoryInvitation.getInvitee().getImageUrl(),
                 categoryInvitation.getCategory().getId(),
-                categoryInvitation.getCategory().getTitle()
+                categoryInvitation.getCategory().getTitle().getTitle()
         );
     }
 }

@@ -24,7 +24,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record StaccatoRequest(
         @Schema(example = SwaggerExamples.STACCATO_TITLE)
         @NotBlank(message = "스타카토 제목을 입력해주세요.")
-        @Size(max = 30, message = "스타카토 제목은 공백 포함 30자 이하로 설정해주세요.")
         String staccatoTitle,
         @Schema(example = SwaggerExamples.STACCATO_PLACE_NAME)
         @NotNull(message = "장소 이름을 입력해주세요.")
@@ -48,7 +47,6 @@ public record StaccatoRequest(
         long categoryId,
         @ArraySchema(
                 arraySchema = @Schema(example = SwaggerExamples.IMAGE_URLS))
-        @Size(max = 5, message = "사진은 8장까지만 추가할 수 있어요.")
         List<String> staccatoImageUrls
 ) {
     public StaccatoRequest {

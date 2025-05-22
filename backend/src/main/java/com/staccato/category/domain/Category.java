@@ -41,14 +41,13 @@ public class Category extends BaseEntity {
     private Long id;
     @Column(columnDefinition = "TEXT")
     private String thumbnailUrl;
-    @Column(nullable = false, length = 50)
-    private String title;
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Embedded
+    private CategoryTitle title;
+    @Embedded
+    private Description description;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Color color;
-    @Column
     @Embedded
     private Term term;
     @Column(nullable = false)
@@ -61,14 +60,21 @@ public class Category extends BaseEntity {
     public Category(String thumbnailUrl, @NonNull String title, String description, Color color, LocalDate startAt,
                     LocalDate endAt, @NonNull Boolean isShared) {
         this.thumbnailUrl = thumbnailUrl;
-        this.title = title.trim();
-        this.description = description;
+        this.title = new CategoryTitle(title);
+        this.description = toDescriptionOrNull(description);
         this.color = color;
         this.term = new Term(startAt, endAt);
         this.isShared = isShared;
 /*        if (Objects.isNull(this.staccatoCount)) {
             this.staccatoCount = 0L;
         }*/
+    }
+
+    private Description toDescriptionOrNull(String description) {
+        if (Objects.isNull(description)) {
+            return null;
+        }
+        return new Description(description);
     }
 
     @Builder
@@ -144,8 +150,8 @@ public class Category extends BaseEntity {
                 .orElse(false);
     }
 
-    public boolean isNotSameTitle(String title) {
-        return !this.title.equals(title);
+    public boolean isNotSameTitle(CategoryTitle title) {
+        return !this.title.isSame(title);
     }
 
     public boolean hasTerm() {

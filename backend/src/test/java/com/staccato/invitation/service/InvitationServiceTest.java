@@ -84,7 +84,7 @@ class InvitationServiceTest extends ServiceSliceTest {
     @Test
     void failToInviteIfNotHost() {
         // given
-        Member anotherUser = MemberFixtures.defaultMember().withNickname("anotherUser").buildAndSave(memberRepository);
+        Member anotherUser = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
 
         // when & then
