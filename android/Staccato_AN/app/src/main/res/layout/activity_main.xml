@@ -69,6 +69,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/shape_bottom_sheet_16dp"
+            android:clickable="true"
+            android:focusable="true"
             app:behavior_fitToContents="false"
             app:behavior_halfExpandedRatio="0.6"
             app:behavior_peekHeight="80dp"
