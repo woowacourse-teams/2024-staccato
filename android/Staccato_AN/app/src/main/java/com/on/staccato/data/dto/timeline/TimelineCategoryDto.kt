@@ -13,6 +13,7 @@ data class TimelineCategoryDto(
     @SerialName("startAt") val startAt: String? = null,
     @SerialName("endAt") val endAt: String? = null,
     @SerialName("isShared") val isShared: Boolean,
-    @SerialName("members") val participants: List<MemberDto>,
-    @SerialName("staccatoCount") val staccatoCount: Int,
+    @SerialName("totalMemberCount") val totalMemberCount: Long,
+    @SerialName("members") val members: List<MemberDto>,
+    @SerialName("staccatoCount") val staccatoCount: Long,
 )

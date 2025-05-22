@@ -23,7 +23,7 @@ import com.on.staccato.theme.Gray3
 @Composable
 fun StaccatoCount(
     modifier: Modifier = Modifier,
-    count: Int = 0,
+    count: Long = 0L,
 ) {
     Row(
         modifier = modifier.padding(bottom = 4.dp),
@@ -47,18 +47,18 @@ fun StaccatoCount(
 @Composable
 private fun StaccatoCountPreview(
     @PreviewParameter(StaccatoCountPreviewParameterProvider::class)
-    count: Int,
+    count: Long,
 ) {
     StaccatoCount(count = count)
 }
 
-private class StaccatoCountPreviewParameterProvider() : PreviewParameterProvider<Int> {
-    override val values: Sequence<Int>
+private class StaccatoCountPreviewParameterProvider : PreviewParameterProvider<Long> {
+    override val values: Sequence<Long>
         get() =
             sequenceOf(
-                0,
-                21,
-                500,
-                1000,
+                0L,
+                21L,
+                500L,
+                1000L,
             )
 }

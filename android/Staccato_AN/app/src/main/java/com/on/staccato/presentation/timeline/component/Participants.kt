@@ -8,16 +8,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.on.staccato.domain.model.Member
-import com.on.staccato.domain.model.dummyMembers
 import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.timeline.model.ParticipantsUiModel
+import com.on.staccato.presentation.timeline.model.dummyParticipantsUiModels
 
 @Composable
 fun Participants(
     modifier: Modifier = Modifier,
-    participants: List<Member>,
-    hiddenParticipantsCount: Int,
+    participants: ParticipantsUiModel,
     colorLabel: String,
 ) {
     LazyRow(
@@ -26,22 +27,31 @@ fun Participants(
         horizontalArrangement = Arrangement.spacedBy((-8).dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        items(participants) { participant ->
-            ParticipantItem(profileImageUrl = participant.memberImage)
+        items(participants.profileImageUrls) { profileImageUrl ->
+            ParticipantItem(profileImageUrl)
         }
 
-        item {
-            HiddenParticipantsCountItem(hiddenParticipantsCount, colorLabel = colorLabel)
+        if (participants.hiddenCount != 0L) {
+            item {
+                HiddenParticipantCountItem(participants.hiddenCount, colorLabel = colorLabel)
+            }
         }
     }
 }
 
 @Preview
 @Composable
-private fun ParticipantsPreview() {
+private fun ParticipantsPreview(
+    @PreviewParameter(ParticipantsPreviewParameterProvider::class)
+    participants: ParticipantsUiModel,
+) {
     Participants(
-        participants = dummyMembers,
-        hiddenParticipantsCount = 3,
+        participants = participants,
         colorLabel = CategoryColor.GRAY.label,
     )
 }
+
+private class ParticipantsPreviewParameterProvider(
+    override val values: Sequence<ParticipantsUiModel> =
+        sequenceOf(*dummyParticipantsUiModels.toTypedArray()),
+) : PreviewParameterProvider<ParticipantsUiModel>

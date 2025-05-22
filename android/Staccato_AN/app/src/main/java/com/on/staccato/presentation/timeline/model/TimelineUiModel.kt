@@ -1,7 +1,5 @@
 package com.on.staccato.presentation.timeline.model
 
-import com.on.staccato.domain.model.Member
-import com.on.staccato.domain.model.dummyMembers
 import com.on.staccato.presentation.common.color.CategoryColor
 import java.time.LocalDate
 
@@ -13,11 +11,11 @@ data class TimelineUiModel(
     val startAt: LocalDate? = null,
     val endAt: LocalDate? = null,
     val isShared: Boolean,
-    val participants: List<Member>,
-    val staccatoCount: Int,
+    val participants: ParticipantsUiModel,
+    val staccatoCount: Long,
 )
 
-val dummyTimelineUiModel =
+val dummyTimelineUiModel: List<TimelineUiModel> =
     listOf(
         TimelineUiModel(
             categoryId = 1,
@@ -27,7 +25,7 @@ val dummyTimelineUiModel =
             endAt = null,
             isShared = true,
             color = CategoryColor.GRAY,
-            participants = dummyMembers,
+            participants = dummyParticipantsUiModels[0],
             staccatoCount = 10,
         ),
         TimelineUiModel(
@@ -38,7 +36,7 @@ val dummyTimelineUiModel =
             endAt = LocalDate.of(2025, 12, 31),
             isShared = true,
             color = CategoryColor.GRAY,
-            participants = dummyMembers,
+            participants = dummyParticipantsUiModels[1],
             staccatoCount = 100,
         ),
         TimelineUiModel(
@@ -49,7 +47,7 @@ val dummyTimelineUiModel =
             endAt = LocalDate.of(2025, 12, 31),
             isShared = true,
             color = CategoryColor.GRAY,
-            participants = dummyMembers,
+            participants = dummyParticipantsUiModels[2],
             staccatoCount = 10,
         ),
         TimelineUiModel(
@@ -60,7 +58,7 @@ val dummyTimelineUiModel =
             endAt = LocalDate.of(2025, 12, 31),
             isShared = false,
             color = CategoryColor.GRAY,
-            participants = dummyMembers,
+            participants = dummyParticipantsUiModels[3],
             staccatoCount = 10,
         ),
     )

@@ -10,6 +10,7 @@ data class TimeLineCategory(
     val startAt: LocalDate? = null,
     val endAt: LocalDate? = null,
     val isShared: Boolean,
-    val participants: List<Member>,
-    val staccatoCount: Int,
+    val totalMemberCount: Long,
+    val members: List<Member>,
+    val staccatoCount: Long,
 )

@@ -33,7 +33,8 @@ fun TimelineCategoryDto.toDomain(): TimeLineCategory {
         startAt = startAt?.let { LocalDate.parse(it) },
         endAt = endAt?.let { LocalDate.parse(it) },
         isShared = isShared,
-        participants = participants.map { it.toDomain() },
+        totalMemberCount = totalMemberCount,
+        members = members.map { it.toDomain() },
         staccatoCount = staccatoCount,
     )
 }

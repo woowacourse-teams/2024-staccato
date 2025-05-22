@@ -130,7 +130,6 @@ fun TimelineItem(
                         bottom.linkTo(parent.bottom)
                     },
                 participants = category.participants,
-                hiddenParticipantsCount = 3,
                 colorLabel = category.color.label,
             )
         }
@@ -158,7 +157,7 @@ private fun TimelineItemPreview(
     )
 }
 
-class TimelineItemPreviewParameterProvider : PreviewParameterProvider<TimelineUiModel> {
+class TimelineItemPreviewParameterProvider(
     override val values: Sequence<TimelineUiModel> =
-        sequenceOf(*dummyTimelineUiModel.toTypedArray())
-}
+        sequenceOf(*dummyTimelineUiModel.toTypedArray()),
+) : PreviewParameterProvider<TimelineUiModel>

@@ -21,8 +21,8 @@ import com.on.staccato.theme.Body6
 import com.on.staccato.theme.White
 
 @Composable
-fun HiddenParticipantsCountItem(
-    count: Int,
+fun HiddenParticipantCountItem(
+    count: Long,
     colorLabel: String,
 ) {
     Box(
@@ -44,21 +44,21 @@ fun HiddenParticipantsCountItem(
 
 @Preview
 @Composable
-private fun HiddenParticipantsCountPreview(
-    @PreviewParameter(HiddenMembersCountPreviewParameterProvider::class)
-    count: Int,
+private fun HiddenParticipantCountPreview(
+    @PreviewParameter(HiddenParticipantCountPreviewParameterProvider::class)
+    count: Long,
 ) {
-    HiddenParticipantsCountItem(
+    HiddenParticipantCountItem(
         count = count,
         colorLabel = CategoryColor.GRAY.label,
     )
 }
 
-private class HiddenMembersCountPreviewParameterProvider : PreviewParameterProvider<Int> {
-    override val values: Sequence<Int> =
+private class HiddenParticipantCountPreviewParameterProvider : PreviewParameterProvider<Long> {
+    override val values: Sequence<Long> =
         sequenceOf(
-            3,
-            10,
-            88,
+            3L,
+            10L,
+            88L,
         )
 }
