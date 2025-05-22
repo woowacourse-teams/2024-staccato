@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
-import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
 import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
 import com.staccato.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Invitation", description = "Invitation API")
 public interface InvitationControllerDocs {
-    @Operation(summary = "카테고리 멤버 초대", description = "지정된 카테고리에 다른 멤버들을 초대하면, 각 멤버 초대에 대한 성공/실패 결과를 배열로 반환합니다.")
+    @Operation(summary = "카테고리 멤버 초대", description = "지정된 카테고리에 다른 멤버들을 초대합니다. 한 명이라도 실패 시 모두 실패 처리되며, 그 중 하나의 예외 메시지를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 초대 성공", responseCode = "200"),
             @ApiResponse(description = """
@@ -25,6 +25,10 @@ public interface InvitationControllerDocs {
                     (1) 초대하려는 카테고리가 존재하지 않을 때
                     
                     (2) Path Variable 형식이 잘못되었을 때
+                    
+                    (3) 이미 카테고리에 추가된 사용자에게 초대 요청 했을 때
+                    
+                    (4) 이미 초대 요청을 보낸 사용자에게 초대 요청 했을 때
                     """,
                     responseCode = "400")
     })
