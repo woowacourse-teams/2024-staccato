@@ -51,8 +51,8 @@ fun DefaultTextButton(
                 shape = RoundedCornerShape(5.dp),
             )
             .padding(
-                horizontal = 24.dp,
-                vertical = 10.dp,
+                horizontal = 16.dp,
+                vertical = 8.dp,
             )
     ) {
         Text(
