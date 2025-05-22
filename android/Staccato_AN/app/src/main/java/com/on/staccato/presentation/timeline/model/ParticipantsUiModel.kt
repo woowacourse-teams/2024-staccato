@@ -7,6 +7,7 @@ data class ParticipantsUiModel(
     val hiddenCount: Long,
 ) {
     companion object {
+        const val MIN_HIDDEN_COUNT = 0L
         private const val VISIBLE_LIMIT = 3
 
         fun from(
@@ -15,7 +16,7 @@ data class ParticipantsUiModel(
         ): ParticipantsUiModel =
             ParticipantsUiModel(
                 profileImageUrls = members.map { it.memberImage },
-                hiddenCount = (totalCount - VISIBLE_LIMIT).coerceAtLeast(0),
+                hiddenCount = (totalCount - VISIBLE_LIMIT).coerceAtLeast(MIN_HIDDEN_COUNT),
             )
     }
 }
@@ -27,7 +28,7 @@ val dummyProfileImageUrls =
         "https://avatars.githubusercontent.com/u/92203597?v=4",
     )
 
-val participantsUiModel = ParticipantsUiModel(dummyProfileImageUrls, 0)
+val participantsUiModel = ParticipantsUiModel(profileImageUrls = dummyProfileImageUrls, hiddenCount = 0)
 
 val dummyParticipantsUiModels: List<ParticipantsUiModel> =
     listOf(

@@ -14,6 +14,8 @@ import com.on.staccato.presentation.timeline.model.dummyTimelineUiModels
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
+private const val TIMELINE_TOP_INDEX = 0
+
 @Composable
 fun Timeline(
     timeline: List<TimelineUiModel>,
@@ -24,7 +26,7 @@ fun Timeline(
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
-            .map { it == 0 }
+            .map { it == TIMELINE_TOP_INDEX }
             .distinctUntilChanged()
             .collect {
                 updateIsDraggable(it)

@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.timeline.model.ParticipantsUiModel
+import com.on.staccato.presentation.timeline.model.ParticipantsUiModel.Companion.MIN_HIDDEN_COUNT
 import com.on.staccato.presentation.timeline.model.dummyParticipantsUiModels
 
 @Composable
@@ -31,7 +32,7 @@ fun Participants(
             ParticipantItem(profileImageUrl)
         }
 
-        if (participants.hiddenCount != 0L) {
+        if (participants.hiddenCount != MIN_HIDDEN_COUNT) {
             item {
                 HiddenParticipantCountItem(participants.hiddenCount, colorLabel = colorLabel)
             }
