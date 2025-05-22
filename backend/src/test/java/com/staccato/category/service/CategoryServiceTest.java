@@ -643,4 +643,26 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
     }
+
+    @DisplayName("카테고리에 포함된 멤버의 역할을 반환한다.")
+    @Test
+    void getRoleOfMemberReturnsRole() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(guest)
+                .buildAndSave(categoryRepository);
+
+        // when
+        Role hostRole = category.getRoleOfMember(host);
+        Role guestRole = category.getRoleOfMember(guest);
+
+        // then
+        assertAll(
+                () -> assertThat(hostRole).isEqualTo(Role.HOST),
+                () -> assertThat(guestRole).isEqualTo(Role.GUEST)
+        );
+    }
 }
