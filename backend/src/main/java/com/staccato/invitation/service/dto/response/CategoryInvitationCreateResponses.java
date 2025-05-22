@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
-public record InvitationResultResponses(List<InvitationResultResponse> invitationResults) {
+public record CategoryInvitationCreateResponses(List<CategoryInvitationCreateResponse> invitationResults) {
     public HttpStatusCode statusCode() {
         if (isAllBadRequest()) {
             return HttpStatus.BAD_REQUEST;
@@ -14,6 +14,6 @@ public record InvitationResultResponses(List<InvitationResultResponse> invitatio
 
     private boolean isAllBadRequest() {
         return invitationResults.stream()
-                .noneMatch(InvitationResultResponse::isOk);
+                .noneMatch(CategoryInvitationCreateResponse::isOk);
     }
 }

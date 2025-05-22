@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
-import com.staccato.invitation.service.dto.response.InvitationResultResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
 import com.staccato.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,7 +28,7 @@ public interface InvitationControllerDocs {
                     """,
                     responseCode = "400")
     })
-    ResponseEntity<InvitationResultResponses> inviteMembers(
+    ResponseEntity<CategoryInvitationCreateResponses> inviteMembers(
             @Parameter(hidden = true) Member member,
             @Parameter(required = true) @Valid CategoryInvitationRequest categoryInvitationRequest
     );

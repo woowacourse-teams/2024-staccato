@@ -15,8 +15,8 @@ import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
-import com.staccato.invitation.service.dto.response.InvitationResultResponse;
-import com.staccato.invitation.service.dto.response.InvitationResultResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponse;
+import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,11 +34,11 @@ public class InvitationService {
     private final CategoryMemberRepository categoryMemberRepository;
 
     @Transactional
-    public InvitationResultResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
+    public CategoryInvitationCreateResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryInvitationRequest.categoryId());
         validateInvitePermission(category, inviter);
         List<Member> invitees = memberRepository.findAllByIdIn(categoryInvitationRequest.inviteeIds());
-        InvitationResultResponses responses = createInvitations(category, inviter, invitees);
+        CategoryInvitationCreateResponses responses = createInvitations(category, inviter, invitees);
 
         return responses;
     }
@@ -65,24 +65,24 @@ public class InvitationService {
         }
     }
 
-    private InvitationResultResponses createInvitations(Category category, Member inviter, List<Member> invitees) {
-        List<InvitationResultResponse> responses = new ArrayList<>();
+    private CategoryInvitationCreateResponses createInvitations(Category category, Member inviter, List<Member> invitees) {
+        List<CategoryInvitationCreateResponse> responses = new ArrayList<>();
         for (Member invitee : invitees) {
             responses.add(createInvitation(category, inviter, invitee));
         }
-        return new InvitationResultResponses(responses);
+        return new CategoryInvitationCreateResponses(responses);
     }
 
-    public InvitationResultResponse createInvitation(Category category, Member inviter, Member invitee) {
+    public CategoryInvitationCreateResponse createInvitation(Category category, Member inviter, Member invitee) {
         try {
             validateIfAlreadyCategoryMember(category, invitee);
             validateIfAlreadyRequested(category, inviter, invitee);
             CategoryInvitation categoryInvitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, inviter, invitee));
-            return InvitationResultResponse.success(categoryInvitation);
+            return CategoryInvitationCreateResponse.success(categoryInvitation);
         } catch (Exception e) {
             log.warn("Invitation failed for categoryId({}), inviterId({}), inviteeId({}), for Reason: {}",
                     category.getId(), inviter.getId(), invitee.getId(), e.getMessage());
-            return InvitationResultResponse.fail(invitee, e.getMessage());
+            return CategoryInvitationCreateResponse.fail(invitee, e.getMessage());
         }
     }
 

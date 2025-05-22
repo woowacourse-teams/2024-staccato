@@ -13,8 +13,8 @@ import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponse;
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
-import com.staccato.invitation.service.dto.response.InvitationResultResponse;
-import com.staccato.invitation.service.dto.response.InvitationResultResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponse;
+import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
 import com.staccato.member.domain.Member;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -41,10 +41,10 @@ class InvitationControllerTest extends ControllerTest {
                 }
                 """;
         when(invitationService.invite(any(Member.class), any(CategoryInvitationRequest.class)))
-                .thenReturn(new InvitationResultResponses(List.of(
-                        new InvitationResultResponse(1L, "200 OK", "초대 요청에 성공하였습니다.", 1L),
-                        new InvitationResultResponse(2L, "400 BAD_REQUEST", "이미 카테고리에 함께하고 있는 사용자입니다.", null),
-                        new InvitationResultResponse(3L, "400 BAD_REQUEST", "해당 사용자를 찾을 수 없어요.", null)
+                .thenReturn(new CategoryInvitationCreateResponses(List.of(
+                        new CategoryInvitationCreateResponse(1L, "200 OK", "초대 요청에 성공하였습니다.", 1L),
+                        new CategoryInvitationCreateResponse(2L, "400 BAD_REQUEST", "이미 카테고리에 함께하고 있는 사용자입니다.", null),
+                        new CategoryInvitationCreateResponse(3L, "400 BAD_REQUEST", "해당 사용자를 찾을 수 없어요.", null)
                 )));
         String expectedResponse = """
                 {
@@ -87,9 +87,9 @@ class InvitationControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(member);
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(categoryId, Set.of(1L, 2L));
         when(invitationService.invite(any(Member.class), any(CategoryInvitationRequest.class)))
-                .thenReturn(new InvitationResultResponses(List.of(
-                        new InvitationResultResponse(1L, "400 BAD_REQUEST", "이미 카테고리에 함께하고 있는 사용자입니다.", null),
-                        new InvitationResultResponse(2L, "400 BAD_REQUEST", "해당 사용자를 찾을 수 없어요.", null)
+                .thenReturn(new CategoryInvitationCreateResponses(List.of(
+                        new CategoryInvitationCreateResponse(1L, "400 BAD_REQUEST", "이미 카테고리에 함께하고 있는 사용자입니다.", null),
+                        new CategoryInvitationCreateResponse(2L, "400 BAD_REQUEST", "해당 사용자를 찾을 수 없어요.", null)
                 )));
 
         // when & then

@@ -6,15 +6,15 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.member.domain.Member;
 
-public record InvitationResultResponse(
+public record CategoryInvitationCreateResponse(
         Long inviteeId,
         String statusCode,
         String message,
         @JsonInclude(Include.NON_NULL)
         Long invitationId
 ) {
-    public static InvitationResultResponse success(CategoryInvitation categoryInvitation) {
-        return new InvitationResultResponse(
+    public static CategoryInvitationCreateResponse success(CategoryInvitation categoryInvitation) {
+        return new CategoryInvitationCreateResponse(
                 categoryInvitation.getInvitee().getId(),
                 HttpStatus.OK.toString(),
                 "초대 요청에 성공하였습니다.",
@@ -22,8 +22,8 @@ public record InvitationResultResponse(
         );
     }
 
-    public static InvitationResultResponse fail(Member invitee, String message) {
-        return new InvitationResultResponse(invitee.getId(), HttpStatus.BAD_REQUEST.toString(), message, null);
+    public static CategoryInvitationCreateResponse fail(Member invitee, String message) {
+        return new CategoryInvitationCreateResponse(invitee.getId(), HttpStatus.BAD_REQUEST.toString(), message, null);
     }
 
     public boolean isOk() {

@@ -22,8 +22,8 @@ import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponse;
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
-import com.staccato.invitation.service.dto.response.InvitationResultResponse;
-import com.staccato.invitation.service.dto.response.InvitationResultResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponse;
+import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
@@ -62,7 +62,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId(), guest2.getId()));
 
         // when
-        InvitationResultResponses responses = invitationService.invite(host, invitationRequest);
+        CategoryInvitationCreateResponses responses = invitationService.invite(host, invitationRequest);
 
         // then
         List<CategoryMember> categoryMembers = categoryRepository.findWithCategoryMembersById(category.getId()).get()
@@ -124,7 +124,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
 
         // when
-        InvitationResultResponses results = invitationService.invite(host, invitationRequest);
+        CategoryInvitationCreateResponses results = invitationService.invite(host, invitationRequest);
 
         // then
         assertAll(
@@ -148,7 +148,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         CategoryInvitationRequest invitationRequest = new CategoryInvitationRequest(category.getId(), Set.of(guest.getId()));
 
         // when
-        InvitationResultResponses results = invitationService.invite(host, invitationRequest);
+        CategoryInvitationCreateResponses results = invitationService.invite(host, invitationRequest);
 
         // then
         assertAll(
@@ -167,7 +167,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         invitationService.invite(host, invitationRequest);
 
         // when
-        InvitationResultResponses results = invitationService.invite(host, invitationRequest);
+        CategoryInvitationCreateResponses results = invitationService.invite(host, invitationRequest);
 
         // then
         assertAll(
@@ -196,12 +196,12 @@ class InvitationServiceTest extends ServiceSliceTest {
         );
 
         // when
-        InvitationResultResponses resultResponses = invitationService.invite(host, invitationRequest);
+        CategoryInvitationCreateResponses resultResponses = invitationService.invite(host, invitationRequest);
 
         // then
-        InvitationResultResponse guestResult = findResult(resultResponses, guest.getId());
-        InvitationResultResponse guest2Result = findResult(resultResponses, guest2.getId());
-        InvitationResultResponse guest3Result = findResult(resultResponses, guest3.getId());
+        CategoryInvitationCreateResponse guestResult = findResult(resultResponses, guest.getId());
+        CategoryInvitationCreateResponse guest2Result = findResult(resultResponses, guest2.getId());
+        CategoryInvitationCreateResponse guest3Result = findResult(resultResponses, guest3.getId());
 
         assertAll(
                 () -> assertThat(resultResponses.invitationResults()).hasSize(3),
@@ -218,7 +218,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         );
     }
 
-    private InvitationResultResponse findResult(InvitationResultResponses responses, Long inviteeId) {
+    private CategoryInvitationCreateResponse findResult(CategoryInvitationCreateResponses responses, Long inviteeId) {
         return responses.invitationResults().stream()
                 .filter(r -> r.inviteeId().equals(inviteeId))
                 .findFirst()
