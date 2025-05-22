@@ -134,10 +134,15 @@ private fun InviteeNicknameWithCategoryTitlePreview() {
 @Composable
 private fun SentInvitationItemPreview(
     @PreviewParameter(
-        provider = CategoryPreviewProvider::class,
+        provider = SentInvitationPreviewProvider::class,
     ) categoryInvitation: SentInvitationUiModel,
 ) {
     Box(modifier = Modifier.padding(10.dp)) {
         SentInvitationItem(categoryInvitation = categoryInvitation) {}
     }
+}
+
+class SentInvitationPreviewProvider : PreviewParameterProvider<SentInvitationUiModel> {
+    override val values: Sequence<SentInvitationUiModel>
+        get() = dummySentInvitationUiModels.asSequence()
 }
