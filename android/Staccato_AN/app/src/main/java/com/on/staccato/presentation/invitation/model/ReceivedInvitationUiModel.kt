@@ -29,7 +29,7 @@ val dummyReceivedInvitationUiModels = listOf(
     ),
     ReceivedInvitationUiModel(
         categoryId = 3L,
-        categoryTitle = "빙빙의 예카 모음집",
+        categoryTitle = "클라이밍 도전기 클라이밍 도전기 클라이밍 도전기",
         inviterId = 3L,
         inviterNickname = "빙티",
     ),

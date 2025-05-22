@@ -16,6 +16,12 @@ val dummySentInvitationUiModels = listOf(
         inviteeNickname = "호두",
     ),
     SentInvitationUiModel(
+        categoryId = 2L,
+        categoryTitle = "퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁",
+        inviteeId = 100L,
+        inviteeNickname = "사후르",
+    ),
+    SentInvitationUiModel(
         categoryId = 1L,
         categoryTitle = "우당탕탕 스타카토 개발기",
         inviteeId = 1L,
