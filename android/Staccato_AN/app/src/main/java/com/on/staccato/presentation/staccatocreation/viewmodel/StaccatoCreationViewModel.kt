@@ -122,8 +122,8 @@ class StaccatoCreationViewModel
             }
         }
 
-        override fun onRetryClicked(deletedPhoto: AttachedPhotoUiModel) {
-            _pendingPhotos.postValue(listOf(deletedPhoto))
+        override fun onRetryClicked(retryPhoto: AttachedPhotoUiModel) {
+            _pendingPhotos.postValue(listOf(retryPhoto))
         }
 
         fun getCurrentLocation() {

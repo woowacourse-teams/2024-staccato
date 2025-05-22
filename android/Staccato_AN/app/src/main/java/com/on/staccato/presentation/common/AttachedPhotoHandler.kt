@@ -7,5 +7,5 @@ interface AttachedPhotoHandler {
 
     fun onAddClicked()
 
-    fun onRetryClicked(deletedPhoto: AttachedPhotoUiModel)
+    fun onRetryClicked(retryPhoto: AttachedPhotoUiModel)
 }
