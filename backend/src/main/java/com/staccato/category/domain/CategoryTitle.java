@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @EqualsAndHashCode
 public class CategoryTitle {
-    public static final int COLUMN_MAX_LENGTH = 50;
+    private static final int COLUMN_MAX_LENGTH = 50;
     private static final int TITLE_MAX_LENGTH = 30;
 
     @Column(nullable = false, length = COLUMN_MAX_LENGTH)
