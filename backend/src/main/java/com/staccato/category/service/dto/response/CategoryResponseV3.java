@@ -36,7 +36,7 @@ public record CategoryResponseV3(
         this(
                 category.getId(),
                 category.getThumbnailUrl(),
-                category.getTitle(),
+                category.getTitle().getTitle(),
                 category.getColor().getName(),
                 category.getTerm().getStartAt(),
                 category.getTerm().getEndAt(),

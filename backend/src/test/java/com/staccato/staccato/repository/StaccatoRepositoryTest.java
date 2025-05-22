@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
@@ -82,7 +81,8 @@ class StaccatoRepositoryTest extends RepositoryTest {
             @Test
             void findAllStaccatoByMemberWithoutAnyCondition() {
                 // given
-                Member anotherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+                Member anotherMember = MemberFixtures.defaultMember().withNickname("otherMem")
+                        .buildAndSave(memberRepository);
                 Category anotherCategory = CategoryFixtures.defaultCategory()
                         .withHost(anotherMember)
                         .buildAndSave(categoryRepository);
