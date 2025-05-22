@@ -156,6 +156,17 @@ public class CategoryService {
         validateOwner(category, member);
     }
 
+    private void deleteAllRelatedCategory(long categoryId) {
+        List<Long> staccatoIds = staccatoRepository.findAllByCategoryId(categoryId)
+                .stream()
+                .map(Staccato::getId)
+                .toList();
+        staccatoImageRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
+        commentRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
+        staccatoRepository.deleteAllByCategoryIdInBulk(categoryId);
+        categoryMemberRepository.deleteAllByCategoryIdInBulk(categoryId);
+    }
+
     private void validateModificationPermission(Category category, Member member) {
         validateOwner(category, member);
         validateHost(category, member);
@@ -171,16 +182,5 @@ public class CategoryService {
         if (category.isGuest(member)) {
             throw new ForbiddenException();
         }
-    }
-
-    private void deleteAllRelatedCategory(long categoryId) {
-        List<Long> staccatoIds = staccatoRepository.findAllByCategoryId(categoryId)
-                .stream()
-                .map(Staccato::getId)
-                .toList();
-        staccatoImageRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
-        commentRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
-        staccatoRepository.deleteAllByCategoryIdInBulk(categoryId);
-        categoryMemberRepository.deleteAllByCategoryIdInBulk(categoryId);
     }
 }

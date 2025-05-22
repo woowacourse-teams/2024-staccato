@@ -28,6 +28,7 @@ public class SwaggerExamples {
     public static final String SHARE_LINK = "https://staccato.kr/share/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
     public static final String CATEGORY_COLOR = "PINK";
     public static final String CATEGORY_ROLE = "host";
+    public static final String MEMBER_IDS = "[1, 2, 3]";
     public static final String STACCATO_COUNT = "42";
     public static final String CATEGORY_IS_SHARED = "false";
     public static final String CATEGORY_MEMBER_COUNT = "11";

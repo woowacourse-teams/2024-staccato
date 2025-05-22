@@ -2,6 +2,7 @@ package com.staccato.category.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,7 @@ import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.fixture.staccato.StaccatoRequestFixtures;
+import com.staccato.invitation.service.InvitationService;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
@@ -54,6 +56,8 @@ class CategoryServiceTest extends ServiceSliceTest {
     private CategoryService categoryService;
     @Autowired
     private StaccatoService staccatoService;
+    @Autowired
+    private InvitationService invitationService;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -228,7 +232,6 @@ class CategoryServiceTest extends ServiceSliceTest {
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), host);
-        // TODO: 함께하는 사람 추가 서비스 메서드로 교체?
         Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
         categoryMemberRepository.save(CategoryMember.builder().category(category).member(guest).role(Role.GUEST)
                 .build());
@@ -538,7 +541,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("카테고리를 삭제하면 속한 스타카토, 댓글, 함께하는 사람들도 함께 삭제된다.")
+    @DisplayName("HOST가 카테고리를 삭제하면 속한 스타카토, 댓글, 함께하는 사람들도 함께 삭제된다.")
     @Test
     void deleteCategoryWithStaccato() {
         // given
@@ -602,7 +605,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .withGuests(member)
+                .withGuests(List.of(member))
                 .buildAndSave(categoryRepository);
         CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest()
                 .build();
@@ -619,7 +622,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .withGuests(member)
+                .withGuests(List.of(member))
                 .buildAndSave(categoryRepository);
 
         // when & then
@@ -634,7 +637,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .withGuests(member)
+                .withGuests(List.of(member))
                 .buildAndSave(categoryRepository);
         CategoryColorRequest categoryColorRequest = new CategoryColorRequest(Color.BLUE.getName());
 
@@ -652,7 +655,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(host)
-                .withGuests(guest)
+                .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
 
         // when

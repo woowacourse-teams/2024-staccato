@@ -176,9 +176,7 @@ class CategoryControllerV3Test extends ControllerTest {
         Member host = MemberFixtures.defaultMember().withNickname("host").build();
         Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
         when(authService.extractFromToken(anyString())).thenReturn(host);
-        Category category = CategoryFixtures.defaultCategory()
-                .withHost(host)
-                .withGuests(guest).build();
+        Category category = CategoryFixtures.defaultCategory().withHost(host).withGuests(List.of(guest)).build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
@@ -289,7 +287,7 @@ class CategoryControllerV3Test extends ControllerTest {
         Category categoryWithTerm = CategoryFixtures.defaultCategory()
                 .withColor(Color.PINK)
                 .withHost(host)
-                .withGuests(guest, guest2, guest3)
+                .withGuests(List.of(guest, guest2, guest3))
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
         Category categoryWithoutTerm = CategoryFixtures.defaultCategory()

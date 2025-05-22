@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -104,13 +105,15 @@ public class Category extends BaseEntity {
         categoryMembers.add(categoryMember);
     }
 
-    public void addGuest(Member member) {
-        CategoryMember categoryMember = CategoryMember.builder()
-                .category(this)
-                .member(member)
-                .role(Role.GUEST)
-                .build();
-        categoryMembers.add(categoryMember);
+    public void addGuests(List<Member> members) {
+        members.forEach(member -> {
+            CategoryMember categoryMember = CategoryMember.builder()
+                    .category(this)
+                    .member(member)
+                    .role(Role.GUEST)
+                    .build();
+            categoryMembers.add(categoryMember);
+        });
     }
 
     public void update(Category updatedCategory, List<Staccato> staccatos) {
