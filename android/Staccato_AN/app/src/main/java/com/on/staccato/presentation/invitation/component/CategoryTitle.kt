@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import com.on.staccato.theme.StaccatoBlack
 import com.on.staccato.theme.Title3
@@ -21,6 +22,7 @@ fun CategoryTitle(
         modifier = modifier,
         style = style,
         color = color,
+        fontWeight = FontWeight.SemiBold,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
     )
