@@ -122,7 +122,7 @@ fun TimelineItem(
         )
 
         if (category.isShared) {
-            Members(
+            Participants(
                 modifier =
                     Modifier.constrainAs(participants) {
                         start.linkTo(firstSpacer.end)
@@ -130,7 +130,7 @@ fun TimelineItem(
                         bottom.linkTo(parent.bottom)
                     },
                 participants = category.participants,
-                hiddenMembersCount = 3,
+                hiddenParticipantsCount = 3,
                 colorLabel = category.color.label,
             )
         }

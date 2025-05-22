@@ -21,7 +21,7 @@ import com.on.staccato.theme.Body6
 import com.on.staccato.theme.White
 
 @Composable
-fun HiddenMembersCountItem(
+fun HiddenParticipantsCountItem(
     count: Int,
     colorLabel: String,
 ) {
@@ -44,11 +44,11 @@ fun HiddenMembersCountItem(
 
 @Preview
 @Composable
-private fun HiddenMembersCountPreview(
+private fun HiddenParticipantsCountPreview(
     @PreviewParameter(HiddenMembersCountPreviewParameterProvider::class)
     count: Int,
 ) {
-    HiddenMembersCountItem(
+    HiddenParticipantsCountItem(
         count = count,
         colorLabel = CategoryColor.GRAY.label,
     )

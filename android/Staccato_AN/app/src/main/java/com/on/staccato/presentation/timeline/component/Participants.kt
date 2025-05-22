@@ -14,10 +14,10 @@ import com.on.staccato.domain.model.dummyMembers
 import com.on.staccato.presentation.common.color.CategoryColor
 
 @Composable
-fun Members(
+fun Participants(
     modifier: Modifier = Modifier,
     participants: List<Member>,
-    hiddenMembersCount: Int,
+    hiddenParticipantsCount: Int,
     colorLabel: String,
 ) {
     LazyRow(
@@ -27,21 +27,21 @@ fun Members(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         items(participants) { participant ->
-            MemberItem(memberImageUrl = participant.memberImage)
+            ParticipantItem(profileImageUrl = participant.memberImage)
         }
 
         item {
-            HiddenMembersCountItem(hiddenMembersCount, colorLabel = colorLabel)
+            HiddenParticipantsCountItem(hiddenParticipantsCount, colorLabel = colorLabel)
         }
     }
 }
 
 @Preview
 @Composable
-private fun MembersPreview() {
-    Members(
+private fun ParticipantsPreview() {
+    Participants(
         participants = dummyMembers,
-        hiddenMembersCount = 3,
+        hiddenParticipantsCount = 3,
         colorLabel = CategoryColor.GRAY.label,
     )
 }

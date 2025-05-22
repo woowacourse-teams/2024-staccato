@@ -13,7 +13,7 @@ import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.theme.White
 
 @Composable
-fun MemberItem(memberImageUrl: String? = null) {
+fun ParticipantItem(profileImageUrl: String? = null) {
     DefaultAsyncImage(
         modifier =
             Modifier
@@ -21,7 +21,7 @@ fun MemberItem(memberImageUrl: String? = null) {
                 .border(width = 1.dp, color = White, shape = CircleShape)
                 .size(25.dp),
         bitmapPixelSize = 150,
-        url = memberImageUrl,
+        url = profileImageUrl,
         placeHolder = R.drawable.icon_member,
         contentDescription = R.string.mates_profile_image_description,
     )
@@ -29,8 +29,8 @@ fun MemberItem(memberImageUrl: String? = null) {
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-private fun MemberItemPreview() {
-    MemberItem(
-        memberImageUrl = "https://avatars.githubusercontent.com/u/103019852?v=4",
+private fun ParticipantItemPreview() {
+    ParticipantItem(
+        profileImageUrl = "https://avatars.githubusercontent.com/u/103019852?v=4",
     )
 }
