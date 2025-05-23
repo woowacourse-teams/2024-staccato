@@ -90,7 +90,7 @@ public class CategoryInvitation extends BaseEntity {
 
     private void validateReject(InvitationStatus status) {
         if (status.isCanceled() || status.isAccepted()) {
-            throw new StaccatoException("이미 상대가 취소/수락한 초대 요청은 수락할 수 없어요.");
+            throw new StaccatoException("이미 상대가 취소/수락한 초대 요청은 거절할 수 없어요.");
         }
     }
 }
