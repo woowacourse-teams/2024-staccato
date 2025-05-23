@@ -8,6 +8,14 @@ data class SentInvitationUiModel(
     val inviteeProfileImageUrl: String? = null,
 )
 
+private val dummySentInvitationUiModel =
+    SentInvitationUiModel(
+        categoryId = 1L,
+        categoryTitle = "우당탕탕 스타카토 개발기",
+        inviteeId = 0L,
+        inviteeNickname = "초대 받은 사용자",
+    )
+
 val dummySentInvitationUiModels = listOf(
     SentInvitationUiModel(
         categoryId = 0L,
@@ -21,40 +29,48 @@ val dummySentInvitationUiModels = listOf(
         inviteeId = 100L,
         inviteeNickname = "사후르",
     ),
-    SentInvitationUiModel(
-        categoryId = 1L,
-        categoryTitle = "우당탕탕 스타카토 개발기",
+    dummySentInvitationUiModel.copy(
         inviteeId = 1L,
-        inviteeNickname = "리니",
+        inviteeNickname = "리니"
     ),
-    SentInvitationUiModel(
-        categoryId = 1L,
-        categoryTitle = "우당탕탕 스타카토 개발기",
+    dummySentInvitationUiModel.copy(
         inviteeId = 3L,
         inviteeNickname = "해나",
     ),
-    SentInvitationUiModel(
-        categoryId = 1L,
-        categoryTitle = "우당탕탕 스타카토 개발기",
+    dummySentInvitationUiModel.copy(
         inviteeId = 4L,
         inviteeNickname = "폭포",
     ),
-    SentInvitationUiModel(
-        categoryId = 1L,
-        categoryTitle = "우당탕탕 스타카토 개발기",
+    dummySentInvitationUiModel.copy(
         inviteeId = 2L,
         inviteeNickname = "빙티",
     ),
-    SentInvitationUiModel(
-        categoryId = 1L,
-        categoryTitle = "우당탕탕 스타카토 개발기",
+    dummySentInvitationUiModel.copy(
         inviteeId = 5L,
         inviteeNickname = "호티",
     ),
-    SentInvitationUiModel(
-        categoryId = 1L,
-        categoryTitle = "우당탕탕 스타카토 개발기",
+    dummySentInvitationUiModel.copy(
         inviteeId = 6L,
         inviteeNickname = "카고",
+    ),
+    dummySentInvitationUiModel.copy(
+        inviteeId = 7L,
+        inviteeNickname = "줄리",
+    ),
+    dummySentInvitationUiModel.copy(
+        inviteeId = 8L,
+        inviteeNickname = "루엘",
+    ),
+    dummySentInvitationUiModel.copy(
+        inviteeId = 9L,
+        inviteeNickname = "규니",
+    ),
+    dummySentInvitationUiModel.copy(
+        inviteeId = 10L,
+        inviteeNickname = "케영",
+    ),
+    dummySentInvitationUiModel.copy(
+        inviteeId = 11L,
+        inviteeNickname = "영미",
     ),
 )
