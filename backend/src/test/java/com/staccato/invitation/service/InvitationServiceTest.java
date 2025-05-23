@@ -252,7 +252,7 @@ class InvitationServiceTest extends ServiceSliceTest {
                 .getStatus()).isEqualTo(InvitationStatus.ACCEPTED);
     }
 
-    @DisplayName("초대 요청을 받은 사용자가 아닌 다른 사용자가 초대 요청을 수락하면 예외가 발생한다.")
+    @DisplayName("초대 요청을 받은 사용자가 아닌 다른 사용자(ex.HOST)가 초대 요청을 수락하면 예외가 발생한다.")
     @Test
     void failToAcceptIfNotInvitee() {
         // given
@@ -315,5 +315,43 @@ class InvitationServiceTest extends ServiceSliceTest {
 
         // when & then
         assertThatNoException().isThrownBy(() -> invitationService.accept(guest, invitation.getId()));
+    }
+
+    @DisplayName("invitee는 본인이 받은 초대 요청을 거절할 수 있다.")
+    @Test
+    void rejectInvitation() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when
+        invitationService.reject(guest, invitation.getId());
+
+        // then
+        assertThat(categoryInvitationRepository.findById(invitation.getId()).get()
+                .getStatus()).isEqualTo(InvitationStatus.REJECTED);
+    }
+
+    @DisplayName("초대 요청을 받은 사용자가 아닌 다른 사용자(ex.HOST)가 초대 요청을 거절하면 예외가 발생한다.")
+    @Test
+    void failToRejectIfNotInvitee() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when & then
+        assertThatThrownBy(() -> invitationService.reject(host, invitation.getId()))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("존재하지 않는 초대 요청을 거절하면 예외가 발생한다.")
+    @Test
+    void failToRejectIfNotExists() {
+        // given
+        long unknownId = 0;
+
+        // then
+        assertThatThrownBy(() -> invitationService.reject(host, unknownId))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("요청하신 초대 정보를 찾을 수 없어요.");
     }
 }

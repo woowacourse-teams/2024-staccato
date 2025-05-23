@@ -101,11 +101,11 @@ public class InvitationService {
     @Transactional
     public void cancel(Member inviter, long invitationId) {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        validateCancelPermission(invitation, inviter);
+        validateInviterIdentity(invitation, inviter);
         invitation.cancel();
     }
 
-    private void validateCancelPermission(CategoryInvitation invitation, Member inviter) {
+    private void validateInviterIdentity(CategoryInvitation invitation, Member inviter) {
         if (invitation.isNotInviter(inviter)) {
             throw new ForbiddenException();
         }
@@ -114,7 +114,7 @@ public class InvitationService {
     @Transactional
     public void accept(Member invitee, long invitationId) {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        validateAcceptPermission(invitation, invitee);
+        validateInviteeIdentity(invitation, invitee);
         invitation.accept();
 
         Category category = invitation.getCategory();
@@ -123,21 +123,25 @@ public class InvitationService {
         }
     }
 
+    private boolean isInviteeNotInCategory(Member invitee, Category category) {
+        return !categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), invitee.getId());
+    }
+
+    @Transactional
+    public void reject(Member invitee, long invitationId) {
+        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
+        validateInviteeIdentity(invitation, invitee);
+        invitation.reject();
+    }
+
     private CategoryInvitation getCategoryInvitationById(long invitationId) {
         return categoryInvitationRepository.findById(invitationId)
                 .orElseThrow(() -> new StaccatoException("요청하신 초대 정보를 찾을 수 없어요."));
     }
 
-    private void validateAcceptPermission(CategoryInvitation invitation, Member invitee) {
+    private void validateInviteeIdentity(CategoryInvitation invitation, Member invitee) {
         if (invitation.isNotInvitee(invitee)) {
             throw new ForbiddenException();
         }
-    }
-
-    private boolean isInviteeNotInCategory(Member invitee, Category category) {
-        return !categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), invitee.getId());
-    }
-
-    public void reject(Member member, long invitationId) {
     }
 }

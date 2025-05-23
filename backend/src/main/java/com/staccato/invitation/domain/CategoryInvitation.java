@@ -84,6 +84,13 @@ public class CategoryInvitation extends BaseEntity {
     }
 
     public void reject() {
+        validateReject(status);
         status = InvitationStatus.REJECTED;
+    }
+
+    private void validateReject(InvitationStatus status) {
+        if (status.isCanceled() || status.isAccepted()) {
+            throw new StaccatoException("이미 상대가 취소/수락한 초대 요청은 수락할 수 없어요.");
+        }
     }
 }
