@@ -19,4 +19,14 @@ public interface CategoryInvitationRepository extends JpaRepository<CategoryInvi
     List<CategoryInvitation> findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(@Param("inviterId") long inviterId);
 
     boolean existsByCategoryIdAndInviterIdAndInviteeIdAndStatus(long categoryId, long inviterId, long inviteeId, InvitationStatus status);
+
+    @Query("""
+            SELECT ci
+            from CategoryInvitation ci
+            join fetch ci.category
+            join fetch ci.inviter
+            where ci.invitee.id = :inviteeId
+            ORDER BY ci.createdAt DESC
+            """)
+    List<CategoryInvitation> findAllWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(@Param("inviteeId") long inviteeId);
 }

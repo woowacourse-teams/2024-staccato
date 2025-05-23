@@ -146,7 +146,8 @@ public class InvitationService {
         }
     }
 
-    public CategoryInvitationReceivedResponses readReceivedInvitations(Member member) {
-        return null;
+    public CategoryInvitationReceivedResponses readReceivedInvitations(Member invitee) {
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(invitee.getId());
+        return CategoryInvitationReceivedResponses.from(invitations);
     }
 }

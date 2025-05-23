@@ -28,6 +28,8 @@ import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.response.CategoryInvitationReceivedResponse;
+import com.staccato.invitation.service.dto.response.CategoryInvitationReceivedResponses;
 import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponse;
 import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponses;
 import com.staccato.member.domain.Member;
@@ -179,9 +181,9 @@ class InvitationServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("초대 요청 목록을 조회하면, 최근에 요청을 보낸 사용자 순으로 보여준다.")
+    @DisplayName("초대 요청 보낸 목록을 조회하면, 최근에 보낸 요청 순서대로 보여준다.")
     @Test
-    void readAllInvitationRequested() {
+    void readAllSentInvitations() {
         // given
         Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
         CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
@@ -353,5 +355,26 @@ class InvitationServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> invitationService.reject(host, unknownId))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 초대 정보를 찾을 수 없어요.");
+    }
+
+    @DisplayName("초대 요청 받은 목록을 조회하면, 최근에 받은 요청 순서대로 보여준다.")
+    @Test
+    void readAllReceivedInvitations() {
+        // given
+        Member host2 = MemberFixtures.defaultMember().withNickname("host2").buildAndSave(memberRepository);
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+        CategoryInvitation invitation2 = categoryInvitationRepository.save(CategoryInvitation.invite(category, host2, guest));
+
+        // when
+        CategoryInvitationReceivedResponses responses = invitationService.readReceivedInvitations(guest);
+
+        // then
+        assertAll(
+                () -> assertThat(responses.invitations()).hasSize(2),
+                () -> assertThat(responses.invitations()).containsExactly(
+                        new CategoryInvitationReceivedResponse(invitation2),
+                        new CategoryInvitationReceivedResponse(invitation)
+                )
+        );
     }
 }
