@@ -43,7 +43,7 @@ public interface InvitationControllerDocs {
             @ApiResponse(description = """
                     <발생 가능한 케이스>
                     
-                    (1) 취소하려는 초대 존재하지 않을 때
+                    (1) 취소하려는 초대가 존재하지 않을 때
                     
                     (2) Path Variable 형식이 잘못되었을 때
                     

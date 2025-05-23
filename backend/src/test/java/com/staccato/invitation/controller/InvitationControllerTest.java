@@ -88,9 +88,9 @@ class InvitationControllerTest extends ControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("사용자가 잘못된 초대 식별자로 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("사용자가 잘못된 초대 식별자로 취소하려고 하면 예외가 발생한다.")
     @Test
-    void cannotDeleteCategoryByInvalidId() throws Exception {
+    void cannotCancelInvitationByInvalidId() throws Exception {
         // given
         long invalidId = 0;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "초대 식별자는 양수로 이루어져야 합니다.");
