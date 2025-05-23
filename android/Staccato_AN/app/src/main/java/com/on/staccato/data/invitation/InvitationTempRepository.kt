@@ -6,13 +6,11 @@ import com.on.staccato.domain.model.Member
 import com.on.staccato.domain.model.invitation.ReceivedInvitation
 import com.on.staccato.domain.model.invitation.SentInvitation
 import com.on.staccato.domain.repository.InvitationRepository
+import javax.inject.Inject
 
-class InvitationTempRepository(
-    private val receivedInvitations: List<ReceivedInvitation> = dummyReceivedInvitations,
-    private val sentInvitations: List<SentInvitation> = dummySentInvitations,
-): InvitationRepository {
-    override fun getReceivedInvitations(): ApiResult<List<ReceivedInvitation>> = Success(receivedInvitations)
-    override fun getSentInvitations(): ApiResult<List<SentInvitation>> = Success(sentInvitations)
+class InvitationTempRepository @Inject constructor(): InvitationRepository {
+    override fun getReceivedInvitations(): ApiResult<List<ReceivedInvitation>> = Success(dummyReceivedInvitations)
+    override fun getSentInvitations(): ApiResult<List<SentInvitation>> = Success(dummySentInvitations)
 }
 
 private val dummyReceivedInvitations =
