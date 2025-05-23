@@ -2,8 +2,10 @@ package com.staccato.invitation.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
@@ -18,6 +20,7 @@ import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResp
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -113,8 +116,11 @@ public class InvitationService {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
         validateAcceptPermission(invitation, invitee);
         invitation.accept();
+
         Category category = invitation.getCategory();
-        category.addGuests(List.of(invitation.getInvitee()));
+        if (isInviteeNotInCategory(invitee, category)) {
+            category.addGuests(List.of(invitation.getInvitee()));
+        }
     }
 
     private CategoryInvitation getCategoryInvitationById(long invitationId) {
@@ -126,5 +132,9 @@ public class InvitationService {
         if (invitation.isNotInvitee(invitee)) {
             throw new ForbiddenException();
         }
+    }
+
+    private boolean isInviteeNotInCategory(Member invitee, Category category) {
+        return !categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), invitee.getId());
     }
 }

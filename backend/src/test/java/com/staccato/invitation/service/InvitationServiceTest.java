@@ -1,6 +1,7 @@
 package com.staccato.invitation.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -21,6 +22,7 @@ import com.staccato.category.repository.CategoryRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.category.CategoryMemberFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
@@ -287,5 +289,31 @@ class InvitationServiceTest extends ServiceSliceTest {
         boolean isGuestSavedInCategory = categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), guest.getId());
 
         assertThat(isGuestSavedInCategory).isTrue();
+    }
+
+    @DisplayName("이미 멤버인 경우에도 accept는 예외를 던지지 않는다.")
+    @Test
+    void acceptDoesNotThrowWhenMemberAlreadyInCategory() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withCategory(category)
+                .withMember(guest)
+                .buildAndSave(categoryMemberRepository);
+
+        // when & then
+        assertThatNoException().isThrownBy(() -> invitationService.accept(guest, invitation.getId()));
+    }
+
+    @DisplayName("이미 수락된 초대를 다시 수락해도 예외가 발생하지 않는다.")
+    @Test
+    void acceptDoesNotThrowWhenInvitationAlreadyAccepted() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        invitationService.accept(guest, invitation.getId());
+
+        // when & then
+        assertThatNoException().isThrownBy(() -> invitationService.accept(guest, invitation.getId()));
     }
 }
