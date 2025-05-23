@@ -81,4 +81,23 @@ public interface InvitationControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "초대 ID", example = "1") @Min(value = 1L, message = "초대 식별자는 양수로 이루어져야 합니다.") long invitationId
     );
+
+    @Operation(summary = "초대 요청 거절", description = "사용자의 초대 요청을 거절합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "초대 거절 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                    
+                    (1) 거절하려는 초대가 존재하지 않을 때
+                    
+                    (2) Path Variable 형식이 잘못되었을 때
+                    
+                    (3) 이미 취소/수락된 초대 요청일 때
+                    """,
+                    responseCode = "400")
+    })
+    ResponseEntity<Void> rejectInvitation(
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "초대 ID", example = "1") @Min(value = 1L, message = "초대 식별자는 양수로 이루어져야 합니다.") long invitationId
+    );
 }

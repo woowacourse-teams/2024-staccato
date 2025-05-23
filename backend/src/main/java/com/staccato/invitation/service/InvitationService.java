@@ -137,4 +137,7 @@ public class InvitationService {
     private boolean isInviteeNotInCategory(Member invitee, Category category) {
         return !categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), invitee.getId());
     }
+
+    public void reject(Member member, long invitationId) {
+    }
 }
