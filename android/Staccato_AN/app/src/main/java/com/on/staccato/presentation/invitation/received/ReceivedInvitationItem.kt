@@ -4,9 +4,9 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,7 +21,9 @@ import com.on.staccato.presentation.invitation.component.NicknameText
 import com.on.staccato.presentation.invitation.component.ProfileImage
 import com.on.staccato.presentation.invitation.model.ReceivedInvitationUiModel
 import com.on.staccato.presentation.invitation.model.dummyReceivedInvitationUiModels
+import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray2
+import com.on.staccato.theme.Gray5
 import com.on.staccato.theme.StaccatoBlack
 import com.on.staccato.theme.StaccatoBlue
 import com.on.staccato.theme.White
@@ -35,54 +37,65 @@ fun ReceivedInvitationItem(
 ) {
     ConstraintLayout(
         modifier = modifier
-            .height(80.dp)
             .fillMaxWidth()
             .background(
                 color = White,
             ),
     ) {
-        val (categoryTitle, profileImage, inviterNickname, rejectButton, acceptButton) = createRefs()
+        val (profileImage, inviterNickname, guideText, categoryTitle, rejectButton, acceptButton) = createRefs()
+
+        ProfileImage(
+            modifier = modifier
+                .size(16.dp)
+                .constrainAs(profileImage) {
+                    start.linkTo(parent.start, margin = 22.dp)
+                    centerVerticallyTo(inviterNickname)
+                },
+            url = categoryInvitation.inviterProfileImageUrl,
+        )
+
+        NicknameText(
+            nickname = categoryInvitation.inviterNickname,
+            modifier = modifier.constrainAs(inviterNickname) {
+                start.linkTo(profileImage.end, margin = 4.dp)
+                top.linkTo(parent.top, margin = 16.dp)
+            },
+        )
 
         CategoryTitle(
             modifier = modifier.constrainAs(categoryTitle) {
-                top.linkTo(parent.top, margin = 19.dp)
-                start.linkTo(parent.start, margin = 22.dp)
-                end.linkTo(rejectButton.start, margin = 16.dp)
+                top.linkTo(profileImage.bottom, margin = 8.dp)
+                start.linkTo(profileImage.start)
+                end.linkTo(parent.end, margin = 32.dp)
                 width = Dimension.fillToConstraints
             },
             title = categoryInvitation.categoryTitle,
         )
 
-        ProfileImage(
-            modifier = modifier
-                .size(20.dp)
-                .constrainAs(profileImage) {
-                    top.linkTo(categoryTitle.bottom, margin = 5.dp)
-                    start.linkTo(categoryTitle.start)
-                },
-            url = categoryInvitation.inviterProfileImageUrl,
-        )
-
-
-        NicknameText(
-            nickname = categoryInvitation.inviterNickname,
-            modifier = modifier.constrainAs(inviterNickname) {
-                centerVerticallyTo(profileImage)
-                start.linkTo(profileImage.end, margin = 8.dp)
-            },
+        Text(
+            text = "님이 카테고리에 초대했어요.",
+            modifier = modifier.constrainAs(guideText) {
+                start.linkTo(inviterNickname.end)
+                centerVerticallyTo(inviterNickname)
+                width = Dimension.wrapContent
+            } ,
+            style = Body4,
+            color = Gray5,
         )
 
         RejectButton(
             modifier = modifier.constrainAs(rejectButton) {
-                centerVerticallyTo(parent)
+                bottom.linkTo(parent.bottom, margin = 16.dp)
                 end.linkTo(acceptButton.start, margin = 4.dp)
             },
             onClick = onRejectClick,
         )
+
         AcceptButton(
             modifier = modifier.constrainAs(acceptButton) {
-                centerVerticallyTo(parent)
-                end.linkTo(parent.end, margin = 20.dp)
+                top.linkTo(categoryTitle.bottom, margin = 8.dp)
+                bottom.linkTo(parent.bottom, margin = 16.dp)
+                end.linkTo(parent.end, margin = 22.dp)
             },
             onClick = onAcceptClick,
         )
