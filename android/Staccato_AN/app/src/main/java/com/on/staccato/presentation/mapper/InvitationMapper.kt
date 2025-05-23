@@ -7,18 +7,20 @@ import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
 
 fun ReceivedInvitation.toUiModel(): ReceivedInvitationUiModel =
     ReceivedInvitationUiModel(
-        categoryId = categoryId,
-        categoryTitle = categoryTitle,
+        invitationId = invitationId,
         inviterId = inviter.memberId,
         inviterNickname = inviter.nickname,
         inviterProfileImageUrl = inviter.memberImage,
+        categoryId = categoryId,
+        categoryTitle = categoryTitle,
     )
 
 fun SentInvitation.toUiModel(): SentInvitationUiModel =
     SentInvitationUiModel(
-        categoryId = categoryId,
-        categoryTitle = categoryTitle,
+        invitationId = invitationId,
         inviteeId = invitee.memberId,
         inviteeNickname = invitee.nickname,
         inviteeProfileImageUrl = invitee.memberImage,
+        categoryId = categoryId,
+        categoryTitle = categoryTitle,
     )

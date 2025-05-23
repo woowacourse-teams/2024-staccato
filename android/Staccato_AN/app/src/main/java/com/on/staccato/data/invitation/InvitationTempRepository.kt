@@ -15,28 +15,28 @@ class InvitationTempRepository @Inject constructor(): InvitationRepository {
 
 private val dummyReceivedInvitations =
     listOf(
-        ReceivedInvitation(0L, "호두의 대구 나들이", Member(100L, "호두", null)),
-        ReceivedInvitation(1L, "호티의 한잔줍쇼", Member(101L, "호티", null)),
-        ReceivedInvitation(2L, "해나의 서울 맛집 탐방", Member(102L, "해나", null)),
-        ReceivedInvitation(3L, "클라이밍 갈 사람 여기여기 붙어라~~~~~~!!!!!!", Member(104L, "리니", null)),
-        ReceivedInvitation(4L, "빙티라미수케잌", Member(103L, "빙티", null)),
-        ReceivedInvitation(5L, "그럼 그냥 이거 하지 말자", Member(105L, "폭포", null)),
-        ReceivedInvitation(6L, "카ㅏㅏㅏㅏㅏㅏ고!!!", Member(106L, "카고", null)),
-        ReceivedInvitation(7L, "안줄리나 줄리야?", Member(107L, "줄리", null)),
-        ReceivedInvitation(8L, "디자인 그러케 하는거 아닌데영", Member(108L, "케영", null)),
-        ReceivedInvitation(9L, "영미!!!!!!!", Member(109L, "영미", null)),
+        ReceivedInvitation(0L, Member(100L, "호두", null), 0L, "호두의 대구 나들이"),
+        ReceivedInvitation(1L, Member(101L, "호티", null), 1L, "호티의 한잔줍쇼"),
+        ReceivedInvitation(2L, Member(102L, "해나", null), 2L, "해나의 서울 맛집 탐방"),
+        ReceivedInvitation(3L, Member(104L, "리니", null), 3L, "클라이밍 갈 사람 여기여기 붙어라~~~~~~!!!!!!"),
+        ReceivedInvitation(4L, Member(103L, "빙티", null), 4L, "빙티라미수케잌"),
+        ReceivedInvitation(5L, Member(105L, "폭포", null), 5L, "그럼 그냥 이거 하지 말자"),
+        ReceivedInvitation(6L, Member(106L, "카고", null), 6L, "카ㅏㅏㅏㅏㅏㅏ고!!!"),
+        ReceivedInvitation(7L, Member(107L, "줄리", null), 7L, "안줄리나 줄리야?"),
+        ReceivedInvitation(8L, Member(108L, "케영", null), 8L, "디자인 그러케 하는거 아닌데영"),
+        ReceivedInvitation(9L, Member(109L, "영미", null), 9L, "영미!!!!!!!"),
     )
 
 private val dummySentInvitations =
     listOf(
-        SentInvitation(3L, "클라이밍 갈 사람 여기여기 붙어라~~~~~~!!!!!!", Member(104L, "리니", null)),
-        SentInvitation(1L, "호티의 한잔줍쇼", Member(101L, "호티", null)),
-        SentInvitation(0L, "호두의 대구 나들이", Member(100L, "호두", null)),
-        SentInvitation(8L, "디자인 그러케 하는거 아닌데영", Member(108L, "케영", null)),
-        SentInvitation(5L, "그럼 그냥 이거 하지 말자", Member(105L, "폭포", null)),
-        SentInvitation(2L, "해나의 서울 맛집 탐방", Member(102L, "해나", null)),
-        SentInvitation(6L, "카ㅏㅏㅏㅏㅏㅏ고!!!", Member(106L, "카고", null)),
-        SentInvitation(4L, "빙티라미수케잌", Member(103L, "빙티", null)),
-        SentInvitation(9L, "영미!!!!!!!", Member(109L, "영미", null)),
-        SentInvitation(7L, "안줄리나 줄리야?", Member(107L, "줄리", null)),
+        SentInvitation(3L, Member(104L, "리니", null), 3L, "클라이밍 갈 사람 여기여기 붙어라~~~~~~!!!!!!"),
+        SentInvitation(1L, Member(101L, "호티", null), 1L, "호티의 한잔줍쇼"),
+        SentInvitation(0L, Member(100L, "호두", null), 0L, "호두의 대구 나들이"),
+        SentInvitation(8L, Member(108L, "케영", null), 8L, "디자인 그러케 하는거 아닌데영"),
+        SentInvitation(5L, Member(105L, "폭포", null), 5L, "그럼 그냥 이거 하지 말자"),
+        SentInvitation(2L, Member(102L, "해나", null), 2L, "해나의 서울 맛집 탐방"),
+        SentInvitation(6L, Member(106L, "카고", null), 6L, "카ㅏㅏㅏㅏㅏㅏ고!!!"),
+        SentInvitation(4L, Member(103L, "빙티", null), 4L, "빙티라미수케잌"),
+        SentInvitation(9L, Member(109L, "영미", null), 9L, "영미!!!!!!!"),
+        SentInvitation(7L, Member(107L, "줄리", null), 7L, "안줄리나 줄리야?"),
     )
