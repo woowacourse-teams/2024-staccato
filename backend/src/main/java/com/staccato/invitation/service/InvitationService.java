@@ -108,4 +108,7 @@ public class InvitationService {
             throw new ForbiddenException();
         }
     }
+
+    public void accept(Member member, long invitationId) {
+    }
 }

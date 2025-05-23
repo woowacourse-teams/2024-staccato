@@ -62,4 +62,23 @@ public interface InvitationControllerDocs {
     })
     public ResponseEntity<CategoryInvitationRequestedResponses> readRequestedInvitations(
             @Parameter(hidden = true) @LoginMember Member member);
+
+    @Operation(summary = "초대 요청 수락", description = "사용자의 초대 요청을 수락합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "초대 수락 성공", responseCode = "200"),
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                    
+                    (1) 수락하려는 초대가 존재하지 않을 때
+                    
+                    (2) Path Variable 형식이 잘못되었을 때
+                    
+                    (3) 이미 취소/거절된 초대 요청일 때
+                    """,
+                    responseCode = "400")
+    })
+    ResponseEntity<Void> acceptInvitation(
+            @Parameter(hidden = true) Member member,
+            @Parameter(description = "초대 ID", example = "1") @Min(value = 1L, message = "초대 식별자는 양수로 이루어져야 합니다.") long invitationId
+    );
 }

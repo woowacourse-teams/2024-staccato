@@ -144,4 +144,32 @@ class InvitationControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
     }
+
+    @DisplayName("초대 ID로 초대 요청을 수락한다.")
+    @Test
+    void accept() throws Exception {
+        // given
+        long invitationId = 1L;
+        Member member = MemberFixtures.defaultMember().build();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+
+        // when & then
+        mockMvc.perform(post("/invitations/{invitationId}/accept", invitationId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("사용자가 잘못된 초대 식별자로 수락하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotAcceptInvitationByInvalidId() throws Exception {
+        // given
+        long invalidId = 0;
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "초대 식별자는 양수로 이루어져야 합니다.");
+
+        // when & then
+        mockMvc.perform(post("/invitations/{invitationId}/cancel", invalidId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
 }

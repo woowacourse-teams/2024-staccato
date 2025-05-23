@@ -50,4 +50,13 @@ public class InvitationController implements InvitationControllerDocs {
 
         return ResponseEntity.ok(responses);
     }
+
+    @PostMapping("/{invitationId}/accept")
+    public ResponseEntity<Void> acceptInvitation(
+            @LoginMember Member member,
+            @Min(value = 1L, message = "초대 식별자는 양수로 이루어져야 합니다.") @PathVariable long invitationId
+    ) {
+        invitationService.accept(member, invitationId);
+        return ResponseEntity.ok().build();
+    }
 }
