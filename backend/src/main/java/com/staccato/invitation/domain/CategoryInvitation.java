@@ -53,8 +53,12 @@ public class CategoryInvitation extends BaseEntity {
         this.status = status;
     }
 
-    public boolean isNotBy(Member inviter) {
-        return !this.inviter.equals(inviter);
+    public boolean isNotInviter(Member member) {
+        return !this.inviter.equals(member);
+    }
+
+    public boolean isNotInvitee(Member member) {
+        return !this.invitee.equals(member);
     }
 
     public void cancel() {
@@ -69,7 +73,14 @@ public class CategoryInvitation extends BaseEntity {
     }
 
     public void accept() {
+        validateAccept(status);
         status = InvitationStatus.ACCEPTED;
+    }
+
+    private void validateAccept(InvitationStatus status) {
+        if (status.isCanceled() || status.isRejected()) {
+            throw new StaccatoException("이미 상대가 취소/거절한 초대 요청은 수락할 수 없어요.");
+        }
     }
 
     public void reject() {

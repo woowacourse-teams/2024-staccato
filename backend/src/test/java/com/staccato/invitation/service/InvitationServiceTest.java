@@ -230,4 +230,42 @@ class InvitationServiceTest extends ServiceSliceTest {
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 초대 정보를 찾을 수 없어요.");
     }
+
+    @DisplayName("invitee는 본인이 받은 초대 요청을 수락할 수 있다.")
+    @Test
+    void acceptInvitation() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when
+        invitationService.accept(guest, invitation.getId());
+
+        // then
+        assertThat(categoryInvitationRepository.findById(invitation.getId()).get()
+                .getStatus()).isEqualTo(InvitationStatus.ACCEPTED);
+    }
+
+    @DisplayName("초대 요청을 받은 사용자가 아닌 다른 사용자가 초대 요청을 수락하면 예외가 발생한다.")
+    @Test
+    void failToAcceptIfNotInvitee() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when & then
+        assertThatThrownBy(() -> invitationService.accept(host, invitation.getId()))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("존재하지 않는 초대 요청을 수락하면 예외가 발생한다.")
+    @Test
+    void failToAcceptIfNotExists() {
+        // given
+        long unknownId = 0;
+
+        // then
+        assertThatThrownBy(() -> invitationService.accept(host, unknownId))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("요청하신 초대 정보를 찾을 수 없어요.");
+    }
 }

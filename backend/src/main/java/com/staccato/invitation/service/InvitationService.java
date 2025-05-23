@@ -97,18 +97,33 @@ public class InvitationService {
 
     @Transactional
     public void cancel(Member inviter, long invitationId) {
-        CategoryInvitation invitation = categoryInvitationRepository.findById(invitationId)
-                .orElseThrow(() -> new StaccatoException("요청하신 초대 정보를 찾을 수 없어요."));
+        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
         validateCancelPermission(invitation, inviter);
         invitation.cancel();
     }
 
     private void validateCancelPermission(CategoryInvitation invitation, Member inviter) {
-        if (invitation.isNotBy(inviter)) {
+        if (invitation.isNotInviter(inviter)) {
             throw new ForbiddenException();
         }
     }
 
-    public void accept(Member member, long invitationId) {
+    @Transactional
+    public void accept(Member invitee, long invitationId) {
+        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
+        validateAcceptPermission(invitation, invitee);
+        invitation.accept();
+        // TODO: CategoryMember 추가
+    }
+
+    private CategoryInvitation getCategoryInvitationById(long invitationId) {
+        return categoryInvitationRepository.findById(invitationId)
+                .orElseThrow(() -> new StaccatoException("요청하신 초대 정보를 찾을 수 없어요."));
+    }
+
+    private void validateAcceptPermission(CategoryInvitation invitation, Member invitee) {
+        if (invitation.isNotInvitee(invitee)) {
+            throw new ForbiddenException();
+        }
     }
 }
