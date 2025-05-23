@@ -113,7 +113,8 @@ public class InvitationService {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
         validateAcceptPermission(invitation, invitee);
         invitation.accept();
-        // TODO: CategoryMember 추가
+        Category category = invitation.getCategory();
+        category.addGuests(List.of(invitation.getInvitee()));
     }
 
     private CategoryInvitation getCategoryInvitationById(long invitationId) {

@@ -1,15 +1,22 @@
 package com.staccato.invitation.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
+import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
@@ -24,10 +31,6 @@ import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedR
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 class InvitationServiceTest extends ServiceSliceTest {
     @Autowired
     private InvitationService invitationService;
@@ -37,6 +40,8 @@ class InvitationServiceTest extends ServiceSliceTest {
     private CategoryRepository categoryRepository;
     @Autowired
     private CategoryInvitationRepository categoryInvitationRepository;
+    @Autowired
+    private CategoryMemberRepository categoryMemberRepository;
 
     private Member host;
     private Member guest;
@@ -267,5 +272,20 @@ class InvitationServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> invitationService.accept(host, unknownId))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 초대 정보를 찾을 수 없어요.");
+    }
+
+    @DisplayName("초대가 수락되면 GUEST가 HOST의 카테고리에 멤버로 추가된다.")
+    @Test
+    void saveCategoryMemberWhenInvitationAcceptSuccess() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when
+        invitationService.accept(guest, invitation.getId());
+
+        // then
+        boolean isGuestSavedInCategory = categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), guest.getId());
+
+        assertThat(isGuestSavedInCategory).isTrue();
     }
 }
