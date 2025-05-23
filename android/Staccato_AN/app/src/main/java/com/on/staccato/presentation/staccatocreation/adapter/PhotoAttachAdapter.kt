@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.on.staccato.databinding.ItemAddPhotoBinding
 import com.on.staccato.databinding.ItemAttachedPhotoBinding
-import com.on.staccato.presentation.common.AttachedPhotoHandler
+import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
 import com.on.staccato.presentation.common.photo.AttachedPhotoState
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
+import com.on.staccato.presentation.common.photo.AttachedPhotoUiModel
 
 class PhotoAttachAdapter(
     private val attachedPhotoHandler: AttachedPhotoHandler,

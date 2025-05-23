@@ -1,7 +1,6 @@
-package com.on.staccato.presentation.staccatocreation.model
+package com.on.staccato.presentation.common.photo
 
 import android.net.Uri
-import com.on.staccato.presentation.common.photo.AttachedPhotoState
 
 data class AttachedPhotoUiModel(
     val uri: Uri? = null,

@@ -1,6 +1,4 @@
-package com.on.staccato.presentation.common
-
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
+package com.on.staccato.presentation.common.photo
 
 interface AttachedPhotoHandler {
     fun onDeleteClicked(deletedPhoto: AttachedPhotoUiModel)

@@ -6,7 +6,7 @@
 
         <variable
             name="selectedPhotoHandler"
-            type="com.on.staccato.presentation.common.AttachedPhotoHandler" />
+            type="com.on.staccato.presentation.common.photo.AttachedPhotoHandler" />
 
     </data>
 

@@ -15,12 +15,12 @@ import com.on.staccato.databinding.ActivityCategoryCreationBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel
-import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.SELECTED_COLOR_LABEL
 import com.on.staccato.presentation.common.photo.FileUiModel
+import com.on.staccato.presentation.common.photo.PhotoAttachFragment
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.convertCategoryUriToFile

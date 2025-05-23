@@ -9,7 +9,7 @@
 
         <variable
             name="selectedPhotoHandler"
-            type="com.on.staccato.presentation.common.AttachedPhotoHandler" />
+            type="com.on.staccato.presentation.common.photo.AttachedPhotoHandler" />
 
         <variable
             name="state"
@@ -17,7 +17,7 @@
 
         <variable
             name="attachedPhoto"
-            type="com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel" />
+            type="com.on.staccato.presentation.common.photo.AttachedPhotoUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

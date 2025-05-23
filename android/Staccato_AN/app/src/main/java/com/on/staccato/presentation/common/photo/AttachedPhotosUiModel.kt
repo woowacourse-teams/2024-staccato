@@ -1,9 +1,8 @@
-package com.on.staccato.presentation.staccatocreation.model
+package com.on.staccato.presentation.common.photo
 
 import android.net.Uri
-import com.on.staccato.presentation.common.photo.AttachedPhotoState
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel.Companion.toLoadingPhoto
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel.Companion.toSuccessPhoto
+import com.on.staccato.presentation.common.photo.AttachedPhotoUiModel.Companion.toLoadingPhoto
+import com.on.staccato.presentation.common.photo.AttachedPhotoUiModel.Companion.toSuccessPhoto
 
 data class AttachedPhotosUiModel(
     val attachedPhotos: List<AttachedPhotoUiModel>,
@@ -32,9 +31,7 @@ data class AttachedPhotosUiModel(
         return AttachedPhotosUiModel(combinedPhotos.take(MAX_PHOTO_NUMBER))
     }
 
-    fun removePhoto(targetPhoto: AttachedPhotoUiModel): AttachedPhotosUiModel {
-        return AttachedPhotosUiModel(attachedPhotos.filterNot { it == targetPhoto })
-    }
+    fun removePhoto(targetPhoto: AttachedPhotoUiModel) = AttachedPhotosUiModel(attachedPhotos.filterNot { it == targetPhoto })
 
     fun getLoadingPhotosWithoutUrls(): List<AttachedPhotoUiModel> {
         return attachedPhotos.filter { it.imageUrl == null && it.state == AttachedPhotoState.Loading }
