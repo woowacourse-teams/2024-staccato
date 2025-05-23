@@ -15,21 +15,23 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CategoryInvitationTest {
-    private Member host;
-    private Member guest;
-    private Category category;
+    private CategoryInvitation invitation;
 
     @BeforeEach
     void init() {
-        host = MemberFixtures.defaultMember().withNickname("host").build();
-        guest = MemberFixtures.defaultMember().withNickname("guest").build();
-        category = CategoryFixtures.defaultCategory().withHost(host).build();
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        Category category = CategoryFixtures.defaultCategory().withHost(host).build();
+        invitation = CategoryInvitation.invite(category, host, guest);
     }
 
     @DisplayName("주어진 카테고리, 초대자, 초대 대상에 대한 초대 내역(REQUESTED)를 생성한다.")
     @Test
     void invite() {
         // when
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        Category category = CategoryFixtures.defaultCategory().withHost(host).build();
         CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
 
         // then
@@ -45,7 +47,6 @@ class CategoryInvitationTest {
     @Test
     void cancel() {
         // when
-        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
         invitation.cancel();
 
         // then
@@ -56,22 +57,20 @@ class CategoryInvitationTest {
     @Test
     void cancelInvitationAlreadyCanceled() {
         // when
-        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
         invitation.cancel();
 
         // then
-        assertThatNoException().isThrownBy(() -> invitation.cancel());
+        assertThatNoException().isThrownBy(invitation::cancel);
     }
 
     @DisplayName("이미 수락된 초대를 취소하려고 하면 예외가 발생한다.")
     @Test
     void cannotCancelIfAccepted() {
         // when
-        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
         invitation.accept();
 
         // then
-        assertThatThrownBy(() -> invitation.cancel())
+        assertThatThrownBy(invitation::cancel)
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("이미 상대가 수락/거절한 초대 요청은 취소할 수 없어요.");
     }
@@ -80,11 +79,10 @@ class CategoryInvitationTest {
     @Test
     void cannotCancelIfRejected() {
         // when
-        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
         invitation.reject();
 
         // then
-        assertThatThrownBy(() -> invitation.cancel())
+        assertThatThrownBy(invitation::cancel)
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("이미 상대가 수락/거절한 초대 요청은 취소할 수 없어요.");
     }
@@ -93,7 +91,6 @@ class CategoryInvitationTest {
     @Test
     void accept() {
         // when
-        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
         invitation.accept();
 
         // then
@@ -104,22 +101,20 @@ class CategoryInvitationTest {
     @Test
     void acceptInvitationAlreadyAccepted() {
         // when
-        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
         invitation.accept();
 
         // then
-        assertThatNoException().isThrownBy(() -> invitation.accept());
+        assertThatNoException().isThrownBy(invitation::accept);
     }
 
     @DisplayName("이미 취소된 초대를 수락하려고 하면 예외가 발생한다.")
     @Test
     void cannotAcceptIfCanceled() {
         // when
-        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
         invitation.cancel();
 
         // then
-        assertThatThrownBy(() -> invitation.accept())
+        assertThatThrownBy(invitation::accept)
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("이미 상대가 취소/거절한 초대 요청은 수락할 수 없어요.");
     }
@@ -128,11 +123,10 @@ class CategoryInvitationTest {
     @Test
     void cannotAcceptIfRejected() {
         // when
-        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
         invitation.reject();
 
         // then
-        assertThatThrownBy(() -> invitation.accept())
+        assertThatThrownBy(invitation::accept)
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("이미 상대가 취소/거절한 초대 요청은 수락할 수 없어요.");
     }
