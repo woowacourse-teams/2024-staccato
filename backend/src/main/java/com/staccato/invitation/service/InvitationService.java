@@ -17,7 +17,8 @@ import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
-import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationReceivedResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
@@ -93,9 +94,9 @@ public class InvitationService {
         }
     }
 
-    public CategoryInvitationRequestedResponses readInvitations(Member inviter) {
+    public CategoryInvitationSentResponses readSentInvitations(Member inviter) {
         List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(inviter.getId());
-        return CategoryInvitationRequestedResponses.from(invitations);
+        return CategoryInvitationSentResponses.from(invitations);
     }
 
     @Transactional
@@ -143,5 +144,9 @@ public class InvitationService {
         if (invitation.isNotInvitee(invitee)) {
             throw new ForbiddenException();
         }
+    }
+
+    public CategoryInvitationReceivedResponses readReceivedInvitations(Member member) {
+        return null;
     }
 }

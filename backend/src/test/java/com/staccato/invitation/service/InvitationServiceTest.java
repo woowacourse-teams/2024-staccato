@@ -28,8 +28,8 @@ import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
-import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponse;
-import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponse;
+import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 
@@ -188,14 +188,14 @@ class InvitationServiceTest extends ServiceSliceTest {
         CategoryInvitation invitation2 = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest2));
 
         // when
-        CategoryInvitationRequestedResponses responses = invitationService.readInvitations(host);
+        CategoryInvitationSentResponses responses = invitationService.readSentInvitations(host);
 
         // then
         assertAll(
                 () -> assertThat(responses.invitations()).hasSize(2),
                 () -> assertThat(responses.invitations()).containsExactly(
-                        new CategoryInvitationRequestedResponse(invitation2),
-                        new CategoryInvitationRequestedResponse(invitation)
+                        new CategoryInvitationSentResponse(invitation2),
+                        new CategoryInvitationSentResponse(invitation)
                 )
         );
     }
