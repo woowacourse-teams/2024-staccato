@@ -58,4 +58,6 @@ public interface StaccatoRepository extends JpaRepository<Staccato, Long> {
     @Modifying
     @Query("DELETE FROM Staccato s WHERE s.category.id = :categoryId")
     void deleteAllByCategoryIdInBulk(@Param("categoryId") Long categoryId);
+
+    long countAllByCategoryId(Long id);
 }

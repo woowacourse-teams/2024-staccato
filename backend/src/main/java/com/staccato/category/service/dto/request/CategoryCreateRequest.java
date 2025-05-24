@@ -20,10 +20,8 @@ public record CategoryCreateRequest(
         String categoryThumbnailUrl,
         @Schema(example = SwaggerExamples.CATEGORY_TITLE)
         @NotBlank(message = "카테고리 제목을 입력해주세요.")
-        @Size(max = 30, message = "제목은 공백 포함 30자 이하로 설정해주세요.")
         String categoryTitle,
         @Schema(example = SwaggerExamples.CATEGORY_DESCRIPTION)
-        @Size(max = 500, message = "내용의 최대 허용 글자수는 공백 포함 500자입니다.")
         String description,
         @Schema(example = SwaggerExamples.CATEGORY_COLOR)
         @NotBlank(message = "카테고리 색상을 선택해주세요.")

@@ -1,15 +1,9 @@
 package com.staccato.staccato.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
@@ -31,8 +25,11 @@ import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
 import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
 import com.staccato.util.StubTokenProvider;
-
 import io.jsonwebtoken.Claims;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class StaccatoShareServiceTest extends ServiceSliceTest {
     @Autowired
@@ -83,7 +80,7 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
     void failToCreateShareLinkWhenInvalidMember() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member)
                 .buildAndSave(categoryRepository);
@@ -176,7 +173,7 @@ public class StaccatoShareServiceTest extends ServiceSliceTest {
     void readSharedStaccatoByToken() {
         // given
         Member member1 = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member member2 = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member member2 = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member1).buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()

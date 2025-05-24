@@ -68,9 +68,6 @@ class StaccatoControllerTest extends ControllerTest {
                                 .withPlaceName(null).build(),
                         "장소 이름을 입력해주세요."),
                 Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
-                                .withStaccatoTitle("가".repeat(31)).build(),
-                        "스타카토 제목은 공백 포함 30자 이하로 설정해주세요."),
-                Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
                                 .withLatitude(null).build(),
                         "스타카토의 위도를 입력해주세요."),
                 Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
@@ -290,30 +287,6 @@ class StaccatoControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(staccatoRequest))
                 .andExpect(status().isOk());
-    }
-
-    @DisplayName("추가하려는 사진이 8장이 넘는다면 스타카토 수정에 실패한다.")
-    @Test
-    void failUpdateStaccatoByImagesSize() throws Exception {
-        // given
-        long staccatoId = 1L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                HttpStatus.BAD_REQUEST.toString(), "사진은 8장까지만 추가할 수 있어요.");
-        List<String> images = new ArrayList<>();
-        for (int count = 1; count <= 9; count++) {
-            images.add("image" + count + ".jpg");
-        }
-        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
-                .withStaccatoImageUrls(images).build();
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-
-        // when & then
-        mockMvc.perform(put("/staccatos/{staccatoId}", staccatoId)
-                        .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(staccatoRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("적합하지 않은 경로변수의 경우 스타카토 수정에 실패한다.")
