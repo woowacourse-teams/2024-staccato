@@ -551,6 +551,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
         Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(host)
                 .withGuests(List.of(guest))
@@ -560,7 +561,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         CommentFixtures.defaultComment()
                 .withStaccato(staccato)
                 .withMember(host).buildAndSave(commentRepository);
-        categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+        categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest2));
 
         // when
         categoryService.deleteCategory(category.getId(), host);
