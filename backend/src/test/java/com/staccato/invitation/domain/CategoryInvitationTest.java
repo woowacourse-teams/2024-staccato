@@ -17,23 +17,21 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class CategoryInvitationTest {
     private static final String STATUS_EXCEPTION_MESSAGE = "이미 처리된 초대 요청이에요.";
 
-    private CategoryInvitation invitation;
+    private Member host;
+    private Member guest;
+    private Category category;
 
     @BeforeEach
     void init() {
-        Member host = MemberFixtures.defaultMember().withNickname("host").build();
-        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
-        Category category = CategoryFixtures.defaultCategory().withHost(host).build();
-        invitation = CategoryInvitation.invite(category, host, guest);
+        host = MemberFixtures.defaultMember().withNickname("host").build();
+        guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        category = CategoryFixtures.defaultCategory().withHost(host).build();
     }
 
     @DisplayName("주어진 카테고리, 초대자, 초대 대상에 대한 초대 내역(REQUESTED)를 생성한다.")
     @Test
     void invite() {
         // when
-        Member host = MemberFixtures.defaultMember().withNickname("host").build();
-        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
-        Category category = CategoryFixtures.defaultCategory().withHost(host).build();
         CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
 
         // then
@@ -48,6 +46,9 @@ class CategoryInvitationTest {
     @DisplayName("초대를 취소한다.")
     @Test
     void cancel() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.cancel();
 
@@ -58,6 +59,9 @@ class CategoryInvitationTest {
     @DisplayName("이미 취소된 초대를 취소해도 아무 일도 일어나지 않는다.")
     @Test
     void cancelInvitationAlreadyCanceled() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.cancel();
 
@@ -68,6 +72,9 @@ class CategoryInvitationTest {
     @DisplayName("이미 수락된 초대를 취소하려고 하면 예외가 발생한다.")
     @Test
     void cannotCancelIfAccepted() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.accept();
 
@@ -80,6 +87,9 @@ class CategoryInvitationTest {
     @DisplayName("이미 거절된 초대를 취소하려고 하면 예외가 발생한다.")
     @Test
     void cannotCancelIfRejected() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.reject();
 
@@ -92,6 +102,9 @@ class CategoryInvitationTest {
     @DisplayName("초대를 수락한다.")
     @Test
     void accept() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.accept();
 
@@ -102,6 +115,9 @@ class CategoryInvitationTest {
     @DisplayName("이미 수락된 초대를 수락해도 아무 일도 일어나지 않는다.")
     @Test
     void acceptInvitationAlreadyAccepted() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.accept();
 
@@ -112,6 +128,9 @@ class CategoryInvitationTest {
     @DisplayName("이미 취소된 초대를 수락하려고 하면 예외가 발생한다.")
     @Test
     void cannotAcceptIfCanceled() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.cancel();
 
@@ -124,6 +143,9 @@ class CategoryInvitationTest {
     @DisplayName("이미 거절된 초대를 수락하려고 하면 예외가 발생한다.")
     @Test
     void cannotAcceptIfRejected() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.reject();
 
@@ -136,6 +158,9 @@ class CategoryInvitationTest {
     @DisplayName("초대를 거절한다.")
     @Test
     void reject() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.reject();
 
@@ -146,6 +171,9 @@ class CategoryInvitationTest {
     @DisplayName("이미 거절된 초대를 거절해도 아무 일도 일어나지 않는다.")
     @Test
     void rejectInvitationAlreadyRejected() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.reject();
 
@@ -156,6 +184,9 @@ class CategoryInvitationTest {
     @DisplayName("이미 취소된 초대를 거절하려고 하면 예외가 발생한다.")
     @Test
     void cannotRejectIfCanceled() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.cancel();
 
@@ -168,6 +199,9 @@ class CategoryInvitationTest {
     @DisplayName("이미 수락된 초대를 거절하려고 하면 예외가 발생한다.")
     @Test
     void cannotRejectIfAccepted() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
         // when
         invitation.accept();
 
