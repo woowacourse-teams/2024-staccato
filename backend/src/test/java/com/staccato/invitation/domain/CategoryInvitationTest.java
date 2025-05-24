@@ -15,6 +15,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CategoryInvitationTest {
+    private static final String STATUS_EXCEPTION_MESSAGE = "이미 처리된 초대 요청이에요.";
+
     private CategoryInvitation invitation;
 
     @BeforeEach
@@ -72,7 +74,7 @@ class CategoryInvitationTest {
         // then
         assertThatThrownBy(invitation::cancel)
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("이미 상대가 수락/거절한 초대 요청은 취소할 수 없어요.");
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
     }
 
     @DisplayName("이미 거절된 초대를 취소하려고 하면 예외가 발생한다.")
@@ -84,7 +86,7 @@ class CategoryInvitationTest {
         // then
         assertThatThrownBy(invitation::cancel)
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("이미 상대가 수락/거절한 초대 요청은 취소할 수 없어요.");
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
     }
 
     @DisplayName("초대를 수락한다.")
@@ -116,7 +118,7 @@ class CategoryInvitationTest {
         // then
         assertThatThrownBy(invitation::accept)
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("이미 상대가 취소/거절한 초대 요청은 수락할 수 없어요.");
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
     }
 
     @DisplayName("이미 거절된 초대를 수락하려고 하면 예외가 발생한다.")
@@ -128,7 +130,7 @@ class CategoryInvitationTest {
         // then
         assertThatThrownBy(invitation::accept)
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("이미 상대가 취소/거절한 초대 요청은 수락할 수 없어요.");
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
     }
 
     @DisplayName("초대를 거절한다.")
@@ -160,7 +162,7 @@ class CategoryInvitationTest {
         // then
         assertThatThrownBy(invitation::reject)
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("이미 상대가 취소/수락한 초대 요청은 거절할 수 없어요.");
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
     }
 
     @DisplayName("이미 수락된 초대를 거절하려고 하면 예외가 발생한다.")
@@ -172,6 +174,6 @@ class CategoryInvitationTest {
         // then
         assertThatThrownBy(invitation::reject)
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("이미 상대가 취소/수락한 초대 요청은 거절할 수 없어요.");
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
     }
 }
