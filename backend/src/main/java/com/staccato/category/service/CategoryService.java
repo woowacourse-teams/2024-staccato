@@ -52,7 +52,7 @@ public class CategoryService {
     @Transactional
     public CategoryIdResponse createCategory(CategoryCreateRequest categoryCreateRequest, Member member) {
         Category category = categoryCreateRequest.toCategory();
-        validateCategoryTitle(category, member);
+        categoryValidator.validateCategoryTitleAlreadyExists(category, member);
         category.addHost(member);
         categoryRepository.save(category);
         return new CategoryIdResponse(category.getId());
@@ -96,7 +96,7 @@ public class CategoryService {
     public CategoryDetailResponseV3 readCategoryById(long categoryId, Member member) {
         Category category = categoryRepository.findWithCategoryMembersById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-        validateReadPermission(category, member);
+        categoryValidator.validateReadPermission(category, member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
 
         return new CategoryDetailResponseV3(category, staccatos, member);
@@ -105,7 +105,7 @@ public class CategoryService {
     public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
             Member member, long categoryId, CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest) {
         Category category = categoryValidator.getCategoryByIdOrThrow(categoryId);
-        validateOwner(category, member);
+        categoryValidator.validateReadPermission(category, member);
         List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRangeAndCategory(
                 member,
                 categoryStaccatoLocationRangeRequest.swLat(),
@@ -121,11 +121,11 @@ public class CategoryService {
     @Transactional
     public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
         Category originCategory = categoryValidator.getCategoryByIdOrThrow(categoryId);
-        validateModificationPermission(originCategory, member);
+        categoryValidator.validateModifyPermission(originCategory, member);
+
         Category updatedCategory = categoryUpdateRequest.toCategory(originCategory);
-        if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
-            validateCategoryTitle(updatedCategory, member);
-        }
+        categoryValidator.validateCategoryTitleAlreadyExists(originCategory, updatedCategory, member);
+
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryId(categoryId);
         originCategory.update(updatedCategory, staccatos);
     }
@@ -133,26 +133,16 @@ public class CategoryService {
     @Transactional
     public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
         Category category = categoryValidator.getCategoryByIdOrThrow(categoryId);
-        validateModificationPermission(category, member);
+        categoryValidator.validateModifyPermission(category, member);
         category.changeColor(categoryColorRequest.toColor());
-    }
-
-    private void validateCategoryTitle(Category category, Member member) {
-        if (categoryMemberRepository.existsByMemberAndCategoryTitle(member, category.getTitle())) {
-            throw new StaccatoException("같은 이름을 가진 카테고리가 있어요. 다른 이름으로 설정해주세요.");
-        }
     }
 
     @Transactional
     public void deleteCategory(long categoryId, Member member) {
         Category category = categoryValidator.getCategoryByIdOrThrow(categoryId);
-        validateModificationPermission(category, member);
+        categoryValidator.validateModifyPermission(category, member);
         deleteAllRelatedCategory(categoryId);
         categoryRepository.deleteById(categoryId);
-    }
-
-    private void validateReadPermission(Category category, Member member) {
-        validateOwner(category, member);
     }
 
     private void deleteAllRelatedCategory(long categoryId) {
@@ -164,22 +154,5 @@ public class CategoryService {
         commentRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
         staccatoRepository.deleteAllByCategoryIdInBulk(categoryId);
         categoryMemberRepository.deleteAllByCategoryIdInBulk(categoryId);
-    }
-
-    private void validateModificationPermission(Category category, Member member) {
-        validateOwner(category, member);
-        validateHost(category, member);
-    }
-
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    private void validateHost(Category category, Member member) {
-        if (category.isGuest(member)) {
-            throw new ForbiddenException();
-        }
     }
 }

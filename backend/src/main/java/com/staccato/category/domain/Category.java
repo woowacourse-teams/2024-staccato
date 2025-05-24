@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -15,11 +16,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -138,11 +141,21 @@ public class Category extends BaseEntity {
         return term.doesNotContain(date);
     }
 
+    public boolean isUnreadableBy(Member member) {
+        return isNotOwnedBy(member);
+    }
+
+    public boolean isUnmodifiableBy(Member member) {
+        return isNotOwnedBy(member) || isGuest(member);
+    }
+
+    // TODO: private으로 변경
     public boolean isNotOwnedBy(Member member) {
         return categoryMembers.stream()
                 .noneMatch(categoryMember -> categoryMember.isOwnedBy(member));
     }
 
+    // TODO: private으로 변경
     public boolean isGuest(Member member) {
         CategoryMember categoryMember = categoryMembers.stream()
                 .filter(cm -> cm.isOwnedBy(member))
