@@ -2,8 +2,10 @@ package com.staccato.invitation.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
@@ -15,9 +17,11 @@ import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
-import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationReceivedResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,22 +94,60 @@ public class InvitationService {
         }
     }
 
-    public CategoryInvitationRequestedResponses readInvitations(Member inviter) {
+    public CategoryInvitationSentResponses readSentInvitations(Member inviter) {
         List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(inviter.getId());
-        return CategoryInvitationRequestedResponses.from(invitations);
+        return CategoryInvitationSentResponses.from(invitations);
     }
 
     @Transactional
     public void cancel(Member inviter, long invitationId) {
-        CategoryInvitation invitation = categoryInvitationRepository.findById(invitationId)
-                .orElseThrow(() -> new StaccatoException("요청하신 초대 정보를 찾을 수 없어요."));
-        validateCancelPermission(invitation, inviter);
+        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
+        validateInviter(invitation, inviter);
         invitation.cancel();
     }
 
-    private void validateCancelPermission(CategoryInvitation invitation, Member inviter) {
-        if (invitation.isNotBy(inviter)) {
+    private void validateInviter(CategoryInvitation invitation, Member inviter) {
+        if (invitation.isNotInviter(inviter)) {
             throw new ForbiddenException();
         }
+    }
+
+    @Transactional
+    public void accept(Member invitee, long invitationId) {
+        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
+        validateInvitee(invitation, invitee);
+        invitation.accept();
+
+        Category category = invitation.getCategory();
+        if (isInviteeNotInCategory(invitee, category)) {
+            category.addGuests(List.of(invitation.getInvitee()));
+        }
+    }
+
+    private boolean isInviteeNotInCategory(Member invitee, Category category) {
+        return !categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), invitee.getId());
+    }
+
+    @Transactional
+    public void reject(Member invitee, long invitationId) {
+        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
+        validateInvitee(invitation, invitee);
+        invitation.reject();
+    }
+
+    private CategoryInvitation getCategoryInvitationById(long invitationId) {
+        return categoryInvitationRepository.findById(invitationId)
+                .orElseThrow(() -> new StaccatoException("요청하신 초대 정보를 찾을 수 없어요."));
+    }
+
+    private void validateInvitee(CategoryInvitation invitation, Member invitee) {
+        if (invitation.isNotInvitee(invitee)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    public CategoryInvitationReceivedResponses readReceivedInvitations(Member invitee) {
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(invitee.getId());
+        return CategoryInvitationReceivedResponses.from(invitations);
     }
 }

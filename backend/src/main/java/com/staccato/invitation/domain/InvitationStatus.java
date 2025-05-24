@@ -14,4 +14,8 @@ public enum InvitationStatus {
     public boolean isRejected() {
         return this == REJECTED;
     }
+
+    public boolean isCanceled() {
+        return this == CANCELED;
+    }
 }

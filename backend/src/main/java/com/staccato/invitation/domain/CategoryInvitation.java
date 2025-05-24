@@ -25,6 +25,8 @@ import lombok.NonNull;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Getter
 public class CategoryInvitation extends BaseEntity {
+    private static final String STATUS_EXCEPTION_MESSAGE = "이미 처리된 초대 요청이에요.";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -53,8 +55,12 @@ public class CategoryInvitation extends BaseEntity {
         this.status = status;
     }
 
-    public boolean isNotBy(Member inviter) {
-        return !this.inviter.equals(inviter);
+    public boolean isNotInviter(Member member) {
+        return !inviter.equals(member);
+    }
+
+    public boolean isNotInvitee(Member member) {
+        return !invitee.equals(member);
     }
 
     public void cancel() {
@@ -64,15 +70,29 @@ public class CategoryInvitation extends BaseEntity {
 
     private void validateCancel(InvitationStatus status) {
         if (status.isAccepted() || status.isRejected()) {
-            throw new StaccatoException("이미 상대가 수락/거절한 초대 요청은 취소할 수 없어요.");
+            throw new StaccatoException(STATUS_EXCEPTION_MESSAGE);
         }
     }
 
     public void accept() {
+        validateAccept(status);
         status = InvitationStatus.ACCEPTED;
     }
 
+    private void validateAccept(InvitationStatus status) {
+        if (status.isCanceled() || status.isRejected()) {
+            throw new StaccatoException(STATUS_EXCEPTION_MESSAGE);
+        }
+    }
+
     public void reject() {
+        validateReject(status);
         status = InvitationStatus.REJECTED;
+    }
+
+    private void validateReject(InvitationStatus status) {
+        if (status.isCanceled() || status.isAccepted()) {
+            throw new StaccatoException(STATUS_EXCEPTION_MESSAGE);
+        }
     }
 }

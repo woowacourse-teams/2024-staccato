@@ -39,6 +39,8 @@ import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.fixture.staccato.StaccatoRequestFixtures;
+import com.staccato.invitation.domain.CategoryInvitation;
+import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.InvitationService;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -68,6 +70,8 @@ class CategoryServiceTest extends ServiceSliceTest {
     private StaccatoRepository staccatoRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private CategoryInvitationRepository categoryInvitationRepository;
 
     static Stream<Arguments> dateProvider() {
         return Stream.of(
@@ -541,29 +545,34 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("HOST가 카테고리를 삭제하면 속한 스타카토, 댓글, 함께하는 사람들도 함께 삭제된다.")
+    @DisplayName("HOST가 카테고리를 삭제하면 속한 스타카토, 댓글, 함께하는 사람, 초대 요청도 함께 삭제된다.")
     @Test
     void deleteCategoryWithStaccato() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), member);
-        Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
         CommentFixtures.defaultComment()
                 .withStaccato(staccato)
-                .withMember(member).buildAndSave(commentRepository);
+                .withMember(host).buildAndSave(commentRepository);
+        categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest2));
 
         // when
-        categoryService.deleteCategory(categoryIdResponse.categoryId(), member);
+        categoryService.deleteCategory(category.getId(), host);
 
         // then
         assertAll(
-                () -> assertThat(categoryRepository.findById(categoryIdResponse.categoryId())).isEmpty(),
+                () -> assertThat(categoryRepository.findById(category.getId())).isEmpty(),
                 () -> assertThat(categoryMemberRepository.findAll()).isEmpty(),
                 () -> assertThat(staccatoRepository.findAll()).isEmpty(),
-                () -> assertThat(commentRepository.findAll()).isEmpty()
+                () -> assertThat(commentRepository.findAll()).isEmpty(),
+                () -> assertThat(categoryInvitationRepository.findAll()).isEmpty()
         );
     }
 
