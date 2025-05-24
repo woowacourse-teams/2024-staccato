@@ -54,11 +54,11 @@ public class CategoryInvitation extends BaseEntity {
     }
 
     public boolean isNotInviter(Member member) {
-        return !this.inviter.equals(member);
+        return !inviter.equals(member);
     }
 
     public boolean isNotInvitee(Member member) {
-        return !this.invitee.equals(member);
+        return !invitee.equals(member);
     }
 
     public void cancel() {
