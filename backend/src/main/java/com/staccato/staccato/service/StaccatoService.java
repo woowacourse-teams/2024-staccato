@@ -1,10 +1,12 @@
 package com.staccato.staccato.service;
 
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.staccato.category.domain.Category;
-import com.staccato.category.repository.CategoryRepository;
+import com.staccato.category.service.CategoryValidator;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
@@ -21,6 +23,7 @@ import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -30,13 +33,13 @@ import lombok.RequiredArgsConstructor;
 public class StaccatoService {
 
     private final StaccatoRepository staccatoRepository;
-    private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
     private final StaccatoImageRepository staccatoImageRepository;
+    private final CategoryValidator categoryValidator;
 
     @Transactional
     public StaccatoIdResponse createStaccato(StaccatoRequest staccatoRequest, Member member) {
-        Category category = getCategoryById(staccatoRequest.categoryId());
+        Category category = categoryValidator.getCategoryByIdOrThrow(staccatoRequest.categoryId());
         validateCategoryOwner(category, member);
         Staccato staccato = staccatoRequest.toStaccato(category);
 
@@ -72,7 +75,7 @@ public class StaccatoService {
         Staccato staccato = getStaccatoById(staccatoId);
         validateCategoryOwner(staccato.getCategory(), member);
 
-        Category targetCategory = getCategoryById(staccatoRequest.categoryId());
+        Category targetCategory = categoryValidator.getCategoryByIdOrThrow(staccatoRequest.categoryId());
         validateCategoryOwner(targetCategory, member);
 
         Staccato newStaccato = staccatoRequest.toStaccato(targetCategory);
@@ -86,11 +89,6 @@ public class StaccatoService {
                 .map(StaccatoImage::getId)
                 .toList();
         staccatoImageRepository.deleteAllByIdInBulk(ids);
-    }
-
-    private Category getCategoryById(long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 
     @Transactional

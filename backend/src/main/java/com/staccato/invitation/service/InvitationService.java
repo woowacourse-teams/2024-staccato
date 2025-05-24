@@ -2,11 +2,13 @@ package com.staccato.invitation.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
-import com.staccato.category.repository.CategoryRepository;
+import com.staccato.category.service.CategoryValidator;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
@@ -18,6 +20,7 @@ import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResp
 import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,24 +30,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class InvitationService {
-    private final CategoryRepository categoryRepository;
+
     private final MemberRepository memberRepository;
     private final CategoryInvitationRepository categoryInvitationRepository;
     private final CategoryMemberRepository categoryMemberRepository;
+    private final CategoryValidator categoryValidator;
 
     @Transactional
     public CategoryInvitationCreateResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
-        Category category = getCategoryById(categoryInvitationRequest.categoryId());
+        Category category = categoryValidator.getCategoryByIdOrThrow(categoryInvitationRequest.categoryId());
         validateInvitePermission(category, inviter);
         List<Member> invitees = memberRepository.findAllByIdIn(categoryInvitationRequest.inviteeIds());
         List<CategoryInvitation> invitations = categoryInvitationRepository.saveAll(createInvitations(category, inviter, invitees));
 
         return CategoryInvitationCreateResponses.from(invitations);
-    }
-
-    private Category getCategoryById(long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 
     private void validateInvitePermission(Category category, Member member) {

@@ -4,8 +4,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
@@ -29,6 +31,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -44,6 +47,7 @@ public class CategoryService {
     private final StaccatoRepository staccatoRepository;
     private final StaccatoImageRepository staccatoImageRepository;
     private final CommentRepository commentRepository;
+    private final CategoryValidator categoryValidator;
 
     @Transactional
     public CategoryIdResponse createCategory(CategoryCreateRequest categoryCreateRequest, Member member) {
@@ -100,7 +104,7 @@ public class CategoryService {
 
     public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
             Member member, long categoryId, CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest) {
-        Category category = getCategoryById(categoryId);
+        Category category = categoryValidator.getCategoryByIdOrThrow(categoryId);
         validateOwner(category, member);
         List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRangeAndCategory(
                 member,
@@ -116,7 +120,7 @@ public class CategoryService {
 
     @Transactional
     public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
-        Category originCategory = getCategoryById(categoryId);
+        Category originCategory = categoryValidator.getCategoryByIdOrThrow(categoryId);
         validateModificationPermission(originCategory, member);
         Category updatedCategory = categoryUpdateRequest.toCategory(originCategory);
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
@@ -128,7 +132,7 @@ public class CategoryService {
 
     @Transactional
     public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
-        Category category = getCategoryById(categoryId);
+        Category category = categoryValidator.getCategoryByIdOrThrow(categoryId);
         validateModificationPermission(category, member);
         category.changeColor(categoryColorRequest.toColor());
     }
@@ -141,15 +145,10 @@ public class CategoryService {
 
     @Transactional
     public void deleteCategory(long categoryId, Member member) {
-        Category category = getCategoryById(categoryId);
+        Category category = categoryValidator.getCategoryByIdOrThrow(categoryId);
         validateModificationPermission(category, member);
         deleteAllRelatedCategory(categoryId);
         categoryRepository.deleteById(categoryId);
-    }
-
-    private Category getCategoryById(long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 
     private void validateReadPermission(Category category, Member member) {
