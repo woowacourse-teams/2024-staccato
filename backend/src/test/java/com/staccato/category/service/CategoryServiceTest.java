@@ -177,7 +177,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withTerm(null, null).build(), member);
 
         // when
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDate(member, currentDate);
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, currentDate, false);
 
         // then
         assertThat(categoryNameResponses.categories()).hasSize(expectedSize);

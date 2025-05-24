@@ -58,7 +58,9 @@ public interface CategoryControllerDocs {
     })
     ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "현재 날짜", example = "2024-08-21") LocalDate currentDate);
+            @Parameter(description = "특정 날짜", example = "2024-08-21") LocalDate specificDate,
+            @Parameter(description = "공유 카테고리 flag 값", example = "2024-08-21") boolean isShared
+    );
 
     @Operation(summary = "카테고리 조회", description = "사용자의 카테고리을 조회합니다.")
     @ApiResponses(value = {
