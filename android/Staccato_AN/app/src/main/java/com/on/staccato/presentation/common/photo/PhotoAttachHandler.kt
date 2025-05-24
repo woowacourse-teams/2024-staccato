@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.common
+package com.on.staccato.presentation.common.photo
 
 interface PhotoAttachHandler {
     fun onCameraClicked()

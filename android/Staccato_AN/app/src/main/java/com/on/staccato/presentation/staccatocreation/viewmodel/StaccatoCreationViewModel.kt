@@ -19,14 +19,15 @@ import com.on.staccato.domain.model.CategoryCandidates.Companion.emptyCategoryCa
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
-import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
+import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
+import com.on.staccato.presentation.common.photo.AttachedPhotoUiModel
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationError
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import com.on.staccato.presentation.util.ExceptionState
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
 import com.on.staccato.presentation.util.convertStaccatoUriToFile
@@ -119,6 +120,11 @@ class StaccatoCreationViewModel
             if (photoJobs[deletedPhoto.uri.toString()]?.isActive == true) {
                 photoJobs[deletedPhoto.uri.toString()]?.cancel()
             }
+        }
+
+        override fun onRetryClicked(retryPhoto: AttachedPhotoUiModel) {
+            _currentPhotos.value = currentPhotos.value?.toLoading(retryPhoto)
+            _pendingPhotos.postValue(listOf(retryPhoto))
         }
 
         fun getCurrentLocation() {
@@ -220,7 +226,7 @@ class StaccatoCreationViewModel
         fun updateSelectedImageUris(newUris: Array<Uri>) {
             val updatedPhotos = currentPhotos.value!!.addPhotosByUris(newUris.toList())
             _currentPhotos.value = updatedPhotos
-            _pendingPhotos.postValue(updatedPhotos.getPhotosWithoutUrls())
+            _pendingPhotos.postValue(updatedPhotos.getLoadingPhotosWithoutUrls())
         }
 
         fun setUrisWithNewOrder(list: List<AttachedPhotoUiModel>) {
@@ -241,14 +247,14 @@ class StaccatoCreationViewModel
             viewModelScope.launch {
                 _isPosting.value = true
                 staccatoRepository.createStaccato(
+                    staccatoTitle = staccatoTitle.get() ?: return@launch handleException(),
+                    placeName = placeName.value ?: return@launch handleException(),
+                    latitude = latitude.value ?: return@launch handleException(),
+                    longitude = longitude.value ?: return@launch handleException(),
+                    address = address.value ?: return@launch handleException(),
+                    visitedAt = selectedVisitedAt.value ?: return@launch handleException(),
                     categoryId = selectedCategory.value!!.categoryId,
-                    staccatoTitle = staccatoTitle.get() ?: return@launch,
-                    placeName = placeName.value ?: return@launch,
-                    latitude = latitude.value ?: return@launch,
-                    longitude = longitude.value ?: return@launch,
-                    address = address.value ?: return@launch,
-                    visitedAt = selectedVisitedAt.value ?: return@launch,
-                    staccatoImageUrls = currentPhotos.value!!.attachedPhotos.map { it.imageUrl!! },
+                    staccatoImageUrls = currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! } ?: emptyList(),
                 ).onSuccess { response ->
                     _createdStaccatoId.postValue(response.staccatoId)
                 }.onException(::handleCreateException)
@@ -264,9 +270,11 @@ class StaccatoCreationViewModel
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
                 }.onException { state ->
-                    if (this.isActive) handleException(state)
+                    if (this.isActive) handlePhotoException(photo.toRetry(), state.message)
                 }
-                .onServerError(::handleServerError)
+                .onServerError { message ->
+                    if (this.isActive) handlePhotoException(photo.toFail(), message)
+                }
         }
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
@@ -279,7 +287,7 @@ class StaccatoCreationViewModel
             targetPhoto: AttachedPhotoUiModel,
             url: String,
         ) {
-            val updatedPhoto = targetPhoto.updateUrl(url)
+            val updatedPhoto = targetPhoto.toSuccessPhotoWith(url)
             _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
         }
 
@@ -288,9 +296,17 @@ class StaccatoCreationViewModel
             _warningMessage.postValue(errorMessage)
         }
 
-        private fun handleException(exceptionState: ExceptionState) {
+        private fun handleException(exceptionState: ExceptionState = ExceptionState.RequiredValuesMissing) {
             _isPosting.value = false
-            _warningMessage.postValue(exceptionState.message)
+            _warningMessage.setValue(exceptionState.message)
+        }
+
+        private fun handlePhotoException(
+            photo: AttachedPhotoUiModel,
+            message: String,
+        ) {
+            _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(photo)
+            _warningMessage.setValue(message)
         }
 
         private fun handleCategoryCandidatesException(exceptionState: ExceptionState) {
@@ -303,7 +319,6 @@ class StaccatoCreationViewModel
         }
 
         companion object {
-            const val MAX_PHOTO_NUMBER = 5
             const val MAX_PHOTO_NUMBER_MESSAGE = "사진은 최대 ${MAX_PHOTO_NUMBER}장만 첨부할 수 있어요!"
             const val FAIL_IMAGE_UPLOAD_MESSAGE = "이미지 업로드에 실패했습니다."
         }

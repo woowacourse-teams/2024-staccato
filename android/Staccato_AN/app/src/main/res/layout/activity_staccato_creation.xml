@@ -65,8 +65,8 @@
                     app:layout_constraintStart_toEndOf="@id/tv_photo_title"
                     app:layout_constraintTop_toTopOf="@id/tv_photo_title"
                     bind:attachedPhotoNumbers="@{viewModel.currentPhotos.size}"
-                    bind:maxPhotoNumbers="@{5}"
-                    tools:text="5/5" />
+                    bind:maxPhotoNumbers="@{viewModel.currentPhotos.MAX_PHOTO_NUMBER}"
+                    tools:text="8/8" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_photo_attach"
@@ -79,7 +79,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_photo_title"
-                    app:spanCount="@integer/staccato_span_count"
+                    app:spanCount="@integer/attached_photo_span_count"
                     tools:itemCount="2"
                     tools:listitem="@layout/item_attached_photo" />
 
