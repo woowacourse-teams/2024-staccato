@@ -54,12 +54,12 @@ public interface CategoryControllerDocs {
     @Operation(summary = "특정 날짜를 포함하는 사용자의 모든 카테고리 목록 조회", description = "특정 날짜를 포함하는 사용자의 모든 카테고리 목록을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 목록 조회 성공", responseCode = "200"),
-            @ApiResponse(description = "입력받은 현재 날짜가 유효하지 않을 때 발생", responseCode = "400")
+            @ApiResponse(description = "입력받은 특정 날짜가 유효하지 않을 때 발생", responseCode = "400")
     })
     ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "특정 날짜", example = "2024-08-21") LocalDate specificDate,
-            @Parameter(description = "공유 카테고리 flag 값", example = "2024-08-21") boolean isShared
+            @Parameter(description = "공유 카테고리 flag 값", example = "false") boolean isShared
     );
 
     @Operation(summary = "카테고리 조회", description = "사용자의 카테고리을 조회합니다.")
