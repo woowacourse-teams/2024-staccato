@@ -6,7 +6,7 @@ import com.staccato.invitation.domain.CategoryInvitation;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "보낸 초대 목록 응답 형식입니다.")
+@Schema(description = "받은 초대 목록 응답 형식입니다.")
 public record CategoryInvitationReceivedResponses(List<CategoryInvitationReceivedResponse> invitations) {
     public static CategoryInvitationReceivedResponses from(List<CategoryInvitation> invitations) {
         return new CategoryInvitationReceivedResponses(invitations.stream()

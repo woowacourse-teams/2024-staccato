@@ -5,7 +5,7 @@ import com.staccato.invitation.domain.CategoryInvitation;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "보낸 초대 목록에서 각 초대의 응답 형식입니다.")
+@Schema(description = "받은 초대 목록에서 각 초대의 응답 형식입니다.")
 public record CategoryInvitationReceivedResponse(
         @Schema(example = SwaggerExamples.INVITATION_ID)
         Long invitationId,
