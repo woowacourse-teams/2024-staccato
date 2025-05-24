@@ -2,6 +2,7 @@ package com.staccato.invitation.repository;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.staccato.invitation.domain.CategoryInvitation;
@@ -29,4 +30,8 @@ public interface CategoryInvitationRepository extends JpaRepository<CategoryInvi
             ORDER BY ci.createdAt DESC
             """)
     List<CategoryInvitation> findAllWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(@Param("inviteeId") long inviteeId);
+
+    @Modifying
+    @Query("DELETE FROM CategoryInvitation ci WHERE ci.category.id = :categoryId")
+    void deleteAllByCategoryIdInBulk(long categoryId);
 }
