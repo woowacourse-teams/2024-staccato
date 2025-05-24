@@ -33,6 +33,11 @@ data class AttachedPhotosUiModel(
 
     fun removePhoto(targetPhoto: AttachedPhotoUiModel) = AttachedPhotosUiModel(attachedPhotos.filterNot { it == targetPhoto })
 
+    fun toLoading(targetPhoto: AttachedPhotoUiModel) =
+        AttachedPhotosUiModel(
+            attachedPhotos.map { if (it == targetPhoto) it.toLoading() else it },
+        )
+
     fun getLoadingPhotosWithoutUrls(): List<AttachedPhotoUiModel> {
         return attachedPhotos.filter { it.imageUrl == null && it.state == AttachedPhotoState.Loading }
     }

@@ -123,6 +123,7 @@ class StaccatoCreationViewModel
         }
 
         override fun onRetryClicked(retryPhoto: AttachedPhotoUiModel) {
+            _currentPhotos.value = currentPhotos.value?.toLoading(retryPhoto)
             _pendingPhotos.postValue(listOf(retryPhoto))
         }
 

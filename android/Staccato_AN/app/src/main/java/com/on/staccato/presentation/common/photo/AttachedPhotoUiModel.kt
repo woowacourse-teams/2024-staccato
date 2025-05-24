@@ -13,6 +13,8 @@ data class AttachedPhotoUiModel(
             state = AttachedPhotoState.Success,
         )
 
+    fun toLoading() = copy(state = AttachedPhotoState.Loading)
+
     fun toRetry() = copy(state = AttachedPhotoState.Retry)
 
     fun toFail() = copy(state = AttachedPhotoState.Fail)
