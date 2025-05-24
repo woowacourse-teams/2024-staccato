@@ -24,6 +24,16 @@
         android:layout_width="110dp"
         android:layout_height="110dp">
 
+        <View
+            android:id="@+id/view_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_attached_photo_5dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_attached_photo"
+            app:layout_constraintEnd_toEndOf="@id/iv_attached_photo"
+            app:layout_constraintStart_toStartOf="@id/iv_attached_photo"
+            app:layout_constraintTop_toTopOf="@id/iv_attached_photo"/>
+
         <ImageView
             android:id="@+id/iv_attached_photo"
             android:layout_width="100dp"
@@ -39,7 +49,7 @@
             bind:coilRoundingRadiusDp="@{5f}" />
 
         <View
-            android:id="@+id/view_background"
+            android:id="@+id/view_foreground"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/shape_attached_photo_5dp"
