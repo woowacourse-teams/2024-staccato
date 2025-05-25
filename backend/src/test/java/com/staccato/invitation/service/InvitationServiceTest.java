@@ -73,7 +73,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         // then
         List<CategoryMember> categoryMembers = categoryRepository.findWithCategoryMembersById(category.getId()).get()
                 .getCategoryMembers();
-        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
         Set<Category> categories = invitations.stream().map(CategoryInvitation::getCategory)
                 .collect(Collectors.toSet());
         Set<InvitationStatus> statuses = invitations.stream().map(CategoryInvitation::getStatus)
@@ -113,7 +113,7 @@ class InvitationServiceTest extends ServiceSliceTest {
         invitationService.invite(host, invitationRequest);
 
         // then
-        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
 
         assertAll(
                 () -> assertThat(invitations).hasSize(1),
