@@ -13,8 +13,6 @@ import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.config.log.annotation.Trace;
-import com.staccato.exception.ForbiddenException;
-import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.service.StaccatoValidator;
@@ -30,6 +28,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CategoryValidator categoryValidator;
     private final StaccatoValidator staccatoValidator;
+    private final CommentValidator commentValidator;
 
     @Transactional
     public long createComment(CommentRequest commentRequest, Member member) {
@@ -55,27 +54,16 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Member member, Long commentId, CommentUpdateRequest commentUpdateRequest) {
-        Comment comment = getComment(commentId);
-        validateCommentOwner(comment, member);
+        Comment comment = commentValidator.getCommentByIdOrThrow(commentId);
+        commentValidator.validateOwner(comment, member);
         comment.changeContent(commentUpdateRequest.content());
-    }
-
-    private Comment getComment(long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new StaccatoException("요청하신 댓글을 찾을 수 없어요."));
     }
 
     @Transactional
     public void deleteComment(long commentId, Member member) {
         commentRepository.findById(commentId).ifPresent(comment -> {
-            validateCommentOwner(comment, member);
+            commentValidator.validateOwner(comment, member);
             commentRepository.deleteById(commentId);
         });
-    }
-
-    private void validateCommentOwner(Comment comment, Member member) {
-        if (comment.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
     }
 }
