@@ -75,10 +75,17 @@ public class StaccatoService {
         Category targetCategory = getCategoryById(staccatoRequest.categoryId());
         validateCategoryOwner(targetCategory, member);
 
+        validateCategoryChangeable(staccato.getCategory(), targetCategory);
         Staccato newStaccato = staccatoRequest.toStaccato(targetCategory);
         List<StaccatoImage> existingImages = staccato.existingImages();
         removeExistingImages(existingImages);
         staccato.update(newStaccato);
+    }
+
+    private void validateCategoryChangeable(Category originCategory, Category targetCategory) {
+        if (originCategory.getIsShared() || targetCategory.getIsShared()) {
+            throw new StaccatoException("공유 상태가 다르거나, 공유 카테고리끼리도 카테고리 변경은 불가능해요.");
+        }
     }
 
     private void removeExistingImages(List<StaccatoImage> images) {

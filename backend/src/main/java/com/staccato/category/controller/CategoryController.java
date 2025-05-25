@@ -64,9 +64,10 @@ public class CategoryController implements CategoryControllerDocs {
     @GetMapping("/candidates")
     public ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @LoginMember Member member,
-            @RequestParam(value = "currentDate") LocalDate currentDate
+            @RequestParam(value = "specificDate") LocalDate specificDate,
+            @RequestParam(value = "isShared") boolean isShared
     ) {
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDate(member, currentDate);
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, specificDate, isShared);
         return ResponseEntity.ok(categoryNameResponses);
     }
 

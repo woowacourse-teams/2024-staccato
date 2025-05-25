@@ -16,11 +16,17 @@ public interface CategoryMemberRepository extends JpaRepository<CategoryMember, 
     List<CategoryMember> findAllByMemberId(long memberId);
 
     @Query("""
-            SELECT mm FROM CategoryMember mm JOIN FETCH mm.category WHERE mm.member.id = :memberId
-            AND ((mm.category.term.startAt is null AND mm.category.term.endAt is null)
-            or (:date BETWEEN mm.category.term.startAt AND mm.category.term.endAt))
+            SELECT mm 
+            FROM CategoryMember mm 
+            JOIN FETCH mm.category 
+            WHERE mm.member.id = :memberId
+              AND mm.category.isShared = :isShared
+              AND (
+                    (mm.category.term.startAt IS NULL AND mm.category.term.endAt IS NULL)
+                 OR (:date BETWEEN mm.category.term.startAt AND mm.category.term.endAt)
+              )
             """)
-    List<CategoryMember> findAllByMemberIdAndDate(@Param("memberId") long memberId, @Param("date") LocalDate date);
+    List<CategoryMember> findAllByMemberIdAndDateAndIsShared(@Param("memberId") long memberId, @Param("date") LocalDate date, @Param("isShared") boolean isShared);
 
     boolean existsByMemberAndCategoryTitle(Member member, CategoryTitle title);
 

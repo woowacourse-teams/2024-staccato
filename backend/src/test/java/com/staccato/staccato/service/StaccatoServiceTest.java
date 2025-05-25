@@ -241,6 +241,52 @@ class StaccatoServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("공유 상태가 다르거나, 공유 카테고리끼리의 카테고리 변경이 일어날 경우 예외가 발생한다.")
+    @Test
+    void failToUpdateCategoryChange() {
+        // given
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category privateCategory = CategoryFixtures.defaultCategory()
+                .withHost(member)
+                .buildAndSave(categoryRepository);
+        Category publicCategory = CategoryFixtures.defaultCategory()
+                .withHost(member)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+        Category publicCategory2 = CategoryFixtures.defaultCategory()
+                .withHost(guest)
+                .withGuests(List.of(member))
+                .buildAndSave(categoryRepository);
+        Staccato privateStaccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(privateCategory)
+                .buildAndSave(staccatoRepository);
+        Staccato publicStaccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(publicCategory)
+                .buildAndSave(staccatoRepository);
+
+        // when
+        StaccatoRequest privateToPublic = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withCategoryId(publicCategory.getId()).build();
+        StaccatoRequest publicToPrivate = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withCategoryId(publicCategory.getId()).build();
+        StaccatoRequest publicToPublic = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withCategoryId(publicCategory2.getId()).build();
+
+        // then
+        assertAll(
+                () -> assertThatThrownBy(() -> staccatoService.updateStaccatoById(privateStaccato.getId(), privateToPublic, member))
+                        .isInstanceOf(StaccatoException.class)
+                        .hasMessage("공유 상태가 다르거나, 공유 카테고리끼리도 카테고리 변경은 불가능해요."),
+                () -> assertThatThrownBy(() -> staccatoService.updateStaccatoById(publicStaccato.getId(), publicToPrivate, member))
+                        .isInstanceOf(StaccatoException.class)
+                        .hasMessage("공유 상태가 다르거나, 공유 카테고리끼리도 카테고리 변경은 불가능해요."),
+                () -> assertThatThrownBy(() -> staccatoService.updateStaccatoById(publicStaccato.getId(), publicToPublic, member))
+                        .isInstanceOf(StaccatoException.class)
+                        .hasMessage("공유 상태가 다르거나, 공유 카테고리끼리도 카테고리 변경은 불가능해요.")
+        );
+    }
+
     @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")
     @Test
     void failToUpdateStaccatoOfOther() {
