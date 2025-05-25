@@ -18,9 +18,6 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
-import com.staccato.staccato.domain.StaccatoImage;
-import com.staccato.staccato.repository.StaccatoImageRepository;
-import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
 import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
 
@@ -37,11 +34,11 @@ public class StaccatoShareService {
 
     private final ShareTokenProvider shareTokenProvider;
     private final CommentRepository commentRepository;
-    private final StaccatoRepository staccatoRepository;
     private final MemberRepository memberRepository;
+    private final StaccatoValidator staccatoValidator;
 
     public StaccatoShareLinkResponse createStaccatoShareLink(Long staccatoId, Member member) {
-        Staccato staccato = getStaccatoById(staccatoId);
+        Staccato staccato = staccatoValidator.getStaccatoByIdOrThrow(staccatoId);
         validateCategoryOwner(staccato.getCategory(), member);
 
         ShareTokenPayload shareTokenPayload = new ShareTokenPayload(staccatoId, member.getId());
@@ -57,16 +54,11 @@ public class StaccatoShareService {
         long memberId = shareTokenProvider.extractMemberId(token);
         LocalDateTime expiredAt = shareTokenProvider.extractExpiredAt(token);
 
-        Staccato staccato = getStaccatoById(staccatoId);
+        Staccato staccato = staccatoValidator.getStaccatoByIdOrThrow(staccatoId);
         Member member = getMemberById(memberId);
         List<Comment> comments = commentRepository.findAllByStaccatoId(staccatoId);
 
         return new StaccatoSharedResponse(expiredAt, staccato, member, comments);
-    }
-
-    private Staccato getStaccatoById(long staccatoId) {
-        return staccatoRepository.findById(staccatoId)
-                .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 
     private Member getMemberById(long memberId) {
