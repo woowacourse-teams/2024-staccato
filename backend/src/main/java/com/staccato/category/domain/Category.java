@@ -148,7 +148,7 @@ public class Category extends BaseEntity {
                 .filter(cm -> cm.isOwnedBy(member))
                 .findFirst()
                 .orElseThrow(ForbiddenException::new);
-        return categoryMember.isGuest();
+        return categoryMember.isRoleGuest();
     }
 
     public boolean isNotSameTitle(CategoryTitle title) {

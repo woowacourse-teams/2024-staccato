@@ -2,9 +2,11 @@ package com.staccato.category.service.dto.response;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.category.domain.Category;
+import com.staccato.category.domain.CategoryMember;
 import com.staccato.config.swagger.SwaggerExamples;
 import com.staccato.member.domain.Member;
 import com.staccato.member.service.dto.response.MemberResponse;
@@ -51,13 +53,17 @@ public record CategoryDetailResponseV3(
                 category.getTerm().getEndAt(),
                 category.getIsShared(),
                 category.getRoleOfMember(member).getRole(),
-                toMemberDetailResponses(category),
+                toMemberDetailResponses(category, member),
                 toStaccatoResponses(staccatos)
         );
     }
 
-    private static List<MemberDetailResponse> toMemberDetailResponses(Category category) {
+    private static List<MemberDetailResponse> toMemberDetailResponses(Category category, Member currentMember) {
         return category.getCategoryMembers().stream()
+                .sorted(Comparator
+                        .comparing((CategoryMember cm) -> cm.isRoleHost() ? 0 : cm.isMember(currentMember) ? 1 : 2)
+                        .thenComparing(CategoryMember::getCreatedAt)
+                )
                 .map(MemberDetailResponse::new)
                 .toList();
     }
