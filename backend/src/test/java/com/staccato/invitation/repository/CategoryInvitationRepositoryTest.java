@@ -7,10 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
 import com.staccato.category.domain.Category;
-import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.fixture.category.CategoryFixtures;
-import com.staccato.fixture.category.CategoryMemberFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.member.domain.Member;
@@ -64,7 +62,7 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
         categoryInvitationRepository.saveAll(List.of(invitation, invitation2, otherInvitation));
 
         // when
-        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
 
         // then
         assertThat(invitations).hasSize(2)
@@ -91,7 +89,7 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
         categoryInvitationRepository.saveAll(List.of(invitation, invitation2, otherInvitation));
 
         // when
-        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(guest.getId());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(guest.getId());
 
         // then
         assertThat(invitations).hasSize(2)

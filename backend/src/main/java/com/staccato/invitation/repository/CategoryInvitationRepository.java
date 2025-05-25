@@ -15,9 +15,10 @@ public interface CategoryInvitationRepository extends JpaRepository<CategoryInvi
             join fetch ci.category
             join fetch ci.invitee
             where ci.inviter.id = :inviterId
+            and ci.status = 'REQUESTED'
             ORDER BY ci.createdAt DESC
             """)
-    List<CategoryInvitation> findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(@Param("inviterId") long inviterId);
+    List<CategoryInvitation> findAllRequestedWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(@Param("inviterId") long inviterId);
 
     boolean existsByCategoryIdAndInviterIdAndInviteeIdAndStatus(long categoryId, long inviterId, long inviteeId, InvitationStatus status);
 
@@ -27,9 +28,10 @@ public interface CategoryInvitationRepository extends JpaRepository<CategoryInvi
             join fetch ci.category
             join fetch ci.inviter
             where ci.invitee.id = :inviteeId
+            and ci.status = 'REQUESTED'
             ORDER BY ci.createdAt DESC
             """)
-    List<CategoryInvitation> findAllWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(@Param("inviteeId") long inviteeId);
+    List<CategoryInvitation> findAllRequestedWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(@Param("inviteeId") long inviteeId);
 
     @Modifying
     @Query("DELETE FROM CategoryInvitation ci WHERE ci.category.id = :categoryId")

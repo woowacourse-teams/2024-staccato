@@ -95,7 +95,7 @@ public class InvitationService {
     }
 
     public CategoryInvitationSentResponses readSentInvitations(Member inviter) {
-        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(inviter.getId());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(inviter.getId());
         return CategoryInvitationSentResponses.from(invitations);
     }
 
@@ -147,7 +147,7 @@ public class InvitationService {
     }
 
     public CategoryInvitationReceivedResponses readReceivedInvitations(Member invitee) {
-        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(invitee.getId());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(invitee.getId());
         return CategoryInvitationReceivedResponses.from(invitations);
     }
 }
