@@ -13,7 +13,6 @@ import com.staccato.ContainerBaseTest;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestPropertySource(properties = {"spring.config.location = classpath:application-test.yml"})
 @ActiveProfiles("test")
-@Disabled
 public class FlywayTest extends ContainerBaseTest {
 
     @Test

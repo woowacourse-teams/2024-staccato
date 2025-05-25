@@ -72,9 +72,9 @@ tasks.named('test') {
 	finalizedBy jacocoTestReport
 }
 
-test {
-	systemProperty "JASYPT_PASSWORD", project.findProperty("JASYPT_PASSWORD") ?: ""
-}
+//test {
+//	systemProperty "JASYPT_PASSWORD", project.findProperty("JASYPT_PASSWORD") ?: ""
+//}
 
 jacocoTestReport {
 	executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))
