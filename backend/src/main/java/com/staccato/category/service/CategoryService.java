@@ -27,6 +27,7 @@ import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoImageRepository;
@@ -47,6 +48,7 @@ public class CategoryService {
     private final StaccatoRepository staccatoRepository;
     private final StaccatoImageRepository staccatoImageRepository;
     private final CommentRepository commentRepository;
+    private final CategoryInvitationRepository categoryInvitationRepository;
     private final CategoryValidator categoryValidator;
 
     @Transactional
@@ -154,5 +156,6 @@ public class CategoryService {
         commentRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
         staccatoRepository.deleteAllByCategoryIdInBulk(categoryId);
         categoryMemberRepository.deleteAllByCategoryIdInBulk(categoryId);
+        categoryInvitationRepository.deleteAllByCategoryIdInBulk(categoryId);
     }
 }

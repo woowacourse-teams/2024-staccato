@@ -1,32 +1,39 @@
 package com.staccato.invitation.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
+import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.category.CategoryMemberFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
-import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponse;
-import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationReceivedResponse;
+import com.staccato.invitation.service.dto.response.CategoryInvitationReceivedResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponse;
+import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class InvitationServiceTest extends ServiceSliceTest {
     @Autowired
@@ -37,6 +44,8 @@ class InvitationServiceTest extends ServiceSliceTest {
     private CategoryRepository categoryRepository;
     @Autowired
     private CategoryInvitationRepository categoryInvitationRepository;
+    @Autowired
+    private CategoryMemberRepository categoryMemberRepository;
 
     private Member host;
     private Member guest;
@@ -172,23 +181,23 @@ class InvitationServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("초대 요청 목록을 조회하면, 최근에 요청을 보낸 사용자 순으로 보여준다.")
+    @DisplayName("초대 요청 보낸 목록을 조회하면, 최근에 보낸 요청 순서대로 보여준다.")
     @Test
-    void readAllInvitationRequested() {
+    void readAllSentInvitations() {
         // given
         Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
         CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
         CategoryInvitation invitation2 = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest2));
 
         // when
-        CategoryInvitationRequestedResponses responses = invitationService.readInvitations(host);
+        CategoryInvitationSentResponses responses = invitationService.readSentInvitations(host);
 
         // then
         assertAll(
                 () -> assertThat(responses.invitations()).hasSize(2),
                 () -> assertThat(responses.invitations()).containsExactly(
-                        new CategoryInvitationRequestedResponse(invitation2),
-                        new CategoryInvitationRequestedResponse(invitation)
+                        new CategoryInvitationSentResponse(invitation2),
+                        new CategoryInvitationSentResponse(invitation)
                 )
         );
     }
@@ -229,5 +238,143 @@ class InvitationServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> invitationService.cancel(host, unknownId))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 초대 정보를 찾을 수 없어요.");
+    }
+
+    @DisplayName("invitee는 본인이 받은 초대 요청을 수락할 수 있다.")
+    @Test
+    void acceptInvitation() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when
+        invitationService.accept(guest, invitation.getId());
+
+        // then
+        assertThat(categoryInvitationRepository.findById(invitation.getId()).get()
+                .getStatus()).isEqualTo(InvitationStatus.ACCEPTED);
+    }
+
+    @DisplayName("초대 요청을 받은 사용자가 아닌 다른 사용자(ex.HOST)가 초대 요청을 수락하면 예외가 발생한다.")
+    @Test
+    void failToAcceptIfNotInvitee() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when & then
+        assertThatThrownBy(() -> invitationService.accept(host, invitation.getId()))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("존재하지 않는 초대 요청을 수락하면 예외가 발생한다.")
+    @Test
+    void failToAcceptIfNotExists() {
+        // given
+        long unknownId = 0;
+
+        // then
+        assertThatThrownBy(() -> invitationService.accept(host, unknownId))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("요청하신 초대 정보를 찾을 수 없어요.");
+    }
+
+    @DisplayName("초대가 수락되면 GUEST가 HOST의 카테고리에 멤버로 추가된다.")
+    @Test
+    void saveCategoryMemberWhenInvitationAcceptSuccess() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when
+        invitationService.accept(guest, invitation.getId());
+
+        // then
+        boolean isGuestSavedInCategory = categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), guest.getId());
+
+        assertThat(isGuestSavedInCategory).isTrue();
+    }
+
+    @DisplayName("이미 멤버인 경우에도 accept는 예외를 던지지 않는다.")
+    @Test
+    void acceptDoesNotThrowWhenMemberAlreadyInCategory() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+        CategoryMemberFixtures.defaultCategoryMember()
+                .withCategory(category)
+                .withMember(guest)
+                .buildAndSave(categoryMemberRepository);
+
+        // when & then
+        assertThatNoException().isThrownBy(() -> invitationService.accept(guest, invitation.getId()));
+    }
+
+    @DisplayName("이미 수락된 초대를 다시 수락해도 예외가 발생하지 않는다.")
+    @Test
+    void acceptDoesNotThrowWhenInvitationAlreadyAccepted() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        invitationService.accept(guest, invitation.getId());
+
+        // when & then
+        assertThatNoException().isThrownBy(() -> invitationService.accept(guest, invitation.getId()));
+    }
+
+    @DisplayName("invitee는 본인이 받은 초대 요청을 거절할 수 있다.")
+    @Test
+    void rejectInvitation() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when
+        invitationService.reject(guest, invitation.getId());
+
+        // then
+        assertThat(categoryInvitationRepository.findById(invitation.getId()).get()
+                .getStatus()).isEqualTo(InvitationStatus.REJECTED);
+    }
+
+    @DisplayName("초대 요청을 받은 사용자가 아닌 다른 사용자(ex.HOST)가 초대 요청을 거절하면 예외가 발생한다.")
+    @Test
+    void failToRejectIfNotInvitee() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+
+        // when & then
+        assertThatThrownBy(() -> invitationService.reject(host, invitation.getId()))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("존재하지 않는 초대 요청을 거절하면 예외가 발생한다.")
+    @Test
+    void failToRejectIfNotExists() {
+        // given
+        long unknownId = 0;
+
+        // then
+        assertThatThrownBy(() -> invitationService.reject(host, unknownId))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("요청하신 초대 정보를 찾을 수 없어요.");
+    }
+
+    @DisplayName("초대 요청 받은 목록을 조회하면, 최근에 받은 요청 순서대로 보여준다.")
+    @Test
+    void readAllReceivedInvitations() {
+        // given
+        Member host2 = MemberFixtures.defaultMember().withNickname("host2").buildAndSave(memberRepository);
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+        CategoryInvitation invitation2 = categoryInvitationRepository.save(CategoryInvitation.invite(category, host2, guest));
+
+        // when
+        CategoryInvitationReceivedResponses responses = invitationService.readReceivedInvitations(guest);
+
+        // then
+        assertAll(
+                () -> assertThat(responses.invitations()).hasSize(2),
+                () -> assertThat(responses.invitations()).containsExactly(
+                        new CategoryInvitationReceivedResponse(invitation2),
+                        new CategoryInvitationReceivedResponse(invitation)
+                )
+        );
     }
 }

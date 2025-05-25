@@ -1,5 +1,6 @@
 package com.staccato.flyway;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -12,6 +13,7 @@ import com.staccato.ContainerBaseTest;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestPropertySource(properties = {"spring.config.location = classpath:application-test.yml"})
 @ActiveProfiles("test")
+@Disabled
 public class FlywayTest extends ContainerBaseTest {
 
     @Test

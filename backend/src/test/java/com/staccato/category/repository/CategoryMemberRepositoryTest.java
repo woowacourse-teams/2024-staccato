@@ -1,12 +1,20 @@
 package com.staccato.category.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import java.time.LocalDate;
 import java.util.List;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+
 import com.staccato.RepositoryTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
@@ -15,9 +23,6 @@ import com.staccato.fixture.category.CategoryMemberFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CategoryMemberRepositoryTest extends RepositoryTest {
     @Autowired
@@ -128,5 +133,28 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
                 () -> assertThat(categoryMemberRepository.findById(categoryMember1.getId()).isEmpty()).isTrue(),
                 () -> assertThat(categoryMemberRepository.findById(categoryMember2.getId()).isEmpty()).isTrue()
         );
+    }
+
+    @DisplayName("카테고리 멤버는 (카테고리, 멤버) 쌍으로 유일해야 한다.")
+    @Test
+    void categoryMemberShouldBeUniqueByCategoryAndMember() {
+        Category category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        CategoryMember categoryMember1 = CategoryMemberFixtures.defaultCategoryMember()
+                .withCategory(category)
+                .withMember(member)
+                .build();
+        CategoryMember categoryMember2 = CategoryMemberFixtures.defaultCategoryMember()
+                .withCategory(category)
+                .withMember(member)
+                .build();
+
+        categoryMemberRepository.save(categoryMember1);
+        categoryMemberRepository.flush();
+
+        assertThatThrownBy(() -> {
+            categoryMemberRepository.save(categoryMember2);
+            categoryMemberRepository.flush();
+        }).isInstanceOf(DataIntegrityViolationException.class);
     }
 }
