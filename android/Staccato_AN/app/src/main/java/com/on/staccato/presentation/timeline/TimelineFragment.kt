@@ -15,7 +15,6 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
-import com.on.staccato.presentation.timeline.adapter.TimelineAdapter
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
 import com.on.staccato.presentation.util.showToast
@@ -36,14 +35,12 @@ class TimelineFragment :
 
     private val timelineViewModel: TimelineViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
-    private lateinit var adapter: TimelineAdapter
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         setupBinding()
-        setUpAdapter()
         setUpObserving()
         logAccess()
     }
@@ -72,28 +69,26 @@ class TimelineFragment :
         timelineViewModel.changeFilterState()
     }
 
+    override fun onChangeToHalfClicked() {
+        sharedViewModel.updateIsHalfModeRequested(true)
+    }
+
     private fun setupBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = timelineViewModel
         binding.handler = this
+        binding.cvTimelineCategories.setContent {
+            TimelineScreen(sharedViewModel = sharedViewModel) {
+                onCategoryClicked(it)
+            }
+        }
     }
 
     private fun navigateToCategory(bundle: Bundle) {
         findNavController().navigate(R.id.action_timelineFragment_to_categoryFragment, bundle)
     }
 
-    private fun setUpAdapter() {
-        adapter = TimelineAdapter(this)
-        binding.rvTimeline.adapter = adapter
-    }
-
     private fun setUpObserving() {
-        timelineViewModel.timeline.observe(viewLifecycleOwner) { timeline ->
-            adapter.updateTimeline(timeline) {
-                binding.rvTimeline.scrollToPosition(0)
-            }
-        }
-
         timelineViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             showToast(message)
         }
@@ -109,6 +104,11 @@ class TimelineFragment :
 
         sharedViewModel.memberProfile.observe(viewLifecycleOwner) { memberProfile ->
             binding.nickname = memberProfile.nickname
+        }
+
+        sharedViewModel.isBottomSheetExpanded.observe(viewLifecycleOwner) {
+            binding.isBottomSheetExpanded = it
+            if (it) sharedViewModel.updateLatestIsDraggable()
         }
     }
 

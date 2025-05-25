@@ -5,6 +5,7 @@ import com.on.staccato.data.dto.category.CategoryColorRequest
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.dto.category.CategoryResponse
 import com.on.staccato.data.dto.mapper.toDto
+import com.on.staccato.data.dto.timeline.TimelineResponse
 import com.on.staccato.data.network.ApiResult
 import com.on.staccato.data.network.handle
 import com.on.staccato.domain.model.NewCategory
@@ -25,8 +26,13 @@ class CategoryRemoteDataSource
             color: String,
         ): ApiResult<Unit> = categoryApiService.putCategoryColor(categoryId, CategoryColorRequest(color)).handle()
 
-        override suspend fun getCategories(currentDate: String?): ApiResult<CategoriesResponse> =
-            categoryApiService.getCategories(
+        override suspend fun getCategories(
+            sort: String?,
+            filter: String?,
+        ): ApiResult<TimelineResponse> = categoryApiService.getCategories(sort, filter)
+
+        override suspend fun getCategoriesBy(currentDate: String?): ApiResult<CategoriesResponse> =
+            categoryApiService.getCategoriesBy(
                 currentDate,
             )
 

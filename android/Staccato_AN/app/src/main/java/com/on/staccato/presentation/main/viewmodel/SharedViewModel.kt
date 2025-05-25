@@ -14,6 +14,9 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +24,15 @@ import javax.inject.Inject
 class SharedViewModel
     @Inject
     constructor(private val myPageRepository: MyPageRepository) : ViewModel() {
+        private val _isHalfModeRequested = MutableLiveData<Boolean>(false)
+        val isHalfModeRequested: LiveData<Boolean> get() = _isHalfModeRequested
+
+        private val _isDraggable = MutableStateFlow<Boolean>(true)
+        val isDraggable: StateFlow<Boolean> = _isDraggable.asStateFlow()
+
+        private val _latestIsDraggable = MutableLiveData<Boolean>()
+        val latestIsDraggable: LiveData<Boolean> get() = _latestIsDraggable
+
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile> get() = _memberProfile
 
@@ -41,8 +53,11 @@ class SharedViewModel
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
 
-        private val _isBottomSheetHalf = MutableLiveData(true)
-        val isBottomSheetHalf: LiveData<Boolean> get() = _isBottomSheetHalf
+        private val _isBottomSheetExpanded = MutableLiveData<Boolean>(false)
+        val isBottomSheetExpanded: LiveData<Boolean> get() = _isBottomSheetExpanded
+
+        private val _isBottomSheetHalfExpanded = MutableLiveData(true)
+        val isBottomSheetHalfExpanded: LiveData<Boolean> get() = _isBottomSheetHalfExpanded
 
         private val _staccatoId = MutableLiveData<Long>()
         val staccatoId: LiveData<Long> get() = _staccatoId
@@ -67,6 +82,14 @@ class SharedViewModel
             }
         }
 
+        fun updateIsDraggable(value: Boolean) {
+            _isDraggable.value = value
+        }
+
+        fun updateLatestIsDraggable() {
+            _latestIsDraggable.value = _isDraggable.value
+        }
+
         fun setTimelineHasUpdated() {
             _isTimelineUpdated.value = true
         }
@@ -84,9 +107,17 @@ class SharedViewModel
             _isSettingClicked.value = isSettingClicked
         }
 
-        fun setIsBottomSheetHalf(isBottomSheetHalf: Boolean) {
-            val isDifferent = isBottomSheetHalf != _isBottomSheetHalf.value
-            if (isDifferent && isDragging.value == false) _isBottomSheetHalf.value = isBottomSheetHalf
+        fun updateBottomSheetState(
+            isExpanded: Boolean,
+            isHalfExpanded: Boolean,
+        ) {
+            val isDifferent = isHalfExpanded != _isBottomSheetHalfExpanded.value
+            if (isDifferent && isDragging.value == false) _isBottomSheetHalfExpanded.value = isHalfExpanded
+            _isBottomSheetExpanded.value = isExpanded
+        }
+
+        fun updateIsHalfModeRequested(state: Boolean) {
+            _isHalfModeRequested.value = state
         }
 
         fun updateStaccatoId(id: Long) {

@@ -8,4 +8,6 @@ interface TimelineHandler {
     fun onSortClicked()
 
     fun onFilterClicked()
+
+    fun onChangeToHalfClicked()
 }

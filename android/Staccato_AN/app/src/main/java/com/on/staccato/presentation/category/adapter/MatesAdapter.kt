@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.on.staccato.databinding.ItemMatesBinding
-import com.on.staccato.presentation.common.MemberUiModel
+import com.on.staccato.domain.model.Member
 
-class MatesAdapter : ListAdapter<MemberUiModel, MatesViewHolder>(diffUtil) {
+class MatesAdapter : ListAdapter<Member, MatesViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -24,21 +24,21 @@ class MatesAdapter : ListAdapter<MemberUiModel, MatesViewHolder>(diffUtil) {
         holder.bind(getItem(position))
     }
 
-    fun updateMates(mates: List<MemberUiModel>) {
+    fun updateMates(mates: List<Member>) {
         submitList(mates)
     }
 
     companion object {
         val diffUtil =
-            object : DiffUtil.ItemCallback<MemberUiModel>() {
+            object : DiffUtil.ItemCallback<Member>() {
                 override fun areItemsTheSame(
-                    oldItem: MemberUiModel,
-                    newItem: MemberUiModel,
-                ): Boolean = oldItem.id == newItem.id
+                    oldItem: Member,
+                    newItem: Member,
+                ): Boolean = oldItem.memberId == newItem.memberId
 
                 override fun areContentsTheSame(
-                    oldItem: MemberUiModel,
-                    newItem: MemberUiModel,
+                    oldItem: Member,
+                    newItem: Member,
                 ): Boolean = oldItem == newItem
             }
     }

@@ -3,6 +3,7 @@ package com.on.staccato.data.category
 import com.on.staccato.data.dto.category.CategoriesResponse
 import com.on.staccato.data.dto.category.CategoryCreationResponse
 import com.on.staccato.data.dto.category.CategoryResponse
+import com.on.staccato.data.dto.timeline.TimelineResponse
 import com.on.staccato.data.network.ApiResult
 import com.on.staccato.domain.model.NewCategory
 
@@ -14,7 +15,13 @@ interface CategoryDataSource {
         color: String,
     ): ApiResult<Unit>
 
-    suspend fun getCategories(currentDate: String?): ApiResult<CategoriesResponse>
+    // TODO: 현재 사용 되지 않음
+    suspend fun getCategories(
+        sort: String? = null,
+        filter: String? = null,
+    ): ApiResult<TimelineResponse>
+
+    suspend fun getCategoriesBy(currentDate: String?): ApiResult<CategoriesResponse>
 
     suspend fun createCategory(newCategory: NewCategory): ApiResult<CategoryCreationResponse>
 

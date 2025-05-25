@@ -90,7 +90,7 @@
             android:src="@drawable/icon_timeline_color_bar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:tintColorRes="@{category.color}" />
+            bind:tintColorRes="@{category.color.colorRes}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

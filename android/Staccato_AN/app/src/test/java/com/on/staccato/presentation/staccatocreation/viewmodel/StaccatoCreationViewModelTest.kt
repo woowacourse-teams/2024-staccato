@@ -11,9 +11,9 @@ import com.on.staccato.domain.model.endDateOf2023
 import com.on.staccato.domain.model.middleDateOf2024
 import com.on.staccato.domain.model.startDateOf2024
 import com.on.staccato.domain.model.targetCategoryCandidate
+import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
-import com.on.staccato.domain.repository.TimelineRepository
 import com.on.staccato.presentation.MainDispatcherRule
 import com.on.staccato.presentation.getOrAwaitValue
 import io.mockk.MockKAnnotations
@@ -40,7 +40,7 @@ class StaccatoCreationViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     @MockK
-    private lateinit var timelineRepository: TimelineRepository
+    private lateinit var categoryRepository: CategoryRepository
 
     @MockK
     private lateinit var staccatoRepository: StaccatoRepository
@@ -146,7 +146,7 @@ class StaccatoCreationViewModelTest {
         }
 
     private fun givenCategoryCandidatesReturnsSuccessWithDummyData() {
-        coEvery { timelineRepository.getCategoryCandidates() } returns
+        coEvery { categoryRepository.getCategoryCandidates() } returns
             Success(
                 dummyCategoryCandidates,
             )

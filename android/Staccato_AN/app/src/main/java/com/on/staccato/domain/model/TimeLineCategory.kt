@@ -9,6 +9,8 @@ data class TimeLineCategory(
     val color: String,
     val startAt: LocalDate? = null,
     val endAt: LocalDate? = null,
-    val mates: List<Member>,
-    val staccatos: List<CategoryStaccato>,
+    val isShared: Boolean,
+    val totalMemberCount: Long,
+    val members: List<Member>,
+    val staccatoCount: Long,
 )

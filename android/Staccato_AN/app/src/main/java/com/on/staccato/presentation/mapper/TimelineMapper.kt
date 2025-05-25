@@ -3,6 +3,7 @@ package com.on.staccato.presentation.mapper
 import com.on.staccato.domain.model.TimeLineCategory
 import com.on.staccato.domain.model.Timeline
 import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.timeline.model.ParticipantsUiModel
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 
 fun Timeline.toTimelineUiModel(): List<TimelineUiModel> {
@@ -14,10 +15,13 @@ fun Timeline.toTimelineUiModel(): List<TimelineUiModel> {
 fun TimeLineCategory.toTimelineUiModel(): TimelineUiModel {
     return TimelineUiModel(
         categoryId = categoryId,
-        categoryTitle = categoryTitle,
         categoryThumbnailUrl = categoryThumbnailUrl,
+        categoryTitle = categoryTitle,
+        color = CategoryColor.getCategoryColorBy(color),
+        isShared = isShared,
         startAt = startAt,
         endAt = endAt,
-        color = CategoryColor.getColorResBy(color),
+        participants = ParticipantsUiModel.from(members, totalMemberCount),
+        staccatoCount = staccatoCount,
     )
 }

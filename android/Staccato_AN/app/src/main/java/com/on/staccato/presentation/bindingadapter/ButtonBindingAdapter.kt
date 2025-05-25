@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.bindingadapter
 
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.databinding.BindingAdapter
@@ -133,6 +134,33 @@ fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
 @BindingAdapter("sendButtonEnabled")
 fun ImageButton.setSendButtonEnabled(value: String?) {
     isEnabled = !value.isNullOrBlank()
+}
+
+@BindingAdapter("visibilityByIsBottomSheetExpanded")
+fun ImageButton.setVisibilityBy(isBottomSheetExpanded: Boolean?) {
+    if (isBottomSheetExpanded == true) {
+        fadeIn()
+    } else {
+        fadeOut()
+    }
+}
+
+private fun View.fadeIn(duration: Long = 300) {
+    alpha = 0f
+    visibility = View.VISIBLE
+    animate()
+        .alpha(1f)
+        .setDuration(duration)
+        .setListener(null)
+}
+
+private fun View.fadeOut(duration: Long = 300) {
+    animate()
+        .alpha(0f)
+        .setDuration(duration)
+        .withEndAction {
+            visibility = View.GONE
+        }
 }
 
 private const val MAX_RECOVERY_CODE = 36

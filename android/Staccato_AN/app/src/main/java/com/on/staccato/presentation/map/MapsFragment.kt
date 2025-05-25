@@ -206,10 +206,10 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun GoogleMap.setMapPadding() {
-        sharedViewModel.isBottomSheetHalf.observe(viewLifecycleOwner) { isBottomSheetHalf ->
+        sharedViewModel.isBottomSheetHalfExpanded.observe(viewLifecycleOwner) { isHalfExpanded ->
             val mapPaddingBottom =
-                if (isBottomSheetHalf) (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt() else DEFAULT_MAP_PADDING
-            val yPixel = if (isBottomSheetHalf) yPixel else -yPixel
+                if (isHalfExpanded) (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt() else DEFAULT_MAP_PADDING
+            val yPixel = if (isHalfExpanded) yPixel else -yPixel
 
             setPadding(
                 DEFAULT_MAP_PADDING,
