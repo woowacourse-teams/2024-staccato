@@ -48,7 +48,7 @@ public class CategoryValidator {
         }
     }
 
-    public void validateCategoryOwner(Category category, Member member) {
+    public void validateOwner(Category category, Member member) {
         if (category.isNotOwnedBy(member)) {
             throw new ForbiddenException();
         }

@@ -34,7 +34,7 @@ public class CommentService {
     @Transactional
     public long createComment(CommentRequest commentRequest, Member member) {
         Staccato staccato = staccatoValidator.getStaccatoByIdOrThrow(commentRequest.staccatoId());
-        categoryValidator.validateCategoryOwner(staccato.getCategory(), member);
+        categoryValidator.validateOwner(staccato.getCategory(), member);
         Comment comment = commentRequest.toComment(staccato, member);
 
         return commentRepository.save(comment).getId();
@@ -42,7 +42,7 @@ public class CommentService {
 
     public CommentResponses readAllCommentsByStaccatoId(Member member, Long staccatoId) {
         Staccato staccato = staccatoValidator.getStaccatoByIdOrThrow(staccatoId);
-        categoryValidator.validateCategoryOwner(staccato.getCategory(), member);
+        categoryValidator.validateOwner(staccato.getCategory(), member);
         List<Comment> comments = commentRepository.findAllByStaccatoId(staccatoId);
         sortByCreatedAtAscending(comments);
 
