@@ -50,8 +50,8 @@ public class AuthService {
     }
 
     public Member extractFromToken(String token) {
-        Member member = memberRepository.findById(tokenProvider.extractMemberId(token))
-                .orElseThrow(UnauthorizedException::new);
+        long memberId = tokenProvider.extractMemberId(token);
+        Member member = memberValidator.getMemberByIdOrThrow(memberId);
         log.info(LogForm.LOGIN_MEMBER_FORM, member.getId(), member.getNickname().getNickname());
         return member;
     }
