@@ -10,10 +10,7 @@ import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.service.CategoryValidator;
 import com.staccato.config.log.annotation.Trace;
-import com.staccato.exception.ForbiddenException;
-import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.domain.CategoryInvitation;
-import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
@@ -36,58 +33,30 @@ public class InvitationService {
     private final CategoryInvitationRepository categoryInvitationRepository;
     private final CategoryMemberRepository categoryMemberRepository;
     private final CategoryValidator categoryValidator;
+    private final CategoryInvitationValidator categoryInvitationValidator;
 
     @Transactional
     public CategoryInvitationCreateResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = categoryValidator.getCategoryByIdOrThrow(categoryInvitationRequest.categoryId());
-        validateInvitePermission(category, inviter);
+        categoryValidator.validateOwner(category, inviter);
+        categoryValidator.validateHost(category, inviter);
         List<Member> invitees = memberRepository.findAllByIdIn(categoryInvitationRequest.inviteeIds());
         List<CategoryInvitation> invitations = categoryInvitationRepository.saveAll(createInvitations(category, inviter, invitees));
 
         return CategoryInvitationCreateResponses.from(invitations);
     }
 
-    private void validateInvitePermission(Category category, Member member) {
-        validateOwner(category, member);
-        validateHost(category, member);
-    }
-
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    private void validateHost(Category category, Member member) {
-        if (category.isGuest(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
     private List<CategoryInvitation> createInvitations(Category category, Member inviter, List<Member> invitees) {
         List<CategoryInvitation> categoryInvitations = new ArrayList<>();
 
         for (Member invitee : invitees) {
-            validateIfAlreadyCategoryMember(category, invitee);
-            validateIfAlreadyRequested(category, inviter, invitee);
+            categoryValidator.validateNotCategoryMember(category, invitee);
+            categoryInvitationValidator.validateNotAlreadyRequested(category, inviter, invitee);
             CategoryInvitation categoryInvitation = CategoryInvitation.invite(category, inviter, invitee);
             categoryInvitations.add(categoryInvitation);
         }
 
         return categoryInvitations;
-    }
-
-    private void validateIfAlreadyCategoryMember(Category category, Member invitee) {
-        if (categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), invitee.getId())) {
-            throw new StaccatoException("이미 카테고리에 함께하고 있는 사용자입니다.");
-        }
-    }
-
-    private void validateIfAlreadyRequested(Category category, Member inviter, Member invitee) {
-        if (categoryInvitationRepository.existsByCategoryIdAndInviterIdAndInviteeIdAndStatus(
-                category.getId(), inviter.getId(), invitee.getId(), InvitationStatus.REQUESTED)) {
-            throw new StaccatoException("이미 초대 요청을 보낸 사용자입니다.");
-        }
     }
 
     public CategoryInvitationSentResponses readSentInvitations(Member inviter) {
@@ -97,21 +66,15 @@ public class InvitationService {
 
     @Transactional
     public void cancel(Member inviter, long invitationId) {
-        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        validateInviter(invitation, inviter);
+        CategoryInvitation invitation = categoryInvitationValidator.getCategoryInvitationByIdOrThrow(invitationId);
+        categoryInvitationValidator.validateInviter(invitation, inviter);
         invitation.cancel();
-    }
-
-    private void validateInviter(CategoryInvitation invitation, Member inviter) {
-        if (invitation.isNotInviter(inviter)) {
-            throw new ForbiddenException();
-        }
     }
 
     @Transactional
     public void accept(Member invitee, long invitationId) {
-        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        validateInvitee(invitation, invitee);
+        CategoryInvitation invitation = categoryInvitationValidator.getCategoryInvitationByIdOrThrow(invitationId);
+        categoryInvitationValidator.validateInvitee(invitation, invitee);
         invitation.accept();
 
         Category category = invitation.getCategory();
@@ -126,20 +89,9 @@ public class InvitationService {
 
     @Transactional
     public void reject(Member invitee, long invitationId) {
-        CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        validateInvitee(invitation, invitee);
+        CategoryInvitation invitation = categoryInvitationValidator.getCategoryInvitationByIdOrThrow(invitationId);
+        categoryInvitationValidator.validateInvitee(invitation, invitee);
         invitation.reject();
-    }
-
-    private CategoryInvitation getCategoryInvitationById(long invitationId) {
-        return categoryInvitationRepository.findById(invitationId)
-                .orElseThrow(() -> new StaccatoException("요청하신 초대 정보를 찾을 수 없어요."));
-    }
-
-    private void validateInvitee(CategoryInvitation invitation, Member invitee) {
-        if (invitation.isNotInvitee(invitee)) {
-            throw new ForbiddenException();
-        }
     }
 
     public CategoryInvitationReceivedResponses readReceivedInvitations(Member invitee) {

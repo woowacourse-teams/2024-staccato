@@ -53,4 +53,16 @@ public class CategoryValidator {
             throw new ForbiddenException();
         }
     }
+
+    public void validateHost(Category category, Member member) {
+        if (category.isGuest(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    public void validateNotCategoryMember(Category category, Member invitee) {
+        if (categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), invitee.getId())) {
+            throw new StaccatoException("이미 카테고리에 함께하고 있는 사용자입니다.");
+        }
+    }
 }
