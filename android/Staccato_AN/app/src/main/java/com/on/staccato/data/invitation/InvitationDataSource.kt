@@ -5,13 +5,13 @@ import com.on.staccato.data.dto.invitation.SentInvitationsResponse
 import com.on.staccato.data.network.ApiResult
 
 interface InvitationDataSource {
-    fun getReceivedInvitations(): ApiResult<ReceivedInvitationsResponse>
+    suspend fun getReceivedInvitations(): ApiResult<ReceivedInvitationsResponse>
 
-    fun acceptInvitation(invitationId: Long): ApiResult<Unit>
+    suspend fun acceptInvitation(invitationId: Long): ApiResult<Unit>
 
-    fun rejectInvitation(invitationId: Long): ApiResult<Unit>
+    suspend fun rejectInvitation(invitationId: Long): ApiResult<Unit>
 
-    fun getSentInvitations(): ApiResult<SentInvitationsResponse>
+    suspend fun getSentInvitations(): ApiResult<SentInvitationsResponse>
 
-    fun cancelInvitation(invitationId: Long): ApiResult<Unit>
+    suspend fun cancelInvitation(invitationId: Long): ApiResult<Unit>
 }

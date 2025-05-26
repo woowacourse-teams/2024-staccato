@@ -13,19 +13,19 @@ class InvitationDefaultRepository
     constructor(
         private val invitationDataSource: InvitationDataSource
     ) : InvitationRepository {
-    override fun getReceivedInvitations(): ApiResult<List<ReceivedInvitation>> =
+    override suspend fun getReceivedInvitations(): ApiResult<List<ReceivedInvitation>> =
         invitationDataSource.getReceivedInvitations().handle { it.toDomain() }
 
-    override fun acceptInvitation(invitationId: Long): ApiResult<Unit> =
+    override suspend fun acceptInvitation(invitationId: Long): ApiResult<Unit> =
         invitationDataSource.acceptInvitation(invitationId =  invitationId).handle()
 
-    override fun rejectInvitation(invitationId: Long): ApiResult<Unit> =
+    override suspend fun rejectInvitation(invitationId: Long): ApiResult<Unit> =
         invitationDataSource.rejectInvitation(invitationId =  invitationId).handle()
 
-    override fun getSentInvitations(): ApiResult<List<SentInvitation>> =
+    override suspend fun getSentInvitations(): ApiResult<List<SentInvitation>> =
         invitationDataSource.getSentInvitations().handle { it.toDomain() }
 
-    override fun cancelInvitation(invitationId: Long): ApiResult<Unit> =
+    override suspend fun cancelInvitation(invitationId: Long): ApiResult<Unit> =
         invitationDataSource.cancelInvitation(invitationId =  invitationId).handle()
 
 }

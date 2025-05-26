@@ -9,23 +9,23 @@ import retrofit2.http.Path
 
 interface InvitationApiService {
     @GET(RECEIVED_INVITATION_PATH)
-    fun getReceivedInvitations(): ApiResult<ReceivedInvitationsResponse>
+    suspend fun getReceivedInvitations(): ApiResult<ReceivedInvitationsResponse>
 
     @POST(INVITATION_ACCEPT_PATH)
-    fun postInvitationAccept(
+    suspend fun postInvitationAccept(
         @Path(INVITATION_ID) invitationId: Long,
     ): ApiResult<Unit>
 
     @POST(INVITATION_REJECT_PATH)
-    fun postInvitationReject(
+    suspend fun postInvitationReject(
         @Path(INVITATION_ID) invitationId: Long,
     ): ApiResult<Unit>
 
     @GET(SENT_INVITATION_PATH)
-    fun getSentInvitations(): ApiResult<SentInvitationsResponse>
+    suspend fun getSentInvitations(): ApiResult<SentInvitationsResponse>
 
     @POST(INVITATION_CANCEL_PATH)
-    fun postInvitationCancel(
+    suspend fun postInvitationCancel(
         @Path(INVITATION_ID) invitationId: Long,
     ): ApiResult<Unit>
 
