@@ -10,7 +10,14 @@ import javax.inject.Inject
 
 class InvitationTempRepository @Inject constructor(): InvitationRepository {
     override fun getReceivedInvitations(): ApiResult<List<ReceivedInvitation>> = Success(dummyReceivedInvitations)
+
+    override fun acceptInvitation(invitationId: Long): ApiResult<Unit> = Success(Unit)
+
+    override fun rejectInvitation(invitationId: Long): ApiResult<Unit> = Success(Unit)
+
     override fun getSentInvitations(): ApiResult<List<SentInvitation>> = Success(dummySentInvitations)
+
+    override fun cancelInvitation(invitationId: Long): ApiResult<Unit> = Success(Unit)
 }
 
 private val dummyReceivedInvitations =
