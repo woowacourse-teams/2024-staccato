@@ -3,6 +3,7 @@ package com.on.staccato.di.module
 import com.on.staccato.data.category.CategoryDefaultRepository
 import com.on.staccato.data.comment.CommentDefaultRepository
 import com.on.staccato.data.image.ImageDefaultRepository
+import com.on.staccato.data.invitation.InvitationDefaultRepository
 import com.on.staccato.data.invitation.InvitationTempRepository
 import com.on.staccato.data.location.LocationDefaultRepository
 import com.on.staccato.data.login.LoginDefaultRepository
@@ -56,5 +57,5 @@ abstract class RepositoryModule {
     abstract fun bindLocationRepository(locationDefaultRepository: LocationDefaultRepository): LocationRepository
 
     @Binds
-    abstract fun bindInvitationRepository(invitationRepository: InvitationTempRepository): InvitationRepository
+    abstract fun bindInvitationRepository(invitationRepository: InvitationDefaultRepository): InvitationRepository
 }
