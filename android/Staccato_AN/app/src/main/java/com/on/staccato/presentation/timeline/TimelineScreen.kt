@@ -13,7 +13,7 @@ import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
-private const val TIMELINE_TOP_INDEX = 0
+private const val TIMELINE_TOP_SCROLL_OFFSET = 0
 
 @Composable
 fun TimelineScreen(
@@ -25,8 +25,8 @@ fun TimelineScreen(
     val lazyListState = rememberLazyListState()
 
     LaunchedEffect(lazyListState) {
-        snapshotFlow { lazyListState.firstVisibleItemIndex }
-            .map { it == TIMELINE_TOP_INDEX }
+        snapshotFlow { lazyListState.firstVisibleItemScrollOffset }
+            .map { it == TIMELINE_TOP_SCROLL_OFFSET }
             .distinctUntilChanged()
             .collect {
                 sharedViewModel.updateIsDraggable(it)
