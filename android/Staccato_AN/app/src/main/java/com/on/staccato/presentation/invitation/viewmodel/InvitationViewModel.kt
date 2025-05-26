@@ -54,6 +54,16 @@ class InvitationViewModel
             }
         }
 
+        fun cancelInvitation(invitationId: Long) {
+            viewModelScope.launch {
+                val result = invitationRepository.cancelInvitation(invitationId)
+                result
+                    .onSuccess{ getSentInvitations() }
+                    .onServerError {}
+                    .onException2 {}
+            }
+        }
+
         private fun updateReceivedInvitations(invitations: List<ReceivedInvitation>) {
             _receivedInvitations.value = invitations.map { it.toUiModel() }
         }
