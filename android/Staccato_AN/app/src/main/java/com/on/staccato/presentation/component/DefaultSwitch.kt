@@ -15,16 +15,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.on.staccato.R
 import com.on.staccato.theme.Gray2
 import com.on.staccato.theme.StaccatoBlue70
 import com.on.staccato.theme.White
+
+private const val LABEL_TRACK_COLOR = "TrackColor"
+private const val LABEL_THUMB_POSITION = "ThumbPosition"
 
 @Composable
 fun DefaultSwitch(
@@ -40,12 +41,12 @@ fun DefaultSwitch(
 ) {
     val trackColor by animateColorAsState(
         if (checked) checkedTrackColor else uncheckedTrackColor,
-        label = stringResource(id = R.string.label_custom_switch_track_color),
+        label = LABEL_TRACK_COLOR,
     )
     val padding = 2.dp
     val thumbPosition by animateDpAsState(
         if (checked) width - thumbSize - padding else padding,
-        label = stringResource(id = R.string.label_custom_switch_thumb_position),
+        label = LABEL_THUMB_POSITION,
     )
 
     Box(
