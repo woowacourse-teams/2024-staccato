@@ -1,6 +1,5 @@
 package com.staccato.category.service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +9,7 @@ import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
+import com.staccato.category.service.dto.request.CategoryCandidateRequest;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
@@ -71,9 +71,9 @@ public class CategoryService {
         return new CategoryResponsesV3(responses);
     }
 
-    public CategoryNameResponses readAllCategoriesByDateAndIsShared(Member member, LocalDate specificDate, boolean isShared) {
+    public CategoryNameResponses readAllCategoriesByDateAndIsShared(Member member, CategoryCandidateRequest categoryCandidateRequest) {
         List<Category> rawCategories = getCategories(
-                categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(member.getId(), specificDate, isShared));
+                categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(member.getId(), categoryCandidateRequest.specificDate(), categoryCandidateRequest.isShared()));
         List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER,
                 DEFAULT_CATEGORY_SORT);
 

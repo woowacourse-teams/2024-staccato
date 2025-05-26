@@ -17,6 +17,7 @@ import com.staccato.category.domain.Color;
 import com.staccato.category.domain.Role;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
+import com.staccato.category.service.dto.request.CategoryCandidateRequest;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
@@ -158,10 +159,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertThatNoException().isThrownBy(() -> categoryService.createCategory(categoryCreateRequest, member));
     }
 
-    @DisplayName("현재 날짜를 포함하는 모든 카테고리 목록을 조회한다.")
+    @DisplayName("특정 날짜를 포함하는 모든 카테고리 목록을 조회한다.")
     @MethodSource("dateProvider")
     @ParameterizedTest
-    void readAllCategories(LocalDate currentDate, int expectedSize) {
+    void readAllCategories(LocalDate specificDate, int expectedSize) {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         categoryService.createCategory(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
@@ -175,9 +176,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         categoryService.createCategory(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                 .withCategoryTitle("third")
                 .withTerm(null, null).build(), member);
+        CategoryCandidateRequest categoryCandidateRequest = new CategoryCandidateRequest(specificDate, false);
 
         // when
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, currentDate, false);
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, categoryCandidateRequest);
 
         // then
         assertThat(categoryNameResponses.categories()).hasSize(expectedSize);
