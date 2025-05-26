@@ -35,6 +35,7 @@ import com.on.staccato.presentation.invitation.component.NicknameText
 import com.on.staccato.presentation.invitation.component.ProfileImage
 import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
 import com.on.staccato.presentation.invitation.model.dummySentInvitationUiModels
+import com.on.staccato.presentation.invitation.sent.component.CancelButton
 import com.on.staccato.theme.Accents4
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray3
@@ -145,29 +146,6 @@ fun CategoryTitleLayout(
             style = Body4,
             color = Gray3,
         )
-    }
-}
-
-
-@Composable
-private fun CancelButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    DefaultTextButton(
-        modifier = modifier,
-        text = "취소",
-        onClick = onClick,
-        backgroundColor = Accents4,
-        textColor = White,
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun CancelButtonPreview() {
-    Box(modifier = Modifier.padding(10.dp)) {
-        CancelButton {}
     }
 }
 
