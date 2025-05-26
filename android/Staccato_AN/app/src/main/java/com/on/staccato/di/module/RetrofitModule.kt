@@ -45,11 +45,11 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun memberApiService(): MemberApiService = retrofit.create(MemberApiService::class.java)
+    fun provideMemberApiService(): MemberApiService = retrofit.create(MemberApiService::class.java)
 
     @Singleton
     @Provides
-    fun myPageApiService(): MyPageApiService = retrofit.create(MyPageApiService::class.java)
+    fun provideMyPageApiService(): MyPageApiService = retrofit.create(MyPageApiService::class.java)
 
     @Singleton
     @Provides
