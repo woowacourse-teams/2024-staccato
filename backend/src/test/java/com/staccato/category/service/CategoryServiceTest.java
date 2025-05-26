@@ -17,7 +17,6 @@ import com.staccato.category.domain.Color;
 import com.staccato.category.domain.Role;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
-import com.staccato.category.service.dto.request.CategoryCandidateRequest;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryCreateRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
@@ -176,10 +175,9 @@ class CategoryServiceTest extends ServiceSliceTest {
         categoryService.createCategory(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                 .withCategoryTitle("third")
                 .withTerm(null, null).build(), member);
-        CategoryCandidateRequest categoryCandidateRequest = new CategoryCandidateRequest(specificDate, false);
 
         // when
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, categoryCandidateRequest);
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, specificDate, false);
 
         // then
         assertThat(categoryNameResponses.categories()).hasSize(expectedSize);

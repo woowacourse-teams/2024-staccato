@@ -16,7 +16,6 @@ import org.springframework.http.MediaType;
 import com.staccato.ControllerTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
-import com.staccato.category.service.dto.request.CategoryCandidateRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
@@ -238,7 +237,7 @@ class CategoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().build();
         CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
-        when(categoryService.readAllCategoriesByDateAndIsShared(any(Member.class), any(CategoryCandidateRequest.class))).thenReturn(categoryNameResponses);
+        when(categoryService.readAllCategoriesByDateAndIsShared(any(Member.class), any(), any(Boolean.class))).thenReturn(categoryNameResponses);
         String expectedResponse = """
                 {
                     "categories": [

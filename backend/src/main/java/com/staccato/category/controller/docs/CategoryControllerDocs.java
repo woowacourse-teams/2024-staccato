@@ -1,9 +1,9 @@
 package com.staccato.category.controller.docs;
 
+import java.time.LocalDate;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
-import com.staccato.category.service.dto.request.CategoryCandidateRequest;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
@@ -58,7 +58,8 @@ public interface CategoryControllerDocs {
     })
     ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "특정 날짜를 포함하며 개인 혹은 공통 카테고리인지에 대한 flag 값을 기준으로 해당하는 카테고리 목록을 조회합니다.") CategoryCandidateRequest categoryCandidateRequest
+            @Parameter(description = "특정 날짜", example = "2024-08-21") LocalDate specificDate,
+            @Parameter(description = "공유 카테고리 flag 값", example = "false") boolean isShared
     );
 
     @Operation(summary = "카테고리 조회", description = "사용자의 카테고리을 조회합니다.")
