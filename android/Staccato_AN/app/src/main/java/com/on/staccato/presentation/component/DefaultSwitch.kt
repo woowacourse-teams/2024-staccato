@@ -40,12 +40,12 @@ fun DefaultSwitch(
     onCheckedChange: (Boolean) -> Unit,
 ) {
     val trackColor by animateColorAsState(
-        if (checked) checkedTrackColor else uncheckedTrackColor,
+        targetValue = if (checked) checkedTrackColor else uncheckedTrackColor,
         label = LABEL_TRACK_COLOR,
     )
     val padding = 2.dp
     val thumbPosition by animateDpAsState(
-        if (checked) width - thumbSize - padding else padding,
+        targetValue = if (checked) width - thumbSize - padding else padding,
         label = LABEL_THUMB_POSITION,
     )
 
