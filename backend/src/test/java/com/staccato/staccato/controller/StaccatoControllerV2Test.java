@@ -1,6 +1,7 @@
 package com.staccato.staccato.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -18,11 +19,14 @@ import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
+import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
+import com.staccato.staccato.service.dto.response.StaccatoDetailResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -103,5 +107,45 @@ class StaccatoControllerV2Test extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("적합한 경로변수를 통해 스타카토 조회에 성공한다.")
+    @Test
+    void readStaccatoById() throws Exception {
+        // given
+        long staccatoId = 1L;
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31)).build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
+        StaccatoDetailResponseV2 response = new StaccatoDetailResponseV2(staccato);
+        when(staccatoService.readStaccatoById(anyLong(), any(Member.class))).thenReturn(response);
+        String expectedResponse = """
+                    {
+                         "staccatoId": null,
+                         "categoryId": null,
+                         "categoryTitle": "categoryTitle",
+                         "startAt": "2024-01-01",
+                         "endAt": "2024-12-31",
+                         "staccatoTitle": "staccatoTitle",
+                         "staccatoImageUrls": ["https://example.com/staccatoImage.jpg"],
+                         "visitedAt": "2024-06-01T00:00:00",
+                         "feeling": "nothing",
+                         "placeName": "placeName",
+                         "address": "address",
+                         "latitude": 0,
+                         "longitude": 0,
+                         "isShared": false
+                     }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/v2/staccatos/{staccatoId}", staccatoId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
     }
 }

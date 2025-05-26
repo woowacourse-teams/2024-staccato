@@ -27,7 +27,7 @@ import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
-import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
+import com.staccato.staccato.service.dto.response.StaccatoDetailResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
@@ -170,10 +170,10 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
-        StaccatoDetailResponse actual = staccatoService.readStaccatoById(staccato.getId(), member);
+        StaccatoDetailResponseV2 actual = staccatoService.readStaccatoById(staccato.getId(), member);
 
         // then
-        assertThat(actual).isEqualTo(new StaccatoDetailResponse(staccato));
+        assertThat(actual).isEqualTo(new StaccatoDetailResponseV2(staccato));
     }
 
     @DisplayName("본인 것이 아닌 스타카토를 조회하려고 하면 예외가 발생한다.")
