@@ -161,10 +161,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertThatNoException().isThrownBy(() -> categoryService.createCategory(categoryCreateRequest, member));
     }
 
-    @DisplayName("현재 날짜를 포함하는 모든 카테고리 목록을 조회한다.")
+    @DisplayName("특정 날짜를 포함하는 모든 카테고리 목록을 조회한다.")
     @MethodSource("dateProvider")
     @ParameterizedTest
-    void readAllCategories(LocalDate currentDate, int expectedSize) {
+    void readAllCategories(LocalDate specificDate, int expectedSize) {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         categoryService.createCategory(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
@@ -180,7 +180,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withTerm(null, null).build(), member);
 
         // when
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDate(member, currentDate);
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, specificDate, false);
 
         // then
         assertThat(categoryNameResponses.categories()).hasSize(expectedSize);

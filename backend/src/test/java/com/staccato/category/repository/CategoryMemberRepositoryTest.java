@@ -55,32 +55,81 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
         assertThat(result).hasSize(2);
     }
 
-    @DisplayName("사용자 식별자와 날짜로 카테고리 목록을 조회한다.")
+    @DisplayName("사용자 식별자와 날짜 값으로 카테고리 목록을 조회한다.")
     @Test
     void findAllByMemberIdAndDate() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Category category1 = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2023, 1, 1),
-                        LocalDate.of(2023, 12, 31))
+        CategoryFixtures.defaultCategory()
+                .withTerm(null, null)
+                .withTitle("no-term")
+                .withHost(member)
                 .buildAndSave(categoryRepository);
-        Category category2 = CategoryFixtures.defaultCategory()
+        CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
+                .withTitle("term")
+                .withHost(member)
                 .buildAndSave(categoryRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
-                .withMember(member)
-                .withCategory(category1).buildAndSave(categoryMemberRepository);
-        CategoryMemberFixtures.defaultCategoryMember()
-                .withMember(member)
-                .withCategory(category2).buildAndSave(categoryMemberRepository);
 
         // when
-        List<CategoryMember> result = categoryMemberRepository.findAllByMemberIdAndDate(
-                member.getId(), LocalDate.of(2024, 6, 1));
+        List<CategoryMember> result = categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(
+                member.getId(), LocalDate.of(2024, 6, 1), false);
+        List<CategoryMember> otherResult = categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(
+                member.getId(), LocalDate.of(2023, 6, 1), false);
 
         // then
-        assertThat(result).hasSize(1);
+        assertAll(
+                () -> assertThat(result)
+                        .hasSize(2)
+                        .extracting(cm -> cm.getCategory().getTitle().getTitle())
+                        .containsExactly("no-term", "term"),
+
+                () -> assertThat(otherResult)
+                        .hasSize(1)
+                        .extracting(cm -> cm.getCategory().getTitle().getTitle())
+                        .containsExactly("no-term")
+        );
+    }
+
+
+    @DisplayName("사용자 식별자와 공유 flag 값으로 카테고리 목록을 조회한다.")
+    @Test
+    void findAllByMemberIdAndFlag() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
+                .withTitle("shared")
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+        CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
+                .withTitle("nonShared")
+                .withHost(host)
+                .buildAndSave(categoryRepository);
+
+        // when
+        List<CategoryMember> nonSharedResult = categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(
+                host.getId(), LocalDate.of(2024, 6, 1), false);
+        List<CategoryMember> sharedResult = categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(
+                host.getId(), LocalDate.of(2024, 6, 1), true);
+
+        // then
+        assertAll(
+                () -> assertThat(nonSharedResult)
+                        .hasSize(1)
+                        .extracting(cm -> cm.getCategory().getTitle().getTitle())
+                        .containsExactly("nonShared"),
+                () -> assertThat(sharedResult)
+                        .hasSize(1)
+                        .extracting(cm -> cm.getCategory().getTitle().getTitle())
+                        .containsExactly("shared")
+        );
     }
 
     @DisplayName("사용자 식별자와 날짜로 카테고리 목록을 조회할 때 카테고리에 기한이 없을 경우 함께 조회한다.")
@@ -103,7 +152,7 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
                 .withCategory(category2).buildAndSave(categoryMemberRepository);
 
         // when
-        List<CategoryMember> result = categoryMemberRepository.findAllByMemberIdAndDate(member.getId(), LocalDate.of(2024, 6, 1));
+        List<CategoryMember> result = categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(member.getId(), LocalDate.of(2024, 6, 1), false);
 
         // then
         assertThat(result).hasSize(2);

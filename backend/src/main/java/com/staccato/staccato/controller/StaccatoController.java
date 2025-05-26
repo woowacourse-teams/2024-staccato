@@ -26,6 +26,7 @@ import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
+import com.staccato.staccato.service.dto.response.StaccatoDetailResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
@@ -63,8 +64,8 @@ public class StaccatoController implements StaccatoControllerDocs {
     public ResponseEntity<StaccatoDetailResponse> readStaccatoById(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "스타카토 식별자는 양수로 이루어져야 합니다.") long staccatoId) {
-        StaccatoDetailResponse staccatoDetailResponse = staccatoService.readStaccatoById(staccatoId, member);
-        return ResponseEntity.ok().body(staccatoDetailResponse);
+        StaccatoDetailResponseV2 staccatoDetailResponse = staccatoService.readStaccatoById(staccatoId, member);
+        return ResponseEntity.ok().body(staccatoDetailResponse.toStaccatoDetailResponse());
     }
 
     @PutMapping(path = "/{staccatoId}")

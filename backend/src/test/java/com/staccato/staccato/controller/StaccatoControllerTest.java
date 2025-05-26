@@ -1,25 +1,10 @@
 package com.staccato.staccato.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,7 +13,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
 import com.staccato.ControllerTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
@@ -44,12 +28,25 @@ import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
-import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
+import com.staccato.staccato.service.dto.response.StaccatoDetailResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
 import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class StaccatoControllerTest extends ControllerTest {
 
@@ -220,7 +217,7 @@ class StaccatoControllerTest extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        StaccatoDetailResponse response = new StaccatoDetailResponse(staccato);
+        StaccatoDetailResponseV2 response = new StaccatoDetailResponseV2(staccato);
         when(staccatoService.readStaccatoById(anyLong(), any(Member.class))).thenReturn(response);
         String expectedResponse = """
                     {
