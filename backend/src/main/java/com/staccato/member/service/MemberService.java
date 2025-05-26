@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
+import com.staccato.member.service.dto.request.MemberReadRequest;
 import com.staccato.member.service.dto.response.MemberProfileImageResponse;
 import com.staccato.member.service.dto.response.MemberResponses;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,9 @@ public class MemberService {
                 .orElseThrow(() -> new StaccatoException("요청하신 사용자 정보를 찾을 수 없어요."));
     }
 
-    public MemberResponses readMembersByNickname(Member member, String nickname) {
-        List<Member> members = memberRepository.findByNicknameNicknameContainsAndIdNot(nickname, member.getId());
+    public MemberResponses readMembersByNickname(Member member, MemberReadRequest memberReadRequest) {
+
+        List<Member> members = memberRepository.findByNicknameNicknameContainsAndIdNot(memberReadRequest.nickname(), member.getId());
         return MemberResponses.of(members);
     }
 }

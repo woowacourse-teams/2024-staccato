@@ -1,9 +1,9 @@
 package com.staccato.member.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
+import com.staccato.member.service.dto.request.MemberReadRequest;
 import com.staccato.member.service.dto.response.MemberResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,8 +17,8 @@ public interface MemberControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 초대 성공", responseCode = "200")
     })
-    public ResponseEntity<MemberResponses> readMembersByNickname(
+    ResponseEntity<MemberResponses> readMembersByNickname(
             @Parameter(hidden = true) @LoginMember Member member,
-            @Parameter(description = "검색어", example = "닉네임") @RequestParam(value = "nickname") String nickname
+            @Parameter(description = "검색어와 검색 결과에서 제외할 카테고리 식별자로 필터링합니다. 검색어가 없다면 빈 배열을 반환합니다.") MemberReadRequest memberReadRequest
     );
 }

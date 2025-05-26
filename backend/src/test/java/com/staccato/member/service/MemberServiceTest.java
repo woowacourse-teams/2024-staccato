@@ -5,10 +5,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
+import com.staccato.category.domain.Category;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.exception.StaccatoException;
+import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.member.MemberReadRequestFixtures;
+import com.staccato.invitation.domain.CategoryInvitation;
+import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
+import com.staccato.member.service.dto.request.MemberReadRequest;
 import com.staccato.member.service.dto.response.MemberProfileImageResponse;
 import com.staccato.member.service.dto.response.MemberResponse;
 import com.staccato.member.service.dto.response.MemberResponses;
@@ -23,6 +30,10 @@ class MemberServiceTest extends ServiceSliceTest {
     MemberService memberService;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
+    @Autowired
+    CategoryInvitationRepository categoryInvitationRepository;
 
     @DisplayName("주어진 이미지 경로로 사용자의 프로필 사진을 변경한다.")
     @Test
@@ -72,10 +83,13 @@ class MemberServiceTest extends ServiceSliceTest {
         Member member3 = MemberFixtures.defaultMember()
                 .withNickname("타스")
                 .buildAndSave(memberRepository);
+        String keyword = "스타";
+        MemberReadRequest memberReadRequest = MemberReadRequestFixtures.defaultMemberReadRequest()
+                .withNickname(keyword)
+                .build();
 
         // when
-        String keyword = "스타";
-        MemberResponses result = memberService.readMembersByNickname(member, keyword);
+        MemberResponses result = memberService.readMembersByNickname(member, memberReadRequest);
 
         // then
         List<Long> resultIds = result.members().stream()
@@ -98,9 +112,13 @@ class MemberServiceTest extends ServiceSliceTest {
         Member member2 = MemberFixtures.defaultMember()
                 .withNickname("스타카토")
                 .buildAndSave(memberRepository);
-        // when
         String keyword = "스타";
-        MemberResponses result = memberService.readMembersByNickname(member, keyword);
+        MemberReadRequest memberReadRequest = MemberReadRequestFixtures.defaultMemberReadRequest()
+                .withNickname(keyword)
+                .build();
+
+        // when
+        MemberResponses result = memberService.readMembersByNickname(member, memberReadRequest);
 
         // then
         List<Long> resultIds = result.members().stream()
