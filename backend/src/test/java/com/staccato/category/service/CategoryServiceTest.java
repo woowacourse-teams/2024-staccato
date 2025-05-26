@@ -2,6 +2,8 @@ package com.staccato.category.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +30,7 @@ import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
+import com.staccato.category.service.dto.response.MemberDetailResponse;
 import com.staccato.category.service.dto.response.StaccatoResponse;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
