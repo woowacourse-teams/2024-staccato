@@ -138,28 +138,11 @@ fun ImageButton.setSendButtonEnabled(value: String?) {
 
 @BindingAdapter("visibilityByIsBottomSheetExpanded")
 fun ImageButton.setVisibilityBy(isBottomSheetExpanded: Boolean?) {
-    if (isBottomSheetExpanded == true) {
-        fadeIn()
-    } else {
-        fadeOut()
-    }
-}
-
-private fun View.fadeIn(duration: Long = 300) {
-    alpha = 0f
-    visibility = View.VISIBLE
-    animate()
-        .alpha(1f)
-        .setDuration(duration)
-        .setListener(null)
-}
-
-private fun View.fadeOut(duration: Long = 300) {
-    animate()
-        .alpha(0f)
-        .setDuration(duration)
-        .withEndAction {
-            visibility = View.GONE
+    visibility =
+        if (isBottomSheetExpanded == true) {
+            View.VISIBLE
+        } else {
+            View.GONE
         }
 }
 
