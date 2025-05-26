@@ -37,6 +37,10 @@ fun DefaultTextButton(
     Box(
         modifier = modifier
             .padding(vertical = 4.dp)
+            .background(
+                color = if(enabled) backgroundColor else Gray1,
+                shape = RoundedCornerShape(5.dp),
+            )
             .clickableWithoutRipple { onClick() }
             .border(
                 border = border ?:
@@ -46,16 +50,13 @@ fun DefaultTextButton(
                 ),
                 shape = RoundedCornerShape(5.dp),
             )
-            .background(
-                color = if(enabled) backgroundColor else Gray1,
-                shape = RoundedCornerShape(5.dp),
-            )
-            .padding(
-                horizontal = 16.dp,
-                vertical = 8.dp,
-            )
+
     ) {
         Text(
+            modifier = modifier.padding(
+                horizontal = 16.dp,
+                vertical = 8.dp,
+            ),
             text = text,
             style = textStyle,
             color = if(enabled) textColor else Gray4
