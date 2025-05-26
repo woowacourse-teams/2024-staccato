@@ -46,7 +46,7 @@ import com.on.staccato.theme.White
 fun SentInvitationItem(
     modifier: Modifier = Modifier,
     categoryInvitation: SentInvitationUiModel,
-    onCancelClick: () -> Unit,
+    onCancelClick: (invitationId: Long) -> Unit,
 ) {
     ConstraintLayout(
         modifier = modifier
@@ -96,7 +96,7 @@ fun SentInvitationItem(
             }.onGloballyPositioned { coordinates ->
                 cancelButtonStartX = coordinates.positionInParent().x
             },
-            onClick = onCancelClick,
+            onClick = { onCancelClick(categoryInvitation.invitationId) },
         )
     }
 }

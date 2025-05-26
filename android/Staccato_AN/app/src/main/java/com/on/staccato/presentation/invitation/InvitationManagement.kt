@@ -28,7 +28,7 @@ fun InvitationManagement(
     onRejectClick: () -> Unit,
     onAcceptClick: () -> Unit,
     sentInvitations: List<SentInvitationUiModel>,
-    onCancelClick: () -> Unit,
+    onCancelClick: (invitationId: Long) -> Unit,
 ) {
     Column(modifier = modifier) {
         DefaultDivider()

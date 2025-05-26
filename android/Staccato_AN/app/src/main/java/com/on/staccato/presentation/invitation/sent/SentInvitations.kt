@@ -12,7 +12,7 @@ import com.on.staccato.presentation.invitation.model.dummySentInvitationUiModels
 @Composable
 fun SentInvitations(
     sentInvitations: List<SentInvitationUiModel>,
-    onCancelClick: () -> Unit,
+    onCancelClick: (invitationId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
