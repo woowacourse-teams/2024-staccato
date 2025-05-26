@@ -11,4 +11,8 @@ public record MemberResponses(List<MemberResponse> members) {
                 .map(MemberResponse::new)
                 .toList());
     }
+
+    public static MemberResponses empty() {
+        return new MemberResponses(List.of());
+    }
 }

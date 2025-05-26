@@ -3,6 +3,9 @@ package com.staccato.member.service;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
@@ -102,32 +105,27 @@ class MemberServiceTest extends ServiceSliceTest {
                 .doesNotContain(member.getId(), member3.getId());
     }
 
-    @DisplayName("주어진 문자열을 포함하는 닉네임으로 사용자 목록을 반환 시 본인은 제외한다.")
-    @Test
-    void readMembersByNicknameWithoutMember() {
+    @DisplayName("검색어가 없다면, 빈 배열을 반환한다.")
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", " "})
+    void readMembersByBlankNickname(String keyword) {
         // given
         Member member = MemberFixtures.defaultMember()
                 .withNickname("스타")
                 .buildAndSave(memberRepository);
-        Member member2 = MemberFixtures.defaultMember()
-                .withNickname("스타카토")
-                .buildAndSave(memberRepository);
-        String keyword = "스타";
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         MemberReadRequest memberReadRequest = MemberReadRequestFixtures.defaultMemberReadRequest()
                 .withNickname(keyword)
+                .withExcludeCategoryId(category.getId())
                 .build();
 
         // when
         MemberResponses result = memberService.readMembersByNickname(member, memberReadRequest);
 
         // then
-        List<Long> resultIds = result.members().stream()
-                .map(MemberResponse::memberId)
-                .toList();
-
-        assertThat(resultIds)
-                .hasSize(1)
-                .containsExactlyInAnyOrder(member2.getId())
-                .doesNotContain(member.getId());
+        assertThat(result.members()).isEmpty();
     }
 }
