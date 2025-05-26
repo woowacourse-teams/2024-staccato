@@ -33,6 +33,13 @@ val dummySentInvitationUiModels = listOf(
         categoryId = 2L,
         categoryTitle = "퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁퉁",
     ),
+    SentInvitationUiModel(
+        invitationId = 2L,
+        inviteeId = 100L,
+        inviteeNickname = "초대받은사람",
+        categoryId = 2L,
+        categoryTitle = "무지무지무지무지무지무지무지무지무지무지 기이이이이인 제목",
+    ),
     dummySentInvitationUiModel.copy(
         invitationId = 3L,
         inviteeId = 1L,

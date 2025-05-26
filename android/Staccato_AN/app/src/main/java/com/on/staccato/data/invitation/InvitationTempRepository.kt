@@ -36,6 +36,7 @@ private val dummyReceivedInvitations =
 
 private val dummySentInvitations =
     listOf(
+        SentInvitation(10L, Member(110L, "테스트", null), 10L, "무지무지무지무지무지무지무지무지무지무지 기이이이이인 제목"),
         SentInvitation(3L, Member(104L, "리니", null), 3L, "클라이밍 갈 사람 여기여기 붙어라~~~~~~!!!!!!"),
         SentInvitation(1L, Member(101L, "호티", null), 1L, "호티의 한잔줍쇼"),
         SentInvitation(0L, Member(100L, "호두", null), 0L, "호두의 대구 나들이"),
