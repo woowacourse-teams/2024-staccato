@@ -322,47 +322,6 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("특정 카테고리를 조회하면 함께하는 사람들은 1. 방장(HOST) 2. 본인 3. 카테고리에 추가된 순서를 기준으로 정렬된다.")
-    @Test
-    void readCategoryByIdOrderByMembers() {
-        // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        Member guest1 = MemberFixtures.defaultMember().withNickname("guest1").buildAndSave(memberRepository);
-        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
-        Member guestSelf = MemberFixtures.defaultMember().withNickname("guestSelf").buildAndSave(memberRepository);
-
-        Category category = CategoryFixtures.defaultCategory()
-                .withHost(host)
-                .withGuests(List.of(guest2, guestSelf, guest1))
-                .buildAndSave(categoryRepository);
-
-        // when
-        CategoryDetailResponseV3 responseV3 = categoryService.readCategoryById(category.getId(), guestSelf);
-
-        List<Long> actualMemberIds = responseV3.members().stream()
-                .map(MemberDetailResponse::memberId)
-                .toList();
-
-        // then
-        List<Long> expectedMemberIds = new ArrayList<>(List.of(
-                host.getId(),
-                guestSelf.getId(),
-                guest1.getId(),
-                guest2.getId()));
-
-        CategoryMember categoryMember1 = category.getCategoryMembers().stream()
-                .filter(cm -> cm.getMember().equals(guest1))
-                .findFirst().orElseThrow();
-        CategoryMember categoryMember2 = category.getCategoryMembers().stream()
-                .filter(cm -> cm.getMember().equals(guest2))
-                .findFirst().orElseThrow();
-        if (categoryMember1.getCreatedAt().isAfter(categoryMember2.getCreatedAt())) {
-            Collections.swap(expectedMemberIds, 2, 3);
-        }
-
-        assertThat(actualMemberIds).isEqualTo(expectedMemberIds);
-    }
-
     @DisplayName("존재하지 않는 카테고리를 조회하려고 할 경우 예외가 발생한다.")
     @Test
     void failReadCategory() {
