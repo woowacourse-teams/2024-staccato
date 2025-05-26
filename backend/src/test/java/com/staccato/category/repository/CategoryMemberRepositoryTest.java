@@ -55,25 +55,58 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
         assertThat(result).hasSize(2);
     }
 
-    @DisplayName("사용자 식별자와 날짜, 공유 flag 값으로 카테고리 목록을 조회한다.")
+    @DisplayName("사용자 식별자와 날짜 값으로 카테고리 목록을 조회한다.")
     @Test
     void findAllByMemberIdAndDate() {
         // given
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        CategoryFixtures.defaultCategory()
+                .withTerm(null, null)
+                .withTitle("no-term")
+                .withHost(member)
+                .buildAndSave(categoryRepository);
+        CategoryFixtures.defaultCategory()
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
+                .withTitle("term")
+                .withHost(member)
+                .buildAndSave(categoryRepository);
+
+        // when
+        List<CategoryMember> result = categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(
+                member.getId(), LocalDate.of(2024, 6, 1), false);
+        List<CategoryMember> otherResult = categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(
+                member.getId(), LocalDate.of(2023, 6, 1), false);
+
+        // then
+        assertAll(
+                () -> assertThat(result)
+                        .hasSize(2)
+                        .extracting(cm -> cm.getCategory().getTitle().getTitle())
+                        .containsExactly("no-term", "term"),
+
+                () -> assertThat(otherResult)
+                        .hasSize(1)
+                        .extracting(cm -> cm.getCategory().getTitle().getTitle())
+                        .containsExactly("no-term")
+        );
+    }
+
+
+    @DisplayName("사용자 식별자와 공유 flag 값으로 카테고리 목록을 조회한다.")
+    @Test
+    void findAllByMemberIdAndFlag() {
+        // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
         Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
-                .withTerm(LocalDate.of(2023, 1, 1),
-                        LocalDate.of(2023, 12, 31))
-                .withHost(host)
-                .buildAndSave(categoryRepository);
-        Category sharedCategory = CategoryFixtures.defaultCategory()
+        CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
                 .withTitle("shared")
                 .withHost(host)
                 .withGuests(List.of(guest))
                 .buildAndSave(categoryRepository);
-        Category nonSharedCategory = CategoryFixtures.defaultCategory()
+        CategoryFixtures.defaultCategory()
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31))
                 .withTitle("nonShared")
@@ -92,7 +125,6 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
                         .hasSize(1)
                         .extracting(cm -> cm.getCategory().getTitle().getTitle())
                         .containsExactly("nonShared"),
-
                 () -> assertThat(sharedResult)
                         .hasSize(1)
                         .extracting(cm -> cm.getCategory().getTitle().getTitle())
