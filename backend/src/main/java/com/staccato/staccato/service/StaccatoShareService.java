@@ -38,7 +38,7 @@ public class StaccatoShareService {
 
     public StaccatoShareLinkResponse createStaccatoShareLink(Long staccatoId, Member member) {
         Staccato staccato = staccatoValidator.getStaccatoByIdOrThrow(staccatoId);
-        categoryValidator.validateNotCategoryMember(staccato.getCategory(), member);
+        staccato.validateReadPermission(member);
 
         ShareTokenPayload shareTokenPayload = new ShareTokenPayload(staccatoId, member.getId());
         String token = shareTokenProvider.create(shareTokenPayload);
