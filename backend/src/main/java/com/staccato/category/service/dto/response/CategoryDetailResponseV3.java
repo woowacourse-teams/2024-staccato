@@ -61,7 +61,7 @@ public record CategoryDetailResponseV3(
     private static List<MemberDetailResponse> toMemberDetailResponses(Category category, Member currentMember) {
         return category.getCategoryMembers().stream()
                 .sorted(Comparator
-                        .comparing((CategoryMember cm) -> cm.isRoleHost() ? 0 : cm.isMember(currentMember) ? 1 : 2)
+                        .comparing((CategoryMember cm) -> cm.isHost() ? 0 : cm.isMember(currentMember) ? 1 : 2)
                         .thenComparing(CategoryMember::getCreatedAt)
                 )
                 .map(MemberDetailResponse::new)
