@@ -3,7 +3,6 @@ package com.staccato.fixture.member;
 import java.util.UUID;
 
 import com.staccato.member.domain.Member;
-import com.staccato.member.domain.Nickname;
 import com.staccato.member.repository.MemberRepository;
 
 public class MemberFixtures {
@@ -16,10 +15,9 @@ public class MemberFixtures {
     }
 
     public static class MemberBuilder {
-        Long id;
-        String nickname;
-        String imageUrl;
-        String code;
+        private String nickname;
+        private String imageUrl;
+        private String code;
 
         public MemberBuilder withNickname(String nickname) {
             this.nickname = nickname;

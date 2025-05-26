@@ -1,15 +1,19 @@
 package com.staccato.member.domain;
 
 import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+
 import com.staccato.config.domain.BaseEntity;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -36,31 +40,15 @@ public class Member extends BaseEntity {
     private String code;
     private Boolean isDeleted = false;
 
-    @Builder
     public Member(@NonNull String nickname, String imageUrl, String code) {
         this.nickname = new Nickname(nickname);
         this.imageUrl = imageUrl;
         this.code = code;
     }
 
-    public Member(Long id, String nickname, String imageUrl, String code) {
-        this(nickname, imageUrl, code);
-        this.id = id;
-    }
-
-    public static Member create(String nickname) {
-        return Member.builder()
-                .nickname(nickname)
-                .code(UUID.randomUUID().toString())
-                .build();
-    }
-
-    public static Member create(String nickname, String imageUrl) {
-        return Member.builder()
-                .nickname(nickname)
-                .imageUrl(imageUrl)
-                .code(UUID.randomUUID().toString())
-                .build();
+    @Builder
+    public Member(@NonNull String nickname, String imageUrl) {
+        this(nickname, imageUrl, UUID.randomUUID().toString());
     }
 
     public void updateImage(String imageUrl) {

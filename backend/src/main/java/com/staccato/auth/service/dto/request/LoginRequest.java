@@ -24,6 +24,8 @@ public record LoginRequest(
     }
 
     public Member toMember() {
-        return Member.create(nickname);
+        return Member.builder()
+                .nickname(nickname)
+                .build();
     }
 }
