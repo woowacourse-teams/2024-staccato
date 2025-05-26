@@ -16,6 +16,7 @@ fun CategoryInputGuide(
     modifier: Modifier = Modifier,
     @StringRes titleId: Int,
     @StringRes hintId: Int,
+    @StringRes warningId: Int,
 ) {
     Column(
         modifier = modifier.padding(start = 24.dp),
@@ -23,7 +24,9 @@ fun CategoryInputGuide(
     ) {
         CategoryInputTitle(id = titleId)
         Spacer(modifier = Modifier.padding(top = 8.dp))
-        CategoryInputHint(id = hintId)
+        CategoryInputHint(hintId)
+        Spacer(modifier = Modifier.padding(top = 5.dp))
+        CategoryInputWarning(warningId)
     }
 }
 
@@ -33,5 +36,6 @@ private fun CategoryInputGuidePreview() {
     CategoryInputGuide(
         titleId = R.string.category_creation_color,
         hintId = R.string.category_creation_color_hint,
+        warningId = R.string.category_creation_share_warning,
     )
 }

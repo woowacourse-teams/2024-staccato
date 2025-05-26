@@ -23,5 +23,5 @@ fun CategoryInputHint(
 @Preview(showBackground = true)
 @Composable
 private fun CategoryInputHintPreview() {
-    CategoryInputTitle(R.string.category_creation_title_hint)
+    CategoryInputHint(id = R.string.category_creation_title_hint)
 }

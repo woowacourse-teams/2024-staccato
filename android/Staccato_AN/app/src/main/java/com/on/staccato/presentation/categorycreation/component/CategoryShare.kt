@@ -29,6 +29,7 @@ fun CategoryShare(
         CategoryInputGuide(
             titleId = R.string.category_creation_share_title,
             hintId = R.string.category_creation_share_hint,
+            warningId = R.string.category_creation_share_warning,
         )
         Spacer(modifier = Modifier.weight(1f))
         DefaultSwitch(
