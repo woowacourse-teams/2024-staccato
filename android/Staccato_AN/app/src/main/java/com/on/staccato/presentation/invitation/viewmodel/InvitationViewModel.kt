@@ -18,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InvitationViewModel
-    @Inject constructor(
+    @Inject
+    constructor(
         private val invitationRepository: InvitationRepository
     ) : ViewModel() {
         private val _receivedInvitations: MutableStateFlow<List<ReceivedInvitationUiModel>> = MutableStateFlow((emptyList()))
@@ -29,7 +30,6 @@ class InvitationViewModel
 
         init {
             getReceivedInvitations()
-            getSentInvitations()
         }
 
         fun getReceivedInvitations() {
