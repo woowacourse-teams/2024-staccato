@@ -7,6 +7,9 @@ import android.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentTimelineBinding
@@ -24,6 +27,7 @@ import com.on.staccato.util.logging.Param
 import com.on.staccato.util.logging.Param.Companion.KEY_FRAGMENT_NAME
 import com.on.staccato.util.logging.Param.Companion.PARAM_CATEGORY_LIST
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -119,8 +123,12 @@ class TimelineFragment :
     }
 
     private fun observeIsRetry() {
-        sharedViewModel.isRetry.observe(viewLifecycleOwner) {
-            if (it) timelineViewModel.loadTimeline()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.retryEvent.collect {
+                    timelineViewModel.loadTimeline()
+                }
+            }
         }
     }
 

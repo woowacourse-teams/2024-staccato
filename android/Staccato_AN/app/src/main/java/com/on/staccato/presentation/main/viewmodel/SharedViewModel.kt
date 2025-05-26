@@ -14,8 +14,11 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -68,8 +71,8 @@ class SharedViewModel
         private val _exception = MutableLiveData<ExceptionState2>()
         val exception: LiveData<ExceptionState2> get() = _exception
 
-        private val _isRetry = MutableLiveData<Boolean>()
-        val isRetry: LiveData<Boolean> get() = _isRetry
+        private val _retryEvent = MutableSharedFlow<Unit>(replay = 0)
+        val retryEvent: SharedFlow<Unit> = _retryEvent.asSharedFlow()
 
         private val isDragging = MutableLiveData<Boolean>(false)
 
@@ -140,7 +143,9 @@ class SharedViewModel
         }
 
         fun updateIsRetry() {
-            _isRetry.value = true
+            viewModelScope.launch {
+                _retryEvent.emit(Unit)
+            }
         }
 
         private fun setMemberProfile(memberProfile: MemberProfile) {
