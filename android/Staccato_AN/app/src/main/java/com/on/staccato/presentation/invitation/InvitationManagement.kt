@@ -25,8 +25,8 @@ fun InvitationManagement(
     selectedMenu: InvitationSelectionMenuItems,
     onMenuClick: (InvitationSelectionMenuItems) -> Unit,
     receivedInvitations: List<ReceivedInvitationUiModel>,
-    onRejectClick: () -> Unit,
-    onAcceptClick: () -> Unit,
+    onRejectClick: (invitationId: Long) -> Unit,
+    onAcceptClick: (invitationId: Long) -> Unit,
     sentInvitations: List<SentInvitationUiModel>,
     onCancelClick: (invitationId: Long) -> Unit,
 ) {
@@ -43,8 +43,8 @@ fun InvitationManagement(
             RECEIVED_INVITATION -> {
                 ReceivedInvitations(
                     receivedInvitations = receivedInvitations,
-                    onAcceptClick = onAcceptClick,
                     onRejectClick = onRejectClick,
+                    onAcceptClick = onAcceptClick,
                 )
             }
 

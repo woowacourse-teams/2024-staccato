@@ -44,8 +44,8 @@ fun InvitationManagementScreen(
                 }
             },
             receivedInvitations = receivedInvitations,
-            onRejectClick = {  },
-            onAcceptClick = {  },
+            onRejectClick = { invitationViewModel.rejectInvitation(it) },
+            onAcceptClick = { invitationViewModel.acceptInvitation(it) },
             sentInvitations = sentInvitations,
             onCancelClick = { invitationViewModel.cancelInvitation(it) },
         )

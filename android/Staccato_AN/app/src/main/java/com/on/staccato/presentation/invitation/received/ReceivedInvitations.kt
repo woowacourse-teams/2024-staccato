@@ -13,8 +13,8 @@ import com.on.staccato.presentation.invitation.model.dummyReceivedInvitationUiMo
 fun ReceivedInvitations(
     modifier: Modifier = Modifier,
     receivedInvitations: List<ReceivedInvitationUiModel>,
-    onAcceptClick: () -> Unit,
-    onRejectClick: () -> Unit,
+    onRejectClick: (invitationId: Long) -> Unit,
+    onAcceptClick: (invitationId: Long) -> Unit,
 ) {
     LazyColumn(modifier = modifier) {
         itemsIndexed(receivedInvitations) { index, invitation ->

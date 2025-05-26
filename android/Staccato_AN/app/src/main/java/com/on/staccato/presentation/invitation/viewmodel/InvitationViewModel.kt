@@ -44,6 +44,26 @@ class InvitationViewModel
             }
         }
 
+        fun acceptInvitation(invitationId: Long) {
+            viewModelScope.launch {
+                val result = invitationRepository.acceptInvitation(invitationId)
+                result
+                    .onSuccess{ getReceivedInvitations() }
+                    .onServerError {}
+                    .onException2 {}
+            }
+        }
+
+        fun rejectInvitation(invitationId: Long) {
+            viewModelScope.launch {
+                val result = invitationRepository.rejectInvitation(invitationId)
+                result
+                    .onSuccess{ getReceivedInvitations() }
+                    .onServerError {}
+                    .onException2 {}
+            }
+        }
+
         fun getSentInvitations() {
             viewModelScope.launch {
                 val result = invitationRepository.getSentInvitations()

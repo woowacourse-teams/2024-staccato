@@ -32,8 +32,8 @@ import com.on.staccato.theme.White
 fun ReceivedInvitationItem(
     modifier: Modifier = Modifier,
     categoryInvitation: ReceivedInvitationUiModel,
-    onRejectClick: () -> Unit,
-    onAcceptClick: () -> Unit,
+    onRejectClick: (invitationId: Long) -> Unit,
+    onAcceptClick: (invitationId: Long) -> Unit,
 ) {
     ConstraintLayout(
         modifier = modifier
@@ -88,7 +88,7 @@ fun ReceivedInvitationItem(
                 bottom.linkTo(parent.bottom, margin = 16.dp)
                 end.linkTo(acceptButton.start, margin = 4.dp)
             },
-            onClick = onRejectClick,
+            onClick = { onRejectClick(categoryInvitation.invitationId) },
         )
 
         AcceptButton(
@@ -97,7 +97,7 @@ fun ReceivedInvitationItem(
                 bottom.linkTo(parent.bottom, margin = 16.dp)
                 end.linkTo(parent.end, margin = 22.dp)
             },
-            onClick = onAcceptClick,
+            onClick = { onAcceptClick(categoryInvitation.invitationId) },
         )
     }
 }
