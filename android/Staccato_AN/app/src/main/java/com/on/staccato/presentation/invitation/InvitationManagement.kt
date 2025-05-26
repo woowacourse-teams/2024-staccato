@@ -9,6 +9,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.on.staccato.presentation.component.DefaultDivider
+import com.on.staccato.presentation.invitation.menu.InvitationSelectionMenu
 import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuItems
 import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuItems.RECEIVED_INVITATION
 import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuItems.SENT_INVITATION
@@ -58,7 +59,10 @@ fun InvitationManagement(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFFFFF.toLong(),
+)
 @Composable
 private fun InvitationManagementPreview(
     @PreviewParameter(InvitationSelectionMenuProvider::class) menu: InvitationSelectionMenuItems,
@@ -75,5 +79,8 @@ private fun InvitationManagementPreview(
 }
 
 private class InvitationSelectionMenuProvider(
-    override val values: Sequence<InvitationSelectionMenuItems> = sequenceOf(RECEIVED_INVITATION, SENT_INVITATION)
+    override val values: Sequence<InvitationSelectionMenuItems> = sequenceOf(
+        RECEIVED_INVITATION,
+        SENT_INVITATION,
+    )
 ) : PreviewParameterProvider<InvitationSelectionMenuItems>
