@@ -2,17 +2,17 @@ package com.on.staccato.presentation.invitation.sent
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.on.staccato.presentation.invitation.component.CategoryTitle
@@ -21,7 +21,6 @@ import com.on.staccato.presentation.invitation.component.ProfileImage
 import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
 import com.on.staccato.presentation.invitation.model.dummySentInvitationUiModels
 import com.on.staccato.presentation.invitation.sent.component.CancelButton
-import com.on.staccato.presentation.invitation.sent.component.CategoryTitleLayout
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.StaccatoBlack
@@ -41,12 +40,22 @@ fun SentInvitationItem(
                 color = White,
             ),
     ) {
-        val (inviteeProfileImage, inviteeNicknameWithCategoryTitle, cancelButton) = createRefs()
+        val (profileImageRef, nicknameRef, titleRef, suffixRef, cancelButtonRef) = createRefs()
+        val titleChain = createHorizontalChain(
+            titleRef, suffixRef,
+            chainStyle = ChainStyle.Packed(
+                bias = 0f
+            ),
+        )
+        constrain(titleChain) {
+            start.linkTo(profileImageRef.end, margin = 10.dp)
+            end.linkTo(cancelButtonRef.start, margin = 22.dp)
+        }
 
         ProfileImage(
             modifier = modifier
                 .size(40.dp)
-                .constrainAs(inviteeProfileImage) {
+                .constrainAs(profileImageRef) {
                     start.linkTo(parent.start, margin = 20.dp)
                     top.linkTo(parent.top, margin = 20.dp)
                     bottom.linkTo(parent.bottom, margin = 20.dp)
@@ -54,52 +63,47 @@ fun SentInvitationItem(
             url = categoryInvitation.inviteeProfileImageUrl,
         )
 
-        Column(
-            modifier = modifier.constrainAs(inviteeNicknameWithCategoryTitle) {
-                start.linkTo(inviteeProfileImage.end, margin = 10.dp)
-                end.linkTo(cancelButton.start, margin = 22.dp)
-                centerVerticallyTo(inviteeProfileImage)
-                width = Dimension.fillToConstraints
-            }
-        ) {
-            NicknameText(
-                nickname = categoryInvitation.inviteeNickname,
-                style = Title3,
-                color = StaccatoBlack,
-            )
-
-            CategoryTitleLayout(
-                categoryTitle = categoryInvitation.categoryTitle,
-            )
-        }
-
-        CancelButton(
-            modifier = modifier
-                .constrainAs(cancelButton) {
-                    end.linkTo(parent.end, margin = 20.dp)
-                    centerVerticallyTo(parent)
-                },
-            onClick = { onCancelClick(categoryInvitation.invitationId) },
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun InviteeNicknameWithCategoryTitlePreview() {
-    Column(
-        modifier = Modifier.width(150.dp)
-    ) {
         NicknameText(
-            nickname = "10글자짜리닉네임임",
+            modifier = modifier.constrainAs(nicknameRef) {
+                start.linkTo(profileImageRef.end, margin = 10.dp)
+                top.linkTo(profileImageRef.top)
+                bottom.linkTo(titleRef.top)
+            },
+            nickname = categoryInvitation.inviteeNickname,
             style = Title3,
             color = StaccatoBlack,
-            )
+        )
 
         CategoryTitle(
-            title = "카테고리제목근데이제엄청나게긴",
+            modifier = modifier.constrainAs(titleRef) {
+                top.linkTo(nicknameRef.bottom)
+                bottom.linkTo(profileImageRef.bottom)
+                end.linkTo(suffixRef.start)
+                width = Dimension.preferredWrapContent
+            },
+            title = categoryInvitation.categoryTitle,
             style = Body4,
             color = Gray3,
+        )
+
+        Text(
+            modifier = modifier.constrainAs(suffixRef) {
+                centerVerticallyTo(titleRef)
+                start.linkTo(titleRef.end)
+                width = Dimension.wrapContent
+            },
+            text = "에 초대했어요.",
+            style = Body4,
+            color = Gray3,
+            maxLines = 1,
+        )
+
+        CancelButton(
+            modifier = modifier.constrainAs(cancelButtonRef) {
+                end.linkTo(parent.end, margin = 20.dp)
+                centerVerticallyTo(parent)
+            },
+            onClick = { onCancelClick(categoryInvitation.invitationId) },
         )
     }
 }
