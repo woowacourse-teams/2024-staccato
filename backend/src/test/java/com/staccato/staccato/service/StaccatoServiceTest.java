@@ -277,13 +277,13 @@ class StaccatoServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThatThrownBy(() -> staccatoService.updateStaccatoById(privateStaccato.getId(), privateToPublic, member))
                         .isInstanceOf(StaccatoException.class)
-                        .hasMessage("공유 상태가 다르거나, 공유 카테고리끼리도 카테고리 변경은 불가능해요."),
+                        .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요."),
                 () -> assertThatThrownBy(() -> staccatoService.updateStaccatoById(publicStaccato.getId(), publicToPrivate, member))
                         .isInstanceOf(StaccatoException.class)
-                        .hasMessage("공유 상태가 다르거나, 공유 카테고리끼리도 카테고리 변경은 불가능해요."),
+                        .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요."),
                 () -> assertThatThrownBy(() -> staccatoService.updateStaccatoById(publicStaccato.getId(), publicToPublic, member))
                         .isInstanceOf(StaccatoException.class)
-                        .hasMessage("공유 상태가 다르거나, 공유 카테고리끼리도 카테고리 변경은 불가능해요.")
+                        .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요.")
         );
     }
 

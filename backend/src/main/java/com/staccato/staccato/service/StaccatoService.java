@@ -7,7 +7,6 @@ import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
-import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Feeling;
@@ -37,7 +36,7 @@ public class StaccatoService {
     @Transactional
     public StaccatoIdResponse createStaccato(StaccatoRequest staccatoRequest, Member member) {
         Category category = getCategoryById(staccatoRequest.categoryId());
-        validateCategoryOwner(category, member);
+        category.validateOwner(member);
         Staccato staccato = staccatoRequest.toStaccato(category);
 
         staccatoRepository.save(staccato);
@@ -59,7 +58,7 @@ public class StaccatoService {
 
     public StaccatoDetailResponse readStaccatoById(long staccatoId, Member member) {
         Staccato staccato = getStaccatoById(staccatoId);
-        validateCategoryOwner(staccato.getCategory(), member);
+        staccato.validateOwner(member);
         return new StaccatoDetailResponse(staccato);
     }
 
@@ -70,22 +69,17 @@ public class StaccatoService {
             Member member
     ) {
         Staccato staccato = getStaccatoById(staccatoId);
-        validateCategoryOwner(staccato.getCategory(), member);
+        staccato.validateOwner(member);
 
         Category targetCategory = getCategoryById(staccatoRequest.categoryId());
-        validateCategoryOwner(targetCategory, member);
+        targetCategory.validateOwner(member);
 
-        validateCategoryChangeable(staccato.getCategory(), targetCategory);
+        staccato.validateCategoryChangeable(targetCategory);
+
         Staccato newStaccato = staccatoRequest.toStaccato(targetCategory);
         List<StaccatoImage> existingImages = staccato.existingImages();
         removeExistingImages(existingImages);
         staccato.update(newStaccato);
-    }
-
-    private void validateCategoryChangeable(Category originCategory, Category targetCategory) {
-        if (originCategory.getIsShared() || targetCategory.getIsShared()) {
-            throw new StaccatoException("공유 상태가 다르거나, 공유 카테고리끼리도 카테고리 변경은 불가능해요.");
-        }
     }
 
     private void removeExistingImages(List<StaccatoImage> images) {
@@ -103,7 +97,7 @@ public class StaccatoService {
     @Transactional
     public void deleteStaccatoById(long staccatoId, Member member) {
         staccatoRepository.findById(staccatoId).ifPresent(staccato -> {
-            validateCategoryOwner(staccato.getCategory(), member);
+            staccato.validateOwner(member);
             commentRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
             staccatoImageRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
             staccatoRepository.deleteById(staccatoId);
@@ -113,7 +107,7 @@ public class StaccatoService {
     @Transactional
     public void updateStaccatoFeelingById(long staccatoId, Member member, FeelingRequest feelingRequest) {
         Staccato staccato = getStaccatoById(staccatoId);
-        validateCategoryOwner(staccato.getCategory(), member);
+        staccato.validateOwner(member);
         Feeling feeling = feelingRequest.toFeeling();
         staccato.changeFeeling(feeling);
     }
@@ -121,11 +115,5 @@ public class StaccatoService {
     private Staccato getStaccatoById(long staccatoId) {
         return staccatoRepository.findById(staccatoId)
                 .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
-    }
-
-    private void validateCategoryOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
     }
 }
