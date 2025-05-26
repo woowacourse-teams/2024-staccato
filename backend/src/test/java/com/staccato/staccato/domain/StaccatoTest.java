@@ -1,6 +1,5 @@
 package com.staccato.staccato.domain;
 
-import com.staccato.category.domain.Category;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,14 +12,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.category.repository.CategoryRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,31 +71,6 @@ class StaccatoTest {
                 .build());
     }
 
-    @DisplayName("스타카토 생성 시 title의 앞 뒤 공백이 제거된다.")
-    @Test
-    void trimPlaceName() {
-        // given
-        Category category = CategoryFixtures.defaultCategory().build();
-        LocalDateTime visitedAt = LocalDateTime.of(2024, 6, 1, 0, 0);
-        String title = " staccatoTitle ";
-        String expectedTitle = "staccatoTitle";
-
-        // when
-        Staccato staccato = Staccato.builder()
-                .visitedAt(visitedAt)
-                .title(title)
-                .latitude(BigDecimal.ONE)
-                .longitude(BigDecimal.ONE)
-                .placeName("placeName")
-                .address("address")
-                .category(category)
-                .staccatoImages(new StaccatoImages(List.of()))
-                .build();
-
-        // then
-        assertThat(staccato.getTitle()).isEqualTo(expectedTitle);
-    }
-
     @DisplayName("카테고리 날짜 안에 스타카토 날짜가 포함되지 않으면 예외를 발생시킨다.")
     @Test
     void failCreateStaccato() {
@@ -122,7 +97,7 @@ class StaccatoTest {
 
     @DisplayName("이미지가 있을 경우 첫번째 사진을 썸네일로 반환한다.")
     @Test
-    void thumbnail(){
+    void thumbnail() {
         // given
         Category category = CategoryFixtures.defaultCategory().build();
         String thumbnail = "https://example.com/staccatoImage1.jpg";
@@ -140,7 +115,7 @@ class StaccatoTest {
 
     @DisplayName("이미지가 없을 경우 null을 썸네일로 반환한다.")
     @Test
-    void noThumbnail(){
+    void noThumbnail() {
         // given
         Category category = CategoryFixtures.defaultCategory().build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
@@ -174,7 +149,7 @@ class StaccatoTest {
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
                     .withHost(member)
-                .buildAndSave(categoryRepository);
+                    .buildAndSave(categoryRepository);
             LocalDateTime beforeCreate = category.getUpdatedAt();
 
             // when
@@ -195,7 +170,7 @@ class StaccatoTest {
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
                     .withHost(member)
-                .buildAndSave(categoryRepository);
+                    .buildAndSave(categoryRepository);
             Staccato staccato = StaccatoFixtures.defaultStaccato()
                     .withCategory(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeUpdate = category.getUpdatedAt();
@@ -217,7 +192,7 @@ class StaccatoTest {
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
                     .withHost(member)
-                .buildAndSave(categoryRepository);
+                    .buildAndSave(categoryRepository);
             Staccato staccato = StaccatoFixtures.defaultStaccato()
                     .withCategory(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeDelete = category.getUpdatedAt();

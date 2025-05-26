@@ -18,7 +18,8 @@ import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
-import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryResponseV3;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.category.CategoryRequestV2Fixtures;
@@ -58,13 +59,7 @@ class CategoryControllerV2Test extends ControllerTest {
                         "카테고리 제목을 입력해주세요."),
                 Arguments.of(CategoryRequestV2Fixtures.defaultCategoryRequestV2()
                                 .withCategoryTitle("  ").build(),
-                        "카테고리 제목을 입력해주세요."),
-                Arguments.of(CategoryRequestV2Fixtures.defaultCategoryRequestV2()
-                                .withCategoryTitle("가".repeat(31)).build(),
-                        "제목은 공백 포함 30자 이하로 설정해주세요."),
-                Arguments.of(CategoryRequestV2Fixtures.defaultCategoryRequestV2()
-                                .withDescription("가".repeat(501)).build(),
-                        "내용의 최대 허용 글자수는 공백 포함 500자입니다.")
+                        "카테고리 제목을 입력해주세요.")
         );
     }
 
@@ -177,7 +172,10 @@ class CategoryControllerV2Test extends ControllerTest {
         Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
                 .withTerm(null, null).build();
-        CategoryResponsesV2 categoryResponses = CategoryResponsesV2.from(List.of(categoryWithTerm, categoryWithoutTerm));
+        CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
+                new CategoryResponseV3(categoryWithTerm, 0),
+                new CategoryResponseV3(categoryWithoutTerm, 0))
+        );
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
                 {
@@ -215,8 +213,10 @@ class CategoryControllerV2Test extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category1 = CategoryFixtures.defaultCategory().build();
         Category category2 = CategoryFixtures.defaultCategory().build();
-        CategoryResponsesV2 categoryResponses = CategoryResponsesV2.from(List.of(category1, category2));
-
+        CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
+                new CategoryResponseV3(category1, 0),
+                new CategoryResponseV3(category2, 0))
+        );
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
 
         // when & then
@@ -238,7 +238,7 @@ class CategoryControllerV2Test extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato));
+        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
@@ -289,7 +289,7 @@ class CategoryControllerV2Test extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato));
+        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {

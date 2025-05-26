@@ -1,6 +1,5 @@
 package com.staccato.staccato.domain;
 
-import com.staccato.category.domain.Category;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -19,6 +18,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
+import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.StaccatoException;
@@ -40,12 +40,11 @@ public class Staccato extends BaseEntity {
     private Long id;
     @Column(nullable = false)
     private LocalDateTime visitedAt;
-    @Column(nullable = false)
-    private String title;
+    @Embedded
+    private StaccatoTitle title;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Feeling feeling = Feeling.NOTHING;
-    @Column(nullable = false)
     @Embedded
     private Spot spot;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -67,7 +66,7 @@ public class Staccato extends BaseEntity {
     ) {
         validateIsWithinCategoryTerm(visitedAt, category);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
-        this.title = title.trim();
+        this.title = new StaccatoTitle(title);
         this.spot = new Spot(placeName, address, latitude, longitude);
         this.staccatoImages.addAll(staccatoImages, this);
         this.category = category;
@@ -116,7 +115,7 @@ public class Staccato extends BaseEntity {
     public void updateCategoryModifiedDate() {
         category.setUpdatedAt(LocalDateTime.now());
     }
-  
+
     public Color getColor() {
         return category.getColor();
     }

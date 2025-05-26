@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.staccato.category.domain.Category;
 import com.staccato.config.swagger.SwaggerExamples;
+import com.staccato.member.domain.Member;
 import com.staccato.member.service.dto.response.MemberResponse;
 import com.staccato.staccato.domain.Staccato;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,19 +32,25 @@ public record CategoryDetailResponseV3(
         @Schema(example = SwaggerExamples.CATEGORY_END_AT)
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDate endAt,
-        List<MemberDetailResponse> mates,
+        @Schema(example = SwaggerExamples.CATEGORY_IS_SHARED)
+        boolean isShared,
+        @Schema(example = SwaggerExamples.CATEGORY_ROLE)
+        String myRole,
+        List<MemberDetailResponse> members,
         List<StaccatoResponse> staccatos
 ) {
 
-    public CategoryDetailResponseV3(Category category, List<Staccato> staccatos) {
+    public CategoryDetailResponseV3(Category category, List<Staccato> staccatos, Member member) {
         this(
                 category.getId(),
                 category.getThumbnailUrl(),
-                category.getTitle(),
-                category.getDescription(),
+                category.getTitle().getTitle(),
+                category.getDescription().getDescription(),
                 category.getColor().getName(),
                 category.getTerm().getStartAt(),
                 category.getTerm().getEndAt(),
+                category.getIsShared(),
+                category.getRoleOfMember(member).getRole(),
                 toMemberDetailResponses(category),
                 toStaccatoResponses(staccatos)
         );
@@ -67,7 +74,7 @@ public record CategoryDetailResponseV3(
                 description,
                 startAt,
                 endAt,
-                toMemberResponses(mates),
+                toMemberResponses(members),
                 staccatos
         );
     }
@@ -81,7 +88,7 @@ public record CategoryDetailResponseV3(
                 categoryColor,
                 startAt,
                 endAt,
-                toMemberResponses(mates),
+                toMemberResponses(members),
                 staccatos
         );
     }

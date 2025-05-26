@@ -19,7 +19,7 @@ import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.color.CategoryColor
-import com.on.staccato.presentation.common.photo.FileUiModel
+import com.on.staccato.presentation.common.photo.UploadFile
 import com.on.staccato.presentation.util.CATEGORY_FILE_CHILD_NAME
 import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
@@ -86,7 +86,7 @@ class CategoryCreationViewModel
 
         fun createThumbnailUrl(
             uri: Uri,
-            file: FileUiModel,
+            file: UploadFile,
         ) {
             _isPhotoPosting.value = true
             setThumbnailUri(uri)
@@ -142,7 +142,7 @@ class CategoryCreationViewModel
 
         private fun registerThumbnailJob(
             uri: Uri,
-            file: FileUiModel,
+            file: UploadFile,
         ) {
             val job = createFetchingThumbnailJob(uri, file)
             job.invokeOnCompletion {
@@ -153,7 +153,7 @@ class CategoryCreationViewModel
 
         private fun createFetchingThumbnailJob(
             uri: Uri,
-            file: FileUiModel,
+            file: UploadFile,
         ): Job {
             val formData = createFormData(file)
 
@@ -169,9 +169,9 @@ class CategoryCreationViewModel
             }
         }
 
-        private fun createFormData(fileUiModel: FileUiModel): MultipartBody.Part {
-            val mediaType: MediaType? = fileUiModel.contentType?.toMediaTypeOrNull()
-            val requestFile: RequestBody = fileUiModel.file.asRequestBody(mediaType)
+        private fun createFormData(uploadFile: UploadFile): MultipartBody.Part {
+            val mediaType: MediaType? = uploadFile.contentType?.toMediaTypeOrNull()
+            val requestFile: RequestBody = uploadFile.file.asRequestBody(mediaType)
 
             return createFormData(
                 IMAGE_FORM_DATA_NAME,
@@ -217,10 +217,10 @@ class CategoryCreationViewModel
         private fun handlePhotoException(
             state: ExceptionState2,
             uri: Uri,
-            fileUiModel: FileUiModel,
+            uploadFile: UploadFile,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(CategoryCreationError.Thumbnail(state, uri, fileUiModel))
+                _error.setValue(CategoryCreationError.Thumbnail(state, uri, uploadFile))
             }
         }
 
