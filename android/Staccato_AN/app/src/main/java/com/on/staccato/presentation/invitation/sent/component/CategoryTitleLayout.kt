@@ -28,13 +28,11 @@ fun CategoryTitleLayout(
     endMargin: Dp = 22.dp,
 ) {
     val density = LocalDensity.current
-
     var layoutStartX by remember { mutableFloatStateOf(0f) }
-    var text2WidthPx by remember { mutableIntStateOf(0) }
-
-    val titleMaxWidthDp = remember(layoutStartX, text2WidthPx) {
+    var guideTextWidthPx by remember { mutableIntStateOf(0) }
+    val titleMaxWidthDp = remember(layoutStartX, guideTextWidthPx) {
         with(density) {
-            val usableWidthPx = cancelButtonStartX - layoutStartX - text2WidthPx - endMargin.toPx()
+            val usableWidthPx = cancelButtonStartX - layoutStartX - guideTextWidthPx - endMargin.toPx()
             usableWidthPx.coerceAtLeast(0f).toDp()
         }
     }
@@ -56,9 +54,8 @@ fun CategoryTitleLayout(
 
         Text(
             text = "에 초대했어요.",
-            modifier = Modifier
-                .onGloballyPositioned {
-                    text2WidthPx = it.size.width
+            modifier = Modifier.onGloballyPositioned {
+                    guideTextWidthPx = it.size.width
                 },
             maxLines = 1,
             style = Body4,
