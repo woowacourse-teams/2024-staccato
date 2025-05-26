@@ -41,6 +41,9 @@ public record CategoryDetailResponseV3(
         List<MemberDetailResponse> members,
         List<StaccatoResponse> staccatos
 ) {
+    private static final int PRIORITY_HOST = 0;
+    private static final int PRIORITY_CURRENT_USER = 1;
+    private static final int PRIORITY_OTHERS = 2;
 
     public CategoryDetailResponseV3(Category category, List<Staccato> staccatos, Member member) {
         this(
@@ -60,12 +63,17 @@ public record CategoryDetailResponseV3(
 
     private static List<MemberDetailResponse> toMemberDetailResponses(Category category, Member currentMember) {
         return category.getCategoryMembers().stream()
-                .sorted(Comparator
-                        .comparing((CategoryMember cm) -> cm.isHost() ? 0 : cm.isMember(currentMember) ? 1 : 2)
-                        .thenComparing(CategoryMember::getCreatedAt)
-                )
+                .sorted(byHostFirstThenCurrentUser(currentMember).thenComparing(CategoryMember::getCreatedAt))
                 .map(MemberDetailResponse::new)
                 .toList();
+    }
+
+    private static Comparator<CategoryMember> byHostFirstThenCurrentUser(Member currentMember) {
+        return Comparator.comparing((CategoryMember cm) -> {
+            if (cm.isHost()) return PRIORITY_HOST;
+            if (cm.isMember(currentMember)) return PRIORITY_CURRENT_USER;
+            return PRIORITY_OTHERS;
+        });
     }
 
     private static List<StaccatoResponse> toStaccatoResponses(List<Staccato> staccatos) {
