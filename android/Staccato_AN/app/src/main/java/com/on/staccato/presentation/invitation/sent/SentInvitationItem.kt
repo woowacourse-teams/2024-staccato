@@ -36,6 +36,7 @@ import com.on.staccato.presentation.invitation.component.ProfileImage
 import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
 import com.on.staccato.presentation.invitation.model.dummySentInvitationUiModels
 import com.on.staccato.presentation.invitation.sent.component.CancelButton
+import com.on.staccato.presentation.invitation.sent.component.CategoryTitleLayout
 import com.on.staccato.theme.Accents4
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray3
@@ -98,53 +99,6 @@ fun SentInvitationItem(
                 cancelButtonStartX = coordinates.positionInParent().x
             },
             onClick = { onCancelClick(categoryInvitation.invitationId) },
-        )
-    }
-}
-
-@Composable
-fun CategoryTitleLayout(
-    categoryTitle: String,
-    modifier: Modifier = Modifier,
-    cancelButtonStartX: Float,
-    endMargin: Dp = 22.dp,
-) {
-    val density = LocalDensity.current
-
-    var layoutStartX by remember { mutableFloatStateOf(0f) }
-    var text2WidthPx by remember { mutableIntStateOf(0) }
-
-    val titleMaxWidthDp = remember(layoutStartX, text2WidthPx) {
-        with(density) {
-            val usableWidthPx = cancelButtonStartX - layoutStartX - text2WidthPx - endMargin.toPx()
-            usableWidthPx.coerceAtLeast(0f).toDp()
-        }
-    }
-
-    Row(
-        modifier = modifier.onGloballyPositioned { coordinates ->
-                layoutStartX = coordinates.positionInRoot().x
-            },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        CategoryTitle(
-            title = categoryTitle,
-            modifier = Modifier.widthIn(
-                max = titleMaxWidthDp
-            ),
-            style = Body4,
-            color = Gray3,
-        )
-
-        Text(
-            text = "에 초대했어요.",
-            modifier = Modifier
-                .onGloballyPositioned {
-                    text2WidthPx = it.size.width
-                },
-            maxLines = 1,
-            style = Body4,
-            color = Gray3,
         )
     }
 }
