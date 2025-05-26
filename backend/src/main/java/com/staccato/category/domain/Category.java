@@ -141,22 +141,24 @@ public class Category extends BaseEntity {
         return term.doesNotContain(date);
     }
 
-    public boolean isUnreadableBy(Member member) {
-        return isNotOwnedBy(member);
+    public void validateReadPermission(Member member) {
+        if (isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
     }
 
-    public boolean isUnmodifiableBy(Member member) {
-        return isNotOwnedBy(member) || isGuest(member);
+    public void validateModifyPermission(Member member) {
+        if (isNotOwnedBy(member) || isGuest(member)) {
+            throw new ForbiddenException();
+        }
     }
 
-    // TODO: private으로 변경
-    public boolean isNotOwnedBy(Member member) {
+    private boolean isNotOwnedBy(Member member) {
         return categoryMembers.stream()
                 .noneMatch(categoryMember -> categoryMember.isOwnedBy(member));
     }
 
-    // TODO: private으로 변경
-    public boolean isGuest(Member member) {
+    private boolean isGuest(Member member) {
         CategoryMember categoryMember = categoryMembers.stream()
                 .filter(cm -> cm.isOwnedBy(member))
                 .findFirst()

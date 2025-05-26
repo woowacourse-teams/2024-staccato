@@ -98,7 +98,7 @@ public class CategoryService {
     public CategoryDetailResponseV3 readCategoryById(long categoryId, Member member) {
         Category category = categoryRepository.findWithCategoryMembersById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-        categoryValidator.validateReadPermission(category, member);
+        category.validateReadPermission(member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
 
         return new CategoryDetailResponseV3(category, staccatos, member);
@@ -107,7 +107,7 @@ public class CategoryService {
     public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
             Member member, long categoryId, CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest) {
         Category category = categoryValidator.getCategoryByIdOrThrow(categoryId);
-        categoryValidator.validateReadPermission(category, member);
+        category.validateReadPermission(member);
         List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRangeAndCategory(
                 member,
                 categoryStaccatoLocationRangeRequest.swLat(),
@@ -123,7 +123,7 @@ public class CategoryService {
     @Transactional
     public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
         Category originCategory = categoryValidator.getCategoryByIdOrThrow(categoryId);
-        categoryValidator.validateModifyPermission(originCategory, member);
+        originCategory.validateModifyPermission(member);
 
         Category updatedCategory = categoryUpdateRequest.toCategory(originCategory);
         categoryValidator.validateCategoryTitleAlreadyExists(originCategory, updatedCategory, member);
@@ -135,14 +135,14 @@ public class CategoryService {
     @Transactional
     public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
         Category category = categoryValidator.getCategoryByIdOrThrow(categoryId);
-        categoryValidator.validateModifyPermission(category, member);
+        category.validateModifyPermission(member);
         category.changeColor(categoryColorRequest.toColor());
     }
 
     @Transactional
     public void deleteCategory(long categoryId, Member member) {
         Category category = categoryValidator.getCategoryByIdOrThrow(categoryId);
-        categoryValidator.validateModifyPermission(category, member);
+        category.validateModifyPermission(member);
         deleteAllRelatedCategory(categoryId);
         categoryRepository.deleteById(categoryId);
     }

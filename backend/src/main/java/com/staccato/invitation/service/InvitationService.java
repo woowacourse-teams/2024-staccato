@@ -38,8 +38,7 @@ public class InvitationService {
     @Transactional
     public CategoryInvitationCreateResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = categoryValidator.getCategoryByIdOrThrow(categoryInvitationRequest.categoryId());
-        categoryValidator.validateOwner(category, inviter);
-        categoryValidator.validateHost(category, inviter);
+        category.validateModifyPermission(inviter);
         List<Member> invitees = memberRepository.findAllByIdIn(categoryInvitationRequest.inviteeIds());
         List<CategoryInvitation> invitations = categoryInvitationRepository.saveAll(createInvitations(category, inviter, invitees));
 

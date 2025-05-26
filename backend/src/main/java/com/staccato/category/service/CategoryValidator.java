@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
-import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 
@@ -33,30 +32,6 @@ public class CategoryValidator {
         if (origin.isNotSameTitle(updated.getTitle()) &&
                 categoryMemberRepository.existsByMemberAndCategoryTitle(member, updated.getTitle())) {
             throw new StaccatoException("같은 이름을 가진 카테고리가 있어요. 다른 이름으로 설정해주세요.");
-        }
-    }
-
-    public void validateReadPermission(Category category, Member member) {
-        if (category.isUnreadableBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    public void validateModifyPermission(Category category, Member member) {
-        if (category.isUnmodifiableBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    public void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    public void validateHost(Category category, Member member) {
-        if (category.isGuest(member)) {
-            throw new ForbiddenException();
         }
     }
 

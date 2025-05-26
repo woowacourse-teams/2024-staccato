@@ -1,19 +1,21 @@
 package com.staccato.category.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CategoryTest {
     @DisplayName("기본 카테고리는 멤버 이름으로 만들어진다.")
@@ -111,37 +113,6 @@ class CategoryTest {
 
         // then
         assertThat(category.getColor()).isEqualTo(Color.BLUE);
-    }
-
-    @DisplayName("멤버가 GUEST이면, 참을 반환한다.")
-    @Test
-    void isGuestReturnTrueIfGuestMember() {
-        // given
-        Member member = MemberFixtures.defaultMember().build();
-        Category category = CategoryFixtures.defaultCategory()
-                .withGuests(List.of(member))
-                .build();
-
-        // when
-        boolean isDenied = category.isGuest(member);
-
-        // then
-        assertThat(isDenied).isEqualTo(true);
-    }
-
-    @DisplayName("멤버가 HOST이면, 거짓을 반환한다.")
-    @Test
-    void isGuestReturnFalseIfHostMember() {
-        // given
-        Member member = MemberFixtures.defaultMember().build();
-        Category category = CategoryFixtures.defaultCategory()
-                .withHost(member).build();
-
-        // when
-        boolean isDenied = category.isGuest(member);
-
-        // then
-        assertThat(isDenied).isEqualTo(false);
     }
 
 /*
