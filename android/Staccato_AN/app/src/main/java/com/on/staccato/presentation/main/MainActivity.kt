@@ -198,6 +198,7 @@ class MainActivity :
                 }
                 STATE_HALF_EXPANDED -> {
                     behavior.state = STATE_COLLAPSED
+                    behavior.isDraggable = false
                 }
                 else -> {
                     handleBackPressedTwice(backPressedTime).also {
