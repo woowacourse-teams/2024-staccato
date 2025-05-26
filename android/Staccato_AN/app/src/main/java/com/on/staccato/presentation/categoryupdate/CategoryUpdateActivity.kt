@@ -115,7 +115,7 @@ class CategoryUpdateActivity :
         binding.viewModel = viewModel
         binding.handler = this
         binding.textInputCategoryUpdateTitle.clearFocus()
-        binding.composeViewCategoryUpdatePeriodSet.setContent {
+        binding.cvCategoryUpdatePeriodSet.setContent {
             PeriodActiveSwitch()
         }
     }

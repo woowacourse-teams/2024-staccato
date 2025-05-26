@@ -116,10 +116,10 @@ class CategoryCreationActivity :
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.handler = this
-        binding.composeViewCategoryCreationPeriodSet.setContent {
+        binding.cvCategoryCreationPeriodSet.setContent {
             PeriodActiveSwitch()
         }
-        binding.composeViewCategoryCreationShare.setContent {
+        binding.cvCategoryCreationShare.setContent {
             CategoryShareSection()
         }
     }
