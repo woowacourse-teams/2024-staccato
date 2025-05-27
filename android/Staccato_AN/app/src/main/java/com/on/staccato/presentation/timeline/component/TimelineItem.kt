@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -19,7 +18,6 @@ import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.component.clickableWithoutRipple
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.timeline.model.dummyTimelineUiModels
-import com.on.staccato.presentation.util.dpToPx
 import com.on.staccato.theme.Title3
 
 @Composable
@@ -60,7 +58,7 @@ fun TimelineItem(
             url = category.categoryThumbnailUrl,
             placeHolder = R.drawable.default_image,
             contentDescription = R.string.all_category_thumbnail_photo_description,
-            radius = 4f.dpToPx(LocalContext.current),
+            radiusPx = 6f,
         )
 
         Spacer(modifier = Modifier.constrainAs(firstSpacer) { start.linkTo(thumbnail.end) }.size(15.dp))
