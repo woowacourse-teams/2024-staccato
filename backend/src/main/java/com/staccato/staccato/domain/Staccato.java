@@ -115,6 +115,10 @@ public class Staccato extends BaseEntity {
         }
     }
 
+    public boolean hasDifferentCategoryFrom(Category targetCategory) {
+        return !category.equals(targetCategory);
+    }
+
     @PrePersist
     @PreUpdate
     @PreRemove

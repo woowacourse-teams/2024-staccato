@@ -74,7 +74,9 @@ public class StaccatoService {
         Category targetCategory = getCategoryById(staccatoRequest.categoryId());
         targetCategory.validateOwner(member);
 
-        staccato.validateCategoryChangeable(targetCategory);
+        if (staccato.hasDifferentCategoryFrom(targetCategory)) {
+            staccato.validateCategoryChangeable(targetCategory);
+        }
 
         Staccato newStaccato = staccatoRequest.toStaccato(targetCategory);
         List<StaccatoImage> existingImages = staccato.existingImages();
