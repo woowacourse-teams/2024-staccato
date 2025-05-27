@@ -2,6 +2,8 @@ package com.staccato.category.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,6 +12,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
@@ -113,6 +116,73 @@ class CategoryTest {
 
         // then
         assertThat(category.getColor()).isEqualTo(Color.BLUE);
+    }
+
+    @DisplayName("카테고리의 함께하는 사람들(HOST, GUEST)은 카테고리를 읽을 수 있다.")
+    @Test
+    void canReadCategoryWhenHostOrGuest() {
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .build();
+
+        assertAll(
+                () -> assertDoesNotThrow(() -> category.validateReadPermission(host)),
+                () -> assertDoesNotThrow(() -> category.validateReadPermission(guest))
+        );
+    }
+
+    @DisplayName("카테고리의 함께하는 사람들(HOST, GUEST)이 아니면 카테고리를 읽을 수 없다.")
+    @Test
+    void cannotReadCategoryWhenNotParticipant() {
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member other = MemberFixtures.defaultMember().withNickname("other").build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .build();
+
+        assertThatThrownBy(() -> category.validateReadPermission(other))
+                .isInstanceOf(ForbiddenException.class);
+    }
+
+    @DisplayName("카테고리의 HOST는 카테고리를 수정할 수 있다.")
+    @Test
+    void canModifyCategoryWhenHost() {
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .build();
+
+        assertDoesNotThrow(() -> category.validateModifyPermission(host));
+    }
+
+    @DisplayName("카테고리의 GUEST는 카테고리를 수정할 수 없다.")
+    @Test
+    void cannotModifyCategoryWhenGuest() {
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .build();
+
+        assertThatThrownBy(() -> category.validateModifyPermission(guest))
+                .isInstanceOf(ForbiddenException.class);
+    }
+
+    @DisplayName("카테고리의 함께하는 사람들(HOST, GUEST)이 아니면 카테고리를 수정할 수 없다.")
+    @Test
+    void cannotModifyCategoryWhenNotParticipant() {
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member other = MemberFixtures.defaultMember().withNickname("other").build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .build();
+
+        assertThatThrownBy(() -> category.validateModifyPermission(other))
+                .isInstanceOf(ForbiddenException.class);
     }
 
 /*
