@@ -65,11 +65,17 @@ image:
 
 management:
   server:
-    port: 8080
+    port: 9292
   endpoints:
     web:
       exposure:
-        include: info, health, metrics, env, beans, threaddump, loggers, prometheus
+        include: info, health, prometheus, beans, threaddump, loggers
+    jmx:
+      exposure:
+        exclude: "*"
+  endpoint:
+    health:
+      show-components: never
 
   metrics:
     distribution:
