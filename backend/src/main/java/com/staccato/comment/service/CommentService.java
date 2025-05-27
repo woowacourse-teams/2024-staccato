@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final CategoryValidator categoryValidator;
     private final StaccatoValidator staccatoValidator;
     private final CommentValidator commentValidator;
 

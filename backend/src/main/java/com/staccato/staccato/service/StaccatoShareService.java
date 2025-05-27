@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StaccatoShareService {
 
-    private final CategoryValidator categoryValidator;
     @Value("${staccato.share.link-prefix}")
     private String shareLinkPrefix;
 
