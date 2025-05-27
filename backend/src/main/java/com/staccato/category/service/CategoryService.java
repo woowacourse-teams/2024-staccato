@@ -75,9 +75,9 @@ public class CategoryService {
         return new CategoryResponsesV3(responses);
     }
 
-    public CategoryNameResponses readAllCategoriesByDate(Member member, LocalDate currentDate) {
+    public CategoryNameResponses readAllCategoriesByDateAndIsShared(Member member, LocalDate specificDate, boolean isShared) {
         List<Category> rawCategories = getCategories(
-                categoryMemberRepository.findAllByMemberIdAndDate(member.getId(), currentDate));
+                categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(member.getId(), specificDate, isShared));
         List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER,
                 DEFAULT_CATEGORY_SORT);
 

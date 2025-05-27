@@ -23,9 +23,11 @@ import jakarta.persistence.PreUpdate;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
 import com.staccato.config.domain.BaseEntity;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 
+import com.staccato.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -103,6 +105,12 @@ public class Staccato extends BaseEntity {
 
     public void changeFeeling(Feeling feeling) {
         this.feeling = feeling;
+    }
+
+    public void validateCategoryChangeable(Category targetCategory) {
+        if (category.getIsShared() || targetCategory.getIsShared()) {
+            throw new StaccatoException("개인 카테고리 간에만 스타카토를 옮길 수 있어요.");
+        }
     }
 
     @PrePersist

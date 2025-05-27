@@ -7,10 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.RepositoryTest;
 import com.staccato.category.domain.Category;
-import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.fixture.category.CategoryFixtures;
-import com.staccato.fixture.category.CategoryMemberFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.member.domain.Member;
@@ -64,12 +62,46 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
         categoryInvitationRepository.saveAll(List.of(invitation, invitation2, otherInvitation));
 
         // when
-        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
 
         // then
         assertThat(invitations).hasSize(2)
                 .containsExactly(invitation2, invitation)
                 .doesNotContain(otherInvitation);
+    }
+
+    @DisplayName("특정 사용자가 요청한 초대 목록은 모두 REQUESTED 상태다.")
+    @Test
+    void readAllByInviterOnlyReturnsRequestedStatus() {
+        // given
+        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        Member guest3 = MemberFixtures.defaultMember().withNickname("guest3").buildAndSave(memberRepository);
+        Member guest4 = MemberFixtures.defaultMember().withNickname("guest4").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .buildAndSave(categoryRepository);
+        CategoryInvitation invitationRequested = CategoryInvitation.invite(category, host, guest);
+        CategoryInvitation invitationCanceled = CategoryInvitation.invite(category, host, guest2);
+        CategoryInvitation invitationAccepted = CategoryInvitation.invite(category, host, guest3);
+        CategoryInvitation invitationRejected = CategoryInvitation.invite(category, host, guest4);
+        categoryInvitationRepository.saveAll(List.of(invitationRequested, invitationCanceled, invitationAccepted, invitationRejected));
+
+        List<CategoryInvitation> beforeInvitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
+
+        invitationCanceled.cancel();
+        invitationAccepted.accept();
+        invitationRejected.reject();
+
+        // when
+        List<CategoryInvitation> afterInvitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviteeByInviterIdOrderByCreatedAtDesc(host.getId());
+
+        // then
+        assertAll(
+                () -> assertThat(beforeInvitations).hasSize(4),
+                () -> assertThat(afterInvitations).hasSize(1)
+                        .containsExactly(invitationRequested)
+                        .doesNotContain(invitationCanceled, invitationAccepted, invitationRejected)
+        );
     }
 
     @DisplayName("특정 사용자가 요청(REQUESTED)받은 초대 목록을 최신순으로 조회한다.")
@@ -91,12 +123,44 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
         categoryInvitationRepository.saveAll(List.of(invitation, invitation2, otherInvitation));
 
         // when
-        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(guest.getId());
+        List<CategoryInvitation> invitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(guest.getId());
 
         // then
         assertThat(invitations).hasSize(2)
                 .containsExactly(invitation2, invitation)
                 .doesNotContain(otherInvitation);
+    }
+
+    @DisplayName("특정 사용자가 요청받은 초대 목록은 모두 REQUESTED 상태다.")
+    @Test
+    void readAllByInviteeOnlyReturnsRequestedStatus() {
+        // given
+        Category category = CategoryFixtures.defaultCategory().withTitle("category").withHost(host).buildAndSave(categoryRepository);
+        Category category2 = CategoryFixtures.defaultCategory().withTitle("category2").withHost(host).buildAndSave(categoryRepository);
+        Category category3 = CategoryFixtures.defaultCategory().withTitle("category3").withHost(host).buildAndSave(categoryRepository);
+        Category category4 = CategoryFixtures.defaultCategory().withTitle("category4").withHost(host).buildAndSave(categoryRepository);
+        CategoryInvitation invitationRequested = CategoryInvitation.invite(category, host, guest);
+        CategoryInvitation invitationCanceled = CategoryInvitation.invite(category2, host, guest);
+        CategoryInvitation invitationAccepted = CategoryInvitation.invite(category3, host, guest);
+        CategoryInvitation invitationRejected = CategoryInvitation.invite(category4, host, guest);
+        categoryInvitationRepository.saveAll(List.of(invitationRequested, invitationCanceled, invitationAccepted, invitationRejected));
+
+        List<CategoryInvitation> beforeInvitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(guest.getId());
+
+        invitationCanceled.cancel();
+        invitationAccepted.accept();
+        invitationRejected.reject();
+
+        // when
+        List<CategoryInvitation> afterInvitations = categoryInvitationRepository.findAllRequestedWithCategoryAndInviterByInviteeIdOrderByCreatedAtDesc(guest.getId());
+
+        // then
+        assertAll(
+                () -> assertThat(beforeInvitations).hasSize(4),
+                () -> assertThat(afterInvitations).hasSize(1)
+                        .containsExactly(invitationRequested)
+                        .doesNotContain(invitationCanceled, invitationAccepted, invitationRejected)
+        );
     }
 
     @DisplayName("특정 카테고리의 id를 가지고 있는 모든 CategoryInvitation을 삭제한다.")

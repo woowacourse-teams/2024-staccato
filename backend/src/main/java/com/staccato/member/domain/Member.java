@@ -33,6 +33,7 @@ public class Member extends BaseEntity {
     @EqualsAndHashCode.Include
     private Long id;
     @Embedded
+    @EqualsAndHashCode.Include
     private Nickname nickname;
     @Column(columnDefinition = "TEXT")
     private String imageUrl;

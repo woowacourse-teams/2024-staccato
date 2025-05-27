@@ -18,7 +18,7 @@ import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
-import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
+import com.staccato.staccato.service.dto.response.StaccatoDetailResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
@@ -59,10 +59,10 @@ public class StaccatoService {
         return StaccatoLocationResponsesV2.of(staccatos);
     }
 
-    public StaccatoDetailResponse readStaccatoById(long staccatoId, Member member) {
+    public StaccatoDetailResponseV2 readStaccatoById(long staccatoId, Member member) {
         Staccato staccato = staccatoValidator.getStaccatoByIdOrThrow(staccatoId);
         staccato.validateReadPermission(member);
-        return new StaccatoDetailResponse(staccato);
+        return new StaccatoDetailResponseV2(staccato);
     }
 
     @Transactional
@@ -76,6 +76,8 @@ public class StaccatoService {
 
         Category targetCategory = categoryValidator.getCategoryByIdOrThrow(staccatoRequest.categoryId());
         targetCategory.validateReadPermission(member);
+
+        staccato.validateCategoryChangeable(targetCategory);
 
         Staccato newStaccato = staccatoRequest.toStaccato(targetCategory);
         List<StaccatoImage> existingImages = staccato.existingImages();

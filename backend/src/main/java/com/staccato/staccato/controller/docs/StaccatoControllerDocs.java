@@ -85,6 +85,8 @@ public interface StaccatoControllerDocs {
                     (6) 사진이 8장을 초과했을 때
                                         
                     (7) 스타카토 날짜가 카테고리 기간에 포함되지 않을 때
+                    
+                    (8) 공유 상태가 다르거나, 공유 카테고리간의 카테고리 변경이 일어났을 때
                     """,
                     responseCode = "400")
     })
