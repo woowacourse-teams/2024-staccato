@@ -7,7 +7,6 @@ import com.on.staccato.data.dto.category.CategoryResponse
 import com.on.staccato.data.dto.mapper.toDto
 import com.on.staccato.data.dto.timeline.TimelineResponse
 import com.on.staccato.data.network.ApiResult
-import com.on.staccato.data.network.handle
 import com.on.staccato.domain.model.NewCategory
 import javax.inject.Inject
 
@@ -24,7 +23,7 @@ class CategoryRemoteDataSource
         override suspend fun changeCategoryColor(
             categoryId: Long,
             color: String,
-        ): ApiResult<Unit> = categoryApiService.putCategoryColor(categoryId, CategoryColorRequest(color)).handle()
+        ): ApiResult<Unit> = categoryApiService.putCategoryColor(categoryId, CategoryColorRequest(color))
 
         override suspend fun getCategories(
             sort: String?,
