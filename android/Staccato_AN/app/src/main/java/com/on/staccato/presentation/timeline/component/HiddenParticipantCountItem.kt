@@ -15,28 +15,26 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.on.staccato.presentation.common.color.CategoryColor
-import com.on.staccato.presentation.common.color.CategoryColor.Companion.getColorBy
-import com.on.staccato.presentation.common.color.CategoryColor.Companion.getTextColorBy
 import com.on.staccato.theme.Body6
 import com.on.staccato.theme.White
 
 @Composable
 fun HiddenParticipantCountItem(
     count: Long,
-    colorLabel: String,
+    color: CategoryColor,
 ) {
     Box(
         modifier =
             Modifier
                 .size(19.dp)
                 .shadow(2.dp, shape = CircleShape, clip = false)
-                .background(color = getColorBy(colorLabel), shape = CircleShape)
+                .background(color = color.color, shape = CircleShape)
                 .border(width = 1.dp, color = White, shape = CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "+$count",
-            color = getTextColorBy(colorLabel),
+            color = color.textColor,
             style = Body6,
         )
     }
@@ -50,7 +48,7 @@ private fun HiddenParticipantCountPreview(
 ) {
     HiddenParticipantCountItem(
         count = count,
-        colorLabel = CategoryColor.GRAY.label,
+        color = CategoryColor.GRAY,
     )
 }
 

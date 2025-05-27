@@ -13,25 +13,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
-import com.on.staccato.presentation.common.color.CategoryColor.Companion.getColorBy
-import com.on.staccato.presentation.common.color.CategoryColor.Companion.getIconBackgroundColorBy
+import com.on.staccato.presentation.common.color.CategoryColor
 
 @Composable
 fun CategoryColor(
     modifier: Modifier = Modifier,
-    color: String,
+    color: CategoryColor,
 ) {
     Box(
         modifier =
             modifier
                 .size(36.dp)
-                .background(color = getIconBackgroundColorBy(color), shape = CircleShape),
+                .background(color = color.iconBackgroundColor, shape = CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.icon_folder),
             contentDescription = stringResource(id = R.string.category_creation_color),
-            tint = getColorBy(color),
+            tint = color.color,
         )
     }
 }

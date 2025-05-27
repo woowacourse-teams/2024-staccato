@@ -69,7 +69,7 @@ fun TimelineItem(
                     start.linkTo(firstSpacer.end)
                     top.linkTo(thumbnail.top)
                 },
-            color = category.color.label,
+            color = category.color,
         )
 
         Spacer(modifier = Modifier.constrainAs(secondSpacer) { start.linkTo(color.end) }.size(10.dp))
@@ -128,7 +128,7 @@ fun TimelineItem(
                         bottom.linkTo(parent.bottom)
                     },
                 participants = category.participants,
-                colorLabel = category.color.label,
+                color = category.color,
             )
         }
 

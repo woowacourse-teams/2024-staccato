@@ -20,7 +20,7 @@ import com.on.staccato.presentation.timeline.model.dummyParticipantsUiModels
 fun Participants(
     modifier: Modifier = Modifier,
     participants: ParticipantsUiModel,
-    colorLabel: String,
+    color: CategoryColor,
 ) {
     LazyRow(
         modifier = modifier,
@@ -34,7 +34,7 @@ fun Participants(
 
         if (participants.hiddenCount != MIN_HIDDEN_COUNT) {
             item {
-                HiddenParticipantCountItem(participants.hiddenCount, colorLabel = colorLabel)
+                HiddenParticipantCountItem(participants.hiddenCount, color = color)
             }
         }
     }
@@ -48,7 +48,7 @@ private fun ParticipantsPreview(
 ) {
     Participants(
         participants = participants,
-        colorLabel = CategoryColor.GRAY.label,
+        color = CategoryColor.GRAY,
     )
 }
 
