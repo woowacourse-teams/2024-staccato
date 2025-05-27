@@ -72,10 +72,10 @@ public class StaccatoService {
             Member member
     ) {
         Staccato staccato = staccatoValidator.getStaccatoByIdOrThrow(staccatoId);
-        staccato.validateReadPermission(member);
+        staccato.validateModifyPermission(member);
 
         Category targetCategory = categoryValidator.getCategoryByIdOrThrow(staccatoRequest.categoryId());
-        targetCategory.validateReadPermission(member);
+        targetCategory.validateModifyPermission(member);
 
         staccato.validateCategoryChangeable(targetCategory);
 
@@ -95,7 +95,7 @@ public class StaccatoService {
     @Transactional
     public void deleteStaccatoById(long staccatoId, Member member) {
         staccatoRepository.findById(staccatoId).ifPresent(staccato -> {
-            staccato.validateReadPermission(member);
+            staccato.validateModifyPermission(member);
             commentRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
             staccatoImageRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
             staccatoRepository.deleteById(staccatoId);
@@ -105,7 +105,7 @@ public class StaccatoService {
     @Transactional
     public void updateStaccatoFeelingById(long staccatoId, Member member, FeelingRequest feelingRequest) {
         Staccato staccato = staccatoValidator.getStaccatoByIdOrThrow(staccatoId);
-        staccato.validateReadPermission(member);
+        staccato.validateModifyPermission(member);
         Feeling feeling = feelingRequest.toFeeling();
         staccato.changeFeeling(feeling);
     }

@@ -135,4 +135,8 @@ public class Staccato extends BaseEntity {
     public void validateReadPermission(Member member) {
         category.validateReadPermission(member);
     }
+
+    public void validateModifyPermission(Member member) {
+        category.validateReadPermission(member);
+    }
 }
