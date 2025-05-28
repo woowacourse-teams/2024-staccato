@@ -36,8 +36,8 @@
                 android:layout_height="45dp"
                 android:contentDescription="@string/profile_image_description"
                 bind:coilCircleImageUrl="@{member.member.memberImage}"
-                bind:coilPlaceHolder="@{@drawable/shape_place_holder_oval}"
-                tools:src="@drawable/shape_place_holder_oval" />
+                bind:coilPlaceHolder="@{@drawable/icon_member}"
+                tools:src="@drawable/icon_member" />
         </LinearLayout>
 
         <ImageView
