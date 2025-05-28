@@ -26,7 +26,7 @@ import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray3
 
 @Composable
-fun StaccatoSearchTextField(
+fun SearchTextField(
     value: String,
     modifier: Modifier = Modifier,
     placeholderText: String = "",
@@ -88,7 +88,7 @@ fun StaccatoSearchTextField(
 @Composable
 @Preview(showBackground = true)
 fun StaccatoSearchEmptyTextFieldPreview() {
-    StaccatoSearchTextField(
+    SearchTextField(
         value = "",
         onValueChange = {},
         placeholderText = "검색어를 입력해주세요",
@@ -98,7 +98,7 @@ fun StaccatoSearchEmptyTextFieldPreview() {
 @Composable
 @Preview(showBackground = true)
 fun StaccatoSearchTextFieldPreview() {
-    StaccatoSearchTextField(
+    SearchTextField(
         value = "아주아주 긴 입력값 아주아주 긴 입력값 아주아주 긴 입력값 아주아주 긴 입력값",
         onValueChange = {},
         placeholderText = "",

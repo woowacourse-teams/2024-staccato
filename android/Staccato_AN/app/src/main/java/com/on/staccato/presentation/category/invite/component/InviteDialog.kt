@@ -61,7 +61,7 @@ fun InviteDialog(
                     participantsNumber = selectedMembers.members.size,
                     onInviteConfirmed = onInviteConfirmed,
                 )
-                StaccatoSearchTextField(
+                SearchTextField(
                     value = searchKeyword,
                     placeholderText = stringResource(R.string.invite_member_search_nickname),
                     modifier = Modifier.padding(horizontal = 16.dp),
