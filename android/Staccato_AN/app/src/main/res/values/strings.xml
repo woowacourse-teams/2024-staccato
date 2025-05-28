@@ -31,6 +31,7 @@
     <string name="all_delete_image">사진 삭제 버튼</string>
     <string name="all_photo_attach_icon_description">사진 첨부란</string>
     <string name="all_category_thumbnail_photo_description">카테고리 썸네일 사진</string>
+    <string name="all_waring">경고</string>
 
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
@@ -83,12 +84,16 @@
     <string name="category_creation_description">카테고리 소개</string>
     <string name="category_creation_description_hint">소개를 입력해 주세요</string>
     <string name="category_creation_color">마커 색상</string>
+    <string name="category_creation_color_hint">지도 위에서 보여질 마커의 색을 선택해주세요.</string>
     <string name="category_creation_period_setting">기간 설정</string>
     <string name="category_creation_period_hint">기간을 선택해 주세요</string>
     <string name="category_creation_selected_period">%s ~ %s</string>
-    <string name="category_creation_period_description">여행과 프로젝트처럼 시작일과 종료일을 설정할 수 있어요.</string>
+    <string name="category_creation_period_description">여행처럼 시작일과 종료일을 설정할 수 있어요.</string>
     <string name="category_creation_toolbar_title">카테고리 만들기</string>
     <string name="category_creation_toolbar_subtitle">스타카토를 담을 카테고리를 만들어 보세요!</string>
+    <string name="category_creation_share_title">카테고리 공유</string>
+    <string name="category_creation_share_hint">친구들을 초대해 함께 카테고리를 채워보세요.</string>
+    <string name="category_creation_share_warning">한 번 설정하면 변경할 수 없어요</string>
 
     // activity_category_update
     <string name="category_update_toolbar_title">카테고리 수정하기</string>
