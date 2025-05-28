@@ -4,7 +4,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.staccato.ServiceSliceTest;
@@ -14,7 +14,6 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.member.MemberReadRequestFixtures;
-import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
@@ -107,8 +106,8 @@ class MemberServiceTest extends ServiceSliceTest {
 
     @DisplayName("검색어가 없다면, 빈 배열을 반환한다.")
     @ParameterizedTest
-    @NullSource
-    @ValueSource(strings = {"", " "})
+    @NullAndEmptySource
+    @ValueSource(strings = {" "})
     void readMembersByBlankNickname(String keyword) {
         // given
         Member member = MemberFixtures.defaultMember()

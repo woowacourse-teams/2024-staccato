@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.domain.InvitationStatus;
-import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.member.service.dto.request.MemberReadRequest;
@@ -20,8 +18,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final CategoryInvitationRepository categoryInvitationRepository;
-    private final CategoryMemberRepository categoryMemberRepository;
 
     @Transactional
     public MemberProfileImageResponse changeProfileImage(Member member, String imageUrl) {
@@ -39,7 +35,7 @@ public class MemberService {
         if (hasNoNickname(memberReadRequest.nickname())) {
             return MemberResponses.empty();
         }
-        List<Member> members = memberRepository.findByNicknameNicknameContainsAndMemberIddNotAndCategoryNot(
+        List<Member> members = memberRepository.findByNicknameContainsWithoutMemberIdAndCategoryId(
                 memberReadRequest.trimmedNickname(),
                 member.getId(),
                 memberReadRequest.excludeCategoryId(),

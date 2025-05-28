@@ -32,7 +32,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                   )
                 )
             """)
-    List<Member> findByNicknameNicknameContainsAndMemberIddNotAndCategoryNot(
+    List<Member> findByNicknameContainsWithoutMemberIdAndCategoryId(
             @Param("nickname") String nickname,
             @Param("memberId") long memberId,
             @Param("categoryId") Long categoryId,

@@ -47,7 +47,7 @@ class MemberRepositoryTest extends RepositoryTest {
     void readMembersByNicknameWithoutMember() {
         // when
         List<Member> result = memberRepository
-                .findByNicknameNicknameContainsAndMemberIddNotAndCategoryNot(
+                .findByNicknameContainsWithoutMemberIdAndCategoryId(
                         "스타", host.getId(), null, InvitationStatus.REQUESTED
                 );
 
@@ -72,7 +72,7 @@ class MemberRepositoryTest extends RepositoryTest {
                 .buildAndSave(memberRepository);
 
         // when
-        List<Member> result = memberRepository.findByNicknameNicknameContainsAndMemberIddNotAndCategoryNot(
+        List<Member> result = memberRepository.findByNicknameContainsWithoutMemberIdAndCategoryId(
                 keyword, host.getId(), category.getId(), InvitationStatus.REQUESTED
         );
 
@@ -93,7 +93,7 @@ class MemberRepositoryTest extends RepositoryTest {
 
         // when
         List<Member> result = memberRepository
-                .findByNicknameNicknameContainsAndMemberIddNotAndCategoryNot(
+                .findByNicknameContainsWithoutMemberIdAndCategoryId(
                         keyword, host.getId(), category.getId(), InvitationStatus.REQUESTED
                 );
 
@@ -116,7 +116,7 @@ class MemberRepositoryTest extends RepositoryTest {
 
         // when
         List<Member> result = memberRepository
-                .findByNicknameNicknameContainsAndMemberIddNotAndCategoryNot(
+                .findByNicknameContainsWithoutMemberIdAndCategoryId(
                         keyword, host.getId(), null, InvitationStatus.REQUESTED
                 );
 
@@ -136,7 +136,7 @@ class MemberRepositoryTest extends RepositoryTest {
 
         // when
         List<Member> result = memberRepository
-                .findByNicknameNicknameContainsAndMemberIddNotAndCategoryNot(
+                .findByNicknameContainsWithoutMemberIdAndCategoryId(
                         keyword, host.getId(), null, InvitationStatus.REQUESTED
                 );
 
