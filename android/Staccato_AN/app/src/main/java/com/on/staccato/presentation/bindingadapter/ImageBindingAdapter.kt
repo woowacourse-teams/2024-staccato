@@ -20,12 +20,12 @@ import com.on.staccato.presentation.util.dpToPx
 
 @BindingAdapter("isGone")
 fun ImageView.setIsGone(isGone: Boolean) {
-    visibility = if (isGone)View.GONE else View.VISIBLE
+    visibility = if (isGone) View.GONE else View.VISIBLE
 }
 
 @BindingAdapter("isInvisible")
 fun ImageView.setVisibility(isInvisible: Boolean) {
-    visibility = if (isInvisible)View.INVISIBLE else View.VISIBLE
+    visibility = if (isInvisible) View.INVISIBLE else View.VISIBLE
 }
 
 @BindingAdapter("imageButtonIcon")
