@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
 import com.on.staccato.domain.model.Member
+import com.on.staccato.domain.model.longNameMember
 import com.on.staccato.presentation.category.invite.model.InviteState
 import com.on.staccato.presentation.category.invite.model.MemberUiModel
 import com.on.staccato.presentation.category.invite.model.dummyMemberUiModel
@@ -68,9 +69,10 @@ fun SearchedMemberItem(
             maxLines = 1,
             modifier =
                 Modifier
+                    .weight(1f)
                     .align(Alignment.CenterVertically),
         )
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.width(10.dp))
         InviteStateComposable(
             item = item,
             onSelect = onSelect,
@@ -82,7 +84,7 @@ fun SearchedMemberItem(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(name = "선택 가능 상태", showBackground = true)
 fun UnselectedPreview() {
     SearchedMemberItem(
         item = dummyMemberUiModel,
@@ -92,7 +94,17 @@ fun UnselectedPreview() {
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(name = "이름이 아주 길 때", showBackground = true)
+fun LongNameSearchedMemberPreview() {
+    SearchedMemberItem(
+        item = MemberUiModel(longNameMember),
+        onDeselect = {},
+        onSelect = {},
+    )
+}
+
+@Composable
+@Preview(name = "선택된 상태", showBackground = true)
 fun SelectedPreview() {
     SearchedMemberItem(
         item = selectedMemberUiModel,
@@ -102,7 +114,7 @@ fun SelectedPreview() {
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(name = "참여중 상태", showBackground = true)
 fun ParticipatingPreview() {
     SearchedMemberItem(
         item = participatingMemberUiModel,

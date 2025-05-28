@@ -93,7 +93,7 @@ fun SelectedMemberItemPreview() {
 
 @Composable
 @Preview(showBackground = true)
-fun LongNamePreview() {
+fun LongNameSelectedMemberPreview() {
     SelectedMemberItem(
         item = dummyMember.copy(nickname = "매우엄청나게짱긴이름"),
         onDeselect = {},

@@ -13,4 +13,4 @@ val dummyMember =
         memberImage = "",
     )
 
-val longNameMember = dummyMember.copy(nickname = "엄청나게아주긴닉네임")
+val longNameMember = dummyMember.copy(nickname = "엄청나게아주매우아주매우아주매우아주매우아주매우닉네임")
