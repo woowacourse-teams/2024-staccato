@@ -121,7 +121,7 @@ private fun SearchTrailingIcon(
 
 @Composable
 @Preview(showBackground = true)
-fun StaccatoSearchEmptyTextFieldPreview() {
+fun SearchEmptyTextFieldPreview() {
     SearchTextField(
         value = "",
         onValueChange = {},
@@ -131,19 +131,9 @@ fun StaccatoSearchEmptyTextFieldPreview() {
 
 @Composable
 @Preview(showBackground = true)
-fun StaccatoSearchTextFieldPreview() {
+fun SearchTextFieldPreview() {
     SearchTextField(
         value = "아주아주 긴 입력값 아주아주 긴 입력값 아주아주 긴 입력값 아주아주 긴 입력값",
-        onValueChange = {},
-        placeholderText = "",
-    )
-}
-
-@Composable
-@Preview(showBackground = true)
-fun EnglishStaccatoSearchTextFieldPreview() {
-    SearchTextField(
-        value = "Hello my name",
         onValueChange = {},
         placeholderText = "",
     )
