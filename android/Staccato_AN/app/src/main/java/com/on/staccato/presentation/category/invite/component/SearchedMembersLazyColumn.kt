@@ -30,7 +30,7 @@ fun SearchedMembersLazyColumn(
                     item = item,
                     onSelect = onSelect,
                     onDeselect = onDeselect,
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier,
                 )
             }
         }
