@@ -164,7 +164,7 @@ class CategoryViewModel
 
         private suspend fun updateCategory(category: Category) {
             _category.value = category.toUiModel()
-            participatingMembers.emit(Participants(category.mates))
+            participatingMembers.emit(Participants(category.participants))
         }
 
         private fun updateIsDeleteSuccess() {

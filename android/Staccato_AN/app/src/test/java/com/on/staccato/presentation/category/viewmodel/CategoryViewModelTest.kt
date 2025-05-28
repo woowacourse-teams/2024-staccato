@@ -199,7 +199,7 @@ class CategoryViewModelTest {
             coEvery { categoryRepository.getCategory(VALID_ID) } returns
                 Success(
                     category.copy(
-                        mates = participants,
+                        participants = participants,
                     ),
                 )
             coEvery { memberRepository.searchMembersBy("나") } returns MutableStateFlow(Success(naMembers))
@@ -220,7 +220,7 @@ class CategoryViewModelTest {
             coEvery { categoryRepository.getCategory(VALID_ID) } returns
                 Success(
                     category.copy(
-                        mates = participants,
+                        participants = participants,
                     ),
                 )
             coEvery { memberRepository.searchMembersBy("나") } returns MutableStateFlow(Success(naMembers))
