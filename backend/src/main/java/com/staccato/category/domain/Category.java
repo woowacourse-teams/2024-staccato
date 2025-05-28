@@ -175,6 +175,12 @@ public class Category extends BaseEntity {
         return categoryMembers.size();
     }
 
+    public void validateOwner(Member member) {
+        if (isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
 /*    public void increaseStaccatoCount() {
         staccatoCount = staccatoCount + 1;
     }

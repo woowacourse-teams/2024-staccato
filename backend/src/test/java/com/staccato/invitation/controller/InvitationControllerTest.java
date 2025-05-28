@@ -1,21 +1,5 @@
 package com.staccato.invitation.controller;
 
-import java.util.List;
-import java.util.Set;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import com.staccato.ControllerTest;
-import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.member.MemberFixtures;
-import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
-import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
-import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponse;
-import com.staccato.invitation.service.dto.response.CategoryInvitationRequestedResponses;
-import com.staccato.member.domain.Member;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -23,6 +7,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+import java.util.Set;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+import com.staccato.ControllerTest;
+import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
+import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationReceivedResponse;
+import com.staccato.invitation.service.dto.response.CategoryInvitationReceivedResponses;
+import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponse;
+import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponses;
+import com.staccato.member.domain.Member;
 
 class InvitationControllerTest extends ControllerTest {
 
@@ -88,9 +92,9 @@ class InvitationControllerTest extends ControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("사용자가 잘못된 초대 식별자로 삭제하려고 하면 예외가 발생한다.")
+    @DisplayName("사용자가 잘못된 초대 식별자로 취소하려고 하면 예외가 발생한다.")
     @Test
-    void cannotDeleteCategoryByInvalidId() throws Exception {
+    void cannotCancelInvitationByInvalidId() throws Exception {
         // given
         long invalidId = 0;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "초대 식별자는 양수로 이루어져야 합니다.");
@@ -104,21 +108,22 @@ class InvitationControllerTest extends ControllerTest {
 
     @DisplayName("요청자는 자신이 보낸 초대 요청 목록을 조회할 수 있다.")
     @Test
-    void readRequestedInvitations() throws Exception {
+    void readSentInvitations() throws Exception {
         // given
         Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
 
-        when(invitationService.readInvitations(any(Member.class)))
-                .thenReturn(new CategoryInvitationRequestedResponses(List.of(
-                        new CategoryInvitationRequestedResponse(2L, "초대한사람", "https://example.com/images/profile1.png", 10L, "여름 방학 여행"),
-                        new CategoryInvitationRequestedResponse(3L, "다른사용자", "https://example.com/images/profile2.png", 11L, "겨울 맛집 탐방")
+        when(invitationService.readSentInvitations(any(Member.class)))
+                .thenReturn(new CategoryInvitationSentResponses(List.of(
+                        new CategoryInvitationSentResponse(1L, 2L, "초대한사람", "https://example.com/images/profile1.png", 10L, "여름 방학 여행"),
+                        new CategoryInvitationSentResponse(2L, 3L, "다른사용자", "https://example.com/images/profile2.png", 11L, "겨울 맛집 탐방")
                 )));
 
         String expectedResponse = """
                 {
                   "invitations": [
                     {
+                      "invitationId": 1,
                       "inviteeId": 2,
                       "inviteeNickname": "초대한사람",
                       "inviteeProfileImageUrl": "https://example.com/images/profile1.png",
@@ -126,6 +131,7 @@ class InvitationControllerTest extends ControllerTest {
                       "categoryTitle": "여름 방학 여행"
                     },
                     {
+                      "invitationId": 2,
                       "inviteeId": 3,
                       "inviteeNickname": "다른사용자",
                       "inviteeProfileImageUrl": "https://example.com/images/profile2.png",
@@ -137,7 +143,106 @@ class InvitationControllerTest extends ControllerTest {
                 """;
 
         // when & then
-        mockMvc.perform(get("/invitations")
+        mockMvc.perform(get("/invitations/sent")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("초대 ID로 초대 요청을 수락한다.")
+    @Test
+    void accept() throws Exception {
+        // given
+        long invitationId = 1L;
+        Member member = MemberFixtures.defaultMember().build();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+
+        // when & then
+        mockMvc.perform(post("/invitations/{invitationId}/accept", invitationId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("사용자가 잘못된 초대 식별자로 수락하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotAcceptInvitationByInvalidId() throws Exception {
+        // given
+        long invalidId = 0;
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "초대 식별자는 양수로 이루어져야 합니다.");
+
+        // when & then
+        mockMvc.perform(post("/invitations/{invitationId}/cancel", invalidId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("초대 ID로 초대 요청을 거절한다.")
+    @Test
+    void reject() throws Exception {
+        // given
+        long invitationId = 1L;
+        Member member = MemberFixtures.defaultMember().build();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+
+        // when & then
+        mockMvc.perform(post("/invitations/{invitationId}/reject", invitationId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("사용자가 잘못된 초대 식별자로 거절하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotRejectInvitationByInvalidId() throws Exception {
+        // given
+        long invalidId = 0;
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "초대 식별자는 양수로 이루어져야 합니다.");
+
+        // when & then
+        mockMvc.perform(post("/invitations/{invitationId}/reject", invalidId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("요청자는 자신이 받은 초대 요청 목록을 조회할 수 있다.")
+    @Test
+    void readReceivedInvitations() throws Exception {
+        // given
+        Member member = MemberFixtures.defaultMember().build();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+
+        when(invitationService.readReceivedInvitations(any(Member.class)))
+                .thenReturn(new CategoryInvitationReceivedResponses(List.of(
+                        new CategoryInvitationReceivedResponse(1L, 2L, "초대보낸사람1", "https://example.com/images/profile1.png", 10L, "여름 방학 여행"),
+                        new CategoryInvitationReceivedResponse(2L, 3L, "초대보낸사람2", "https://example.com/images/profile2.png", 11L, "겨울 맛집 탐방")
+                )));
+
+        String expectedResponse = """
+                {
+                  "invitations": [
+                    {
+                      "invitationId": 1,
+                      "inviterId": 2,
+                      "inviterNickname": "초대보낸사람1",
+                      "inviterProfileImageUrl": "https://example.com/images/profile1.png",
+                      "categoryId": 10,
+                      "categoryTitle": "여름 방학 여행"
+                    },
+                    {
+                      "invitationId": 2,
+                      "inviterId": 3,
+                      "inviterNickname": "초대보낸사람2",
+                      "inviterProfileImageUrl": "https://example.com/images/profile2.png",
+                      "categoryId": 11,
+                      "categoryTitle": "겨울 맛집 탐방"
+                    }
+                  ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/invitations/received")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));

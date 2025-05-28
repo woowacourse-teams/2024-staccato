@@ -15,6 +15,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CategoryInvitationTest {
+    private static final String STATUS_EXCEPTION_MESSAGE = "이미 처리된 초대 요청이에요.";
+
     private Member host;
     private Member guest;
     private Category category;
@@ -44,8 +46,10 @@ class CategoryInvitationTest {
     @DisplayName("초대를 취소한다.")
     @Test
     void cancel() {
-        // when
+        // given
         CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
         invitation.cancel();
 
         // then
@@ -55,37 +59,155 @@ class CategoryInvitationTest {
     @DisplayName("이미 취소된 초대를 취소해도 아무 일도 일어나지 않는다.")
     @Test
     void cancelInvitationAlreadyCanceled() {
-        // when
+        // given
         CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
         invitation.cancel();
 
         // then
-        assertThatNoException().isThrownBy(() -> invitation.cancel());
+        assertThatNoException().isThrownBy(invitation::cancel);
     }
 
     @DisplayName("이미 수락된 초대를 취소하려고 하면 예외가 발생한다.")
     @Test
     void cannotCancelIfAccepted() {
-        // when
+        // given
         CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
         invitation.accept();
 
         // then
-        assertThatThrownBy(() -> invitation.cancel())
+        assertThatThrownBy(invitation::cancel)
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("이미 상대가 수락/거절한 초대 요청은 취소할 수 없어요.");
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
     }
 
     @DisplayName("이미 거절된 초대를 취소하려고 하면 예외가 발생한다.")
     @Test
     void cannotCancelIfRejected() {
-        // when
+        // given
         CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
         invitation.reject();
 
         // then
-        assertThatThrownBy(() -> invitation.cancel())
+        assertThatThrownBy(invitation::cancel)
                 .isInstanceOf(StaccatoException.class)
-                .hasMessage("이미 상대가 수락/거절한 초대 요청은 취소할 수 없어요.");
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
+    }
+
+    @DisplayName("초대를 수락한다.")
+    @Test
+    void accept() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
+        invitation.accept();
+
+        // then
+        assertThat(invitation.getStatus()).isEqualTo(InvitationStatus.ACCEPTED);
+    }
+
+    @DisplayName("이미 수락된 초대를 수락해도 아무 일도 일어나지 않는다.")
+    @Test
+    void acceptInvitationAlreadyAccepted() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
+        invitation.accept();
+
+        // then
+        assertThatNoException().isThrownBy(invitation::accept);
+    }
+
+    @DisplayName("이미 취소된 초대를 수락하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotAcceptIfCanceled() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
+        invitation.cancel();
+
+        // then
+        assertThatThrownBy(invitation::accept)
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
+    }
+
+    @DisplayName("이미 거절된 초대를 수락하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotAcceptIfRejected() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
+        invitation.reject();
+
+        // then
+        assertThatThrownBy(invitation::accept)
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
+    }
+
+    @DisplayName("초대를 거절한다.")
+    @Test
+    void reject() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
+        invitation.reject();
+
+        // then
+        assertThat(invitation.getStatus()).isEqualTo(InvitationStatus.REJECTED);
+    }
+
+    @DisplayName("이미 거절된 초대를 거절해도 아무 일도 일어나지 않는다.")
+    @Test
+    void rejectInvitationAlreadyRejected() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
+        invitation.reject();
+
+        // then
+        assertThatNoException().isThrownBy(invitation::reject);
+    }
+
+    @DisplayName("이미 취소된 초대를 거절하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotRejectIfCanceled() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
+        invitation.cancel();
+
+        // then
+        assertThatThrownBy(invitation::reject)
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
+    }
+
+    @DisplayName("이미 수락된 초대를 거절하려고 하면 예외가 발생한다.")
+    @Test
+    void cannotRejectIfAccepted() {
+        // given
+        CategoryInvitation invitation = CategoryInvitation.invite(category, host, guest);
+
+        // when
+        invitation.accept();
+
+        // then
+        assertThatThrownBy(invitation::reject)
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage(STATUS_EXCEPTION_MESSAGE);
     }
 }
