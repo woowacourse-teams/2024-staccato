@@ -14,13 +14,15 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.member.MemberReadRequestFixtures;
+import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.member.service.dto.request.MemberReadRequest;
 import com.staccato.member.service.dto.response.MemberProfileImageResponse;
-import com.staccato.member.service.dto.response.MemberResponse;
-import com.staccato.member.service.dto.response.MemberResponses;
+import com.staccato.member.service.dto.response.MemberSearchResponse;
+import com.staccato.member.service.dto.response.MemberSearchResponses;
+import com.staccato.member.service.dto.response.SearchedStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -91,17 +93,21 @@ class MemberServiceTest extends ServiceSliceTest {
                 .build();
 
         // when
-        MemberResponses result = memberService.readMembersByNickname(member, memberReadRequest);
+        MemberSearchResponses result = memberService.readMembersByNickname(member, memberReadRequest);
 
         // then
         List<Long> resultIds = result.members().stream()
-                .map(MemberResponse::memberId)
+                .map(MemberSearchResponse::memberId)
                 .toList();
 
-        assertThat(resultIds)
-                .hasSize(2)
-                .containsExactlyInAnyOrder(member1.getId(), member2.getId())
-                .doesNotContain(member.getId(), member3.getId());
+        assertAll(
+                () -> assertThat(resultIds)
+                        .hasSize(2)
+                        .containsExactlyInAnyOrder(member1.getId(), member2.getId())
+                        .doesNotContain(member.getId(), member3.getId()),
+                () -> assertThat(result.members().get(0).status()).isEqualTo(SearchedStatus.NONE.name()),
+                () -> assertThat(result.members().get(1).status()).isEqualTo(SearchedStatus.NONE.name())
+        );
     }
 
     @DisplayName("검색어가 없다면, 빈 배열을 반환한다.")
@@ -122,9 +128,83 @@ class MemberServiceTest extends ServiceSliceTest {
                 .build();
 
         // when
-        MemberResponses result = memberService.readMembersByNickname(member, memberReadRequest);
+        MemberSearchResponses result = memberService.readMembersByNickname(member, memberReadRequest);
 
         // then
         assertThat(result.members()).isEmpty();
+    }
+
+    @DisplayName("excludeCategoryId가 있다면, 검색된 사용자 중 이미 초대 요청을 받은 사용자는 ALREADY_REQUESTED 상태로 구분된다.")
+    @Test
+    void readMembersWithRequestedStatus() {
+        // given
+        Member me = MemberFixtures.defaultMember().withNickname("나").buildAndSave(memberRepository);
+        Member invited = MemberFixtures.defaultMember().withNickname("스타").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory().withHost(me).buildAndSave(categoryRepository);
+
+        categoryInvitationRepository.save(CategoryInvitation.invite(category, me, invited));
+
+        MemberReadRequest request = MemberReadRequestFixtures.defaultMemberReadRequest()
+                .withNickname("스타")
+                .withExcludeCategoryId(category.getId())
+                .build();
+
+        // when
+        MemberSearchResponses result = memberService.readMembersByNickname(me, request);
+
+        // then
+        assertAll(
+                () -> assertThat(result.members()).hasSize(1),
+                () -> assertThat(result.members().get(0).memberId()).isEqualTo(invited.getId()),
+                () -> assertThat(result.members().get(0).status()).isEqualTo(SearchedStatus.ALREADY_REQUESTED.name())
+        );
+    }
+
+    @DisplayName("excludeCategoryId가 있다면, 검색된 사용자 중 이미 카테고리에 속한 사용자는 ALREADY_REQUESTED 상태로 구분된다.")
+    @Test
+    void readMembersWithJoinedStatus() {
+        // given
+        Member me = MemberFixtures.defaultMember().withNickname("나").buildAndSave(memberRepository);
+        Member joined = MemberFixtures.defaultMember().withNickname("스타카토").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory().withHost(me).withGuests(List.of(joined))
+                .buildAndSave(categoryRepository);
+
+        MemberReadRequest request = MemberReadRequestFixtures.defaultMemberReadRequest()
+                .withNickname("스타")
+                .withExcludeCategoryId(category.getId())
+                .build();
+
+        // when
+        MemberSearchResponses result = memberService.readMembersByNickname(me, request);
+
+        // then
+        assertAll(
+                () -> assertThat(result.members()).hasSize(1),
+                () -> assertThat(result.members().get(0).memberId()).isEqualTo(joined.getId()),
+                () -> assertThat(result.members().get(0).status()).isEqualTo(SearchedStatus.ALREADY_JOINED.name())
+        );
+    }
+
+    @DisplayName("excludeCategoryId가 없다면, 검색된 모든 사용자는 NONE 상태로 구분된다.")
+    @Test
+    void readMembersWithoutExcludeCategoryId() {
+        // given
+        Member me = MemberFixtures.defaultMember().withNickname("나").buildAndSave(memberRepository);
+        Member none = MemberFixtures.defaultMember().withNickname("스타").buildAndSave(memberRepository);
+
+        MemberReadRequest request = MemberReadRequestFixtures.defaultMemberReadRequest()
+                .withNickname("스타")
+                .withExcludeCategoryId(null)
+                .build();
+
+        // when
+        MemberSearchResponses result = memberService.readMembersByNickname(me, request);
+
+        // then
+        assertAll(
+                () -> assertThat(result.members()).hasSize(1),
+                () -> assertThat(result.members().get(0).memberId()).isEqualTo(none.getId()),
+                () -> assertThat(result.members().get(0).status()).isEqualTo(SearchedStatus.NONE.name())
+        );
     }
 }

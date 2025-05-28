@@ -5,6 +5,7 @@ import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
 import com.staccato.member.service.dto.request.MemberReadRequest;
 import com.staccato.member.service.dto.response.MemberResponses;
+import com.staccato.member.service.dto.response.MemberSearchResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,7 +18,7 @@ public interface MemberControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 초대 성공", responseCode = "200")
     })
-    ResponseEntity<MemberResponses> readMembersByNickname(
+    ResponseEntity<MemberSearchResponses> readMembersByNickname(
             @Parameter(hidden = true) @LoginMember Member member,
             @Parameter(description = "검색어와 검색 결과에서 제외할 카테고리 식별자로 필터링합니다. 검색어가 없다면 빈 배열을 반환합니다.") MemberReadRequest memberReadRequest
     );

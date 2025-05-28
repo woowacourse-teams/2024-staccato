@@ -11,6 +11,8 @@ import com.staccato.member.domain.Member;
 import com.staccato.member.service.MemberService;
 import com.staccato.member.service.dto.request.MemberReadRequest;
 import com.staccato.member.service.dto.response.MemberResponses;
+import com.staccato.member.service.dto.response.MemberSearchResponse;
+import com.staccato.member.service.dto.response.MemberSearchResponses;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -20,10 +22,10 @@ public class MemberController implements MemberControllerDocs {
     private final MemberService memberService;
 
     @GetMapping("/search")
-    public ResponseEntity<MemberResponses> readMembersByNickname(
+    public ResponseEntity<MemberSearchResponses> readMembersByNickname(
             @LoginMember Member member, @ModelAttribute MemberReadRequest memberReadRequest
     ) {
-        MemberResponses memberResponses = memberService.readMembersByNickname(member, memberReadRequest);
-        return ResponseEntity.ok(memberResponses);
+        MemberSearchResponses memberSearchResponses = memberService.readMembersByNickname(member, memberReadRequest);
+        return ResponseEntity.ok(memberSearchResponses);
     }
 }

@@ -15,29 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByCode(String code);
 
-    @Query("""
-                SELECT m FROM Member m
-                WHERE m.nickname.nickname LIKE CONCAT('%', :nickname, '%')
-                AND m.id <> :memberId
-                AND (
-                  :categoryId IS NULL OR (
-                    m.id NOT IN (
-                        SELECT ci.invitee.id FROM CategoryInvitation ci
-                        WHERE ci.category.id = :categoryId AND ci.status = :status
-                    )
-                    AND m.id NOT IN (
-                        SELECT cm.member.id FROM CategoryMember cm
-                        WHERE cm.category.id = :categoryId
-                    )
-                  )
-                )
-            """)
-    List<Member> findByNicknameContainsWithoutMemberIdAndCategoryId(
-            @Param("nickname") String nickname,
-            @Param("memberId") long memberId,
-            @Param("categoryId") Long categoryId,
-            @Param("status") InvitationStatus status
-    );
+    List<Member> findByNicknameNicknameContainsAndIdNot(String nickname, long memberId);
 
     List<Member> findAllByIdIn(Set<Long> memberIds);
 }

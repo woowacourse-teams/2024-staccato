@@ -9,6 +9,8 @@ import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.service.dto.request.MemberReadRequest;
 import com.staccato.member.service.dto.response.MemberResponses;
+import com.staccato.member.service.dto.response.MemberSearchResponse;
+import com.staccato.member.service.dto.response.MemberSearchResponses;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -25,9 +27,9 @@ class MemberControllerTest extends ControllerTest {
         // given
         Member member = MemberFixtures.defaultMember().withNickname("스타카토").build();
         Member member2 = MemberFixtures.defaultMember().withNickname("스타").build();
-        MemberResponses memberResponses = MemberResponses.of(List.of(member2));
+        MemberSearchResponses memberSearchResponses = MemberSearchResponses.none(List.of(member2));
         when(authService.extractFromToken(anyString())).thenReturn(member);
-        when(memberService.readMembersByNickname(any(Member.class), any(MemberReadRequest.class))).thenReturn(memberResponses);
+        when(memberService.readMembersByNickname(any(Member.class), any(MemberReadRequest.class))).thenReturn(memberSearchResponses);
 
         String expectedResponse = """
                 {
@@ -35,7 +37,8 @@ class MemberControllerTest extends ControllerTest {
                         {
                             "memberId": null,
                             "nickname": "스타",
-                            "memberImageUrl": "https://example.com/memberImage.png"
+                            "memberImageUrl": "https://example.com/memberImage.png",
+                            "status": "NONE"
                         }
                     ]
                 }
