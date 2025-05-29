@@ -4,11 +4,15 @@ import com.on.staccato.data.dto.category.CategoriesResponse
 import com.on.staccato.data.dto.category.CategoryRequest
 import com.on.staccato.data.dto.category.CategoryResponse
 import com.on.staccato.data.dto.category.CategoryStaccatoDto
+import com.on.staccato.data.dto.member.ParticipantDto
 import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.CategoryStaccato
+import com.on.staccato.domain.model.Member
 import com.on.staccato.domain.model.NewCategory
+import com.on.staccato.domain.model.Participant
+import com.on.staccato.domain.model.Role
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -21,8 +25,10 @@ fun CategoryResponse.toDomain() =
         endAt = endAt?.let { LocalDate.parse(endAt) },
         description = description,
         color = color,
-        mates = mates.map { it.toDomain() },
+        participants = participants.map { it.toDomain() },
         staccatos = staccatos.map { it.toDomain() },
+        isShared = isShared,
+        myRole = Role.of(myRole),
     )
 
 fun CategoriesResponse.toDomain(): CategoryCandidates =
@@ -54,4 +60,15 @@ fun NewCategory.toDto() =
         startAt = startAt?.toString(),
         endAt = endAt?.toString(),
         isShared = isShared,
+    )
+
+fun ParticipantDto.toDomain(): Participant =
+    Participant(
+        member =
+            Member(
+                memberId = id,
+                nickname = nickname,
+                memberImage = imageUrl,
+            ),
+        role = Role.of(role),
     )

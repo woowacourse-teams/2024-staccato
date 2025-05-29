@@ -6,9 +6,11 @@ data class Member(
     val memberImage: String? = null,
 )
 
-val dummyMembers =
-    listOf(
-        Member(memberId = 1, nickname = "빙티", memberImage = "https://avatars.githubusercontent.com/u/46596035?v=4"),
-        Member(memberId = 2, nickname = "해나", memberImage = "https://avatars.githubusercontent.com/u/103019852?v=4"),
-        Member(memberId = 3, nickname = "호두"),
+val dummyMember =
+    Member(
+        memberId = 0L,
+        nickname = "빙티",
+        memberImage = "",
     )
+
+val longNameMember = dummyMember.copy(nickname = "엄청나게아주매우아주매우아주매우아주매우아주매우닉네임")

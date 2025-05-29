@@ -37,7 +37,7 @@ val Body1 =
 val Body2 =
     defaultTextStyle(
         fontSize = 15.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         lineHeight = 20.sp,
     )
 
