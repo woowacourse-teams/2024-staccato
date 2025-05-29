@@ -132,6 +132,7 @@
     <string name="staccato_creation_empty_address">"장소를 선택하면 상세 주소가 나타나요"</string>
     <string name="staccato_creation_address">상세 주소</string>
     <string name="staccato_creation_category_selection">카테고리 선택</string>
+    <string name="staccato_creation_loading_visitedAt">날짜와 시간을 불러오고 있어요</string>
     <string name="staccato_creation_no_category_in_this_date">선택하신 날짜에는 카테고리가 없어요</string>
     <string name="staccato_creation_no_category">스타카토를 남길 수 있는 카테고리가 없어요</string>
     <string name="staccato_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨 보세요!</string>
