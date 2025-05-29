@@ -194,7 +194,7 @@ class CategoryFragment :
     }
 
     private fun showErrorToast() {
-        viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             showToast(message)
         }
     }

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.network.ApiResult
+import com.on.staccato.data.network.onException
 import com.on.staccato.data.network.onException2
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
@@ -45,8 +46,8 @@ class CategoryViewModel
         private val _category = MutableLiveData<CategoryUiModel>()
         val category: LiveData<CategoryUiModel> get() = _category
 
-        private val _errorMessage = MutableSingleLiveData<String>()
-        val errorMessage: SingleLiveData<String> get() = _errorMessage
+        private val _toastMessage = MutableSingleLiveData<String>()
+        val toastMessage: SingleLiveData<String> get() = _toastMessage
 
         private val _exceptionState = MutableSingleLiveData<ExceptionState2>()
         val exceptionState: SingleLiveData<ExceptionState2> get() = _exceptionState
@@ -79,10 +80,10 @@ class CategoryViewModel
             category.value?.id?.let { categoryId ->
                 viewModelScope.launch {
                     invitationRepository.invite(categoryId, ids).onSuccess {
-                        _errorMessage.setValue("${ids.size}명을 초대했어요!") // stringRes로 빼기
+                        _toastMessage.setValue("${ids.size}명을 초대했어요!") // stringRes로 빼기
                         toggleInviteMode(false)
                     }.onServerError(::handleServerError)
-                        .onException2(::handelException)
+                        .onException { handleServerError(it.message) }
                 }
             }
         }
@@ -104,7 +105,7 @@ class CategoryViewModel
                 memberRepository.searchMembersBy(keyword).collect { result ->
                     result
                         .onServerError(::handleServerError)
-                        .onException2(::handelException)
+                        .onException { handleServerError(it.message) }
                         .onSuccess {
                             searchedMembers.emit(it)
                         }
@@ -172,7 +173,7 @@ class CategoryViewModel
         }
 
         private fun handleServerError(message: String) {
-            _errorMessage.setValue(message)
+            _toastMessage.setValue(message)
         }
 
         private fun handelException(state: ExceptionState2) {

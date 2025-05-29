@@ -92,7 +92,7 @@ class CategoryViewModelTest {
             viewModel.loadCategory(VALID_ID)
 
             // then
-            val actual = viewModel.errorMessage.getOrAwaitValue()
+            val actual = viewModel.toastMessage.getOrAwaitValue()
             assertThat(actual).isEqualTo("Bad Request")
         }
 
@@ -156,7 +156,7 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val errorMessage = viewModel.errorMessage.getOrAwaitValue()
+            val errorMessage = viewModel.toastMessage.getOrAwaitValue()
             assertThat(errorMessage).isEqualTo("Bad Request")
         }
 
