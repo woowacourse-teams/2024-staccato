@@ -16,8 +16,7 @@ import com.on.staccato.presentation.category.adapter.MembersViewType.MEMBER_PROF
 
 class MembersAdapter(
     private val handler: MemberInviteHandler,
-) :
-    ListAdapter<Participant, MembersViewHolder>(diffUtil) {
+) : ListAdapter<Participant, MembersViewHolder>(diffUtil) {
     private var isInvitable: Boolean = false
 
     init {
