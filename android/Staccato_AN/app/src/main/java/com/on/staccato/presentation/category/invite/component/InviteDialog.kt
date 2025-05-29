@@ -41,7 +41,6 @@ fun InviteDialog(
             DialogProperties(
                 usePlatformDefaultWidth = false,
                 dismissOnClickOutside = false,
-                decorFitsSystemWindows = false,
             ),
     ) {
         Surface(
