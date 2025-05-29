@@ -22,8 +22,7 @@ fun ParticipantItem(profileImageUrl: String? = null) {
     Box(
         modifier =
             Modifier.size(25.dp)
-                .shadow(2.dp, shape = CircleShape, clip = false)
-                .clip(CircleShape)
+                .shadow(2.dp, shape = CircleShape, clip = true)
                 .background(Color.White)
                 .padding(1.dp),
     ) {

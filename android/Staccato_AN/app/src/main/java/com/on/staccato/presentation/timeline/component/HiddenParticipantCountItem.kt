@@ -1,8 +1,9 @@
 package com.on.staccato.presentation.timeline.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
@@ -26,21 +27,28 @@ fun HiddenParticipantCountItem(
     Box(
         modifier =
             Modifier
-                .size(19.dp)
-                .shadow(2.dp, shape = CircleShape, clip = false)
-                .background(color = color.color, shape = CircleShape)
-                .border(width = 1.dp, color = White, shape = CircleShape),
-        contentAlignment = Alignment.Center,
+                .size(21.dp)
+                .shadow(2.dp, shape = CircleShape, clip = true)
+                .background(color = White, shape = CircleShape)
+                .padding(1.dp),
     ) {
-        Text(
-            text = "+$count",
-            color = color.textColor,
-            style = Body6,
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(color = color.color, shape = CircleShape),
+        ) {
+            Text(
+                text = "+$count",
+                color = color.textColor,
+                style = Body6,
+            )
+        }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun HiddenParticipantCountPreview(
     @PreviewParameter(HiddenParticipantCountPreviewParameterProvider::class)
@@ -48,7 +56,7 @@ private fun HiddenParticipantCountPreview(
 ) {
     HiddenParticipantCountItem(
         count = count,
-        color = CategoryColor.GRAY,
+        color = CategoryColor.RED,
     )
 }
 
@@ -57,6 +65,6 @@ private class HiddenParticipantCountPreviewParameterProvider : PreviewParameterP
         sequenceOf(
             3L,
             10L,
-            88L,
+            16L,
         )
 }
