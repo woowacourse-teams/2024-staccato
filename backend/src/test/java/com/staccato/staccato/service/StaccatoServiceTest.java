@@ -1,9 +1,11 @@
 package com.staccato.staccato.service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
@@ -30,6 +32,7 @@ import com.staccato.staccato.service.dto.request.StaccatoRequest;
 import com.staccato.staccato.service.dto.response.StaccatoDetailResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
+import com.staccato.util.TransactionExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -48,6 +51,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
     private CategoryRepository categoryRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private TransactionExecutor transactionExecutor;
 
     @DisplayName("사진 없이도 스타카토를 생성할 수 있다.")
     @Test
@@ -412,5 +417,49 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 () -> assertThat(staccatoRepository.findById(staccato.getId()).get()
                         .getFeeling()).isEqualTo(Feeling.HAPPY)
         );
+    }
+
+    @DisplayName("동일한 Staccato를 동시에 수정하면 낙관적 락 예외가 발생한다.")
+    @Test
+    void failOnConcurrentUpdate() {
+        // given
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(member)
+                .buildAndSave(categoryRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .buildAndSave(staccatoRepository);
+        Long staccatoId = staccato.getId();
+
+        StaccatoRequest request1 = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withStaccatoTitle("first-update")
+                .withCategoryId(category.getId())
+                .build();
+
+        StaccatoRequest request2 = StaccatoRequestFixtures.defaultStaccatoRequest()
+                .withStaccatoTitle("second-update")
+                .withCategoryId(category.getId())
+                .build();
+
+        // when
+        CompletableFuture<Void> updateFuture1 = CompletableFuture.runAsync(() ->
+                assertThatThrownBy(() -> transactionExecutor.executeInNewTransaction(() -> {
+                    staccatoService.updateStaccatoById(staccatoId, request1, member);
+                    transactionExecutor.sleep(2000);
+                })).isInstanceOf(ObjectOptimisticLockingFailureException.class)
+        );
+
+        CompletableFuture<Void> updateFuture2 = CompletableFuture.runAsync(() ->
+                transactionExecutor.executeInNewTransaction(() -> {
+                    transactionExecutor.sleep(500);
+                    staccatoService.updateStaccatoById(staccatoId, request2, member);
+                })
+        );
+
+        // then
+        CompletableFuture.allOf(updateFuture1, updateFuture2).join();
+        assertThat(staccatoRepository.findById(staccatoId).get().getTitle().getTitle())
+                .isEqualTo("second-update");
     }
 }
