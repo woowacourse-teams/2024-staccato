@@ -5,6 +5,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.staccato.presentation.component.DefaultDivider
@@ -17,6 +20,15 @@ fun Timeline(
     onCategoryClicked: (Long) -> Unit,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
+    val previousHashCode = rememberSaveable { mutableIntStateOf(timeline.hashCode()) }
+
+    LaunchedEffect(timeline.hashCode()) {
+        if (timeline.hashCode() != previousHashCode.intValue) {
+            lazyListState.animateScrollToItem(0)
+            previousHashCode.intValue = timeline.hashCode()
+        }
+    }
+
     LazyColumn(
         state = lazyListState,
     ) {
@@ -25,7 +37,6 @@ fun Timeline(
             key = { it.categoryId },
         ) { timelineCategory ->
             TimelineItem(
-                modifier = Modifier.animateItem(),
                 category = timelineCategory,
                 onCategoryClicked = onCategoryClicked,
             )
