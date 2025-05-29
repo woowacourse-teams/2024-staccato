@@ -81,58 +81,63 @@ fun InviteDialog(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "검색 결과, 선택 모두 비어있을 때",
+    showBackground = true,
+)
 @Composable
-fun EmptyInviteDialogPreview() {
-    InviteDialog(
-        searchKeyword = "",
+private fun EmptyInviteDialogPreview() {
+    DefaultInviteDialog(
         selectedMembers = emptyMembers,
         searchedMembers = emptyMembersUiModel,
-        onValueChanged = {},
-        onInviteConfirmed = {},
-        onClose = {},
-        onMemberDeselected = {},
-        onMemberSelected = {},
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "선택만 비어있을 때",
+    showBackground = true,
+)
 @Composable
-fun EmptySelectedMemberPreview() {
-    InviteDialog(
-        searchKeyword = "",
+private fun EmptySelectedMemberPreview() {
+    DefaultInviteDialog(
         selectedMembers = emptyMembers,
         searchedMembers = dummyMembersUiModel,
-        onValueChanged = {},
-        onInviteConfirmed = {},
-        onClose = {},
-        onMemberDeselected = {},
-        onMemberSelected = {},
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "검색 결과만 비어있을 때",
+    showBackground = true,
+)
 @Composable
-fun EmptySearchedMemberPreview() {
-    InviteDialog(
-        searchKeyword = "",
+private fun EmptySearchedMemberPreview() {
+    DefaultInviteDialog(
         selectedMembers = dummyMembers,
         searchedMembers = emptyMembersUiModel,
-        onValueChanged = {},
-        onInviteConfirmed = {},
-        onClose = {},
-        onMemberDeselected = {},
-        onMemberSelected = {},
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "검색 결과, 선택 모두 존재할 때",
+    showBackground = true,
+)
 @Composable
-fun InviteDialogPreview() {
-    InviteDialog(
-        searchKeyword = "",
+private fun InviteDialogPreview() {
+    DefaultInviteDialog(
         selectedMembers = dummyMembers,
         searchedMembers = dummyMembersUiModel,
+    )
+}
+
+@Composable
+private fun DefaultInviteDialog(
+    selectedMembers: Members,
+    searchedMembers: MembersUiModel,
+) {
+    InviteDialog(
+        searchKeyword = "",
+        selectedMembers = selectedMembers,
+        searchedMembers = searchedMembers,
         onValueChanged = {},
         onInviteConfirmed = {},
         onClose = {},
