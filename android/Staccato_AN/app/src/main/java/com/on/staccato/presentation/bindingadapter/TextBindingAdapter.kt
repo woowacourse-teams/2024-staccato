@@ -51,10 +51,17 @@ fun TextView.setSelectedCategory(
 
 @BindingAdapter("dateTimeWithAmPm")
 fun TextView.setDateTimeWithAmPm(dateTime: LocalDateTime?) {
-    text = dateTime?.let(::getFormattedLocalDateTime) ?: EMPTY_TEXT
-    setTextColor(resources.getColor(R.color.staccato_black, null))
-    isClickable = true
-    isFocusable = true
+    if (dateTime == null) {
+        text = resources.getString(R.string.staccato_creation_loading_visitedAt)
+        setTextColor(resources.getColor(R.color.gray3, null))
+        isClickable = false
+        isFocusable = false
+    } else {
+        text = dateTime.let(::getFormattedLocalDateTime)
+        setTextColor(resources.getColor(R.color.staccato_black, null))
+        isClickable = true
+        isFocusable = true
+    }
 }
 
 @BindingAdapter(
