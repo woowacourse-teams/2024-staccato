@@ -1,20 +1,8 @@
 package com.staccato.category.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +11,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
 import com.staccato.ControllerTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
@@ -40,6 +27,17 @@ import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class CategoryControllerV3Test extends ControllerTest {
 
@@ -65,12 +63,6 @@ class CategoryControllerV3Test extends ControllerTest {
                 Arguments.of(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                                 .withCategoryTitle("  ").build(),
                         "카테고리 제목을 입력해주세요."),
-                Arguments.of(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
-                                .withCategoryTitle("가".repeat(31)).build(),
-                        "제목은 공백 포함 30자 이하로 설정해주세요."),
-                Arguments.of(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
-                                .withDescription("가".repeat(501)).build(),
-                        "내용의 최대 허용 글자수는 공백 포함 500자입니다."),
                 Arguments.of(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                                 .withIsShared(null).build(),
                         "카테고리 공개 여부를 입력해주세요.")
@@ -184,11 +176,11 @@ class CategoryControllerV3Test extends ControllerTest {
         Member host = MemberFixtures.defaultMember().withNickname("host").build();
         Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
         when(authService.extractFromToken(anyString())).thenReturn(host);
-        Category category = CategoryFixtures.defaultCategory().withHost(host).withGuests(guest).build();
+        Category category = CategoryFixtures.defaultCategory().withHost(host).withGuests(List.of(guest)).build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato));
+        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), host);
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
@@ -247,7 +239,7 @@ class CategoryControllerV3Test extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato));
+        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
@@ -256,6 +248,7 @@ class CategoryControllerV3Test extends ControllerTest {
                     "categoryTitle": "categoryTitle",
                     "description": "categoryDescription",
                     "categoryColor": "pink",
+                    "myRole": "host",
                     "members": [
                         {
                             "memberId": null,
@@ -286,20 +279,24 @@ class CategoryControllerV3Test extends ControllerTest {
     @Test
     void readAllCategory() throws Exception {
         // given
-        Member member = MemberFixtures.defaultMember().build();
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").build();
+        Member guest3 = MemberFixtures.defaultMember().withNickname("guest3").build();
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category categoryWithTerm = CategoryFixtures.defaultCategory()
                 .withColor(Color.PINK)
-                .withHost(member)
+                .withHost(host)
+                .withGuests(List.of(guest, guest2, guest3))
                 .withTerm(LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31)).build();
         Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
-                .withHost(member)
+                .withHost(host)
                 .withTerm(null, null).build();
         CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
                 new CategoryResponseV3(categoryWithTerm, 0),
-                new CategoryResponseV3(categoryWithoutTerm,0))
+                new CategoryResponseV3(categoryWithoutTerm, 0))
         );
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
@@ -312,11 +309,22 @@ class CategoryControllerV3Test extends ControllerTest {
                             "categoryColor": "pink",
                             "startAt": "2024-01-01",
                             "endAt": "2024-12-31",
-                            "isShared": false,
+                            "isShared": true,
+                            "totalMemberCount": 4,
                             "members": [
                                 {
                                     "memberId": null,
-                                    "nickname": "nickname",
+                                    "nickname": "host",
+                                    "memberImageUrl": "https://example.com/memberImage.png"
+                                },
+                                {
+                                    "memberId": null,
+                                    "nickname": "guest",
+                                    "memberImageUrl": "https://example.com/memberImage.png"
+                                },
+                                {
+                                    "memberId": null,
+                                    "nickname": "guest2",
                                     "memberImageUrl": "https://example.com/memberImage.png"
                                 }
                             ],
@@ -328,10 +336,11 @@ class CategoryControllerV3Test extends ControllerTest {
                             "categoryThumbnailUrl": "https://example.com/categoryThumbnail.jpg",
                             "categoryColor": "blue",
                             "isShared": false,
+                            "totalMemberCount": 1,
                             "members": [
                                 {
                                     "memberId": null,
-                                    "nickname": "nickname",
+                                    "nickname": "host",
                                     "memberImageUrl": "https://example.com/memberImage.png"
                                 }
                             ],
@@ -358,7 +367,7 @@ class CategoryControllerV3Test extends ControllerTest {
         Category category2 = CategoryFixtures.defaultCategory().build();
         CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
                 new CategoryResponseV3(category1, 0),
-                new CategoryResponseV3(category2,0))
+                new CategoryResponseV3(category2, 0))
         );
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
 

@@ -16,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import com.staccato.config.domain.BaseEntity;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
@@ -41,14 +42,13 @@ public class Category extends BaseEntity {
     private Long id;
     @Column(columnDefinition = "TEXT")
     private String thumbnailUrl;
-    @Column(nullable = false, length = 50)
-    private String title;
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Embedded
+    private CategoryTitle title;
+    @Embedded
+    private Description description;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Color color;
-    @Column
     @Embedded
     private Term term;
     @Column(nullable = false)
@@ -61,14 +61,21 @@ public class Category extends BaseEntity {
     public Category(String thumbnailUrl, @NonNull String title, String description, Color color, LocalDate startAt,
                     LocalDate endAt, @NonNull Boolean isShared) {
         this.thumbnailUrl = thumbnailUrl;
-        this.title = title.trim();
-        this.description = description;
+        this.title = new CategoryTitle(title);
+        this.description = toDescriptionOrNull(description);
         this.color = color;
         this.term = new Term(startAt, endAt);
         this.isShared = isShared;
 /*        if (Objects.isNull(this.staccatoCount)) {
             this.staccatoCount = 0L;
         }*/
+    }
+
+    private Description toDescriptionOrNull(String description) {
+        if (Objects.isNull(description)) {
+            return null;
+        }
+        return new Description(description);
     }
 
     @Builder
@@ -98,13 +105,15 @@ public class Category extends BaseEntity {
         categoryMembers.add(categoryMember);
     }
 
-    public void addGuest(Member member) {
-        CategoryMember categoryMember = CategoryMember.builder()
-                .category(this)
-                .member(member)
-                .role(Role.GUEST)
-                .build();
-        categoryMembers.add(categoryMember);
+    public void addGuests(List<Member> members) {
+        members.forEach(member -> {
+            CategoryMember categoryMember = CategoryMember.builder()
+                    .category(this)
+                    .member(member)
+                    .role(Role.GUEST)
+                    .build();
+            categoryMembers.add(categoryMember);
+        });
     }
 
     public void update(Category updatedCategory, List<Staccato> staccatos) {
@@ -135,15 +144,15 @@ public class Category extends BaseEntity {
     }
 
     public boolean isGuest(Member member) {
-        return categoryMembers.stream()
-                .filter(categoryMember -> categoryMember.isOwnedBy(member))
+        CategoryMember categoryMember = categoryMembers.stream()
+                .filter(cm -> cm.isOwnedBy(member))
                 .findFirst()
-                .map(CategoryMember::isGuest)
-                .orElse(false);
+                .orElseThrow(ForbiddenException::new);
+        return categoryMember.isGuest();
     }
 
-    public boolean isNotSameTitle(String title) {
-        return !this.title.equals(title);
+    public boolean isNotSameTitle(CategoryTitle title) {
+        return !this.title.isSame(title);
     }
 
     public boolean hasTerm() {
@@ -152,6 +161,24 @@ public class Category extends BaseEntity {
 
     public void changeColor(Color color) {
         this.color = color;
+    }
+
+    public Role getRoleOfMember(Member member) {
+        return categoryMembers.stream()
+                .filter(categoryMember -> categoryMember.isOwnedBy(member))
+                .findFirst()
+                .map(CategoryMember::getRole)
+                .orElseThrow(ForbiddenException::new);
+    }
+
+    public long getCategoryMemberCount() {
+        return categoryMembers.size();
+    }
+
+    public void validateOwner(Member member) {
+        if (isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
     }
 
 /*    public void increaseStaccatoCount() {

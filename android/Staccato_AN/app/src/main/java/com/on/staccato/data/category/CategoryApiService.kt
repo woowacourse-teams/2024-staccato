@@ -39,7 +39,7 @@ interface CategoryApiService {
         @Query(CURRENT_DATE) currentDate: String?,
     ): ApiResult<CategoriesResponse>
 
-    @POST(CATEGORIES_PATH_V2)
+    @POST(CATEGORIES_PATH_V3)
     suspend fun postCategory(
         @Body categoryRequest: CategoryRequest,
     ): ApiResult<CategoryCreationResponse>

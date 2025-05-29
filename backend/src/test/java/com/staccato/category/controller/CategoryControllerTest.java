@@ -66,13 +66,7 @@ class CategoryControllerTest extends ControllerTest {
                         "카테고리 제목을 입력해주세요."),
                 Arguments.of(CategoryRequestFixtures.defaultCategoryRequest()
                                 .withCategoryTitle("  ").build(),
-                        "카테고리 제목을 입력해주세요."),
-                Arguments.of(CategoryRequestFixtures.defaultCategoryRequest()
-                                .withCategoryTitle("가".repeat(31)).build(),
-                        "제목은 공백 포함 30자 이하로 설정해주세요."),
-                Arguments.of(CategoryRequestFixtures.defaultCategoryRequest()
-                                .withDescription("가".repeat(501)).build(),
-                        "내용의 최대 허용 글자수는 공백 포함 500자입니다.")
+                        "카테고리 제목을 입력해주세요.")
         );
     }
 
@@ -185,7 +179,7 @@ class CategoryControllerTest extends ControllerTest {
                 .withTerm(null, null).build();
         CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
                 new CategoryResponseV3(categoryWithTerm, 0),
-                new CategoryResponseV3(categoryWithoutTerm,0))
+                new CategoryResponseV3(categoryWithoutTerm, 0))
         );
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
@@ -224,7 +218,7 @@ class CategoryControllerTest extends ControllerTest {
         Category category2 = CategoryFixtures.defaultCategory().build();
         CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
                 new CategoryResponseV3(category1, 0),
-                new CategoryResponseV3(category2,0))
+                new CategoryResponseV3(category2, 0))
         );
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
 
@@ -243,7 +237,7 @@ class CategoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().build();
         CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
-        when(categoryService.readAllCategoriesByDate(any(Member.class), any())).thenReturn(categoryNameResponses);
+        when(categoryService.readAllCategoriesByDateAndIsShared(any(Member.class), any(), any(Boolean.class))).thenReturn(categoryNameResponses);
         String expectedResponse = """
                 {
                     "categories": [
@@ -258,7 +252,8 @@ class CategoryControllerTest extends ControllerTest {
         // when & then
         mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
-                        .param("currentDate", LocalDate.now().toString()))
+                        .param("specificDate", LocalDate.now().toString())
+                        .param("isShared", "false"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
     }
@@ -274,7 +269,8 @@ class CategoryControllerTest extends ControllerTest {
         // when & then
         mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
-                        .param("currentDate", currentDate))
+                        .param("specificDate", currentDate)
+                        .param("isShared", "false"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -290,7 +286,7 @@ class CategoryControllerTest extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato));
+        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
@@ -340,7 +336,7 @@ class CategoryControllerTest extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato));
+        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {

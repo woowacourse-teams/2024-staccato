@@ -50,7 +50,8 @@ fun NewCategory.toDto() =
         categoryThumbnailUrl = categoryThumbnailUrl,
         categoryTitle = categoryTitle,
         description = description,
+        color = color,
         startAt = startAt?.toString(),
         endAt = endAt?.toString(),
-        color = color,
+        isShared = isShared,
     )

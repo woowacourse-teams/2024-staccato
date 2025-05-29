@@ -40,8 +40,7 @@ public class OpenApiConfig {
     public GroupedOpenApi v1Api() {
         return GroupedOpenApi.builder()
                 .group("V1 API")
-                .pathsToExclude("/v2/**")
-                .pathsToExclude("/v3/**")
+                .pathsToExclude("/v2/**", "/v3/**")
                 .build();
     }
 

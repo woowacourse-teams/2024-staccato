@@ -1,5 +1,6 @@
 package com.staccato.category.repository;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ class CategoryRepositoryTest extends RepositoryTest {
 
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(member1)
-                .withGuests(member2)
+                .withGuests(List.of(member2))
                 .buildAndSave(categoryRepository);
 
         // when

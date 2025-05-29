@@ -174,12 +174,22 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_category_update_description" />
 
+                <TextView
+                    android:id="@+id/tv_category_update_color_hint"
+                    style="@style/HintTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/category_creation_color_hint"
+                    app:layout_constraintStart_toStartOf="@id/tv_category_update_color"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_update_color" />
+
                 <ImageButton
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="24dp"
-                    android:onClick="@{()->handler.onColorSelectionClicked()}"
                     android:background="@android:color/transparent"
+                    android:onClick="@{()->handler.onColorSelectionClicked()}"
                     android:scaleType="fitCenter"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_category_update_color"
@@ -190,27 +200,19 @@
                     android:id="@+id/tv_category_update_period_title"
                     style="@style/SubTitleStyle"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="60dp"
+                    android:layout_marginTop="24dp"
                     android:text="@string/category_creation_period_setting"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_category_update_color" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_update_color_hint" />
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switch_category_update_period_set"
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/cv_category_update_period_set"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_marginEnd="24dp"
-                    android:background="@android:color/transparent"
-                    android:checked="@={viewModel.isPeriodActive}"
-                    android:thumb="@drawable/shape_switch_thumb_oval"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_category_update_period_title"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_category_update_period_title"
-                    app:switchMinWidth="48dp"
-                    app:thumbTint="@color/white"
-                    app:track="@drawable/shape_switch_track_50dp"
-                    app:trackTint="@drawable/selector_switch_track_colors"
-                    app:trackTintMode="src_in" />
+                    app:layout_constraintTop_toTopOf="@id/tv_category_update_period_title" />
 
                 <TextView
                     android:id="@+id/tv_category_update_period_description"
