@@ -155,7 +155,7 @@ private fun TimelineItemPreview(
     )
 }
 
-class TimelineItemPreviewParameterProvider(
+private class TimelineItemPreviewParameterProvider(
     override val values: Sequence<TimelineUiModel> =
         sequenceOf(*dummyTimelineUiModels.toTypedArray()),
 ) : PreviewParameterProvider<TimelineUiModel>
