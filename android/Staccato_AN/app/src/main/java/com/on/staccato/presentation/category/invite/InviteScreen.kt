@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.debounce
 @OptIn(FlowPreview::class)
 @Composable
 fun InviteScreen(viewModel: CategoryViewModel = hiltViewModel()) {
-    val isInviteModel by viewModel.isInviteMode.collectAsState()
+    val isInviteMode by viewModel.isInviteMode.collectAsState()
     val selectedMembers by viewModel.selectedMembers.collectAsState()
     val searchedMembers by viewModel.members.collectAsState(MembersUiModel.emptyMembersUiModel)
     var searchKeyword by rememberSaveable { mutableStateOf("") }
@@ -36,7 +36,7 @@ fun InviteScreen(viewModel: CategoryViewModel = hiltViewModel()) {
             }
     }
 
-    if (isInviteModel) {
+    if (isInviteMode) {
         InviteDialog(
             searchKeyword = searchKeyword,
             selectedMembers = selectedMembers,
