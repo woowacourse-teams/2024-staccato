@@ -8,8 +8,6 @@ import com.staccato.ControllerTest;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.service.dto.request.MemberReadRequest;
-import com.staccato.member.service.dto.response.MemberResponses;
-import com.staccato.member.service.dto.response.MemberSearchResponse;
 import com.staccato.member.service.dto.response.MemberSearchResponses;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -47,6 +45,7 @@ class MemberControllerTest extends ControllerTest {
         // when & then
         mockMvc.perform(get("/members/search")
                         .param("nickname", "스타")
+                        .param("excludeCategoryId", "0")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));

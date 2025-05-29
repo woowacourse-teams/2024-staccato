@@ -47,7 +47,8 @@ public class MemberService {
         if (hasCategoryToExclude(memberReadRequest.excludeCategoryId())) {
             Set<Long> categoryMemberIds = categoryMemberRepository.findAllByCategoryIdAndMemberIn(memberReadRequest.excludeCategoryId(), members)
                     .stream().map(categoryMember -> categoryMember.getMember().getId()).collect(Collectors.toSet());
-            Set<Long> inviteeIds = categoryInvitationRepository.findAllByInviteeInAndStatus(members, InvitationStatus.REQUESTED)
+            Set<Long> inviteeIds = categoryInvitationRepository.findAllByCategoryIdAndInviteeInAndStatus(
+                            memberReadRequest.excludeCategoryId(), members, InvitationStatus.REQUESTED)
                     .stream().map(categoryInvitation -> categoryInvitation.getInvitee().getId())
                     .collect(Collectors.toSet());
             List<MemberSearchResponse> responses = members.stream()
@@ -63,14 +64,13 @@ public class MemberService {
     }
 
     private boolean hasCategoryToExclude(Long categoryId) {
-        return Objects.nonNull(categoryId);
+        return categoryId > 0;
     }
 
     private MemberSearchResponse resolveSearchStatus(Member m, Set<Long> categoryMemberIds, Set<Long> inviteeIds) {
         if (categoryMemberIds.contains(m.getId())) {
             return MemberSearchResponse.joined(m);
-        }
-        if (inviteeIds.contains(m.getId())) {
+        } else if (inviteeIds.contains(m.getId())) {
             return MemberSearchResponse.requested(m);
         }
         return MemberSearchResponse.none(m);

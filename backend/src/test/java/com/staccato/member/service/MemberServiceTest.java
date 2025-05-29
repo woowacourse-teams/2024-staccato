@@ -90,6 +90,7 @@ class MemberServiceTest extends ServiceSliceTest {
         String keyword = "스타";
         MemberReadRequest memberReadRequest = MemberReadRequestFixtures.defaultMemberReadRequest()
                 .withNickname(keyword)
+                .withExcludeCategoryId(0L)
                 .build();
 
         // when
@@ -160,7 +161,34 @@ class MemberServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("excludeCategoryId가 있다면, 검색된 사용자 중 이미 카테고리에 속한 사용자는 ALREADY_REQUESTED 상태로 구분된다.")
+    @DisplayName("검색된 사용자 중 excludeCategoryId에 해당되지 않는 사용자는 NONE 상태로 구분된다.")
+    @Test
+    void readMembersWithCategoryIdAndRequestedStatus() {
+        // given
+        Member me = MemberFixtures.defaultMember().withNickname("나").buildAndSave(memberRepository);
+        Member invited = MemberFixtures.defaultMember().withNickname("스타").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory().withHost(me).buildAndSave(categoryRepository);
+
+        categoryInvitationRepository.save(CategoryInvitation.invite(category, me, invited));
+
+        long excludeCategoryId = category.getId() + 1;
+        MemberReadRequest request = MemberReadRequestFixtures.defaultMemberReadRequest()
+                .withNickname("스타")
+                .withExcludeCategoryId(excludeCategoryId)
+                .build();
+
+        // when
+        MemberSearchResponses result = memberService.readMembersByNickname(me, request);
+
+        // then
+        assertAll(
+                () -> assertThat(result.members()).hasSize(1),
+                () -> assertThat(result.members().get(0).memberId()).isEqualTo(invited.getId()),
+                () -> assertThat(result.members().get(0).status()).isEqualTo(SearchedStatus.NONE.name())
+        );
+    }
+
+    @DisplayName("excludeCategoryId가 있다면, 검색된 사용자 중 이미 카테고리에 속한 사용자는 ALREADY_JOINED 상태로 구분된다.")
     @Test
     void readMembersWithJoinedStatus() {
         // given
@@ -185,6 +213,32 @@ class MemberServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("검색된 사용자 중 excludeCategoryId에 해당되지 않는 사용자는 NONE 상태로 구분된다.")
+    @Test
+    void readMembersWithCategoryIdAndNoneStatus() {
+        // given
+        Member me = MemberFixtures.defaultMember().withNickname("나").buildAndSave(memberRepository);
+        Member joined = MemberFixtures.defaultMember().withNickname("스타카토").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory().withHost(me).withGuests(List.of(joined))
+                .buildAndSave(categoryRepository);
+
+        long excludeCategoryId = category.getId() + 1;
+        MemberReadRequest request = MemberReadRequestFixtures.defaultMemberReadRequest()
+                .withNickname("스타")
+                .withExcludeCategoryId(excludeCategoryId)
+                .build();
+
+        // when
+        MemberSearchResponses result = memberService.readMembersByNickname(me, request);
+
+        // then
+        assertAll(
+                () -> assertThat(result.members()).hasSize(1),
+                () -> assertThat(result.members().get(0).memberId()).isEqualTo(joined.getId()),
+                () -> assertThat(result.members().get(0).status()).isEqualTo(SearchedStatus.NONE.name())
+        );
+    }
+
     @DisplayName("excludeCategoryId가 없다면, 검색된 모든 사용자는 NONE 상태로 구분된다.")
     @Test
     void readMembersWithoutExcludeCategoryId() {
@@ -194,7 +248,7 @@ class MemberServiceTest extends ServiceSliceTest {
 
         MemberReadRequest request = MemberReadRequestFixtures.defaultMemberReadRequest()
                 .withNickname("스타")
-                .withExcludeCategoryId(null)
+                .withExcludeCategoryId(0L)
                 .build();
 
         // when
