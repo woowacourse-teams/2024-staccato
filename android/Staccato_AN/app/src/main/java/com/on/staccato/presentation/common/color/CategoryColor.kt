@@ -265,14 +265,5 @@ enum class CategoryColor(
         fun getCategoryColorBy(label: String) = entries.firstOrNull { it.label == label } ?: GRAY
 
         fun getMarkerResBy(label: String) = entries.firstOrNull { it.label == label }?.markerRes ?: GRAY.markerRes
-
-        fun getColorResBy(label: String) = entries.firstOrNull { it.label == label }?.colorRes ?: GRAY.colorRes
-
-        fun getColorBy(label: String) = entries.firstOrNull { it.label == label }?.color ?: GRAY.color
-
-        fun getIconBackgroundColorBy(label: String) =
-            entries.firstOrNull { it.label == label }?.iconBackgroundColor ?: GRAY.iconBackgroundColor
-
-        fun getTextColorBy(label: String) = entries.firstOrNull { it.label == label }?.textColor ?: GRAY.textColor
     }
 }
