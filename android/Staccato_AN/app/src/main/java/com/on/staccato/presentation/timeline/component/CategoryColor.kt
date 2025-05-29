@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
 import com.on.staccato.presentation.common.color.CategoryColor
@@ -33,4 +34,10 @@ fun CategoryColor(
             tint = color.color,
         )
     }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
+@Composable
+private fun CategoryColorPreview() {
+    CategoryColor(color = CategoryColor.LIGHT_INDIGO)
 }
