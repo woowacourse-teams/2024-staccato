@@ -123,6 +123,22 @@ class StaccatoUpdateViewModel
             }
         }
 
+        override fun selectCategory(position: Int) {
+            selectableCategories.value?.categoryCandidates?.get(position)?.let {
+                _selectedCategory.value = it
+            }
+        }
+
+        fun fetchTargetData(staccatoId: Long) {
+            viewModelScope.launch {
+                val staccatoJob = launch { fetchStaccatoBy(staccatoId) }
+                val categoryCandidatesJob = launch { fetchCategoryCandidates() }
+                staccatoJob.join()
+                categoryCandidatesJob.join()
+                initializeSelectableCategories()
+            }
+        }
+
         override fun onRetryClicked(retryPhoto: AttachedPhotoUiModel) {
             _currentPhotos.value = currentPhotos.value?.toLoading(retryPhoto)
             _pendingPhotos.postValue(listOf(retryPhoto))
@@ -136,18 +152,8 @@ class StaccatoUpdateViewModel
             }
         }
 
-        override fun selectCategory(position: Int) {
-            _selectedCategory.value =
-                selectableCategories.value?.categoryCandidates?.get(position) ?: return
-        }
-
         fun selectVisitedAt(visitedAt: LocalDateTime) {
             _selectedVisitedAt.value = visitedAt
-        }
-
-        fun fetchTargetData(staccatoId: Long) {
-            fetchCategoryCandidates()
-            fetchStaccatoBy(staccatoId)
         }
 
         fun selectNewPlace(
@@ -206,6 +212,7 @@ class StaccatoUpdateViewModel
             _selectableCategories.value = filteredCategories
             _selectedCategory.value =
                 filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
+                    ?: return
         }
 
         fun updateStaccato(staccatoId: Long) {
@@ -228,18 +235,24 @@ class StaccatoUpdateViewModel
             }
         }
 
-        private fun fetchStaccatoBy(staccatoId: Long) {
-            viewModelScope.launch {
-                staccatoRepository.getStaccato(staccatoId = staccatoId)
-                    .onSuccess { staccato ->
-                        staccatoTitle.set(staccato.staccatoTitle)
-                        _currentPhotos.value = staccato.staccatoImageUrls.toSuccessPhotos()
-                        initializePlaceBy(staccato)
-                        selectVisitedAt(staccato.visitedAt)
-                        initCategory(staccato)
-                    }.onException(::handleInitializeException)
-                    .onServerError(::handleServerError)
-            }
+        private suspend fun fetchCategoryCandidates() {
+            timelineRepository.getCategoryCandidates()
+                .onSuccess { categoryCandidates ->
+                    _categoryCandidates.value = categoryCandidates
+                }.onException(::handleCategoryCandidatesException)
+                .onServerError(::handleServerError)
+        }
+
+        private suspend fun fetchStaccatoBy(staccatoId: Long) {
+            staccatoRepository.getStaccato(staccatoId = staccatoId)
+                .onSuccess { staccato ->
+                    staccatoTitle.set(staccato.staccatoTitle)
+                    _currentPhotos.value = staccato.staccatoImageUrls.toSuccessPhotos()
+                    selectVisitedAt(staccato.visitedAt)
+                    initializePlaceBy(staccato)
+                    initializeSelectedCategory(staccato)
+                }.onException(::handleInitializeException)
+                .onServerError(::handleServerError)
         }
 
         private fun initializePlaceBy(staccato: Staccato) {
@@ -252,7 +265,7 @@ class StaccatoUpdateViewModel
             )
         }
 
-        private fun initCategory(staccato: Staccato) {
+        private fun initializeSelectedCategory(staccato: Staccato) {
             _selectedCategory.value =
                 CategoryCandidate(
                     staccato.categoryId,
@@ -260,17 +273,11 @@ class StaccatoUpdateViewModel
                     staccato.startAt,
                     staccato.endAt,
                 )
-            _selectableCategories.value =
-                categoryCandidates.value?.filterBy(staccato.visitedAt.toLocalDate())
         }
 
-        private fun fetchCategoryCandidates() {
-            viewModelScope.launch {
-                timelineRepository.getCategoryCandidates()
-                    .onSuccess { categoryCandidates ->
-                        _categoryCandidates.value = categoryCandidates
-                    }.onException(::handleCategoryCandidatesException)
-                    .onServerError(::handleServerError)
+        private fun initializeSelectableCategories() {
+            selectedVisitedAt.value?.toLocalDate()?.let { visitedAt ->
+                _selectableCategories.value = categoryCandidates.value?.filterBy(visitedAt)
             }
         }
 

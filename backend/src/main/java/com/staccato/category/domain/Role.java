@@ -15,4 +15,8 @@ public enum Role {
     boolean isGuest() {
         return this == Role.GUEST;
     }
+
+    public boolean isHost() {
+        return this == Role.HOST;
+    }
 }

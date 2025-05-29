@@ -25,6 +25,7 @@ import com.staccato.staccato.repository.StaccatoRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class StaccatoTest {
@@ -225,5 +226,36 @@ class StaccatoTest {
 
         // then
         assertThat(color).isEqualTo(Color.PINK);
+    }
+
+    @DisplayName("스타카토의 카테고리를 변경할 수 없는 경우 예외가 발생한다.")
+    @Test
+    void validateCategoryChangeable() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withTitle("non-shared")
+                .withHost(host)
+                .build();
+        Category sharedCategory = CategoryFixtures.defaultCategory()
+                .withTitle("shared")
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).build();
+        Staccato sharedStaccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(sharedCategory).build();
+
+        // when & then
+        assertAll(
+                () -> assertThatThrownBy(() -> staccato.validateCategoryChangeable(sharedCategory))
+                        .isInstanceOf(StaccatoException.class)
+                        .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요."),
+                () -> assertThatThrownBy(() -> sharedStaccato.validateCategoryChangeable(category))
+                        .isInstanceOf(StaccatoException.class)
+                        .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요.")
+        );
     }
 }
