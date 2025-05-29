@@ -1,14 +1,13 @@
 package com.staccato.exception;
 
 import java.util.Optional;
-
 import jakarta.validation.ConstraintViolationException;
-
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,9 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
-
 import com.staccato.config.log.LogForm;
-
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.s3.model.S3Exception;
@@ -119,6 +116,15 @@ public class GlobalExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.FORBIDDEN.toString(), e.getMessage());
         log.warn(LogForm.CUSTOM_EXCEPTION_LOGGING_FORM, exceptionResponse);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    @ApiResponse(description = "낙관적 락 충돌 발생", responseCode = "409")
+    public ResponseEntity<ExceptionResponse> handleOptimisticLockingFailure(ObjectOptimisticLockingFailureException e) {
+        String exceptionMessage = "요청하신 데이터가 다른 요청에 의해 수정되었습니다. 새로고침 후 다시 시도해주세요.";
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.CONFLICT.toString(), exceptionMessage);
+        log.warn(LogForm.EXCEPTION_LOGGING_FORM, exceptionResponse, e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
     }
 
     @ExceptionHandler(RuntimeException.class)

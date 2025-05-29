@@ -1,19 +1,14 @@
 package com.staccato.invitation.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
@@ -34,6 +29,12 @@ import com.staccato.invitation.service.dto.response.CategoryInvitationSentRespon
 import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
+import com.staccato.util.TransactionExecutor;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class InvitationServiceTest extends ServiceSliceTest {
     @Autowired
@@ -46,6 +47,8 @@ class InvitationServiceTest extends ServiceSliceTest {
     private CategoryInvitationRepository categoryInvitationRepository;
     @Autowired
     private CategoryMemberRepository categoryMemberRepository;
+    @Autowired
+    private TransactionExecutor transactionExecutor;
 
     private Member host;
     private Member guest;
@@ -376,5 +379,33 @@ class InvitationServiceTest extends ServiceSliceTest {
                         new CategoryInvitationReceivedResponse(invitation)
                 )
         );
+    }
+
+    @DisplayName("초대 수락과 취소를 동시에 시도하면 낙관적 락 충돌 예외가 발생한다.")
+    @Test
+    void failOnConcurrentAcceptAndCancel() {
+        // given
+        CategoryInvitation invitation = categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
+        Long invitationId = invitation.getId();
+
+        //when
+        CompletableFuture<Void> acceptFuture = CompletableFuture.runAsync(() ->
+                assertThatThrownBy(() -> transactionExecutor.executeInNewTransaction(() -> {
+                    invitationService.accept(guest, invitationId);
+                    transactionExecutor.sleep(2000);
+                })).isInstanceOf(ObjectOptimisticLockingFailureException.class)
+        );
+
+        CompletableFuture<Void> cancelFuture = CompletableFuture.runAsync(() ->
+                transactionExecutor.executeInNewTransaction(() -> {
+                    transactionExecutor.sleep(500);
+                    invitationService.cancel(host, invitationId);
+                })
+        );
+
+        // then
+        CompletableFuture.allOf(acceptFuture, cancelFuture).join();
+        assertThat(categoryInvitationRepository.findById(invitationId).get().getStatus())
+                .isEqualTo(InvitationStatus.CANCELED);
     }
 }
