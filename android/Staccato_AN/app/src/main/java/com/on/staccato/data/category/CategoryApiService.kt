@@ -31,7 +31,7 @@ interface CategoryApiService {
         @Query(CURRENT_DATE) currentDate: String?,
     ): ApiResult<CategoriesResponse>
 
-    @POST(CATEGORIES_PATH_V2)
+    @POST(CATEGORIES_PATH_V3)
     suspend fun postCategory(
         @Body categoryRequest: CategoryRequest,
     ): ApiResult<CategoryCreationResponse>
@@ -57,5 +57,6 @@ interface CategoryApiService {
         private const val CURRENT_DATE = "currentDate"
         private const val CATEGORIES_PATH_V2 = "/v2${CATEGORIES_PATH}"
         private const val CATEGORY_PATH_WITH_ID_V3 = "/v3$CATEGORIES_PATH/{$CATEGORY_ID}"
+        private const val CATEGORIES_PATH_V3 = "/v3${CATEGORIES_PATH}"
     }
 }
