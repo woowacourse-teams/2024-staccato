@@ -77,6 +77,7 @@ class CategoryViewModel
             }
 
         fun inviteMemberBy(ids: List<Long>) {
+            if (selectedMembers.value.members.isEmpty()) return
             category.value?.id?.let { categoryId ->
                 viewModelScope.launch {
                     invitationRepository.invite(categoryId, ids).onSuccess {
