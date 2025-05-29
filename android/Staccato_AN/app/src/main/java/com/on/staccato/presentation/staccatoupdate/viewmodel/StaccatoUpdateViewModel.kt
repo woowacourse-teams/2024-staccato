@@ -130,8 +130,10 @@ class StaccatoUpdateViewModel
 
         fun fetchTargetData(staccatoId: Long) {
             viewModelScope.launch {
-                fetchStaccatoBy(staccatoId)
-                fetchCategoryCandidates()
+                val staccatoJob = launch { fetchStaccatoBy(staccatoId) }
+                val categoryCandidatesJob = launch { fetchCategoryCandidates() }
+                staccatoJob.join()
+                categoryCandidatesJob.join()
                 initializeSelectableCategories()
             }
         }
