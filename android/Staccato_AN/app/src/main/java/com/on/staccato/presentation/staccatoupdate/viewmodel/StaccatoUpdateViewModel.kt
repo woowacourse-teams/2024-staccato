@@ -295,10 +295,10 @@ class StaccatoUpdateViewModel
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
                 }.onException { state ->
-                    if (this.isActive) handlePhotoException(photo.toRetry(), state.message)
+                    if (isActive) handlePhotoException(photo.toRetry(), state.message)
                 }
                 .onServerError { message ->
-                    if (this.isActive) handlePhotoException(photo.toFail(), message)
+                    if (isActive) handlePhotoException(photo.toFail(), message)
                 }
         }
 
