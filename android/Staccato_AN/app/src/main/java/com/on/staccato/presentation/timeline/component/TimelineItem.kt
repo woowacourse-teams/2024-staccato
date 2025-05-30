@@ -68,7 +68,7 @@ fun TimelineItem(
                 Modifier.constrainAs(color) {
                     start.linkTo(firstSpacer.end)
                     top.linkTo(thumbnail.top)
-                },
+                }.padding(2.dp),
             color = category.color,
         )
 

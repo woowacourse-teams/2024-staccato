@@ -24,7 +24,7 @@ fun CategoryColor(
     Box(
         modifier =
             modifier
-                .size(36.dp)
+                .size(34.dp)
                 .background(color = color.iconBackgroundColor, shape = CircleShape),
         contentAlignment = Alignment.Center,
     ) {
