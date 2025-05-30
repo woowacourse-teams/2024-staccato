@@ -110,9 +110,27 @@ class TimelineFragment :
             binding.nickname = memberProfile.nickname
         }
 
+        observeIsBottomSheetExpanded()
+        observeIsAtTop()
+    }
+
+    private fun observeIsBottomSheetExpanded() {
         sharedViewModel.isBottomSheetExpanded.observe(viewLifecycleOwner) {
             binding.isBottomSheetExpanded = it
-            if (it) sharedViewModel.updateLatestIsDraggable()
+            if (it) {
+                sharedViewModel.updateIsDraggable()
+                sharedViewModel.updateLatestIsDraggable()
+            }
+        }
+    }
+
+    private fun observeIsAtTop() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.isAtTop.collect {
+                    sharedViewModel.updateIsDraggable()
+                }
+            }
         }
     }
 

@@ -21,7 +21,7 @@ private const val TIMELINE_TOP_SCROLL_OFFSET = 0
 fun Timeline(
     timeline: List<TimelineUiModel>,
     onCategoryClicked: (Long) -> Unit,
-    onDraggableChanged: (Boolean) -> Unit,
+    onTopChanged: (Boolean) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
     val previousHashCode = rememberSaveable { mutableIntStateOf(timeline.hashCode()) }
@@ -38,7 +38,7 @@ fun Timeline(
             .map { it == TIMELINE_TOP_SCROLL_OFFSET }
             .distinctUntilChanged()
             .collect {
-                onDraggableChanged(it)
+                onTopChanged(it)
             }
     }
 
@@ -64,6 +64,6 @@ private fun TimelinePreview() {
     Timeline(
         timeline = dummyTimelineUiModels,
         onCategoryClicked = {},
-        onDraggableChanged = {},
+        onTopChanged = {},
     )
 }

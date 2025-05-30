@@ -30,10 +30,13 @@ class SharedViewModel
         private val _halfModeEvent = MutableSharedFlow<Unit>()
         val halfModeEvent: SharedFlow<Unit> = _halfModeEvent.asSharedFlow()
 
+        private val _isAtTop = MutableStateFlow<Boolean>(true)
+        val isAtTop: StateFlow<Boolean> = _isAtTop.asStateFlow()
+
         private val _isDraggable = MutableStateFlow<Boolean>(true)
         val isDraggable: StateFlow<Boolean> = _isDraggable.asStateFlow()
 
-        private val _latestIsDraggable = MutableLiveData<Boolean>()
+        private val _latestIsDraggable = MutableLiveData<Boolean>(_isDraggable.value)
         val latestIsDraggable: LiveData<Boolean> get() = _latestIsDraggable
 
         private val _memberProfile = MutableLiveData<MemberProfile>()
@@ -85,8 +88,12 @@ class SharedViewModel
             }
         }
 
-        fun updateIsDraggable(value: Boolean) {
-            _isDraggable.value = value
+        fun updateIsAtTop(value: Boolean) {
+            _isAtTop.value = value
+        }
+
+        fun updateIsDraggable() {
+            _isDraggable.value = _isBottomSheetHalfExpanded.value == true || (_isBottomSheetExpanded.value == true && _isAtTop.value)
         }
 
         fun updateLatestIsDraggable() {

@@ -19,6 +19,6 @@ fun TimelineScreen(
     Timeline(
         timeline = timeline,
         onCategoryClicked = onCategoryClicked,
-        onDraggableChanged = { sharedViewModel.updateIsDraggable(it) },
+        onTopChanged = { sharedViewModel.updateIsAtTop(it) },
     )
 }

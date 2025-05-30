@@ -160,9 +160,20 @@ class MainActivity :
     }
 
     private fun observeBottomSheetIsDraggable() {
+        observeIsAtTop()
         observeIsDraggable()
         observeLatestIsDraggable()
         observeIsHalfModeRequested()
+    }
+
+    private fun observeIsAtTop() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.isAtTop.collect {
+                    sharedViewModel.updateIsDraggable()
+                }
+            }
+        }
     }
 
     private fun observeIsDraggable() {
