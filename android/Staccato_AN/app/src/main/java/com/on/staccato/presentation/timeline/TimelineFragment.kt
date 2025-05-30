@@ -74,7 +74,7 @@ class TimelineFragment :
     }
 
     override fun onChangeToHalfClicked() {
-        sharedViewModel.updateIsHalfModeRequested(true)
+        sharedViewModel.updateHalfModeEvent()
     }
 
     private fun setupBinding() {

@@ -182,9 +182,13 @@ class MainActivity :
     }
 
     private fun observeIsHalfModeRequested() {
-        sharedViewModel.isHalfModeRequested.observe(this) {
-            if (it) behavior.state = STATE_HALF_EXPANDED
-            behavior.isDraggable = true
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.halfModeEvent.collect {
+                    behavior.state = STATE_HALF_EXPANDED
+                    behavior.isDraggable = true
+                }
+            }
         }
     }
 

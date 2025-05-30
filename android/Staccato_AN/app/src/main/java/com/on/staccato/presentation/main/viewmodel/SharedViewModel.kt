@@ -27,8 +27,8 @@ import javax.inject.Inject
 class SharedViewModel
     @Inject
     constructor(private val myPageRepository: MyPageRepository) : ViewModel() {
-        private val _isHalfModeRequested = MutableLiveData<Boolean>(false)
-        val isHalfModeRequested: LiveData<Boolean> get() = _isHalfModeRequested
+        private val _halfModeEvent = MutableSharedFlow<Unit>()
+        val halfModeEvent: SharedFlow<Unit> = _halfModeEvent.asSharedFlow()
 
         private val _isDraggable = MutableStateFlow<Boolean>(true)
         val isDraggable: StateFlow<Boolean> = _isDraggable.asStateFlow()
@@ -98,7 +98,7 @@ class SharedViewModel
         }
 
         fun setStaccatosHasUpdated() {
-            _isTimelineUpdated.setValue(true)
+            _isTimelineUpdated.value = true
             _isStaccatosUpdated.setValue(true)
         }
 
@@ -119,8 +119,10 @@ class SharedViewModel
             _isBottomSheetExpanded.value = isExpanded
         }
 
-        fun updateIsHalfModeRequested(state: Boolean) {
-            _isHalfModeRequested.value = state
+        fun updateHalfModeEvent() {
+            viewModelScope.launch {
+                _halfModeEvent.emit(Unit)
+            }
         }
 
         fun updateStaccatoId(id: Long) {
