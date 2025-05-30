@@ -1,24 +1,23 @@
 package com.staccato.comment.service;
 
-import com.staccato.comment.service.dto.request.CommentRequest;
 import java.util.Comparator;
 import java.util.List;
-
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.staccato.category.domain.Category;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
+import com.staccato.comment.service.dto.event.CommentCreatedEvent;
+import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.category.domain.Category;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -28,13 +27,14 @@ import lombok.RequiredArgsConstructor;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final StaccatoRepository staccatoRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public long createComment(CommentRequest commentRequest, Member member) {
         Staccato staccato = getStaccato(commentRequest.staccatoId());
         validateOwner(staccato.getCategory(), member);
         Comment comment = commentRequest.toComment(staccato, member);
-
+        eventPublisher.publishEvent(new CommentCreatedEvent(member, staccato.getCategory(), staccato));
         return commentRepository.save(comment).getId();
     }
 
@@ -49,7 +49,7 @@ public class CommentService {
 
     private Staccato getStaccato(long staccatoId) {
         return staccatoRepository.findById(staccatoId)
-            .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
+                .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 
     private void validateOwner(Category category, Member member) {

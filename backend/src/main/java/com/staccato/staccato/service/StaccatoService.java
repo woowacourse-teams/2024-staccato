@@ -1,6 +1,7 @@
 package com.staccato.staccato.service;
 
 import java.util.List;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.staccato.category.domain.Category;
@@ -14,6 +15,7 @@ import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.domain.StaccatoImage;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
+import com.staccato.staccato.service.dto.event.StaccatoCreatedEvent;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
 import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
@@ -32,6 +34,7 @@ public class StaccatoService {
     private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
     private final StaccatoImageRepository staccatoImageRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public StaccatoIdResponse createStaccato(StaccatoRequest staccatoRequest, Member member) {
@@ -40,7 +43,7 @@ public class StaccatoService {
         Staccato staccato = staccatoRequest.toStaccato(category);
 
         staccatoRepository.save(staccato);
-
+        eventPublisher.publishEvent(new StaccatoCreatedEvent(category));
         return new StaccatoIdResponse(staccato.getId());
     }
 
