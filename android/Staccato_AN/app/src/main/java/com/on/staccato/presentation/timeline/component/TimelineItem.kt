@@ -63,7 +63,7 @@ fun TimelineItem(
 
         Spacer(modifier = Modifier.constrainAs(firstSpacer) { start.linkTo(thumbnail.end) }.size(15.dp))
 
-        CategoryColor(
+        CategoryFolder(
             modifier =
                 Modifier.constrainAs(color) {
                     start.linkTo(firstSpacer.end)

@@ -17,7 +17,7 @@ import com.on.staccato.R
 import com.on.staccato.presentation.common.color.CategoryColor
 
 @Composable
-fun CategoryColor(
+fun CategoryFolder(
     modifier: Modifier = Modifier,
     color: CategoryColor,
 ) {
@@ -38,6 +38,6 @@ fun CategoryColor(
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
-private fun CategoryColorPreview() {
-    CategoryColor(color = CategoryColor.LIGHT_INDIGO)
+private fun CategoryFolderPreview() {
+    CategoryFolder(color = CategoryColor.LIGHT_INDIGO)
 }
