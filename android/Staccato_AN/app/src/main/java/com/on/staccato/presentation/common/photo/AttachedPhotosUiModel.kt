@@ -11,7 +11,7 @@ data class AttachedPhotosUiModel(
 
     fun imageUrls(): List<String> = attachedPhotos.mapNotNull { it.imageUrl }
 
-    fun updateOrAppendPhoto(updatedPhoto: AttachedPhotoUiModel): AttachedPhotosUiModel {
+    fun updatePhoto(updatedPhoto: AttachedPhotoUiModel): AttachedPhotosUiModel {
         val updatedPhotos =
             attachedPhotos.map { currentPhoto ->
                 if (currentPhoto.uri == updatedPhoto.uri) {

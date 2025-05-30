@@ -254,7 +254,7 @@ class StaccatoCreationViewModel
                     address = address.value ?: return@launch handleException(),
                     visitedAt = selectedVisitedAt.value ?: return@launch handleException(),
                     categoryId = selectedCategory.value!!.categoryId,
-                    staccatoImageUrls = currentPhotos.value?.imageUrls()?: emptyList(),
+                    staccatoImageUrls = currentPhotos.value?.imageUrls() ?: emptyList(),
                 ).onSuccess { response ->
                     _createdStaccatoId.postValue(response.staccatoId)
                 }.onException(::handleCreateException)
@@ -288,7 +288,7 @@ class StaccatoCreationViewModel
             url: String,
         ) {
             val updatedPhoto = targetPhoto.toSuccessPhotoWith(url)
-            _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
+            _currentPhotos.value = currentPhotos.value?.updatePhoto(updatedPhoto)
         }
 
         private fun handleServerError(errorMessage: String) {
@@ -305,7 +305,7 @@ class StaccatoCreationViewModel
             photo: AttachedPhotoUiModel,
             message: String,
         ) {
-            _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(photo)
+            _currentPhotos.value = currentPhotos.value?.updatePhoto(photo)
             _warningMessage.setValue(message)
         }
 
