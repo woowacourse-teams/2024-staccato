@@ -93,7 +93,11 @@ class SharedViewModel
         }
 
         fun updateIsDraggable() {
-            _isDraggable.value = _isBottomSheetHalfExpanded.value == true || (_isBottomSheetExpanded.value == true && _isAtTop.value)
+            val isHalfExpanded = _isBottomSheetHalfExpanded.value == true
+            val isExpandedAndTop = _isBottomSheetExpanded.value == true && _isAtTop.value
+            val isCollapsed = _isBottomSheetExpanded.value == false && _isBottomSheetHalfExpanded.value == false
+
+            _isDraggable.value = isHalfExpanded || isExpandedAndTop || isCollapsed
         }
 
         fun updateLatestIsDraggable() {
