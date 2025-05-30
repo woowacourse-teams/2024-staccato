@@ -10,6 +10,7 @@ import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat.getColor
+import androidx.core.view.isGone
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -17,6 +18,16 @@ import com.on.staccato.R
 import com.on.staccato.presentation.common.photo.AttachedPhotoState
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.util.dpToPx
+
+@BindingAdapter("isGone")
+fun ImageView.setIsGone(isGone: Boolean) {
+    this.isGone = isGone
+}
+
+@BindingAdapter("isInvisible")
+fun ImageView.setVisibility(isInvisible: Boolean) {
+    visibility = if (isInvisible) View.INVISIBLE else View.VISIBLE
+}
 
 @BindingAdapter("imageButtonIcon")
 fun ImageButton.setColorSelectionIcon(

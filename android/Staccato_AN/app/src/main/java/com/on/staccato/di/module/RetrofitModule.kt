@@ -4,6 +4,7 @@ import com.on.staccato.StaccatoApplication.Companion.retrofit
 import com.on.staccato.data.category.CategoryApiService
 import com.on.staccato.data.comment.CommentApiService
 import com.on.staccato.data.image.ImageApiService
+import com.on.staccato.data.invitation.InvitationApiService
 import com.on.staccato.data.login.LoginApiService
 import com.on.staccato.data.member.MemberApiService
 import com.on.staccato.data.mypage.MyPageApiService
@@ -49,4 +50,8 @@ object RetrofitModule {
     @Singleton
     @Provides
     fun myPageApiService(): MyPageApiService = retrofit.create(MyPageApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun invitationApiService(): InvitationApiService = retrofit.create(InvitationApiService::class.java)
 }
