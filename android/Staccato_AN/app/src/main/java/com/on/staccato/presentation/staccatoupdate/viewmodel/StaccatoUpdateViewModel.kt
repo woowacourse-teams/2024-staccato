@@ -227,8 +227,8 @@ class StaccatoUpdateViewModel
                     longitude = longitude.value ?: return@launch handleException(),
                     visitedAt = selectedVisitedAt.value ?: return@launch handleException(),
                     categoryId = selectedCategory.value?.categoryId ?: return@launch handleException(),
-                    staccatoImageUrls = currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! } ?: emptyList(),
-                ).onSuccess {
+                    staccatoImageUrls = currentPhotos.value?.imageUrls()?: emptyList(),
+                    ).onSuccess {
                     _isUpdateCompleted.postValue(true)
                 }.onException(::handleUpdateException)
                     .onServerError(::handleServerError)

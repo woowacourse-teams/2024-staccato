@@ -36,7 +36,7 @@ import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter.Companion.addPhotoButton
+import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter.Companion.photoAdditionButton
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.util.getSnackBarWithAction
@@ -276,7 +276,7 @@ class StaccatoCreationActivity :
         viewModel.currentPhotos.observe(this) { photos ->
             photoAttachFragment.setCurrentImageCount(MAX_PHOTO_NUMBER - photos.size)
             photoAttachAdapter.submitList(
-                listOf(addPhotoButton, *photos.attachedPhotos.toTypedArray()),
+                listOf(photoAdditionButton, *photos.attachedPhotos.toTypedArray()),
             )
         }
     }

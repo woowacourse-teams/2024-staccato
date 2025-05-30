@@ -254,7 +254,7 @@ class StaccatoCreationViewModel
                     address = address.value ?: return@launch handleException(),
                     visitedAt = selectedVisitedAt.value ?: return@launch handleException(),
                     categoryId = selectedCategory.value!!.categoryId,
-                    staccatoImageUrls = currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! } ?: emptyList(),
+                    staccatoImageUrls = currentPhotos.value?.imageUrls()?: emptyList(),
                 ).onSuccess { response ->
                     _createdStaccatoId.postValue(response.staccatoId)
                 }.onException(::handleCreateException)

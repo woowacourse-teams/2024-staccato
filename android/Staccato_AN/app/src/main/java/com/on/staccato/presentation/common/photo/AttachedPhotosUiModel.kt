@@ -9,6 +9,8 @@ data class AttachedPhotosUiModel(
 ) {
     val size get() = attachedPhotos.size
 
+    fun imageUrls(): List<String> = attachedPhotos.mapNotNull { it.imageUrl }
+
     fun updateOrAppendPhoto(newPhoto: AttachedPhotoUiModel): AttachedPhotosUiModel {
         val updatedPhotos =
             attachedPhotos.map { currentPhoto ->
