@@ -177,12 +177,8 @@ class MainActivity :
     }
 
     private fun observeIsDraggable() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.isDraggable.collect {
-                    behavior.isDraggable = it
-                }
-            }
+        sharedViewModel.isDraggable.observe(this) {
+            behavior.isDraggable = it
         }
     }
 

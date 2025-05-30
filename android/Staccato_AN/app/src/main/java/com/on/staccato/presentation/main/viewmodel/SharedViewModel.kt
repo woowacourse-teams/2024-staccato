@@ -33,8 +33,8 @@ class SharedViewModel
         private val _isAtTop = MutableStateFlow<Boolean>(true)
         val isAtTop: StateFlow<Boolean> = _isAtTop.asStateFlow()
 
-        private val _isDraggable = MutableStateFlow<Boolean>(true)
-        val isDraggable: StateFlow<Boolean> = _isDraggable.asStateFlow()
+        private val _isDraggable = MutableLiveData<Boolean>(true)
+        val isDraggable: LiveData<Boolean> get() = _isDraggable
 
         private val _latestIsDraggable = MutableLiveData<Boolean>(_isDraggable.value)
         val latestIsDraggable: LiveData<Boolean> get() = _latestIsDraggable
