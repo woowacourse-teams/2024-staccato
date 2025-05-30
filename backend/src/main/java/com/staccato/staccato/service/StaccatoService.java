@@ -94,12 +94,11 @@ public class StaccatoService {
 
     @Transactional
     public void deleteStaccatoById(long staccatoId, Member member) {
-        staccatoRepository.findById(staccatoId).ifPresent(staccato -> {
-            staccato.validateModifyPermission(member);
-            commentRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
-            staccatoImageRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
-            staccatoRepository.deleteById(staccatoId);
-        });
+        Staccato staccato = staccatoValidator.getStaccatoByIdOrThrow(staccatoId);
+        staccato.validateModifyPermission(member);
+        commentRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
+        staccatoImageRepository.deleteAllByStaccatoIdInBulk(List.of(staccatoId));
+        staccatoRepository.deleteById(staccatoId);
     }
 
     @Transactional
