@@ -17,7 +17,7 @@ data class AttachedPhotoUiModel(
 
     fun toRetry() = copy(state = AttachedPhotoState.Retry)
 
-    fun toFail() = copy(state = AttachedPhotoState.Fail)
+    fun toFail() = copy(state = AttachedPhotoState.Failure)
 
     companion object {
         fun ImageUrl.toSuccessPhoto(): AttachedPhotoUiModel =

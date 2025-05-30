@@ -288,7 +288,7 @@ fun View.visibilityByDescription(description: String?) {
 @BindingAdapter("failVisibilityByState")
 fun TextView.setFailVisibilityByPhotoState(photoState: AttachedPhotoState) {
     visibility =
-        if (photoState == AttachedPhotoState.Fail) {
+        if (photoState == AttachedPhotoState.Failure) {
             View.VISIBLE
         } else {
             View.GONE
