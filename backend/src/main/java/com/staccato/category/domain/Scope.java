@@ -2,6 +2,8 @@ package com.staccato.category.domain;
 
 import java.util.Arrays;
 
+import com.staccato.exception.StaccatoException;
+
 public enum Scope {
     ALL,
     PRIVATE;
@@ -10,7 +12,7 @@ public enum Scope {
         return Arrays.stream(Scope.values())
                 .filter(scope -> scope.name().equalsIgnoreCase(input.trim()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("일치하는 Scope 값이 없습니다."));
+                .orElseThrow(() -> new StaccatoException("올바르지 않은 scope 값입니다."));
     }
 
     public boolean isAll() {

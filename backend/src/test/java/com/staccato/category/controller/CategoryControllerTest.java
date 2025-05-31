@@ -235,7 +235,7 @@ class CategoryControllerTest extends ControllerTest {
 
     @DisplayName("특정 날짜를 포함하고 있는 모든 카테고리 목록을 조회하는 응답 직렬화에 성공한다.")
     @Test
-    void readAllCategoryIncludingDate() throws Exception {
+    void readCandidateCategoriesIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().build();
@@ -256,7 +256,7 @@ class CategoryControllerTest extends ControllerTest {
         mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .param("specificDate", LocalDate.now().toString())
-                        .param("scope", "ALL"))
+                        .param("scope", "all"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
     }
@@ -264,7 +264,7 @@ class CategoryControllerTest extends ControllerTest {
     @DisplayName("잘못된 날짜 형식으로 카테고리 목록 조회를 시도하면 예외가 발생한다.")
     @ParameterizedTest
     @ValueSource(strings = {"2024.07.01", "2024-07", "2024", "a"})
-    void cannotReadAllCategoryByInvalidDateFormat(String currentDate) throws Exception {
+    void cannotReadCandidateCategoriesByInvalidDateFormat(String currentDate) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
@@ -273,7 +273,24 @@ class CategoryControllerTest extends ControllerTest {
         mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .param("specificDate", currentDate)
-                        .param("isShared", "false"))
+                        .param("scope", "all"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("지정된 값(all, private)이 아닌 문자열의 scope로 카테고리 목록 조회를 시도하면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"public", " ", "a", "123"})
+    void cannotReadCandidateCategoriesByInvalidScope(String scope) throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 scope 값입니다.");
+
+        // when & then
+        mockMvc.perform(get("/categories/candidates")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("specificDate", LocalDate.now().toString())
+                        .param("scope", scope))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
