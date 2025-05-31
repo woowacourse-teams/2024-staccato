@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.staccato.category.controller.docs.CategoryControllerDocs;
+import com.staccato.category.domain.Scope;
 import com.staccato.category.service.CategoryService;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
@@ -65,9 +66,9 @@ public class CategoryController implements CategoryControllerDocs {
     public ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @LoginMember Member member,
             @RequestParam(value = "specificDate") LocalDate specificDate,
-            @RequestParam(value = "isShared") boolean isShared
+            @RequestParam(value = "scope") Scope scope
     ) {
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, specificDate, isShared);
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, specificDate, false, scope);
         return ResponseEntity.ok(categoryNameResponses);
     }
 

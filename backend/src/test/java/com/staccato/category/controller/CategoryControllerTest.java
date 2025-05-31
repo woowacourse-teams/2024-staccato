@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import com.staccato.ControllerTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
+import com.staccato.category.domain.Scope;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
@@ -237,7 +238,7 @@ class CategoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().build();
         CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
-        when(categoryService.readAllCategoriesByDateAndIsShared(any(Member.class), any(), any(Boolean.class))).thenReturn(categoryNameResponses);
+        when(categoryService.readAllCategoriesByDateAndIsShared(any(Member.class), any(), any(Boolean.class), any(Scope.class))).thenReturn(categoryNameResponses);
         String expectedResponse = """
                 {
                     "categories": [
@@ -253,7 +254,7 @@ class CategoryControllerTest extends ControllerTest {
         mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .param("specificDate", LocalDate.now().toString())
-                        .param("isShared", "false"))
+                        .param("scope", "ALL"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
     }
