@@ -56,7 +56,13 @@ public interface CategoryControllerDocs {
     @Operation(summary = "특정 날짜를 포함하는 사용자의 개인/전체 카테고리 목록 조회", description = "특정 날짜를 포함하는 사용자의 개인/전체 카테고리 목록을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 목록 조회 성공", responseCode = "200"),
-            @ApiResponse(description = "입력받은 특정 날짜가 유효하지 않을 때 발생", responseCode = "400")
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                                        
+                    (1) 입력받은 특정 날짜가 유효하지 않을 때
+                                        
+                    (2) 입력받은 Scope가 'all' 또는 'private'이 아닐 때 (대소문자 구분 X)
+                    """, responseCode = "400")
     })
     ResponseEntity<CategoryNameResponses> readCandidateCategories(
             @Parameter(hidden = true) Member member,
