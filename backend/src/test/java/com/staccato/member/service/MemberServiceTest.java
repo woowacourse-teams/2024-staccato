@@ -111,6 +111,20 @@ class MemberServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("검색된 결과에서 본인을 제외한 사용자 목록이 반환된다.")
+    @Test
+    void readMemberWithoutOneself() {
+        // given
+        Member me = MemberFixtures.defaultMember().withNickname("me").buildAndSave(memberRepository);
+        MemberReadRequest memberReadRequest = new MemberReadRequest("me", 0);
+
+        // when
+        MemberSearchResponses result = memberService.readMembersByNickname(me, memberReadRequest);
+
+        // then
+        assertThat(result.members()).isEmpty();
+    }
+
     @DisplayName("검색어가 없다면, 빈 배열을 반환한다.")
     @ParameterizedTest
     @NullAndEmptySource
