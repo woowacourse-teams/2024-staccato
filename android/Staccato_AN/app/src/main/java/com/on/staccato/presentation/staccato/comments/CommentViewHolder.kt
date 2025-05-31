@@ -3,34 +3,54 @@ package com.on.staccato.presentation.staccato.comments
 import android.view.Gravity
 import android.view.View
 import android.widget.PopupMenu
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.on.staccato.R
 import com.on.staccato.databinding.ItemStaccatoMyCommentBinding
+import com.on.staccato.databinding.ItemStaccatoOthersCommentBinding
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.DialogHandler
 
-// Todo: 추후 나의 댓글, 다른 사용자의 댓글 구분하기
-class CommentViewHolder(
-    private val binding: ItemStaccatoMyCommentBinding,
-    private val commentHandler: CommentHandler,
-) : RecyclerView.ViewHolder(binding.root),
-    DialogHandler {
+sealed class CommentViewHolder(binding: ViewDataBinding) : ViewHolder(binding.root), DialogHandler {
+    abstract val binding: ViewDataBinding
     private val deleteDialogFragment = DeleteDialogFragment { onConfirmClicked() }
 
-    override fun onConfirmClicked() {
-        binding.myComment?.id?.let { commentHandler.onDeleteButtonClicked(it) }
-    }
+    class MyCommentViewHolder(
+        override val binding: ItemStaccatoMyCommentBinding,
+        private val commentHandler: CommentHandler,
+    ) : CommentViewHolder(binding) {
+        override fun onConfirmClicked() {
+            binding.myComment?.id?.let { commentHandler.onDeleteButtonClicked(it) }
+        }
 
-    fun bind(commentUiModel: CommentUiModel) {
-        binding.myComment = commentUiModel
-        binding.root.setOnLongClickListener {
-            onCommentLongClicked(commentId = commentUiModel.id)
-            false
+        fun bind(commentUiModel: CommentUiModel) {
+            binding.myComment = commentUiModel
+            binding.root.setOnLongClickListener {
+                onCommentLongClicked()
+                false
+            }
         }
     }
 
-    private fun onCommentLongClicked(commentId: Long) {
+    class OtherCommentViewHolder(
+        override val binding: ItemStaccatoOthersCommentBinding,
+        private val commentHandler: CommentHandler,
+    ) : CommentViewHolder(binding) {
+        override fun onConfirmClicked() {
+            binding.othersComment?.id?.let { commentHandler.onDeleteButtonClicked(it) }
+        }
+
+        fun bind(commentUiModel: CommentUiModel) {
+            binding.othersComment = commentUiModel
+            binding.root.setOnLongClickListener {
+                onCommentLongClicked()
+                false
+            }
+        }
+    }
+
+    fun onCommentLongClicked() {
         val popup = inflateCreationMenu(binding.root)
         setUpCreationMenu(popup)
         popup.show()
