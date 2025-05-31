@@ -32,6 +32,7 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
 
     private Member host;
     private Member guest;
+    private Category category;
 
     @BeforeEach
     void init() {
@@ -41,15 +42,15 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
         guest = MemberFixtures.defaultMember()
                 .withNickname("guest")
                 .buildAndSave(memberRepository);
+        category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .buildAndSave(categoryRepository);
     }
 
     @DisplayName("특정 사용자가 요청(REQUESTED)한 초대 목록을 최신순으로 조회한다.")
     @Test
     void readAllByInviter() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
-                .withHost(host)
-                .buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
                 .withHost(host)
                 .buildAndSave(categoryRepository);
@@ -77,9 +78,6 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
         Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
         Member guest3 = MemberFixtures.defaultMember().withNickname("guest3").buildAndSave(memberRepository);
         Member guest4 = MemberFixtures.defaultMember().withNickname("guest4").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
-                .withHost(host)
-                .buildAndSave(categoryRepository);
         CategoryInvitation invitationRequested = CategoryInvitation.invite(category, host, guest);
         CategoryInvitation invitationCanceled = CategoryInvitation.invite(category, host, guest2);
         CategoryInvitation invitationAccepted = CategoryInvitation.invite(category, host, guest3);
@@ -108,9 +106,6 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
     @Test
     void readAllByInvitee() {
         // given
-        Category category = CategoryFixtures.defaultCategory()
-                .withHost(host)
-                .buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
                 .withHost(host)
                 .buildAndSave(categoryRepository);
@@ -135,7 +130,6 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
     @Test
     void readAllByInviteeOnlyReturnsRequestedStatus() {
         // given
-        Category category = CategoryFixtures.defaultCategory().withTitle("category").withHost(host).buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory().withTitle("category2").withHost(host).buildAndSave(categoryRepository);
         Category category3 = CategoryFixtures.defaultCategory().withTitle("category3").withHost(host).buildAndSave(categoryRepository);
         Category category4 = CategoryFixtures.defaultCategory().withTitle("category4").withHost(host).buildAndSave(categoryRepository);
@@ -168,7 +162,7 @@ class CategoryInvitationRepositoryTest extends RepositoryTest {
     void deleteAllByCategoryIdInBulk() {
         // given
         Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory()
+        category = CategoryFixtures.defaultCategory()
                 .withHost(host)
                 .withGuests(List.of(guest, guest2))
                 .buildAndSave(categoryRepository);

@@ -20,8 +20,8 @@ public class SwaggerExamples {
     public static final String MEMBER_NICKNAME = "김스타";
     public static final String IMAGE_URL = "https://image.staccato.kr/web/share/excited.png";
     public static final String IMAGE_URLS = "[\"https://image.staccato.kr/web/share/happy.png\", " +
-            "\"https://image.staccato.kr/web/share/angry.png\", " +
-            "\"https://image.staccato.kr/web/share/sad.png\"]";
+                                            "\"https://image.staccato.kr/web/share/angry.png\", " +
+                                            "\"https://image.staccato.kr/web/share/sad.png\"]";
     public static final String FEELING = "happy";
     public static final String EXPIRED_AT = "2025-06-01T00:00:00";
     public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
@@ -33,4 +33,5 @@ public class SwaggerExamples {
     public static final String CATEGORY_IS_SHARED = "false";
     public static final String CATEGORY_MEMBER_COUNT = "11";
     public static final String INVITATION_ID = "1";
+    public static final String SEARCHED_MEMBER_STATUS = "REQUESTED";
 }
