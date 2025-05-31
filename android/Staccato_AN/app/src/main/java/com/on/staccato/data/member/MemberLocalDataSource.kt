@@ -41,6 +41,18 @@ class MemberLocalDataSource
                 uuidCode = getRecoveryCode(),
             )
 
+        override suspend fun updateMemberProfile(memberProfile: MemberProfile) {
+            updateProfileImageUrl(memberProfile.profileImageUrl)
+            updateNickname(memberProfile.nickname)
+            updateRecoveryCode(memberProfile.uuidCode)
+        }
+
+        override suspend fun updateProfileImageUrl(url: String?) {
+            withContext(Dispatchers.IO) {
+                userInfoPrefs.edit().putString(PROFILE_IMAGE_URL_KEY_NAME, url ?: EMPTY_STRING).apply()
+            }
+        }
+
         private suspend fun getProfileImageUrl(): String? {
             return withContext(Dispatchers.IO) {
                 userInfoPrefs.getString(PROFILE_IMAGE_URL_KEY_NAME, null)
@@ -56,18 +68,6 @@ class MemberLocalDataSource
         private suspend fun getRecoveryCode(): String {
             return withContext(Dispatchers.IO) {
                 userInfoPrefs.getString(RECOVERY_CODE_KEY_NAME, null) ?: EMPTY_STRING
-            }
-        }
-
-        override suspend fun updateMemberProfile(memberProfile: MemberProfile) {
-            updateProfileImageUrl(memberProfile.profileImageUrl)
-            updateNickname(memberProfile.nickname)
-            updateRecoveryCode(memberProfile.uuidCode)
-        }
-
-        override suspend fun updateProfileImageUrl(url: String?) {
-            withContext(Dispatchers.IO) {
-                userInfoPrefs.edit().putString(PROFILE_IMAGE_URL_KEY_NAME, url ?: EMPTY_STRING).apply()
             }
         }
 
