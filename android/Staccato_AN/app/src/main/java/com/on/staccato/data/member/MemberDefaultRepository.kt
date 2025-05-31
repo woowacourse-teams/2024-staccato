@@ -17,7 +17,12 @@ class MemberDefaultRepository
     ) : MemberRepository {
         override suspend fun fetchTokenWithRecoveryCode(recoveryCode: String): ApiResult<Unit> =
             memberApiService.postRecoveryCode(recoveryCode)
-                .handle { StaccatoApplication.userInfoPrefsManager.setToken(it.token) }
+                .handle { StaccatoApplication.userInfoPrefsManager.setTokenAndId(it.token, it.id) }
+
+        override suspend fun getMemberId(): Result<Long> =
+            runCatching {
+                StaccatoApplication.userInfoPrefsManager.getMemberId()
+            }
 
         override suspend fun searchMembersBy(nickname: String): Flow<ApiResult<Members>> =
             flow {

@@ -13,7 +13,7 @@ class LoginDefaultRepository
     ) : LoginRepository {
         override suspend fun loginWithNickname(nickname: String): ApiResult<Unit> =
             loginDataSource.requestLoginWithNickname(nickname).handle {
-                StaccatoApplication.userInfoPrefsManager.setToken(it.token)
+                StaccatoApplication.userInfoPrefsManager.setTokenAndId(it.token, it.id)
             }
 
         override suspend fun getToken(): Result<String?> =

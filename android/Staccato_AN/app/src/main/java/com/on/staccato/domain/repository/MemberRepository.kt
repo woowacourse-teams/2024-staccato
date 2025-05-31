@@ -7,5 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface MemberRepository {
     suspend fun fetchTokenWithRecoveryCode(recoveryCode: String): ApiResult<Unit>
 
+    suspend fun getMemberId(): Result<Long>
+
     suspend fun searchMembersBy(nickname: String): Flow<ApiResult<Members>>
 }

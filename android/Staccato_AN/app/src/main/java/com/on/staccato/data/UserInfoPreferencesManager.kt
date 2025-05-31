@@ -18,6 +18,11 @@ class UserInfoPreferencesManager(context: Context) : MyPageLocalDataSource {
         }
     }
 
+    suspend fun getMemberId(): Long =
+        withContext(Dispatchers.IO) {
+            userInfoPrefs.getLong(MEMBER_ID_KEY_NAME, 0L)
+        }
+
     override suspend fun getMemberProfile(): MemberProfile =
         MemberProfile(
             profileImageUrl = getProfileImageUrl(),
@@ -43,9 +48,15 @@ class UserInfoPreferencesManager(context: Context) : MyPageLocalDataSource {
         }
     }
 
-    suspend fun setToken(newToken: String) {
+    suspend fun setTokenAndId(
+        newToken: String,
+        id: Long,
+    ) {
         withContext(Dispatchers.IO) {
-            userInfoPrefs.edit().putString(TOKEN_KEY_NAME, newToken).apply()
+            userInfoPrefs.edit()
+                .putString(TOKEN_KEY_NAME, newToken)
+                .putLong(MEMBER_ID_KEY_NAME, id)
+                .apply()
         }
     }
 
@@ -79,5 +90,6 @@ class UserInfoPreferencesManager(context: Context) : MyPageLocalDataSource {
         private const val PROFILE_IMAGE_URL_KEY_NAME = "com.on.staccato.profile"
         private const val NICKNAME_KEY_NAME = "com.on.staccato.nickname"
         private const val RECOVERY_CODE_KEY_NAME = "com.on.staccato.recovery"
+        private const val MEMBER_ID_KEY_NAME = "com.on.staccato.member_id"
     }
 }
