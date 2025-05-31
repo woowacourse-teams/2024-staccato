@@ -2,10 +2,13 @@ package com.staccato.category.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.domain.Scope;
@@ -31,6 +34,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -72,11 +76,15 @@ public class CategoryService {
         return new CategoryResponsesV3(responses);
     }
 
-    public CategoryNameResponses readAllCategoriesByDateAndIsShared(Member member, LocalDate specificDate, boolean isShared, Scope scope) {
-        List<Category> rawCategories = getCategories(
-                categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(member.getId(), specificDate, isShared));
-        List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER,
-                DEFAULT_CATEGORY_SORT);
+    public CategoryNameResponses readAllCategoriesByDateAndIsShared(Member member, LocalDate specificDate, Scope scope) {
+        List<Category> rawCategories = Collections.emptyList();
+        if (scope.isAll()) {
+            rawCategories = categoryRepository.findAllByMemberIdAndDate(member.getId(), specificDate);
+        } else if (scope.isPrivate()) {
+            rawCategories = categoryRepository.findPrivateByMemberIdAndDate(member.getId(), specificDate);
+        }
+
+        List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER, DEFAULT_CATEGORY_SORT);
 
         return CategoryNameResponses.from(categories);
     }
