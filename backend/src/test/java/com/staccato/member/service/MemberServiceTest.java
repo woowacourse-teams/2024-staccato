@@ -149,7 +149,7 @@ class MemberServiceTest extends ServiceSliceTest {
         assertThat(result.members()).isEmpty();
     }
 
-    @DisplayName("excludeCategoryId가 있다면, 검색된 사용자 중 이미 초대 요청을 받은 사용자는 ALREADY_REQUESTED 상태로 구분된다.")
+    @DisplayName("excludeCategoryId가 있다면, 검색된 사용자 중 이미 초대 요청을 받은 사용자는 REQUESTED 상태로 구분된다.")
     @Test
     void readMembersWithRequestedStatus() {
         // given
@@ -171,7 +171,7 @@ class MemberServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(result.members()).hasSize(1),
                 () -> assertThat(result.members().get(0).memberId()).isEqualTo(invited.getId()),
-                () -> assertThat(result.members().get(0).status()).isEqualTo(SearchedStatus.ALREADY_REQUESTED.name())
+                () -> assertThat(result.members().get(0).status()).isEqualTo(SearchedStatus.REQUESTED.name())
         );
     }
 
@@ -202,7 +202,7 @@ class MemberServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("excludeCategoryId가 있다면, 검색된 사용자 중 이미 카테고리에 속한 사용자는 ALREADY_JOINED 상태로 구분된다.")
+    @DisplayName("excludeCategoryId가 있다면, 검색된 사용자 중 이미 카테고리에 속한 사용자는 JOINED 상태로 구분된다.")
     @Test
     void readMembersWithJoinedStatus() {
         // given
@@ -223,7 +223,7 @@ class MemberServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(result.members()).hasSize(1),
                 () -> assertThat(result.members().get(0).memberId()).isEqualTo(joined.getId()),
-                () -> assertThat(result.members().get(0).status()).isEqualTo(SearchedStatus.ALREADY_JOINED.name())
+                () -> assertThat(result.members().get(0).status()).isEqualTo(SearchedStatus.JOINED.name())
         );
     }
 
