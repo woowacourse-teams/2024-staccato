@@ -44,27 +44,31 @@ public class MemberService {
         }
         List<Member> members = memberRepository.findByNicknameNicknameContainsAndIdNot(memberReadRequest.trimmedNickname(), member.getId());
 
-        if (hasCategoryToExclude(memberReadRequest.excludeCategoryId())) {
-            Set<Long> categoryMemberIds = categoryMemberRepository.findAllByCategoryIdAndMemberIn(memberReadRequest.excludeCategoryId(), members)
-                    .stream().map(categoryMember -> categoryMember.getMember().getId()).collect(Collectors.toSet());
-            Set<Long> inviteeIds = categoryInvitationRepository.findAllByCategoryIdAndInviteeInAndStatus(
-                            memberReadRequest.excludeCategoryId(), members, InvitationStatus.REQUESTED)
-                    .stream().map(categoryInvitation -> categoryInvitation.getInvitee().getId())
-                    .collect(Collectors.toSet());
-            List<MemberSearchResponse> responses = members.stream()
-                    .map(m -> resolveSearchStatus(m, categoryMemberIds, inviteeIds))
-                    .toList();
-            return new MemberSearchResponses(responses);
+        return getMemberSearchResponses(memberReadRequest, members);
+    }
+
+    private MemberSearchResponses getMemberSearchResponses(MemberReadRequest memberReadRequest, List<Member> members) {
+        if (hasNoCategoryToExclude(memberReadRequest.excludeCategoryId())) {
+            return MemberSearchResponses.none(members);
         }
-        return MemberSearchResponses.none(members);
+        Set<Long> categoryMemberIds = categoryMemberRepository.findAllByCategoryIdAndMemberIn(memberReadRequest.excludeCategoryId(), members)
+                .stream().map(categoryMember -> categoryMember.getMember().getId()).collect(Collectors.toSet());
+        Set<Long> inviteeIds = categoryInvitationRepository.findAllByCategoryIdAndInviteeInAndStatus(
+                        memberReadRequest.excludeCategoryId(), members, InvitationStatus.REQUESTED)
+                .stream().map(categoryInvitation -> categoryInvitation.getInvitee().getId())
+                .collect(Collectors.toSet());
+        List<MemberSearchResponse> responses = members.stream()
+                .map(m -> resolveSearchStatus(m, categoryMemberIds, inviteeIds))
+                .toList();
+        return new MemberSearchResponses(responses);
     }
 
     private boolean hasNoNickname(String nickname) {
         return Objects.isNull(nickname) || nickname.isBlank();
     }
 
-    private boolean hasCategoryToExclude(Long categoryId) {
-        return categoryId > 0;
+    private boolean hasNoCategoryToExclude(long categoryId) {
+        return categoryId <= 0;
     }
 
     private MemberSearchResponse resolveSearchStatus(Member m, Set<Long> categoryMemberIds, Set<Long> inviteeIds) {
