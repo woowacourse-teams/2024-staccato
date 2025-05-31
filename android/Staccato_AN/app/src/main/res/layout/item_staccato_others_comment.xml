@@ -13,17 +13,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_staccato_others_comment_profile"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="10dp"
-            android:layout_marginStart="19dp"
+            style="@style/CommentProfileImageStyle"
             android:contentDescription="@string/staccato_others_comment_profile_image_description"
-            android:elevation="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:coilCircleImageUrl="@{othersComment.memberImageUrl}"
@@ -41,14 +36,7 @@
 
         <TextView
             android:id="@+id/tv_staccato_others_comment_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="25dp"
-            android:background="@drawable/shape_others_staccato_log_12dp"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="12dp"
+            style="@style/CommentChatBoxStyle.OtherComment"
             android:text="@{othersComment.content}"
             android:textAppearance="@style/Typography.Body3"
             android:textColor="@color/gray5"
