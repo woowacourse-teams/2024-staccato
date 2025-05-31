@@ -9,5 +9,7 @@ interface MemberRepository {
 
     suspend fun getMemberId(): Result<Long>
 
+    suspend fun getNickname(): Result<String>
+
     suspend fun searchMembersBy(nickname: String): Flow<ApiResult<Members>>
 }

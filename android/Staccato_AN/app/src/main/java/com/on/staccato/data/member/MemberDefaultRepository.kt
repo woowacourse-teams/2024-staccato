@@ -1,6 +1,5 @@
 package com.on.staccato.data.member
 
-import com.on.staccato.StaccatoApplication
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.network.ApiResult
 import com.on.staccato.data.network.handle
@@ -13,15 +12,21 @@ import javax.inject.Inject
 class MemberDefaultRepository
     @Inject
     constructor(
+        private val memberLocalDataSource: MemberLocalDataSource,
         private val memberApiService: MemberApiService,
     ) : MemberRepository {
         override suspend fun fetchTokenWithRecoveryCode(recoveryCode: String): ApiResult<Unit> =
             memberApiService.postRecoveryCode(recoveryCode)
-                .handle { StaccatoApplication.userInfoPrefsManager.setTokenAndId(it.token, it.id) }
+                .handle { memberLocalDataSource.setTokenAndId(it.token, it.id) }
 
         override suspend fun getMemberId(): Result<Long> =
             runCatching {
-                StaccatoApplication.userInfoPrefsManager.getMemberId()
+                memberLocalDataSource.getMemberId()
+            }
+
+        override suspend fun getNickname(): Result<String> =
+            runCatching {
+                memberLocalDataSource.getMemberProfile().nickname
             }
 
         override suspend fun searchMembersBy(nickname: String): Flow<ApiResult<Members>> =
