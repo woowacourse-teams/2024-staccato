@@ -15,4 +15,9 @@ class LoginDefaultRepository
             loginDataSource.requestLoginWithNickname(nickname).handle {
                 StaccatoApplication.userInfoPrefsManager.setToken(it.token)
             }
+
+        override suspend fun getToken(): Result<String?> =
+            runCatching {
+                StaccatoApplication.userInfoPrefsManager.getToken()
+            }
     }
