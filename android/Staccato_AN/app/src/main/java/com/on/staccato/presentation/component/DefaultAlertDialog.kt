@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.on.staccato.theme.Body2
 import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray3
@@ -22,13 +23,20 @@ fun DefaultAlertDialog(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
-    dismiss: Boolean = false,
     onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
+    confirmButton: @Composable () -> Unit,
+    dismissButton: @Composable (() -> Unit)? = {
+        DefaultTextButton(
+            text = "취소",
+            onClick = onDismissRequest,
+            backgroundColor = Gray1,
+            textColor = Gray4,
+        )
+    },
+    properties: DialogProperties = DialogProperties()
 ) {
     AlertDialog(
         modifier = modifier.fillMaxWidth(),
-        onDismissRequest = {  },
         title = {
             Text(
                 text = title,
@@ -43,28 +51,12 @@ fun DefaultAlertDialog(
                 color = Gray3,
             )
         },
-        confirmButton = {
-            DefaultTextButton(
-                text = "확인",
-                onClick = onConfirmation,
-                backgroundColor = StaccatoBlue,
-                textColor = White,
-            )
-        },
-        dismissButton = {
-            if(dismiss) {
-                DefaultTextButton(
-                    text = "취소",
-                    onClick = onDismissRequest,
-                    backgroundColor = Gray1,
-                    textColor = Gray4,
-                )
-            }
-        },
+        onDismissRequest = onDismissRequest,
+        confirmButton = confirmButton,
+        dismissButton = dismissButton,
         shape = RoundedCornerShape(10.dp),
         containerColor = White,
-        titleContentColor = StaccatoBlack,
-        textContentColor = Gray3,
+        properties = properties,
     )
 }
 
@@ -77,8 +69,14 @@ private fun AlertDialogPreview() {
     DefaultAlertDialog(
         title = "제목제목제목",
         description = "내용내용내용.\n내용내용, 내용내용내용??",
-        dismiss = true,
-        onDismissRequest = {},
-        onConfirmation = {},
+        confirmButton = {
+            DefaultTextButton(
+                text = "확인",
+                onClick = {  },
+                backgroundColor = StaccatoBlue,
+                textColor = White,
+            )
+        },
+        onDismissRequest = {  },
     )
 }

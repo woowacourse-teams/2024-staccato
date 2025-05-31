@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.on.staccato.theme.Body2
 import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray3
@@ -33,16 +34,18 @@ fun DefaultBasicDialog(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
-    dismiss: Boolean = false,
     onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
+    confirmButton: @Composable () -> Unit,
+    dismissButton: @Composable (() -> Unit)? = null,
+    properties: DialogProperties = DialogProperties(),
 ) {
     val displayMetrics = LocalContext.current.resources.displayMetrics
     val width = (displayMetrics.widthPixels * 0.9).dp
 
     BasicAlertDialog(
         modifier = modifier.width(width),
-        onDismissRequest = {  },
+        onDismissRequest = onDismissRequest,
+        properties = properties,
     ) {
         Surface(
             modifier = modifier,
@@ -54,6 +57,7 @@ fun DefaultBasicDialog(
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
+                    modifier = Modifier.padding(bottom = 8.dp),
                     text = title,
                     style = Title2,
                     color = StaccatoBlack,
@@ -68,24 +72,11 @@ fun DefaultBasicDialog(
                     modifier = modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
                 ) {
-                    if (dismiss) {
-                        DefaultTextButton(
-                            text = "취소",
-                            onClick = onDismissRequest,
-                            backgroundColor = Gray1,
-                            textColor = Gray4,
-                        )
-                    }
+                    dismissButton?.invoke()
                     Spacer(modifier = modifier.width(6.dp))
-                    DefaultTextButton(
-                        text = "확인",
-                        onClick = onConfirmation,
-                        backgroundColor = StaccatoBlue,
-                        textColor = White,
-                    )
+                    confirmButton()
                 }
             }
-
         }
     }
 }
@@ -99,8 +90,22 @@ private fun DefaultBasicDialogPreview() {
     DefaultBasicDialog(
         title = "제목제목제목",
         description = "내용내용내용.\n내용내용, 내용내용내용??",
-        dismiss = true,
         onDismissRequest = {  },
-        onConfirmation = {  },
+        confirmButton = {
+            DefaultTextButton(
+                text = "확인",
+                onClick = {  },
+                backgroundColor = StaccatoBlue,
+                textColor = White,
+            )
+        },
+        dismissButton = {
+            DefaultTextButton(
+                text = "취소",
+                onClick = {  },
+                backgroundColor = Gray1,
+                textColor = Gray4,
+            )
+        }
     )
 }
