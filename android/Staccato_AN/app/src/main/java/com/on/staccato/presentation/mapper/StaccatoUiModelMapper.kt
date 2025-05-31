@@ -23,13 +23,13 @@ fun Staccato.toStaccatoDetailUiModel(): StaccatoDetailUiModel {
     )
 }
 
-fun Comment.toCommentUiModel() =
+fun Comment.toCommentUiModel(isMine: Boolean) =
     CommentUiModel(
         id = commentId,
-        memberId = memberId,
         nickname = nickname,
         memberImageUrl = memberImageUrl,
         content = content,
+        isMine = isMine,
     )
 
 fun Feeling.toFeelingUiModel(selectedFeeling: String = Feeling.NOTHING.value): FeelingUiModel {

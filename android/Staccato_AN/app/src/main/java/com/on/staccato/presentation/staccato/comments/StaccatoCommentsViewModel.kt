@@ -8,8 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.network.onException
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.model.Comment
 import com.on.staccato.domain.model.NewComment
 import com.on.staccato.domain.repository.CommentRepository
+import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toCommentUiModel
@@ -22,6 +24,7 @@ import javax.inject.Inject
 class StaccatoCommentsViewModel
     @Inject
     constructor(
+        private val memberRepository: MemberRepository,
         private val commentRepository: CommentRepository,
     ) : ViewModel(), CommentHandler {
         private val _comments = MutableLiveData<List<CommentUiModel>>()
@@ -45,6 +48,12 @@ class StaccatoCommentsViewModel
             get() = _errorMessage
 
         private var staccatoId: Long = STACCATO_DEFAULT_ID
+
+        private val myMemberId = MutableSingleLiveData<Long>()
+
+        init {
+            fetchMemberId()
+        }
 
         override fun onSendButtonClicked() {
             viewModelScope.launch {
@@ -72,12 +81,28 @@ class StaccatoCommentsViewModel
             setStaccatoId(id)
             viewModelScope.launch {
                 commentRepository.fetchComments(id)
-                    .onSuccess { comments ->
-                        setComments(comments.map { it.toCommentUiModel() })
-                    }
+                    .onSuccess(::setComments)
                     .onServerError(::handleServerError)
                     .onException(::handleException)
             }
+        }
+
+        private fun fetchMemberId() {
+            viewModelScope.launch {
+                memberRepository.getMemberId()
+                    .onSuccess { myMemberId.setValue(it) }
+                    .onFailure {
+                        handleException(ExceptionState.UnknownError)
+                    }
+            }
+        }
+
+        private fun setComments(newComments: List<Comment>) {
+            _comments.value =
+                newComments.map { comment ->
+                    val isMine = comment.memberId == myMemberId.getValue()
+                    comment.toCommentUiModel(isMine)
+                }
         }
 
         private fun setStaccatoId(id: Long) {
@@ -100,10 +125,6 @@ class StaccatoCommentsViewModel
                         .onException(::handleException)
                 }
             }
-        }
-
-        private fun setComments(newComments: List<CommentUiModel>) {
-            _comments.value = newComments
         }
 
         private fun handleServerError(message: String) {

@@ -14,7 +14,6 @@ import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toStaccatoDetailUiModel
-import com.on.staccato.presentation.staccato.comments.CommentUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoShareEvent
 import com.on.staccato.presentation.util.ExceptionState
@@ -32,9 +31,6 @@ class StaccatoViewModel
     ) : ViewModel() {
         private val _staccatoDetail = MutableLiveData<StaccatoDetailUiModel>()
         val staccatoDetail: LiveData<StaccatoDetailUiModel> get() = _staccatoDetail
-
-        private val _comments = MutableLiveData<List<CommentUiModel>>()
-        val comments: LiveData<List<CommentUiModel>> get() = _comments
 
         private val _feeling = MutableLiveData<Feeling>()
         val feeling: LiveData<Feeling> get() = _feeling

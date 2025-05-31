@@ -11,14 +11,15 @@ import com.on.staccato.presentation.staccato.comments.CommentViewHolder.OtherCom
 import com.on.staccato.presentation.staccato.comments.CommentViewType.MY_COMMENT
 import com.on.staccato.presentation.staccato.comments.CommentViewType.OTHER_COMMENT
 
-// TODO: memberId 서버에서 들어오는 값으로 바꾸기
-class CommentsAdapter(private val commentHandler: CommentHandler, private val memberId: Long = 54L) :
-    ListAdapter<CommentUiModel, CommentViewHolder>(diffUtil) {
-    override fun getItemViewType(position: Int): Int {
-        val isMyId = memberId == currentList[position].memberId
-
-        return if (isMyId) MY_COMMENT.viewType else OTHER_COMMENT.viewType
-    }
+class CommentsAdapter(
+    private val commentHandler: CommentHandler,
+) : ListAdapter<CommentUiModel, CommentViewHolder>(diffUtil) {
+    override fun getItemViewType(position: Int): Int =
+        if (currentList[position].isMine) {
+            MY_COMMENT.viewType
+        } else {
+            OTHER_COMMENT.viewType
+        }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
