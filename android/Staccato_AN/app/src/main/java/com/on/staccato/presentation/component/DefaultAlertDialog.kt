@@ -65,7 +65,7 @@ fun DefaultAlertDialog(
     showBackground = true,
     backgroundColor = 0xDDDDDDL
 )
-private fun AlertDialogPreview() {
+private fun DefaultAlertDialogPreview() {
     DefaultAlertDialog(
         title = "제목제목제목",
         description = "내용내용내용.\n내용내용, 내용내용내용??",
