@@ -76,7 +76,7 @@ public class CategoryService {
         return new CategoryResponsesV3(responses);
     }
 
-    public CategoryNameResponses readAllCategoriesByDateAndIsShared(Member member, LocalDate specificDate, Scope scope) {
+    public CategoryNameResponses readCategoriesByMemberAndDateAndScope(Member member, LocalDate specificDate, Scope scope) {
         List<Category> rawCategories = Collections.emptyList();
         if (scope.isAll()) {
             rawCategories = categoryRepository.findAllByMemberIdAndDate(member.getId(), specificDate);

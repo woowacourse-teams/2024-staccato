@@ -203,7 +203,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         @Test
         void findAllByMemberIdAndDate() {
             // given & when
-            CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(host, LocalDate.of(2023, 6, 1), Scope.ALL);
+            CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndScope(host, LocalDate.of(2023, 6, 1), Scope.ALL);
 
             // then
             assertThat(categoryNameResponses.categories())
@@ -216,7 +216,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         @Test
         void findPrivateByMemberIdAndDate() {
             // given & when
-            CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(host, LocalDate.of(2023, 6, 1), Scope.PRIVATE);
+            CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndScope(host, LocalDate.of(2023, 6, 1), Scope.PRIVATE);
 
             // then
             assertThat(categoryNameResponses.categories())

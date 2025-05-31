@@ -240,7 +240,7 @@ class CategoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().build();
         CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
-        when(categoryService.readAllCategoriesByDateAndIsShared(any(Member.class), any(), any(Scope.class))).thenReturn(categoryNameResponses);
+        when(categoryService.readCategoriesByMemberAndDateAndScope(any(Member.class), any(), any(Scope.class))).thenReturn(categoryNameResponses);
         String expectedResponse = """
                 {
                     "categories": [

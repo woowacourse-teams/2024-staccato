@@ -58,10 +58,10 @@ public interface CategoryControllerDocs {
             @ApiResponse(description = "카테고리 목록 조회 성공", responseCode = "200"),
             @ApiResponse(description = "입력받은 특정 날짜가 유효하지 않을 때 발생", responseCode = "400")
     })
-    ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
+    ResponseEntity<CategoryNameResponses> readCandidateCategories(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "특정 날짜", example = "2024-08-21") LocalDate specificDate,
-            @Parameter(description = "카테고리 볌위: ALL(전체 카테고리), PRIVATE(개인 카테고리)", example = "ALL") Scope scope
+            @Parameter(description = "카테고리 범위: all(전체 카테고리), private(개인 카테고리)", example = "all") String scope
     );
 
     @Operation(summary = "카테고리 조회", description = "사용자의 카테고리을 조회합니다.")

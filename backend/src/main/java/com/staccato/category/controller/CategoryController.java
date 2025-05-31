@@ -67,12 +67,12 @@ public class CategoryController implements CategoryControllerDocs {
     }
 
     @GetMapping("/candidates")
-    public ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
+    public ResponseEntity<CategoryNameResponses> readCandidateCategories(
             @LoginMember Member member,
             @RequestParam(value = "specificDate") LocalDate specificDate,
-            @RequestParam(value = "scope") Scope scope
+            @RequestParam(value = "scope") String scope
     ) {
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, specificDate, scope);
+        CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndScope(member, specificDate, Scope.from(scope));
         return ResponseEntity.ok(categoryNameResponses);
     }
 
