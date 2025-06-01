@@ -103,7 +103,7 @@ class StaccatoCreationActivity :
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.isPlaceSearchClicked.getValue() != true) checkLocationSetting()
+        if (viewModel.isFromPlaceSearch.getValue() != true) checkLocationSetting()
     }
 
     override fun onNewPlaceSelected(

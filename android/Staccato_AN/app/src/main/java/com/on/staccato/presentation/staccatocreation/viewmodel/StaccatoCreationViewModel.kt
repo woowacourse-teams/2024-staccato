@@ -97,8 +97,8 @@ class StaccatoCreationViewModel
 
         private val photoJobs = mutableMapOf<String, Job>()
 
-        private val _isPlaceSearchClicked = MutableSingleLiveData(false)
-        val isPlaceSearchClicked: SingleLiveData<Boolean> get() = _isPlaceSearchClicked
+        private val _isFromPlaceSearch = MutableSingleLiveData(false)
+        val isFromPlaceSearch: SingleLiveData<Boolean> get() = _isFromPlaceSearch
 
         private val _warningMessage = MutableSingleLiveData<String>()
         val warningMessage: SingleLiveData<String> get() = _warningMessage
@@ -146,7 +146,7 @@ class StaccatoCreationViewModel
             longitude: Double,
             latitude: Double,
         ) {
-            _isPlaceSearchClicked.setValue(true)
+            _isFromPlaceSearch.setValue(true)
             _placeName.value = name
             _address.value = address
             _longitude.value = longitude
