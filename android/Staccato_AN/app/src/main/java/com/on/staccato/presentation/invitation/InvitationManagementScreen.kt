@@ -28,6 +28,7 @@ fun InvitationManagementScreen(
     var selectedMenu by remember { mutableStateOf(defaultSelectedMenu) }
     val receivedInvitations by invitationViewModel.receivedInvitations.collectAsStateWithLifecycle()
     val sentInvitations by invitationViewModel.sentInvitations.collectAsStateWithLifecycle()
+    val dialogState by invitationViewModel.dialogState
 
     Scaffold(
         containerColor = White,
@@ -44,10 +45,15 @@ fun InvitationManagementScreen(
                 }
             },
             receivedInvitations = receivedInvitations,
-            onRejectClick = { invitationViewModel.rejectInvitation(it) },
+            onRejectClick = { invitationViewModel.showRejectDialog(it) },
             onAcceptClick = { invitationViewModel.acceptInvitation(it) },
             sentInvitations = sentInvitations,
-            onCancelClick = { invitationViewModel.cancelInvitation(it) },
+            onCancelClick = { invitationViewModel.showCancelDialog(it) },
+        )
+
+        InvitationDialogs(
+            state = dialogState,
+            onDismiss = { invitationViewModel.dismissDialog() },
         )
     }
 }
