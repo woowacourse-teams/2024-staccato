@@ -27,7 +27,7 @@ import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
-import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
@@ -57,16 +57,17 @@ public class CategoryController implements CategoryControllerDocs {
             @LoginMember Member member,
             @ModelAttribute("CategoryReadRequest") CategoryReadRequest categoryReadRequest
     ) {
-        CategoryResponsesV2 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
+        CategoryResponsesV3 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
         return ResponseEntity.ok(categoryResponses.toCategoryResponses());
     }
 
     @GetMapping("/candidates")
     public ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @LoginMember Member member,
-            @RequestParam(value = "currentDate") LocalDate currentDate
+            @RequestParam(value = "specificDate") LocalDate specificDate,
+            @RequestParam(value = "isShared") boolean isShared
     ) {
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDate(member, currentDate);
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, specificDate, isShared);
         return ResponseEntity.ok(categoryNameResponses);
     }
 

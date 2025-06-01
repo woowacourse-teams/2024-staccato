@@ -77,8 +77,8 @@ public class CategorySortTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> assertThat(result.get(0).getTitle()).isEqualTo("second"),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo("first")
+                () -> assertThat(result.get(0).getTitle().getTitle()).isEqualTo("second"),
+                () -> assertThat(result.get(1).getTitle().getTitle()).isEqualTo("first")
         );
     }
 
@@ -111,10 +111,10 @@ public class CategorySortTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> assertThat(result.get(0).getTitle()).isEqualTo("second"),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo("first"),
-                () -> assertThat(result.get(2).getTitle()).isEqualTo("fourth"),
-                () -> assertThat(result.get(3).getTitle()).isEqualTo("third")
+                () -> assertThat(result.get(0).getTitle().getTitle()).isEqualTo("second"),
+                () -> assertThat(result.get(1).getTitle().getTitle()).isEqualTo("first"),
+                () -> assertThat(result.get(2).getTitle().getTitle()).isEqualTo("fourth"),
+                () -> assertThat(result.get(3).getTitle().getTitle()).isEqualTo("third")
         );
     }
 
@@ -147,10 +147,10 @@ public class CategorySortTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> assertThat(result.get(0).getTitle()).isEqualTo("first"),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo("second"),
-                () -> assertThat(result.get(2).getTitle()).isEqualTo("fourth"),
-                () -> assertThat(result.get(3).getTitle()).isEqualTo("third")
+                () -> assertThat(result.get(0).getTitle().getTitle()).isEqualTo("first"),
+                () -> assertThat(result.get(1).getTitle().getTitle()).isEqualTo("second"),
+                () -> assertThat(result.get(2).getTitle().getTitle()).isEqualTo("fourth"),
+                () -> assertThat(result.get(3).getTitle().getTitle()).isEqualTo("third")
         );
     }
 }

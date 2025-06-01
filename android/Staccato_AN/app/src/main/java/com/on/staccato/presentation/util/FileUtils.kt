@@ -3,7 +3,7 @@ package com.on.staccato.presentation.util
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import com.on.staccato.presentation.common.photo.FileUiModel
+import com.on.staccato.presentation.common.photo.UploadFile
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -17,7 +17,7 @@ private const val STACCATO_FILE_CHILD_NAME = "staccato"
 fun convertCategoryUriToFile(
     context: Context,
     uri: Uri,
-): FileUiModel {
+): UploadFile {
     val contextResolver: ContentResolver = context.contentResolver
     // 파일 이름과 MIME 타입 가져오기
     val contentType = contextResolver.getType(uri)
@@ -31,7 +31,7 @@ fun convertCategoryUriToFile(
         }
     }
 
-    return FileUiModel(file, contentType)
+    return UploadFile(file, contentType)
 }
 
 fun convertMyPageUriToFile(

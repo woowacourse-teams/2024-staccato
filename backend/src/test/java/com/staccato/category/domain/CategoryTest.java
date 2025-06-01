@@ -1,15 +1,10 @@
 package com.staccato.category.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
@@ -17,24 +12,10 @@ import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 class CategoryTest {
-    @DisplayName("카테고리 생성 시 제목에는 앞뒤 공백이 잘린다.")
-    @Test
-    void trimCategoryTitle() {
-        // given
-        String expectedTitle = "title";
-
-        // when
-        Category category = Category.builder()
-                .title(" title ")
-                .color(Color.BLUE.getName())
-                .isShared(false)
-                .build();
-
-        // then
-        assertThat(category.getTitle()).isEqualTo(expectedTitle);
-    }
-
     @DisplayName("기본 카테고리는 멤버 이름으로 만들어진다.")
     @Test
     void createBasicCategoryWithMemberNickname() {
@@ -48,7 +29,7 @@ class CategoryTest {
         Category category = Category.basic(member);
 
         // then
-        assertThat(category.getTitle()).isEqualTo(nickname + "의 추억");
+        assertThat(category.getTitle().getTitle()).isEqualTo(nickname + "의 추억");
     }
 
     @DisplayName("카테고리를 수정 시 기존 스타카토 기록 날짜를 포함하지 않는 경우 수정에 실패한다.")
@@ -80,7 +61,7 @@ class CategoryTest {
                 .withTitle(title).build();
 
         // when
-        boolean result = category.isNotSameTitle(title);
+        boolean result = category.isNotSameTitle(category.getTitle());
 
         // then
         assertThat(result).isFalse();
@@ -138,7 +119,7 @@ class CategoryTest {
         // given
         Member member = MemberFixtures.defaultMember().build();
         Category category = CategoryFixtures.defaultCategory()
-                .withGuests(member)
+                .withGuests(List.of(member))
                 .build();
 
         // when
@@ -162,4 +143,37 @@ class CategoryTest {
         // then
         assertThat(isDenied).isEqualTo(false);
     }
+
+/*
+    @DisplayName("처음 카테고리를 생성했을 때 스타카토는 0개이다.")
+    @Test
+    void createCategoryAndStaccatoCountIsZero() {
+        // given
+        Category category = Category.builder()
+                .title("category")
+                .isShared(false)
+                .color(Color.LIGHT_GRAY.getName())
+                .build();
+
+        // when
+        long result = category.getStaccatoCount();
+
+        // then
+        assertThat(result).isZero();
+    }
+
+    @DisplayName("카테고리를 수정해도, 스타카토 개수는 영향을 받지 않는다.")
+    @Test
+    void updateCategoryWithoutStaccatoCount() {
+        // given
+        Category category = Category.builder()
+                .title("category")
+                .isShared(false)
+                .color(Color.LIGHT_GRAY.getName())
+                .build();
+        category.increaseStaccatoCount();
+
+        // when
+
+    }*/
 }

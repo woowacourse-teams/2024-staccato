@@ -22,6 +22,7 @@ import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
@@ -50,8 +51,8 @@ public class CategoryControllerV2 implements CategoryControllerV2Docs {
             @LoginMember Member member,
             @ModelAttribute("CategoryReadRequest") CategoryReadRequest categoryReadRequest
     ) {
-        CategoryResponsesV2 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
-        return ResponseEntity.ok(categoryResponses);
+        CategoryResponsesV3 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
+        return ResponseEntity.ok(categoryResponses.toCategoryResponsesV2());
     }
 
     @GetMapping("/{categoryId}")

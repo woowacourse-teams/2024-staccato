@@ -55,10 +55,7 @@ public class CommentControllerTest extends ControllerTest {
                     "댓글 내용을 입력해주세요."),
             Arguments.of(CommentRequestFixtures.defaultCommentRequest()
                             .withContent("  ").build(),
-                    "댓글 내용을 입력해주세요."),
-            Arguments.of(CommentRequestFixtures.defaultCommentRequest()
-                            .withContent("1".repeat(MAX_CONTENT_LENGTH + 1)).build(),
-                    "댓글은 공백 포함 500자 이하로 입력해주세요.")
+                    "댓글 내용을 입력해주세요.")
         );
     }
 

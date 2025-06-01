@@ -2,6 +2,9 @@ package com.staccato.category.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,9 +27,10 @@ import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
-import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
+import com.staccato.category.service.dto.response.MemberDetailResponse;
 import com.staccato.category.service.dto.response.StaccatoResponse;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
@@ -38,6 +42,9 @@ import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.fixture.staccato.StaccatoRequestFixtures;
+import com.staccato.invitation.domain.CategoryInvitation;
+import com.staccato.invitation.repository.CategoryInvitationRepository;
+import com.staccato.invitation.service.InvitationService;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
@@ -55,6 +62,8 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Autowired
     private StaccatoService staccatoService;
     @Autowired
+    private InvitationService invitationService;
+    @Autowired
     private MemberRepository memberRepository;
     @Autowired
     private CategoryMemberRepository categoryMemberRepository;
@@ -64,6 +73,8 @@ class CategoryServiceTest extends ServiceSliceTest {
     private StaccatoRepository staccatoRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private CategoryInvitationRepository categoryInvitationRepository;
 
     static Stream<Arguments> dateProvider() {
         return Stream.of(
@@ -97,7 +108,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertAll(
                 () -> assertThat(categoryMember.getMember().getId()).isEqualTo(member.getId()),
                 () -> assertThat(categoryMember.getCategory()
-                        .getTitle()).isEqualTo(categoryCreateRequest.categoryTitle())
+                        .getTitle().getTitle()).isEqualTo(categoryCreateRequest.categoryTitle())
         );
     }
 
@@ -143,17 +154,17 @@ class CategoryServiceTest extends ServiceSliceTest {
         CategoryCreateRequest categoryCreateRequest = CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
                 .build();
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         categoryService.createCategory(categoryCreateRequest, otherMember);
 
         // when & then
         assertThatNoException().isThrownBy(() -> categoryService.createCategory(categoryCreateRequest, member));
     }
 
-    @DisplayName("현재 날짜를 포함하는 모든 카테고리 목록을 조회한다.")
+    @DisplayName("특정 날짜를 포함하는 모든 카테고리 목록을 조회한다.")
     @MethodSource("dateProvider")
     @ParameterizedTest
-    void readAllCategories(LocalDate currentDate, int expectedSize) {
+    void readAllCategories(LocalDate specificDate, int expectedSize) {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         categoryService.createCategory(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
@@ -169,7 +180,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .withTerm(null, null).build(), member);
 
         // when
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDate(member, currentDate);
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, specificDate, false);
 
         // then
         assertThat(categoryNameResponses.categories()).hasSize(expectedSize);
@@ -191,7 +202,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         CategoryReadRequest categoryReadRequest = new CategoryReadRequest("false", null);
 
         // when
-        CategoryResponsesV2 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
+        CategoryResponsesV3 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
 
         // then
         assertAll(
@@ -215,7 +226,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.mates()).hasSize(1)
+                () -> assertThat(categoryDetailResponse.members()).hasSize(1)
         );
     }
 
@@ -228,7 +239,6 @@ class CategoryServiceTest extends ServiceSliceTest {
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), host);
-        // TODO: 함께하는 사람 추가 서비스 메서드로 교체?
         Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
         categoryMemberRepository.save(CategoryMember.builder().category(category).member(guest).role(Role.GUEST)
                 .build());
@@ -239,7 +249,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.mates()).hasSize(2)
+                () -> assertThat(categoryDetailResponse.members()).hasSize(2)
         );
     }
 
@@ -258,7 +268,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(categoryDetailResponse.categoryId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(categoryDetailResponse.mates()).hasSize(1),
+                () -> assertThat(categoryDetailResponse.members()).hasSize(1),
                 () -> assertThat(categoryDetailResponse.startAt()).isNull(),
                 () -> assertThat(categoryDetailResponse.endAt()).isNull()
         );
@@ -269,7 +279,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     void cannotReadCategoryByIdIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
 
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), member);
@@ -363,6 +373,30 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
+    @DisplayName("카테고리 목록 조회 시 각 카테고리에 해당하는 스타카토 개수가 포함된다.")
+    @Test
+    void readAllCategoriesContainsStaccatoCount() {
+        // given
+        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(member)
+                .buildAndSave(categoryRepository);
+
+        StaccatoFixtures.defaultStaccato().withCategory(category).buildAndSave(staccatoRepository);
+        StaccatoFixtures.defaultStaccato().withCategory(category).buildAndSave(staccatoRepository);
+
+        CategoryReadRequest request = new CategoryReadRequest(null, null);
+
+        // when
+        CategoryResponsesV3 categoryResponses = categoryService.readAllCategories(member, request);
+
+        // then
+        assertAll(
+                () -> assertThat(categoryResponses.categories()).hasSize(1),
+                () -> assertThat(categoryResponses.categories().get(0).staccatoCount()).isEqualTo(2L)
+        );
+    }
+
     @DisplayName("카테고리 정보를 기반으로, 카테고리를 수정한다.")
     @MethodSource("updateCategoryProvider")
     @ParameterizedTest
@@ -379,8 +413,10 @@ class CategoryServiceTest extends ServiceSliceTest {
         // then
         assertAll(
                 () -> assertThat(foundedCategory.getId()).isEqualTo(categoryIdResponse.categoryId()),
-                () -> assertThat(foundedCategory.getTitle()).isEqualTo(categoryUpdateRequest.categoryTitle()),
-                () -> assertThat(foundedCategory.getDescription()).isEqualTo(categoryUpdateRequest.description()),
+                () -> assertThat(foundedCategory.getTitle()
+                        .getTitle()).isEqualTo(categoryUpdateRequest.categoryTitle()),
+                () -> assertThat(foundedCategory.getDescription()
+                        .getDescription()).isEqualTo(categoryUpdateRequest.description()),
                 () -> assertThat(foundedCategory.getTerm().getStartAt()).isEqualTo(categoryUpdateRequest.startAt()),
                 () -> assertThat(foundedCategory.getTerm().getEndAt()).isEqualTo(categoryUpdateRequest.endAt()),
                 () -> assertThat(foundedCategory.getThumbnailUrl()).isEqualTo(expected)
@@ -427,7 +463,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     void cannotUpdateCategoryIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest()
                 .build();
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
@@ -512,29 +548,34 @@ class CategoryServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("카테고리를 삭제하면 속한 스타카토, 댓글, 함께하는 사람들도 함께 삭제된다.")
+    @DisplayName("HOST가 카테고리를 삭제하면 속한 스타카토, 댓글, 함께하는 사람, 초대 요청도 함께 삭제된다.")
     @Test
     void deleteCategoryWithStaccato() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(
-                CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), member);
-        Category category = categoryRepository.findById(categoryIdResponse.categoryId()).get();
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
         CommentFixtures.defaultComment()
                 .withStaccato(staccato)
-                .withMember(member).buildAndSave(commentRepository);
+                .withMember(host).buildAndSave(commentRepository);
+        categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest2));
 
         // when
-        categoryService.deleteCategory(categoryIdResponse.categoryId(), member);
+        categoryService.deleteCategory(category.getId(), host);
 
         // then
         assertAll(
-                () -> assertThat(categoryRepository.findById(categoryIdResponse.categoryId())).isEmpty(),
+                () -> assertThat(categoryRepository.findById(category.getId())).isEmpty(),
                 () -> assertThat(categoryMemberRepository.findAll()).isEmpty(),
                 () -> assertThat(staccatoRepository.findAll()).isEmpty(),
-                () -> assertThat(commentRepository.findAll()).isEmpty()
+                () -> assertThat(commentRepository.findAll()).isEmpty(),
+                () -> assertThat(categoryInvitationRepository.findAll()).isEmpty()
         );
     }
 
@@ -543,7 +584,7 @@ class CategoryServiceTest extends ServiceSliceTest {
     void cannotDeleteCategoryIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         CategoryIdResponse categoryIdResponse = categoryService.createCategory(
                 CategoryCreateRequestFixtures.defaultCategoryCreateRequest().build(), member);
 
@@ -576,7 +617,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .withGuests(member)
+                .withGuests(List.of(member))
                 .buildAndSave(categoryRepository);
         CategoryUpdateRequest categoryUpdateRequest = CategoryUpdateRequestFixtures.defaultCategoryUpdateRequest()
                 .build();
@@ -593,7 +634,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .withGuests(member)
+                .withGuests(List.of(member))
                 .buildAndSave(categoryRepository);
 
         // when & then
@@ -608,7 +649,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .withGuests(member)
+                .withGuests(List.of(member))
                 .buildAndSave(categoryRepository);
         CategoryColorRequest categoryColorRequest = new CategoryColorRequest(Color.BLUE.getName());
 
@@ -616,5 +657,27 @@ class CategoryServiceTest extends ServiceSliceTest {
         assertThatThrownBy(() -> categoryService.updateCategoryColor(category.getId(), categoryColorRequest, member))
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessage("요청하신 작업을 처리할 권한이 없습니다.");
+    }
+
+    @DisplayName("카테고리에 포함된 멤버의 역할을 반환한다.")
+    @Test
+    void getRoleOfMemberReturnsRole() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when
+        Role hostRole = category.getRoleOfMember(host);
+        Role guestRole = category.getRoleOfMember(guest);
+
+        // then
+        assertAll(
+                () -> assertThat(hostRole).isEqualTo(Role.HOST),
+                () -> assertThat(guestRole).isEqualTo(Role.GUEST)
+        );
     }
 }

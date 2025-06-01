@@ -1,6 +1,7 @@
 package com.staccato.category.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,14 @@ import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
-import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryResponseV3;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
+import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoImageRepository;
@@ -42,6 +45,7 @@ public class CategoryService {
     private final StaccatoRepository staccatoRepository;
     private final StaccatoImageRepository staccatoImageRepository;
     private final CommentRepository commentRepository;
+    private final CategoryInvitationRepository categoryInvitationRepository;
 
     @Transactional
     public CategoryIdResponse createCategory(CategoryCreateRequest categoryCreateRequest, Member member) {
@@ -52,16 +56,24 @@ public class CategoryService {
         return new CategoryIdResponse(category.getId());
     }
 
-    public CategoryResponsesV2 readAllCategories(Member member, CategoryReadRequest categoryReadRequest) {
+    public CategoryResponsesV3 readAllCategories(Member member, CategoryReadRequest categoryReadRequest) {
         List<Category> rawCategories = getCategories(categoryMemberRepository.findAllByMemberId(member.getId()));
         List<Category> categories = filterAndSort(rawCategories, categoryReadRequest.getFilters(), categoryReadRequest.getSort());
-
-        return CategoryResponsesV2.from(categories);
+        return getCategoryResponsesV3(categories);
     }
 
-    public CategoryNameResponses readAllCategoriesByDate(Member member, LocalDate currentDate) {
+    private CategoryResponsesV3 getCategoryResponsesV3(List<Category> categories) {
+        List<CategoryResponseV3> responses = new ArrayList<>();
+        for (Category category : categories) {
+            long staccatoCount = staccatoRepository.countAllByCategoryId(category.getId());
+            responses.add(new CategoryResponseV3(category, staccatoCount));
+        }
+        return new CategoryResponsesV3(responses);
+    }
+
+    public CategoryNameResponses readAllCategoriesByDateAndIsShared(Member member, LocalDate specificDate, boolean isShared) {
         List<Category> rawCategories = getCategories(
-                categoryMemberRepository.findAllByMemberIdAndDate(member.getId(), currentDate));
+                categoryMemberRepository.findAllByMemberIdAndDateAndIsShared(member.getId(), specificDate, isShared));
         List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER,
                 DEFAULT_CATEGORY_SORT);
 
@@ -84,7 +96,8 @@ public class CategoryService {
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
         validateReadPermission(category, member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
-        return new CategoryDetailResponseV3(category, staccatos);
+
+        return new CategoryDetailResponseV3(category, staccatos, member);
     }
 
     public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
@@ -145,6 +158,18 @@ public class CategoryService {
         validateOwner(category, member);
     }
 
+    private void deleteAllRelatedCategory(long categoryId) {
+        List<Long> staccatoIds = staccatoRepository.findAllByCategoryId(categoryId)
+                .stream()
+                .map(Staccato::getId)
+                .toList();
+        staccatoImageRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
+        commentRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
+        staccatoRepository.deleteAllByCategoryIdInBulk(categoryId);
+        categoryMemberRepository.deleteAllByCategoryIdInBulk(categoryId);
+        categoryInvitationRepository.deleteAllByCategoryIdInBulk(categoryId);
+    }
+
     private void validateModificationPermission(Category category, Member member) {
         validateOwner(category, member);
         validateHost(category, member);
@@ -160,16 +185,5 @@ public class CategoryService {
         if (category.isGuest(member)) {
             throw new ForbiddenException();
         }
-    }
-
-    private void deleteAllRelatedCategory(long categoryId) {
-        List<Long> staccatoIds = staccatoRepository.findAllByCategoryId(categoryId)
-                .stream()
-                .map(Staccato::getId)
-                .toList();
-        staccatoImageRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
-        commentRepository.deleteAllByStaccatoIdInBulk(staccatoIds);
-        staccatoRepository.deleteAllByCategoryIdInBulk(categoryId);
-        categoryMemberRepository.deleteAllByCategoryIdInBulk(categoryId);
     }
 }
