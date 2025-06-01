@@ -83,7 +83,7 @@ class StaccatoCreationViewModel
         private val _selectedVisitedAt = MutableLiveData<LocalDateTime?>()
         val selectedVisitedAt: LiveData<LocalDateTime?> get() = _selectedVisitedAt
 
-        private val _isCurrentLocationLoading = MutableLiveData<Boolean>()
+        private val _isCurrentLocationLoading = MutableLiveData<Boolean>(false)
         val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
 
         private val _createdStaccatoId = MutableSingleLiveData<Long>()
@@ -97,8 +97,8 @@ class StaccatoCreationViewModel
 
         private val photoJobs = mutableMapOf<String, Job>()
 
-        private val _isPlaceSearchClicked = MutableLiveData(false)
-        val isPlaceSearchClicked: LiveData<Boolean> get() = _isPlaceSearchClicked
+        private val _isFromPlaceSearch = MutableSingleLiveData(false)
+        val isFromPlaceSearch: SingleLiveData<Boolean> get() = _isFromPlaceSearch
 
         private val _warningMessage = MutableSingleLiveData<String>()
         val warningMessage: SingleLiveData<String> get() = _warningMessage
@@ -122,10 +122,11 @@ class StaccatoCreationViewModel
         }
 
         fun getCurrentLocation() {
-            _isCurrentLocationLoading.postValue(true)
+            _isCurrentLocationLoading.value = true
             val currentLocation: Task<Location> = locationRepository.getCurrentLocation()
             currentLocation.addOnSuccessListener {
                 _currentLocation.value = it
+                _isCurrentLocationLoading.value = false
             }
         }
 
@@ -145,6 +146,7 @@ class StaccatoCreationViewModel
             longitude: Double,
             latitude: Double,
         ) {
+            _isFromPlaceSearch.setValue(true)
             _placeName.value = name
             _address.value = address
             _longitude.value = longitude
@@ -211,10 +213,6 @@ class StaccatoCreationViewModel
 
         private fun setClosestDateTimeAs(visitedAt: LocalDateTime) {
             _selectedVisitedAt.value = selectedCategory.value?.getClosestDateTime(visitedAt)
-        }
-
-        fun setIsPlaceSearchClicked(value: Boolean) {
-            _isPlaceSearchClicked.value = value
         }
 
         fun updateSelectedImageUris(newUris: Array<Uri>) {
