@@ -70,7 +70,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/shape_bottom_sheet_16dp"
             android:clickable="true"
-            android:elevation="8dp"
+            android:elevation="4dp"
             android:focusable="true"
             app:behavior_fitToContents="false"
             app:behavior_halfExpandedRatio="0.6"
