@@ -16,6 +16,14 @@ class MainFabBehavior(
     private var initialFabY: Float? = null
     private var isFabVisible = true
 
+    override fun layoutDependsOn(
+        parent: CoordinatorLayout,
+        child: FloatingActionButton,
+        dependency: View,
+    ): Boolean {
+        return dependency.id == R.id.constraint_main_bottom_sheet
+    }
+
     override fun onDependentViewChanged(
         parent: CoordinatorLayout,
         child: FloatingActionButton,
@@ -46,14 +54,6 @@ class MainFabBehavior(
         }
 
         return true
-    }
-
-    override fun layoutDependsOn(
-        parent: CoordinatorLayout,
-        child: FloatingActionButton,
-        dependency: View,
-    ): Boolean {
-        return dependency.id == R.id.constraint_main_bottom_sheet
     }
 
     companion object {
