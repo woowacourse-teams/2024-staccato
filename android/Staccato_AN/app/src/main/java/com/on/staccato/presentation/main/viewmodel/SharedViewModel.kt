@@ -74,7 +74,7 @@ class SharedViewModel
         private val _exception = MutableLiveData<ExceptionState2>()
         val exception: LiveData<ExceptionState2> get() = _exception
 
-        private val _retryEvent = MutableSharedFlow<Unit>(replay = 0)
+        private val _retryEvent = MutableSharedFlow<Unit>()
         val retryEvent: SharedFlow<Unit> = _retryEvent.asSharedFlow()
 
         private val isDragging = MutableLiveData<Boolean>(false)
