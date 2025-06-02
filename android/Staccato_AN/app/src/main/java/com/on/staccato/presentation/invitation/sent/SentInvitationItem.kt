@@ -34,64 +34,64 @@ fun SentInvitationItem(
     onCancelClick: (invitationId: Long) -> Unit,
 ) {
     ConstraintLayout(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = White,
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(
+                    color = White,
+                ),
     ) {
         val (profileImageRef, nicknameRef, titleRef, suffixRef, cancelButtonRef) = createRefs()
-        val titleChain = createHorizontalChain(
-            titleRef, suffixRef,
-            chainStyle = ChainStyle.Packed(
-                bias = 0f
-            ),
-        )
+        val titleChain = createHorizontalChain(titleRef, suffixRef, chainStyle = ChainStyle.Packed(bias = 0f))
         constrain(titleChain) {
             start.linkTo(profileImageRef.end, margin = 10.dp)
             end.linkTo(cancelButtonRef.start, margin = 22.dp)
         }
 
         ProfileImage(
-            modifier = modifier
-                .size(40.dp)
-                .constrainAs(profileImageRef) {
-                    start.linkTo(parent.start, margin = 20.dp)
-                    top.linkTo(parent.top, margin = 20.dp)
-                    bottom.linkTo(parent.bottom, margin = 20.dp)
-                },
+            modifier =
+                modifier
+                    .size(40.dp)
+                    .constrainAs(profileImageRef) {
+                        start.linkTo(parent.start, margin = 20.dp)
+                        top.linkTo(parent.top, margin = 20.dp)
+                        bottom.linkTo(parent.bottom, margin = 20.dp)
+                    },
             url = categoryInvitation.inviteeProfileImageUrl,
         )
 
         NicknameText(
-            modifier = modifier.constrainAs(nicknameRef) {
-                start.linkTo(profileImageRef.end, margin = 10.dp)
-                top.linkTo(profileImageRef.top)
-                bottom.linkTo(titleRef.top)
-            },
+            modifier =
+                modifier.constrainAs(nicknameRef) {
+                    start.linkTo(profileImageRef.end, margin = 10.dp)
+                    top.linkTo(profileImageRef.top)
+                    bottom.linkTo(titleRef.top)
+                },
             nickname = categoryInvitation.inviteeNickname,
             style = Title3,
             color = StaccatoBlack,
         )
 
         CategoryTitle(
-            modifier = modifier.constrainAs(titleRef) {
-                top.linkTo(nicknameRef.bottom)
-                bottom.linkTo(profileImageRef.bottom)
-                end.linkTo(suffixRef.start)
-                width = Dimension.preferredWrapContent
-            },
+            modifier =
+                modifier.constrainAs(titleRef) {
+                    top.linkTo(nicknameRef.bottom)
+                    bottom.linkTo(profileImageRef.bottom)
+                    end.linkTo(suffixRef.start)
+                    width = Dimension.preferredWrapContent
+                },
             title = categoryInvitation.categoryTitle,
             style = Body4,
             color = Gray3,
         )
 
         Text(
-            modifier = modifier.constrainAs(suffixRef) {
-                centerVerticallyTo(titleRef)
-                start.linkTo(titleRef.end)
-                width = Dimension.wrapContent
-            },
+            modifier =
+                modifier.constrainAs(suffixRef) {
+                    centerVerticallyTo(titleRef)
+                    start.linkTo(titleRef.end)
+                    width = Dimension.wrapContent
+                },
             text = "에 초대했어요.",
             style = Body4,
             color = Gray3,
@@ -99,19 +99,17 @@ fun SentInvitationItem(
         )
 
         CancelButton(
-            modifier = modifier.constrainAs(cancelButtonRef) {
-                end.linkTo(parent.end, margin = 20.dp)
-                centerVerticallyTo(parent)
-            },
+            modifier =
+                modifier.constrainAs(cancelButtonRef) {
+                    end.linkTo(parent.end, margin = 20.dp)
+                    centerVerticallyTo(parent)
+                },
             onClick = { onCancelClick(categoryInvitation.invitationId) },
         )
     }
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 1L,
-)
+@Preview(showBackground = true, backgroundColor = 1L)
 @Composable
 private fun SentInvitationItemPreview(
     @PreviewParameter(
@@ -119,11 +117,13 @@ private fun SentInvitationItemPreview(
     ) categoryInvitation: SentInvitationUiModel,
 ) {
     Box(modifier = Modifier.padding(10.dp)) {
-        SentInvitationItem(categoryInvitation = categoryInvitation) {}
+        SentInvitationItem(
+            categoryInvitation = categoryInvitation,
+            onCancelClick = {},
+        )
     }
 }
 
-class SentInvitationPreviewProvider : PreviewParameterProvider<SentInvitationUiModel> {
-    override val values: Sequence<SentInvitationUiModel>
-        get() = dummySentInvitationUiModels.asSequence()
-}
+class SentInvitationPreviewProvider(
+    override val values: Sequence<SentInvitationUiModel> = dummySentInvitationUiModels.asSequence(),
+) : PreviewParameterProvider<SentInvitationUiModel>

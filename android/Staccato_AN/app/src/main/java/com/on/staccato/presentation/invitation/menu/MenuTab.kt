@@ -36,11 +36,12 @@ fun MenuTab(
     val contentColor = if (selected) StaccatoBlue else Gray3
 
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickableWithoutRipple(onClick)
-            .background(color = backgroundColor, shape = RoundedCornerShape(5.dp))
-            .padding(5.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickableWithoutRipple(onClick)
+                .background(color = backgroundColor, shape = RoundedCornerShape(5.dp))
+                .padding(5.dp),
         contentAlignment = Alignment.Center,
     ) {
         Row(
@@ -63,26 +64,23 @@ fun MenuTab(
     }
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0L,
-)
+@Preview(showBackground = true, backgroundColor = 0L)
 @Composable
 private fun MenuTapPreview() {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         InvitationSelectionMenuItems.entries.forEach { menu ->
             MenuTab(
                 menu = menu,
                 selected = false,
-            ) {  }
+                onClick = {},
+            )
         }
         InvitationSelectionMenuItems.entries.forEach { menu ->
             MenuTab(
                 menu = menu,
                 selected = true,
-            ) {  }
+                onClick = {},
+            )
         }
     }
 }

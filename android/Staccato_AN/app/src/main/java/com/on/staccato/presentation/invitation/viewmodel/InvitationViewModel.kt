@@ -29,7 +29,7 @@ import javax.inject.Inject
 class InvitationViewModel
     @Inject
     constructor(
-        private val invitationRepository: InvitationRepository
+        private val invitationRepository: InvitationRepository,
     ) : ViewModel() {
         private val _receivedInvitations: MutableStateFlow<List<ReceivedInvitationUiModel>> = MutableStateFlow(emptyList())
         val receivedInvitations: StateFlow<List<ReceivedInvitationUiModel>> = _receivedInvitations.asStateFlow()
@@ -58,7 +58,7 @@ class InvitationViewModel
             viewModelScope.launch {
                 val result = invitationRepository.acceptInvitation(invitationId)
                 result
-                    .onSuccess{ getReceivedInvitations() }
+                    .onSuccess { getReceivedInvitations() }
                     .onServerError {}
                     .onException2 {}
             }
@@ -103,7 +103,7 @@ class InvitationViewModel
             viewModelScope.launch {
                 val result = invitationRepository.rejectInvitation(invitationId)
                 result
-                    .onSuccess{ getReceivedInvitations() }
+                    .onSuccess { getReceivedInvitations() }
                     .onServerError {}
                     .onException2 {}
             }
@@ -118,7 +118,7 @@ class InvitationViewModel
             viewModelScope.launch {
                 val result = invitationRepository.cancelInvitation(invitationId)
                 result
-                    .onSuccess{ getSentInvitations() }
+                    .onSuccess { getSentInvitations() }
                     .onServerError {}
                     .onException2 {}
             }

@@ -25,12 +25,13 @@ fun InvitationSelectionMenu(
 ) {
     PrimaryTabRow(
         selectedTabIndex = selectedMenu.menuId,
-        modifier = modifier
-            .background(
-                color = Gray1,
-                shape = RoundedCornerShape(7.dp),
-            )
-            .padding(5.dp),
+        modifier =
+            modifier
+                .background(
+                    color = Gray1,
+                    shape = RoundedCornerShape(7.dp),
+                )
+                .padding(5.dp),
         containerColor = Gray1,
         contentColor = StaccatoBlue,
         indicator = {},
@@ -40,27 +41,26 @@ fun InvitationSelectionMenu(
             MenuTab(
                 menu = menu,
                 selected = menu.menuId == selectedMenu.menuId,
-                onClick = { onClick(menu) }
+                onClick = { onClick(menu) },
             )
         }
     }
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF,
-)
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 private fun InvitationSelectionMenuPreview() {
     Column(
-        modifier = Modifier.padding(10.dp)
+        modifier = Modifier.padding(10.dp),
     ) {
         InvitationSelectionMenu(
             selectedMenu = InvitationSelectionMenuItems.SENT_INVITATION,
-        ) {}
+            onClick = {},
+        )
         Box(modifier = Modifier.height(10.dp))
         InvitationSelectionMenu(
             selectedMenu = InvitationSelectionMenuItems.RECEIVED_INVITATION,
-        ) {}
+            onClick = {},
+        )
     }
 }

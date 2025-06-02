@@ -8,32 +8,32 @@ import com.on.staccato.domain.model.Member
 import com.on.staccato.domain.model.invitation.ReceivedInvitation
 import com.on.staccato.domain.model.invitation.SentInvitation
 
-fun ReceivedInvitationsResponse.toDomain(): List<ReceivedInvitation> =
-    invitations.map { it.toDomain() }
+fun ReceivedInvitationsResponse.toDomain(): List<ReceivedInvitation> = invitations.map { it.toDomain() }
 
 fun ReceivedInvitationDto.toDomain(): ReceivedInvitation =
     ReceivedInvitation(
         invitationId = invitationId,
-        inviter = Member(
-            memberId = inviterId,
-            nickname = inviterNickname,
-            memberImage = inviterProfile,
-        ),
+        inviter =
+            Member(
+                memberId = inviterId,
+                nickname = inviterNickname,
+                memberImage = inviterProfile,
+            ),
         categoryId = categoryId,
         categoryTitle = categoryTitle,
     )
 
-fun SentInvitationsResponse.toDomain(): List<SentInvitation> =
-    invitations.map { it.toDomain() }
+fun SentInvitationsResponse.toDomain(): List<SentInvitation> = invitations.map { it.toDomain() }
 
 fun SentInvitationDto.toDomain(): SentInvitation =
     SentInvitation(
         invitationId = invitationId,
-        invitee = Member(
-            memberId = inviteeId,
-            nickname = inviteeNickname,
-            memberImage = inviteeProfileImageUrl,
-        ),
+        invitee =
+            Member(
+                memberId = inviteeId,
+                nickname = inviteeNickname,
+                memberImage = inviteeProfileImageUrl,
+            ),
         categoryId = categoryId,
         categoryTitle = categoryTitle,
     )

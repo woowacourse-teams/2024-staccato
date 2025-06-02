@@ -28,14 +28,14 @@ fun DefaultAsyncImage(
     val painter =
         rememberAsyncImagePainter(
             model =
-            ImageRequest.Builder(LocalContext.current)
-                .data(url)
-                .transformations(RoundedCornersTransformation(radius.dpToPx(LocalContext.current)))
-                .size(bitmapPixelSize)
-                .placeholder(placeHolder)
-                .fallback(placeHolder)
-                .error(placeHolder)
-                .build(),
+                ImageRequest.Builder(LocalContext.current)
+                    .data(url)
+                    .transformations(RoundedCornersTransformation(radius.dpToPx(LocalContext.current)))
+                    .size(bitmapPixelSize)
+                    .placeholder(placeHolder)
+                    .fallback(placeHolder)
+                    .error(placeHolder)
+                    .build(),
         )
 
     Image(

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class InvitationRemoteDataSource
     @Inject
     constructor(
-        private val invitationApiService: InvitationApiService
+        private val invitationApiService: InvitationApiService,
     ) : InvitationDataSource {
         override suspend fun getReceivedInvitations(): ApiResult<ReceivedInvitationsResponse> =
             invitationApiService.getReceivedInvitations()
@@ -19,8 +19,7 @@ class InvitationRemoteDataSource
         override suspend fun rejectInvitation(invitationId: Long): ApiResult<Unit> =
             invitationApiService.postInvitationReject(invitationId = invitationId)
 
-        override suspend fun getSentInvitations(): ApiResult<SentInvitationsResponse> =
-            invitationApiService.getSentInvitations()
+        override suspend fun getSentInvitations(): ApiResult<SentInvitationsResponse> = invitationApiService.getSentInvitations()
 
         override suspend fun cancelInvitation(invitationId: Long): ApiResult<Unit> =
             invitationApiService.postInvitationCancel(invitationId = invitationId)

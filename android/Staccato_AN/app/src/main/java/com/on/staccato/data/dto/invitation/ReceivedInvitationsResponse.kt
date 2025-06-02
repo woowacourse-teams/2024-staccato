@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ReceivedInvitationsResponse(
-    @SerialName("invitations") val invitations: List<ReceivedInvitationDto>
+    @SerialName("invitations") val invitations: List<ReceivedInvitationDto>,
 )

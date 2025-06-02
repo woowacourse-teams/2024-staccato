@@ -39,7 +39,7 @@ fun InvitationManagementScreen(
             selectedMenu = selectedMenu,
             onMenuClick = {
                 selectedMenu = it
-                when(it) {
+                when (it) {
                     RECEIVED_INVITATION -> invitationViewModel.getReceivedInvitations()
                     SENT_INVITATION -> invitationViewModel.getSentInvitations()
                 }
@@ -60,9 +60,7 @@ fun InvitationManagementScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun InvitationManagementTopBar(
-    onNavigationClick: () -> Unit,
-) {
+private fun InvitationManagementTopBar(onNavigationClick: () -> Unit) {
     DefaultNavigationTopBar(
         title = "카테고리 초대 관리",
         onNavigationClick = onNavigationClick,

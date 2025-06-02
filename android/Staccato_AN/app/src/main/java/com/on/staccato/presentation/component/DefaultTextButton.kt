@@ -35,31 +35,28 @@ fun DefaultTextButton(
     textStyle: TextStyle = Body4,
 ) {
     Box(
-        modifier = modifier
-            .padding(vertical = 4.dp)
-            .background(
-                color = if(enabled) backgroundColor else Gray1,
-                shape = RoundedCornerShape(5.dp),
-            )
-            .clickableWithoutRipple { onClick() }
-            .border(
-                border = border ?:
-                BorderStroke(
-                    width = 0.dp,
-                    color = Color.Transparent,
+        modifier =
+            modifier
+                .padding(vertical = 4.dp)
+                .background(
+                    color = if (enabled) backgroundColor else Gray1,
+                    shape = RoundedCornerShape(5.dp),
+                )
+                .clickableWithoutRipple { onClick() }
+                .border(
+                    border = border ?: BorderStroke(width = 0.dp, color = Color.Transparent),
+                    shape = RoundedCornerShape(5.dp),
                 ),
-                shape = RoundedCornerShape(5.dp),
-            )
-
     ) {
         Text(
-            modifier = modifier.padding(
-                horizontal = 16.dp,
-                vertical = 8.dp,
-            ),
+            modifier =
+                modifier.padding(
+                    horizontal = 16.dp,
+                    vertical = 8.dp,
+                ),
             text = text,
             style = textStyle,
-            color = if(enabled) textColor else Gray4
+            color = if (enabled) textColor else Gray4,
         )
     }
 }
@@ -73,26 +70,26 @@ private fun DefaultTextButtonPreview() {
     ) {
         DefaultTextButton(
             text = "활성화 버튼",
-            onClick = { },
+            onClick = {},
             backgroundColor = StaccatoBlue,
-            textColor = White
+            textColor = White,
         )
 
         DefaultTextButton(
             text = "비활성화 버튼",
-            onClick = { },
+            onClick = {},
             enabled = false,
             backgroundColor = StaccatoBlue,
-            textColor = White
+            textColor = White,
         )
 
         DefaultTextButton(
             text = "거절",
-            onClick = { },
+            onClick = {},
             enabled = true,
             backgroundColor = White,
             textColor = StaccatoBlack,
-            border = BorderStroke(0.5.dp, Gray2)
+            border = BorderStroke(0.5.dp, Gray2),
         )
     }
 }

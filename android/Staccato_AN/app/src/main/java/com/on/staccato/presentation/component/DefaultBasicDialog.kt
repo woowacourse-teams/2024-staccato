@@ -82,19 +82,16 @@ fun DefaultBasicDialog(
 }
 
 @Composable
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xDDDDDDL
-)
+@Preview(showBackground = true, backgroundColor = 0xDDDDDDL)
 private fun DefaultBasicDialogPreview() {
     DefaultBasicDialog(
         title = "제목제목제목",
         description = "내용내용내용.\n내용내용, 내용내용내용??",
-        onDismissRequest = {  },
+        onDismissRequest = {},
         confirmButton = {
             DefaultTextButton(
                 text = "확인",
-                onClick = {  },
+                onClick = {},
                 backgroundColor = StaccatoBlue,
                 textColor = White,
             )
@@ -102,10 +99,10 @@ private fun DefaultBasicDialogPreview() {
         dismissButton = {
             DefaultTextButton(
                 text = "취소",
-                onClick = {  },
+                onClick = {},
                 backgroundColor = Gray1,
                 textColor = Gray4,
             )
-        }
+        },
     )
 }

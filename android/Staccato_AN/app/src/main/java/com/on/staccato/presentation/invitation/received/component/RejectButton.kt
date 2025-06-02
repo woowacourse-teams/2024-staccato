@@ -23,10 +23,7 @@ fun RejectButton(
         onClick = onClick,
         backgroundColor = White,
         textColor = StaccatoBlack,
-        border = BorderStroke(
-            width = 0.5.dp,
-            color = Gray2,
-        )
+        border = BorderStroke(width = 0.5.dp, color = Gray2),
     )
 }
 
@@ -34,15 +31,6 @@ fun RejectButton(
 @Composable
 private fun RejectButtonPreview() {
     Box(modifier = Modifier.padding(10.dp)) {
-        DefaultTextButton(
-            text = "거절",
-            onClick = { },
-            backgroundColor = White,
-            textColor = StaccatoBlack,
-            border = BorderStroke(
-                width = 0.5.dp,
-                color = Gray2,
-            )
-        )
+        RejectButton(onClick = {})
     }
 }

@@ -28,13 +28,14 @@ import com.on.staccato.theme.Title2
 import com.on.staccato.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
-private val TopAppBarColors = TopAppBarColors(
-    containerColor = White,
-    scrolledContainerColor = White,
-    navigationIconContentColor = Gray3,
-    titleContentColor = StaccatoBlack,
-    actionIconContentColor = Gray3,
-)
+private val TopAppBarColors =
+    TopAppBarColors(
+        containerColor = White,
+        scrolledContainerColor = White,
+        navigationIconContentColor = Gray3,
+        titleContentColor = StaccatoBlack,
+        actionIconContentColor = Gray3,
+    )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,9 +112,10 @@ private fun NavigationIconButton(
     onNavigationClick: () -> Unit,
 ) {
     Icon(
-        modifier = Modifier
-            .padding(5.dp)
-            .clickableWithoutRipple { onNavigationClick() },
+        modifier =
+            Modifier
+                .padding(5.dp)
+                .clickableWithoutRipple { onNavigationClick() },
         imageVector = ImageVector.vectorResource(id = vectorResource),
         contentDescription = "Navigation Icon",
         tint = Gray3,

@@ -40,7 +40,7 @@ fun InvitationDialogs(
                         backgroundColor = Gray1,
                         textColor = Gray4,
                     )
-                }
+                },
             )
         }
 
@@ -64,7 +64,7 @@ fun InvitationDialogs(
                         backgroundColor = Gray1,
                         textColor = Gray4,
                     )
-                }
+                },
             )
         }
     }

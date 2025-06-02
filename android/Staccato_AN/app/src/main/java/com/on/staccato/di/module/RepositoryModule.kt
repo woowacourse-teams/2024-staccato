@@ -4,7 +4,6 @@ import com.on.staccato.data.category.CategoryDefaultRepository
 import com.on.staccato.data.comment.CommentDefaultRepository
 import com.on.staccato.data.image.ImageDefaultRepository
 import com.on.staccato.data.invitation.InvitationDefaultRepository
-import com.on.staccato.data.invitation.InvitationTempRepository
 import com.on.staccato.data.location.LocationDefaultRepository
 import com.on.staccato.data.login.LoginDefaultRepository
 import com.on.staccato.data.member.MemberDefaultRepository

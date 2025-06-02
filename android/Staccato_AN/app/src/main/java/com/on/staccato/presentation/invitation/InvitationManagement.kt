@@ -79,8 +79,6 @@ private fun InvitationManagementPreview(
 }
 
 private class InvitationSelectionMenuProvider(
-    override val values: Sequence<InvitationSelectionMenuItems> = sequenceOf(
-        RECEIVED_INVITATION,
-        SENT_INVITATION,
-    )
+    override val values: Sequence<InvitationSelectionMenuItems> =
+        sequenceOf(RECEIVED_INVITATION, SENT_INVITATION),
 ) : PreviewParameterProvider<InvitationSelectionMenuItems>

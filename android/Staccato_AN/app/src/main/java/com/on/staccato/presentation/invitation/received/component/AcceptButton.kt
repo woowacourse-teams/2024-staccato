@@ -32,7 +32,7 @@ private fun AcceptButtonPreview() {
             text = "수락",
             onClick = { },
             backgroundColor = StaccatoBlue,
-            textColor = White
+            textColor = White,
         )
     }
 }

@@ -25,12 +25,13 @@ import com.on.staccato.theme.StaccatoBlack
 import com.on.staccato.theme.Title3
 import com.on.staccato.theme.White
 
-private val MenuPaddingValues = PaddingValues(
-    top = 18.dp,
-    bottom = 18.dp,
-    start = 24.dp,
-    end = 12.dp,
-)
+private val MenuPaddingValues =
+    PaddingValues(
+        top = 18.dp,
+        bottom = 18.dp,
+        start = 24.dp,
+        end = 12.dp,
+    )
 
 @Composable
 fun MenuButton(
@@ -40,10 +41,11 @@ fun MenuButton(
     onClick: () -> Unit,
 ) {
     Box(
-        modifier = modifier
-            .background(color = White)
-            .padding(contentPadding)
-            .clickableWithoutRipple { onClick() },
+        modifier =
+            modifier
+                .background(color = White)
+                .padding(contentPadding)
+                .clickableWithoutRipple { onClick() },
     ) {
         Row(
             modifier = modifier.fillMaxWidth(),
@@ -65,23 +67,19 @@ fun MenuButton(
     }
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0L,
-)
+@Preview(showBackground = true, backgroundColor = 0L)
 @Composable
 fun MenuButtonPreview(
     @PreviewParameter(provider = MenuTitlePreviewParameterProvider::class) title: String,
 ) {
-    MenuButton(
-        menuTitle = title,
-    ) {}
+    MenuButton(menuTitle = title, onClick = {})
 }
 
-class MenuTitlePreviewParameterProvider : PreviewParameterProvider<String> {
-    override val values = sequenceOf(
-        "카테고리 초대 관리",
-        "개인정보처리방침",
-        "피드백으로 혼내주기",
-    )
-}
+class MenuTitlePreviewParameterProvider(
+    override val values: Sequence<String> =
+        sequenceOf(
+            "카테고리 초대 관리",
+            "개인정보처리방침",
+            "피드백으로 혼내주기",
+        ),
+) : PreviewParameterProvider<String>

@@ -33,7 +33,7 @@ fun DefaultAlertDialog(
             textColor = Gray4,
         )
     },
-    properties: DialogProperties = DialogProperties()
+    properties: DialogProperties = DialogProperties(),
 ) {
     AlertDialog(
         modifier = modifier.fillMaxWidth(),
@@ -61,10 +61,7 @@ fun DefaultAlertDialog(
 }
 
 @Composable
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xDDDDDDL
-)
+@Preview(showBackground = true, backgroundColor = 0xDDDDDDL)
 private fun DefaultAlertDialogPreview() {
     DefaultAlertDialog(
         title = "제목제목제목",
@@ -72,11 +69,11 @@ private fun DefaultAlertDialogPreview() {
         confirmButton = {
             DefaultTextButton(
                 text = "확인",
-                onClick = {  },
+                onClick = {},
                 backgroundColor = StaccatoBlue,
                 textColor = White,
             )
         },
-        onDismissRequest = {  },
+        onDismissRequest = {},
     )
 }

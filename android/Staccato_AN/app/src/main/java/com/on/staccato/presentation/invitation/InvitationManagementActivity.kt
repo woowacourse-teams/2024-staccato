@@ -13,7 +13,7 @@ class InvitationManagementActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             InvitationManagementScreen(
-                onNavigationClick = { finish() }
+                onNavigationClick = { finish() },
             )
         }
     }

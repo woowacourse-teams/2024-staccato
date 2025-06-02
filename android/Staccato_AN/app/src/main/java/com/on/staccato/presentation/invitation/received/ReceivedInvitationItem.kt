@@ -31,76 +31,80 @@ fun ReceivedInvitationItem(
     onAcceptClick: (invitationId: Long) -> Unit,
 ) {
     ConstraintLayout(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = White,
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(
+                    color = White,
+                ),
     ) {
         val (profileImage, inviterNickname, guideText, categoryTitle, rejectButton, acceptButton) = createRefs()
 
         ProfileImage(
-            modifier = modifier
-                .size(16.dp)
-                .constrainAs(profileImage) {
-                    start.linkTo(parent.start, margin = 22.dp)
-                    centerVerticallyTo(inviterNickname)
-                },
+            modifier =
+                modifier
+                    .size(16.dp)
+                    .constrainAs(profileImage) {
+                        start.linkTo(parent.start, margin = 22.dp)
+                        centerVerticallyTo(inviterNickname)
+                    },
             url = categoryInvitation.inviterProfileImageUrl,
         )
 
         NicknameText(
             nickname = categoryInvitation.inviterNickname,
-            modifier = modifier.constrainAs(inviterNickname) {
-                start.linkTo(profileImage.end, margin = 4.dp)
-                top.linkTo(parent.top, margin = 16.dp)
-            },
+            modifier =
+                modifier.constrainAs(inviterNickname) {
+                    start.linkTo(profileImage.end, margin = 4.dp)
+                    top.linkTo(parent.top, margin = 16.dp)
+                },
         )
 
         CategoryTitle(
-            modifier = modifier.constrainAs(categoryTitle) {
-                top.linkTo(profileImage.bottom, margin = 8.dp)
-                start.linkTo(profileImage.start)
-                end.linkTo(parent.end, margin = 32.dp)
-                width = Dimension.fillToConstraints
-            },
+            modifier =
+                modifier.constrainAs(categoryTitle) {
+                    top.linkTo(profileImage.bottom, margin = 8.dp)
+                    start.linkTo(profileImage.start)
+                    end.linkTo(parent.end, margin = 32.dp)
+                    width = Dimension.fillToConstraints
+                },
             title = categoryInvitation.categoryTitle,
         )
 
         Text(
             text = "님이 카테고리에 초대했어요.",
-            modifier = modifier.constrainAs(guideText) {
-                start.linkTo(inviterNickname.end)
-                centerVerticallyTo(inviterNickname)
-                width = Dimension.wrapContent
-            } ,
+            modifier =
+                modifier.constrainAs(guideText) {
+                    start.linkTo(inviterNickname.end)
+                    centerVerticallyTo(inviterNickname)
+                    width = Dimension.wrapContent
+                },
             style = Body4,
             color = Gray5,
         )
 
         RejectButton(
-            modifier = modifier.constrainAs(rejectButton) {
-                bottom.linkTo(parent.bottom, margin = 16.dp)
-                end.linkTo(acceptButton.start, margin = 4.dp)
-            },
+            modifier =
+                modifier.constrainAs(rejectButton) {
+                    bottom.linkTo(parent.bottom, margin = 16.dp)
+                    end.linkTo(acceptButton.start, margin = 4.dp)
+                },
             onClick = { onRejectClick(categoryInvitation.invitationId) },
         )
 
         AcceptButton(
-            modifier = modifier.constrainAs(acceptButton) {
-                top.linkTo(categoryTitle.bottom, margin = 8.dp)
-                bottom.linkTo(parent.bottom, margin = 16.dp)
-                end.linkTo(parent.end, margin = 22.dp)
-            },
+            modifier =
+                modifier.constrainAs(acceptButton) {
+                    top.linkTo(categoryTitle.bottom, margin = 8.dp)
+                    bottom.linkTo(parent.bottom, margin = 16.dp)
+                    end.linkTo(parent.end, margin = 22.dp)
+                },
             onClick = { onAcceptClick(categoryInvitation.invitationId) },
         )
     }
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0L,
-)
+@Preview(showBackground = true, backgroundColor = 0L)
 @Composable
 private fun ReceivedInvitationItemPreview(
     @PreviewParameter(
