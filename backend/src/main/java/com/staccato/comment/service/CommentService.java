@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.staccato.category.service.CategoryValidator;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.comment.service.dto.request.CommentRequest;
@@ -54,14 +53,14 @@ public class CommentService {
     @Transactional
     public void updateComment(Member member, Long commentId, CommentUpdateRequest commentUpdateRequest) {
         Comment comment = commentValidator.getCommentByIdOrThrow(commentId);
-        commentValidator.validateOwner(comment, member);
+        comment.validateModifyPermission(member);
         comment.changeContent(commentUpdateRequest.content());
     }
 
     @Transactional
     public void deleteComment(long commentId, Member member) {
         Comment comment = commentValidator.getCommentByIdOrThrow(commentId);
-        commentValidator.validateOwner(comment, member);
+        comment.validateModifyPermission(member);
         commentRepository.deleteById(commentId);
     }
 }

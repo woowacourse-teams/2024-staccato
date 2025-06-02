@@ -60,7 +60,7 @@ public class Comment extends BaseEntity {
         }
     }
 
-    public boolean isNotOwnedBy(Member member) {
-        return !Objects.equals(this.member, member);
+    public void validateModifyPermission(Member member) {
+        staccato.validateModifyPermission(member);
     }
 }
