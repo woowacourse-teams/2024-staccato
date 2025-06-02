@@ -8,7 +8,8 @@ data class CategoryRequest(
     @SerialName("categoryThumbnailUrl") val categoryThumbnailUrl: String? = null,
     @SerialName("categoryTitle") val categoryTitle: String,
     @SerialName("description") val description: String? = null,
+    @SerialName("categoryColor") val color: String? = null,
     @SerialName("startAt") val startAt: String? = null,
     @SerialName("endAt") val endAt: String? = null,
-    @SerialName("categoryColor") val color: String? = null,
+    @SerialName("isShared") val isShared: Boolean,
 )

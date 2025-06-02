@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
+import com.staccato.auth.service.dto.response.LoginResponseV2;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.config.jwt.MemberTokenProvider;
@@ -31,11 +32,11 @@ public class AuthService {
     private final MemberValidator memberValidator;
 
     @Transactional
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponseV2 login(LoginRequest loginRequest) {
         Member member = createMember(loginRequest);
         String token = tokenProvider.create(member);
         createBasicCategory(member);
-        return new LoginResponse(token);
+        return new LoginResponseV2(member, token);
     }
 
     private Member createMember(LoginRequest loginRequest) {
@@ -56,9 +57,9 @@ public class AuthService {
         return member;
     }
 
-    public LoginResponse loginByCode(String code) {
+    public LoginResponseV2 loginByCode(String code) {
         Member member = memberValidator.getMemberByCodeOrThrow(code);
         String token = tokenProvider.create(member);
-        return new LoginResponse(token);
+        return new LoginResponseV2(member, token);
     }
 }

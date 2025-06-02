@@ -35,4 +35,6 @@ public interface CategoryMemberRepository extends JpaRepository<CategoryMember, 
     @Modifying
     @Query("DELETE FROM CategoryMember mm WHERE mm.category.id = :categoryId")
     void deleteAllByCategoryIdInBulk(@Param("categoryId") Long categoryId);
+
+    List<CategoryMember> findAllByCategoryIdAndMemberIn(long categoryId, List<Member> members);
 }

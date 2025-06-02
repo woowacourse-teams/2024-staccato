@@ -7,10 +7,17 @@ import com.on.staccato.data.network.Exception
 import com.on.staccato.data.network.ServerError
 import com.on.staccato.data.network.Success
 import com.on.staccato.domain.repository.CategoryRepository
+import com.on.staccato.domain.repository.InvitationRepository
+import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.category.INVALID_ID
 import com.on.staccato.presentation.category.VALID_ID
 import com.on.staccato.presentation.category.category
 import com.on.staccato.presentation.category.categoryUiModel
+import com.on.staccato.presentation.category.naMembers
+import com.on.staccato.presentation.category.naMembersUiModel
+import com.on.staccato.presentation.category.nana
+import com.on.staccato.presentation.category.participants
+import com.on.staccato.presentation.category.selectedNaMembersUiModel
 import com.on.staccato.presentation.getOrAwaitValue
 import com.on.staccato.presentation.util.ExceptionState2
 import io.mockk.MockKAnnotations
@@ -18,6 +25,8 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -30,6 +39,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 class CategoryViewModelTest {
     @MockK
     private lateinit var categoryRepository: CategoryRepository
+
+    @MockK
+    private lateinit var memberRepository: MemberRepository
+
+    @MockK
+    private lateinit var invitationRepository: InvitationRepository
 
     @InjectMockKs
     private lateinit var viewModel: CategoryViewModel
@@ -77,7 +92,7 @@ class CategoryViewModelTest {
             viewModel.loadCategory(VALID_ID)
 
             // then
-            val actual = viewModel.errorMessage.getOrAwaitValue()
+            val actual = viewModel.toastMessage.getOrAwaitValue()
             assertThat(actual).isEqualTo("Bad Request")
         }
 
@@ -141,7 +156,7 @@ class CategoryViewModelTest {
             viewModel.deleteCategory()
 
             // then
-            val errorMessage = viewModel.errorMessage.getOrAwaitValue()
+            val errorMessage = viewModel.toastMessage.getOrAwaitValue()
             assertThat(errorMessage).isEqualTo("Bad Request")
         }
 
@@ -175,5 +190,48 @@ class CategoryViewModelTest {
             // then
             val exceptionState = viewModel.exceptionState.getOrAwaitValue()
             assertThat(exceptionState).isInstanceOf(ExceptionState2.UnknownError::class.java)
+        }
+
+    @Test
+    fun `빙티, 해나, 호두가 참여한 카테고리에서 '나'로 검색하면 해나(참여중)와 나나(선택가능)를 반환한다`() =
+        runTest {
+            // given
+            coEvery { categoryRepository.getCategory(VALID_ID) } returns
+                Success(
+                    category.copy(
+                        participants = participants,
+                    ),
+                )
+            coEvery { memberRepository.searchMembersBy("나") } returns MutableStateFlow(Success(naMembers))
+            viewModel.loadCategory(VALID_ID)
+
+            // when
+            viewModel.searchMembersBy("나")
+
+            // then
+            val result = viewModel.members.first()
+            assertThat(result).isEqualTo(naMembersUiModel)
+        }
+
+    @Test
+    fun `'나'로 검색한 뒤 나나를 선택하면 해나(참여중)와 나나(선택됨)를 반환한다`() =
+        runTest {
+            // given
+            coEvery { categoryRepository.getCategory(VALID_ID) } returns
+                Success(
+                    category.copy(
+                        participants = participants,
+                    ),
+                )
+            coEvery { memberRepository.searchMembersBy("나") } returns MutableStateFlow(Success(naMembers))
+            viewModel.loadCategory(VALID_ID)
+            viewModel.searchMembersBy("나")
+
+            // when
+            viewModel.select(nana)
+
+            // then
+            val result = viewModel.members.first()
+            assertThat(result).isEqualTo(selectedNaMembersUiModel)
         }
 }

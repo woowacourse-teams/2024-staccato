@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+
 import com.staccato.ContainerBaseTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
