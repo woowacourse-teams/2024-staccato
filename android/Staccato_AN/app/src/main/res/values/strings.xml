@@ -233,5 +233,6 @@
 
     // invitation management
     <string name="invitation_management_accept">수락</string>
+    <string name="invitation_management_reject">거절</string>
 
 </resources>
