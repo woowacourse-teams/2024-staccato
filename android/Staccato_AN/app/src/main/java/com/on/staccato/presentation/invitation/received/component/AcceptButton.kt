@@ -28,11 +28,6 @@ fun AcceptButton(
 @Composable
 private fun AcceptButtonPreview() {
     Box(modifier = Modifier.padding(10.dp)) {
-        DefaultTextButton(
-            text = "수락",
-            onClick = { },
-            backgroundColor = StaccatoBlue,
-            textColor = White,
-        )
+        AcceptButton(onClick = {})
     }
 }
