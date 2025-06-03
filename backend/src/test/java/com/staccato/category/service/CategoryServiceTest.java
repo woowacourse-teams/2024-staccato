@@ -64,8 +64,6 @@ class CategoryServiceTest extends ServiceSliceTest {
     @Autowired
     private StaccatoService staccatoService;
     @Autowired
-    private InvitationService invitationService;
-    @Autowired
     private MemberRepository memberRepository;
     @Autowired
     private CategoryMemberRepository categoryMemberRepository;
@@ -77,13 +75,6 @@ class CategoryServiceTest extends ServiceSliceTest {
     private CommentRepository commentRepository;
     @Autowired
     private CategoryInvitationRepository categoryInvitationRepository;
-
-    static Stream<Arguments> dateProvider() {
-        return Stream.of(
-                Arguments.of(LocalDate.of(2024, 6, 1), 3),
-                Arguments.of(LocalDate.of(2024, 6, 2), 2)
-        );
-    }
 
     static Stream<Arguments> updateCategoryProvider() {
         return Stream.of(
@@ -161,68 +152,6 @@ class CategoryServiceTest extends ServiceSliceTest {
 
         // when & then
         assertThatNoException().isThrownBy(() -> categoryService.createCategory(categoryCreateRequest, member));
-    }
-
-    @Nested
-    @DisplayName("사용자 ID의 특정 날짜를 포함하는 카테고리를 조회한다.")
-    class findCategoriesByMemberIdAndDate {
-
-        private Member host;
-        private Member guest;
-        private Category sharedCategoryIn2023;
-        private Category sharedCategoryIn2024;
-        private Category privateCategoryIn2023;
-        private Category privateCategoryIn2024;
-
-        @BeforeEach
-        void setUp() {
-            host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-            guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-            sharedCategoryIn2023 = CategoryFixtures.defaultCategory()
-                    .withHost(host)
-                    .withGuests(List.of(guest))
-                    .withTerm(LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31))
-                    .buildAndSave(categoryRepository);
-            sharedCategoryIn2024 = CategoryFixtures.defaultCategory()
-                    .withHost(host)
-                    .withGuests(List.of(guest))
-                    .withTerm(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31))
-                    .buildAndSave(categoryRepository);
-            privateCategoryIn2023 = CategoryFixtures.defaultCategory()
-                    .withHost(host)
-                    .withTerm(LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31))
-                    .buildAndSave(categoryRepository);
-            privateCategoryIn2024 = CategoryFixtures.defaultCategory()
-                    .withHost(host)
-                    .withTerm(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31))
-                    .buildAndSave(categoryRepository);
-        }
-
-        @DisplayName("사용자 ID의 특정 날짜를 포함하는 모든 카테고리를 조회한다.")
-        @Test
-        void findAllByMemberIdAndDate() {
-            // given & when
-            CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndPrivateFlag(host, LocalDate.of(2023, 6, 1), false);
-
-            // then
-            assertThat(categoryNameResponses.categories())
-                    .extracting(CategoryNameResponse::categoryId)
-                    .containsExactlyInAnyOrder(sharedCategoryIn2023.getId(), privateCategoryIn2023.getId())
-                    .doesNotContain(sharedCategoryIn2024.getId(), privateCategoryIn2024.getId());
-        }
-
-        @DisplayName("사용자 ID의 특정 날짜를 포함하는 개인 카테고리를 조회한다.")
-        @Test
-        void findPrivateByMemberIdAndDate() {
-            // given & when
-            CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndPrivateFlag(host, LocalDate.of(2023, 6, 1), true);
-
-            // then
-            assertThat(categoryNameResponses.categories())
-                    .extracting(CategoryNameResponse::categoryId)
-                    .containsExactlyInAnyOrder(privateCategoryIn2023.getId())
-                    .doesNotContain(sharedCategoryIn2023.getId(), sharedCategoryIn2024.getId(), privateCategoryIn2024.getId());
-        }
     }
 
     @DisplayName("CategoryMember 목록을 최근 수정 순으로 조회된다.")
