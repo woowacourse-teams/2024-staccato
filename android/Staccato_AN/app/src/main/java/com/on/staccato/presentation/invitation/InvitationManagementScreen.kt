@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.on.staccato.presentation.component.topbar.DefaultNavigationTopBar
+import com.on.staccato.presentation.invitation.component.InvitationManagementTopBar
 import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel
 import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel.RECEIVED_INVITATION
 import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel.SENT_INVITATION
@@ -56,13 +57,4 @@ fun InvitationManagementScreen(
             onDismiss = { invitationViewModel.dismissDialog() },
         )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun InvitationManagementTopBar(onNavigationClick: () -> Unit) {
-    DefaultNavigationTopBar(
-        title = "카테고리 초대 관리",
-        onNavigationClick = onNavigationClick,
-    )
 }
