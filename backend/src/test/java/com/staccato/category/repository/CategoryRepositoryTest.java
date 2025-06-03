@@ -27,30 +27,24 @@ class CategoryRepositoryTest extends RepositoryTest {
 
     private Member host;
     private Member guest;
-    private Category privateCategory;
-    private Category publicCategory;
 
     @BeforeEach
     void setUp() {
         host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
         guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-        privateCategory = CategoryFixtures.defaultCategory()
-                .withHost(host)
-                .withTerm(null, null)
-                .buildAndSave(categoryRepository);
-        publicCategory = CategoryFixtures.defaultCategory()
-                .withHost(host)
-                .withGuests(List.of(guest))
-                .withTerm(null, null)
-                .buildAndSave(categoryRepository);
     }
-
 
     @DisplayName("카테고리 id로 조회 시, categoryMembers와 member까지 함께 조회된다")
     @Test
     void findWithCategoryMembersByIdWithCategoryMembersAndMembers() {
-        // given & when
-        Category result = categoryRepository.findWithCategoryMembersById(publicCategory.getId()).get();
+        // given
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when
+        Category result = categoryRepository.findWithCategoryMembersById(category.getId()).get();
 
         // then
         List<Member> resultMembers = result.getCategoryMembers().stream()
@@ -64,10 +58,59 @@ class CategoryRepositoryTest extends RepositoryTest {
         );
     }
 
+    @DisplayName("특정 날짜(specificDate)가 주어지면 해당 날짜를 포함하는 모든 카테고리 목록을 조회한다.")
+    @Test
+    void findByMemberIdAndDateWithPrivateFlagWhenSpecificDateIsGiven() {
+        // given
+        Category privateCategoryIn2024 = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
+                .buildAndSave(categoryRepository);
+        Category publicCategoryIn2024 = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .withTerm(LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31))
+                .buildAndSave(categoryRepository);
+        Category privateCategoryIn2025 = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withTerm(LocalDate.of(2025, 1, 1),
+                        LocalDate.of(2025, 12, 31))
+                .buildAndSave(categoryRepository);
+        Category publicCategoryIn2025 = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .withTerm(LocalDate.of(2025, 1, 1),
+                        LocalDate.of(2025, 12, 31))
+                .buildAndSave(categoryRepository);
+
+        // when
+        LocalDate specificDateIn2024 = LocalDate.of(2024, 6, 1);
+        boolean defaultIsPrivate = false;
+        List<Category> categories = categoryRepository.findByMemberIdAndDateWithPrivateFlag(host.getId(), specificDateIn2024, defaultIsPrivate);
+
+        // then
+        assertThat(categories).hasSize(2)
+                .containsExactlyInAnyOrder(privateCategoryIn2024, publicCategoryIn2024)
+                .doesNotContain(privateCategoryIn2025, publicCategoryIn2025);
+    }
+
     @DisplayName("개인카테고리여부(isPrivate)가 false이면 해당 멤버의 전체 카테고리(개인/공동) 목록을 조회한다.")
     @Test
     void findByMemberIdAndDateWithPrivateFlagWhenPrivateFlagIsFalse() {
-        // given & when
+        // given
+        Category privateCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withTerm(null, null)
+                .buildAndSave(categoryRepository);
+        Category publicCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .withTerm(null, null)
+                .buildAndSave(categoryRepository);
+
+        // when
         List<Category> categories = categoryRepository.findByMemberIdAndDateWithPrivateFlag(host.getId(), LocalDate.now(), false);
 
         // then
@@ -78,11 +121,23 @@ class CategoryRepositoryTest extends RepositoryTest {
     @DisplayName("개인카테고리여부(isPrivate)가 true이면 해당 멤버의 개인 카테고리 목록만 조회한다.")
     @Test
     void findByMemberIdAndDateWithPrivateFlagWhenPrivateFlagIsTrue() {
-        // given & when
+        // given
+        Category privateCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withTerm(null, null)
+                .buildAndSave(categoryRepository);
+        Category publicCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .withTerm(null, null)
+                .buildAndSave(categoryRepository);
+
+        // when
         List<Category> categories = categoryRepository.findByMemberIdAndDateWithPrivateFlag(host.getId(), LocalDate.now(), true);
 
         // then
         assertThat(categories).hasSize(1)
-                .containsExactly(privateCategory);
+                .containsExactly(privateCategory)
+                .doesNotContain(publicCategory);
     }
 }
