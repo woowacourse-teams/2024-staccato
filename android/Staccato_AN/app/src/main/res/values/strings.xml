@@ -239,7 +239,9 @@
     <string name="invitation_management_guide_text_nickname">님이 카테고리에 초대했어요.</string>
     <string name="invitation_management_accept">수락</string>
     <string name="invitation_management_reject">거절</string>
+    <string name="invitation_management_received_empty">아직 친구에게 받은 초대가 없어요!</string>
     <string name="invitation_management_guide_text_category">에 초대했어요.</string>
     <string name="invitation_management_cancel">취소</string>
+    <string name="invitation_management_sent_empty">보낸 초대가 없어요!\n카테고리에서 친구를 초대해보세요.</string>
 
 </resources>
