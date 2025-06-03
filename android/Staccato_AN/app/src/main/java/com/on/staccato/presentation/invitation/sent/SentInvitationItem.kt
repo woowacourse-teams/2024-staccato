@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.on.staccato.R
 import com.on.staccato.presentation.invitation.component.CategoryTitle
 import com.on.staccato.presentation.invitation.component.NicknameText
 import com.on.staccato.presentation.invitation.component.ProfileImage
@@ -92,7 +94,7 @@ fun SentInvitationItem(
                     start.linkTo(titleRef.end)
                     width = Dimension.wrapContent
                 },
-            text = "에 초대했어요.",
+            text = stringResource(id = R.string.invitation_management_guide_text_category),
             style = Body4,
             color = Gray3,
             maxLines = 1,

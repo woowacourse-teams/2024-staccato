@@ -63,13 +63,13 @@ fun ReceivedInvitationItem(
         )
 
         Text(
-            text = stringResource(id = R.string.invitation_management_inviter_guide_text),
+            text = stringResource(id = R.string.invitation_management_guide_text_nickname),
             modifier =
-            modifier.constrainAs(guideText) {
-                start.linkTo(inviterNickname.end)
-                centerVerticallyTo(inviterNickname)
-                width = Dimension.wrapContent
-            },
+                modifier.constrainAs(guideText) {
+                    start.linkTo(inviterNickname.end)
+                    centerVerticallyTo(inviterNickname)
+                    width = Dimension.wrapContent
+                },
             style = Body4,
             color = Gray5,
         )
