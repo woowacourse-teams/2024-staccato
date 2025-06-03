@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.on.staccato.presentation.component.topbar.DefaultNavigationTopBar
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuItems
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuItems.RECEIVED_INVITATION
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuItems.SENT_INVITATION
+import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel
+import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel.RECEIVED_INVITATION
+import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel.SENT_INVITATION
 import com.on.staccato.presentation.invitation.viewmodel.InvitationViewModel
 import com.on.staccato.theme.White
 
@@ -23,7 +23,7 @@ fun InvitationManagementScreen(
     modifier: Modifier = Modifier,
     invitationViewModel: InvitationViewModel = viewModel(),
     onNavigationClick: () -> Unit,
-    defaultSelectedMenu: InvitationSelectionMenuItems = RECEIVED_INVITATION,
+    defaultSelectedMenu: InvitationSelectionMenuUiModel = RECEIVED_INVITATION,
 ) {
     var selectedMenu by remember { mutableStateOf(defaultSelectedMenu) }
     val receivedInvitations by invitationViewModel.receivedInvitations.collectAsStateWithLifecycle()

@@ -15,11 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.staccato.presentation.component.clickableWithoutRipple
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuItems
+import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel
 import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.StaccatoBlue
@@ -28,7 +29,7 @@ import com.on.staccato.theme.White
 
 @Composable
 fun MenuTab(
-    menu: InvitationSelectionMenuItems,
+    menu: InvitationSelectionMenuUiModel,
     selected: Boolean,
     onClick: () -> Unit,
 ) {
@@ -50,7 +51,7 @@ fun MenuTab(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = menu.title,
+                text = stringResource(menu.titleId),
                 style = Title3,
                 color = contentColor,
             )
@@ -58,7 +59,7 @@ fun MenuTab(
             Icon(
                 imageVector = ImageVector.vectorResource(menu.iconResId),
                 tint = contentColor,
-                contentDescription = menu.iconContentDescription,
+                contentDescription = stringResource(menu.iconContentDescriptionId),
             )
         }
     }
@@ -68,14 +69,14 @@ fun MenuTab(
 @Composable
 private fun MenuTapPreview() {
     Column(modifier = Modifier.fillMaxWidth()) {
-        InvitationSelectionMenuItems.entries.forEach { menu ->
+        InvitationSelectionMenuUiModel.entries.forEach { menu ->
             MenuTab(
                 menu = menu,
                 selected = false,
                 onClick = {},
             )
         }
-        InvitationSelectionMenuItems.entries.forEach { menu ->
+        InvitationSelectionMenuUiModel.entries.forEach { menu ->
             MenuTab(
                 menu = menu,
                 selected = true,
