@@ -24,7 +24,6 @@ import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.domain.Color;
 import com.staccato.category.domain.Role;
-import com.staccato.category.domain.Scope;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
@@ -203,7 +202,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         @Test
         void findAllByMemberIdAndDate() {
             // given & when
-            CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndScope(host, LocalDate.of(2023, 6, 1), Scope.ALL);
+            CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndPrivateFlag(host, LocalDate.of(2023, 6, 1), false);
 
             // then
             assertThat(categoryNameResponses.categories())
@@ -216,7 +215,7 @@ class CategoryServiceTest extends ServiceSliceTest {
         @Test
         void findPrivateByMemberIdAndDate() {
             // given & when
-            CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndScope(host, LocalDate.of(2023, 6, 1), Scope.PRIVATE);
+            CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndPrivateFlag(host, LocalDate.of(2023, 6, 1), true);
 
             // then
             assertThat(categoryNameResponses.categories())

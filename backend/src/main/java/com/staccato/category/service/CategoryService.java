@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
-import com.staccato.category.domain.Scope;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
@@ -76,12 +75,12 @@ public class CategoryService {
         return new CategoryResponsesV3(responses);
     }
 
-    public CategoryNameResponses readCategoriesByMemberAndDateAndScope(Member member, LocalDate specificDate, Scope scope) {
+    public CategoryNameResponses readCategoriesByMemberAndDateAndPrivateFlag(Member member, LocalDate specificDate, boolean isPrivate) {
         List<Category> rawCategories = Collections.emptyList();
-        if (scope.isAll()) {
-            rawCategories = categoryRepository.findAllByMemberIdAndDate(member.getId(), specificDate);
-        } else if (scope.isPrivate()) {
+        if (isPrivate) {
             rawCategories = categoryRepository.findPrivateByMemberIdAndDate(member.getId(), specificDate);
+        } else if (!isPrivate) {
+            rawCategories = categoryRepository.findAllByMemberIdAndDate(member.getId(), specificDate);
         }
 
         List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER, DEFAULT_CATEGORY_SORT);

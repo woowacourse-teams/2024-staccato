@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.staccato.category.domain.Scope;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
@@ -16,6 +16,7 @@ import com.staccato.category.service.dto.response.CategoryResponses;
 import com.staccato.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,13 +62,17 @@ public interface CategoryControllerDocs {
                                         
                     (1) 입력받은 특정 날짜가 유효하지 않을 때
                                         
-                    (2) 입력받은 Scope가 'all' 또는 'private'이 아닐 때 (대소문자 구분 X)
+                    (2) 입력받은 개인 카테고리 여부가 유효하지 않을 때
                     """, responseCode = "400")
     })
     ResponseEntity<CategoryNameResponses> readCandidateCategories(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "특정 날짜", example = "2024-08-21") LocalDate specificDate,
-            @Parameter(description = "카테고리 범위: all(전체 카테고리), private(개인 카테고리)", example = "all") String scope
+            @Parameter(description = "특정 날짜 (yyyy-MM-dd 형식)", example = "2024-08-21", required = true)
+            @RequestParam(required = true)
+            LocalDate specificDate,
+            @Parameter(description = "개인 카테고리 여부 (기본값: false)", example = "true", schema = @Schema(defaultValue = "false"))
+            @RequestParam(required = false, defaultValue = "false")
+            boolean isPrivate
     );
 
     @Operation(summary = "카테고리 조회", description = "사용자의 카테고리을 조회합니다.")

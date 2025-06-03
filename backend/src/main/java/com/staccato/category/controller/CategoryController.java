@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.staccato.category.controller.docs.CategoryControllerDocs;
-import com.staccato.category.domain.Scope;
 import com.staccato.category.service.CategoryService;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
@@ -70,9 +69,9 @@ public class CategoryController implements CategoryControllerDocs {
     public ResponseEntity<CategoryNameResponses> readCandidateCategories(
             @LoginMember Member member,
             @RequestParam(value = "specificDate") LocalDate specificDate,
-            @RequestParam(value = "scope") String scope
+            @RequestParam(value = "isPrivate", required = false, defaultValue = "false") boolean isPrivate
     ) {
-        CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndScope(member, specificDate, Scope.from(scope));
+        CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndPrivateFlag(member, specificDate, isPrivate);
         return ResponseEntity.ok(categoryNameResponses);
     }
 
