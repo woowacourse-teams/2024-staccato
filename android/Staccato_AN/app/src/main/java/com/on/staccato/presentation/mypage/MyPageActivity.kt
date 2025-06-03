@@ -16,7 +16,7 @@ import com.on.staccato.databinding.ActivityMypageBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.invitation.InvitationManagementActivity
-import com.on.staccato.presentation.mypage.component.MenuButton
+import com.on.staccato.presentation.mypage.component.MyPageMenuButton
 import com.on.staccato.presentation.mypage.component.MiddleDivider
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
@@ -89,7 +89,7 @@ class MyPageActivity :
 
     private fun setCategoryInvitationManagementButtonContent() {
         binding.btnMypageMenuCategoryInvitationManagement.setContent {
-            MenuButton(menuTitle = getString(R.string.mypage_invitation_management)) {
+            MyPageMenuButton(menuTitle = getString(R.string.mypage_invitation_management)) {
                 InvitationManagementActivity.launch(this)
             }
         }

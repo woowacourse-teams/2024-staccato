@@ -34,7 +34,7 @@ private val MenuPaddingValues =
     )
 
 @Composable
-fun MenuButton(
+fun MyPageMenuButton(
     modifier: Modifier = Modifier,
     menuTitle: String,
     contentPadding: PaddingValues = MenuPaddingValues,
@@ -69,13 +69,13 @@ fun MenuButton(
 
 @Preview(showBackground = true, backgroundColor = 0L)
 @Composable
-fun MenuButtonPreview(
+private fun MyPageMenuButtonPreview(
     @PreviewParameter(provider = MenuTitlePreviewParameterProvider::class) title: String,
 ) {
-    MenuButton(menuTitle = title, onClick = {})
+    MyPageMenuButton(menuTitle = title, onClick = {})
 }
 
-class MenuTitlePreviewParameterProvider(
+private class MenuTitlePreviewParameterProvider(
     override val values: Sequence<String> =
         sequenceOf(
             "카테고리 초대 관리",
