@@ -89,7 +89,7 @@ class MyPageActivity :
 
     private fun setCategoryInvitationManagementButtonContent() {
         binding.btnMypageMenuCategoryInvitationManagement.setContent {
-            MenuButton(menuTitle = "카테고리 초대 관리") {
+            MenuButton(menuTitle = getString(R.string.mypage_invitation_management)) {
                 InvitationManagementActivity.launch(this)
             }
         }
