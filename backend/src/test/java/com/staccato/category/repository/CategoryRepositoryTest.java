@@ -49,23 +49,18 @@ class CategoryRepositoryTest extends RepositoryTest {
     @DisplayName("카테고리 id로 조회 시, categoryMembers와 member까지 함께 조회된다")
     @Test
     void findWithCategoryMembersByIdWithCategoryMembersAndMembers() {
-        // given
-        Member member1 = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        Member member2 = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-
-        Category category = CategoryFixtures.defaultCategory()
-                .withHost(member1)
-                .withGuests(List.of(member2))
-                .buildAndSave(categoryRepository);
-
-        // when
-        Category result = categoryRepository.findWithCategoryMembersById(category.getId()).get();
+        // given & when
+        Category result = categoryRepository.findWithCategoryMembersById(publicCategory.getId()).get();
 
         // then
+        List<Member> resultMembers = result.getCategoryMembers().stream()
+                .map(CategoryMember::getMember)
+                .toList();
+
         assertAll(
                 () -> assertThat(result.getCategoryMembers()).hasSize(2),
-                () -> assertThat(result.getCategoryMembers().stream().map(CategoryMember::getMember).toList())
-                        .containsExactlyInAnyOrder(member1, member2)
+                () -> assertThat(resultMembers).hasSize(2)
+                        .containsExactlyInAnyOrder(host, guest)
         );
     }
 
@@ -77,8 +72,7 @@ class CategoryRepositoryTest extends RepositoryTest {
 
         // then
         assertThat(categories).hasSize(2)
-                .extracting(Category::getId)
-                .containsExactlyInAnyOrder(privateCategory.getId(), publicCategory.getId());
+                .containsExactlyInAnyOrder(privateCategory, publicCategory);
     }
 
     @DisplayName("개인카테고리여부(isPrivate)가 true이면 해당 멤버의 개인 카테고리 목록만 조회한다.")
@@ -89,7 +83,6 @@ class CategoryRepositoryTest extends RepositoryTest {
 
         // then
         assertThat(categories).hasSize(1)
-                .extracting(Category::getId)
-                .containsExactly(privateCategory.getId());
+                .containsExactly(privateCategory);
     }
 }
