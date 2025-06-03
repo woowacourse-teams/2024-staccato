@@ -231,4 +231,7 @@
     <string name="invite_member_unselected_description">선택 가능</string>
     <string name="invite_member_participating_description">참여중</string>
 
+    // invitation management
+    <string name="invitation_management_accept">수락</string>
+
 </resources>
