@@ -65,18 +65,20 @@ public class CategorySortTest extends ServiceSliceTest {
         List<Category> categories = new ArrayList<>();
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("first")
-                .buildAndSaveWithMember(member, categoryRepository));
+                .withHost(member)
+                .buildAndSave(categoryRepository));
         categories.add(CategoryFixtures.defaultCategory()
                 .withTitle("second")
-                .buildAndSaveWithMember(member, categoryRepository));
+                .withHost(member)
+                .buildAndSave(categoryRepository));
 
         // when
         List<Category> result = CategorySort.UPDATED.apply(categories);
 
         // then
         assertAll(
-                () -> assertThat(result.get(0).getTitle()).isEqualTo("second"),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo("first")
+                () -> assertThat(result.get(0).getTitle().getTitle()).isEqualTo("second"),
+                () -> assertThat(result.get(1).getTitle().getTitle()).isEqualTo("first")
         );
     }
 
@@ -109,10 +111,10 @@ public class CategorySortTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> assertThat(result.get(0).getTitle()).isEqualTo("second"),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo("first"),
-                () -> assertThat(result.get(2).getTitle()).isEqualTo("fourth"),
-                () -> assertThat(result.get(3).getTitle()).isEqualTo("third")
+                () -> assertThat(result.get(0).getTitle().getTitle()).isEqualTo("second"),
+                () -> assertThat(result.get(1).getTitle().getTitle()).isEqualTo("first"),
+                () -> assertThat(result.get(2).getTitle().getTitle()).isEqualTo("fourth"),
+                () -> assertThat(result.get(3).getTitle().getTitle()).isEqualTo("third")
         );
     }
 
@@ -145,10 +147,10 @@ public class CategorySortTest extends ServiceSliceTest {
 
         // then
         assertAll(
-                () -> assertThat(result.get(0).getTitle()).isEqualTo("first"),
-                () -> assertThat(result.get(1).getTitle()).isEqualTo("second"),
-                () -> assertThat(result.get(2).getTitle()).isEqualTo("fourth"),
-                () -> assertThat(result.get(3).getTitle()).isEqualTo("third")
+                () -> assertThat(result.get(0).getTitle().getTitle()).isEqualTo("first"),
+                () -> assertThat(result.get(1).getTitle().getTitle()).isEqualTo("second"),
+                () -> assertThat(result.get(2).getTitle().getTitle()).isEqualTo("fourth"),
+                () -> assertThat(result.get(3).getTitle().getTitle()).isEqualTo("third")
         );
     }
 }

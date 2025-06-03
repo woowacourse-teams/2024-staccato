@@ -48,7 +48,7 @@ fun DefaultAsyncImage(
 
 @Preview
 @Composable
-private fun ImageComponentPreview() {
+private fun DefaultAsyncImagePreview() {
     DefaultAsyncImage(
         bitmapPixelSize = 150,
         url = "https://avatars.githubusercontent.com/u/103019852?v=4",

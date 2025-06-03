@@ -3,10 +3,13 @@ package com.staccato.staccato.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,11 +34,10 @@ import com.staccato.staccato.domain.StaccatoImage;
 import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
-import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
+import com.staccato.staccato.service.dto.response.StaccatoDetailResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 
 class StaccatoServiceTest extends ServiceSliceTest {
@@ -58,7 +60,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
                 .withCategoryId(category.getId()).build();
 
@@ -75,7 +78,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
                 .withCategoryId(category.getId())
                 .withStaccatoImageUrls(List.of("https://example.com/staccatoImage.jpg")).build();
@@ -96,9 +100,10 @@ class StaccatoServiceTest extends ServiceSliceTest {
     void cannotCreateStaccatoIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
                 .withCategoryId(category.getId()).build();
 
@@ -122,41 +127,39 @@ class StaccatoServiceTest extends ServiceSliceTest {
                 .hasMessageContaining("요청하신 카테고리를 찾을 수 없어요.");
     }
 
-    @DisplayName("스타카토 목록 조회에 성공한다.")
+    @DisplayName("위경도 조건이 없으므로, 사용자의 모든 스타카토 목록을 조회한다.")
     @Test
     void readAllStaccato() {
         // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member member = MemberFixtures.defaultMember().withCode("me").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
                 .withTitle("title2")
                 .withColor(Color.PINK)
-                .buildAndSaveWithMember(member, categoryRepository);
-        StaccatoFixtures.defaultStaccato()
+                .withHost(member)
+                .buildAndSave(categoryRepository);
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
-        StaccatoFixtures.defaultStaccato()
-                .withCategory(category).buildAndSave(staccatoRepository);
-        StaccatoFixtures.defaultStaccato()
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
                 .withCategory(category2).buildAndSave(staccatoRepository);
+        Staccato staccato3 = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
-        StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member);
+        StaccatoLocationResponsesV2 responses = staccatoService.readAllStaccato(member, StaccatoLocationRangeRequest.empty());
 
         // then
-        long blueCount = responses.staccatoLocationResponses().stream()
-                .map(StaccatoLocationResponseV2::staccatoColor)
-                .filter(color -> color.equals(Color.BLUE.getName()))
-                .count();
-        long pinkCount = responses.staccatoLocationResponses().stream()
-                .map(StaccatoLocationResponseV2::staccatoColor)
-                .filter(color -> color.equals(Color.PINK.getName()))
-                .count();
         assertAll(
                 () -> assertThat(responses.staccatoLocationResponses()).hasSize(3),
-                () -> assertThat(blueCount).isEqualTo(2),
-                () -> assertThat(pinkCount).isEqualTo(1)
+                () -> assertThat(responses.staccatoLocationResponses())
+                        .containsExactlyInAnyOrder(
+                                new StaccatoLocationResponseV2(staccato),
+                                new StaccatoLocationResponseV2(staccato2),
+                                new StaccatoLocationResponseV2(staccato3)
+                        )
         );
     }
 
@@ -166,15 +169,16 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
 
         // when
-        StaccatoDetailResponse actual = staccatoService.readStaccatoById(staccato.getId(), member);
+        StaccatoDetailResponseV2 actual = staccatoService.readStaccatoById(staccato.getId(), member);
 
         // then
-        assertThat(actual).isEqualTo(new StaccatoDetailResponse(staccato));
+        assertThat(actual).isEqualTo(new StaccatoDetailResponseV2(staccato));
     }
 
     @DisplayName("본인 것이 아닌 스타카토를 조회하려고 하면 예외가 발생한다.")
@@ -182,9 +186,10 @@ class StaccatoServiceTest extends ServiceSliceTest {
     void cannotReadStaccatoByIdIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
 
@@ -212,9 +217,11 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category1 = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         Category category2 = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category1)
                 .buildAndSaveWithStaccatoImages(List.of("https://example.com/staccatoImage1.jpg", "https://example.com/staccatoImage2.jpg"), staccatoRepository);
@@ -231,7 +238,7 @@ class StaccatoServiceTest extends ServiceSliceTest {
         Staccato foundedStaccato = staccatoRepository.findById(staccato.getId()).get();
         List<StaccatoImage> images = staccatoImageRepository.findAll();
         assertAll(
-                () -> assertThat(foundedStaccato.getTitle()).isEqualTo("newStaccatoTitle"),
+                () -> assertThat(foundedStaccato.getTitle().getTitle()).isEqualTo(staccatoRequest.staccatoTitle()),
                 () -> assertThat(foundedStaccato.getCategory().getId()).isEqualTo(category2.getId()),
                 () -> assertThat(images.size()).isEqualTo(2),
                 () -> assertThat(images.get(0).getImageUrl()).isEqualTo("https://example.com/staccatoImage2.jpg"),
@@ -239,14 +246,125 @@ class StaccatoServiceTest extends ServiceSliceTest {
         );
     }
 
+    @Nested
+    @DisplayName("스타카토의 카테고리 변경 시 예외 처리")
+    class UpdateCategoryChangeTests {
+
+        private Member member1;
+        private Member member2;
+
+        private Category privateCategory1;
+        private Category privateCategory2;
+        private Category sharedCategory1;
+        private Category sharedCategory2;
+
+        private Staccato staccatoInPrivate1;
+        private Staccato staccatoInShared1;
+
+        @BeforeEach
+        void setUp() {
+            member1 = MemberFixtures.defaultMember().withNickname("member1").buildAndSave(memberRepository);
+            member2 = MemberFixtures.defaultMember().withNickname("member2").buildAndSave(memberRepository);
+            privateCategory1 = CategoryFixtures.defaultCategory()
+                    .withHost(member1)
+                    .buildAndSave(categoryRepository);
+            privateCategory2 = CategoryFixtures.defaultCategory()
+                    .withHost(member1)
+                    .buildAndSave(categoryRepository);
+            sharedCategory1 = CategoryFixtures.defaultCategory()
+                    .withHost(member1)
+                    .withGuests(List.of(member2))
+                    .buildAndSave(categoryRepository);
+            sharedCategory2 = CategoryFixtures.defaultCategory()
+                    .withHost(member1)
+                    .withGuests(List.of(member2))
+                    .buildAndSave(categoryRepository);
+            staccatoInPrivate1 = StaccatoFixtures.defaultStaccato()
+                    .withCategory(privateCategory1)
+                    .buildAndSave(staccatoRepository);
+            staccatoInShared1 = StaccatoFixtures.defaultStaccato()
+                    .withCategory(sharedCategory1)
+                    .buildAndSave(staccatoRepository);
+        }
+
+        @DisplayName("카테고리 ID를 변경하지 않는다면 스타카토 수정에 제약은 없다.")
+        @Test
+        void updateDoesNotThrow_whenCategoryIsUnchanged() {
+            Long staccatoId = staccatoInShared1.getId();
+            Long sameCategoryId = sharedCategory1.getId();
+
+            StaccatoRequest request = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    .withCategoryId(sameCategoryId)
+                    .build();
+
+            assertDoesNotThrow(() -> staccatoService.updateStaccatoById(staccatoId, request, member1));
+        }
+
+        @DisplayName("개인 -> 개인 카테고리 이동은 가능하다.")
+        @Test
+        void updateAllows_privateToPrivate() {
+            Long staccatoId = staccatoInPrivate1.getId();
+
+            StaccatoRequest request = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    .withCategoryId(privateCategory2.getId())
+                    .build();
+
+            assertDoesNotThrow(() -> staccatoService.updateStaccatoById(staccatoId, request, member1));
+        }
+
+        @DisplayName("개인 → 공동 카테고리 이동은 예외가 발생한다.")
+        @Test
+        void updateThrows_privateToShared() {
+            Long staccatoId = staccatoInPrivate1.getId();
+
+            StaccatoRequest request = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    .withCategoryId(sharedCategory1.getId())
+                    .build();
+
+            assertThatThrownBy(() -> staccatoService.updateStaccatoById(staccatoId, request, member1))
+                    .isInstanceOf(StaccatoException.class)
+                    .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요.");
+        }
+
+        @DisplayName("공동 → 개인 카테고리 이동은 예외가 발생한다.")
+        @Test
+        void updateThrows_sharedToPrivate() {
+            Long staccatoId = staccatoInShared1.getId();
+
+            StaccatoRequest request = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    .withCategoryId(privateCategory1.getId())
+                    .build();
+
+            assertThatThrownBy(() -> staccatoService.updateStaccatoById(staccatoId, request, member1))
+                    .isInstanceOf(StaccatoException.class)
+                    .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요.");
+        }
+
+        @DisplayName("공동 → 공동 카테고리 간 이동은 예외가 발생한다.")
+        @Test
+        void updateThrows_sharedToShared() {
+            Long staccatoId = staccatoInShared1.getId();
+
+            StaccatoRequest request = StaccatoRequestFixtures.defaultStaccatoRequest()
+                    .withCategoryId(sharedCategory2.getId())
+                    .build();
+
+            assertThatThrownBy(() -> staccatoService.updateStaccatoById(staccatoId, request, member1))
+                    .isInstanceOf(StaccatoException.class)
+                    .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요.");
+        }
+    }
+
+
     @DisplayName("본인 것이 아닌 스타카토를 수정하려고 하면 예외가 발생한다.")
     @Test
     void failToUpdateStaccatoOfOther() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
         StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
@@ -263,11 +381,12 @@ class StaccatoServiceTest extends ServiceSliceTest {
     void failToUpdateStaccatoToOtherCategory() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         Category otherCategory = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(otherMember, categoryRepository);
+                .withHost(otherMember).buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
         StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
@@ -285,7 +404,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
                 .withCategoryId(category.getId()).build();
 
@@ -301,7 +421,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .buildAndSaveWithStaccatoImages(List.of("https://example.com/staccatoImage1.jpg", "https://example.com/staccatoImage2.jpg"), staccatoRepository);
@@ -326,9 +447,10 @@ class StaccatoServiceTest extends ServiceSliceTest {
     void cannotDeleteStaccatoByIdIfNotOwner() {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        Member otherMember = MemberFixtures.defaultMember().buildAndSave(memberRepository);
+        Member otherMember = MemberFixtures.defaultMember().withNickname("otherMem").buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
 
@@ -344,7 +466,8 @@ class StaccatoServiceTest extends ServiceSliceTest {
         // given
         Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
         Category category = CategoryFixtures.defaultCategory()
-                .buildAndSaveWithMember(member, categoryRepository);
+                .withHost(member)
+                .buildAndSave(categoryRepository);
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category).buildAndSave(staccatoRepository);
         FeelingRequest feelingRequest = new FeelingRequest("happy");

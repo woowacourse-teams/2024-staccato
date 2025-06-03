@@ -1,5 +1,6 @@
 package com.on.staccato.data.invitation
 
+import com.on.staccato.data.dto.invitation.InvitationRequest
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.network.ApiResult
 import com.on.staccato.data.network.handle
@@ -13,6 +14,13 @@ class InvitationDefaultRepository
     constructor(
         private val invitationApiService: InvitationApiService,
     ) : InvitationRepository {
+        override suspend fun invite(
+            categoryId: Long,
+            inviteeIds: List<Long>,
+        ): ApiResult<List<Long>> =
+            invitationApiService.postInvitation(InvitationRequest(categoryId, inviteeIds))
+                .handle { it.invitationIds }
+
         override suspend fun getReceivedInvitations(): ApiResult<List<ReceivedInvitation>> =
             invitationApiService.getReceivedInvitations().handle { it.toDomain() }
 

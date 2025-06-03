@@ -56,5 +56,5 @@ abstract class RepositoryModule {
     abstract fun bindLocationRepository(locationDefaultRepository: LocationDefaultRepository): LocationRepository
 
     @Binds
-    abstract fun bindInvitationRepository(invitationRepository: InvitationDefaultRepository): InvitationRepository
+    abstract fun bindInvitationRepository(invitationDefaultRepository: InvitationDefaultRepository): InvitationRepository
 }

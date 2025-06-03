@@ -1,13 +1,21 @@
 package com.on.staccato.data.invitation
 
+import com.on.staccato.data.dto.invitation.InvitationRequest
+import com.on.staccato.data.dto.invitation.InvitationResponse
 import com.on.staccato.data.dto.invitation.ReceivedInvitationsResponse
 import com.on.staccato.data.dto.invitation.SentInvitationsResponse
 import com.on.staccato.data.network.ApiResult
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface InvitationApiService {
+    @POST(INVITATION_PATH)
+    suspend fun postInvitation(
+        @Body invitation: InvitationRequest,
+    ): ApiResult<InvitationResponse>
+
     @GET(RECEIVED_INVITATION_PATH)
     suspend fun getReceivedInvitations(): ApiResult<ReceivedInvitationsResponse>
 
@@ -30,7 +38,7 @@ interface InvitationApiService {
     ): ApiResult<Unit>
 
     companion object {
-        private const val INVITATION_PATH = "/invitations"
+        const val INVITATION_PATH = "/invitations"
         private const val INVITATION_ID = "invitationId"
         private const val RECEIVED_INVITATION_PATH = "$INVITATION_PATH/received"
         private const val SENT_INVITATION_PATH = "$INVITATION_PATH/sent"

@@ -5,6 +5,11 @@ import com.on.staccato.domain.model.invitation.ReceivedInvitation
 import com.on.staccato.domain.model.invitation.SentInvitation
 
 interface InvitationRepository {
+    suspend fun invite(
+        categoryId: Long,
+        inviteeIds: List<Long>,
+    ): ApiResult<List<Long>>
+
     suspend fun getReceivedInvitations(): ApiResult<List<ReceivedInvitation>>
 
     suspend fun acceptInvitation(invitationId: Long): ApiResult<Unit>

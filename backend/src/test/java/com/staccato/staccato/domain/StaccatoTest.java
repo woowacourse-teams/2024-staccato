@@ -1,6 +1,5 @@
 package com.staccato.staccato.domain;
 
-import com.staccato.category.domain.Category;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,23 +9,23 @@ import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import com.staccato.category.domain.Category;
+import com.staccato.category.domain.Color;
+import com.staccato.category.repository.CategoryRepository;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.category.repository.CategoryRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class StaccatoTest {
@@ -73,31 +72,6 @@ class StaccatoTest {
                 .build());
     }
 
-    @DisplayName("스타카토 생성 시 title의 앞 뒤 공백이 제거된다.")
-    @Test
-    void trimPlaceName() {
-        // given
-        Category category = CategoryFixtures.defaultCategory().build();
-        LocalDateTime visitedAt = LocalDateTime.of(2024, 6, 1, 0, 0);
-        String title = " staccatoTitle ";
-        String expectedTitle = "staccatoTitle";
-
-        // when
-        Staccato staccato = Staccato.builder()
-                .visitedAt(visitedAt)
-                .title(title)
-                .latitude(BigDecimal.ONE)
-                .longitude(BigDecimal.ONE)
-                .placeName("placeName")
-                .address("address")
-                .category(category)
-                .staccatoImages(new StaccatoImages(List.of()))
-                .build();
-
-        // then
-        assertThat(staccato.getTitle()).isEqualTo(expectedTitle);
-    }
-
     @DisplayName("카테고리 날짜 안에 스타카토 날짜가 포함되지 않으면 예외를 발생시킨다.")
     @Test
     void failCreateStaccato() {
@@ -124,7 +98,7 @@ class StaccatoTest {
 
     @DisplayName("이미지가 있을 경우 첫번째 사진을 썸네일로 반환한다.")
     @Test
-    void thumbnail(){
+    void thumbnail() {
         // given
         Category category = CategoryFixtures.defaultCategory().build();
         String thumbnail = "https://example.com/staccatoImage1.jpg";
@@ -142,7 +116,7 @@ class StaccatoTest {
 
     @DisplayName("이미지가 없을 경우 null을 썸네일로 반환한다.")
     @Test
-    void noThumbnail(){
+    void noThumbnail() {
         // given
         Category category = CategoryFixtures.defaultCategory().build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
@@ -175,7 +149,8 @@ class StaccatoTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                    .buildAndSave(categoryRepository);
             LocalDateTime beforeCreate = category.getUpdatedAt();
 
             // when
@@ -195,7 +170,8 @@ class StaccatoTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                    .buildAndSave(categoryRepository);
             Staccato staccato = StaccatoFixtures.defaultStaccato()
                     .withCategory(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeUpdate = category.getUpdatedAt();
@@ -216,7 +192,8 @@ class StaccatoTest {
             // given
             Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
             Category category = CategoryFixtures.defaultCategory()
-                    .buildAndSaveWithMember(member, categoryRepository);
+                    .withHost(member)
+                    .buildAndSave(categoryRepository);
             Staccato staccato = StaccatoFixtures.defaultStaccato()
                     .withCategory(category).buildAndSave(staccatoRepository);
             LocalDateTime beforeDelete = category.getUpdatedAt();
@@ -230,5 +207,55 @@ class StaccatoTest {
             // then
             assertThat(afterDelete).isAfter(beforeDelete);
         }
+    }
+
+    @DisplayName("스타카토의 색상은 카테고리의 색상을 따른다.")
+    @Test
+    void getColor() {
+        // given
+        Member member = MemberFixtures.defaultMember().build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withColor(Color.PINK)
+                .withHost(member)
+                .build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).build();
+
+        // when
+        Color color = staccato.getColor();
+
+        // then
+        assertThat(color).isEqualTo(Color.PINK);
+    }
+
+    @DisplayName("스타카토의 카테고리를 변경할 수 없는 경우 예외가 발생한다.")
+    @Test
+    void validateCategoryChangeable() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withTitle("non-shared")
+                .withHost(host)
+                .build();
+        Category sharedCategory = CategoryFixtures.defaultCategory()
+                .withTitle("shared")
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .build();
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category).build();
+        Staccato sharedStaccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(sharedCategory).build();
+
+        // when & then
+        assertAll(
+                () -> assertThatThrownBy(() -> staccato.validateCategoryChangeable(sharedCategory))
+                        .isInstanceOf(StaccatoException.class)
+                        .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요."),
+                () -> assertThatThrownBy(() -> sharedStaccato.validateCategoryChangeable(category))
+                        .isInstanceOf(StaccatoException.class)
+                        .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요.")
+        );
     }
 }

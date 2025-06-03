@@ -1,25 +1,10 @@
 package com.staccato.staccato.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,7 +13,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
 import com.staccato.ControllerTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
@@ -42,15 +26,27 @@ import com.staccato.fixture.staccato.StaccatoRequestFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.service.dto.request.FeelingRequest;
+import com.staccato.staccato.service.dto.request.StaccatoLocationRangeRequest;
 import com.staccato.staccato.service.dto.request.StaccatoRequest;
-import com.staccato.staccato.service.dto.response.StaccatoDetailResponse;
+import com.staccato.staccato.service.dto.response.StaccatoDetailResponseV2;
 import com.staccato.staccato.service.dto.response.StaccatoIdResponse;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponse;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponseV2;
-import com.staccato.staccato.service.dto.response.StaccatoLocationResponses;
 import com.staccato.staccato.service.dto.response.StaccatoLocationResponsesV2;
 import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
 import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class StaccatoControllerTest extends ControllerTest {
 
@@ -68,9 +64,6 @@ class StaccatoControllerTest extends ControllerTest {
                 Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
                                 .withPlaceName(null).build(),
                         "장소 이름을 입력해주세요."),
-                Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
-                                .withStaccatoTitle("가".repeat(31)).build(),
-                        "스타카토 제목은 공백 포함 30자 이하로 설정해주세요."),
                 Arguments.of(StaccatoRequestFixtures.defaultStaccatoRequest()
                                 .withLatitude(null).build(),
                         "스타카토의 위도를 입력해주세요."),
@@ -178,18 +171,16 @@ class StaccatoControllerTest extends ControllerTest {
         StaccatoLocationResponseV2 response1 = new StaccatoLocationResponseV2(
                 StaccatoFixtures.defaultStaccato()
                         .withCategory(category)
-                        .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build(),
-                category.getColor()
+                        .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build()
         );
         StaccatoLocationResponseV2 response2 = new StaccatoLocationResponseV2(
                 StaccatoFixtures.defaultStaccato()
                         .withCategory(category)
-                        .withSpot(new BigDecimal("123.456789"), new BigDecimal("123.456789")).build(),
-                category.getColor()
+                        .withSpot(new BigDecimal("123.456789"), new BigDecimal("123.456789")).build()
         );
         StaccatoLocationResponsesV2 responses = new StaccatoLocationResponsesV2(List.of(response1, response2));
 
-        when(staccatoService.readAllStaccato(any(Member.class))).thenReturn(responses);
+        when(staccatoService.readAllStaccato(any(Member.class), any(StaccatoLocationRangeRequest.class))).thenReturn(responses);
         String expectedResponse = """
                 {
                     "staccatoLocationResponses": [
@@ -226,7 +217,7 @@ class StaccatoControllerTest extends ControllerTest {
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        StaccatoDetailResponse response = new StaccatoDetailResponse(staccato);
+        StaccatoDetailResponseV2 response = new StaccatoDetailResponseV2(staccato);
         when(staccatoService.readStaccatoById(anyLong(), any(Member.class))).thenReturn(response);
         String expectedResponse = """
                     {
@@ -293,30 +284,6 @@ class StaccatoControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(staccatoRequest))
                 .andExpect(status().isOk());
-    }
-
-    @DisplayName("추가하려는 사진이 8장이 넘는다면 스타카토 수정에 실패한다.")
-    @Test
-    void failUpdateStaccatoByImagesSize() throws Exception {
-        // given
-        long staccatoId = 1L;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                HttpStatus.BAD_REQUEST.toString(), "사진은 8장까지만 추가할 수 있어요.");
-        List<String> images = new ArrayList<>();
-        for (int count = 1; count <= 9; count++) {
-            images.add("image" + count + ".jpg");
-        }
-        StaccatoRequest staccatoRequest = StaccatoRequestFixtures.defaultStaccatoRequest()
-                .withStaccatoImageUrls(images).build();
-        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-
-        // when & then
-        mockMvc.perform(put("/staccatos/{staccatoId}", staccatoId)
-                        .header(HttpHeaders.AUTHORIZATION, "token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(staccatoRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
 
     @DisplayName("적합하지 않은 경로변수의 경우 스타카토 수정에 실패한다.")
