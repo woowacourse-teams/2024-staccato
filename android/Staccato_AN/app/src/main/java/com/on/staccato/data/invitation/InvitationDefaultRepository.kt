@@ -11,20 +11,20 @@ import javax.inject.Inject
 class InvitationDefaultRepository
     @Inject
     constructor(
-        private val invitationDataSource: InvitationDataSource,
+        private val invitationApiService: InvitationApiService,
     ) : InvitationRepository {
         override suspend fun getReceivedInvitations(): ApiResult<List<ReceivedInvitation>> =
-            invitationDataSource.getReceivedInvitations().handle { it.toDomain() }
+            invitationApiService.getReceivedInvitations().handle { it.toDomain() }
 
         override suspend fun acceptInvitation(invitationId: Long): ApiResult<Unit> =
-            invitationDataSource.acceptInvitation(invitationId = invitationId).handle()
+            invitationApiService.postInvitationAccept(invitationId = invitationId).handle()
 
         override suspend fun rejectInvitation(invitationId: Long): ApiResult<Unit> =
-            invitationDataSource.rejectInvitation(invitationId = invitationId).handle()
+            invitationApiService.postInvitationReject(invitationId = invitationId).handle()
 
         override suspend fun getSentInvitations(): ApiResult<List<SentInvitation>> =
-            invitationDataSource.getSentInvitations().handle { it.toDomain() }
+            invitationApiService.getSentInvitations().handle { it.toDomain() }
 
         override suspend fun cancelInvitation(invitationId: Long): ApiResult<Unit> =
-            invitationDataSource.cancelInvitation(invitationId = invitationId).handle()
+            invitationApiService.postInvitationCancel(invitationId = invitationId).handle()
     }
