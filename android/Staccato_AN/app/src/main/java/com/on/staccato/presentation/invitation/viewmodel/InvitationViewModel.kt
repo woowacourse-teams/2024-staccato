@@ -12,14 +12,15 @@ import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.invitation.ReceivedInvitation
 import com.on.staccato.domain.model.invitation.SentInvitation
 import com.on.staccato.domain.repository.InvitationRepository
-import com.on.staccato.presentation.invitation.model.ToastMessage
 import com.on.staccato.presentation.invitation.model.InvitationDialogState
 import com.on.staccato.presentation.invitation.model.InvitationDialogState.Cancel
 import com.on.staccato.presentation.invitation.model.InvitationDialogState.None
 import com.on.staccato.presentation.invitation.model.InvitationDialogState.Reject
 import com.on.staccato.presentation.invitation.model.ReceivedInvitationUiModel
 import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
-import com.on.staccato.presentation.invitation.model.ToastMessage.*
+import com.on.staccato.presentation.invitation.model.ToastMessage
+import com.on.staccato.presentation.invitation.model.ToastMessage.FromResource
+import com.on.staccato.presentation.invitation.model.ToastMessage.Plain
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel

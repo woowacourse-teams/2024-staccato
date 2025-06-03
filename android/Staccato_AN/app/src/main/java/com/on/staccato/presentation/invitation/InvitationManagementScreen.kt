@@ -36,10 +36,11 @@ fun InvitationManagementScreen(
 
     LaunchedEffect(Unit) {
         invitationViewModel.toastMessage.collect {
-            val message = when (it) {
-                is ToastMessage.FromResource -> context.getString(it.messageId)
-                is ToastMessage.Plain -> it.errorMessage
-            }
+            val message =
+                when (it) {
+                    is ToastMessage.FromResource -> context.getString(it.messageId)
+                    is ToastMessage.Plain -> it.errorMessage
+                }
             context.showToast(message)
         }
     }
