@@ -22,22 +22,14 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             SELECT c FROM Category c
             JOIN c.categoryMembers cm
             WHERE cm.member.id = :memberId
+              AND (:isPrivate = false OR c.isShared = false)
               AND (
                     (c.term.startAt IS NULL AND c.term.endAt IS NULL)
                  OR (:date BETWEEN c.term.startAt AND c.term.endAt)
               )
-    """)
-    List<Category> findAllByMemberIdAndDate(@Param("memberId") long memberId, @Param("date") LocalDate date);
-
-    @Query("""
-            SELECT c FROM Category c
-            JOIN c.categoryMembers cm
-            WHERE cm.member.id = :memberId
-              AND c.isShared = false
-              AND (
-                    (c.term.startAt IS NULL AND c.term.endAt IS NULL)
-                 OR (:date BETWEEN c.term.startAt AND c.term.endAt)
-              )
-    """)
-    List<Category> findPrivateByMemberIdAndDate(@Param("memberId") long memberId, @Param("date") LocalDate date);
+            """)
+    List<Category> findByMemberIdAndDateWithPrivateFlag(
+            @Param("memberId") long memberId,
+            @Param("date") LocalDate date,
+            @Param("isPrivate") boolean isPrivate);
 }

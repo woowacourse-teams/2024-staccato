@@ -76,13 +76,7 @@ public class CategoryService {
     }
 
     public CategoryNameResponses readCategoriesByMemberAndDateAndPrivateFlag(Member member, LocalDate specificDate, boolean isPrivate) {
-        List<Category> rawCategories = Collections.emptyList();
-        if (isPrivate) {
-            rawCategories = categoryRepository.findPrivateByMemberIdAndDate(member.getId(), specificDate);
-        } else if (!isPrivate) {
-            rawCategories = categoryRepository.findAllByMemberIdAndDate(member.getId(), specificDate);
-        }
-
+        List<Category> rawCategories = categoryRepository.findByMemberIdAndDateWithPrivateFlag(member.getId(), specificDate, isPrivate);
         List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER, DEFAULT_CATEGORY_SORT);
 
         return CategoryNameResponses.from(categories);
