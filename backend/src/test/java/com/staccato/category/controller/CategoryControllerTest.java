@@ -255,9 +255,37 @@ class CategoryControllerTest extends ControllerTest {
         mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .param("specificDate", LocalDate.now().toString())
-                        .param("scope", "all"))
+                        .param("isPrivate", "false"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("specificDate 파라미터 없이 요청하면 예외가 발생한다.")
+    @Test
+    void cannotReadCandidateCategoriesWithoutSpecificDate() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "필수 요청 파라미터가 누락되었습니다. 필요한 파라미터를 제공해주세요.");
+
+        // when & then
+        mockMvc.perform(get("/categories/candidates")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("isPrivate", "false"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("isPrivate 파라미터 없이 요청해도 기본값 false로 정상 동작한다")
+    @Test
+    void canReadCandidateCategoriesWithoutIsPrivate() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+
+        // when & then
+        mockMvc.perform(get("/categories/candidates")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("specificDate", LocalDate.now().toString()))
+                .andExpect(status().isOk());
     }
 
     @DisplayName("잘못된 날짜 형식으로 카테고리 목록 조회를 시도하면 예외가 발생한다.")
@@ -272,7 +300,23 @@ class CategoryControllerTest extends ControllerTest {
         mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .param("specificDate", currentDate)
-                        .param("scope", "all"))
+                        .param("isPrivate", "false"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("잘못된 boolean 형식으로 카테고리 목록 조회를 시도하면 예외가 발생한다.")
+    @Test
+    void cannotReadCandidateCategoriesByInvalidBooleanFormat() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
+
+        // when & then
+        mockMvc.perform(get("/categories/candidates")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("specificDate", LocalDate.now().toString())
+                        .param("isPrivate", "invalidString"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
