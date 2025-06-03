@@ -235,5 +235,6 @@
     <string name="invitation_management_inviter_guide_text">님이 카테고리에 초대했어요.</string>
     <string name="invitation_management_accept">수락</string>
     <string name="invitation_management_reject">거절</string>
+    <string name="invitation_management_cancel">취소</string>
 
 </resources>
