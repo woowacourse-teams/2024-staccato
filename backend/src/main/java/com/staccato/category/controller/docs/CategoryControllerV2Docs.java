@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Category V2", description = "Category API V2")
 public interface CategoryControllerV2Docs {
-    @Operation(summary = "카테고리 생성", description = "카테고리(썸네일, 제목, 내용, 기간)을 생성합니다.")
+    @Operation(summary = "카테고리 생성", deprecated = true, description = "카테고리(썸네일, 제목, 내용, 기간)을 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 생성 성공", responseCode = "201"),
             @ApiResponse(description = """
@@ -45,14 +45,14 @@ public interface CategoryControllerV2Docs {
             @Parameter(required = true) @Valid CategoryRequestV2 categoryRequest,
             @Parameter(hidden = true) Member member);
 
-    @Operation(summary = "카테고리 목록 조회", description = "사용자의 모든 카테고리 목록을 조회합니다.")
+    @Operation(summary = "카테고리 목록 조회", deprecated = true, description = "사용자의 모든 카테고리 목록을 조회합니다.")
     @ApiResponse(description = "카테고리 목록 조회 성공", responseCode = "200")
     ResponseEntity<CategoryResponsesV2> readAllCategories(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "정렬 기준은 생략하거나 유효하지 않은 값에 대해서는 최근 수정 순(UPDATED)이 기본 정렬로 적용됩니다. 필터링 조건은 생략하거나 유효하지 않은 값이 들어오면 적용되지 않습니다.") CategoryReadRequest categoryReadRequest
     );
 
-    @Operation(summary = "카테고리 조회", description = "사용자의 카테고리을 조회합니다.")
+    @Operation(summary = "카테고리 조회", deprecated = true, description = "사용자의 카테고리을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
