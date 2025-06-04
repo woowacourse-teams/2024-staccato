@@ -10,9 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -51,7 +49,6 @@ import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.fixture.staccato.StaccatoRequestFixtures;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
-import com.staccato.invitation.service.InvitationService;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
@@ -363,6 +360,61 @@ class CategoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(categoryResponses.categories()).hasSize(1),
                 () -> assertThat(categoryResponses.categories().get(0).staccatoCount()).isEqualTo(2L)
         );
+    }
+
+    @DisplayName("개인카테고리여부(isPrivate)가 false이면 해당 멤버의 전체 카테고리(개인/공동) 목록을 수정 순으로 조회한다.")
+    @Test
+    void readAllCategoriesByMemberAndDateAndPrivateFlagWhenPrivateFlagIsFalse() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category privateCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .buildAndSave(categoryRepository);
+        Category publicCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when
+        boolean isPrivate = false;
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByMemberAndDateAndPrivateFlag(host, LocalDate.of(2024, 6, 1), isPrivate);
+
+        // then
+        List<Long> resultCategoryIds = categoryNameResponses.categories().stream()
+                .map(CategoryNameResponse::categoryId)
+                .toList();
+
+        assertThat(resultCategoryIds).hasSize(2)
+                .containsExactly(publicCategory.getId(), privateCategory.getId());
+    }
+
+    @DisplayName("개인카테고리여부(isPrivate)가 true이면 해당 멤버의 개인 카테고리 목록을 수정 순으로 조회한다.")
+    @Test
+    void readAllCategoriesByMemberAndDateAndPrivateFlagWhenPrivateFlagIsTrue() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category privateCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .buildAndSave(categoryRepository);
+        Category publicCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when
+        boolean isPrivate = true;
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByMemberAndDateAndPrivateFlag(host, LocalDate.of(2024, 6, 1), isPrivate);
+
+        // then
+        List<Long> resultCategoryIds = categoryNameResponses.categories().stream()
+                .map(CategoryNameResponse::categoryId)
+                .toList();
+
+        assertThat(resultCategoryIds).hasSize(1)
+                .containsExactly(privateCategory.getId())
+                .doesNotContain(publicCategory.getId());
     }
 
     @DisplayName("카테고리 정보를 기반으로, 카테고리를 수정한다.")

@@ -234,12 +234,12 @@ class CategoryControllerTest extends ControllerTest {
 
     @DisplayName("특정 날짜를 포함하고 있는 모든 카테고리 목록을 조회하는 응답 직렬화에 성공한다.")
     @Test
-    void readCandidateCategoriesIncludingDate() throws Exception {
+    void readAllCandidateCategoriesIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().build();
         CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
-        when(categoryService.readCategoriesByMemberAndDateAndPrivateFlag(any(Member.class), any(), any(Boolean.class))).thenReturn(categoryNameResponses);
+        when(categoryService.readAllCategoriesByMemberAndDateAndPrivateFlag(any(Member.class), any(), any(Boolean.class))).thenReturn(categoryNameResponses);
         String expectedResponse = """
                 {
                     "categories": [
@@ -262,7 +262,7 @@ class CategoryControllerTest extends ControllerTest {
 
     @DisplayName("specificDate 파라미터 없이 요청하면 예외가 발생한다.")
     @Test
-    void cannotReadCandidateCategoriesWithoutSpecificDate() throws Exception {
+    void cannotReadAllCandidateCategoriesWithoutSpecificDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "필수 요청 파라미터가 누락되었습니다. 필요한 파라미터를 제공해주세요.");
@@ -277,7 +277,7 @@ class CategoryControllerTest extends ControllerTest {
 
     @DisplayName("isPrivate 파라미터 없이 요청해도 기본값 false로 정상 동작한다")
     @Test
-    void canReadCandidateCategoriesWithoutIsPrivate() throws Exception {
+    void canReadAllCandidateCategoriesWithoutIsPrivate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
 
@@ -291,7 +291,7 @@ class CategoryControllerTest extends ControllerTest {
     @DisplayName("잘못된 날짜 형식으로 카테고리 목록 조회를 시도하면 예외가 발생한다.")
     @ParameterizedTest
     @ValueSource(strings = {"2024.07.01", "2024-07", "2024", "a"})
-    void cannotReadCandidateCategoriesByInvalidDateFormat(String currentDate) throws Exception {
+    void cannotReadAllCandidateCategoriesByInvalidDateFormat(String currentDate) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
@@ -307,7 +307,7 @@ class CategoryControllerTest extends ControllerTest {
 
     @DisplayName("잘못된 boolean 형식으로 카테고리 목록 조회를 시도하면 예외가 발생한다.")
     @Test
-    void cannotReadCandidateCategoriesByInvalidBooleanFormat() throws Exception {
+    void cannotReadAllCandidateCategoriesByInvalidBooleanFormat() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");

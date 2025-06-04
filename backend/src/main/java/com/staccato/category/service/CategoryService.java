@@ -2,7 +2,6 @@ package com.staccato.category.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,8 +74,9 @@ public class CategoryService {
         return new CategoryResponsesV3(responses);
     }
 
-    public CategoryNameResponses readCategoriesByMemberAndDateAndPrivateFlag(Member member, LocalDate specificDate, boolean isPrivate) {
-        List<Category> rawCategories = categoryRepository.findByMemberIdAndDateWithPrivateFlag(member.getId(), specificDate, isPrivate);
+    public CategoryNameResponses readAllCategoriesByMemberAndDateAndPrivateFlag(Member member, LocalDate specificDate, boolean isPrivate) {
+        Boolean isSharedFilter = isPrivate ? Boolean.FALSE : null;
+        List<Category> rawCategories = categoryRepository.findAllByMemberIdAndDateAndSharingFilter(member.getId(), specificDate, isSharedFilter);
         List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER, DEFAULT_CATEGORY_SORT);
 
         return CategoryNameResponses.from(categories);

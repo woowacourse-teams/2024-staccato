@@ -65,7 +65,7 @@ public interface CategoryControllerDocs {
                     (2) 입력받은 개인 카테고리 여부가 유효하지 않을 때
                     """, responseCode = "400")
     })
-    ResponseEntity<CategoryNameResponses> readCandidateCategories(
+    ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @Parameter(hidden = true) Member member,
             @Parameter(description = "특정 날짜 (yyyy-MM-dd 형식)", example = "2024-08-21", required = true)
             @RequestParam(required = true)

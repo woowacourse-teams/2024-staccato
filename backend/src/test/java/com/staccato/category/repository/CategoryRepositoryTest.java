@@ -87,8 +87,8 @@ class CategoryRepositoryTest extends RepositoryTest {
 
         // when
         LocalDate specificDateIn2024 = LocalDate.of(2024, 6, 1);
-        boolean defaultIsPrivate = false;
-        List<Category> categories = categoryRepository.findByMemberIdAndDateWithPrivateFlag(host.getId(), specificDateIn2024, defaultIsPrivate);
+        Boolean defaultIsShared = null;
+        List<Category> categories = categoryRepository.findAllByMemberIdAndDateAndSharingFilter(host.getId(), specificDateIn2024, defaultIsShared);
 
         // then
         assertThat(categories).hasSize(2)
@@ -96,9 +96,9 @@ class CategoryRepositoryTest extends RepositoryTest {
                 .doesNotContain(privateCategoryIn2025, publicCategoryIn2025);
     }
 
-    @DisplayName("개인카테고리여부(isPrivate)가 false이면 해당 멤버의 전체 카테고리(개인/공동) 목록을 조회한다.")
+    @DisplayName("공유카테고리여부(isShared)가 null이면 해당 멤버의 전체 카테고리(개인/공동) 목록을 조회한다.")
     @Test
-    void findByMemberIdAndDateWithPrivateFlagWhenPrivateFlagIsFalse() {
+    void findAllByMemberIdAndDateAndSharingFilterIsNull() {
         // given
         Category privateCategory = CategoryFixtures.defaultCategory()
                 .withHost(host)
@@ -111,16 +111,16 @@ class CategoryRepositoryTest extends RepositoryTest {
                 .buildAndSave(categoryRepository);
 
         // when
-        List<Category> categories = categoryRepository.findByMemberIdAndDateWithPrivateFlag(host.getId(), LocalDate.now(), false);
+        List<Category> categories = categoryRepository.findAllByMemberIdAndDateAndSharingFilter(host.getId(), LocalDate.now(), null);
 
         // then
         assertThat(categories).hasSize(2)
                 .containsExactlyInAnyOrder(privateCategory, publicCategory);
     }
 
-    @DisplayName("개인카테고리여부(isPrivate)가 true이면 해당 멤버의 개인 카테고리 목록만 조회한다.")
+    @DisplayName("공유카테고리여부(isShared)가 false이면 해당 멤버의 개인 카테고리 목록만 조회한다.")
     @Test
-    void findByMemberIdAndDateWithPrivateFlagWhenPrivateFlagIsTrue() {
+    void findAllByMemberIdAndDateAndSharingFilterIsFalse() {
         // given
         Category privateCategory = CategoryFixtures.defaultCategory()
                 .withHost(host)
@@ -133,7 +133,7 @@ class CategoryRepositoryTest extends RepositoryTest {
                 .buildAndSave(categoryRepository);
 
         // when
-        List<Category> categories = categoryRepository.findByMemberIdAndDateWithPrivateFlag(host.getId(), LocalDate.now(), true);
+        List<Category> categories = categoryRepository.findAllByMemberIdAndDateAndSharingFilter(host.getId(), LocalDate.now(), false);
 
         // then
         assertThat(categories).hasSize(1)

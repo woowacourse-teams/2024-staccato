@@ -66,12 +66,12 @@ public class CategoryController implements CategoryControllerDocs {
     }
 
     @GetMapping("/candidates")
-    public ResponseEntity<CategoryNameResponses> readCandidateCategories(
+    public ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @LoginMember Member member,
             @RequestParam(value = "specificDate") LocalDate specificDate,
             @RequestParam(value = "isPrivate", required = false, defaultValue = "false") boolean isPrivate
     ) {
-        CategoryNameResponses categoryNameResponses = categoryService.readCategoriesByMemberAndDateAndPrivateFlag(member, specificDate, isPrivate);
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByMemberAndDateAndPrivateFlag(member, specificDate, isPrivate);
         return ResponseEntity.ok(categoryNameResponses);
     }
 
