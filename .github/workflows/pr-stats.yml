@@ -1,6 +1,11 @@
 name: PR Stats
+
 on:
   workflow_dispatch:
+    inputs:
+      period:
+        description: 'PR 통계를 추출할 기간 (예: 2024-07-17~2024-09-01 또는 2024-07-17~)'
+        required: false
 
 jobs:
   pr-stats:
@@ -8,11 +13,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: PR Stats
-        uses: "naver/pr-stats@v1.0.0" # 이 액션의 경로와 사용할 버전
+        uses: "naver/pr-stats@v1.0.0"
         with:
           token: ${{ secrets.HANNAH_PERSONAL_ACCESS_TOKEN }}
           ignoreUsers: "kargowild"
           count: '20'
           baseBranch: "develop"
           output: "console"
+          # period가 입력되었을 경우에만 전달
+          period: ${{ github.event.inputs.period || '' }}
