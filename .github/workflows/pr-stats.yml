@@ -18,14 +18,4 @@ jobs:
           ignoreUsers: "kargowild"
           count: '100'
           baseBranch: "develop"
-          output: "csv"
-      - name: Show CSV file path
-        run: |
-            echo "📝 Generated CSV file path (relative): $(realpath pr-stats.csv)"
-            echo "🗂 Directory listing:"
-            ls -al stats || echo "stats directory not found"
-      - name: Upload PR Stats CSV as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr-stats-csv
-          path: stats/*.csv
+          output: "console"
