@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -25,12 +26,13 @@ import com.on.staccato.theme.White
 
 @Composable
 fun DefaultTextButton(
-    modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     enabled: Boolean = true,
     backgroundColor: Color,
     textColor: Color,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     border: BorderStroke? = null,
     textStyle: TextStyle = Body4,
 ) {
@@ -50,10 +52,7 @@ fun DefaultTextButton(
     ) {
         Text(
             modifier =
-                modifier.padding(
-                    horizontal = 16.dp,
-                    vertical = 8.dp,
-                ),
+                modifier.padding(contentPadding),
             text = text,
             style = textStyle,
             color = if (enabled) textColor else Gray4,
