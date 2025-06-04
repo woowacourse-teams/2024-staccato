@@ -16,6 +16,7 @@ import com.on.staccato.databinding.FragmentStaccatoBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.ShareManager
+import com.on.staccato.presentation.common.clipboard.ClipboardHelper
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.comments.CommentHandler
@@ -47,6 +48,9 @@ class StaccatoFragment :
 
     @Inject
     lateinit var shareManager: ShareManager
+
+    @Inject
+    lateinit var clipboardHelper: ClipboardHelper
 
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val staccatoViewModel: StaccatoViewModel by viewModels()
@@ -118,7 +122,7 @@ class StaccatoFragment :
         gravity: Int,
         id: Long,
     ) {
-        commentsViewModel.updateCommentId(id)
+        commentsViewModel.setSelectedComment(id)
         view.showPopupMenu(
             menuRes = R.menu.menu_comment,
             menuHandler = ::setupActionBy,
@@ -130,6 +134,15 @@ class StaccatoFragment :
         when (menuItemId) {
             R.id.comment_delete -> {
                 commentDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
+            }
+            R.id.comment_copy -> {
+                val comment =
+                    commentsViewModel.selectedComment.value?.content
+                        ?: return showToast(getString(R.string.staccato_error_comment_copy))
+                clipboardHelper.copyText(
+                    label = LABEL_STACCATO_COMMENT,
+                    text = comment,
+                )
             }
         }
     }
@@ -313,5 +326,6 @@ class StaccatoFragment :
         const val STACCATO_ID_KEY = "staccatoId"
         const val DEFAULT_STACCATO_ID = 0L
         const val CREATED_STACCATO_KEY = "isStaccatoCreated"
+        private const val LABEL_STACCATO_COMMENT = "staccatoComment"
     }
 }

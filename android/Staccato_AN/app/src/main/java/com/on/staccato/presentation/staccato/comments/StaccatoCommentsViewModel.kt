@@ -51,7 +51,8 @@ class StaccatoCommentsViewModel
 
         private val myMemberId = MutableSingleLiveData<Long>()
 
-        private val commentId = MutableLiveData<Long>()
+        private val _selectedComment = MutableLiveData<CommentUiModel>()
+        val selectedComment: LiveData<CommentUiModel> get() = _selectedComment
 
         init {
             fetchMemberId()
@@ -59,7 +60,7 @@ class StaccatoCommentsViewModel
 
         fun deleteComment() {
             viewModelScope.launch {
-                commentRepository.deleteComment(commentId.value ?: return@launch handleException(ExceptionState.UnknownError))
+                commentRepository.deleteComment(_selectedComment.value?.id ?: return@launch handleException(ExceptionState.UnknownError))
                     .onSuccess {
                         fetchComments(staccatoId)
                         _isDeleteSuccess.postValue(true)
@@ -79,8 +80,8 @@ class StaccatoCommentsViewModel
             }
         }
 
-        fun updateCommentId(id: Long) {
-            commentId.value = id
+        fun setSelectedComment(id: Long) {
+            _selectedComment.value = _comments.value?.find { it.id == id }
         }
 
         fun sendComment() {
