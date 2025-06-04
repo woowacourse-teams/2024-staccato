@@ -25,12 +25,14 @@ class MemberLocalDataSource
         }
 
         override suspend fun getMemberProfile(): MemberProfile =
-            MemberProfile(
-                memberId = getMemberId(),
-                profileImageUrl = getProfileImageUrl(),
-                nickname = getNickname(),
-                uuidCode = getRecoveryCode(),
-            )
+            withContext(Dispatchers.IO) {
+                MemberProfile(
+                    memberId = getMemberId(),
+                    profileImageUrl = getProfileImageUrl(),
+                    nickname = getNickname(),
+                    uuidCode = getRecoveryCode(),
+                )
+            }
 
         override suspend fun updateMemberProfile(memberProfile: MemberProfile) {
             withContext(Dispatchers.IO) {
@@ -49,32 +51,18 @@ class MemberLocalDataSource
             }
         }
 
-        private suspend fun getMemberId(): Long =
-            withContext(Dispatchers.IO) {
-                if (userInfoPrefs.contains(MEMBER_ID_KEY_NAME)) {
-                    userInfoPrefs.getLong(MEMBER_ID_KEY_NAME, INVALID_MEMBER_ID)
-                } else {
-                    INVALID_MEMBER_ID
-                }
+        private fun getMemberId(): Long =
+            if (userInfoPrefs.contains(MEMBER_ID_KEY_NAME)) {
+                userInfoPrefs.getLong(MEMBER_ID_KEY_NAME, INVALID_MEMBER_ID)
+            } else {
+                INVALID_MEMBER_ID
             }
 
-        private suspend fun getProfileImageUrl(): String? {
-            return withContext(Dispatchers.IO) {
-                userInfoPrefs.getString(PROFILE_IMAGE_URL_KEY_NAME, null)
-            }
-        }
+        private fun getProfileImageUrl(): String? = userInfoPrefs.getString(PROFILE_IMAGE_URL_KEY_NAME, null)
 
-        private suspend fun getNickname(): String {
-            return withContext(Dispatchers.IO) {
-                userInfoPrefs.getString(NICKNAME_KEY_NAME, null) ?: EMPTY_STRING
-            }
-        }
+        private fun getNickname(): String = userInfoPrefs.getString(NICKNAME_KEY_NAME, null) ?: EMPTY_STRING
 
-        private suspend fun getRecoveryCode(): String {
-            return withContext(Dispatchers.IO) {
-                userInfoPrefs.getString(RECOVERY_CODE_KEY_NAME, null) ?: EMPTY_STRING
-            }
-        }
+        private fun getRecoveryCode(): String = userInfoPrefs.getString(RECOVERY_CODE_KEY_NAME, null) ?: EMPTY_STRING
 
         companion object {
             private const val TOKEN_KEY_NAME = "com.on.staccato.token"
