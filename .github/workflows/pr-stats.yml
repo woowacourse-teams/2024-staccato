@@ -19,3 +19,8 @@ jobs:
           count: '100'
           baseBranch: "develop"
           output: "console,csv"
+      - name: Upload CSV as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-stats-csv
+          path: pr-stats.csv
