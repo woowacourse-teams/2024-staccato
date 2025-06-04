@@ -75,7 +75,10 @@ public class CategoryService {
     }
 
     public CategoryNameResponses readAllCategoriesByMemberAndDateAndPrivateFlag(Member member, LocalDate specificDate, boolean isPrivate) {
-        Boolean isSharedFilter = isPrivate ? Boolean.FALSE : null;
+        Boolean isSharedFilter = null;
+        if (isPrivate) {
+            isSharedFilter = Boolean.FALSE;
+        }
         List<Category> rawCategories = categoryRepository.findAllByMemberIdAndDateAndSharingFilter(member.getId(), specificDate, isSharedFilter);
         List<Category> categories = filterAndSort(rawCategories, DEFAULT_CATEGORY_FILTER, DEFAULT_CATEGORY_SORT);
 
