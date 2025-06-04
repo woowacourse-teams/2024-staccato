@@ -19,10 +19,14 @@ jobs:
           count: '100'
           baseBranch: "develop"
           output: "csv"
-      - name: Show CSV file path and preview content
+      - name: Show CSV file path
         run: |
             echo "📝 Generated CSV file path (relative): $(realpath pr-stats.csv)"
             echo "🗂 Directory listing:"
-            ls -al
-            echo "📄 CSV content (first 10 lines):"
-            head -n 10 pr-stats.csv
+          ls -al stats || echo "stats directory not found"
+
+      - name: Upload PR Stats CSV as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-stats-csv
+          path: stats/pr-stats.csv
