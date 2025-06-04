@@ -21,6 +21,7 @@ import com.on.staccato.presentation.invitation.component.CategoryTitle
 import com.on.staccato.presentation.invitation.component.NicknameText
 import com.on.staccato.presentation.invitation.component.ProfileImage
 import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
+import com.on.staccato.presentation.invitation.model.dummySentInvitationLongTitle
 import com.on.staccato.presentation.invitation.model.dummySentInvitationUiModels
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray3
@@ -125,6 +126,17 @@ private fun SentInvitationItemPreview(
     }
 }
 
-class SentInvitationPreviewProvider(
+private class SentInvitationPreviewProvider(
     override val values: Sequence<SentInvitationUiModel> = dummySentInvitationUiModels.asSequence(),
 ) : PreviewParameterProvider<SentInvitationUiModel>
+
+@Preview(name = "제목이 긴 경우", showBackground = true, backgroundColor = 1L)
+@Composable
+private fun LongTitleItemPreview() {
+    Box(modifier = Modifier.padding(10.dp)) {
+        SentInvitationItem(
+            categoryInvitation = dummySentInvitationLongTitle,
+            onCancelClick = {},
+        )
+    }
+}
