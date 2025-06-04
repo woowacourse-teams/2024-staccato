@@ -40,3 +40,12 @@ val dummyReceivedInvitationUiModels =
             categoryTitle = "클라이밍 도전기 클라이밍 도전기 클라이밍 도전기",
         ),
     )
+
+val dummyReceivedInvitationLongTitle =
+    ReceivedInvitationUiModel(
+        invitationId = 3L,
+        inviterId = 3L,
+        inviterNickname = "유다빈밴드",
+        categoryId = 3L,
+        categoryTitle = "이제 마주한 눈에 함께한 하루들이 흘러내린다 언제나 우리기에 돌아볼만한 그런 날들이었다",
+    )

@@ -18,6 +18,7 @@ import com.on.staccato.presentation.invitation.component.CategoryTitle
 import com.on.staccato.presentation.invitation.component.NicknameText
 import com.on.staccato.presentation.invitation.component.ProfileImage
 import com.on.staccato.presentation.invitation.model.ReceivedInvitationUiModel
+import com.on.staccato.presentation.invitation.model.dummyReceivedInvitationLongTitle
 import com.on.staccato.presentation.invitation.model.dummyReceivedInvitationUiModels
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray5
@@ -118,7 +119,17 @@ private fun ReceivedInvitationItemPreview(
     )
 }
 
-class CategoryPreviewProvider : PreviewParameterProvider<ReceivedInvitationUiModel> {
+private class CategoryPreviewProvider : PreviewParameterProvider<ReceivedInvitationUiModel> {
     override val values: Sequence<ReceivedInvitationUiModel>
         get() = dummyReceivedInvitationUiModels.asSequence()
+}
+
+@Preview(name = "제목이 긴 경우", showBackground = true, backgroundColor = 0L)
+@Composable
+private fun LongTitleItemPreview() {
+    ReceivedInvitationItem(
+        categoryInvitation = dummyReceivedInvitationLongTitle,
+        onRejectClick = {},
+        onAcceptClick = {},
+    )
 }
