@@ -3,6 +3,7 @@ package com.on.staccato.data.member
 import android.content.SharedPreferences
 import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.model.MemberProfile.Companion.EMPTY_STRING
+import com.on.staccato.domain.model.MemberProfile.Companion.INVALID_MEMBER_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -17,34 +18,29 @@ class MemberLocalDataSource
                 userInfoPrefs.getString(TOKEN_KEY_NAME, EMPTY_STRING)
             }
 
-        override suspend fun getMemberId(): Long =
+        override suspend fun updateToken(newToken: String) {
             withContext(Dispatchers.IO) {
-                userInfoPrefs.getLong(MEMBER_ID_KEY_NAME, 0L)
-            }
-
-        override suspend fun setTokenAndId(
-            newToken: String,
-            id: Long,
-        ) {
-            withContext(Dispatchers.IO) {
-                userInfoPrefs.edit()
-                    .putString(TOKEN_KEY_NAME, newToken)
-                    .putLong(MEMBER_ID_KEY_NAME, id)
-                    .apply()
+                userInfoPrefs.edit().putString(TOKEN_KEY_NAME, newToken).apply()
             }
         }
 
         override suspend fun getMemberProfile(): MemberProfile =
             MemberProfile(
+                memberId = getMemberId(),
                 profileImageUrl = getProfileImageUrl(),
                 nickname = getNickname(),
                 uuidCode = getRecoveryCode(),
             )
 
         override suspend fun updateMemberProfile(memberProfile: MemberProfile) {
-            updateProfileImageUrl(memberProfile.profileImageUrl)
-            updateNickname(memberProfile.nickname)
-            updateRecoveryCode(memberProfile.uuidCode)
+            withContext(Dispatchers.IO) {
+                userInfoPrefs.edit()
+                    .putLong(MEMBER_ID_KEY_NAME, memberProfile.memberId)
+                    .putString(PROFILE_IMAGE_URL_KEY_NAME, memberProfile.profileImageUrl)
+                    .putString(NICKNAME_KEY_NAME, memberProfile.nickname)
+                    .putString(RECOVERY_CODE_KEY_NAME, memberProfile.uuidCode)
+                    .apply()
+            }
         }
 
         override suspend fun updateProfileImageUrl(url: String?) {
@@ -52,6 +48,15 @@ class MemberLocalDataSource
                 userInfoPrefs.edit().putString(PROFILE_IMAGE_URL_KEY_NAME, url ?: EMPTY_STRING).apply()
             }
         }
+
+        private suspend fun getMemberId(): Long =
+            withContext(Dispatchers.IO) {
+                if (userInfoPrefs.contains(MEMBER_ID_KEY_NAME)) {
+                    userInfoPrefs.getLong(MEMBER_ID_KEY_NAME, INVALID_MEMBER_ID)
+                } else {
+                    INVALID_MEMBER_ID
+                }
+            }
 
         private suspend fun getProfileImageUrl(): String? {
             return withContext(Dispatchers.IO) {
@@ -68,18 +73,6 @@ class MemberLocalDataSource
         private suspend fun getRecoveryCode(): String {
             return withContext(Dispatchers.IO) {
                 userInfoPrefs.getString(RECOVERY_CODE_KEY_NAME, null) ?: EMPTY_STRING
-            }
-        }
-
-        private suspend fun updateNickname(nickname: String) {
-            withContext(Dispatchers.IO) {
-                userInfoPrefs.edit().putString(NICKNAME_KEY_NAME, nickname).apply()
-            }
-        }
-
-        private suspend fun updateRecoveryCode(code: String) {
-            withContext(Dispatchers.IO) {
-                userInfoPrefs.edit().putString(RECOVERY_CODE_KEY_NAME, code).apply()
             }
         }
 

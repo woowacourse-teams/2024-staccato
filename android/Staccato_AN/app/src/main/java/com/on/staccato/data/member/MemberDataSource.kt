@@ -5,12 +5,7 @@ import com.on.staccato.domain.model.MemberProfile
 interface MemberDataSource {
     suspend fun getToken(): String?
 
-    suspend fun getMemberId(): Long
-
-    suspend fun setTokenAndId(
-        newToken: String,
-        id: Long,
-    )
+    suspend fun updateToken(newToken: String)
 
     suspend fun getMemberProfile(): MemberProfile
 

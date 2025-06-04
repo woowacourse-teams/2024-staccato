@@ -14,7 +14,7 @@ class LoginDefaultRepository
     ) : LoginRepository {
         override suspend fun loginWithNickname(nickname: String): ApiResult<Unit> =
             loginDataSource.requestLoginWithNickname(nickname).handle {
-                memberDataSource.setTokenAndId(it.token, it.id)
+                memberDataSource.updateToken(it.token)
             }
 
         override suspend fun getToken(): Result<String?> =

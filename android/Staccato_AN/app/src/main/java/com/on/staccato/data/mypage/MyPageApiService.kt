@@ -10,7 +10,8 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 
 interface MyPageApiService {
-    @GET(MYPAGE_PATH)
+    // TODO: 사용자 프로필 조회 API V2 머지 되면 수정
+    @GET(MY_PAGE_PATH)
     suspend fun getMemberProfile(): ApiResult<MemberProfileResponse>
 
     @Multipart
@@ -20,8 +21,9 @@ interface MyPageApiService {
     ): ApiResult<ProfileImageResponse>
 
     companion object {
-        private const val MYPAGE_PATH = "/mypage"
+        private const val MY_PAGE_PATH = "/mypage"
+        private const val MY_PAGE_PATH_V2 = "/v2${MY_PAGE_PATH}"
         private const val PROFILE_IMAGE = "/images"
-        private const val PROFILE_IMAGE_CHANGE_PATH = "$MYPAGE_PATH$PROFILE_IMAGE"
+        private const val PROFILE_IMAGE_CHANGE_PATH = "$MY_PAGE_PATH$PROFILE_IMAGE"
     }
 }

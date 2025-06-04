@@ -17,11 +17,11 @@ class MemberDefaultRepository
     ) : MemberRepository {
         override suspend fun fetchTokenWithRecoveryCode(recoveryCode: String): ApiResult<Unit> =
             memberApiService.postRecoveryCode(recoveryCode)
-                .handle { memberLocalDataSource.setTokenAndId(it.token, it.id) }
+                .handle { memberLocalDataSource.updateToken(it.token) }
 
         override suspend fun getMemberId(): Result<Long> =
             runCatching {
-                memberLocalDataSource.getMemberId()
+                memberLocalDataSource.getMemberProfile().memberId
             }
 
         override suspend fun getNickname(): Result<String> =
