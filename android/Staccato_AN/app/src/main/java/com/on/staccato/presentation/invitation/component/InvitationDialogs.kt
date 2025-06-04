@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.invitation
+package com.on.staccato.presentation.invitation.component
 
 import androidx.compose.runtime.Composable
 import com.on.staccato.presentation.component.DefaultAlertDialog

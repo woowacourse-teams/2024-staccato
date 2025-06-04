@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.on.staccato.presentation.invitation.component.InvitationDialogs
+import com.on.staccato.presentation.invitation.component.InvitationManagement
 import com.on.staccato.presentation.invitation.component.InvitationManagementTopBar
 import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel
 import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel.RECEIVED_INVITATION

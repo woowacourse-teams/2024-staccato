@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.invitation.received
+package com.on.staccato.presentation.invitation.received.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,8 +19,6 @@ import com.on.staccato.presentation.invitation.component.NicknameText
 import com.on.staccato.presentation.invitation.component.ProfileImage
 import com.on.staccato.presentation.invitation.model.ReceivedInvitationUiModel
 import com.on.staccato.presentation.invitation.model.dummyReceivedInvitationUiModels
-import com.on.staccato.presentation.invitation.received.component.AcceptButton
-import com.on.staccato.presentation.invitation.received.component.RejectButton
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray5
 import com.on.staccato.theme.White

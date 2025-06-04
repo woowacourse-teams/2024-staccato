@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.invitation
+package com.on.staccato.presentation.invitation.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

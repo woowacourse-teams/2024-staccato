@@ -11,6 +11,7 @@ import com.on.staccato.presentation.component.DefaultDivider
 import com.on.staccato.presentation.component.DefaultEmptyView
 import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
 import com.on.staccato.presentation.invitation.model.dummySentInvitationUiModels
+import com.on.staccato.presentation.invitation.sent.component.SentInvitationItem
 
 @Composable
 fun SentInvitations(

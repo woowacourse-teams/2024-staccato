@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.invitation.sent
+package com.on.staccato.presentation.invitation.sent.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,7 +22,6 @@ import com.on.staccato.presentation.invitation.component.NicknameText
 import com.on.staccato.presentation.invitation.component.ProfileImage
 import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
 import com.on.staccato.presentation.invitation.model.dummySentInvitationUiModels
-import com.on.staccato.presentation.invitation.sent.component.CancelButton
 import com.on.staccato.theme.Body4
 import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.StaccatoBlack
