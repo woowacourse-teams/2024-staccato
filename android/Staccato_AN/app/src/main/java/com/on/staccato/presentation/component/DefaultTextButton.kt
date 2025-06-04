@@ -4,13 +4,11 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -60,35 +58,38 @@ fun DefaultTextButton(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "활성화 상태", showBackground = true)
 @Composable
-private fun DefaultTextButtonPreview() {
-    Column(
-        modifier = Modifier.padding(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        DefaultTextButton(
-            text = "활성화 버튼",
-            onClick = {},
-            backgroundColor = StaccatoBlue,
-            textColor = White,
-        )
+private fun EnabledDefaultTextButtonPreview() {
+    DefaultTextButton(
+        text = "활성화 버튼",
+        onClick = {},
+        backgroundColor = StaccatoBlue,
+        textColor = White,
+    )
+}
 
-        DefaultTextButton(
-            text = "비활성화 버튼",
-            onClick = {},
-            enabled = false,
-            backgroundColor = StaccatoBlue,
-            textColor = White,
-        )
+@Preview(name = "비활성화 상태", showBackground = true, backgroundColor = 0x000000L)
+@Composable
+private fun DisabledDefaultTextButtonPreview() {
+    DefaultTextButton(
+        text = "비활성화 버튼",
+        onClick = {},
+        enabled = false,
+        backgroundColor = StaccatoBlue,
+        textColor = White,
+    )
+}
 
-        DefaultTextButton(
-            text = "거절",
-            onClick = {},
-            enabled = true,
-            backgroundColor = White,
-            textColor = StaccatoBlack,
-            border = BorderStroke(0.5.dp, Gray2),
-        )
-    }
+@Preview(name = "테두리 설정", showBackground = true)
+@Composable
+private fun BorderedDefaultTextButtonPreview() {
+    DefaultTextButton(
+        text = "거절",
+        onClick = {},
+        enabled = true,
+        backgroundColor = White,
+        textColor = StaccatoBlack,
+        border = BorderStroke(0.5.dp, Gray2),
+    )
 }
