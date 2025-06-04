@@ -19,8 +19,10 @@ jobs:
           count: '100'
           baseBranch: "develop"
           output: "csv"
-      - name: Upload CSV as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr-stats-csv
-          path: pr-stats.csv
+      - name: Show CSV file path and preview content
+        run: |
+            echo "📝 Generated CSV file path (relative): $(realpath pr-stats.csv)"
+            echo "🗂 Directory listing:"
+            ls -al
+            echo "📄 CSV content (first 10 lines):"
+            head -n 10 pr-stats.csv
