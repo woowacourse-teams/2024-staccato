@@ -1,0 +1,16 @@
+name: request pr review
+
+on:
+  schedule:
+    - cron: '0 1 * * 1-5' # (KST 기준) 평일 오전 10시마다 수행
+
+jobs:
+  cron:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Request PR Review
+        uses: naver/request-pr-review@v1.2.1
+        with:
+          token: ${{ secrets.HANNAH_PERSONAL_ACCESS_TOKEN }}
+          slackBotToken: ${{ secrets.SLACK_BOT_TOKEN }}
+          repoUrl: "https://github.com/woowacourse-teams/2024-staccato"
