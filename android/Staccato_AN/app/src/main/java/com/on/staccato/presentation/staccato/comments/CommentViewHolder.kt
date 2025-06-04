@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.staccato.comments
 
+import android.view.Gravity
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.on.staccato.databinding.ItemStaccatoMyCommentBinding
@@ -15,8 +16,12 @@ sealed class CommentViewHolder(binding: ViewDataBinding) : ViewHolder(binding.ro
         fun bind(commentUiModel: CommentUiModel) {
             binding.myComment = commentUiModel
             binding.handler = handler
-            binding.root.setOnLongClickListener { view ->
-                handler.onCommentLongClicked(view, commentUiModel.id)
+            binding.root.setOnLongClickListener {
+                handler.onCommentLongClicked(
+                    view = binding.tvStaccatoMyCommentChat,
+                    gravity = Gravity.END,
+                    id = commentUiModel.id,
+                )
                 false
             }
         }
@@ -29,8 +34,12 @@ sealed class CommentViewHolder(binding: ViewDataBinding) : ViewHolder(binding.ro
         fun bind(commentUiModel: CommentUiModel) {
             binding.othersComment = commentUiModel
             binding.handler = handler
-            binding.root.setOnLongClickListener { view ->
-                handler.onCommentLongClicked(view, commentUiModel.id)
+            binding.root.setOnLongClickListener {
+                handler.onCommentLongClicked(
+                    view = binding.tvStaccatoOthersCommentChat,
+                    gravity = Gravity.START,
+                    id = commentUiModel.id,
+                )
                 false
             }
         }

@@ -115,12 +115,14 @@ class StaccatoFragment :
 
     override fun onCommentLongClicked(
         view: View,
+        gravity: Int,
         id: Long,
     ) {
         commentsViewModel.updateCommentId(id)
         view.showPopupMenu(
             menuRes = R.menu.menu_comment,
             menuHandler = ::setupActionBy,
+            gravity = gravity,
         )
     }
 
