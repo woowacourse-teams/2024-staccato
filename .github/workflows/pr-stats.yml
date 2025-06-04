@@ -1,0 +1,18 @@
+name: PR Stats
+on:
+  workflow_dispatch:
+
+jobs:
+  pr-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: PR Stats
+        uses: "naver/pr-stats@v1.0.0" # 이 액션의 경로와 사용할 버전
+        with:
+          token: ${{ secrets.HANNAH_PERSONAL_ACCESS_TOKEN }}
+          ignoreUsers: "kargowild"
+          count: '100'
+          baseBranch: "develop"
+          output: "console,csv"
