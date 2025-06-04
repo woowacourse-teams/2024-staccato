@@ -10,8 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.on.staccato.presentation.invitation.component.InvitationDialogs
 import com.on.staccato.presentation.invitation.component.InvitationManagement
 import com.on.staccato.presentation.invitation.component.InvitationManagementTopBar
@@ -26,7 +26,7 @@ import com.on.staccato.theme.White
 @Composable
 fun InvitationManagementScreen(
     modifier: Modifier = Modifier,
-    invitationViewModel: InvitationViewModel = viewModel(),
+    invitationViewModel: InvitationViewModel = hiltViewModel(),
     onNavigationClick: () -> Unit,
     defaultSelectedMenu: InvitationSelectionMenuUiModel = RECEIVED_INVITATION,
 ) {
