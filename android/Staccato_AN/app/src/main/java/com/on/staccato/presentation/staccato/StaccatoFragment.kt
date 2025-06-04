@@ -1,8 +1,10 @@
 package com.on.staccato.presentation.staccato
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.PopupMenu
 import android.widget.ScrollView
 import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
@@ -18,6 +20,7 @@ import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.ShareManager
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
+import com.on.staccato.presentation.staccato.comments.CommentHandler
 import com.on.staccato.presentation.staccato.comments.CommentsAdapter
 import com.on.staccato.presentation.staccato.comments.StaccatoCommentsViewModel
 import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
@@ -36,7 +39,8 @@ import javax.inject.Inject
 class StaccatoFragment :
     BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato),
     StaccatoShareHandler,
-    StaccatoToolbarHandler {
+    StaccatoToolbarHandler,
+    CommentHandler {
     @Inject
     lateinit var loggingManager: LoggingManager
 
@@ -46,12 +50,19 @@ class StaccatoFragment :
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private val commentsViewModel: StaccatoCommentsViewModel by viewModels()
-    private val commentsAdapter: CommentsAdapter by lazy { CommentsAdapter(commentsViewModel) }
+    private val commentsAdapter: CommentsAdapter by lazy { CommentsAdapter(this) }
     private val pagePhotoAdapter: ViewpagePhotoAdapter by lazy { ViewpagePhotoAdapter() }
-    private val deleteDialog =
+    private val staccatoDeleteDialog =
         DeleteDialogFragment {
             staccatoViewModel.deleteStaccato(staccatoId)
         }
+
+    private val commentDeleteDialog by lazy {
+        DeleteDialogFragment {
+            commentsViewModel.deleteComment()
+        }
+    }
+
     private val staccatoId by lazy {
         arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID
     }
@@ -80,7 +91,7 @@ class StaccatoFragment :
     }
 
     override fun onDeleteClicked() {
-        deleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
+        staccatoDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
     }
 
     override fun onUpdateClicked(
@@ -101,11 +112,20 @@ class StaccatoFragment :
         staccatoViewModel.createStaccatoShareLink()
     }
 
+    override fun onCommentLongClicked(
+        view: View,
+        id: Long,
+    ) {
+        commentsViewModel.updateCommentId(id)
+        val popup = inflateCreationMenu(view)
+        setUpCreationMenu(popup)
+        popup.show()
+    }
+
     private fun setUpBinding() {
         binding.lifecycleOwner = this
         binding.toolbarHandler = this
         binding.shareHandler = this
-        binding.commentHandler = commentsViewModel
         binding.staccatoViewModel = staccatoViewModel
         binding.commentsViewModel = commentsViewModel
     }
@@ -242,6 +262,24 @@ class StaccatoFragment :
                 staccatoFeelingSelectionFragment,
             )
             .commit()
+    }
+
+    private fun inflateCreationMenu(view: View): PopupMenu {
+        val popup =
+            PopupMenu(view.context, view, Gravity.END, 0, R.style.Theme_Staccato_AN_PopupMenu)
+        popup.menuInflater.inflate(R.menu.menu_comment, popup.menu)
+        return popup
+    }
+
+    private fun setUpCreationMenu(popup: PopupMenu) {
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.comment_delete -> {
+                    commentDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
+                }
+            }
+            false
+        }
     }
 
     private fun showErrorToast() {

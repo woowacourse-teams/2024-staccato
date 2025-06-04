@@ -26,7 +26,7 @@ class StaccatoCommentsViewModel
     constructor(
         private val memberRepository: MemberRepository,
         private val commentRepository: CommentRepository,
-    ) : ViewModel(), CommentHandler {
+    ) : ViewModel() {
         private val _comments = MutableLiveData<List<CommentUiModel>>()
         val comments: LiveData<List<CommentUiModel>>
             get() = _comments
@@ -51,23 +51,15 @@ class StaccatoCommentsViewModel
 
         private val myMemberId = MutableSingleLiveData<Long>()
 
+        private val commentId = MutableLiveData<Long>()
+
         init {
             fetchMemberId()
         }
 
-        override fun onSendButtonClicked() {
+        fun deleteComment() {
             viewModelScope.launch {
-                sendComment()
-            }
-        }
-
-        override fun onUpdateButtonClicked(commentId: Long) {
-            // TODO
-        }
-
-        override fun onDeleteButtonClicked(commentId: Long) {
-            viewModelScope.launch {
-                commentRepository.deleteComment(commentId)
+                commentRepository.deleteComment(commentId.value ?: return@launch handleException(ExceptionState.UnknownError))
                     .onSuccess {
                         fetchComments(staccatoId)
                         _isDeleteSuccess.postValue(true)
@@ -84,6 +76,26 @@ class StaccatoCommentsViewModel
                     .onSuccess(::setComments)
                     .onServerError(::handleServerError)
                     .onException(::handleException)
+            }
+        }
+
+        fun updateCommentId(id: Long) {
+            commentId.value = id
+        }
+
+        fun sendComment() {
+            commentInput.value?.let {
+                val newComment = NewComment(staccatoId, it)
+                commentInput.value = ""
+                viewModelScope.launch {
+                    commentRepository.createComment(newComment)
+                        .onSuccess {
+                            fetchComments(staccatoId)
+                            _isSendingSuccess.postValue(true)
+                        }
+                        .onServerError(::handleServerError)
+                        .onException(::handleException)
+                }
             }
         }
 
@@ -108,22 +120,6 @@ class StaccatoCommentsViewModel
         private fun setStaccatoId(id: Long) {
             if (staccatoId == STACCATO_DEFAULT_ID) {
                 staccatoId = id
-            }
-        }
-
-        private fun sendComment() {
-            commentInput.value?.let {
-                val newComment = NewComment(staccatoId, it)
-                commentInput.value = ""
-                viewModelScope.launch {
-                    commentRepository.createComment(newComment)
-                        .onSuccess {
-                            fetchComments(staccatoId)
-                            _isSendingSuccess.postValue(true)
-                        }
-                        .onServerError(::handleServerError)
-                        .onException(::handleException)
-                }
             }
         }
 

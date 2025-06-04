@@ -17,10 +17,6 @@
             type="com.on.staccato.presentation.staccato.StaccatoShareHandler" />
 
         <variable
-            name="commentHandler"
-            type="com.on.staccato.presentation.staccato.comments.CommentHandler" />
-
-        <variable
             name="staccatoViewModel"
             type="com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel" />
 
@@ -271,7 +267,7 @@
             android:id="@+id/iv_staccato_comments_send"
             style="@style/ButtonStyle.Send"
             android:contentDescription="@string/staccato_feeling_selection_comment_send_btn_description"
-            android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
+            android:onClick="@{() -> commentsViewModel.sendComment()}"
             app:layout_constraintBottom_toBottomOf="@id/et_staccato_comments_input"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/et_staccato_comments_input"

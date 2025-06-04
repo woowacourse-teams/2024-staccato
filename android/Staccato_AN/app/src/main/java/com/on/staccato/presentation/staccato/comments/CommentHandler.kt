@@ -1,9 +1,10 @@
 package com.on.staccato.presentation.staccato.comments
 
+import android.view.View
+
 interface CommentHandler {
-    fun onSendButtonClicked()
-
-    fun onUpdateButtonClicked(commentId: Long)
-
-    fun onDeleteButtonClicked(commentId: Long)
+    fun onCommentLongClicked(
+        view: View,
+        id: Long,
+    )
 }

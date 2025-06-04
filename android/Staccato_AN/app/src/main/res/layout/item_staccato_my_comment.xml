@@ -9,6 +9,10 @@
         <variable
             name="myComment"
             type="com.on.staccato.presentation.staccato.comments.CommentUiModel" />
+
+        <variable
+            name="handler"
+            type="com.on.staccato.presentation.staccato.comments.CommentHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
