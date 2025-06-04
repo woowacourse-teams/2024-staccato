@@ -13,6 +13,6 @@ jobs:
         with:
           token: ${{ secrets.HANNAH_PERSONAL_ACCESS_TOKEN }}
           ignoreUsers: "kargowild"
-          count: '100'
+          count: '20'
           baseBranch: "develop"
           output: "console"
