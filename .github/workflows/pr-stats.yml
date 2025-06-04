@@ -1,6 +1,9 @@
 name: PR Stats
 on:
-  workflow_dispatch:
+  #workflow_dispatch:
+  pull_request:
+    branches:
+      - develop
 
 jobs:
   pr-stats:
