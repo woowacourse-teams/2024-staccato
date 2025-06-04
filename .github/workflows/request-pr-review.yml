@@ -1,3 +1,4 @@
+# 정기적으로 원하는 시간에 리뷰가 필요한 PR 목록 알림
 name: request pr review
 
 on:
@@ -6,7 +7,7 @@ on:
 
 jobs:
   cron:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     steps:
       - name: Request PR Review
         uses: naver/request-pr-review@v1.2.1

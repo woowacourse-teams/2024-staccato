@@ -1,3 +1,7 @@
+# PR 통계 데이터 제공
+## pr stats: 기간 내(혹은 최신 n개) 각 pr에 대한 통계 데이터 제공
+## prList stats: 기간 내(혹은 최신 n개) 전체 pr에 대한 평균 통계 데이터 제공
+## user stats: user 별 통계 데이터 제공
 name: PR Stats
 
 on:

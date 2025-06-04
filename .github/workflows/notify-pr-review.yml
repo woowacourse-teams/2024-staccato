@@ -1,3 +1,4 @@
+# 리뷰 요청 시 Slack 메시지 알림
 name: notify pr review
 
 on:

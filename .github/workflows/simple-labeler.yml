@@ -1,10 +1,13 @@
+# PR 생성 시 자동으로 라벨을 추가
 name: Simple Labeler
+
 on:
   pull_request:
-    types: [opened, ready_for_review]
+    types: [ opened, ready_for_review ]
+
 jobs:
   simple-labeler:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     steps:
       - name: Label to PR
         uses: naver/simple-labeler@latest
