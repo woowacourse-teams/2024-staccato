@@ -1,10 +1,8 @@
 package com.on.staccato.presentation.staccato
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.PopupMenu
 import android.widget.ScrollView
 import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
@@ -27,6 +25,8 @@ import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.StaccatoFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
+import com.on.staccato.presentation.util.MenuHandler
+import com.on.staccato.presentation.util.showPopupMenu
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent
@@ -40,7 +40,8 @@ class StaccatoFragment :
     BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato),
     StaccatoShareHandler,
     StaccatoToolbarHandler,
-    CommentHandler {
+    CommentHandler,
+    MenuHandler {
     @Inject
     lateinit var loggingManager: LoggingManager
 
@@ -117,9 +118,18 @@ class StaccatoFragment :
         id: Long,
     ) {
         commentsViewModel.updateCommentId(id)
-        val popup = inflateCreationMenu(view)
-        setUpCreationMenu(popup)
-        popup.show()
+        view.showPopupMenu(
+            menuRes = R.menu.menu_comment,
+            menuHandler = ::setupActionBy,
+        )
+    }
+
+    override fun setupActionBy(menuItemId: Int) {
+        when (menuItemId) {
+            R.id.comment_delete -> {
+                commentDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
+            }
+        }
     }
 
     private fun setUpBinding() {
@@ -262,24 +272,6 @@ class StaccatoFragment :
                 staccatoFeelingSelectionFragment,
             )
             .commit()
-    }
-
-    private fun inflateCreationMenu(view: View): PopupMenu {
-        val popup =
-            PopupMenu(view.context, view, Gravity.END, 0, R.style.Theme_Staccato_AN_PopupMenu)
-        popup.menuInflater.inflate(R.menu.menu_comment, popup.menu)
-        return popup
-    }
-
-    private fun setUpCreationMenu(popup: PopupMenu) {
-        popup.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.comment_delete -> {
-                    commentDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
-                }
-            }
-            false
-        }
     }
 
     private fun showErrorToast() {
