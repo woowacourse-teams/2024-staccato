@@ -205,7 +205,7 @@
     <string name="delete_description">삭제를 누르면 복구할 수 없어요!</string>
 
     // menu_comment
-    <string name="menu_comment_delete">삭제하기</string>
+    <string name="comment_delete">삭제하기</string>
 
     <string name="maps_location_permission_granted_message">위치 서비스 사용을 위한 위치 권한이 설정 되었습니다.</string>
 
