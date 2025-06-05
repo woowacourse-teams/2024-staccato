@@ -47,10 +47,10 @@ fun MyPageMenuButton(
 ) {
     Box(
         modifier =
-        modifier
-            .background(color = White)
-            .padding(contentPadding)
-            .clickableWithoutRipple { onClick() },
+            modifier
+                .background(color = White)
+                .padding(contentPadding)
+                .clickableWithoutRipple { onClick() },
     ) {
         Row(
             modifier = modifier.fillMaxWidth(),
@@ -58,8 +58,8 @@ fun MyPageMenuButton(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             BadgedBox(
-                badge = { if (hasNotification) Badge(containerColor = Accents4) }
-            ){
+                badge = { if (hasNotification) Badge(containerColor = Accents4) },
+            ) {
                 Text(
                     text = menuTitle,
                     style = Title3,
@@ -98,4 +98,3 @@ private class MenuTitlePreviewParameterProvider(
 private fun MyPageMenuButtonWithBadgePreview() {
     MyPageMenuButton(menuTitle = "알림이 있는 경우", onClick = {}, hasNotification = true)
 }
-

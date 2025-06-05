@@ -8,7 +8,8 @@ import com.on.staccato.domain.repository.NotificationRepository
 import javax.inject.Inject
 
 class NotificationDefaultRepository
-    @Inject constructor(
+    @Inject
+    constructor(
         private val notificationApiService: NotificationApiService,
     ) : NotificationRepository {
         override suspend fun getNotificationExistence(): ApiResult<NotificationExistence> =

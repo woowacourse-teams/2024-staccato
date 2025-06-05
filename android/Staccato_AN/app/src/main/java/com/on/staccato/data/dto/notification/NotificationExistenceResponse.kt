@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NotificationExistenceResponse(
-    @SerialName("isExist") val isExist: Boolean
+    @SerialName("isExist") val isExist: Boolean,
 )

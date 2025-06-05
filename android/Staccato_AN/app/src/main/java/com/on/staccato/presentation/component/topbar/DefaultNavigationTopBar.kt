@@ -114,9 +114,9 @@ private fun NavigationIconButton(
 ) {
     Icon(
         modifier =
-        Modifier
-            .padding(5.dp)
-            .clickableWithoutRipple { onNavigationClick() },
+            Modifier
+                .padding(5.dp)
+                .clickableWithoutRipple { onNavigationClick() },
         imageVector = ImageVector.vectorResource(id = vectorResource),
         contentDescription = stringResource(id = R.string.top_bar_navigation_back_icon),
         tint = Gray3,
@@ -127,9 +127,9 @@ private fun NavigationIconButton(
 @Preview(name = "제목이 없는 경우")
 @Composable
 private fun DefaultNavigationTopBarPreview() {
-        DefaultNavigationTopBar(
-            onNavigationClick = {},
-        )
+    DefaultNavigationTopBar(
+        onNavigationClick = {},
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
