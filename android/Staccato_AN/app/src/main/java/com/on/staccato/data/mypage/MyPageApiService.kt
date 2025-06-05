@@ -10,8 +10,7 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 
 interface MyPageApiService {
-    // TODO: 사용자 프로필 조회 API V2 머지 되면 수정
-    @GET(MY_PAGE_PATH)
+    @GET(MY_PAGE_PATH_V2)
     suspend fun getMemberProfile(): ApiResult<MemberProfileResponse>
 
     @Multipart
