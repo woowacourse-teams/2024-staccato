@@ -52,20 +52,18 @@ class StaccatoViewModel
                 handleException(ExceptionState.UnknownError)
                 return
             }
-
-            viewModelScope.launch {
-                val nickname: String = getUserNickname() ?: return@launch
-                shareStaccato(staccatoId, nickname)
-            }
+            getUserNickname(staccatoId)
         }
 
-        private suspend fun getUserNickname(): String? {
-            val nickname = memberRepository.getNickname()
-            if (nickname.isFailure) {
-                handleException(ExceptionState.UnknownError)
-                return null
+        private fun getUserNickname(staccatoId: Long) {
+            viewModelScope.launch {
+                memberRepository.getNickname()
+                    .onSuccess {
+                        shareStaccato(staccatoId, it)
+                    }.onFailure {
+                        handleException(ExceptionState.UnknownError)
+                    }
             }
-            return nickname.getOrNull()
         }
 
         private suspend fun shareStaccato(
