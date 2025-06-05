@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Category", description = "Category API")
 public interface CategoryControllerDocs {
-    @Operation(summary = "카테고리 생성", description = "카테고리(썸네일, 제목, 내용, 기간)을 생성합니다.")
+    @Operation(summary = "카테고리 생성", deprecated = true, description = "카테고리(썸네일, 제목, 내용, 기간)을 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 생성 성공", responseCode = "201"),
             @ApiResponse(description = """
@@ -47,7 +47,7 @@ public interface CategoryControllerDocs {
             @Parameter(required = true) @Valid CategoryRequest categoryRequest,
             @Parameter(hidden = true) Member member);
 
-    @Operation(summary = "카테고리 목록 조회", description = "사용자의 모든 카테고리 목록을 조회합니다.")
+    @Operation(summary = "카테고리 목록 조회", deprecated = true, description = "사용자의 모든 카테고리 목록을 조회합니다.")
     @ApiResponse(description = "카테고리 목록 조회 성공", responseCode = "200")
     ResponseEntity<CategoryResponses> readAllCategories(
             @Parameter(hidden = true) Member member,
@@ -75,7 +75,7 @@ public interface CategoryControllerDocs {
             boolean isPrivate
     );
 
-    @Operation(summary = "카테고리 조회", description = "사용자의 카테고리을 조회합니다.")
+    @Operation(summary = "카테고리 조회", deprecated = true, description = "사용자의 카테고리을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
@@ -91,7 +91,7 @@ public interface CategoryControllerDocs {
             @Parameter(hidden = true) Member member,
             @Parameter(description = "카테고리 ID", example = "1") @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId);
 
-    @Operation(summary = "카테고리 수정", description = "카테고리 정보(썸네일, 제목, 내용, 기간)를 수정합니다.")
+    @Operation(summary = "카테고리 수정", deprecated = true, description = "카테고리 정보(썸네일, 제목, 내용, 기간)를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 수정 성공", responseCode = "200"),
             @ApiResponse(description = """
