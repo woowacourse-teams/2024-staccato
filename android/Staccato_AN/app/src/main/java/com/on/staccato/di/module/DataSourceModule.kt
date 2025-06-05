@@ -1,6 +1,5 @@
 package com.on.staccato.di.module
 
-import com.on.staccato.data.UserInfoPreferencesManager
 import com.on.staccato.data.category.CategoryDataSource
 import com.on.staccato.data.category.CategoryRemoteDataSource
 import com.on.staccato.data.comment.CommentDataSource
@@ -9,9 +8,10 @@ import com.on.staccato.data.location.LocationDataSource
 import com.on.staccato.data.location.LocationLocalDataSource
 import com.on.staccato.data.login.LoginDataSource
 import com.on.staccato.data.login.LoginRemoteDataSource
-import com.on.staccato.data.mypage.MyPageLocalDataSource
+import com.on.staccato.data.member.MemberDataSource
+import com.on.staccato.data.member.MemberLocalDataSource
+import com.on.staccato.data.mypage.MyPageDataSource
 import com.on.staccato.data.mypage.MyPageRemoteDataSource
-import com.on.staccato.data.mypage.MyPageRemoteDataSourceImpl
 import com.on.staccato.data.staccato.StaccatoDataSource
 import com.on.staccato.data.staccato.StaccatoRemoteDataSource
 import dagger.Binds
@@ -35,10 +35,10 @@ abstract class DataSourceModule {
     abstract fun bindStaccatoDataSource(staccatoRemoteDataSource: StaccatoRemoteDataSource): StaccatoDataSource
 
     @Binds
-    abstract fun bindMyPageLocalDataSource(myPageLocalDataSource: UserInfoPreferencesManager): MyPageLocalDataSource
+    abstract fun bindMemberLocalDataSource(memberLocalDataSource: MemberLocalDataSource): MemberDataSource
 
     @Binds
-    abstract fun bindMyPageRemoteDataSource(myPageRemoteDataSource: MyPageRemoteDataSourceImpl): MyPageRemoteDataSource
+    abstract fun bindMyPageRemoteDataSource(myPageRemoteDataSource: MyPageRemoteDataSource): MyPageDataSource
 
     @Binds
     abstract fun bindLocationLocalDataSource(locationLocalDataSource: LocationLocalDataSource): LocationDataSource

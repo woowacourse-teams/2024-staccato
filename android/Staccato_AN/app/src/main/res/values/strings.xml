@@ -115,6 +115,7 @@
     <string name="staccato_feeling_selection_comment_send_btn_description">코멘트 전송</string>
     <string name="staccato_share_message">%s님의 스타카토를 확인해보세요!</string>
     <string name="staccato_share">스타카토 공유하기</string>
+    <string name="staccato_error_comment_copy">코멘트를 복사할 수 없어요.</string>
 
     // item_staccato_my_comment
     <string name="staccato_my_comment_profile_image_description">나의 프로필 이미지</string>
@@ -204,7 +205,8 @@
     <string name="delete_description">삭제를 누르면 복구할 수 없어요!</string>
 
     // menu_comment
-    <string name="menu_comment_delete">삭제하기</string>
+    <string name="menu_comment_copy">복사</string>
+    <string name="menu_comment_delete">삭제</string>
 
     <string name="maps_location_permission_granted_message">위치 서비스 사용을 위한 위치 권한이 설정 되었습니다.</string>
 

@@ -17,7 +17,7 @@ fun buildRetrofitFor(mockWebServer: MockWebServer): Retrofit {
         .addConverterFactory(
             jsonBuilder.asConverterFactory("application/json".toMediaType()),
         )
-        .addCallAdapterFactory(ApiResultCallAdapterFactory.create())
+        .addCallAdapterFactory(ApiResultCallAdapterFactory())
         .build()
 }
 
