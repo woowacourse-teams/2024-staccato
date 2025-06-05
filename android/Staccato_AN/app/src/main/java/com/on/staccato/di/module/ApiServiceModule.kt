@@ -7,6 +7,7 @@ import com.on.staccato.data.invitation.InvitationApiService
 import com.on.staccato.data.login.LoginApiService
 import com.on.staccato.data.member.MemberApiService
 import com.on.staccato.data.mypage.MyPageApiService
+import com.on.staccato.data.notification.NotificationApiService
 import com.on.staccato.data.staccato.StaccatoApiService
 import dagger.Module
 import dagger.Provides
@@ -49,4 +50,8 @@ object ApiServiceModule {
     @Singleton
     @Provides
     fun invitationApiService(retrofit: Retrofit): InvitationApiService = retrofit.create(InvitationApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideNotificationService(retrofit: Retrofit): NotificationApiService = retrofit.create(NotificationApiService::class.java)
 }

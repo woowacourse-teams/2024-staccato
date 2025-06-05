@@ -83,6 +83,11 @@ class MainActivity :
         updateBottomSheetIsDraggable()
     }
 
+    override fun onResume() {
+        super.onResume()
+        sharedViewModel.fetchNotificationExistence()
+    }
+
     override fun onStop() {
         super.onStop()
         sharedViewModel.updateIsSettingClicked(false)
