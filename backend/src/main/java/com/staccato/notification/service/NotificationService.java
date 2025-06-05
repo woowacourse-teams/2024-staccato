@@ -14,7 +14,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class NotificationService {
+    private final CategoryInvitationRepository categoryInvitationRepository;
+
     public NotificationExistResponse isExistNotifications(Member member) {
-        return null;
+        boolean isExist = categoryInvitationRepository.existsByInviteeIdAndStatus(member.getId(), InvitationStatus.REQUESTED);
+        return new NotificationExistResponse(isExist);
     }
 }
