@@ -36,7 +36,7 @@ fun SentInvitations(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun SentInvitationPreview() {
     SentInvitations(
@@ -45,7 +45,7 @@ private fun SentInvitationPreview() {
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 private fun EmptySentInvitationPreview() {
     SentInvitations(

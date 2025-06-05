@@ -46,7 +46,7 @@ fun DefaultEmptyView(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 private fun DefaultEmptyViewPreview() {
     DefaultEmptyView(description = "목록의 아이템이 비어있는 경우\n나타내는 화면입니다.\n글자는 가운데 정렬입니다.")
 }
