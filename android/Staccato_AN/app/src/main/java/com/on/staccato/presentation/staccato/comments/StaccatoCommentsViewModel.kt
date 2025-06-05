@@ -74,7 +74,7 @@ class StaccatoCommentsViewModel
             setStaccatoId(id)
             viewModelScope.launch {
                 commentRepository.fetchComments(id)
-                    .onSuccess(::setComments)
+                    .onSuccess(::updateComments)
                     .onServerError(::handleServerError)
                     .onException(::handleException)
             }
@@ -110,7 +110,7 @@ class StaccatoCommentsViewModel
             }
         }
 
-        private fun setComments(newComments: List<Comment>) {
+        private fun updateComments(newComments: List<Comment>) {
             _comments.value =
                 newComments.map { comment ->
                     val isMine = comment.memberId == myMemberId.getValue()
