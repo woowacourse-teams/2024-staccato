@@ -11,15 +11,15 @@ enum class InvitationSelectionMenuUiModel(
     @StringRes val iconContentDescriptionId: Int,
 ) {
     RECEIVED_INVITATION(
-        0,
-        R.string.invitation_management_received,
-        R.drawable.icon_receive_box,
-        R.string.invitation_management_received_description,
+        menuId = 0,
+        titleId = R.string.invitation_management_received,
+        iconResId = R.drawable.icon_receive_box,
+        iconContentDescriptionId = R.string.invitation_management_received_description,
     ),
     SENT_INVITATION(
-        1,
-        R.string.invitation_management_sent,
-        R.drawable.icon_send,
-        R.string.invitation_management_sent_description,
+        menuId = 1,
+        titleId = R.string.invitation_management_sent,
+        iconResId = R.drawable.icon_send,
+        iconContentDescriptionId = R.string.invitation_management_sent_description,
     ),
 }
