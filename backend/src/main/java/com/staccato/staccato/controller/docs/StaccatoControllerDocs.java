@@ -46,11 +46,11 @@ public interface StaccatoControllerDocs {
             @Parameter(required = true) @Valid StaccatoRequest staccatoRequest
     );
 
-    @Operation(summary = "스타카토 목록 조회", description = "스타카토 목록을 조회합니다.")
+    @Operation(summary = "스타카토 목록 조회", deprecated = true, description = "스타카토 목록을 조회합니다.")
     @ApiResponse(description = "스타카토 목록 조회 성공", responseCode = "200")
     ResponseEntity<StaccatoLocationResponses> readAllStaccato(@Parameter(hidden = true) Member member);
 
-    @Operation(summary = "스타카토 조회", description = "스타카토를 조회합니다.")
+    @Operation(summary = "스타카토 조회", deprecated = true, description = "스타카토를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "스타카토 조회 성공", responseCode = "200"),
             @ApiResponse(description = """
