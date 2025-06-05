@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -46,10 +47,10 @@ fun MyPageMenuButton(
 ) {
     Box(
         modifier =
-            modifier
-                .background(color = White)
-                .padding(contentPadding)
-                .clickableWithoutRipple { onClick() },
+        modifier
+            .background(color = White)
+            .padding(contentPadding)
+            .clickableWithoutRipple { onClick() },
     ) {
         Row(
             modifier = modifier.fillMaxWidth(),
@@ -67,7 +68,7 @@ fun MyPageMenuButton(
             }
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.icon_arrow_right),
-                contentDescription = "icon",
+                contentDescription = stringResource(id = R.string.mypage_menu_navigation_icon_description),
                 modifier = modifier,
                 tint = Gray2,
             )

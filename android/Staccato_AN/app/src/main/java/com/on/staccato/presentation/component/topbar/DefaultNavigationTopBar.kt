@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -113,11 +114,11 @@ private fun NavigationIconButton(
 ) {
     Icon(
         modifier =
-            Modifier
-                .padding(5.dp)
-                .clickableWithoutRipple { onNavigationClick() },
+        Modifier
+            .padding(5.dp)
+            .clickableWithoutRipple { onNavigationClick() },
         imageVector = ImageVector.vectorResource(id = vectorResource),
-        contentDescription = "Navigation Icon",
+        contentDescription = stringResource(id = R.string.top_bar_navigation_back_icon),
         tint = Gray3,
     )
 }

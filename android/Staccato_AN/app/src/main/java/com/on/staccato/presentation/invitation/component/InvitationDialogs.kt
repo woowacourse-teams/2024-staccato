@@ -1,6 +1,8 @@
 package com.on.staccato.presentation.invitation.component
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.on.staccato.R
 import com.on.staccato.presentation.component.DefaultAlertDialog
 import com.on.staccato.presentation.component.DefaultTextButton
 import com.on.staccato.presentation.invitation.model.InvitationDialogState
@@ -22,12 +24,12 @@ fun InvitationDialogs(
 
         is Reject -> {
             DefaultAlertDialog(
-                title = "정말 초대를 거절할까요?",
-                description = "한 번 거절하면 되돌릴 수 없어요.\n친구가 실망할지도 몰라요!",
+                title = stringResource(id = R.string.invitation_management_dialog_reject_title),
+                description = stringResource(id = R.string.invitation_management_dialog_reject_description),
                 onDismissRequest = onDismiss,
                 confirmButton = {
                     DefaultTextButton(
-                        text = "확인",
+                        text = stringResource(id = R.string.all_confirm),
                         onClick = state.onConfirm,
                         backgroundColor = StaccatoBlue,
                         textColor = White,
@@ -35,7 +37,7 @@ fun InvitationDialogs(
                 },
                 dismissButton = {
                     DefaultTextButton(
-                        text = "취소",
+                        text = stringResource(id = R.string.all_cancel),
                         onClick = onDismiss,
                         backgroundColor = Gray1,
                         textColor = Gray4,
@@ -46,12 +48,12 @@ fun InvitationDialogs(
 
         is Cancel -> {
             DefaultAlertDialog(
-                title = "정말 초대를 취소할까요?",
-                description = "취소하더라도 나중에 다시 초대할 수 있어요.",
+                title = stringResource(id = R.string.invitation_management_dialog_cancel_title),
+                description = stringResource(id = R.string.invitation_management_dialog_cancel_description),
                 onDismissRequest = onDismiss,
                 confirmButton = {
                     DefaultTextButton(
-                        text = "확인",
+                        text = stringResource(id = R.string.all_confirm),
                         onClick = state.onConfirm,
                         backgroundColor = StaccatoBlue,
                         textColor = White,
@@ -59,7 +61,7 @@ fun InvitationDialogs(
                 },
                 dismissButton = {
                     DefaultTextButton(
-                        text = "취소",
+                        text = stringResource(id = R.string.all_cancel),
                         onClick = onDismiss,
                         backgroundColor = Gray1,
                         textColor = Gray4,
