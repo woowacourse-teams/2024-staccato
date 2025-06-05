@@ -59,10 +59,7 @@ fun InvitationManagement(
     }
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFF.toLong(),
-)
+@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 private fun InvitationManagementPreview(
     @PreviewParameter(InvitationSelectionMenuProvider::class) menu: InvitationSelectionMenuUiModel,
