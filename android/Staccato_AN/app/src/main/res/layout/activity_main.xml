@@ -68,15 +68,15 @@
                 </LinearLayout>
 
                 <ImageView
-                    app:layout_constraintTop_toTopOf="@id/linear_main_profile_image"
-                    app:layout_constraintEnd_toEndOf="@id/linear_main_profile_image"
-                    android:padding="2dp"
-                    android:contentDescription="@string/all_invitation_notification_indicator_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/all_invitation_notification_indicator_description"
+                    android:padding="2dp"
+                    android:src="@drawable/notification_point"
                     android:visibility="gone"
-                    bind:visibleOrGone="@{sharedViewModel.hasNotification}"
-                    android:src="@drawable/notification_point"/>
+                    app:layout_constraintEnd_toEndOf="@id/linear_main_profile_image"
+                    app:layout_constraintTop_toTopOf="@id/linear_main_profile_image"
+                    bind:visibleOrGone="@{sharedViewModel.hasNotification}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
