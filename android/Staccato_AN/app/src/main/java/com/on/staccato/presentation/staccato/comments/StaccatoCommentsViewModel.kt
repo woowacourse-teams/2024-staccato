@@ -49,7 +49,7 @@ class StaccatoCommentsViewModel
 
         private var staccatoId: Long = STACCATO_DEFAULT_ID
 
-        private val myMemberId = MutableSingleLiveData<Long>()
+        private var myMemberId: Long = 0L
 
         var selectedComment: CommentUiModel? = null
             private set
@@ -103,7 +103,7 @@ class StaccatoCommentsViewModel
         private fun fetchMemberId() {
             viewModelScope.launch {
                 memberRepository.getMemberId()
-                    .onSuccess { myMemberId.setValue(it) }
+                    .onSuccess { myMemberId = it }
                     .onFailure {
                         handleException(ExceptionState.UnknownError)
                     }
@@ -113,7 +113,7 @@ class StaccatoCommentsViewModel
         private fun updateComments(newComments: List<Comment>) {
             _comments.value =
                 newComments.map { comment ->
-                    val isMine = comment.memberId == myMemberId.getValue()
+                    val isMine = comment.memberId == myMemberId
                     comment.toCommentUiModel(isMine)
                 }
         }
