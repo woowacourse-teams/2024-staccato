@@ -13,7 +13,7 @@ enum class InvitationTabMenu(
     RECEIVED_INVITATION(
         menuId = 0,
         titleId = R.string.invitation_management_received,
-        iconResId = R.drawable.icon_receive_box,
+        iconResId = R.drawable.icon_receive,
         iconContentDescriptionId = R.string.invitation_management_received_description,
     ),
     SENT_INVITATION(
