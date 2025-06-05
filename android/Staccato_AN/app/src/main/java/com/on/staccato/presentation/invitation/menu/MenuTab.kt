@@ -46,7 +46,7 @@ fun MenuTab(
         contentAlignment = Alignment.Center,
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 0.dp, vertical = 8.dp),
+            modifier = Modifier.padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
