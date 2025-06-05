@@ -14,6 +14,6 @@ interface LoginApiService {
 
     companion object {
         private const val LOGIN_PATH = "/login"
-        private const val LOGIN_PATH_V2 = "/v2${LOGIN_PATH}"
+        private const val LOGIN_PATH_V2 = "/v2$LOGIN_PATH"
     }
 }
