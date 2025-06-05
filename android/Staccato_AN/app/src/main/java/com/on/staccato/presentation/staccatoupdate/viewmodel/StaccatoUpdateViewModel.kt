@@ -20,13 +20,14 @@ import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.domain.repository.TimelineRepository
-import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.createPhotosByUrls
+import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
+import com.on.staccato.presentation.common.photo.AttachedPhotoUiModel
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.toSuccessPhotos
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel.Companion.FAIL_IMAGE_UPLOAD_MESSAGE
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateError
@@ -108,7 +109,7 @@ class StaccatoUpdateViewModel
         val error: SingleLiveData<StaccatoUpdateError> get() = _error
 
         override fun onAddClicked() {
-            if ((currentPhotos.value?.size ?: 0) == StaccatoCreationViewModel.MAX_PHOTO_NUMBER) {
+            if ((currentPhotos.value?.size ?: 0) == MAX_PHOTO_NUMBER) {
                 _warningMessage.postValue(StaccatoCreationViewModel.MAX_PHOTO_NUMBER_MESSAGE)
             } else {
                 _isAddPhotoClicked.postValue(true)
@@ -136,6 +137,11 @@ class StaccatoUpdateViewModel
                 categoryCandidatesJob.join()
                 initializeSelectableCategories()
             }
+        }
+
+        override fun onRetryClicked(retryPhoto: AttachedPhotoUiModel) {
+            _currentPhotos.value = currentPhotos.value?.toLoading(retryPhoto)
+            _pendingPhotos.postValue(listOf(retryPhoto))
         }
 
         fun getCurrentLocation() {
@@ -183,7 +189,7 @@ class StaccatoUpdateViewModel
         fun updateSelectedImageUris(newUris: Array<Uri>) {
             val updatedPhotos = currentPhotos.value!!.addPhotosByUris(newUris.toList())
             _currentPhotos.value = updatedPhotos
-            _pendingPhotos.postValue(updatedPhotos.getPhotosWithoutUrls())
+            _pendingPhotos.postValue(updatedPhotos.getLoadingPhotosWithoutUrls())
         }
 
         fun setUrisWithNewOrder(list: List<AttachedPhotoUiModel>) {
@@ -211,28 +217,17 @@ class StaccatoUpdateViewModel
 
         fun updateStaccato(staccatoId: Long) {
             viewModelScope.launch {
-                val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleException()
-                val placeNameValue = placeName.value ?: return@launch handleException()
-                val addressValue = address.value ?: return@launch handleException()
-                val latitudeValue = latitude.value ?: return@launch handleException()
-                val longitudeValue = longitude.value ?: return@launch handleException()
-                val visitedAtValue = selectedVisitedAt.value ?: return@launch handleException()
-                val categoryIdValue =
-                    selectedCategory.value?.categoryId ?: return@launch handleException()
-                val staccatoImageUrlsValue =
-                    currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
-                        ?: emptyList()
                 _isPosting.value = true
                 staccatoRepository.updateStaccato(
                     staccatoId = staccatoId,
-                    staccatoTitle = staccatoTitleValue,
-                    placeName = placeNameValue,
-                    address = addressValue,
-                    latitude = latitudeValue,
-                    longitude = longitudeValue,
-                    visitedAt = visitedAtValue,
-                    categoryId = categoryIdValue,
-                    staccatoImageUrls = staccatoImageUrlsValue,
+                    staccatoTitle = staccatoTitle.get() ?: return@launch handleException(),
+                    placeName = placeName.value ?: return@launch handleException(),
+                    address = address.value ?: return@launch handleException(),
+                    latitude = latitude.value ?: return@launch handleException(),
+                    longitude = longitude.value ?: return@launch handleException(),
+                    visitedAt = selectedVisitedAt.value ?: return@launch handleException(),
+                    categoryId = selectedCategory.value?.categoryId ?: return@launch handleException(),
+                    staccatoImageUrls = currentPhotos.value?.imageUrls() ?: emptyList(),
                 ).onSuccess {
                     _isUpdateCompleted.postValue(true)
                 }.onException(::handleUpdateException)
@@ -252,7 +247,7 @@ class StaccatoUpdateViewModel
             staccatoRepository.getStaccato(staccatoId = staccatoId)
                 .onSuccess { staccato ->
                     staccatoTitle.set(staccato.staccatoTitle)
-                    _currentPhotos.value = createPhotosByUrls(staccato.staccatoImageUrls)
+                    _currentPhotos.value = staccato.staccatoImageUrls.toSuccessPhotos()
                     selectVisitedAt(staccato.visitedAt)
                     initializePlaceBy(staccato)
                     initializeSelectedCategory(staccato)
@@ -300,9 +295,11 @@ class StaccatoUpdateViewModel
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
                 }.onException { state ->
-                    if (this.isActive) handleUpdatePhotoException(state)
+                    if (isActive) handlePhotoException(photo.toRetry(), state.message)
                 }
-                .onServerError(::handleServerError)
+                .onServerError { message ->
+                    if (isActive) handlePhotoException(photo.toFail(), message)
+                }
         }
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
@@ -315,8 +312,8 @@ class StaccatoUpdateViewModel
             targetPhoto: AttachedPhotoUiModel,
             url: String,
         ) {
-            val updatedPhoto = targetPhoto.updateUrl(url)
-            _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
+            val updatedPhoto = targetPhoto.toSuccessPhotoWith(url)
+            _currentPhotos.value = currentPhotos.value?.updatePhoto(updatedPhoto)
         }
 
         private fun handleServerError(message: String) {
@@ -324,8 +321,12 @@ class StaccatoUpdateViewModel
             _warningMessage.setValue(message)
         }
 
-        private fun handleUpdatePhotoException(exceptionState: ExceptionState = ExceptionState.ImageUploadError) {
-            _warningMessage.setValue(exceptionState.message)
+        private fun handlePhotoException(
+            photo: AttachedPhotoUiModel,
+            message: String,
+        ) {
+            _currentPhotos.value = currentPhotos.value?.updatePhoto(photo)
+            _warningMessage.setValue(message)
         }
 
         private fun handleException(state: ExceptionState = ExceptionState.RequiredValuesMissing) {

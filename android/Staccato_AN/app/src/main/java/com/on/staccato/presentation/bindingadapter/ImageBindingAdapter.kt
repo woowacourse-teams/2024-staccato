@@ -15,6 +15,7 @@ import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.on.staccato.R
+import com.on.staccato.presentation.common.photo.AttachedPhotoState
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.util.dpToPx
 
@@ -136,4 +137,14 @@ fun ImageView.setCategoryFilter(filterType: FilterType?) {
             else -> resources.getColor(R.color.staccato_blue, null)
         }
     imageTintList = ColorStateList.valueOf(color)
+}
+
+@BindingAdapter("retryVisibilityByState")
+fun ImageView.setRetryVisibilityByPhotoState(photoState: AttachedPhotoState) {
+    visibility =
+        if (photoState == AttachedPhotoState.Retry) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
 }

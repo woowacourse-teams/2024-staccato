@@ -18,11 +18,11 @@ import com.on.staccato.presentation.categorycreation.component.CategoryShareSect
 import com.on.staccato.presentation.categorycreation.component.PeriodActiveSwitch
 import com.on.staccato.presentation.categorycreation.model.CategoryCreationError
 import com.on.staccato.presentation.categorycreation.viewmodel.CategoryCreationViewModel
-import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.SELECTED_COLOR_LABEL
+import com.on.staccato.presentation.common.photo.PhotoAttachFragment
 import com.on.staccato.presentation.common.photo.UploadFile
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.ExceptionState2

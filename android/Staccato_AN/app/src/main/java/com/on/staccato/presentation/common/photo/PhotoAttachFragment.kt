@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.common
+package com.on.staccato.presentation.common.photo
 
 import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
