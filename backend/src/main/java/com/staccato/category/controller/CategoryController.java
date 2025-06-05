@@ -2,8 +2,10 @@ package com.staccato.category.controller;
 
 import java.net.URI;
 import java.time.LocalDate;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.staccato.category.controller.docs.CategoryControllerDocs;
 import com.staccato.category.service.CategoryService;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
@@ -32,6 +35,7 @@ import com.staccato.category.service.dto.response.CategoryStaccatoLocationRespon
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -65,9 +69,9 @@ public class CategoryController implements CategoryControllerDocs {
     public ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @LoginMember Member member,
             @RequestParam(value = "specificDate") LocalDate specificDate,
-            @RequestParam(value = "isShared") boolean isShared
+            @RequestParam(value = "isPrivate", required = false, defaultValue = "false") boolean isPrivate
     ) {
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, specificDate, isShared);
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByMemberAndDateAndPrivateFlag(member, specificDate, isPrivate);
         return ResponseEntity.ok(categoryNameResponses);
     }
 

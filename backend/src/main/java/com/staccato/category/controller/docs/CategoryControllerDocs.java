@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
@@ -14,6 +16,7 @@ import com.staccato.category.service.dto.response.CategoryResponses;
 import com.staccato.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,15 +54,25 @@ public interface CategoryControllerDocs {
             @Parameter(description = "정렬 기준은 생략하거나 유효하지 않은 값에 대해서는 최근 수정 순(UPDATED)이 기본 정렬로 적용됩니다. 필터링 조건은 생략하거나 유효하지 않은 값이 들어오면 적용되지 않습니다.") CategoryReadRequest categoryReadRequest
     );
 
-    @Operation(summary = "특정 날짜를 포함하는 사용자의 개인/공통 카테고리 목록 조회", description = "특정 날짜를 포함하는 사용자의 개인/공통 카테고리 목록을 조회합니다.")
+    @Operation(summary = "특정 날짜를 포함하는 사용자의 개인/전체 카테고리 목록 조회", description = "특정 날짜를 포함하는 사용자의 개인/전체 카테고리 목록을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(description = "카테고리 목록 조회 성공", responseCode = "200"),
-            @ApiResponse(description = "입력받은 특정 날짜가 유효하지 않을 때 발생", responseCode = "400")
+            @ApiResponse(description = """
+                    <발생 가능한 케이스>
+                                        
+                    (1) 입력받은 특정 날짜가 유효하지 않을 때
+                                        
+                    (2) 입력받은 개인 카테고리 여부가 유효하지 않을 때
+                    """, responseCode = "400")
     })
     ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "특정 날짜", example = "2024-08-21") LocalDate specificDate,
-            @Parameter(description = "공유 카테고리 flag 값", example = "false") boolean isShared
+            @Parameter(description = "특정 날짜 (yyyy-MM-dd 형식)", example = "2024-08-21", required = true)
+            @RequestParam(required = true)
+            LocalDate specificDate,
+            @Parameter(description = "개인 카테고리 여부 (기본값: false)", example = "true", schema = @Schema(defaultValue = "false"))
+            @RequestParam(required = false, defaultValue = "false")
+            boolean isPrivate
     );
 
     @Operation(summary = "카테고리 조회", description = "사용자의 카테고리을 조회합니다.")
