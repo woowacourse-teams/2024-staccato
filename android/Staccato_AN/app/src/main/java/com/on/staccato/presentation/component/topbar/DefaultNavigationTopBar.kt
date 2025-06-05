@@ -40,7 +40,7 @@ private val TopAppBarColors =
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DefaultNavigationTopBar(
-    title: String,
+    title: String? = null,
     subtitle: String? = null,
     isTitleCentered: Boolean = true,
     @DrawableRes vectorResource: Int = R.drawable.icon_arrow_left,
@@ -50,7 +50,7 @@ fun DefaultNavigationTopBar(
     if (isTitleCentered) {
         CenterAlignedTopAppBar(
             title = {
-                TopBarTitleText(title, subtitle, isTitleCentered)
+                if (title != null) TopBarTitleText(title, subtitle, isTitleCentered)
             },
             navigationIcon = {
                 NavigationIconButton(vectorResource, onNavigationClick)
@@ -60,7 +60,7 @@ fun DefaultNavigationTopBar(
     } else {
         TopAppBar(
             title = {
-                TopBarTitleText(title, subtitle, isTitleCentered)
+                if (title != null) TopBarTitleText(title, subtitle, isTitleCentered)
             },
             navigationIcon = {
                 NavigationIconButton(vectorResource, onNavigationClick)
@@ -123,34 +123,54 @@ private fun NavigationIconButton(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+@Preview(name = "제목이 없는 경우")
 @Composable
 private fun DefaultNavigationTopBarPreview() {
-    Column {
         DefaultNavigationTopBar(
-            title = "상단 앱 바 제목",
-            isTitleCentered = true,
             onNavigationClick = {},
         )
+}
 
-        DefaultNavigationTopBar(
-            title = "상단 앱 바 제목",
-            isTitleCentered = false,
-            onNavigationClick = {},
-        )
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(name = "제목이 중앙에 위치")
+@Composable
+private fun CenteredTitleTopBarPreview() {
+    DefaultNavigationTopBar(
+        title = "상단 앱 바 제목",
+        onNavigationClick = {},
+    )
+}
 
-        DefaultNavigationTopBar(
-            title = "상단 앱 바 제목",
-            subtitle = "상단 앱 바 부제목입니다",
-            isTitleCentered = true,
-            onNavigationClick = {},
-        )
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(name = "제목이 왼쪽에 위치")
+@Composable
+private fun LeftSideTitleTopBarPreview() {
+    DefaultNavigationTopBar(
+        title = "상단 앱 바 제목",
+        isTitleCentered = false,
+        onNavigationClick = {},
+    )
+}
 
-        DefaultNavigationTopBar(
-            title = "상단 앱 바 제목",
-            subtitle = "상단 앱 바 부제목입니다",
-            isTitleCentered = false,
-            onNavigationClick = {},
-        )
-    }
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(name = "제목과 부제목이 중앙에 위치")
+@Composable
+private fun CenteredTitleWithSubTitleTopBarPreview() {
+    DefaultNavigationTopBar(
+        title = "상단 앱 바 제목",
+        subtitle = "상단 앱 바 부제목입니다",
+        onNavigationClick = {},
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(name = "제목과 부제목이 왼쪽에 위치")
+@Composable
+private fun LeftSideTitleWithSubTitleTopBarPreview() {
+    DefaultNavigationTopBar(
+        title = "상단 앱 바 제목",
+        subtitle = "상단 앱 바 부제목입니다",
+        isTitleCentered = false,
+        onNavigationClick = {},
+    )
 }
