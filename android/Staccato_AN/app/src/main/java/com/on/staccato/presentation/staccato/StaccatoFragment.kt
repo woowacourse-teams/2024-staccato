@@ -137,7 +137,7 @@ class StaccatoFragment :
             }
             R.id.comment_copy -> {
                 val comment =
-                    commentsViewModel.selectedComment.value?.content
+                    commentsViewModel.selectedComment?.content
                         ?: return showToast(getString(R.string.staccato_error_comment_copy))
                 clipboardHelper.copyText(
                     label = LABEL_STACCATO_COMMENT,
