@@ -7,6 +7,7 @@ import com.on.staccato.data.invitation.InvitationApiService
 import com.on.staccato.data.login.LoginApiService
 import com.on.staccato.data.member.MemberApiService
 import com.on.staccato.data.mypage.MyPageApiService
+import com.on.staccato.data.notification.NotificationApiService
 import com.on.staccato.data.staccato.StaccatoApiService
 import dagger.Module
 import dagger.Provides
@@ -40,13 +41,17 @@ object ApiServiceModule {
 
     @Singleton
     @Provides
-    fun memberApiService(retrofit: Retrofit): MemberApiService = retrofit.create(MemberApiService::class.java)
+    fun providesMemberApiService(retrofit: Retrofit): MemberApiService = retrofit.create(MemberApiService::class.java)
 
     @Singleton
     @Provides
-    fun myPageApiService(retrofit: Retrofit): MyPageApiService = retrofit.create(MyPageApiService::class.java)
+    fun providesMyPageApiService(retrofit: Retrofit): MyPageApiService = retrofit.create(MyPageApiService::class.java)
 
     @Singleton
     @Provides
-    fun invitationApiService(retrofit: Retrofit): InvitationApiService = retrofit.create(InvitationApiService::class.java)
+    fun providesInvitationApiService(retrofit: Retrofit): InvitationApiService = retrofit.create(InvitationApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun providesNotificationApiService(retrofit: Retrofit): NotificationApiService = retrofit.create(NotificationApiService::class.java)
 }
