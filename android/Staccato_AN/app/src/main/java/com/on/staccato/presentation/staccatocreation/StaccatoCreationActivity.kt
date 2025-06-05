@@ -104,15 +104,7 @@ class StaccatoCreationActivity :
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.isPlaceSearchClicked.value != true) {
-            checkLocationSetting()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        val hasPlaceSearchClicked = autocompleteFragment.isVisible
-        viewModel.setIsPlaceSearchClicked(hasPlaceSearchClicked)
+        if (viewModel.isFromPlaceSearch.getValue() != true) checkLocationSetting()
     }
 
     override fun onNewPlaceSelected(

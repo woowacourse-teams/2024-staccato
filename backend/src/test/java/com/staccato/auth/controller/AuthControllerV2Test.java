@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class AuthControllerTest extends ControllerTest {
+class AuthControllerV2Test extends ControllerTest {
     @DisplayName("로그인 요청/응답에 대한 역직렬화/직렬화에 성공한다.")
     @Test
     void login() throws Exception {
@@ -35,6 +35,7 @@ class AuthControllerTest extends ControllerTest {
                 """;
         String expectedResponse = """
                 {
+                  "memberId": null,
                   "token": "staccatoToken"
                 }
                 """;
@@ -42,7 +43,7 @@ class AuthControllerTest extends ControllerTest {
         when(authService.login(any(LoginRequest.class))).thenReturn(loginResponse);
 
         // when & then
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post("/v2/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(loginRequest))
                 .andExpect(status().isOk())
@@ -60,7 +61,7 @@ class AuthControllerTest extends ControllerTest {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "닉네임을 입력해주세요.");
 
         // when & then
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post("/v2/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isBadRequest())
@@ -77,12 +78,13 @@ class AuthControllerTest extends ControllerTest {
         when(authService.loginByCode(any(String.class))).thenReturn(loginResponse);
         String response = """
                 {
+                    "memberId": null,
                     "token" : "token"
                 }
                 """;
 
         // when & then
-        mockMvc.perform(post("/members")
+        mockMvc.perform(post("/v2/members")
                         .param("code", code))
                 .andExpect(status().isOk())
                 .andExpect(content().json(response));
