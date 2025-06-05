@@ -12,7 +12,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.on.staccato.R
-import com.on.staccato.StaccatoApplication.Companion.userInfoPrefsManager
 import com.on.staccato.databinding.ActivityLoginBinding
 import com.on.staccato.presentation.login.viewmodel.LoginViewModel
 import com.on.staccato.presentation.main.MainActivity
@@ -27,7 +26,6 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
     private lateinit var binding: ActivityLoginBinding
     private val loginViewModel: LoginViewModel by viewModels()
 
-    private var isLoggedIn = false
     private val inputManager: InputMethodManager by lazy {
         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
     }
@@ -71,16 +69,21 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
 
     private fun checkIfLoggedIn(splashScreen: SplashScreen) {
         splashScreen.setKeepOnScreenCondition { true }
-        lifecycleScope.launch {
-            val token = userInfoPrefsManager.getToken()
-            isLoggedIn = !token.isNullOrEmpty()
-            routeToNextScreenByCheckingToken()
-            delay(SPLASH_SCREEN_DURATION)
-            splashScreen.setKeepOnScreenCondition { false }
+        loginViewModel.fetchToken()
+        observeIsLoggedIn(splashScreen)
+    }
+
+    private fun observeIsLoggedIn(splashScreen: SplashScreen) {
+        loginViewModel.isLoggedIn.observe(this) {
+            lifecycleScope.launch {
+                routeToNextScreenByCheckingToken(it)
+                delay(SPLASH_SCREEN_DURATION)
+                splashScreen.setKeepOnScreenCondition { false }
+            }
         }
     }
 
-    private fun routeToNextScreenByCheckingToken() {
+    private fun routeToNextScreenByCheckingToken(isLoggedIn: Boolean) {
         if (isLoggedIn) {
             navigateToMainActivity()
         }

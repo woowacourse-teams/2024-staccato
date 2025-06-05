@@ -9,18 +9,20 @@
         <variable
             name="myComment"
             type="com.on.staccato.presentation.staccato.comments.CommentUiModel" />
+
+        <variable
+            name="handler"
+            type="com.on.staccato.presentation.staccato.comments.CommentHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_staccato_my_comment_profile"
-            style="@style/CommentProfileImageStyle.MyProfile"
+            style="@style/CommentProfileImageStyle"
             android:contentDescription="@string/staccato_my_comment_profile_image_description"
-            android:elevation="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:coilCircleImageUrl="@{myComment.memberImageUrl}"

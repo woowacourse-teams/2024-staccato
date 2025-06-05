@@ -1,9 +1,7 @@
 package com.on.staccato.presentation.timeline
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
-import android.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -20,6 +18,8 @@ import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
+import com.on.staccato.presentation.util.MenuHandler
+import com.on.staccato.presentation.util.showPopupMenu
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_FRAGMENT_PAGE
 import com.on.staccato.util.logging.LoggingManager
@@ -33,7 +33,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TimelineFragment :
     BindingFragment<FragmentTimelineBinding>(R.layout.fragment_timeline),
-    TimelineHandler {
+    TimelineHandler,
+    MenuHandler {
     @Inject
     lateinit var loggingManager: LoggingManager
 
@@ -64,9 +65,15 @@ class TimelineFragment :
 
     override fun onSortClicked() {
         val sortButton = binding.linearTimelineSortCategories
-        val popup = sortButton.inflateCreationMenu()
-        setUpCreationMenu(popup)
-        popup.show()
+        sortButton.showPopupMenu(
+            R.menu.menu_sort,
+            menuHandler = ::setupActionBy,
+        )
+    }
+
+    override fun setupActionBy(menuItemId: Int) {
+        val sortType: SortType = SortType.from(menuItemId)
+        timelineViewModel.sortTimeline(sortType)
     }
 
     override fun onFilterClicked() {
@@ -147,27 +154,6 @@ class TimelineFragment :
                     timelineViewModel.loadTimeline()
                 }
             }
-        }
-    }
-
-    private fun View.inflateCreationMenu(): PopupMenu {
-        val popup =
-            PopupMenu(
-                this.context,
-                this,
-                Gravity.END,
-                0,
-                R.style.Theme_Staccato_AN_PopupMenu,
-            )
-        popup.menuInflater.inflate(R.menu.menu_sort, popup.menu)
-        return popup
-    }
-
-    private fun setUpCreationMenu(popup: PopupMenu) {
-        popup.setOnMenuItemClickListener { menuItem ->
-            val sortType: SortType = SortType.from(menuItem.itemId)
-            timelineViewModel.sortTimeline(sortType)
-            false
         }
     }
 

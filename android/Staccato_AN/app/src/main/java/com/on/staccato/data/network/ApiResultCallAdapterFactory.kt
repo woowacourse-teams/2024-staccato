@@ -25,8 +25,4 @@ class ApiResultCallAdapterFactory : CallAdapter.Factory() {
         val resultType = getParameterUpperBound(0, responseType as ParameterizedType)
         return ApiResultCallAdapter(resultType)
     }
-
-    companion object {
-        fun create(): ApiResultCallAdapterFactory = ApiResultCallAdapterFactory()
-    }
 }
