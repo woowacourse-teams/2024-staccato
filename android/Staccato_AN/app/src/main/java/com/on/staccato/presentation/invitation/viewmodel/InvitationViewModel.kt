@@ -55,6 +55,7 @@ class InvitationViewModel
 
         init {
             fetchReceivedInvitations()
+            fetchSentInvitations()
         }
 
         fun fetchReceivedInvitations() {
