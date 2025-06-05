@@ -8,6 +8,7 @@ import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -16,11 +17,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMypageBinding
 import com.on.staccato.presentation.base.BindingActivity
-import com.on.staccato.presentation.invitation.InvitationManagementActivity
-import com.on.staccato.presentation.mypage.component.MiddleDivider
-import com.on.staccato.presentation.mypage.component.MyPageMenuButton
 import com.on.staccato.presentation.common.clipboard.ClipboardHelper
 import com.on.staccato.presentation.common.photo.PhotoAttachFragment
+import com.on.staccato.presentation.component.DefaultDivider
+import com.on.staccato.presentation.invitation.InvitationManagementActivity
+import com.on.staccato.presentation.mypage.component.MyPageMenuButton
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
@@ -108,7 +109,7 @@ class MyPageActivity :
 
     private fun setDividerContent() {
         binding.dividerMypageMiddle.setContent {
-            MiddleDivider()
+            DefaultDivider(thickness = 10.dp)
         }
     }
 
