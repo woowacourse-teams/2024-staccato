@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/all_invitation_notification_indicator_description"
-                    android:padding="2dp"
+                    android:padding="1dp"
                     android:src="@drawable/notification_point"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@id/linear_main_profile_image"
