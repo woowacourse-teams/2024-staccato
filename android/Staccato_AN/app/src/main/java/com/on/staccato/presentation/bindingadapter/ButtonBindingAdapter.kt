@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.bindingadapter
 
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.databinding.BindingAdapter
@@ -9,8 +10,8 @@ import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.common.InputState
 import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel
 import com.on.staccato.presentation.mapper.toInputState
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -51,7 +52,7 @@ fun Button.setStaccatoSaveButtonEnabled(
             staccatoAddress == null ||
             staccatoCategory == null ||
             staccatoVisitedAt == null ||
-            staccatoPhotos?.isLoading() == true
+            staccatoPhotos?.hasNotSuccessPhoto() == true
         ) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
@@ -133,6 +134,16 @@ fun MaterialButton.setCurrentLocationButtonLoading(isLoading: Boolean?) {
 @BindingAdapter("sendButtonEnabled")
 fun ImageButton.setSendButtonEnabled(value: String?) {
     isEnabled = !value.isNullOrBlank()
+}
+
+@BindingAdapter("visibilityByIsBottomSheetExpanded")
+fun ImageButton.setVisibilityBy(isBottomSheetExpanded: Boolean?) {
+    visibility =
+        if (isBottomSheetExpanded == true) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
 }
 
 private const val MAX_RECOVERY_CODE = 36

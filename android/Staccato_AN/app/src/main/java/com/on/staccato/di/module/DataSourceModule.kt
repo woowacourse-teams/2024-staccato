@@ -14,8 +14,6 @@ import com.on.staccato.data.mypage.MyPageDataSource
 import com.on.staccato.data.mypage.MyPageRemoteDataSource
 import com.on.staccato.data.staccato.StaccatoDataSource
 import com.on.staccato.data.staccato.StaccatoRemoteDataSource
-import com.on.staccato.data.timeline.TimelineDataSource
-import com.on.staccato.data.timeline.TimelineRemoteDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -35,9 +33,6 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindStaccatoDataSource(staccatoRemoteDataSource: StaccatoRemoteDataSource): StaccatoDataSource
-
-    @Binds
-    abstract fun bindTimelineDataSource(timelineRemoteDataSource: TimelineRemoteDataSource): TimelineDataSource
 
     @Binds
     abstract fun bindMemberLocalDataSource(memberLocalDataSource: MemberLocalDataSource): MemberDataSource

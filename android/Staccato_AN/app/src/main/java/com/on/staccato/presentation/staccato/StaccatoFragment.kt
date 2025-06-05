@@ -172,7 +172,9 @@ class StaccatoFragment :
         TabLayoutMediator(
             binding.tabStaccatoPhotoHorizontal,
             binding.vpStaccatoPhotoHorizontal,
-        ) { _, _ -> }.attach()
+        ) { tab, _ ->
+            tab.setCustomView(R.layout.item_tab_dot)
+        }.attach()
     }
 
     private fun loadStaccato() {

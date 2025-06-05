@@ -79,7 +79,7 @@ private fun CustomSwitchPreview(
     ) {}
 }
 
-class SwitchPreviewParameterProvider : PreviewParameterProvider<Boolean> {
+private class SwitchPreviewParameterProvider : PreviewParameterProvider<Boolean> {
     override val values =
         sequenceOf(
             false,

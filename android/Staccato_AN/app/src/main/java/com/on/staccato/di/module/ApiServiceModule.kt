@@ -8,7 +8,6 @@ import com.on.staccato.data.login.LoginApiService
 import com.on.staccato.data.member.MemberApiService
 import com.on.staccato.data.mypage.MyPageApiService
 import com.on.staccato.data.staccato.StaccatoApiService
-import com.on.staccato.data.timeline.TimeLineApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,10 +25,6 @@ object ApiServiceModule {
     @Singleton
     @Provides
     fun provideCategoryApiService(retrofit: Retrofit): CategoryApiService = retrofit.create(CategoryApiService::class.java)
-
-    @Singleton
-    @Provides
-    fun provideTimelineApiService(retrofit: Retrofit): TimeLineApiService = retrofit.create(TimeLineApiService::class.java)
 
     @Singleton
     @Provides

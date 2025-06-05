@@ -193,7 +193,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_category_creation_color"
                     bind:imageButtonIcon="@{viewModel.color.markerRes}"
-                    tools:src="@drawable/icon_marker_2x_brown" />
+                    tools:src="@drawable/icon_marker_4x_brown" />
 
                 <TextView
                     android:id="@+id/tv_category_creation_period_title"

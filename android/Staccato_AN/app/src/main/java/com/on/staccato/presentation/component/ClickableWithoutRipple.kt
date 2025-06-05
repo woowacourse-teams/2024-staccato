@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun Modifier.clickableWithoutRipple(onClick: () -> Unit): Modifier =
-    this.clickable(
+    clickable(
         indication = null,
         interactionSource = remember { MutableInteractionSource() },
         onClick = onClick,
