@@ -23,6 +23,7 @@ import javax.inject.Singleton
 @Module
 object NetworkModule {
     private const val CONTENT_TYPE = "application/json"
+    private const val EXCEPTION_CONVERT_ERROR_RESPONSE = "errorBody를 변환할 수 없습니다."
 
     @Provides
     @Singleton
@@ -89,6 +90,6 @@ object NetworkModule {
             retrofit.responseBodyConverter<ErrorResponse>(
                 ErrorResponse::class.java,
                 ErrorResponse::class.java.annotations,
-            ).convert(errorBody) ?: throw IllegalArgumentException("errorBody를 변환할 수 없습니다.")
+            ).convert(errorBody) ?: throw IllegalArgumentException(EXCEPTION_CONVERT_ERROR_RESPONSE)
         }
 }
