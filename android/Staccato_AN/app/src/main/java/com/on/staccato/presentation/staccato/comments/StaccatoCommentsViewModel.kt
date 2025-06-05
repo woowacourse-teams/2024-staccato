@@ -71,7 +71,7 @@ class StaccatoCommentsViewModel
         }
 
         fun fetchComments(id: Long) {
-            setStaccatoId(id)
+            updateStaccatoId(id)
             viewModelScope.launch {
                 commentRepository.fetchComments(id)
                     .onSuccess(::updateComments)
@@ -118,7 +118,7 @@ class StaccatoCommentsViewModel
                 }
         }
 
-        private fun setStaccatoId(id: Long) {
+        private fun updateStaccatoId(id: Long) {
             if (staccatoId == STACCATO_DEFAULT_ID) {
                 staccatoId = id
             }
