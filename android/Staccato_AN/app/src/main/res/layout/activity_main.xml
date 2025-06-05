@@ -21,107 +21,113 @@
         android:background="@color/white"
         tools:context=".presentation.main.MainActivity">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_main_map"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragment_container_view_map"
-                android:name="com.on.staccato.presentation.map.MapsFragment"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_main_map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/fragment_container_view_map"
+                    android:name="com.on.staccato.presentation.map.MapsFragment"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/icon_member"
+                    android:gravity="center"
+                    android:padding="0.5dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_main_mypage"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:clickable="true"
+                        android:contentDescription="@string/main_mypage_btn_description"
+                        android:focusable="true"
+                        android:onClick="@{() -> handler.onMyPageClicked()}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        bind:coilCircleImageUrl="@{sharedViewModel.memberProfile.profileImageUrl}"
+                        bind:coilPlaceHolder="@{@drawable/icon_member}" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_main_bottom_sheet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_bottom_sheet_16dp"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:focusable="true"
+                app:behavior_fitToContents="false"
+                app:behavior_halfExpandedRatio="0.6"
+                app:behavior_peekHeight="80dp"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                bind:backgroundByIsBottomSheetExpanded="@{sharedViewModel.isBottomSheetExpanded}">
 
-            <LinearLayout
+                <View
+                    android:id="@+id/view_main_drag_bar"
+                    style="@style/DragHandleStyle"
+                    android:layout_marginVertical="10dp"
+                    app:layout_constraintBottom_toTopOf="@id/fragment_container_view_main_bottom_sheet"
+                    app:layout_constraintEnd_toEndOf="@id/constraint_main_bottom_sheet"
+                    app:layout_constraintStart_toStartOf="@id/constraint_main_bottom_sheet"
+                    app:layout_constraintTop_toTopOf="@id/constraint_main_bottom_sheet"
+                    bind:visibilityByIsBottomSheetExpanded="@{sharedViewModel.isBottomSheetExpanded}" />
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/fragment_container_view_main_bottom_sheet"
+                    android:name="androidx.navigation.fragment.NavHostFragment"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:defaultNavHost="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_main_drag_bar"
+                    app:navGraph="@navigation/bottom_navigation_graph" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_main_creation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/icon_member"
-                android:gravity="center"
-                android:padding="0.5dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="12dp"
+                android:backgroundTint="@color/staccato_blue"
+                android:contentDescription="@string/main_staccato_creation_btn_description"
+                android:elevation="7dp"
+                android:onClick="@{() -> handler.onStaccatoCreationClicked(sharedViewModel.isPermissionCanceled)}"
+                android:translationY="-36dp"
+                app:fabCustomSize="44dp"
+                app:layout_behavior="com.on.staccato.presentation.main.MainFabBehavior"
+                app:rippleColor="@android:color/transparent"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                app:srcCompat="@drawable/icon_plus"
+                app:tint="@color/white" />
 
-                <ImageView
-                    android:id="@+id/iv_main_mypage"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:clickable="true"
-                    android:contentDescription="@string/main_mypage_btn_description"
-                    android:focusable="true"
-                    android:onClick="@{() -> handler.onMyPageClicked()}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    bind:coilCircleImageUrl="@{sharedViewModel.memberProfile.profileImageUrl}"
-                    bind:coilPlaceHolder="@{@drawable/icon_member}" />
-
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_main_bottom_sheet"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/shape_bottom_sheet_16dp"
-            android:clickable="true"
-            android:elevation="4dp"
-            android:focusable="true"
-            app:behavior_fitToContents="false"
-            app:behavior_halfExpandedRatio="0.6"
-            app:behavior_peekHeight="80dp"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            bind:backgroundByIsBottomSheetExpanded="@{sharedViewModel.isBottomSheetExpanded}">
-
-            <View
-                android:id="@+id/view_main_drag_bar"
-                style="@style/DragHandleStyle"
-                android:layout_marginVertical="10dp"
-                app:layout_constraintBottom_toTopOf="@id/fragment_container_view_main_bottom_sheet"
-                app:layout_constraintEnd_toEndOf="@id/constraint_main_bottom_sheet"
-                app:layout_constraintStart_toStartOf="@id/constraint_main_bottom_sheet"
-                app:layout_constraintTop_toTopOf="@id/constraint_main_bottom_sheet"
-                bind:visibilityByIsBottomSheetExpanded="@{sharedViewModel.isBottomSheetExpanded}" />
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragment_container_view_main_bottom_sheet"
-                android:name="androidx.navigation.fragment.NavHostFragment"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:defaultNavHost="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_main_drag_bar"
-                app:navGraph="@navigation/bottom_navigation_graph" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_main_creation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginEnd="12dp"
-            android:backgroundTint="@color/staccato_blue"
-            android:contentDescription="@string/main_staccato_creation_btn_description"
-            android:elevation="7dp"
-            android:onClick="@{() -> handler.onStaccatoCreationClicked(sharedViewModel.isPermissionCanceled)}"
-            android:translationY="-36dp"
-            app:fabCustomSize="44dp"
-            app:layout_behavior="com.on.staccato.presentation.main.MainFabBehavior"
-            app:rippleColor="@android:color/transparent"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-            app:srcCompat="@drawable/icon_plus"
-            app:tint="@color/white" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
