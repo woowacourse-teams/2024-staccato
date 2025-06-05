@@ -31,7 +31,7 @@ fun DefaultTextButton(
     backgroundColor: Color,
     textColor: Color,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-    border: BorderStroke? = null,
+    border: BorderStroke = BorderStroke(width = 0.dp, color = Color.Transparent),
     textStyle: TextStyle = Body4,
 ) {
     Box(
@@ -44,7 +44,7 @@ fun DefaultTextButton(
                 )
                 .clickableWithoutRipple { onClick() }
                 .border(
-                    border = border ?: BorderStroke(width = 0.dp, color = Color.Transparent),
+                    border = border,
                     shape = RoundedCornerShape(5.dp),
                 ),
     ) {
