@@ -67,19 +67,26 @@ fun MenuTab(
 
 @Preview
 @Composable
-private fun MenuTapPreview() {
+private fun SelectedMenuTapPreview() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        InvitationTabMenu.entries.forEach { menu ->
+            MenuTab(
+                menu = menu,
+                selected = true,
+                onClick = {},
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun UnselectedMenuTapPreview() {
     Column(modifier = Modifier.fillMaxWidth()) {
         InvitationTabMenu.entries.forEach { menu ->
             MenuTab(
                 menu = menu,
                 selected = false,
-                onClick = {},
-            )
-        }
-        InvitationTabMenu.entries.forEach { menu ->
-            MenuTab(
-                menu = menu,
-                selected = true,
                 onClick = {},
             )
         }
