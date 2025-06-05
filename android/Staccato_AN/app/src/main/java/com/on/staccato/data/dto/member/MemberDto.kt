@@ -8,5 +8,6 @@ data class MemberDto(
     @SerialName("memberId") val memberId: Long,
     @SerialName("nickname") val nickname: String,
     @SerialName("memberImageUrl") val memberImage: String? = null,
-    @SerialName("status") val status: String = "none", // 추후 기본값 제거 예정
+    // 추후 기본값 제거 예정
+    @SerialName("status") val status: String = "none",
 )
