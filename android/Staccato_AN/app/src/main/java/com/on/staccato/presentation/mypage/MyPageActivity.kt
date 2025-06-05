@@ -105,6 +105,7 @@ class MyPageActivity :
             clipboardHelper.copyText(
                 label = UUID_CODE_LABEL,
                 text = code,
+                context = this,
             )
         }
     }

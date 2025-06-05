@@ -142,6 +142,7 @@ class StaccatoFragment :
                 clipboardHelper.copyText(
                     label = LABEL_STACCATO_COMMENT,
                     text = comment,
+                    context = requireContext(),
                 )
             }
         }
