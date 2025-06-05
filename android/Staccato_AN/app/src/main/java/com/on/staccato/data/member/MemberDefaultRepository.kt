@@ -12,7 +12,7 @@ import javax.inject.Inject
 class MemberDefaultRepository
     @Inject
     constructor(
-        private val memberLocalDataSource: MemberLocalDataSource,
+        private val memberLocalDataSource: MemberDataSource,
         private val memberApiService: MemberApiService,
     ) : MemberRepository {
         override suspend fun fetchTokenWithRecoveryCode(recoveryCode: String): ApiResult<Unit> =
