@@ -87,7 +87,7 @@ fun InviteDialog(
 )
 @Composable
 private fun EmptyInviteDialogPreview() {
-    DefaultInviteDialog(
+    PreviewInviteDialog(
         selectedMembers = emptyMembers,
         searchedMembers = emptyMembersUiModel,
     )
@@ -99,7 +99,7 @@ private fun EmptyInviteDialogPreview() {
 )
 @Composable
 private fun EmptySelectedMemberPreview() {
-    DefaultInviteDialog(
+    PreviewInviteDialog(
         selectedMembers = emptyMembers,
         searchedMembers = dummyMembersUiModel,
     )
@@ -111,7 +111,7 @@ private fun EmptySelectedMemberPreview() {
 )
 @Composable
 private fun EmptySearchedMemberPreview() {
-    DefaultInviteDialog(
+    PreviewInviteDialog(
         selectedMembers = dummyMembers,
         searchedMembers = emptyMembersUiModel,
     )
@@ -123,14 +123,14 @@ private fun EmptySearchedMemberPreview() {
 )
 @Composable
 private fun InviteDialogPreview() {
-    DefaultInviteDialog(
+    PreviewInviteDialog(
         selectedMembers = dummyMembers,
         searchedMembers = dummyMembersUiModel,
     )
 }
 
 @Composable
-private fun DefaultInviteDialog(
+private fun PreviewInviteDialog(
     selectedMembers: Members,
     searchedMembers: MembersUiModel,
 ) {

@@ -11,7 +11,7 @@
     <string name="all_confirm">확인</string>
     <string name="all_photo">사진</string>
     <string name="all_photo_number">(%s/%s)</string>
-    <string name="all_photo_attach">사진을 첨부해 보세요</string>
+    <string name="all_photo_attach">사진 첨부하기</string>
     <string name="all_visited_at">날짜 및 시간</string>
     <string name="all_please_select_visited_at">날짜 및 시간을 선택해 주세요</string>
     <string name="all_please_select_color">색상을 선택해 주세요</string>
@@ -32,6 +32,8 @@
     <string name="all_photo_attach_icon_description">사진 첨부란</string>
     <string name="all_category_thumbnail_photo_description">카테고리 썸네일 사진</string>
     <string name="all_waring">경고</string>
+    <string name="all_period_dot_different_year">%s. %s. %s - %s. %s. %s</string>
+    <string name="all_period_dot_same_year">%s. %s. %s - %s. %s</string>
 
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
@@ -52,6 +54,7 @@
     <string name="timeline_filter_all">모든 카테고리</string>
     <string name="timeline_create_category">카테고리 생성하기</string>
     <string name="timeline_category_creation_btn_description">카테고리 만들기로 이동</string>
+    <string name="timeline_expand_to_half">바텀시트를 전체 화면에서 하프 화면으로 전환</string>
 
     // menu_sort
     <string name="sort_updated_order">최근 수정순</string>
@@ -63,7 +66,6 @@
 
     // fragment_category
     <string name="category_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
-    <string name="category_period_dot">%s. %s. %s ~ %s. %s. %s</string>
     <string name="category_mates">함께하는 사람들</string>
     <string name="category_staccatos">스타카토</string>
     <string name="category_delete_complete">카테고리가 삭제되었습니다.</string>
@@ -142,6 +144,7 @@
 
     // item_attached_photo
     <string name="attached_photo_staccato_photo_description">스타카토 사진</string>
+    <string name="all_large_photo_warning">10MB보다\n작은 사진을\n올려주세요</string>
 
     // activity_staccato_update
     <string name="staccato_update_toolbar_subtitle">기억하고 싶은 순간을 수정해 보세요!</string>

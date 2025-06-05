@@ -60,6 +60,7 @@ private const val NOT_FOUND_ERROR_BODY = "errorBody를 찾을 수 없습니다."
 private fun <T : Any> handleApiResponse(execute: () -> Response<T>): ApiResult<T> {
     return try {
         val response: Response<T> = execute()
+        if (response.code() == 413) return ServerError(status = Status.Code(413), message = "10MB 이하의 사진만 업로드할 수 있어요!")
         val body: T? = response.body()
 
         when {

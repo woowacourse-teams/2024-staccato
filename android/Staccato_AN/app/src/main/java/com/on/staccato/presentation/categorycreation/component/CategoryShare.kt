@@ -51,7 +51,7 @@ private fun CategorySharePreview(
     )
 }
 
-class CategorySharePreviewParameterProvider : PreviewParameterProvider<Boolean> {
+private class CategorySharePreviewParameterProvider : PreviewParameterProvider<Boolean> {
     override val values =
         sequenceOf(
             false,

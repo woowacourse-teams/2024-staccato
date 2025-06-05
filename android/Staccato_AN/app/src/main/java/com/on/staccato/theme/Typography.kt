@@ -60,6 +60,19 @@ val Body5 =
         fontWeight = FontWeight.Normal,
     )
 
+val Body6 =
+    defaultTextStyle(
+        fontSize = 9.sp,
+        fontWeight = FontWeight.SemiBold,
+    )
+
+// 디자인 시스템 정리 전 임시 Typography
+val Regular11 =
+    defaultTextStyle(
+        fontSize = 11.sp,
+        fontWeight = FontWeight.Normal,
+    )
+
 private val Pretendard =
     FontFamily(
         Font(R.font.pretendard_regular, weight = FontWeight.Normal),
