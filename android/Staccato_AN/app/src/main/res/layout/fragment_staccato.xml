@@ -90,7 +90,7 @@
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tab_staccato_photo_horizontal"
-                    android:layout_width="50dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="10dp"
                     android:layout_marginTop="10dp"
                     android:background="#00000000"
@@ -101,6 +101,8 @@
                     app:tabGravity="center"
                     app:tabIndicatorFullWidth="false"
                     app:tabIndicatorHeight="0dp"
+                    app:tabPaddingEnd="0dp"
+                    app:tabPaddingStart="0dp"
                     bind:visibleOrGone="@{staccatoViewModel.staccatoDetail.staccatoImageUrls.size > 1}"
                     tools:visibility="gone" />
 

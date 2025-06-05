@@ -2,12 +2,14 @@ package com.on.staccato.presentation.staccatocreation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.on.staccato.databinding.ItemAddPhotoBinding
 import com.on.staccato.databinding.ItemAttachedPhotoBinding
-import com.on.staccato.presentation.common.AttachedPhotoHandler
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
+import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
+import com.on.staccato.presentation.common.photo.AttachedPhotoState
+import com.on.staccato.presentation.common.photo.AttachedPhotoUiModel
 
 class PhotoAttachAdapter(
     private val attachedPhotoHandler: AttachedPhotoHandler,
@@ -15,7 +17,7 @@ class PhotoAttachAdapter(
 ) :
     ItemMoveListener, ListAdapter<AttachedPhotoUiModel, PhotoAttachViewHolder>(diffUtil) {
     init {
-        submitList(listOf(AttachedPhotoUiModel.addPhotoButton))
+        submitList(listOf(photoAdditionButton))
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -76,15 +78,23 @@ class PhotoAttachAdapter(
     }
 
     override fun onStopDrag() {
-        dragListener.onStopDrag(currentList.filterNot { it == AttachedPhotoUiModel.addPhotoButton })
+        dragListener.onStopDrag(currentList.filterNot { it == photoAdditionButton })
     }
 
     companion object {
-        const val ADD_PHOTO_BUTTON_URI = "add_photo_button_uri"
-        const val ADD_PHOTO_BUTTON_URL = "add_photo_button_url"
+        private const val ADD_PHOTO_BUTTON_URI = "add_photo_button_uri"
+        private const val ADD_PHOTO_BUTTON_URL = "add_photo_button_url"
         const val ADD_PHOTO_POSITION = 0
         const val VIEW_TYPE_ADD_PHOTO = 0
         const val VIEW_TYPE_ATTACHED_PHOTO = 1
+
+        val photoAdditionButton by lazy {
+            AttachedPhotoUiModel(
+                ADD_PHOTO_BUTTON_URI.toUri(),
+                ADD_PHOTO_BUTTON_URL,
+                AttachedPhotoState.Success,
+            )
+        }
 
         val diffUtil =
             object : DiffUtil.ItemCallback<AttachedPhotoUiModel>() {

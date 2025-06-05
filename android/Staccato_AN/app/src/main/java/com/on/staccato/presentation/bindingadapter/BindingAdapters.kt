@@ -8,6 +8,7 @@ import androidx.databinding.BindingAdapter
 import com.on.staccato.R
 import com.on.staccato.presentation.category.model.CategoryStaccatoUiModel
 import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
+import com.on.staccato.presentation.common.photo.AttachedPhotoState
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 
@@ -116,3 +117,23 @@ private fun getVisibilityForExistingTimeline(isEmptyView: Boolean?) =
         true -> View.INVISIBLE
         else -> View.VISIBLE
     }
+
+@BindingAdapter("loadingVisibilityByState")
+fun View.setLoadingVisibilityByPhotoState(photoState: AttachedPhotoState) {
+    visibility =
+        if (photoState == AttachedPhotoState.Loading) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+}
+
+@BindingAdapter("backgroundVisibilityByState")
+fun View.setBackgroundVisibilityByPhotoState(photoState: AttachedPhotoState) {
+    visibility =
+        if (photoState == AttachedPhotoState.Success) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+}

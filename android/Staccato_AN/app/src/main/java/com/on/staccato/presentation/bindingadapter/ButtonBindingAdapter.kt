@@ -10,8 +10,8 @@ import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.common.InputState
 import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel
 import com.on.staccato.presentation.mapper.toInputState
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -52,7 +52,7 @@ fun Button.setStaccatoSaveButtonEnabled(
             staccatoAddress == null ||
             staccatoCategory == null ||
             staccatoVisitedAt == null ||
-            staccatoPhotos?.isLoading() == true
+            staccatoPhotos?.hasNotSuccessPhoto() == true
         ) {
             setTextColor(resources.getColor(R.color.gray4, null))
             false
