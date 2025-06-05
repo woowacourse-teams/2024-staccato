@@ -1,4 +1,4 @@
-package com.staccato.member.controller;
+package com.staccato.member.controller.docs;
 
 import org.springframework.http.ResponseEntity;
 import com.staccato.config.auth.LoginMember;
