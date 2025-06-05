@@ -4,9 +4,15 @@ import com.on.staccato.data.dto.mypage.MemberProfileResponse
 import com.on.staccato.data.dto.mypage.ProfileImageResponse
 import com.on.staccato.data.network.ApiResult
 import okhttp3.MultipartBody
+import javax.inject.Inject
 
-interface MyPageRemoteDataSource {
-    suspend fun loadMemberProfile(): ApiResult<MemberProfileResponse>
+class MyPageRemoteDataSource
+    @Inject
+    constructor(
+        private val myPageApiService: MyPageApiService,
+    ) : MyPageDataSource {
+        override suspend fun loadMemberProfile(): ApiResult<MemberProfileResponse> = myPageApiService.getMemberProfile()
 
-    suspend fun updateProfileImage(profileImageFile: MultipartBody.Part): ApiResult<ProfileImageResponse>
-}
+        override suspend fun updateProfileImage(profileImageFile: MultipartBody.Part): ApiResult<ProfileImageResponse> =
+            myPageApiService.postProfileImageChange(profileImageFile)
+    }

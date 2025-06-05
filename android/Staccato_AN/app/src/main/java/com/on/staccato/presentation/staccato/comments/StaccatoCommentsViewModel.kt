@@ -8,8 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.network.onException
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
+import com.on.staccato.domain.model.Comment
 import com.on.staccato.domain.model.NewComment
 import com.on.staccato.domain.repository.CommentRepository
+import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toCommentUiModel
@@ -22,8 +24,9 @@ import javax.inject.Inject
 class StaccatoCommentsViewModel
     @Inject
     constructor(
+        private val memberRepository: MemberRepository,
         private val commentRepository: CommentRepository,
-    ) : ViewModel(), CommentHandler {
+    ) : ViewModel() {
         private val _comments = MutableLiveData<List<CommentUiModel>>()
         val comments: LiveData<List<CommentUiModel>>
             get() = _comments
@@ -46,19 +49,18 @@ class StaccatoCommentsViewModel
 
         private var staccatoId: Long = STACCATO_DEFAULT_ID
 
-        override fun onSendButtonClicked() {
-            viewModelScope.launch {
-                sendComment()
-            }
+        private var myMemberId: Long = 0L
+
+        var selectedComment: CommentUiModel? = null
+            private set
+
+        init {
+            fetchMemberId()
         }
 
-        override fun onUpdateButtonClicked(commentId: Long) {
-            // TODO
-        }
-
-        override fun onDeleteButtonClicked(commentId: Long) {
+        fun deleteComment() {
             viewModelScope.launch {
-                commentRepository.deleteComment(commentId)
+                commentRepository.deleteComment(selectedComment?.id ?: return@launch handleException(ExceptionState.UnknownError))
                     .onSuccess {
                         fetchComments(staccatoId)
                         _isDeleteSuccess.postValue(true)
@@ -69,24 +71,20 @@ class StaccatoCommentsViewModel
         }
 
         fun fetchComments(id: Long) {
-            setStaccatoId(id)
+            updateStaccatoId(id)
             viewModelScope.launch {
                 commentRepository.fetchComments(id)
-                    .onSuccess { comments ->
-                        setComments(comments.map { it.toCommentUiModel() })
-                    }
+                    .onSuccess(::updateComments)
                     .onServerError(::handleServerError)
                     .onException(::handleException)
             }
         }
 
-        private fun setStaccatoId(id: Long) {
-            if (staccatoId == STACCATO_DEFAULT_ID) {
-                staccatoId = id
-            }
+        fun setSelectedComment(id: Long) {
+            selectedComment = _comments.value?.find { it.id == id }
         }
 
-        private fun sendComment() {
+        fun sendComment() {
             commentInput.value?.let {
                 val newComment = NewComment(staccatoId, it)
                 commentInput.value = ""
@@ -102,8 +100,28 @@ class StaccatoCommentsViewModel
             }
         }
 
-        private fun setComments(newComments: List<CommentUiModel>) {
-            _comments.value = newComments
+        private fun fetchMemberId() {
+            viewModelScope.launch {
+                memberRepository.getMemberId()
+                    .onSuccess { myMemberId = it }
+                    .onFailure {
+                        handleException(ExceptionState.UnknownError)
+                    }
+            }
+        }
+
+        private fun updateComments(newComments: List<Comment>) {
+            _comments.value =
+                newComments.map { comment ->
+                    val isMine = comment.memberId == myMemberId
+                    comment.toCommentUiModel(isMine)
+                }
+        }
+
+        private fun updateStaccatoId(id: Long) {
+            if (staccatoId == STACCATO_DEFAULT_ID) {
+                staccatoId = id
+            }
         }
 
         private fun handleServerError(message: String) {

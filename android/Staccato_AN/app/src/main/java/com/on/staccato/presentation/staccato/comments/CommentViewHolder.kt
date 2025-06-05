@@ -1,58 +1,47 @@
 package com.on.staccato.presentation.staccato.comments
 
 import android.view.Gravity
-import android.view.View
-import android.widget.PopupMenu
-import androidx.fragment.app.FragmentManager
-import androidx.recyclerview.widget.RecyclerView
-import com.on.staccato.R
+import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.on.staccato.databinding.ItemStaccatoMyCommentBinding
-import com.on.staccato.presentation.common.DeleteDialogFragment
-import com.on.staccato.presentation.common.DialogHandler
+import com.on.staccato.databinding.ItemStaccatoOthersCommentBinding
 
-// Todo: 추후 나의 댓글, 다른 사용자의 댓글 구분하기
-class CommentViewHolder(
-    private val binding: ItemStaccatoMyCommentBinding,
-    private val commentHandler: CommentHandler,
-) : RecyclerView.ViewHolder(binding.root),
-    DialogHandler {
-    private val deleteDialogFragment = DeleteDialogFragment { onConfirmClicked() }
+sealed class CommentViewHolder(binding: ViewDataBinding) : ViewHolder(binding.root) {
+    abstract val binding: ViewDataBinding
 
-    override fun onConfirmClicked() {
-        binding.myComment?.id?.let { commentHandler.onDeleteButtonClicked(it) }
-    }
-
-    fun bind(commentUiModel: CommentUiModel) {
-        binding.myComment = commentUiModel
-        binding.root.setOnLongClickListener {
-            onCommentLongClicked(commentId = commentUiModel.id)
-            false
+    class MyCommentViewHolder(
+        override val binding: ItemStaccatoMyCommentBinding,
+        private val handler: CommentHandler,
+    ) : CommentViewHolder(binding) {
+        fun bind(commentUiModel: CommentUiModel) {
+            binding.myComment = commentUiModel
+            binding.handler = handler
+            binding.root.setOnLongClickListener {
+                handler.onCommentLongClicked(
+                    view = binding.tvStaccatoMyCommentChat,
+                    gravity = Gravity.END,
+                    id = commentUiModel.id,
+                )
+                false
+            }
         }
     }
 
-    private fun onCommentLongClicked(commentId: Long) {
-        val popup = inflateCreationMenu(binding.root)
-        setUpCreationMenu(popup)
-        popup.show()
-    }
-
-    private fun inflateCreationMenu(view: View): PopupMenu {
-        val popup =
-            PopupMenu(view.context, view, Gravity.END, 0, R.style.Theme_Staccato_AN_PopupMenu)
-        popup.menuInflater.inflate(R.menu.menu_comment, popup.menu)
-        return popup
-    }
-
-    private fun setUpCreationMenu(popup: PopupMenu) {
-        popup.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.comment_delete ->
-                    deleteDialogFragment.show(
-                        FragmentManager.findFragmentManager(binding.root),
-                        DeleteDialogFragment.TAG,
-                    )
+    class OtherCommentViewHolder(
+        override val binding: ItemStaccatoOthersCommentBinding,
+        private val handler: CommentHandler,
+    ) : CommentViewHolder(binding) {
+        fun bind(commentUiModel: CommentUiModel) {
+            binding.othersComment = commentUiModel
+            binding.handler = handler
+            binding.root.setOnLongClickListener {
+                handler.onCommentLongClicked(
+                    view = binding.tvStaccatoOthersCommentChat,
+                    gravity = Gravity.START,
+                    id = commentUiModel.id,
+                )
+                false
             }
-            false
         }
     }
 }

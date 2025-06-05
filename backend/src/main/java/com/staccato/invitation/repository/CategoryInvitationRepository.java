@@ -39,4 +39,6 @@ public interface CategoryInvitationRepository extends JpaRepository<CategoryInvi
     void deleteAllByCategoryIdInBulk(long categoryId);
 
     List<CategoryInvitation> findAllByCategoryIdAndInviteeInAndStatus(long categoryId, List<Member> members, InvitationStatus invitationStatus);
+
+    boolean existsByInviteeIdAndStatus(long inviteeId, InvitationStatus invitationStatus);
 }

@@ -1,12 +1,9 @@
 package com.on.staccato.presentation.mypage
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
@@ -17,6 +14,7 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.invitation.InvitationManagementActivity
 import com.on.staccato.presentation.mypage.component.MiddleDivider
 import com.on.staccato.presentation.mypage.component.MyPageMenuButton
+import com.on.staccato.presentation.common.clipboard.ClipboardHelper
 import com.on.staccato.presentation.common.photo.PhotoAttachFragment
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
@@ -25,6 +23,7 @@ import com.on.staccato.presentation.util.convertMyPageUriToFile
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.webview.WebViewActivity
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyPageActivity :
@@ -35,9 +34,9 @@ class MyPageActivity :
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val photoAttachFragment by lazy { PhotoAttachFragment() }
     private val fragmentManager: FragmentManager = supportFragmentManager
-    private val clipboardManager: ClipboardManager by lazy {
-        getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-    }
+
+    @Inject
+    lateinit var clipboardHelper: ClipboardHelper
 
     override fun initStartView(savedInstanceState: Bundle?) {
         setContents()
@@ -126,19 +125,11 @@ class MyPageActivity :
 
     private fun observeCopyingUuidCode() {
         myPageViewModel.uuidCode.observe(this) { code ->
-            copyUuidCodeOnClipBoard(code)
-        }
-    }
-
-    private fun copyUuidCodeOnClipBoard(code: String) {
-        val clipData: ClipData = ClipData.newPlainText(UUID_CODE_LABEL, code)
-        clipboardManager.setPrimaryClip(clipData)
-        showCopySuccessMessageBySdkVersion()
-    }
-
-    private fun showCopySuccessMessageBySdkVersion() {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
-            showToast(getString(R.string.all_clipboard_copy))
+            clipboardHelper.copyText(
+                label = UUID_CODE_LABEL,
+                text = code,
+                context = this,
+            )
         }
     }
 

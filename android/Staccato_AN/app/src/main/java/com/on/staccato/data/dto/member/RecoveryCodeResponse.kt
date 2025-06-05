@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RecoveryCodeResponse(
+    @SerialName("memberId") val id: Long,
     @SerialName("token") val token: String,
 )

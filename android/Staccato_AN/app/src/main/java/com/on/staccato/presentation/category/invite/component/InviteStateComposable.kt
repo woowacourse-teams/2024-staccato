@@ -28,7 +28,7 @@ fun InviteStateComposable(
     when (item.inviteState) {
         InviteState.UNSELECTED -> {
             Image(
-                painter = painterResource(id = R.drawable.icon_invite),
+                painter = painterResource(id = R.drawable.icon_plus_circle),
                 contentDescription = stringResource(id = R.string.invite_member_unselected_description),
                 modifier =
                     Modifier
