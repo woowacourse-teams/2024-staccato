@@ -51,12 +51,7 @@ class MemberLocalDataSource
             }
         }
 
-        private fun getMemberId(): Long =
-            if (userInfoPrefs.contains(MEMBER_ID_KEY_NAME)) {
-                userInfoPrefs.getLong(MEMBER_ID_KEY_NAME, INVALID_MEMBER_ID)
-            } else {
-                INVALID_MEMBER_ID
-            }
+        private fun getMemberId(): Long = userInfoPrefs.getLong(MEMBER_ID_KEY_NAME, INVALID_MEMBER_ID)
 
         private fun getProfileImageUrl(): String? = userInfoPrefs.getString(PROFILE_IMAGE_URL_KEY_NAME, null)
 
