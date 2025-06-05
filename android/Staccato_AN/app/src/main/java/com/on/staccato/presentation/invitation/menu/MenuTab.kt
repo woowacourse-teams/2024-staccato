@@ -41,8 +41,7 @@ fun MenuTab(
             Modifier
                 .fillMaxWidth()
                 .clickableWithoutRipple(onClick)
-                .background(color = backgroundColor, shape = RoundedCornerShape(5.dp))
-                .padding(5.dp),
+                .background(color = backgroundColor, shape = RoundedCornerShape(5.dp)),
         contentAlignment = Alignment.Center,
     ) {
         Row(
