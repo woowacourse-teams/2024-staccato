@@ -116,7 +116,7 @@ class MemberServiceTest extends ServiceSliceTest {
     void readMemberWithoutOneself() {
         // given
         Member me = MemberFixtures.defaultMember().withNickname("me").buildAndSave(memberRepository);
-        MemberReadRequest memberReadRequest = new MemberReadRequest("me", 0);
+        MemberReadRequest memberReadRequest = new MemberReadRequest("me", null);
 
         // when
         MemberSearchResponses result = memberService.readMembersByNickname(me, memberReadRequest);
