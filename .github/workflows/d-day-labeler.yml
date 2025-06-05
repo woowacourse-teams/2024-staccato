@@ -12,4 +12,4 @@ jobs:
       - name: Update D-n Labels
         uses: naver/d-day-labeler@latest
         with:
-          token: ${{ secrets.HANNAH_PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}

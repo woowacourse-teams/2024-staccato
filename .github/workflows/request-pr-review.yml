@@ -12,6 +12,6 @@ jobs:
       - name: Request PR Review
         uses: naver/request-pr-review@v1.2.1
         with:
-          token: ${{ secrets.HANNAH_PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           slackBotToken: ${{ secrets.SLACK_BOT_TOKEN }}
           repoUrl: "https://github.com/woowacourse-teams/2024-staccato"
