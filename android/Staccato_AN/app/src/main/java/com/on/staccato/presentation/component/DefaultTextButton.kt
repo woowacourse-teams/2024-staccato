@@ -69,7 +69,7 @@ private fun EnabledDefaultTextButtonPreview() {
     )
 }
 
-@Preview(name = "비활성화 상태", showBackground = true, backgroundColor = 0x000000L)
+@Preview(name = "비활성화 상태")
 @Composable
 private fun DisabledDefaultTextButtonPreview() {
     DefaultTextButton(

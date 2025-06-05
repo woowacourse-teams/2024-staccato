@@ -123,7 +123,7 @@ private fun NavigationIconButton(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true, backgroundColor = 0xFFFFFF.toLong())
+@Preview
 @Composable
 private fun TopBarComponentsPreview() {
     Column {

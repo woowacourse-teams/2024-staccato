@@ -78,7 +78,7 @@ fun DefaultAlertDialog(
 }
 
 @Composable
-@Preview(showBackground = true, backgroundColor = 0xDDDDDDL)
+@Preview
 private fun DefaultBasicDialogPreview() {
     DefaultAlertDialog(
         title = "제목제목제목",

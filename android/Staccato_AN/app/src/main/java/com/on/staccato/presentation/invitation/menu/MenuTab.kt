@@ -65,7 +65,7 @@ fun MenuTab(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0L)
+@Preview
 @Composable
 private fun MenuTapPreview() {
     Column(modifier = Modifier.fillMaxWidth()) {
