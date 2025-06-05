@@ -41,7 +41,7 @@ fun SentInvitationItem(
                 .fillMaxWidth()
                 .background(
                     color = White,
-                ),
+                ).padding(20.dp),
     ) {
         val (profileImageRef, nicknameRef, titleRef, suffixRef, cancelButtonRef) = createRefs()
         val titleChain = createHorizontalChain(titleRef, suffixRef, chainStyle = ChainStyle.Packed(bias = 0f))
@@ -55,9 +55,9 @@ fun SentInvitationItem(
                 modifier
                     .size(40.dp)
                     .constrainAs(profileImageRef) {
-                        start.linkTo(parent.start, margin = 20.dp)
-                        top.linkTo(parent.top, margin = 20.dp)
-                        bottom.linkTo(parent.bottom, margin = 20.dp)
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
                     },
             url = categoryInvitation.inviteeProfileImageUrl,
         )
@@ -103,7 +103,7 @@ fun SentInvitationItem(
         CancelButton(
             modifier =
                 modifier.constrainAs(cancelButtonRef) {
-                    end.linkTo(parent.end, margin = 20.dp)
+                    end.linkTo(parent.end)
                     centerVerticallyTo(parent)
                 },
             onClick = { onCancelClick(categoryInvitation.invitationId) },
