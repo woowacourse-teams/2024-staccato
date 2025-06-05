@@ -7,7 +7,12 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMypageBinding
 import com.on.staccato.presentation.base.BindingActivity
@@ -23,6 +28,7 @@ import com.on.staccato.presentation.util.convertMyPageUriToFile
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.webview.WebViewActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -46,6 +52,8 @@ class MyPageActivity :
         observeMemberProfile()
         observeCopyingUuidCode()
         observeErrorMessage()
+        observeException()
+        fetchNotifications()
     }
 
     override fun onProfileImageChangeClicked() {
@@ -88,9 +96,13 @@ class MyPageActivity :
 
     private fun setCategoryInvitationManagementButtonContent() {
         binding.btnMypageMenuCategoryInvitationManagement.setContent {
-            MyPageMenuButton(menuTitle = getString(R.string.mypage_invitation_management)) {
-                InvitationManagementActivity.launch(this)
-            }
+            val hasNotification by myPageViewModel.hasNotification.collectAsStateWithLifecycle()
+
+            MyPageMenuButton(
+                menuTitle = getString(R.string.mypage_invitation_management),
+                onClick = { InvitationManagementActivity.launch(this) },
+                hasNotification = hasNotification,
+            )
         }
     }
 
@@ -137,6 +149,20 @@ class MyPageActivity :
         myPageViewModel.errorMessage.observe(this) { errorMessage ->
             finish()
             showToast(errorMessage)
+        }
+    }
+
+    private fun observeException() {
+        myPageViewModel.exceptionState.observe(this) { state ->
+            showToast(getString(state.messageId))
+        }
+    }
+
+    private fun fetchNotifications() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myPageViewModel.fetchNotificationExistence()
+            }
         }
     }
 

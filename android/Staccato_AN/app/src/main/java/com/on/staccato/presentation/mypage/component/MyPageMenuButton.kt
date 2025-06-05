@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +22,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
 import com.on.staccato.presentation.component.clickableWithoutRipple
+import com.on.staccato.theme.Accents4
 import com.on.staccato.theme.Gray2
 import com.on.staccato.theme.StaccatoBlack
 import com.on.staccato.theme.Title3
@@ -35,10 +38,11 @@ private val MenuPaddingValues =
 
 @Composable
 fun MyPageMenuButton(
-    modifier: Modifier = Modifier,
     menuTitle: String,
-    contentPadding: PaddingValues = MenuPaddingValues,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = MenuPaddingValues,
+    hasNotification: Boolean = false,
 ) {
     Box(
         modifier =
@@ -52,11 +56,15 @@ fun MyPageMenuButton(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = menuTitle,
-                style = Title3,
-                color = StaccatoBlack,
-            )
+            BadgedBox(
+                badge = { if (hasNotification) Badge(containerColor = Accents4) }
+            ){
+                Text(
+                    text = menuTitle,
+                    style = Title3,
+                    color = StaccatoBlack,
+                )
+            }
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.icon_arrow_right),
                 contentDescription = "icon",
@@ -67,7 +75,7 @@ fun MyPageMenuButton(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0L)
+@Preview(name = "마이페이지 메뉴 버튼")
 @Composable
 private fun MyPageMenuButtonPreview(
     @PreviewParameter(provider = MenuTitlePreviewParameterProvider::class) title: String,
@@ -83,3 +91,10 @@ private class MenuTitlePreviewParameterProvider(
             "피드백으로 혼내주기",
         ),
 ) : PreviewParameterProvider<String>
+
+@Preview(name = "알림이 있는 경우")
+@Composable
+private fun MyPageMenuButtonWithBadgePreview() {
+    MyPageMenuButton(menuTitle = "알림이 있는 경우", onClick = {}, hasNotification = true)
+}
+
