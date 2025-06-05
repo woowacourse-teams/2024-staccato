@@ -54,10 +54,10 @@ class InvitationViewModel
         val exceptionState: SharedFlow<ExceptionState2> get() = _exceptionState
 
         init {
-            getReceivedInvitations()
+            fetchReceivedInvitations()
         }
 
-        fun getReceivedInvitations() {
+        fun fetchReceivedInvitations() {
             viewModelScope.launch {
                 val result = invitationRepository.getReceivedInvitations()
                 result
@@ -73,7 +73,7 @@ class InvitationViewModel
                 result
                     .onSuccess {
                         _toastMessage.emit(FromResource(R.string.invitation_management_accept_success))
-                        getReceivedInvitations()
+                        fetchReceivedInvitations()
                     }
                     .onServerError { handleServerError(it) }
                     .onException2 { handelException(it) }
@@ -88,7 +88,7 @@ class InvitationViewModel
                 )
         }
 
-        fun getSentInvitations() {
+        fun fetchSentInvitations() {
             viewModelScope.launch {
                 val result = invitationRepository.getSentInvitations()
                 result
@@ -119,7 +119,7 @@ class InvitationViewModel
             viewModelScope.launch {
                 val result = invitationRepository.rejectInvitation(invitationId)
                 result
-                    .onSuccess { getReceivedInvitations() }
+                    .onSuccess { fetchReceivedInvitations() }
                     .onServerError { handleServerError(it) }
                     .onException2 { handelException(it) }
             }
@@ -134,7 +134,7 @@ class InvitationViewModel
             viewModelScope.launch {
                 val result = invitationRepository.cancelInvitation(invitationId)
                 result
-                    .onSuccess { getSentInvitations() }
+                    .onSuccess { fetchSentInvitations() }
                     .onServerError { handleServerError(it) }
                     .onException2 { handelException(it) }
             }

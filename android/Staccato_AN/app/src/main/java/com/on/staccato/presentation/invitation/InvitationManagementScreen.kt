@@ -63,8 +63,8 @@ fun InvitationManagementScreen(
             onMenuClick = {
                 selectedMenu = it
                 when (it) {
-                    RECEIVED_INVITATION -> invitationViewModel.getReceivedInvitations()
-                    SENT_INVITATION -> invitationViewModel.getSentInvitations()
+                    RECEIVED_INVITATION -> invitationViewModel.fetchReceivedInvitations()
+                    SENT_INVITATION -> invitationViewModel.fetchSentInvitations()
                 }
             },
             receivedInvitations = receivedInvitations,
