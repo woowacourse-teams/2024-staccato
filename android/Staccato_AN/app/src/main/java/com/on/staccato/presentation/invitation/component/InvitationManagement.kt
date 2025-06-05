@@ -10,9 +10,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.on.staccato.presentation.component.DefaultDivider
 import com.on.staccato.presentation.invitation.menu.InvitationSelectionMenu
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel.RECEIVED_INVITATION
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel.SENT_INVITATION
+import com.on.staccato.presentation.invitation.model.InvitationTabMenu
+import com.on.staccato.presentation.invitation.model.InvitationTabMenu.RECEIVED_INVITATION
+import com.on.staccato.presentation.invitation.model.InvitationTabMenu.SENT_INVITATION
 import com.on.staccato.presentation.invitation.model.ReceivedInvitationUiModel
 import com.on.staccato.presentation.invitation.model.SentInvitationUiModel
 import com.on.staccato.presentation.invitation.model.dummyReceivedInvitationUiModels
@@ -23,8 +23,8 @@ import com.on.staccato.presentation.invitation.sent.SentInvitations
 @Composable
 fun InvitationManagement(
     modifier: Modifier = Modifier,
-    selectedMenu: InvitationSelectionMenuUiModel,
-    onMenuClick: (InvitationSelectionMenuUiModel) -> Unit,
+    selectedMenu: InvitationTabMenu,
+    onMenuClick: (InvitationTabMenu) -> Unit,
     receivedInvitations: List<ReceivedInvitationUiModel>,
     onRejectClick: (invitationId: Long) -> Unit,
     onAcceptClick: (invitationId: Long) -> Unit,
@@ -62,7 +62,7 @@ fun InvitationManagement(
 @Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 private fun InvitationManagementPreview(
-    @PreviewParameter(InvitationSelectionMenuProvider::class) menu: InvitationSelectionMenuUiModel,
+    @PreviewParameter(InvitationSelectionMenuProvider::class) menu: InvitationTabMenu,
 ) {
     InvitationManagement(
         selectedMenu = menu,
@@ -76,6 +76,6 @@ private fun InvitationManagementPreview(
 }
 
 private class InvitationSelectionMenuProvider(
-    override val values: Sequence<InvitationSelectionMenuUiModel> =
+    override val values: Sequence<InvitationTabMenu> =
         sequenceOf(RECEIVED_INVITATION, SENT_INVITATION),
-) : PreviewParameterProvider<InvitationSelectionMenuUiModel>
+) : PreviewParameterProvider<InvitationTabMenu>

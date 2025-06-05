@@ -15,9 +15,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.staccato.presentation.invitation.component.InvitationDialogs
 import com.on.staccato.presentation.invitation.component.InvitationManagement
 import com.on.staccato.presentation.invitation.component.InvitationManagementTopBar
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel.RECEIVED_INVITATION
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel.SENT_INVITATION
+import com.on.staccato.presentation.invitation.model.InvitationTabMenu
+import com.on.staccato.presentation.invitation.model.InvitationTabMenu.RECEIVED_INVITATION
+import com.on.staccato.presentation.invitation.model.InvitationTabMenu.SENT_INVITATION
 import com.on.staccato.presentation.invitation.model.ToastMessage
 import com.on.staccato.presentation.invitation.viewmodel.InvitationViewModel
 import com.on.staccato.presentation.util.showToast
@@ -28,7 +28,7 @@ fun InvitationManagementScreen(
     modifier: Modifier = Modifier,
     invitationViewModel: InvitationViewModel = hiltViewModel(),
     onNavigationClick: () -> Unit,
-    defaultSelectedMenu: InvitationSelectionMenuUiModel = RECEIVED_INVITATION,
+    defaultSelectedMenu: InvitationTabMenu = RECEIVED_INVITATION,
 ) {
     val receivedInvitations by invitationViewModel.receivedInvitations.collectAsStateWithLifecycle()
     val sentInvitations by invitationViewModel.sentInvitations.collectAsStateWithLifecycle()

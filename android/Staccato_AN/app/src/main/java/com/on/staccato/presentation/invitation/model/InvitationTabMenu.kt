@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.on.staccato.R
 
-enum class InvitationSelectionMenuUiModel(
+enum class InvitationTabMenu(
     val menuId: Int,
     @StringRes val titleId: Int,
     @DrawableRes val iconResId: Int,

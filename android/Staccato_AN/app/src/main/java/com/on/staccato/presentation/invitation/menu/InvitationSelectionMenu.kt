@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel
+import com.on.staccato.presentation.invitation.model.InvitationTabMenu
 import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.StaccatoBlue
 
@@ -20,8 +20,8 @@ import com.on.staccato.theme.StaccatoBlue
 @Composable
 fun InvitationSelectionMenu(
     modifier: Modifier = Modifier,
-    selectedMenu: InvitationSelectionMenuUiModel,
-    onClick: (InvitationSelectionMenuUiModel) -> Unit,
+    selectedMenu: InvitationTabMenu,
+    onClick: (InvitationTabMenu) -> Unit,
 ) {
     PrimaryTabRow(
         selectedTabIndex = selectedMenu.menuId,
@@ -37,7 +37,7 @@ fun InvitationSelectionMenu(
         indicator = {},
         divider = {},
     ) {
-        InvitationSelectionMenuUiModel.entries.forEach { menu ->
+        InvitationTabMenu.entries.forEach { menu ->
             MenuTab(
                 menu = menu,
                 selected = menu.menuId == selectedMenu.menuId,
@@ -54,12 +54,12 @@ private fun InvitationSelectionMenuPreview() {
         modifier = Modifier.padding(10.dp),
     ) {
         InvitationSelectionMenu(
-            selectedMenu = InvitationSelectionMenuUiModel.SENT_INVITATION,
+            selectedMenu = InvitationTabMenu.SENT_INVITATION,
             onClick = {},
         )
         Box(modifier = Modifier.height(10.dp))
         InvitationSelectionMenu(
-            selectedMenu = InvitationSelectionMenuUiModel.RECEIVED_INVITATION,
+            selectedMenu = InvitationTabMenu.RECEIVED_INVITATION,
             onClick = {},
         )
     }

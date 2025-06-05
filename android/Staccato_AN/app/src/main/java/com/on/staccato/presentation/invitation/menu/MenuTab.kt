@@ -20,7 +20,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.staccato.presentation.component.clickableWithoutRipple
-import com.on.staccato.presentation.invitation.model.InvitationSelectionMenuUiModel
+import com.on.staccato.presentation.invitation.model.InvitationTabMenu
 import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray3
 import com.on.staccato.theme.StaccatoBlue
@@ -29,7 +29,7 @@ import com.on.staccato.theme.White
 
 @Composable
 fun MenuTab(
-    menu: InvitationSelectionMenuUiModel,
+    menu: InvitationTabMenu,
     selected: Boolean,
     onClick: () -> Unit,
 ) {
@@ -69,14 +69,14 @@ fun MenuTab(
 @Composable
 private fun MenuTapPreview() {
     Column(modifier = Modifier.fillMaxWidth()) {
-        InvitationSelectionMenuUiModel.entries.forEach { menu ->
+        InvitationTabMenu.entries.forEach { menu ->
             MenuTab(
                 menu = menu,
                 selected = false,
                 onClick = {},
             )
         }
-        InvitationSelectionMenuUiModel.entries.forEach { menu ->
+        InvitationTabMenu.entries.forEach { menu ->
             MenuTab(
                 menu = menu,
                 selected = true,
