@@ -7,6 +7,9 @@ import android.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentTimelineBinding
@@ -15,7 +18,6 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
-import com.on.staccato.presentation.timeline.adapter.TimelineAdapter
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.viewmodel.TimelineViewModel
 import com.on.staccato.presentation.util.showToast
@@ -25,6 +27,7 @@ import com.on.staccato.util.logging.Param
 import com.on.staccato.util.logging.Param.Companion.KEY_FRAGMENT_NAME
 import com.on.staccato.util.logging.Param.Companion.PARAM_CATEGORY_LIST
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,14 +39,12 @@ class TimelineFragment :
 
     private val timelineViewModel: TimelineViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
-    private lateinit var adapter: TimelineAdapter
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         setupBinding()
-        setUpAdapter()
         setUpObserving()
         logAccess()
     }
@@ -72,28 +73,26 @@ class TimelineFragment :
         timelineViewModel.changeFilterState()
     }
 
+    override fun onChangeToHalfClicked() {
+        sharedViewModel.updateHalfModeEvent()
+    }
+
     private fun setupBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = timelineViewModel
         binding.handler = this
+        binding.cvTimelineCategories.setContent {
+            TimelineScreen(sharedViewModel = sharedViewModel) {
+                onCategoryClicked(it)
+            }
+        }
     }
 
     private fun navigateToCategory(bundle: Bundle) {
         findNavController().navigate(R.id.action_timelineFragment_to_categoryFragment, bundle)
     }
 
-    private fun setUpAdapter() {
-        adapter = TimelineAdapter(this)
-        binding.rvTimeline.adapter = adapter
-    }
-
     private fun setUpObserving() {
-        timelineViewModel.timeline.observe(viewLifecycleOwner) { timeline ->
-            adapter.updateTimeline(timeline) {
-                binding.rvTimeline.scrollToPosition(0)
-            }
-        }
-
         timelineViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             showToast(message)
         }
@@ -110,6 +109,29 @@ class TimelineFragment :
         sharedViewModel.memberProfile.observe(viewLifecycleOwner) { memberProfile ->
             binding.nickname = memberProfile.nickname
         }
+
+        observeIsBottomSheetExpanded()
+        observeIsAtTop()
+    }
+
+    private fun observeIsBottomSheetExpanded() {
+        sharedViewModel.isBottomSheetExpanded.observe(viewLifecycleOwner) {
+            binding.isBottomSheetExpanded = it
+            if (it) {
+                sharedViewModel.updateIsDraggable()
+                sharedViewModel.updateLatestIsDraggable()
+            }
+        }
+    }
+
+    private fun observeIsAtTop() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.isAtTop.collect {
+                    sharedViewModel.updateIsDraggable()
+                }
+            }
+        }
     }
 
     private fun observeException() {
@@ -119,8 +141,12 @@ class TimelineFragment :
     }
 
     private fun observeIsRetry() {
-        sharedViewModel.isRetry.observe(viewLifecycleOwner) {
-            if (it) timelineViewModel.loadTimeline()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.retryEvent.collect {
+                    timelineViewModel.loadTimeline()
+                }
+            }
         }
     }
 

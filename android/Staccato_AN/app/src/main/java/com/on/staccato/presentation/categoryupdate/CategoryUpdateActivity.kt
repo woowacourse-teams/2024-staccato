@@ -16,7 +16,7 @@ import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.categoryupdate.component.PeriodActiveSwitch
 import com.on.staccato.presentation.categoryupdate.viewmodel.CategoryUpdateViewModel
-import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.common.color.CategoryColor.Companion.getCategoryColorBy
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.COLOR_SELECTION_REQUEST_KEY
 import com.on.staccato.presentation.common.color.ColorSelectionDialogFragment.Companion.SELECTED_COLOR_LABEL
@@ -97,7 +97,7 @@ class CategoryUpdateActivity :
             this,
         ) { _, bundle ->
             bundle.getString(SELECTED_COLOR_LABEL)?.let {
-                viewModel.updateCategoryColor(CategoryColor.getColorBy(it))
+                viewModel.updateCategoryColor(getCategoryColorBy(it))
             }
         }
     }

@@ -32,4 +32,8 @@ fun View.getFormattedLocalDateTime(setNowDateTime: LocalDateTime): String =
             .format(year, month, day, noonText, hour)
     }
 
+fun LocalDate.toYearMonthDay(): Array<Int> = arrayOf(year, monthValue, dayOfMonth)
+
+fun LocalDate.toMonthDay(): Array<Int> = arrayOf(monthValue, dayOfMonth)
+
 private const val HALF_DAY_HOUR = 12

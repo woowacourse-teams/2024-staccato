@@ -23,14 +23,14 @@ fun DefaultAsyncImage(
     @DrawableRes placeHolder: Int,
     @StringRes contentDescription: Int,
     contentScale: ContentScale = ContentScale.Crop,
-    radius: Float = 0f,
+    radiusPx: Float = 0f,
 ) {
     val painter =
         rememberAsyncImagePainter(
             model =
                 ImageRequest.Builder(LocalContext.current)
                     .data(url)
-                    .transformations(RoundedCornersTransformation(radius.dpToPx(LocalContext.current)))
+                    .transformations(RoundedCornersTransformation(radiusPx.dpToPx(LocalContext.current)))
                     .size(bitmapPixelSize)
                     .placeholder(placeHolder)
                     .fallback(placeHolder)
