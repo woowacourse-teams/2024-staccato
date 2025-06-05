@@ -76,6 +76,7 @@ class MainActivity :
         loadMemberProfile()
         observeException()
         observeStaccatoId()
+        observeRetryEvent()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
@@ -141,6 +142,16 @@ class MainActivity :
                 BOTTOM_SHEET_STATE_REQUEST_KEY,
                 bundleOf(BOTTOM_SHEET_NEW_STATE to STATE_EXPANDED),
             )
+        }
+    }
+
+    private fun observeRetryEvent() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.retryEvent.collect {
+                    sharedViewModel.fetchNotificationExistence()
+                }
+            }
         }
     }
 
