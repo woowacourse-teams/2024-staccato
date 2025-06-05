@@ -125,7 +125,7 @@ private fun NavigationIconButton(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-private fun TopBarComponentsPreview() {
+private fun DefaultNavigationTopBarPreview() {
     Column {
         DefaultNavigationTopBar(
             title = "상단 앱 바 제목",
