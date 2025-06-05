@@ -16,6 +16,7 @@ interface MemberApiService {
     @GET(MEMBERS_SEARCH_PATH)
     suspend fun getMembersBy(
         @Query(NICKNAME) nickname: String,
+        @Query(EXCLUDE_CATEGORY_ID) excludeCategoryId: Long? = null,
     ): ApiResult<MemberSearchResponse>
 
     companion object {
@@ -23,6 +24,7 @@ interface MemberApiService {
         private const val MEMBERS_PATH_V2 = "/v2$MEMBERS_PATH"
         private const val RECOVERY_CODE = "code"
         private const val NICKNAME = "nickname"
+        private const val EXCLUDE_CATEGORY_ID = "excludeCategoryId"
         private const val MEMBERS_SEARCH_PATH = "$MEMBERS_PATH/search"
     }
 }

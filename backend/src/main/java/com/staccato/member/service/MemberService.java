@@ -67,8 +67,8 @@ public class MemberService {
         return Objects.isNull(nickname) || nickname.isBlank();
     }
 
-    private boolean hasNoCategoryToExclude(long categoryId) {
-        return categoryId <= 0;
+    private boolean hasNoCategoryToExclude(Long categoryId) {
+        return Objects.isNull(categoryId);
     }
 
     private MemberSearchResponse resolveSearchStatus(Member m, Set<Long> categoryMemberIds, Set<Long> inviteeIds) {

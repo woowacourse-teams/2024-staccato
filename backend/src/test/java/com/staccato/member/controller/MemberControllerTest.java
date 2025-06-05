@@ -50,4 +50,58 @@ class MemberControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
     }
+
+    @DisplayName("요청 인자로 검색어가 없어도 예외가 발생하지 않는다.")
+    @Test
+    void readMemberWithoutNickname() throws Exception {
+        // given
+        Member member = MemberFixtures.defaultMember().withNickname("스타카토").build();
+        MemberSearchResponses response = MemberSearchResponses.empty();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        when(memberService.readMembersByNickname(any(Member.class), any(MemberReadRequest.class))).thenReturn(response);
+
+        String expectedResponse = """
+                {
+                    "members": []
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/members/search")
+                        .param("excludeCategoryId", "1")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("요청 인자로 카테고리 식별자가 없어도 예외가 발생하지 않는다.")
+    @Test
+    void readMemberWithoutCategoryId() throws Exception {
+        // given
+        Member member = MemberFixtures.defaultMember().withNickname("스타카토").build();
+        Member member2 = MemberFixtures.defaultMember().withNickname("스타").build();
+        MemberSearchResponses response = MemberSearchResponses.none(List.of(member2));
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        when(memberService.readMembersByNickname(any(Member.class), any(MemberReadRequest.class))).thenReturn(response);
+
+        String expectedResponse = """
+                {
+                    "members": [
+                        {
+                            "memberId": null,
+                            "nickname": "스타",
+                            "memberImageUrl": "https://example.com/memberImage.png",
+                            "status": "NONE"
+                        }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/members/search")
+                        .param("nickname", "스타")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
 }
