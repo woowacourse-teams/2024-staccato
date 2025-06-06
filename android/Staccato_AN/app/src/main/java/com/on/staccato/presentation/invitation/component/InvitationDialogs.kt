@@ -1,7 +1,9 @@
 package com.on.staccato.presentation.invitation.component
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.on.staccato.R
 import com.on.staccato.presentation.component.DefaultAlertDialog
 import com.on.staccato.presentation.component.DefaultTextButton
@@ -14,6 +16,8 @@ import com.on.staccato.theme.Gray4
 import com.on.staccato.theme.StaccatoBlue
 import com.on.staccato.theme.White
 
+private val ButtonPaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp)
+
 @Composable
 fun InvitationDialogs(
     state: InvitationDialogState,
@@ -25,7 +29,6 @@ fun InvitationDialogs(
         is Reject -> {
             DefaultAlertDialog(
                 title = stringResource(id = R.string.invitation_management_dialog_reject_title),
-                description = stringResource(id = R.string.invitation_management_dialog_reject_description),
                 onDismissRequest = onDismiss,
                 confirmButton = {
                     DefaultTextButton(
@@ -33,6 +36,7 @@ fun InvitationDialogs(
                         onClick = state.onConfirm,
                         backgroundColor = StaccatoBlue,
                         textColor = White,
+                        contentPadding = ButtonPaddingValues,
                     )
                 },
                 dismissButton = {
@@ -41,6 +45,7 @@ fun InvitationDialogs(
                         onClick = onDismiss,
                         backgroundColor = Gray1,
                         textColor = Gray4,
+                        contentPadding = ButtonPaddingValues,
                     )
                 },
             )
@@ -49,7 +54,6 @@ fun InvitationDialogs(
         is Cancel -> {
             DefaultAlertDialog(
                 title = stringResource(id = R.string.invitation_management_dialog_cancel_title),
-                description = stringResource(id = R.string.invitation_management_dialog_cancel_description),
                 onDismissRequest = onDismiss,
                 confirmButton = {
                     DefaultTextButton(
@@ -57,6 +61,7 @@ fun InvitationDialogs(
                         onClick = state.onConfirm,
                         backgroundColor = StaccatoBlue,
                         textColor = White,
+                        contentPadding = ButtonPaddingValues,
                     )
                 },
                 dismissButton = {
@@ -65,6 +70,7 @@ fun InvitationDialogs(
                         onClick = onDismiss,
                         backgroundColor = Gray1,
                         textColor = Gray4,
+                        contentPadding = ButtonPaddingValues,
                     )
                 },
             )
