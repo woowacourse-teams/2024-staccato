@@ -2,11 +2,11 @@ package com.on.staccato.di.module
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.on.staccato.BuildConfig.BASE_URL
-import com.on.staccato.data.dto.ErrorResponse
 import com.on.staccato.data.member.MemberLocalDataSource
 import com.on.staccato.data.network.ApiResultCallAdapterFactory
 import com.on.staccato.data.network.ErrorConverter
 import com.on.staccato.data.network.HeaderInterceptor
+import com.on.staccato.data.network.ResponseHandler
 import com.on.staccato.data.network.TokenManager
 import dagger.Module
 import dagger.Provides
@@ -23,7 +23,6 @@ import javax.inject.Singleton
 @Module
 object NetworkModule {
     private const val CONTENT_TYPE = "application/json"
-    private const val EXCEPTION_CONVERT_ERROR_RESPONSE = "errorBody를 변환할 수 없습니다."
 
     @Provides
     @Singleton
@@ -64,7 +63,16 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiResultCallAdapterFactory(): ApiResultCallAdapterFactory = ApiResultCallAdapterFactory()
+    fun provideErrorConverter(json: Json): ErrorConverter = ErrorConverter(json)
+
+    @Provides
+    @Singleton
+    fun provideResponseHandler(errorConverter: ErrorConverter): ResponseHandler = ResponseHandler(errorConverter)
+
+    @Provides
+    @Singleton
+    fun provideApiResultCallAdapterFactory(responseHandler: ResponseHandler): ApiResultCallAdapterFactory =
+        ApiResultCallAdapterFactory(responseHandler)
 
     @Provides
     @Singleton
@@ -82,14 +90,4 @@ object NetworkModule {
             )
             .addCallAdapterFactory(callAdapterFactory)
             .build()
-
-    @Provides
-    @Singleton
-    fun provideErrorConverter(retrofit: Retrofit): ErrorConverter =
-        ErrorConverter { errorBody ->
-            retrofit.responseBodyConverter<ErrorResponse>(
-                ErrorResponse::class.java,
-                ErrorResponse::class.java.annotations,
-            ).convert(errorBody) ?: throw IllegalArgumentException(EXCEPTION_CONVERT_ERROR_RESPONSE)
-        }
 }
