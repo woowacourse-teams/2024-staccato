@@ -6,6 +6,7 @@ import com.on.staccato.data.dto.ImagePostResponse
 import com.on.staccato.data.dto.PostResponse
 import com.on.staccato.data.network.ApiResult
 import com.on.staccato.data.network.Exception
+import com.on.staccato.data.network.ServerError
 import com.on.staccato.data.network.Success
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -77,8 +78,7 @@ class ApiResultCallAdapterTest {
         runTest {
             val actual: ApiResult<PostResponse> = fakeApiService.post(request = createInvalidRequest())
 
-            // TODO: ServerError 일 때 테스트가 통과하도록 수정 필요
-            assertThat(actual).isInstanceOf(Exception.UnknownError::class.java)
+            assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
@@ -94,8 +94,7 @@ class ApiResultCallAdapterTest {
         runTest {
             val actual: ApiResult<PostResponse> = fakeApiService.post(request = createValidRequest())
 
-            // TODO: ServerError 일 때 테스트가 통과하도록 수정 필요
-            assertThat(actual).isInstanceOf(Exception.UnknownError::class.java)
+            assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
@@ -111,8 +110,7 @@ class ApiResultCallAdapterTest {
         runTest {
             val actual: ApiResult<Unit> = fakeApiService.delete(id = 1)
 
-            // TODO: ServerError 일 때 테스트가 통과하도록 수정 필요
-            assertThat(actual).isInstanceOf(Exception.UnknownError::class.java)
+            assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
@@ -128,8 +126,7 @@ class ApiResultCallAdapterTest {
         runTest {
             val actual: ApiResult<ImagePostResponse> = fakeApiService.postImage(imageFile = createFakeImageFile())
 
-            // TODO: ServerError 일 때 테스트가 통과하도록 수정 필요
-            assertThat(actual).isInstanceOf(Exception.UnknownError::class.java)
+            assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 
@@ -145,8 +142,7 @@ class ApiResultCallAdapterTest {
         runTest {
             val actual: ApiResult<PostResponse> = fakeApiService.post(request = createValidRequest())
 
-            // TODO: ServerError 일 때 테스트가 통과하도록 수정 필요
-            assertThat(actual).isInstanceOf(Exception.UnknownError::class.java)
+            assertThat(actual).isInstanceOf(ServerError::class.java)
         }
     }
 

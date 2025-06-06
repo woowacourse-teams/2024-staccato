@@ -3,7 +3,7 @@ package com.on.staccato.data.notification
 import com.on.staccato.data.dto.mapper.toDomain
 import com.on.staccato.data.network.ApiResult
 import com.on.staccato.data.network.handle
-import com.on.staccato.domain.model.NotificationExistence
+import com.on.staccato.domain.model.notification.NotificationExistence
 import com.on.staccato.domain.repository.NotificationRepository
 import javax.inject.Inject
 

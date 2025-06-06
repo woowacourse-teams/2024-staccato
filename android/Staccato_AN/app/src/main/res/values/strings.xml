@@ -34,6 +34,7 @@
     <string name="all_waring">경고</string>
     <string name="all_period_dot_different_year">%s. %s. %s - %s. %s. %s</string>
     <string name="all_period_dot_same_year">%s. %s. %s - %s. %s</string>
+    <string name="all_invitation_notification_indicator_description">카테고리 초대 알림 존재 표시</string>
     <string name="all_member_profile_image_description">사용자 프로필 사진</string>
 
     // MainActivity
