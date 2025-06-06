@@ -22,6 +22,12 @@
         <item name="dividerColor">@color/gray2</item>
     </style>
 
+    <style name="DividerStyle.Middle" parent="DividerStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">10dp</item>
+        <item name="dividerColor">@color/gray1</item>
+    </style>
+
     <!-- Dialog styles   -->
 
     <style name="DialogBackgroundStyle">

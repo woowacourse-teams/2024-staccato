@@ -4,16 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.on.staccato.data.network.onException
+import com.on.staccato.data.network.onException2
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.repository.MyPageRepository
+import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mypage.MemberProfileHandler
-import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -21,8 +25,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel
     @Inject
-    constructor(private val repository: MyPageRepository) :
-    ViewModel(), MemberProfileHandler {
+    constructor(
+        private val myPageRepository: MyPageRepository,
+        private val notificationRepository: NotificationRepository,
+    ) : ViewModel(), MemberProfileHandler {
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile>
             get() = _memberProfile
@@ -31,9 +37,16 @@ class MyPageViewModel
         val uuidCode: SingleLiveData<String>
             get() = _uuidCode
 
+        private val _hasNotification = MutableStateFlow(false)
+        val hasNotification: StateFlow<Boolean> = _hasNotification.asStateFlow()
+
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String>
             get() = _errorMessage
+
+        private val _exceptionState = MutableSingleLiveData<ExceptionState2>()
+        val exceptionState: SingleLiveData<ExceptionState2>
+            get() = _exceptionState
 
         override fun onCodeCopyClicked() {
             val memberProfile = memberProfile.value
@@ -46,23 +59,30 @@ class MyPageViewModel
 
         fun changeProfileImage(multipart: MultipartBody.Part) {
             viewModelScope.launch {
-                repository.changeProfileImage(multipart)
+                myPageRepository.changeProfileImage(multipart)
                     .onSuccess {
                         _memberProfile.value =
                             memberProfile.value?.copy(profileImageUrl = it)
-                    }.onException(::handleException)
-                    .onServerError(::handleError)
+                    }.onServerError(::handleError)
+                    .onException2(::handleException2)
             }
         }
 
         fun fetchMemberProfile() {
             viewModelScope.launch {
-                repository.getMemberProfile()
+                myPageRepository.getMemberProfile()
+                    .onSuccess { _memberProfile.value = it }
                     .onServerError(::handleError)
-                    .onException(::handleException)
-                    .onSuccess {
-                        _memberProfile.value = it
-                    }
+                    .onException2(::handleException2)
+            }
+        }
+
+        fun fetchNotificationExistence() {
+            viewModelScope.launch {
+                notificationRepository.getNotificationExistence()
+                    .onSuccess { _hasNotification.value = it.isExist }
+                    .onServerError(::handleError)
+                    .onException2(::handleException2)
             }
         }
 
@@ -70,8 +90,8 @@ class MyPageViewModel
             _errorMessage.postValue(errorMessage)
         }
 
-        private fun handleException(state: ExceptionState) {
-            _errorMessage.postValue(state.message)
+        private fun handleException2(state: ExceptionState2) {
+            _exceptionState.postValue(state)
         }
 
         companion object {

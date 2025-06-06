@@ -7,12 +7,21 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMypageBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.common.clipboard.ClipboardHelper
 import com.on.staccato.presentation.common.photo.PhotoAttachFragment
+import com.on.staccato.presentation.component.DefaultDivider
+import com.on.staccato.presentation.invitation.InvitationManagementActivity
+import com.on.staccato.presentation.mypage.component.MyPageMenuButton
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
@@ -20,6 +29,7 @@ import com.on.staccato.presentation.util.convertMyPageUriToFile
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.presentation.webview.WebViewActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,12 +46,15 @@ class MyPageActivity :
     lateinit var clipboardHelper: ClipboardHelper
 
     override fun initStartView(savedInstanceState: Bundle?) {
+        setContents()
         initToolbar()
         initBindings()
         loadMemberProfile()
         observeMemberProfile()
         observeCopyingUuidCode()
         observeErrorMessage()
+        observeException()
+        fetchNotifications()
     }
 
     override fun onProfileImageChangeClicked() {
@@ -74,6 +87,29 @@ class MyPageActivity :
             startActivity(intent)
         } else {
             showToast(getString(R.string.mypage_error_can_not_open_instagram_page))
+        }
+    }
+
+    private fun setContents() {
+        setCategoryInvitationManagementButtonContent()
+        setDividerContent()
+    }
+
+    private fun setCategoryInvitationManagementButtonContent() {
+        binding.btnMypageMenuCategoryInvitationManagement.setContent {
+            val hasNotification by myPageViewModel.hasNotification.collectAsStateWithLifecycle()
+
+            MyPageMenuButton(
+                menuTitle = getString(R.string.mypage_invitation_management),
+                onClick = { InvitationManagementActivity.launch(this) },
+                hasNotification = hasNotification,
+            )
+        }
+    }
+
+    private fun setDividerContent() {
+        binding.dividerMypageMiddle.setContent {
+            DefaultDivider(thickness = 10.dp)
         }
     }
 
@@ -114,6 +150,20 @@ class MyPageActivity :
         myPageViewModel.errorMessage.observe(this) { errorMessage ->
             finish()
             showToast(errorMessage)
+        }
+    }
+
+    private fun observeException() {
+        myPageViewModel.exceptionState.observe(this) { state ->
+            showToast(getString(state.messageId))
+        }
+    }
+
+    private fun fetchNotifications() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myPageViewModel.fetchNotificationExistence()
+            }
         }
     }
 

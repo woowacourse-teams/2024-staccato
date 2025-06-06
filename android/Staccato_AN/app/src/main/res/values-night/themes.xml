@@ -1,10 +1,10 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.Theme.Staccato_AN" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Staccato_AN" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/staccato_blue</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/white</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -12,7 +12,7 @@
 
     <style name="Theme.Staccato_AN.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_staccato_symbol_dark</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_staccato_symbol</item>
         <!-- Required for animated icons. -->
         <item name="windowSplashScreenAnimationDuration">200</item>
         <!-- Set the theme of the Activity that directly follows your splash

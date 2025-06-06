@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -7,7 +6,9 @@
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="https" android:host="www.instagram.com" />
+            <data
+                android:scheme="https"
+                android:host="www.instagram.com" />
         </intent>
     </queries>
 
@@ -66,8 +67,8 @@
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".presentation.staccatoupdate.StaccatoUpdateActivity"
@@ -91,6 +92,11 @@
 
         <activity
             android:name=".presentation.mypage.MyPageActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".presentation.invitation.InvitationManagementActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
