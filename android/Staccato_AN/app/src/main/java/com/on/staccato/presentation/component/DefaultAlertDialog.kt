@@ -32,7 +32,7 @@ import com.on.staccato.theme.White
 fun DefaultAlertDialog(
     modifier: Modifier = Modifier,
     title: String,
-    description: String,
+    description: String? = null,
     onDismissRequest: () -> Unit,
     confirmButton: @Composable () -> Unit,
     dismissButton: @Composable (() -> Unit)? = null,
@@ -58,11 +58,13 @@ fun DefaultAlertDialog(
                     style = Title2,
                     color = StaccatoBlack,
                 )
-                Text(
-                    text = description,
-                    style = Body2,
-                    color = Gray3,
-                )
+                if (description != null) {
+                    Text(
+                        text = description,
+                        style = Body2,
+                        color = Gray3,
+                    )
+                }
                 Spacer(modifier = modifier.height(36.dp))
                 Row(
                     modifier = modifier.fillMaxWidth(),
