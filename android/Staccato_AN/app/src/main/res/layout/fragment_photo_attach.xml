@@ -6,13 +6,13 @@
 
         <variable
             name="handler"
-            type="com.on.staccato.presentation.common.PhotoAttachHandler" />
+            type="com.on.staccato.presentation.common.photo.PhotoAttachHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_bottom_sheet_20dp"
+        android:background="@drawable/shape_bottom_sheet_16dp"
         android:padding="24dp">
 
         <TextView

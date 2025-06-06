@@ -10,6 +10,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
@@ -41,6 +44,7 @@ import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_COLLAPSED
 import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_EXPANDED
 import com.on.staccato.util.logging.Param.Companion.PARAM_BOTTOM_SHEET_HALF_EXPANDED
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.lang.System.currentTimeMillis
 import javax.inject.Inject
 
@@ -72,10 +76,17 @@ class MainActivity :
         loadMemberProfile()
         observeException()
         observeStaccatoId()
+        observeRetryEvent()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
         setUpBottomSheetStateListener()
+        updateBottomSheetIsDraggable()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sharedViewModel.fetchNotificationExistence()
     }
 
     override fun onStop() {
@@ -134,6 +145,16 @@ class MainActivity :
         }
     }
 
+    private fun observeRetryEvent() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.retryEvent.collect {
+                    sharedViewModel.fetchNotificationExistence()
+                }
+            }
+        }
+    }
+
     private fun navigateToStaccato(staccatoId: Long?) {
         val navOptions =
             NavOptions.Builder()
@@ -145,23 +166,77 @@ class MainActivity :
         navController.navigate(R.id.staccatoFragment, bundle, navOptions)
     }
 
+    private fun updateBottomSheetIsDraggable() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val isTimeline = destination.id == R.id.timelineFragment
+            behavior.isDraggable = !isTimeline
+
+            if (isTimeline) observeBottomSheetIsDraggable()
+        }
+    }
+
+    private fun observeBottomSheetIsDraggable() {
+        observeIsAtTop()
+        observeIsDraggable()
+        observeLatestIsDraggable()
+        observeIsHalfModeRequested()
+    }
+
+    private fun observeIsAtTop() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.isAtTop.collect {
+                    sharedViewModel.updateIsDraggable()
+                }
+            }
+        }
+    }
+
+    private fun observeIsDraggable() {
+        sharedViewModel.isDraggable.observe(this) {
+            behavior.isDraggable = it
+        }
+    }
+
+    private fun observeLatestIsDraggable() {
+        sharedViewModel.latestIsDraggable.observe(this) {
+            behavior.isDraggable = it
+        }
+    }
+
+    private fun observeIsHalfModeRequested() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.halfModeEvent.collect {
+                    behavior.state = STATE_HALF_EXPANDED
+                    behavior.isDraggable = true
+                }
+            }
+        }
+    }
+
     private fun setupBackPressedHandler() {
         var backPressedTime = 0L
         onBackPressedDispatcher.addCallback {
-            if (behavior.state == STATE_EXPANDED) {
-                behavior.state = STATE_HALF_EXPANDED
-            } else if (behavior.state == STATE_HALF_EXPANDED) {
-                behavior.state = STATE_COLLAPSED
-            } else {
-                handleBackPressedTwice(backPressedTime).also {
-                    backPressedTime = it
+            when (behavior.state) {
+                STATE_EXPANDED -> {
+                    behavior.state = STATE_HALF_EXPANDED
+                    behavior.isDraggable = true
+                }
+                STATE_HALF_EXPANDED -> {
+                    behavior.state = STATE_COLLAPSED
+                }
+                else -> {
+                    handleBackPressedTwice(backPressedTime).also {
+                        backPressedTime = it
+                    }
                 }
             }
         }
     }
 
     private fun handleBackPressedTwice(backPressedTime: Long): Long {
-        val currentTime = System.currentTimeMillis()
+        val currentTime = currentTimeMillis()
         if (currentTime - backPressedTime >= 3000L) {
             showToast(getString(R.string.main_end))
         } else {
@@ -248,45 +323,24 @@ class MainActivity :
                     ) {
                         when (newState) {
                             STATE_EXPANDED -> {
-                                sharedViewModel.setIsBottomSheetHalf(false)
-                                binding.viewMainDragBar.visibility =
-                                    View.INVISIBLE
-                                binding.constraintMainBottomSheet.setBackgroundResource(
-                                    R.drawable.shape_bottom_sheet_square,
-                                )
+                                sharedViewModel.updateBottomSheetState(isExpanded = true, isHalfExpanded = false)
                                 changeSkipCollapsed(skipCollapsed = false)
-                                loggingManager.logEvent(
-                                    NAME_BOTTOM_SHEET,
-                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_EXPANDED),
-                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
-                                )
+                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_EXPANDED)
                             }
 
                             STATE_HALF_EXPANDED -> {
-                                sharedViewModel.setIsBottomSheetHalf(true)
+                                sharedViewModel.updateBottomSheetState(isExpanded = false, isHalfExpanded = true)
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
                                 changeSkipCollapsed()
-                                loggingManager.logEvent(
-                                    NAME_BOTTOM_SHEET,
-                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_HALF_EXPANDED),
-                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
-                                )
+                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_HALF_EXPANDED)
                             }
 
                             STATE_COLLAPSED -> {
-                                sharedViewModel.setIsBottomSheetHalf(false)
-                                loggingManager.logEvent(
-                                    NAME_BOTTOM_SHEET,
-                                    Param(KEY_BOTTOM_SHEET_STATE, PARAM_BOTTOM_SHEET_COLLAPSED),
-                                    Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
-                                )
+                                sharedViewModel.updateBottomSheetState(isExpanded = false, isHalfExpanded = false)
+                                logEventForBottomSheet(stateParam = PARAM_BOTTOM_SHEET_COLLAPSED)
                             }
 
                             else -> {
-                                binding.viewMainDragBar.visibility = View.VISIBLE
-                                binding.constraintMainBottomSheet.setBackgroundResource(
-                                    R.drawable.shape_bottom_sheet_20dp,
-                                )
                                 currentFocus?.let { clearFocusAndHideKeyboard(it) }
                             }
                         }
@@ -313,6 +367,14 @@ class MainActivity :
     ) {
         this.isHideable = isHideable
         this.skipCollapsed = skipCollapsed
+    }
+
+    private fun logEventForBottomSheet(stateParam: String) {
+        loggingManager.logEvent(
+            NAME_BOTTOM_SHEET,
+            Param(KEY_BOTTOM_SHEET_STATE, stateParam),
+            Param(KEY_BOTTOM_SHEET_DURATION, calculateBottomSheetTimeDuration()),
+        )
     }
 
     private fun setUpBottomSheetStateListener() {

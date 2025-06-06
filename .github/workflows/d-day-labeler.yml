@@ -1,0 +1,15 @@
+# D-n 라벨을 자동으로 업데이트
+name: Update D-n Labels
+
+on:
+  schedule:
+    - cron: '0 15 * * *' # 매일 밤 12시에 실행 (KST 기준)
+
+jobs:
+  d-day-labeler:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Update D-n Labels
+        uses: naver/d-day-labeler@latest
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

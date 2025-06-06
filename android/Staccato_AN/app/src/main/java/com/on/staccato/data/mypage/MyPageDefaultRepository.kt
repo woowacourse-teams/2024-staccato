@@ -1,6 +1,7 @@
 package com.on.staccato.data.mypage
 
 import com.on.staccato.data.dto.mapper.toDomain
+import com.on.staccato.data.member.MemberDataSource
 import com.on.staccato.data.network.ApiResult
 import com.on.staccato.data.network.Success
 import com.on.staccato.data.network.handle
@@ -12,11 +13,11 @@ import javax.inject.Inject
 class MyPageDefaultRepository
     @Inject
     constructor(
-        private val myPageLocalDataSource: MyPageLocalDataSource,
-        private val myPageRemoteDataSource: MyPageRemoteDataSource,
+        private val memberLocalDataSource: MemberDataSource,
+        private val myPageRemoteDataSource: MyPageDataSource,
     ) : MyPageRepository {
         override suspend fun getMemberProfile(): ApiResult<MemberProfile> {
-            val localProfile = myPageLocalDataSource.getMemberProfile()
+            val localProfile = memberLocalDataSource.getMemberProfile()
             return if (localProfile.isValid()) {
                 Success(localProfile)
             } else {
@@ -27,7 +28,7 @@ class MyPageDefaultRepository
         private suspend fun syncMemberProfile(): ApiResult<MemberProfile> {
             return myPageRemoteDataSource.loadMemberProfile().handle {
                 val serverProfile = it.toDomain()
-                myPageLocalDataSource.updateMemberProfile(serverProfile)
+                memberLocalDataSource.updateMemberProfile(serverProfile)
                 serverProfile
             }
         }
@@ -35,7 +36,7 @@ class MyPageDefaultRepository
         override suspend fun changeProfileImage(profileImageFile: MultipartBody.Part): ApiResult<String?> =
             myPageRemoteDataSource.updateProfileImage(profileImageFile).handle {
                 val imageUrl = it.profileImageUrl
-                myPageLocalDataSource.updateProfileImageUrl(imageUrl)
+                memberLocalDataSource.updateProfileImageUrl(imageUrl)
                 imageUrl
             }
     }

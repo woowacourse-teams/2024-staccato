@@ -2,8 +2,10 @@ package com.staccato.category.controller;
 
 import java.net.URI;
 import java.time.LocalDate;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,20 +18,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.staccato.category.controller.docs.CategoryControllerDocs;
 import com.staccato.category.service.CategoryService;
 import com.staccato.category.service.dto.request.CategoryColorRequest;
 import com.staccato.category.service.dto.request.CategoryReadRequest;
 import com.staccato.category.service.dto.request.CategoryRequest;
+import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponse;
-import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponses;
-import com.staccato.category.service.dto.response.CategoryResponsesV2;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
+import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.member.domain.Member;
+
 import lombok.RequiredArgsConstructor;
 
 @Trace
@@ -45,7 +51,7 @@ public class CategoryController implements CategoryControllerDocs {
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member
     ) {
-        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest.toCategoryRequestV2(), member);
+        CategoryIdResponse categoryIdResponse = categoryService.createCategory(categoryRequest.toCategoryCreateRequest(), member);
         return ResponseEntity.created(URI.create("/categories/" + categoryIdResponse.categoryId()))
                 .body(categoryIdResponse);
     }
@@ -55,16 +61,17 @@ public class CategoryController implements CategoryControllerDocs {
             @LoginMember Member member,
             @ModelAttribute("CategoryReadRequest") CategoryReadRequest categoryReadRequest
     ) {
-        CategoryResponsesV2 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
+        CategoryResponsesV3 categoryResponses = categoryService.readAllCategories(member, categoryReadRequest);
         return ResponseEntity.ok(categoryResponses.toCategoryResponses());
     }
 
     @GetMapping("/candidates")
     public ResponseEntity<CategoryNameResponses> readAllCandidateCategories(
             @LoginMember Member member,
-            @RequestParam(value = "currentDate") LocalDate currentDate
+            @RequestParam(value = "specificDate") LocalDate specificDate,
+            @RequestParam(value = "isPrivate", required = false, defaultValue = "false") boolean isPrivate
     ) {
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDate(member, currentDate);
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByMemberAndDateAndPrivateFlag(member, specificDate, isPrivate);
         return ResponseEntity.ok(categoryNameResponses);
     }
 
@@ -72,8 +79,19 @@ public class CategoryController implements CategoryControllerDocs {
     public ResponseEntity<CategoryDetailResponse> readCategory(
             @LoginMember Member member,
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId) {
-        CategoryDetailResponseV2 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
+        CategoryDetailResponseV3 categoryDetailResponse = categoryService.readCategoryById(categoryId, member);
         return ResponseEntity.ok(categoryDetailResponse.toCategoryDetailResponse());
+    }
+
+    @GetMapping("/{categoryId}/staccatos")
+    public ResponseEntity<CategoryStaccatoLocationResponses> readAllStaccatoByCategory(
+            @LoginMember Member member,
+            @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @Validated @ModelAttribute CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest
+    ) {
+        CategoryStaccatoLocationResponses categoryStaccatoLocationResponses = categoryService.readAllStaccatoByCategory(
+                member, categoryId, categoryStaccatoLocationRangeRequest);
+        return ResponseEntity.ok().body(categoryStaccatoLocationResponses);
     }
 
     @PutMapping("/{categoryId}")
@@ -81,7 +99,7 @@ public class CategoryController implements CategoryControllerDocs {
             @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Valid @RequestBody CategoryRequest categoryRequest,
             @LoginMember Member member) {
-        categoryService.updateCategory(categoryRequest.toCategoryRequestV2(), categoryId, member);
+        categoryService.updateCategory(categoryRequest.toCategoryUpdateRequest(), categoryId, member);
         return ResponseEntity.ok().build();
     }
 

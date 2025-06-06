@@ -8,6 +8,8 @@
 
         <import type="android.view.View" />
 
+        <import type="java.time.LocalDate" />
+
         <variable
             name="viewModel"
             type="com.on.staccato.presentation.category.viewmodel.CategoryViewModel" />
@@ -24,7 +26,9 @@
             name="toolbarHandler"
             type="com.on.staccato.presentation.common.ToolbarHandler" />
 
-        <import type="java.time.LocalDate" />
+        <variable
+            name="role"
+            type="com.on.staccato.domain.model.Role" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,6 +43,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            bind:isHost="@{viewModel.category.myRole == role.HOST}"
             bind:toolbarHandler="@{toolbarHandler}" />
 
         <androidx.core.widget.NestedScrollView
@@ -120,7 +125,7 @@
                     tools:text="(추억 소개) Lorem Ipsum is simply dummy text of the printing and typesetting industry. " />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_category_second"
+                    android:id="@+id/divider_category_description"
                     style="@style/DividerStyle"
                     android:layout_marginTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -134,33 +139,32 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/category_mates"
-                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_category_second" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_category_description"
+                    bind:visibleOrGone="@{viewModel.category.isShared}" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_category_mates"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="18dp"
                     android:clipToPadding="false"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="20dp"
-                    android:visibility="gone"
+                    android:paddingHorizontal="18dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_category_mates"
-                    tools:listitem="@layout/item_mates" />
+                    bind:visibleOrGone="@{viewModel.category.isShared}" />
 
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_category_third"
+                    android:id="@+id/divider_category_mates"
                     style="@style/DividerStyle"
-                    android:layout_marginTop="16dp"
-                    android:visibility="gone"
+                    android:layout_marginTop="18dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rv_category_mates" />
+                    app:layout_constraintTop_toBottomOf="@id/rv_category_mates"
+                    bind:visibleOrGone="@{viewModel.category.isShared}" />
 
                 <TextView
                     android:id="@+id/tv_category_staccatos"
@@ -169,7 +173,7 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/category_staccatos"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_category_third" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_category_mates" />
 
                 <FrameLayout
                     android:id="@+id/frame_category_add_staccatos"
@@ -211,8 +215,8 @@
                 <ImageView
                     android:id="@+id/iv_category_empty"
                     android:layout_width="0dp"
-                    android:layout_height="200dp"
-                    android:layout_marginTop="90dp"
+                    android:layout_height="170dp"
+                    android:layout_marginTop="80dp"
                     android:contentDescription="@string/all_staccato_main_character"
                     android:paddingBottom="10dp"
                     android:src="@drawable/staccato_character"
@@ -228,7 +232,8 @@
                     android:gravity="center"
                     android:paddingBottom="100dp"
                     android:text="@string/category_staccato_empty"
-                    android:textAppearance="@style/Typography.Body2.Not.Resizable"
+                    android:textAppearance="@style/Typography.Body3.Not.Resizable"
+                    android:textColor="@color/gray4"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_category_empty"
@@ -238,6 +243,15 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/cv_member_invite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

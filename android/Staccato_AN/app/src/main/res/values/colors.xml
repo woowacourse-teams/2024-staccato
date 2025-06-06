@@ -9,10 +9,14 @@
     <color name="white_80">#CCFFFFFF</color>
 
     <color name="staccato_black">#FF222222</color>
-    <color name="staccato_blue">#FF6C7BFF</color>
-    <color name="staccato_blue_30">#4D6C7BFF</color>
+    <color name="staccato_blue">#FF5969F2</color>
+    <color name="staccato_blue_20">#FFDEE1FC</color>
+    <color name="staccato_blue_30">#4D5969F2</color>
+    <color name="staccato_blue_70">#FF8F9AFF</color>
 
-    <color name="point1">#FFFB5D67</color>
+    <color name="accents1">#FFD5F2FF</color>
+    <color name="accents3">#FFFFD849</color>
+    <color name="accents4">#FFFB5D67</color>
 
     <color name="gray1">#FFF4F4F4</color>
     <color name="gray2">#FFD2D2D2</color>
@@ -20,27 +24,27 @@
     <color name="gray4">#FF777777</color>
     <color name="gray5">#FF3E3E3E</color>
 
-    <color name="red">#FFEC6161</color>
-    <color name="orange">#FFFF976B</color>
-    <color name="yellow">#FFFFCC4B</color>
-    <color name="green">#FF8DC661</color>
-    <color name="mint">#FF34DDB0</color>
-    <color name="blue">#FF5BB1F7</color>
-    <color name="indigo">#FF6C7BFF</color>
-    <color name="purple">#FFAE78F1</color>
-    <color name="pink">#FFF48CBD</color>
-    <color name="brown">#FFC67F56</color>
-    <color name="gray">#FF949494</color>
+    <color name="red">#FFEF4B59</color>
+    <color name="orange">#FFFF8113</color>
+    <color name="yellow">#FFFFB938</color>
+    <color name="green">#FF3DBC1A</color>
+    <color name="mint">#FF0EC4B8</color>
+    <color name="blue">#FF00ADEA</color>
+    <color name="indigo">@color/staccato_blue</color>
+    <color name="purple">#FF8243FB</color>
+    <color name="pink">#FFF25BC4</color>
+    <color name="brown">#FFA85637</color>
+    <color name="gray">@color/gray4</color>
 
-    <color name="light_red">#FFF48E8E</color>
-    <color name="light_orange">#FFFFAE8C</color>
-    <color name="light_yellow">#FFFFDB7E</color>
-    <color name="light_green">#FFC3E28D</color>
-    <color name="light_mint">#FF98EBD5</color>
-    <color name="light_blue">#FF98CDFF</color>
-    <color name="light_indigo">#FFA6A6F6</color>
-    <color name="light_purple">#FFD0AAFE</color>
+    <color name="light_red">#FFF5939B</color>
+    <color name="light_orange">#FFFFB472</color>
+    <color name="light_yellow">#FFFFD588</color>
+    <color name="light_green">#FF8AD776</color>
+    <color name="light_mint">#FF6FDBD4</color>
+    <color name="light_blue">#FF66CEF2</color>
+    <color name="light_indigo">#FF9CA5F7</color>
+    <color name="light_purple">#FFB48EFD</color>
     <color name="light_pink">#FFFAB0D2</color>
-    <color name="light_brown">#FFE5B69B</color>
-    <color name="light_gray">#FFD2D2D2</color>
+    <color name="light_brown">#FFCB9A87</color>
+    <color name="light_gray">#FFADADAD</color>
 </resources>

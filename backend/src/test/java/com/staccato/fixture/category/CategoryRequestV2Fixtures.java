@@ -3,7 +3,6 @@ package com.staccato.fixture.category;
 import java.time.LocalDate;
 
 import com.staccato.category.domain.Color;
-import com.staccato.category.service.dto.request.CategoryRequest;
 import com.staccato.category.service.dto.request.CategoryRequestV2;
 
 public class CategoryRequestV2Fixtures {

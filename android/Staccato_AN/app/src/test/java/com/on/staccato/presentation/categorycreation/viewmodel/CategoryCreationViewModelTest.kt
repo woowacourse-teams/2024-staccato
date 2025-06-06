@@ -9,7 +9,7 @@ import com.on.staccato.data.network.ServerError
 import com.on.staccato.data.network.Success
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
-import com.on.staccato.presentation.categorycreation.CategoryCreationError
+import com.on.staccato.presentation.categorycreation.model.CategoryCreationError
 import com.on.staccato.presentation.categorycreation.newCategory
 import com.on.staccato.presentation.getOrAwaitValue
 import com.on.staccato.presentation.util.ExceptionState2
@@ -133,6 +133,7 @@ class CategoryCreationViewModelTest {
     @Test
     fun `카테고리 기간 설정 시 시작일과 종료일이 올바르게 변환된다`() {
         // when
+        // startAt = 1743798000000은 2025년 4월 5일, endAt = 1743967200000은 2025년 4월 7일
         viewModel.setCategoryPeriod(startAt = 1743798000000, endAt = 1743967200000)
 
         // then

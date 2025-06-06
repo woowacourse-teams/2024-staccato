@@ -16,16 +16,18 @@ import com.on.staccato.domain.model.CategoryCandidate
 import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.CategoryCandidates.Companion.emptyCategoryCandidates
 import com.on.staccato.domain.model.Staccato
+import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
-import com.on.staccato.domain.repository.TimelineRepository
-import com.on.staccato.presentation.common.AttachedPhotoHandler
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotosUiModel.Companion.createPhotosByUrls
+import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModel
+import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
+import com.on.staccato.presentation.common.photo.AttachedPhotoUiModel
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.toSuccessPhotos
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel.Companion.FAIL_IMAGE_UPLOAD_MESSAGE
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateError
@@ -45,11 +47,11 @@ import javax.inject.Inject
 class StaccatoUpdateViewModel
     @Inject
     constructor(
-        private val timelineRepository: TimelineRepository,
+        private val categoryRepository: CategoryRepository,
         private val staccatoRepository: StaccatoRepository,
         private val imageRepository: ImageRepository,
         private val locationRepository: LocationRepository,
-    ) : AttachedPhotoHandler, ViewModel() {
+    ) : ViewModel(), CategorySelectionViewModel, AttachedPhotoHandler {
         val staccatoTitle = ObservableField<String>()
 
         private val _placeName = MutableLiveData<String?>(null)
@@ -84,10 +86,10 @@ class StaccatoUpdateViewModel
         val isCurrentLocationLoading: LiveData<Boolean> get() = _isCurrentLocationLoading
 
         private val _selectedCategory = MutableLiveData<CategoryCandidate>()
-        val selectedCategory: LiveData<CategoryCandidate> get() = _selectedCategory
+        override val selectedCategory: LiveData<CategoryCandidate> get() = _selectedCategory
 
         private val _selectableCategories = MutableLiveData<CategoryCandidates>()
-        val selectableCategories: LiveData<CategoryCandidates> get() = _selectableCategories
+        override val selectableCategories: LiveData<CategoryCandidates> get() = _selectableCategories
 
         private val _isUpdateCompleted = MutableLiveData(false)
         val isUpdateCompleted: LiveData<Boolean> get() = _isUpdateCompleted
@@ -107,7 +109,7 @@ class StaccatoUpdateViewModel
         val error: SingleLiveData<StaccatoUpdateError> get() = _error
 
         override fun onAddClicked() {
-            if ((currentPhotos.value?.size ?: 0) == StaccatoCreationViewModel.MAX_PHOTO_NUMBER) {
+            if ((currentPhotos.value?.size ?: 0) == MAX_PHOTO_NUMBER) {
                 _warningMessage.postValue(StaccatoCreationViewModel.MAX_PHOTO_NUMBER_MESSAGE)
             } else {
                 _isAddPhotoClicked.postValue(true)
@@ -121,6 +123,27 @@ class StaccatoUpdateViewModel
             }
         }
 
+        override fun selectCategory(position: Int) {
+            selectableCategories.value?.categoryCandidates?.get(position)?.let {
+                _selectedCategory.value = it
+            }
+        }
+
+        fun fetchTargetData(staccatoId: Long) {
+            viewModelScope.launch {
+                val staccatoJob = launch { fetchStaccatoBy(staccatoId) }
+                val categoryCandidatesJob = launch { fetchCategoryCandidates() }
+                staccatoJob.join()
+                categoryCandidatesJob.join()
+                initializeSelectableCategories()
+            }
+        }
+
+        override fun onRetryClicked(retryPhoto: AttachedPhotoUiModel) {
+            _currentPhotos.value = currentPhotos.value?.toLoading(retryPhoto)
+            _pendingPhotos.postValue(listOf(retryPhoto))
+        }
+
         fun getCurrentLocation() {
             _isCurrentLocationLoading.postValue(true)
             val currentLocation: Task<Location> = locationRepository.getCurrentLocation()
@@ -129,17 +152,8 @@ class StaccatoUpdateViewModel
             }
         }
 
-        fun selectCategory(category: CategoryCandidate) {
-            _selectedCategory.value = category
-        }
-
         fun selectVisitedAt(visitedAt: LocalDateTime) {
             _selectedVisitedAt.value = visitedAt
-        }
-
-        fun fetchTargetData(staccatoId: Long) {
-            fetchCategoryCandidates()
-            fetchStaccatoBy(staccatoId)
         }
 
         fun selectNewPlace(
@@ -175,7 +189,7 @@ class StaccatoUpdateViewModel
         fun updateSelectedImageUris(newUris: Array<Uri>) {
             val updatedPhotos = currentPhotos.value!!.addPhotosByUris(newUris.toList())
             _currentPhotos.value = updatedPhotos
-            _pendingPhotos.postValue(updatedPhotos.getPhotosWithoutUrls())
+            _pendingPhotos.postValue(updatedPhotos.getLoadingPhotosWithoutUrls())
         }
 
         fun setUrisWithNewOrder(list: List<AttachedPhotoUiModel>) {
@@ -193,34 +207,27 @@ class StaccatoUpdateViewModel
         }
 
         fun updateCategorySelectionBy(visitedAt: LocalDateTime) {
-            val filteredCategories = categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
+            val filteredCategories =
+                categoryCandidates.value?.filterBy(visitedAt.toLocalDate()) ?: emptyCategoryCandidates
             _selectableCategories.value = filteredCategories
-            _selectedCategory.value = filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
+            _selectedCategory.value =
+                filteredCategories.findByIdOrFirst(selectedCategory.value?.categoryId)
+                    ?: return
         }
 
         fun updateStaccato(staccatoId: Long) {
             viewModelScope.launch {
-                val staccatoTitleValue = staccatoTitle.get() ?: return@launch handleException()
-                val placeNameValue = placeName.value ?: return@launch handleException()
-                val addressValue = address.value ?: return@launch handleException()
-                val latitudeValue = latitude.value ?: return@launch handleException()
-                val longitudeValue = longitude.value ?: return@launch handleException()
-                val visitedAtValue = selectedVisitedAt.value ?: return@launch handleException()
-                val categoryIdValue = selectedCategory.value?.categoryId ?: return@launch handleException()
-                val staccatoImageUrlsValue =
-                    currentPhotos.value?.attachedPhotos?.map { it.imageUrl!! }
-                        ?: emptyList()
                 _isPosting.value = true
                 staccatoRepository.updateStaccato(
                     staccatoId = staccatoId,
-                    staccatoTitle = staccatoTitleValue,
-                    placeName = placeNameValue,
-                    address = addressValue,
-                    latitude = latitudeValue,
-                    longitude = longitudeValue,
-                    visitedAt = visitedAtValue,
-                    categoryId = categoryIdValue,
-                    staccatoImageUrls = staccatoImageUrlsValue,
+                    staccatoTitle = staccatoTitle.get() ?: return@launch handleException(),
+                    placeName = placeName.value ?: return@launch handleException(),
+                    address = address.value ?: return@launch handleException(),
+                    latitude = latitude.value ?: return@launch handleException(),
+                    longitude = longitude.value ?: return@launch handleException(),
+                    visitedAt = selectedVisitedAt.value ?: return@launch handleException(),
+                    categoryId = selectedCategory.value?.categoryId ?: return@launch handleException(),
+                    staccatoImageUrls = currentPhotos.value?.imageUrls() ?: emptyList(),
                 ).onSuccess {
                     _isUpdateCompleted.postValue(true)
                 }.onException(::handleUpdateException)
@@ -228,18 +235,24 @@ class StaccatoUpdateViewModel
             }
         }
 
-        private fun fetchStaccatoBy(staccatoId: Long) {
-            viewModelScope.launch {
-                staccatoRepository.getStaccato(staccatoId = staccatoId)
-                    .onSuccess { staccato ->
-                        staccatoTitle.set(staccato.staccatoTitle)
-                        _currentPhotos.value = createPhotosByUrls(staccato.staccatoImageUrls)
-                        initializePlaceBy(staccato)
-                        selectVisitedAt(staccato.visitedAt)
-                        initCategory(staccato)
-                    }.onException(::handleInitializeException)
-                    .onServerError(::handleServerError)
-            }
+        private suspend fun fetchCategoryCandidates() {
+            categoryRepository.getCategoryCandidates()
+                .onSuccess { categoryCandidates ->
+                    _categoryCandidates.value = categoryCandidates
+                }.onException(::handleCategoryCandidatesException)
+                .onServerError(::handleServerError)
+        }
+
+        private suspend fun fetchStaccatoBy(staccatoId: Long) {
+            staccatoRepository.getStaccato(staccatoId = staccatoId)
+                .onSuccess { staccato ->
+                    staccatoTitle.set(staccato.staccatoTitle)
+                    _currentPhotos.value = staccato.staccatoImageUrls.toSuccessPhotos()
+                    selectVisitedAt(staccato.visitedAt)
+                    initializePlaceBy(staccato)
+                    initializeSelectedCategory(staccato)
+                }.onException(::handleInitializeException)
+                .onServerError(::handleServerError)
         }
 
         private fun initializePlaceBy(staccato: Staccato) {
@@ -252,7 +265,7 @@ class StaccatoUpdateViewModel
             )
         }
 
-        private fun initCategory(staccato: Staccato) {
+        private fun initializeSelectedCategory(staccato: Staccato) {
             _selectedCategory.value =
                 CategoryCandidate(
                     staccato.categoryId,
@@ -260,17 +273,11 @@ class StaccatoUpdateViewModel
                     staccato.startAt,
                     staccato.endAt,
                 )
-            _selectableCategories.value =
-                categoryCandidates.value?.filterBy(staccato.visitedAt.toLocalDate())
         }
 
-        private fun fetchCategoryCandidates() {
-            viewModelScope.launch {
-                timelineRepository.getCategoryCandidates()
-                    .onSuccess { categoryCandidates ->
-                        _categoryCandidates.value = categoryCandidates
-                    }.onException(::handleCategoryCandidatesException)
-                    .onServerError(::handleServerError)
+        private fun initializeSelectableCategories() {
+            selectedVisitedAt.value?.toLocalDate()?.let { visitedAt ->
+                _selectableCategories.value = categoryCandidates.value?.filterBy(visitedAt)
             }
         }
 
@@ -288,9 +295,11 @@ class StaccatoUpdateViewModel
                 .onSuccess {
                     updatePhotoWithUrl(photo, it.imageUrl)
                 }.onException { state ->
-                    if (this.isActive) handleUpdatePhotoException(state)
+                    if (isActive) handlePhotoException(photo.toRetry(), state.message)
                 }
-                .onServerError(::handleServerError)
+                .onServerError { message ->
+                    if (isActive) handlePhotoException(photo.toFail(), message)
+                }
         }
 
         private fun buildCoroutineExceptionHandler(): CoroutineExceptionHandler {
@@ -303,8 +312,8 @@ class StaccatoUpdateViewModel
             targetPhoto: AttachedPhotoUiModel,
             url: String,
         ) {
-            val updatedPhoto = targetPhoto.updateUrl(url)
-            _currentPhotos.value = currentPhotos.value?.updateOrAppendPhoto(updatedPhoto)
+            val updatedPhoto = targetPhoto.toSuccessPhotoWith(url)
+            _currentPhotos.value = currentPhotos.value?.updatePhoto(updatedPhoto)
         }
 
         private fun handleServerError(message: String) {
@@ -312,8 +321,12 @@ class StaccatoUpdateViewModel
             _warningMessage.setValue(message)
         }
 
-        private fun handleUpdatePhotoException(exceptionState: ExceptionState = ExceptionState.ImageUploadError) {
-            _warningMessage.setValue(exceptionState.message)
+        private fun handlePhotoException(
+            photo: AttachedPhotoUiModel,
+            message: String,
+        ) {
+            _currentPhotos.value = currentPhotos.value?.updatePhoto(photo)
+            _warningMessage.setValue(message)
         }
 
         private fun handleException(state: ExceptionState = ExceptionState.RequiredValuesMissing) {

@@ -1,0 +1,17 @@
+# PR 생성 시 자동으로 라벨을 추가
+name: Simple Labeler
+
+on:
+  pull_request:
+    types: [ opened, ready_for_review ]
+
+jobs:
+  simple-labeler:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Label to PR
+        uses: naver/simple-labeler@latest
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "D-3" # pr 생성 시(Draft에서 Open 상태로 전환 시), Label을 추가 (default: D-3)
+          duplicate: "D-*" # 기존에 붙은 Label 중 이 패턴과 일치하는 것이 있다면 새 Label을 추가하지 않음

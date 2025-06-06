@@ -12,11 +12,15 @@ import com.on.staccato.domain.model.CategoryCandidates
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.presentation.common.InputState
 import com.on.staccato.presentation.common.getFormattedLocalDateTime
+import com.on.staccato.presentation.common.photo.AttachedPhotoState
+import com.on.staccato.presentation.common.toMonthDay
+import com.on.staccato.presentation.common.toYearMonthDay
 import com.on.staccato.presentation.mapper.toInputState
 import com.on.staccato.presentation.timeline.model.FilterType
 import com.on.staccato.presentation.timeline.model.SortType
 import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.util.dpToPx
+import java.lang.String.format
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -51,10 +55,17 @@ fun TextView.setSelectedCategory(
 
 @BindingAdapter("dateTimeWithAmPm")
 fun TextView.setDateTimeWithAmPm(dateTime: LocalDateTime?) {
-    text = dateTime?.let(::getFormattedLocalDateTime) ?: EMPTY_TEXT
-    setTextColor(resources.getColor(R.color.staccato_black, null))
-    isClickable = true
-    isFocusable = true
+    if (dateTime == null) {
+        text = resources.getString(R.string.staccato_creation_loading_visitedAt)
+        setTextColor(resources.getColor(R.color.gray3, null))
+        isClickable = false
+        isFocusable = false
+    } else {
+        text = dateTime.let(::getFormattedLocalDateTime)
+        setTextColor(resources.getColor(R.color.staccato_black, null))
+        isClickable = true
+        isFocusable = true
+    }
 }
 
 @BindingAdapter(
@@ -101,7 +112,7 @@ fun TextView.formatLocalDateToDatePeriod(
     startAt: LocalDate?,
     endAt: LocalDate?,
 ) {
-    val periodFormatString = resources.getString(R.string.category_period_dot)
+    val periodFormatString = resources.getString(R.string.all_period_dot_different_year)
     text =
         if (startAt != null && endAt != null) {
             visibility = View.VISIBLE
@@ -126,23 +137,32 @@ fun TextView.formatLocalDateToDatePeriodInCategory(
     startAt: LocalDate?,
     endAt: LocalDate?,
 ) {
-    val periodFormatString = resources.getString(R.string.category_period_dot)
-    text =
-        if (startAt != null && endAt != null) {
-            visibility = View.VISIBLE
-            periodFormatString.format(
-                startAt.year,
-                startAt.monthValue,
-                startAt.dayOfMonth,
-                endAt.year,
-                endAt.monthValue,
-                endAt.dayOfMonth,
-            )
-        } else {
-            visibility = View.GONE
-            null
-        }
+    if (startAt != null && endAt != null) {
+        visibility = View.VISIBLE
+        text = formatPeriod(startAt, endAt)
+    } else {
+        visibility = View.GONE
+        text = null
+    }
 }
+
+private fun TextView.formatPeriod(
+    startAt: LocalDate,
+    endAt: LocalDate,
+): String =
+    if (startAt.year == endAt.year) {
+        resources.getString(R.string.all_period_dot_same_year)
+            .format(
+                *startAt.toYearMonthDay(),
+                *endAt.toMonthDay(),
+            )
+    } else {
+        resources.getString(R.string.all_period_dot_different_year)
+            .format(
+                *startAt.toYearMonthDay(),
+                *endAt.toYearMonthDay(),
+            )
+    }
 
 @BindingAdapter(value = ["attachedPhotoNumbers", "maxPhotoNumbers"])
 fun TextView.setPhotoNumbers(
@@ -263,7 +283,7 @@ fun TextInputLayout.changeLayoutBy(inputState: InputState) {
         }
 
         is InputState.Invalid -> {
-            boxStrokeColor = resources.getColor(R.color.point1, context.theme)
+            boxStrokeColor = resources.getColor(R.color.accents4, context.theme)
             boxStrokeWidth = strokeWidth
             boxStrokeWidthFocused = strokeWidth
             error = inputState.errorMessage
@@ -275,6 +295,16 @@ fun TextInputLayout.changeLayoutBy(inputState: InputState) {
 @BindingAdapter("visibilityByDescription")
 fun View.visibilityByDescription(description: String?) {
     visibility = if (description.isNullOrEmpty()) View.GONE else View.VISIBLE
+}
+
+@BindingAdapter("failVisibilityByState")
+fun TextView.setFailVisibilityByPhotoState(photoState: AttachedPhotoState) {
+    visibility =
+        if (photoState == AttachedPhotoState.Failure) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
 }
 
 private const val DRAGGABLE_PHOTO_NUMBER = 2

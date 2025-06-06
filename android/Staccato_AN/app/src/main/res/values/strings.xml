@@ -11,7 +11,7 @@
     <string name="all_confirm">확인</string>
     <string name="all_photo">사진</string>
     <string name="all_photo_number">(%s/%s)</string>
-    <string name="all_photo_attach">사진을 첨부해 보세요</string>
+    <string name="all_photo_attach">사진 첨부하기</string>
     <string name="all_visited_at">날짜 및 시간</string>
     <string name="all_please_select_visited_at">날짜 및 시간을 선택해 주세요</string>
     <string name="all_please_select_color">색상을 선택해 주세요</string>
@@ -31,6 +31,11 @@
     <string name="all_delete_image">사진 삭제 버튼</string>
     <string name="all_photo_attach_icon_description">사진 첨부란</string>
     <string name="all_category_thumbnail_photo_description">카테고리 썸네일 사진</string>
+    <string name="all_waring">경고</string>
+    <string name="all_period_dot_different_year">%s. %s. %s - %s. %s. %s</string>
+    <string name="all_period_dot_same_year">%s. %s. %s - %s. %s</string>
+    <string name="all_invitation_notification_indicator_description">카테고리 초대 알림 존재 표시</string>
+    <string name="all_member_profile_image_description">사용자 프로필 사진</string>
 
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
@@ -51,6 +56,7 @@
     <string name="timeline_filter_all">모든 카테고리</string>
     <string name="timeline_create_category">카테고리 생성하기</string>
     <string name="timeline_category_creation_btn_description">카테고리 만들기로 이동</string>
+    <string name="timeline_expand_to_half">바텀시트를 전체 화면에서 하프 화면으로 전환</string>
 
     // menu_sort
     <string name="sort_updated_order">최근 수정순</string>
@@ -62,12 +68,13 @@
 
     // fragment_category
     <string name="category_period">%s년 %s월 %s일 ~ %s년 %s월 %s일</string>
-    <string name="category_period_dot">%s. %s. %s ~ %s. %s. %s</string>
-    <string name="category_mates">함께 한 사람들</string>
+    <string name="category_mates">함께하는 사람들</string>
     <string name="category_staccatos">스타카토</string>
     <string name="category_delete_complete">카테고리가 삭제되었습니다.</string>
-    <string name="category_staccato_empty">스타카토를 아직 찍지 않으셨군요!\n스타카토를 찍어볼까요?</string>
+    <string name="category_staccato_empty">카테고리가 비어있어요.\n스타카토를 찍어볼까요?</string>
     <string name="category_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
+    <string name="category_error_staccato_record_impossible">스타카토를 기록할 수 없어요.</string>
+    <string name="category_invite_description">카테고리 초대 버튼</string>
 
     // item_mates
     <string name="mates_profile_image_description">함께 한 사람 프로필 이미지</string>
@@ -82,12 +89,16 @@
     <string name="category_creation_description">카테고리 소개</string>
     <string name="category_creation_description_hint">소개를 입력해 주세요</string>
     <string name="category_creation_color">마커 색상</string>
+    <string name="category_creation_color_hint">지도 위에서 보여질 마커의 색을 선택해주세요.</string>
     <string name="category_creation_period_setting">기간 설정</string>
     <string name="category_creation_period_hint">기간을 선택해 주세요</string>
     <string name="category_creation_selected_period">%s ~ %s</string>
-    <string name="category_creation_period_description">여행과 프로젝트처럼 시작일과 종료일을 설정할 수 있어요.</string>
+    <string name="category_creation_period_description">여행처럼 시작일과 종료일을 설정할 수 있어요.</string>
     <string name="category_creation_toolbar_title">카테고리 만들기</string>
     <string name="category_creation_toolbar_subtitle">스타카토를 담을 카테고리를 만들어 보세요!</string>
+    <string name="category_creation_share_title">카테고리 공유</string>
+    <string name="category_creation_share_hint">친구들을 초대해 함께 카테고리를 채워보세요.</string>
+    <string name="category_creation_share_warning">한 번 설정하면 변경할 수 없어요</string>
 
     // activity_category_update
     <string name="category_update_toolbar_title">카테고리 수정하기</string>
@@ -98,7 +109,7 @@
     <string name="staccato_logs">코멘트</string>
     <string name="staccato_add">기록하기</string>
     <string name="staccato_enter_log">코멘트 입력하기</string>
-    <string name="staccato_empty_comments">코멘트가 없어요! 코멘트를 달아보세요.</string>
+    <string name="staccato_empty_comments">코멘트를 남겨보세요!</string>
     <string name="staccato_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
     <string name="staccato_comment_has_been_deleted">코멘트를 삭제했어요!</string>
     <string name="staccato_loading_failure">스타카토를 불러올 수 없어요!</string>
@@ -106,6 +117,7 @@
     <string name="staccato_feeling_selection_comment_send_btn_description">코멘트 전송</string>
     <string name="staccato_share_message">%s님의 스타카토를 확인해보세요!</string>
     <string name="staccato_share">스타카토 공유하기</string>
+    <string name="staccato_error_comment_copy">코멘트를 복사할 수 없어요.</string>
 
     // item_staccato_my_comment
     <string name="staccato_my_comment_profile_image_description">나의 프로필 이미지</string>
@@ -126,6 +138,7 @@
     <string name="staccato_creation_empty_address">"장소를 선택하면 상세 주소가 나타나요"</string>
     <string name="staccato_creation_address">상세 주소</string>
     <string name="staccato_creation_category_selection">카테고리 선택</string>
+    <string name="staccato_creation_loading_visitedAt">날짜와 시간을 불러오고 있어요</string>
     <string name="staccato_creation_no_category_in_this_date">선택하신 날짜에는 카테고리가 없어요</string>
     <string name="staccato_creation_no_category">스타카토를 남길 수 있는 카테고리가 없어요</string>
     <string name="staccato_creation_toolbar_subtitle">기억하고 싶은 순간을 남겨 보세요!</string>
@@ -134,6 +147,7 @@
 
     // item_attached_photo
     <string name="attached_photo_staccato_photo_description">스타카토 사진</string>
+    <string name="all_large_photo_warning">10MB보다\n작은 사진을\n올려주세요</string>
 
     // activity_staccato_update
     <string name="staccato_update_toolbar_subtitle">기억하고 싶은 순간을 수정해 보세요!</string>
@@ -143,7 +157,7 @@
     <string name="login_start">시작하기</string>
     <string name="login_nickname_hint">닉네임을 입력해 주세요</string>
     <string name="login_nickname_valid_message">사용 가능한 닉네임이에요!</string>
-    <string name="login_nickname_error_message_format">닉네임은 한글, 영어, 숫자,\n마침표(.), 밑줄(_)만 사용할 수 있어요.</string>
+    <string name="login_nickname_error_message_format">닉네임은 한글, 영어, 숫자, 띄어쓰기,\n마침표(.), 밑줄(_)만 사용할 수 있어요.</string>
     <string name="login_nickname_error_message_blank_first">닉네임은 공백으로 시작할 수 없어요.</string>
     <string name="login_nickname_error_message_length">%d~%d 사이의 길이로 입력해 주세요.</string>
     <string name="login_recovery_click_here_if_need_recovery"><u>이전 기록을 불러오려면 여기를 눌러주세요</u></string>
@@ -158,10 +172,11 @@
     // activity_mypage
     <string name="mypage_title">마이페이지</string>
     <string name="mypage_uuid">복구 코드 복사하기</string>
+    <string name="mypage_invitation_management">카테고리 초대 관리</string>
     <string name="mypage_privacy_policy">개인정보처리방침</string>
     <string name="mypage_feedback">피드백으로 혼내주기</string>
     <string name="mypage_instagram">스타카토 인스타그램</string>
-    <string name="mypage_app_version">앱 버전 1.4.0</string>
+    <string name="mypage_app_version">앱 버전 2.0.0</string>
     <string name="mypage_error_fetching_member_profile">프로필 정보를 가져올 수 없습니다.</string>
     <string name="mypage_error_changing_profile_image">프로필 이미지 변경에 실패했습니다.</string>
     <string name="mypage_error_not_found_browser">"피드백 페이지를 열 수 있는 브라우저가 없어요"</string>
@@ -169,6 +184,7 @@
     <string name="mypage_user_profile_image_description">사용자 프로필 이미지</string>
     <string name="mypage_update_profile_image_description">프로필 이미지 수정</string>
     <string name="mypage_navigate_to_instagram_btn_description">인스타그램으로 이동</string>
+    <string name="mypage_menu_navigation_icon_description">메뉴 이동 버튼</string>
 
     // activity_camera_preview
     <string name="camera_preview_image_description">촬영된 이미지 미리 보기</string>
@@ -193,8 +209,10 @@
     <string name="delete_description">삭제를 누르면 복구할 수 없어요!</string>
 
     // menu_comment
-    <string name="menu_comment_delete">삭제하기</string>
+    <string name="comment_copy">복사</string>
+    <string name="comment_delete">삭제</string>
 
+    // LocationPermissionManager
     <string name="maps_location_permission_granted_message">위치 서비스 사용을 위한 위치 권한이 설정 되었습니다.</string>
 
     // fragment_location_dialog
@@ -210,5 +228,36 @@
     <string name="error_message_network">"네트워크 연결이 불안정합니다.\n연결을 재설정한 후 다시 시도해 주세요."</string>
     <string name="error_message_unknown">"예기치 못한 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요."</string>
     <string name="error_message_image_upload">"이미지 업로드에 실패했습니다."</string>
+
+    // member invite
+    <string name="profile_image_description">사용자 프로필 이미지</string>
+    <string name="default_profile_image_description">기본 프로필 이미지</string>
+    <string name="invite_member_title">초대할 사람들</string>
+    <string name="invite_member_search_nickname">닉네임을 검색해주세요.</string>
+    <string name="invite_member_search_description">검색 아이콘</string>
+    <string name="invite_member_selected_description">선택됨</string>
+    <string name="invite_member_unselected_description">선택 가능</string>
+    <string name="invite_member_participating_description">참여중</string>
+
+    // invitation management
+    <string name="invitation_management_received">받은 초대</string>
+    <string name="invitation_management_sent">보낸 초대</string>
+    <string name="invitation_management_received_description">받은 초대 아이콘</string>
+    <string name="invitation_management_sent_description">보낸 초대 아이콘</string>
+    <string name="invitation_management_guide_text_nickname">님이 카테고리에 초대했어요.</string>
+    <string name="invitation_management_accept">수락</string>
+    <string name="invitation_management_reject">거절</string>
+    <string name="invitation_management_received_empty">아직 친구에게 받은 초대가 없어요!</string>
+    <string name="invitation_management_guide_text_category">에 초대했어요.</string>
+    <string name="invitation_management_cancel">취소</string>
+    <string name="invitation_management_sent_empty">보낸 초대가 없어요!\n카테고리에서 친구를 초대해보세요.</string>
+    <string name="invitation_management_accept_success">초대를 성공적으로 수락했어요!</string>
+    <string name="invitation_management_dialog_reject_title">초대를 거절할까요?</string>
+    <string name="invitation_management_dialog_reject_description">한 번 거절하면 되돌릴 수 없어요.</string>
+    <string name="invitation_management_dialog_cancel_title">초대를 취소할까요?</string>
+    <string name="invitation_management_dialog_cancel_description">나중에 다시 초대할 수 있어요.</string>
+
+    // NavigationTopBar
+    <string name="top_bar_navigation_back_icon">상단 바 뒤로가기 아이콘</string>
 
 </resources>

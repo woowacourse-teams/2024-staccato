@@ -17,10 +17,6 @@
             type="com.on.staccato.presentation.staccato.StaccatoShareHandler" />
 
         <variable
-            name="commentHandler"
-            type="com.on.staccato.presentation.staccato.comments.CommentHandler" />
-
-        <variable
             name="staccatoViewModel"
             type="com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel" />
 
@@ -39,6 +35,7 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_staccato"
             style="@style/NavigationToolbarStyle"
+            android:fillViewport="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -62,6 +59,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="12dp"
+            android:fillViewport="true"
             android:overScrollMode="never"
             app:layout_constraintBottom_toTopOf="@id/et_staccato_comments_input"
             app:layout_constraintEnd_toEndOf="parent"
@@ -88,7 +86,7 @@
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tab_staccato_photo_horizontal"
-                    android:layout_width="50dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="10dp"
                     android:layout_marginTop="10dp"
                     android:background="#00000000"
@@ -99,6 +97,8 @@
                     app:tabGravity="center"
                     app:tabIndicatorFullWidth="false"
                     app:tabIndicatorHeight="0dp"
+                    app:tabPaddingEnd="0dp"
+                    app:tabPaddingStart="0dp"
                     bind:visibleOrGone="@{staccatoViewModel.staccatoDetail.staccatoImageUrls.size > 1}"
                     tools:visibility="gone" />
 
@@ -205,10 +205,10 @@
                 <ImageView
                     android:id="@+id/iv_staccato_comments_default_empty"
                     android:layout_width="0dp"
-                    android:layout_height="200dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="20dp"
                     android:contentDescription="@string/all_staccato_main_character"
-                    android:paddingBottom="10dp"
-                    android:src="@drawable/staccato_character"
+                    android:src="@drawable/staccato_character_gray"
                     app:layout_constraintBottom_toTopOf="@id/tv_staccato_comments_empty"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -220,10 +220,11 @@
                 <TextView
                     android:id="@+id/tv_staccato_comments_empty"
                     android:layout_width="0dp"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
                     android:gravity="center_horizontal"
                     android:text="@string/staccato_empty_comments"
-                    android:textAppearance="@style/Typography.Body2"
+                    android:textAppearance="@style/Typography.Body4"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -235,6 +236,8 @@
                     android:id="@+id/rv_staccato_comments"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
                     android:clipToPadding="true"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never"
@@ -243,6 +246,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_staccato_comments_title"
+                    app:layout_constraintVertical_bias="0"
                     app:layout_constraintVertical_chainStyle="packed"
                     app:reverseLayout="false"
                     app:stackFromEnd="true"
@@ -265,7 +269,7 @@
             android:id="@+id/iv_staccato_comments_send"
             style="@style/ButtonStyle.Send"
             android:contentDescription="@string/staccato_feeling_selection_comment_send_btn_description"
-            android:onClick="@{() -> commentHandler.onSendButtonClicked()}"
+            android:onClick="@{() -> commentsViewModel.sendComment()}"
             app:layout_constraintBottom_toBottomOf="@id/et_staccato_comments_input"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/et_staccato_comments_input"

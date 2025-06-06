@@ -28,6 +28,12 @@ repositories {
 	mavenCentral()
 }
 
+dependencyManagement {
+	imports {
+		mavenBom("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:2.15.0")
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -38,6 +44,9 @@ dependencies {
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+//	implementation("io.opentelemetry:opentelemetry-exporter-otlp")
+//	implementation("io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter")
+//	implementation 'io.opentelemetry.instrumentation:opentelemetry-jdbc:2.15.0-alpha'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
@@ -49,6 +58,10 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'javax.xml.bind:jaxb-api:2.3.1'
 
+	testImplementation 'org.testcontainers:testcontainers-bom:1.20.5'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:mysql'
+
 	testImplementation 'io.rest-assured:rest-assured:5.3.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -58,6 +71,10 @@ tasks.named('test') {
 	useJUnitPlatform()
 	finalizedBy jacocoTestReport
 }
+
+//test {
+//	systemProperty "JASYPT_PASSWORD", project.findProperty("JASYPT_PASSWORD") ?: ""
+//}
 
 jacocoTestReport {
 	executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))

@@ -14,18 +14,21 @@ import com.on.staccato.domain.model.Category
 import com.on.staccato.domain.model.NewCategory
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.ImageRepository
-import com.on.staccato.presentation.categorycreation.DateConverter.convertLongToLocalDate
-import com.on.staccato.presentation.categorycreation.ThumbnailUiModel
+import com.on.staccato.presentation.categorycreation.model.ThumbnailUiModel
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateError
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.common.color.CategoryColor
-import com.on.staccato.presentation.common.photo.FileUiModel
+import com.on.staccato.presentation.common.photo.UploadFile
 import com.on.staccato.presentation.util.CATEGORY_FILE_CHILD_NAME
 import com.on.staccato.presentation.util.ExceptionState2
 import com.on.staccato.presentation.util.IMAGE_FORM_DATA_NAME
+import com.on.staccato.presentation.util.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -34,8 +37,6 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.time.LocalDate
 import javax.inject.Inject
-
-private typealias ThumbnailUri = Uri
 
 @HiltViewModel
 class CategoryUpdateViewModel
@@ -68,7 +69,8 @@ class CategoryUpdateViewModel
         private val _isPhotoPosting = MutableLiveData<Boolean>(false)
         val isPhotoPosting: LiveData<Boolean> get() = _isPhotoPosting
 
-        val isPeriodActive = MutableLiveData<Boolean>()
+        private val _isPeriodActive = MutableStateFlow<Boolean>(false)
+        val isPeriodActive: StateFlow<Boolean> = _isPeriodActive.asStateFlow()
 
         private var categoryId: Long = 0L
 
@@ -81,7 +83,7 @@ class CategoryUpdateViewModel
         private val _error = MutableSingleLiveData<CategoryUpdateError>()
         val error: SingleLiveData<CategoryUpdateError> get() = _error
 
-        private val thumbnailJobs = mutableMapOf<ThumbnailUri, Job>()
+        private val thumbnailJobs = mutableMapOf<Uri, Job>()
 
         fun fetchCategory(id: Long) {
             categoryId = id
@@ -109,17 +111,21 @@ class CategoryUpdateViewModel
             startAt: Long,
             endAt: Long,
         ) {
-            _startDate.value = convertLongToLocalDate(startAt)
-            _endDate.value = convertLongToLocalDate(endAt)
+            _startDate.value = startAt.toLocalDate()
+            _endDate.value = endAt.toLocalDate()
         }
 
         fun updateCategoryColor(color: CategoryColor) {
             _color.value = color
         }
 
+        fun updateIsPeriodActive(value: Boolean) {
+            _isPeriodActive.value = value
+        }
+
         fun createThumbnailUrl(
             uri: Uri,
-            file: FileUiModel,
+            file: UploadFile,
         ) {
             _isPhotoPosting.value = true
             setThumbnailUri(uri)
@@ -136,13 +142,11 @@ class CategoryUpdateViewModel
             description.value = category.description
             _startDate.value = category.startAt
             _endDate.value = category.endAt
-            _color.value = CategoryColor.getColorBy(category.color)
-            checkCategoryHasPeriod(category)
+            _color.value = CategoryColor.getCategoryColorBy(category.color)
+            updateIsPeriodActive(hasPeriod(category))
         }
 
-        private fun checkCategoryHasPeriod(category: Category) {
-            isPeriodActive.value = category.startAt != null && category.endAt != null
-        }
+        private fun hasPeriod(category: Category): Boolean = category.startAt != null && category.endAt != null
 
         private fun makeNewCategory() =
             NewCategory(
@@ -155,7 +159,7 @@ class CategoryUpdateViewModel
             )
 
         private fun getDateByPeriodSetting(date: LiveData<LocalDate?>): LocalDate? {
-            return if (isPeriodActive.value == true) {
+            return if (isPeriodActive.value) {
                 date.value
             } else {
                 null
@@ -179,7 +183,7 @@ class CategoryUpdateViewModel
 
         private fun registerThumbnailJob(
             uri: Uri,
-            file: FileUiModel,
+            file: UploadFile,
         ) {
             val thumbnailJob = createFetchingThumbnailJob(uri, file)
             thumbnailJob.invokeOnCompletion {
@@ -190,7 +194,7 @@ class CategoryUpdateViewModel
 
         private fun createFetchingThumbnailJob(
             uri: Uri,
-            file: FileUiModel,
+            file: UploadFile,
         ): Job {
             val formData = createFormData(file)
 
@@ -206,9 +210,9 @@ class CategoryUpdateViewModel
             }
         }
 
-        private fun createFormData(fileUiModel: FileUiModel): MultipartBody.Part {
-            val mediaType: MediaType? = fileUiModel.contentType?.toMediaTypeOrNull()
-            val requestFile: RequestBody = fileUiModel.file.asRequestBody(mediaType)
+        private fun createFormData(uploadFile: UploadFile): MultipartBody.Part {
+            val mediaType: MediaType? = uploadFile.contentType?.toMediaTypeOrNull()
+            val requestFile: RequestBody = uploadFile.file.asRequestBody(mediaType)
 
             return MultipartBody.Part.createFormData(
                 IMAGE_FORM_DATA_NAME,
@@ -230,10 +234,10 @@ class CategoryUpdateViewModel
         private fun handlePhotoException(
             state: ExceptionState2,
             uri: Uri,
-            fileUiModel: FileUiModel,
+            uploadFile: UploadFile,
         ) {
             if (thumbnailJobs[uri]?.isActive == true) {
-                _error.setValue(CategoryUpdateError.Thumbnail(state, uri, fileUiModel))
+                _error.setValue(CategoryUpdateError.Thumbnail(state, uri, uploadFile))
             }
         }
 

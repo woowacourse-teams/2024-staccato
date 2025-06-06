@@ -12,15 +12,18 @@ import jakarta.persistence.ManyToOne;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class StaccatoImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
@@ -33,7 +36,7 @@ public class StaccatoImage {
         this.imageUrl = imageUrl;
     }
 
-    protected void belongTo(Staccato staccato) {
+    protected void assignTo(Staccato staccato) {
         this.staccato = staccato;
     }
 }

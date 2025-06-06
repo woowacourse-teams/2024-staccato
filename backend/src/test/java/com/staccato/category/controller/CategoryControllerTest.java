@@ -1,35 +1,5 @@
 package com.staccato.category.controller;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Stream;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import com.staccato.ControllerTest;
-import com.staccato.category.domain.Category;
-import com.staccato.category.domain.Color;
-import com.staccato.category.service.dto.request.CategoryReadRequest;
-import com.staccato.category.service.dto.request.CategoryRequest;
-import com.staccato.category.service.dto.response.CategoryDetailResponse;
-import com.staccato.category.service.dto.response.CategoryDetailResponseV2;
-import com.staccato.category.service.dto.response.CategoryIdResponse;
-import com.staccato.category.service.dto.response.CategoryNameResponses;
-import com.staccato.category.service.dto.response.CategoryResponsesV2;
-import com.staccato.exception.ExceptionResponse;
-import com.staccato.fixture.category.CategoryFixtures;
-import com.staccato.fixture.category.CategoryRequestFixtures;
-import com.staccato.fixture.member.MemberFixtures;
-import com.staccato.fixture.staccato.StaccatoFixtures;
-import com.staccato.member.domain.Member;
-import com.staccato.staccato.domain.Staccato;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -42,6 +12,42 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+import com.staccato.ControllerTest;
+import com.staccato.category.domain.Category;
+import com.staccato.category.domain.Color;
+import com.staccato.category.service.dto.request.CategoryReadRequest;
+import com.staccato.category.service.dto.request.CategoryRequest;
+import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRequest;
+import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
+import com.staccato.category.service.dto.response.CategoryIdResponse;
+import com.staccato.category.service.dto.response.CategoryNameResponses;
+import com.staccato.category.service.dto.response.CategoryResponseV3;
+import com.staccato.category.service.dto.response.CategoryResponsesV3;
+import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
+import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
+import com.staccato.exception.ExceptionResponse;
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.category.CategoryRequestFixtures;
+import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
+import com.staccato.member.domain.Member;
+import com.staccato.staccato.domain.Staccato;
 
 class CategoryControllerTest extends ControllerTest {
 
@@ -62,13 +68,7 @@ class CategoryControllerTest extends ControllerTest {
                         "카테고리 제목을 입력해주세요."),
                 Arguments.of(CategoryRequestFixtures.defaultCategoryRequest()
                                 .withCategoryTitle("  ").build(),
-                        "카테고리 제목을 입력해주세요."),
-                Arguments.of(CategoryRequestFixtures.defaultCategoryRequest()
-                                .withCategoryTitle("가".repeat(31)).build(),
-                        "제목은 공백 포함 30자 이하로 설정해주세요."),
-                Arguments.of(CategoryRequestFixtures.defaultCategoryRequest()
-                                .withDescription("가".repeat(501)).build(),
-                        "내용의 최대 허용 글자수는 공백 포함 500자입니다.")
+                        "카테고리 제목을 입력해주세요.")
         );
     }
 
@@ -179,7 +179,10 @@ class CategoryControllerTest extends ControllerTest {
         Category categoryWithoutTerm = CategoryFixtures.defaultCategory()
                 .withColor(Color.BLUE)
                 .withTerm(null, null).build();
-        CategoryResponsesV2 categoryResponses = CategoryResponsesV2.from(List.of(categoryWithTerm, categoryWithoutTerm));
+        CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
+                new CategoryResponseV3(categoryWithTerm, 0),
+                new CategoryResponseV3(categoryWithoutTerm, 0))
+        );
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
         String expectedResponse = """
                 {
@@ -215,8 +218,10 @@ class CategoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category1 = CategoryFixtures.defaultCategory().build();
         Category category2 = CategoryFixtures.defaultCategory().build();
-        CategoryResponsesV2 categoryResponses = CategoryResponsesV2.from(List.of(category1, category2));
-
+        CategoryResponsesV3 categoryResponses = new CategoryResponsesV3(List.of(
+                new CategoryResponseV3(category1, 0),
+                new CategoryResponseV3(category2, 0))
+        );
         when(categoryService.readAllCategories(any(Member.class), any(CategoryReadRequest.class))).thenReturn(categoryResponses);
 
         // when & then
@@ -229,12 +234,12 @@ class CategoryControllerTest extends ControllerTest {
 
     @DisplayName("특정 날짜를 포함하고 있는 모든 카테고리 목록을 조회하는 응답 직렬화에 성공한다.")
     @Test
-    void readAllCategoryIncludingDate() throws Exception {
+    void readAllCandidateCategoriesIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().build();
         CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
-        when(categoryService.readAllCategoriesByDate(any(Member.class), any())).thenReturn(categoryNameResponses);
+        when(categoryService.readAllCategoriesByMemberAndDateAndPrivateFlag(any(Member.class), any(), any(Boolean.class))).thenReturn(categoryNameResponses);
         String expectedResponse = """
                 {
                     "categories": [
@@ -249,15 +254,44 @@ class CategoryControllerTest extends ControllerTest {
         // when & then
         mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
-                        .param("currentDate", LocalDate.now().toString()))
+                        .param("specificDate", LocalDate.now().toString())
+                        .param("isPrivate", "false"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("specificDate 파라미터 없이 요청하면 예외가 발생한다.")
+    @Test
+    void cannotReadAllCandidateCategoriesWithoutSpecificDate() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "필수 요청 파라미터가 누락되었습니다. 필요한 파라미터를 제공해주세요.");
+
+        // when & then
+        mockMvc.perform(get("/categories/candidates")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("isPrivate", "false"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("isPrivate 파라미터 없이 요청해도 기본값 false로 정상 동작한다")
+    @Test
+    void canReadAllCandidateCategoriesWithoutIsPrivate() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+
+        // when & then
+        mockMvc.perform(get("/categories/candidates")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("specificDate", LocalDate.now().toString()))
+                .andExpect(status().isOk());
     }
 
     @DisplayName("잘못된 날짜 형식으로 카테고리 목록 조회를 시도하면 예외가 발생한다.")
     @ParameterizedTest
     @ValueSource(strings = {"2024.07.01", "2024-07", "2024", "a"})
-    void cannotReadAllCategoryByInvalidDateFormat(String currentDate) throws Exception {
+    void cannotReadAllCandidateCategoriesByInvalidDateFormat(String currentDate) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
@@ -265,7 +299,24 @@ class CategoryControllerTest extends ControllerTest {
         // when & then
         mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
-                        .param("currentDate", currentDate))
+                        .param("specificDate", currentDate)
+                        .param("isPrivate", "false"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("잘못된 boolean 형식으로 카테고리 목록 조회를 시도하면 예외가 발생한다.")
+    @Test
+    void cannotReadAllCandidateCategoriesByInvalidBooleanFormat() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
+
+        // when & then
+        mockMvc.perform(get("/categories/candidates")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("specificDate", LocalDate.now().toString())
+                        .param("isPrivate", "invalidString"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
@@ -277,11 +328,11 @@ class CategoryControllerTest extends ControllerTest {
         long categoryId = 1;
         Member member = MemberFixtures.defaultMember().build();
         when(authService.extractFromToken(anyString())).thenReturn(member);
-        Category category = CategoryFixtures.defaultCategory().buildWithMember(member);
+        Category category = CategoryFixtures.defaultCategory().withHost(member).build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryDetailResponseV2 categoryDetailResponse = new CategoryDetailResponseV2(category, List.of(staccato));
+        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
@@ -326,11 +377,12 @@ class CategoryControllerTest extends ControllerTest {
         when(authService.extractFromToken(anyString())).thenReturn(member);
         Category category = CategoryFixtures.defaultCategory()
                 .withTerm(null, null)
-                .buildWithMember(member);
+                .withHost(member)
+                .build();
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .withStaccatoImages(List.of("https://example.com/staccatoImage.jpg")).build();
-        CategoryDetailResponseV2 categoryDetailResponse = new CategoryDetailResponseV2(category, List.of(staccato));
+        CategoryDetailResponseV3 categoryDetailResponse = new CategoryDetailResponseV3(category, List.of(staccato), member);
         when(categoryService.readCategoryById(anyLong(), any(Member.class))).thenReturn(categoryDetailResponse);
         String expectedResponse = """
                 {
@@ -358,6 +410,55 @@ class CategoryControllerTest extends ControllerTest {
 
         // when & then
         mockMvc.perform(get("/categories/{categoryId}", categoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("특정 카테고리에 속한 스타카토 목록 조회에 성공한다.")
+    @Test
+    void readAllStaccatoByCategory() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
+        CategoryStaccatoLocationResponse response1 = new CategoryStaccatoLocationResponse(
+                StaccatoFixtures.defaultStaccato()
+                        .withCategory(category)
+                        .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build()
+        );
+        CategoryStaccatoLocationResponse response2 = new CategoryStaccatoLocationResponse(
+                StaccatoFixtures.defaultStaccato()
+                        .withCategory(category)
+                        .withSpot(new BigDecimal("80.456789"), new BigDecimal("123.456789")).build()
+        );
+        CategoryStaccatoLocationResponses responses = new CategoryStaccatoLocationResponses(List.of(response1, response2));
+
+        when(categoryService.readAllStaccatoByCategory(any(Member.class), anyLong(), any(CategoryStaccatoLocationRangeRequest.class))).thenReturn(responses);
+        String expectedResponse = """
+                {
+                    "categoryStaccatoLocationResponses": [
+                         {
+                             "staccatoId": null,
+                             "staccatoColor": "pink",
+                             "latitude": 0,
+                             "longitude": 0
+                         },
+                         {
+                             "staccatoId": null,
+                             "staccatoColor": "pink",
+                             "latitude": 80.456789,
+                             "longitude": 123.456789
+                         }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/categories/1/staccatos")
+                        .param("neLat", "81")
+                        .param("neLng", "124")
+                        .param("swLat", "80")
+                        .param("swLng", "123")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));

@@ -9,6 +9,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
@@ -31,6 +34,7 @@ import com.on.staccato.util.logging.AnalyticsEvent
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -206,10 +210,10 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun GoogleMap.setMapPadding() {
-        sharedViewModel.isBottomSheetHalf.observe(viewLifecycleOwner) { isBottomSheetHalf ->
+        sharedViewModel.isBottomSheetHalfExpanded.observe(viewLifecycleOwner) { isHalfExpanded ->
             val mapPaddingBottom =
-                if (isBottomSheetHalf) (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt() else DEFAULT_MAP_PADDING
-            val yPixel = if (isBottomSheetHalf) yPixel else -yPixel
+                if (isHalfExpanded) (requireView().height / BOTTOM_SHEET_HALF_RATIO).toInt() else DEFAULT_MAP_PADDING
+            val yPixel = if (isHalfExpanded) yPixel else -yPixel
 
             setPadding(
                 DEFAULT_MAP_PADDING,
@@ -292,8 +296,12 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun observeIsRetry() {
-        sharedViewModel.isRetry.observe(viewLifecycleOwner) {
-            if (it) mapsViewModel.loadStaccatos()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.retryEvent.collect {
+                    mapsViewModel.loadStaccatos()
+                }
+            }
         }
     }
 

@@ -32,8 +32,10 @@ fun TimelineCategoryDto.toDomain(): TimeLineCategory {
         color = color,
         startAt = startAt?.let { LocalDate.parse(it) },
         endAt = endAt?.let { LocalDate.parse(it) },
-        mates = emptyList(),
-        staccatos = emptyList(),
+        isShared = isShared,
+        totalMemberCount = totalMemberCount,
+        members = members.map { it.toDomain() },
+        staccatoCount = staccatoCount,
     )
 }
 

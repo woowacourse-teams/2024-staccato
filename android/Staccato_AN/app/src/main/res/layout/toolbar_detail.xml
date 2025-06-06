@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <variable
+            name="isHost"
+            type="java.lang.Boolean" />
 
         <variable
             name="toolbarHandler"
@@ -16,13 +21,15 @@
             android:id="@+id/btn_detail_delete"
             style="@style/ToolbarMenuStyle"
             android:onClick="@{() -> toolbarHandler.onDeleteClicked()}"
-            android:text="@string/all_delete" />
+            android:text="@string/all_delete"
+            bind:visibleOrGone="@{isHost}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_detail_update"
             style="@style/ToolbarMenuStyle"
             android:onClick="@{() -> toolbarHandler.onUpdateClicked()}"
-            android:text="@string/all_update" />
+            android:text="@string/all_update"
+            bind:visibleOrGone="@{isHost}" />
 
     </com.google.android.material.appbar.MaterialToolbar>
 

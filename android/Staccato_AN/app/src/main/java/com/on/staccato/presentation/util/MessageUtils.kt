@@ -25,11 +25,7 @@ fun View.showSnackBarWithAction(
     onAction: () -> Unit,
     length: Int,
 ) {
-    val snackBar =
-        Snackbar.make(this, message, length)
-            .setAction(actionLabel) {
-                onAction()
-            }
+    val snackBar = getSnackBarWithAction(message, actionLabel, onAction, length)
     snackBar.show()
 }
 

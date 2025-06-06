@@ -23,19 +23,21 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_TITLE_KEY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
-import com.on.staccato.presentation.common.PhotoAttachFragment
+import com.on.staccato.presentation.common.categoryselection.CategorySelectionFragment
+import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModelProvider
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.PERMISSION_CANCEL_KEY
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.location.PermissionCancelListener
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
+import com.on.staccato.presentation.common.photo.PhotoAttachFragment
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
-import com.on.staccato.presentation.staccatocreation.dialog.CategorySelectionFragment
+import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter.Companion.photoAdditionButton
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
@@ -47,13 +49,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class StaccatoCreationActivity :
+    CategorySelectionViewModelProvider,
     GooglePlaceFragmentEventHandler,
     CurrentLocationHandler,
     OnUrisSelectedListener,
     StaccatoCreationHandler,
     BindingActivity<ActivityStaccatoCreationBinding>() {
     override val layoutResourceId = R.layout.activity_staccato_creation
-    private val viewModel: StaccatoCreationViewModel by viewModels()
+    override val viewModel: StaccatoCreationViewModel by viewModels()
     private val categorySelectionFragment by lazy {
         CategorySelectionFragment()
     }
@@ -92,7 +95,6 @@ class StaccatoCreationActivity :
         initAdapter()
         initItemTouchHelper()
         initToolbar()
-        initCategorySelectionFragment()
         initVisitedAtSelectionFragment()
         observeViewModelData()
         initGooglePlaceSearch()
@@ -102,15 +104,7 @@ class StaccatoCreationActivity :
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.isPlaceSearchClicked.value != true) {
-            checkLocationSetting()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        val hasPlaceSearchClicked = autocompleteFragment.isVisible
-        viewModel.setIsPlaceSearchClicked(hasPlaceSearchClicked)
+        if (viewModel.isFromPlaceSearch.getValue() != true) checkLocationSetting()
     }
 
     override fun onNewPlaceSelected(
@@ -247,12 +241,6 @@ class StaccatoCreationActivity :
         }
     }
 
-    private fun initCategorySelectionFragment() {
-        categorySelectionFragment.setOnCategorySelected { selectedCategory ->
-            viewModel.selectCategory(selectedCategory)
-        }
-    }
-
     private fun initVisitedAtSelectionFragment() {
         visitedAtSelectionFragment.setOnVisitedAtSelected { selectedVisitedAt ->
             viewModel.selectedVisitedAt(selectedVisitedAt)
@@ -278,9 +266,9 @@ class StaccatoCreationActivity :
             viewModel.fetchPhotosUrlsByUris(this)
         }
         viewModel.currentPhotos.observe(this) { photos ->
-            photoAttachFragment.setCurrentImageCount(StaccatoCreationViewModel.MAX_PHOTO_NUMBER - photos.size)
+            photoAttachFragment.setCurrentImageCount(MAX_PHOTO_NUMBER - photos.size)
             photoAttachAdapter.submitList(
-                listOf(AttachedPhotoUiModel.addPhotoButton, *photos.attachedPhotos.toTypedArray()),
+                listOf(photoAdditionButton, *photos.attachedPhotos.toTypedArray()),
             )
         }
     }
@@ -311,14 +299,8 @@ class StaccatoCreationActivity :
                 viewModel.initCategoryAndVisitedAt(categoryId, LocalDateTime.now())
             }
         }
-        viewModel.selectableCategories.observe(this) {
-            it?.let {
-                categorySelectionFragment.setItems(it.categoryCandidates)
-            }
-        }
         viewModel.selectedCategory.observe(this) {
             it?.let {
-                categorySelectionFragment.updateKeyCategory(it)
                 if (categoryId != DEFAULT_CATEGORY_ID) {
                     visitedAtSelectionFragment.initCalendarByPeriod(
                         it.startAt,

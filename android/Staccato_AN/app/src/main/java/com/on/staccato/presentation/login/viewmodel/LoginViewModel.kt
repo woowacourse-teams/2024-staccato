@@ -30,6 +30,11 @@ class LoginViewModel
 
         val nicknameMaxLength = Nickname.MAX_LENGTH
 
+        private val token: MutableLiveData<String?> = MutableLiveData(null)
+
+        private val _isLoggedIn = MutableSingleLiveData(false)
+        val isLoggedIn: SingleLiveData<Boolean> = _isLoggedIn
+
         private val _isLoginSuccess = MutableSingleLiveData(false)
         val isLoginSuccess: SingleLiveData<Boolean>
             get() = _isLoginSuccess
@@ -47,6 +52,17 @@ class LoginViewModel
                         .onServerError(::handleError)
                         .onException(::handleException)
                 }
+            }
+        }
+
+        fun fetchToken() {
+            viewModelScope.launch {
+                repository.getToken()
+                    .onSuccess { token.value = it }
+                    .onFailure {
+                        handleException(ExceptionState.UnknownError)
+                    }
+                _isLoggedIn.setValue(!token.value.isNullOrEmpty())
             }
         }
 
