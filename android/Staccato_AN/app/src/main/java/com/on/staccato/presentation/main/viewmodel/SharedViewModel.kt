@@ -9,6 +9,7 @@ import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.repository.MyPageRepository
+import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
@@ -26,7 +27,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SharedViewModel
     @Inject
-    constructor(private val myPageRepository: MyPageRepository) : ViewModel() {
+    constructor(
+        private val myPageRepository: MyPageRepository,
+        private val notificationRepository: NotificationRepository,
+    ) : ViewModel() {
         private val _halfModeEvent = MutableSharedFlow<Unit>()
         val halfModeEvent: SharedFlow<Unit> = _halfModeEvent.asSharedFlow()
 
@@ -79,12 +83,24 @@ class SharedViewModel
 
         private val isDragging = MutableLiveData<Boolean>(false)
 
+        private val _hasNotification = MutableLiveData<Boolean>(false)
+        val hasNotification: LiveData<Boolean> get() = _hasNotification
+
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = myPageRepository.getMemberProfile()
                 result.onException2(::handleException)
                     .onServerError(::handleServerError)
                     .onSuccess(::setMemberProfile)
+            }
+        }
+
+        fun fetchNotificationExistence() {
+            viewModelScope.launch {
+                notificationRepository.getNotificationExistence()
+                    .onSuccess { _hasNotification.value = it.isExist }
+                    .onServerError(::handleServerError)
+                    .onException2(::handleException)
             }
         }
 

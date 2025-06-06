@@ -8,6 +8,7 @@ import com.on.staccato.data.location.LocationDefaultRepository
 import com.on.staccato.data.login.LoginDefaultRepository
 import com.on.staccato.data.member.MemberDefaultRepository
 import com.on.staccato.data.mypage.MyPageDefaultRepository
+import com.on.staccato.data.notification.NotificationDefaultRepository
 import com.on.staccato.data.staccato.StaccatoDefaultRepository
 import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.domain.repository.CommentRepository
@@ -17,6 +18,7 @@ import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.LoginRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.domain.repository.MyPageRepository
+import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import dagger.Binds
 import dagger.Module
@@ -52,4 +54,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindInvitationRepository(invitationDefaultRepository: InvitationDefaultRepository): InvitationRepository
+
+    @Binds
+    abstract fun bindNotificationRepository(notificationDefaultRepository: NotificationDefaultRepository): NotificationRepository
 }
