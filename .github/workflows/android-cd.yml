@@ -6,6 +6,7 @@ on:
       - main
     types:
       - closed
+  workflow_dispatch:
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
@@ -39,10 +40,6 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Create local.properties
-        run: |
-          touch local.properties
-
       - name: Set Base Url in local.properties
         run: |
           echo "base_url=\"$BASE_URL\"" >> local.properties
@@ -51,19 +48,16 @@ jobs:
         run: |
           echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
 
-      - name: Create secrets.properties
+      - name: Create Google Map API Keys
         run: |
           echo $SECRETS_PROPERTIES > secrets.properties
-
-      - name: Create local.defaults.properties
-        run: |
           echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
 
       - name: Create KeyStore File and Properties
         run: |
-          mkdir -p ./app/signing
-          echo "$UPLOAD_KEY_STORE_JKS" | base64 --decode > ./app/signing/upload_key_store.jks
-          echo "$KEY_STORE_PROPERTIES" > ./app/signing/keystore.properties
+          mkdir -p ./app/.signing
+          echo "$UPLOAD_KEY_STORE_JKS" | base64 --decode > ./app/.signing/upload_key_store.jks
+          echo "$KEY_STORE_PROPERTIES" > ./app/.signing/keystore.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
