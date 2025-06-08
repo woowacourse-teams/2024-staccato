@@ -1,4 +1,4 @@
-package com.staccato.notification.listner;
+package com.staccato.notification.listener;
 
 import java.util.List;
 import org.springframework.scheduling.annotation.Async;
@@ -42,7 +42,7 @@ public class NotificationEventListener {
         Category category = event.category();
         if (category.getIsShared()) {
             List<Member> existingMembers = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
-            notificationService.sendNewStaccatoAlert(event.category(), existingMembers);
+            notificationService.sendNewStaccatoAlert(event.creator(), event.category(), existingMembers);
         }
     }
 
@@ -52,7 +52,7 @@ public class NotificationEventListener {
         Category category = event.category();
         if (category.getIsShared()) {
             List<Member> existingMembers = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
-            notificationService.sendNewCommentAlert(event.commenter(), event.staccato(), existingMembers);
+            notificationService.sendNewCommentAlert(event.commenter(), event.comment(), existingMembers);
         }
     }
 }
