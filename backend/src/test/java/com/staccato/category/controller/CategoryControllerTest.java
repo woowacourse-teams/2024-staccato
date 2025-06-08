@@ -1,9 +1,23 @@
 package com.staccato.category.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,6 +27,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
 import com.staccato.ControllerTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.Color;
@@ -33,19 +48,6 @@ import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class CategoryControllerTest extends ControllerTest {
 
@@ -232,12 +234,12 @@ class CategoryControllerTest extends ControllerTest {
 
     @DisplayName("특정 날짜를 포함하고 있는 모든 카테고리 목록을 조회하는 응답 직렬화에 성공한다.")
     @Test
-    void readAllCategoryIncludingDate() throws Exception {
+    void readAllCandidateCategoriesIncludingDate() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().build();
         CategoryNameResponses categoryNameResponses = CategoryNameResponses.from(List.of(category));
-        when(categoryService.readAllCategoriesByDateAndIsShared(any(Member.class), any(), any(Boolean.class))).thenReturn(categoryNameResponses);
+        when(categoryService.readAllCategoriesByMemberAndDateAndPrivateFlag(any(Member.class), any(), any(Boolean.class))).thenReturn(categoryNameResponses);
         String expectedResponse = """
                 {
                     "categories": [
@@ -253,15 +255,43 @@ class CategoryControllerTest extends ControllerTest {
         mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .param("specificDate", LocalDate.now().toString())
-                        .param("isShared", "false"))
+                        .param("isPrivate", "false"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("specificDate 파라미터 없이 요청하면 예외가 발생한다.")
+    @Test
+    void cannotReadAllCandidateCategoriesWithoutSpecificDate() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "필수 요청 파라미터가 누락되었습니다. 필요한 파라미터를 제공해주세요.");
+
+        // when & then
+        mockMvc.perform(get("/categories/candidates")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("isPrivate", "false"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("isPrivate 파라미터 없이 요청해도 기본값 false로 정상 동작한다")
+    @Test
+    void canReadAllCandidateCategoriesWithoutIsPrivate() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+
+        // when & then
+        mockMvc.perform(get("/categories/candidates")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("specificDate", LocalDate.now().toString()))
+                .andExpect(status().isOk());
     }
 
     @DisplayName("잘못된 날짜 형식으로 카테고리 목록 조회를 시도하면 예외가 발생한다.")
     @ParameterizedTest
     @ValueSource(strings = {"2024.07.01", "2024-07", "2024", "a"})
-    void cannotReadAllCategoryByInvalidDateFormat(String currentDate) throws Exception {
+    void cannotReadAllCandidateCategoriesByInvalidDateFormat(String currentDate) throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
@@ -270,7 +300,23 @@ class CategoryControllerTest extends ControllerTest {
         mockMvc.perform(get("/categories/candidates")
                         .header(HttpHeaders.AUTHORIZATION, "token")
                         .param("specificDate", currentDate)
-                        .param("isShared", "false"))
+                        .param("isPrivate", "false"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
+
+    @DisplayName("잘못된 boolean 형식으로 카테고리 목록 조회를 시도하면 예외가 발생한다.")
+    @Test
+    void cannotReadAllCandidateCategoriesByInvalidBooleanFormat() throws Exception {
+        // given
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "올바르지 않은 쿼리 스트링 형식입니다.");
+
+        // when & then
+        mockMvc.perform(get("/categories/candidates")
+                        .header(HttpHeaders.AUTHORIZATION, "token")
+                        .param("specificDate", LocalDate.now().toString())
+                        .param("isPrivate", "invalidString"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }

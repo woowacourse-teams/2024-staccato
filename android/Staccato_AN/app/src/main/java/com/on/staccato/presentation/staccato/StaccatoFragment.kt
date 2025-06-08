@@ -16,14 +16,18 @@ import com.on.staccato.databinding.FragmentStaccatoBinding
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.ShareManager
+import com.on.staccato.presentation.common.clipboard.ClipboardHelper
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
+import com.on.staccato.presentation.staccato.comments.CommentHandler
 import com.on.staccato.presentation.staccato.comments.CommentsAdapter
 import com.on.staccato.presentation.staccato.comments.StaccatoCommentsViewModel
 import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.StaccatoFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
+import com.on.staccato.presentation.util.MenuHandler
+import com.on.staccato.presentation.util.showPopupMenu
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent
@@ -36,22 +40,34 @@ import javax.inject.Inject
 class StaccatoFragment :
     BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato),
     StaccatoShareHandler,
-    StaccatoToolbarHandler {
+    StaccatoToolbarHandler,
+    CommentHandler,
+    MenuHandler {
     @Inject
     lateinit var loggingManager: LoggingManager
 
     @Inject
     lateinit var shareManager: ShareManager
 
+    @Inject
+    lateinit var clipboardHelper: ClipboardHelper
+
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private val commentsViewModel: StaccatoCommentsViewModel by viewModels()
-    private val commentsAdapter: CommentsAdapter by lazy { CommentsAdapter(commentsViewModel) }
+    private val commentsAdapter: CommentsAdapter by lazy { CommentsAdapter(this) }
     private val pagePhotoAdapter: ViewpagePhotoAdapter by lazy { ViewpagePhotoAdapter() }
-    private val deleteDialog =
+    private val staccatoDeleteDialog =
         DeleteDialogFragment {
             staccatoViewModel.deleteStaccato(staccatoId)
         }
+
+    private val commentDeleteDialog by lazy {
+        DeleteDialogFragment {
+            commentsViewModel.deleteComment()
+        }
+    }
+
     private val staccatoId by lazy {
         arguments?.getLong(STACCATO_ID_KEY) ?: DEFAULT_STACCATO_ID
     }
@@ -80,7 +96,7 @@ class StaccatoFragment :
     }
 
     override fun onDeleteClicked() {
-        deleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
+        staccatoDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
     }
 
     override fun onUpdateClicked(
@@ -101,11 +117,41 @@ class StaccatoFragment :
         staccatoViewModel.createStaccatoShareLink()
     }
 
+    override fun onCommentLongClicked(
+        view: View,
+        gravity: Int,
+        id: Long,
+    ) {
+        commentsViewModel.setSelectedComment(id)
+        view.showPopupMenu(
+            menuRes = R.menu.menu_comment,
+            menuHandler = ::setupActionBy,
+            gravity = gravity,
+        )
+    }
+
+    override fun setupActionBy(menuItemId: Int) {
+        when (menuItemId) {
+            R.id.comment_delete -> {
+                commentDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
+            }
+            R.id.comment_copy -> {
+                val comment =
+                    commentsViewModel.selectedComment?.content
+                        ?: return showToast(getString(R.string.staccato_error_comment_copy))
+                clipboardHelper.copyText(
+                    label = LABEL_STACCATO_COMMENT,
+                    text = comment,
+                    context = requireContext(),
+                )
+            }
+        }
+    }
+
     private fun setUpBinding() {
         binding.lifecycleOwner = this
         binding.toolbarHandler = this
         binding.shareHandler = this
-        binding.commentHandler = commentsViewModel
         binding.staccatoViewModel = staccatoViewModel
         binding.commentsViewModel = commentsViewModel
     }
@@ -126,7 +172,9 @@ class StaccatoFragment :
         TabLayoutMediator(
             binding.tabStaccatoPhotoHorizontal,
             binding.vpStaccatoPhotoHorizontal,
-        ) { _, _ -> }.attach()
+        ) { tab, _ ->
+            tab.setCustomView(R.layout.item_tab_dot)
+        }.attach()
     }
 
     private fun loadStaccato() {
@@ -281,5 +329,6 @@ class StaccatoFragment :
         const val STACCATO_ID_KEY = "staccatoId"
         const val DEFAULT_STACCATO_ID = 0L
         const val CREATED_STACCATO_KEY = "isStaccatoCreated"
+        private const val LABEL_STACCATO_COMMENT = "staccatoComment"
     }
 }

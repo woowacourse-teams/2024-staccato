@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
+import com.staccato.member.domain.Member;
 
 public interface CategoryInvitationRepository extends JpaRepository<CategoryInvitation, Long> {
     @Query("""
@@ -36,4 +37,8 @@ public interface CategoryInvitationRepository extends JpaRepository<CategoryInvi
     @Modifying
     @Query("DELETE FROM CategoryInvitation ci WHERE ci.category.id = :categoryId")
     void deleteAllByCategoryIdInBulk(long categoryId);
+
+    List<CategoryInvitation> findAllByCategoryIdAndInviteeInAndStatus(long categoryId, List<Member> members, InvitationStatus invitationStatus);
+
+    boolean existsByInviteeIdAndStatus(long inviteeId, InvitationStatus invitationStatus);
 }

@@ -27,8 +27,8 @@ android {
         applicationId = "com.on.staccato"
         minSdk = 26
         targetSdk = 34
-        versionCode = 11
-        versionName = "1.4.0"
+        versionCode = 12
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["runnerBuilder"] =
@@ -237,13 +237,19 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.navigation.compose)
 
-    // coil
+    // Compose Coil
     implementation(libs.coil.compose)
 
     // Compose UI Test
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Compose ViewModel
+    implementation(libs.lifecycle.viewmodel.compose)
+
+    // Compose ConstraintLayout
+    implementation(libs.androidx.constraintlayout.compose)
 }
 
 secrets {

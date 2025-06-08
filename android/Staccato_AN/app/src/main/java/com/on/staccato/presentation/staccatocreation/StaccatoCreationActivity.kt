@@ -23,7 +23,6 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_TITLE_KEY
 import com.on.staccato.presentation.common.CustomAutocompleteSupportFragment
 import com.on.staccato.presentation.common.GooglePlaceFragmentEventHandler
-import com.on.staccato.presentation.common.PhotoAttachFragment
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionFragment
 import com.on.staccato.presentation.common.categoryselection.CategorySelectionViewModelProvider
 import com.on.staccato.presentation.common.location.GPSManager
@@ -31,12 +30,14 @@ import com.on.staccato.presentation.common.location.LocationDialogFragment.Compa
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager.Companion.locationPermissions
 import com.on.staccato.presentation.common.location.PermissionCancelListener
+import com.on.staccato.presentation.common.photo.AttachedPhotosUiModel.Companion.MAX_PHOTO_NUMBER
+import com.on.staccato.presentation.common.photo.PhotoAttachFragment
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.adapter.AttachedPhotoItemTouchHelperCallback
 import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter
+import com.on.staccato.presentation.staccatocreation.adapter.PhotoAttachAdapter.Companion.photoAdditionButton
 import com.on.staccato.presentation.staccatocreation.dialog.VisitedAtSelectionFragment
-import com.on.staccato.presentation.staccatocreation.model.AttachedPhotoUiModel
 import com.on.staccato.presentation.staccatocreation.viewmodel.StaccatoCreationViewModel
 import com.on.staccato.presentation.util.getSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
@@ -103,15 +104,7 @@ class StaccatoCreationActivity :
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.isPlaceSearchClicked.value != true) {
-            checkLocationSetting()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        val hasPlaceSearchClicked = autocompleteFragment.isVisible
-        viewModel.setIsPlaceSearchClicked(hasPlaceSearchClicked)
+        if (viewModel.isFromPlaceSearch.getValue() != true) checkLocationSetting()
     }
 
     override fun onNewPlaceSelected(
@@ -273,9 +266,9 @@ class StaccatoCreationActivity :
             viewModel.fetchPhotosUrlsByUris(this)
         }
         viewModel.currentPhotos.observe(this) { photos ->
-            photoAttachFragment.setCurrentImageCount(StaccatoCreationViewModel.MAX_PHOTO_NUMBER - photos.size)
+            photoAttachFragment.setCurrentImageCount(MAX_PHOTO_NUMBER - photos.size)
             photoAttachAdapter.submitList(
-                listOf(AttachedPhotoUiModel.addPhotoButton, *photos.attachedPhotos.toTypedArray()),
+                listOf(photoAdditionButton, *photos.attachedPhotos.toTypedArray()),
             )
         }
     }

@@ -5,13 +5,17 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentCategoryBinding
+import com.on.staccato.domain.model.Role
 import com.on.staccato.presentation.base.BindingFragment
-import com.on.staccato.presentation.category.adapter.MatesAdapter
+import com.on.staccato.presentation.category.adapter.MemberInviteHandler
+import com.on.staccato.presentation.category.adapter.MembersAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
+import com.on.staccato.presentation.category.invite.InviteScreen
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
@@ -35,6 +39,7 @@ import com.on.staccato.util.logging.Param.Companion.KEY_IS_CREATED_IN_MAIN
 import com.on.staccato.util.logging.Param.Companion.KEY_IS_VIEWED_BY_MARKER
 import com.on.staccato.util.logging.Param.Companion.PARAM_CATEGORY_FRAGMENT
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,6 +47,7 @@ class CategoryFragment :
     BindingFragment<FragmentCategoryBinding>(R.layout.fragment_category),
     ToolbarHandler,
     CategoryHandler,
+    MemberInviteHandler,
     DialogHandler {
     private val categoryId: Long by lazy {
         arguments?.getLong(CATEGORY_ID_KEY) ?: DEFAULT_CATEGORY_ID
@@ -53,7 +59,8 @@ class CategoryFragment :
     @Inject
     lateinit var loggingManager: LoggingManager
 
-    private val matesAdapter by lazy { MatesAdapter() }
+    private val membersAdapter by lazy { MembersAdapter(this) }
+
     private val staccatosAdapter by lazy { StaccatosAdapter(handler = this) }
 
     override fun onViewCreated(
@@ -100,6 +107,10 @@ class CategoryFragment :
         viewModel.deleteCategory()
     }
 
+    override fun onInviteClicked() {
+        viewModel.toggleInviteMode(true)
+    }
+
     override fun onStaccatoCreationClicked(
         category: CategoryUiModel?,
         isPermissionCanceled: Boolean,
@@ -136,6 +147,7 @@ class CategoryFragment :
         binding.viewModel = viewModel
         binding.toolbarHandler = this
         binding.categoryHandler = this
+        binding.cvMemberInvite.setContent { InviteScreen() }
         observeIsPermissionCanceled()
     }
 
@@ -152,14 +164,20 @@ class CategoryFragment :
     }
 
     private fun initAdapter() {
-        binding.rvCategoryMates.adapter = matesAdapter
+        binding.rvCategoryMates.adapter = membersAdapter
         binding.rvCategoryStaccatos.adapter = staccatosAdapter
     }
 
     private fun observeCategory() {
         viewModel.category.observe(viewLifecycleOwner) { category ->
-            matesAdapter.updateMates(category.mates)
             staccatosAdapter.updateStaccatos(category.staccatos)
+            membersAdapter.updateInvitable(category.myRole == Role.HOST)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.participatingMembers.collect {
+                membersAdapter.submitMembers(it.members)
+            }
         }
     }
 
@@ -176,7 +194,7 @@ class CategoryFragment :
     }
 
     private fun showErrorToast() {
-        viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
+        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             showToast(message)
         }
     }

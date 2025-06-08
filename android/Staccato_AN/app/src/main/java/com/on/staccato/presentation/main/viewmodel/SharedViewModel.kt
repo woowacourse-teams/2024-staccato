@@ -9,18 +9,40 @@ import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.MemberProfile
 import com.on.staccato.domain.repository.MyPageRepository
+import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SharedViewModel
     @Inject
-    constructor(private val myPageRepository: MyPageRepository) : ViewModel() {
+    constructor(
+        private val myPageRepository: MyPageRepository,
+        private val notificationRepository: NotificationRepository,
+    ) : ViewModel() {
+        private val _halfModeEvent = MutableSharedFlow<Unit>()
+        val halfModeEvent: SharedFlow<Unit> = _halfModeEvent.asSharedFlow()
+
+        private val _isAtTop = MutableStateFlow<Boolean>(true)
+        val isAtTop: StateFlow<Boolean> = _isAtTop.asStateFlow()
+
+        private val _isDraggable = MutableLiveData<Boolean>(true)
+        val isDraggable: LiveData<Boolean> get() = _isDraggable
+
+        private val _latestIsDraggable = MutableLiveData<Boolean>(_isDraggable.value)
+        val latestIsDraggable: LiveData<Boolean> get() = _latestIsDraggable
+
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile> get() = _memberProfile
 
@@ -41,8 +63,11 @@ class SharedViewModel
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
 
-        private val _isBottomSheetHalf = MutableLiveData(true)
-        val isBottomSheetHalf: LiveData<Boolean> get() = _isBottomSheetHalf
+        private val _isBottomSheetExpanded = MutableLiveData<Boolean>(false)
+        val isBottomSheetExpanded: LiveData<Boolean> get() = _isBottomSheetExpanded
+
+        private val _isBottomSheetHalfExpanded = MutableLiveData(true)
+        val isBottomSheetHalfExpanded: LiveData<Boolean> get() = _isBottomSheetHalfExpanded
 
         private val _staccatoId = MutableLiveData<Long>()
         val staccatoId: LiveData<Long> get() = _staccatoId
@@ -53,10 +78,13 @@ class SharedViewModel
         private val _exception = MutableLiveData<ExceptionState2>()
         val exception: LiveData<ExceptionState2> get() = _exception
 
-        private val _isRetry = MutableLiveData<Boolean>()
-        val isRetry: LiveData<Boolean> get() = _isRetry
+        private val _retryEvent = MutableSharedFlow<Unit>()
+        val retryEvent: SharedFlow<Unit> = _retryEvent.asSharedFlow()
 
         private val isDragging = MutableLiveData<Boolean>(false)
+
+        private val _hasNotification = MutableLiveData<Boolean>(false)
+        val hasNotification: LiveData<Boolean> get() = _hasNotification
 
         fun fetchMemberProfile() {
             viewModelScope.launch {
@@ -67,12 +95,37 @@ class SharedViewModel
             }
         }
 
+        fun fetchNotificationExistence() {
+            viewModelScope.launch {
+                notificationRepository.getNotificationExistence()
+                    .onSuccess { _hasNotification.value = it.isExist }
+                    .onServerError(::handleServerError)
+                    .onException2(::handleException)
+            }
+        }
+
+        fun updateIsAtTop(value: Boolean) {
+            _isAtTop.value = value
+        }
+
+        fun updateIsDraggable() {
+            val isHalfExpanded = _isBottomSheetHalfExpanded.value == true
+            val isExpandedAndTop = _isBottomSheetExpanded.value == true && _isAtTop.value
+            val isCollapsed = _isBottomSheetExpanded.value == false && _isBottomSheetHalfExpanded.value == false
+
+            _isDraggable.value = isHalfExpanded || isExpandedAndTop || isCollapsed
+        }
+
+        fun updateLatestIsDraggable() {
+            _latestIsDraggable.value = _isDraggable.value
+        }
+
         fun setTimelineHasUpdated() {
             _isTimelineUpdated.value = true
         }
 
         fun setStaccatosHasUpdated() {
-            _isTimelineUpdated.setValue(true)
+            _isTimelineUpdated.value = true
             _isStaccatosUpdated.setValue(true)
         }
 
@@ -84,9 +137,19 @@ class SharedViewModel
             _isSettingClicked.value = isSettingClicked
         }
 
-        fun setIsBottomSheetHalf(isBottomSheetHalf: Boolean) {
-            val isDifferent = isBottomSheetHalf != _isBottomSheetHalf.value
-            if (isDifferent && isDragging.value == false) _isBottomSheetHalf.value = isBottomSheetHalf
+        fun updateBottomSheetState(
+            isExpanded: Boolean,
+            isHalfExpanded: Boolean,
+        ) {
+            val isDifferent = isHalfExpanded != _isBottomSheetHalfExpanded.value
+            if (isDifferent && isDragging.value == false) _isBottomSheetHalfExpanded.value = isHalfExpanded
+            _isBottomSheetExpanded.value = isExpanded
+        }
+
+        fun updateHalfModeEvent() {
+            viewModelScope.launch {
+                _halfModeEvent.emit(Unit)
+            }
         }
 
         fun updateStaccatoId(id: Long) {
@@ -109,7 +172,9 @@ class SharedViewModel
         }
 
         fun updateIsRetry() {
-            _isRetry.value = true
+            viewModelScope.launch {
+                _retryEvent.emit(Unit)
+            }
         }
 
         private fun setMemberProfile(memberProfile: MemberProfile) {

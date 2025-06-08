@@ -37,7 +37,7 @@ val Body1 =
 val Body2 =
     defaultTextStyle(
         fontSize = 15.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         lineHeight = 20.sp,
     )
 
@@ -57,6 +57,19 @@ val Body4 =
 val Body5 =
     defaultTextStyle(
         fontSize = 10.sp,
+        fontWeight = FontWeight.Normal,
+    )
+
+val Body6 =
+    defaultTextStyle(
+        fontSize = 9.sp,
+        fontWeight = FontWeight.SemiBold,
+    )
+
+// 디자인 시스템 정리 전 임시 Typography
+val Regular11 =
+    defaultTextStyle(
+        fontSize = 11.sp,
         fontWeight = FontWeight.Normal,
     )
 

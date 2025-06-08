@@ -9,7 +9,7 @@ import com.on.staccato.data.network.onException2
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.Timeline
-import com.on.staccato.domain.repository.TimelineRepository
+import com.on.staccato.domain.repository.CategoryRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toTimelineUiModel
@@ -19,6 +19,9 @@ import com.on.staccato.presentation.timeline.model.TimelineUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,7 +29,7 @@ import javax.inject.Inject
 class TimelineViewModel
     @Inject
     constructor(
-        private val timelineRepository: TimelineRepository,
+        private val categoryRepository: CategoryRepository,
     ) : ViewModel() {
         private val _sortType = MutableLiveData(SortType.UPDATED)
         val sortType: LiveData<SortType>
@@ -36,9 +39,8 @@ class TimelineViewModel
         val filterType: LiveData<FilterType?>
             get() = _filterType
 
-        private val _timeline = MutableLiveData<List<TimelineUiModel>>(emptyList())
-        val timeline: LiveData<List<TimelineUiModel>>
-            get() = _timeline
+        private val _timeline = MutableStateFlow<List<TimelineUiModel>>(emptyList())
+        val timeline: StateFlow<List<TimelineUiModel>> = _timeline.asStateFlow()
 
         private val _isTimelineLoading = MutableLiveData(false)
         val isTimelineLoading: LiveData<Boolean>
@@ -67,7 +69,7 @@ class TimelineViewModel
         fun loadTimeline() {
             _isTimelineLoading.value = true
             viewModelScope.launch(coroutineExceptionHandler) {
-                timelineRepository.getTimeline(
+                categoryRepository.getCategories(
                     sort = sortType.value?.name,
                     filter = filterType.value?.name,
                 ).onSuccess(::setTimelineUiModels)

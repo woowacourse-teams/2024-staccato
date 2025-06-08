@@ -55,12 +55,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginTop="50dp"
-            android:padding="18dp"
             android:contentDescription="@string/mypage_update_profile_image_description"
             android:onClick="@{()->myPageHandler.onProfileImageChangeClicked()}"
+            android:padding="18dp"
             android:src="@drawable/icon_edit_circle"
-            app:layout_constraintTop_toTopOf="@id/iv_mypage_profile_image"
-            app:layout_constraintStart_toStartOf="@id/iv_mypage_profile_image" />
+            app:layout_constraintStart_toStartOf="@id/iv_mypage_profile_image"
+            app:layout_constraintTop_toTopOf="@id/iv_mypage_profile_image" />
 
         <TextView
             android:id="@+id/tv_mypage_profile_nickname"
@@ -108,6 +108,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_mypage_profile_uuid" />
 
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/btn_mypage_menu_category_invitation_management"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_mypage_profile" />
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/divider_mypage_middle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_mypage_menu_category_invitation_management" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_mypage_menu_privacy_policy"
             style="@style/ButtonStyle.MyPage"
@@ -116,7 +132,7 @@
             android:text="@string/mypage_privacy_policy"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_mypage_profile" />
+            app:layout_constraintTop_toBottomOf="@id/divider_mypage_middle" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider_mypage_feedback"

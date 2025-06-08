@@ -1,7 +1,7 @@
 package com.on.staccato.di.module
 
 import android.content.Context
-import com.on.staccato.data.UserInfoPreferencesManager
+import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,9 +12,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object SharedPreferencesModule {
-    @Singleton
+    private const val USER_INFO_PREF_NAME = "com.on.staccato.user_info_prefs"
+
     @Provides
-    fun provideMemberProfileManager(
+    @Singleton
+    fun provideSharedPreferences(
         @ApplicationContext context: Context,
-    ): UserInfoPreferencesManager = UserInfoPreferencesManager(context)
+    ): SharedPreferences = context.getSharedPreferences(USER_INFO_PREF_NAME, Context.MODE_PRIVATE)
 }

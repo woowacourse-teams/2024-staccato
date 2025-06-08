@@ -1,7 +1,6 @@
 package com.staccato.auth.controller;
 
 import java.util.UUID;
-import jakarta.validation.constraints.Null;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,9 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import com.staccato.ControllerTest;
 import com.staccato.auth.service.dto.request.LoginRequest;
-import com.staccato.auth.service.dto.response.LoginResponse;
+import com.staccato.auth.service.dto.response.LoginResponseV2;
 import com.staccato.exception.ExceptionResponse;
 import com.staccato.fixture.auth.LoginRequestFixtures;
+import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.member.domain.Member;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -26,6 +27,7 @@ class AuthControllerTest extends ControllerTest {
     @Test
     void login() throws Exception {
         // given
+        Member member = MemberFixtures.defaultMember().withNickname("staccato").build();
         String loginRequest = """
                 {
                     "nickname": "staccato"
@@ -36,7 +38,7 @@ class AuthControllerTest extends ControllerTest {
                   "token": "staccatoToken"
                 }
                 """;
-        LoginResponse loginResponse = new LoginResponse("staccatoToken");
+        LoginResponseV2 loginResponse = new LoginResponseV2(member, "staccatoToken");
         when(authService.login(any(LoginRequest.class))).thenReturn(loginResponse);
 
         // when & then
@@ -70,7 +72,8 @@ class AuthControllerTest extends ControllerTest {
     void findMemberByCodeAndCreateToken() throws Exception {
         // given
         String code = UUID.randomUUID().toString();
-        LoginResponse loginResponse = new LoginResponse("token");
+        Member member = MemberFixtures.defaultMember().withCode(code).build();
+        LoginResponseV2 loginResponse = new LoginResponseV2(member, "token");
         when(authService.loginByCode(any(String.class))).thenReturn(loginResponse);
         String response = """
                 {

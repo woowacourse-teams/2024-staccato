@@ -5,6 +5,7 @@ import com.on.staccato.domain.model.MemberProfile
 
 fun MemberProfileResponse.toDomain() =
     MemberProfile(
+        memberId = memberId,
         profileImageUrl = profileImageUrl,
         nickname = nickname,
         uuidCode = code,

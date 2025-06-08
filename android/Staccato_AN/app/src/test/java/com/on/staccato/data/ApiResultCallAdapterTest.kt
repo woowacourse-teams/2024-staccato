@@ -1,7 +1,6 @@
 package com.on.staccato.data
 
 import com.on.staccato.CoroutinesTestExtension
-import com.on.staccato.StaccatoApplication.Companion.retrofit
 import com.on.staccato.data.dto.GetResponse
 import com.on.staccato.data.dto.ImagePostResponse
 import com.on.staccato.data.dto.PostResponse
@@ -31,7 +30,7 @@ class ApiResultCallAdapterTest {
     fun setUp() {
         mockWebServer.start()
 
-        retrofit = buildRetrofitFor(mockWebServer)
+        val retrofit = buildRetrofitFor(mockWebServer)
         fakeApiService = retrofit.create(FakeApiService::class.java)
     }
 

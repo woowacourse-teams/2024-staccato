@@ -1,17 +1,22 @@
 package com.staccato.category.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
@@ -26,11 +31,11 @@ import com.staccato.category.service.dto.request.CategoryStaccatoLocationRangeRe
 import com.staccato.category.service.dto.request.CategoryUpdateRequest;
 import com.staccato.category.service.dto.response.CategoryDetailResponseV3;
 import com.staccato.category.service.dto.response.CategoryIdResponse;
+import com.staccato.category.service.dto.response.CategoryNameResponse;
 import com.staccato.category.service.dto.response.CategoryNameResponses;
 import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponse;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
-import com.staccato.category.service.dto.response.MemberDetailResponse;
 import com.staccato.category.service.dto.response.StaccatoResponse;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.exception.ForbiddenException;
@@ -44,25 +49,17 @@ import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.fixture.staccato.StaccatoRequestFixtures;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
-import com.staccato.invitation.service.InvitationService;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.StaccatoService;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 class CategoryServiceTest extends ServiceSliceTest {
     @Autowired
     private CategoryService categoryService;
     @Autowired
     private StaccatoService staccatoService;
-    @Autowired
-    private InvitationService invitationService;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -75,13 +72,6 @@ class CategoryServiceTest extends ServiceSliceTest {
     private CommentRepository commentRepository;
     @Autowired
     private CategoryInvitationRepository categoryInvitationRepository;
-
-    static Stream<Arguments> dateProvider() {
-        return Stream.of(
-                Arguments.of(LocalDate.of(2024, 6, 1), 3),
-                Arguments.of(LocalDate.of(2024, 6, 2), 2)
-        );
-    }
 
     static Stream<Arguments> updateCategoryProvider() {
         return Stream.of(
@@ -159,31 +149,6 @@ class CategoryServiceTest extends ServiceSliceTest {
 
         // when & then
         assertThatNoException().isThrownBy(() -> categoryService.createCategory(categoryCreateRequest, member));
-    }
-
-    @DisplayName("특정 날짜를 포함하는 모든 카테고리 목록을 조회한다.")
-    @MethodSource("dateProvider")
-    @ParameterizedTest
-    void readAllCategories(LocalDate specificDate, int expectedSize) {
-        // given
-        Member member = MemberFixtures.defaultMember().buildAndSave(memberRepository);
-        categoryService.createCategory(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
-                .withCategoryTitle("first")
-                .withTerm(LocalDate.of(2024, 6, 1),
-                        LocalDate.of(2024, 6, 1)).build(), member);
-        categoryService.createCategory(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
-                .withCategoryTitle("second")
-                .withTerm(LocalDate.of(2024, 6, 1)
-                        , LocalDate.of(2024, 6, 2)).build(), member);
-        categoryService.createCategory(CategoryCreateRequestFixtures.defaultCategoryCreateRequest()
-                .withCategoryTitle("third")
-                .withTerm(null, null).build(), member);
-
-        // when
-        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByDateAndIsShared(member, specificDate, false);
-
-        // then
-        assertThat(categoryNameResponses.categories()).hasSize(expectedSize);
     }
 
     @DisplayName("CategoryMember 목록을 최근 수정 순으로 조회된다.")
@@ -395,6 +360,61 @@ class CategoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(categoryResponses.categories()).hasSize(1),
                 () -> assertThat(categoryResponses.categories().get(0).staccatoCount()).isEqualTo(2L)
         );
+    }
+
+    @DisplayName("개인카테고리여부(isPrivate)가 false이면 해당 멤버의 전체 카테고리(개인/공동) 목록을 수정 순으로 조회한다.")
+    @Test
+    void readAllCategoriesByMemberAndDateAndPrivateFlagWhenPrivateFlagIsFalse() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category privateCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .buildAndSave(categoryRepository);
+        Category publicCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when
+        boolean isPrivate = false;
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByMemberAndDateAndPrivateFlag(host, LocalDate.of(2024, 6, 1), isPrivate);
+
+        // then
+        List<Long> resultCategoryIds = categoryNameResponses.categories().stream()
+                .map(CategoryNameResponse::categoryId)
+                .toList();
+
+        assertThat(resultCategoryIds).hasSize(2)
+                .containsExactly(publicCategory.getId(), privateCategory.getId());
+    }
+
+    @DisplayName("개인카테고리여부(isPrivate)가 true이면 해당 멤버의 개인 카테고리 목록을 수정 순으로 조회한다.")
+    @Test
+    void readAllCategoriesByMemberAndDateAndPrivateFlagWhenPrivateFlagIsTrue() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category privateCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .buildAndSave(categoryRepository);
+        Category publicCategory = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when
+        boolean isPrivate = true;
+        CategoryNameResponses categoryNameResponses = categoryService.readAllCategoriesByMemberAndDateAndPrivateFlag(host, LocalDate.of(2024, 6, 1), isPrivate);
+
+        // then
+        List<Long> resultCategoryIds = categoryNameResponses.categories().stream()
+                .map(CategoryNameResponse::categoryId)
+                .toList();
+
+        assertThat(resultCategoryIds).hasSize(1)
+                .containsExactly(privateCategory.getId())
+                .doesNotContain(publicCategory.getId());
     }
 
     @DisplayName("카테고리 정보를 기반으로, 카테고리를 수정한다.")

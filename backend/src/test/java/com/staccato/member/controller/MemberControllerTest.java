@@ -7,7 +7,8 @@ import org.springframework.http.HttpHeaders;
 import com.staccato.ControllerTest;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
-import com.staccato.member.service.dto.response.MemberResponses;
+import com.staccato.member.service.dto.request.MemberReadRequest;
+import com.staccato.member.service.dto.response.MemberSearchResponses;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -24,9 +25,9 @@ class MemberControllerTest extends ControllerTest {
         // given
         Member member = MemberFixtures.defaultMember().withNickname("스타카토").build();
         Member member2 = MemberFixtures.defaultMember().withNickname("스타").build();
-        MemberResponses memberResponses = MemberResponses.of(List.of(member2));
+        MemberSearchResponses memberSearchResponses = MemberSearchResponses.none(List.of(member2));
         when(authService.extractFromToken(anyString())).thenReturn(member);
-        when(memberService.readMembersByNickname(any(Member.class), anyString())).thenReturn(memberResponses);
+        when(memberService.readMembersByNickname(any(Member.class), any(MemberReadRequest.class))).thenReturn(memberSearchResponses);
 
         String expectedResponse = """
                 {
@@ -34,7 +35,63 @@ class MemberControllerTest extends ControllerTest {
                         {
                             "memberId": null,
                             "nickname": "스타",
-                            "memberImageUrl": "https://example.com/memberImage.png"
+                            "memberImageUrl": "https://example.com/memberImage.png",
+                            "status": "NONE"
+                        }
+                    ]
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/members/search")
+                        .param("nickname", "스타")
+                        .param("excludeCategoryId", "0")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("요청 인자로 검색어가 없어도 예외가 발생하지 않는다.")
+    @Test
+    void readMemberWithoutNickname() throws Exception {
+        // given
+        Member member = MemberFixtures.defaultMember().withNickname("스타카토").build();
+        MemberSearchResponses response = MemberSearchResponses.empty();
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        when(memberService.readMembersByNickname(any(Member.class), any(MemberReadRequest.class))).thenReturn(response);
+
+        String expectedResponse = """
+                {
+                    "members": []
+                }
+                """;
+
+        // when & then
+        mockMvc.perform(get("/members/search")
+                        .param("excludeCategoryId", "1")
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
+    }
+
+    @DisplayName("요청 인자로 카테고리 식별자가 없어도 예외가 발생하지 않는다.")
+    @Test
+    void readMemberWithoutCategoryId() throws Exception {
+        // given
+        Member member = MemberFixtures.defaultMember().withNickname("스타카토").build();
+        Member member2 = MemberFixtures.defaultMember().withNickname("스타").build();
+        MemberSearchResponses response = MemberSearchResponses.none(List.of(member2));
+        when(authService.extractFromToken(anyString())).thenReturn(member);
+        when(memberService.readMembersByNickname(any(Member.class), any(MemberReadRequest.class))).thenReturn(response);
+
+        String expectedResponse = """
+                {
+                    "members": [
+                        {
+                            "memberId": null,
+                            "nickname": "스타",
+                            "memberImageUrl": "https://example.com/memberImage.png",
+                            "status": "NONE"
                         }
                     ]
                 }
@@ -47,5 +104,4 @@ class MemberControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
     }
-
 }

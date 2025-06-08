@@ -1,5 +1,7 @@
 package com.on.staccato.presentation.staccatocreation.adapter
 
+import android.graphics.Canvas
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
@@ -18,6 +20,21 @@ class AttachedPhotoItemTouchHelperCallback(
         } else {
             ItemTouchHelper.ACTION_STATE_IDLE
         }
+    }
+
+    override fun onChildDraw(
+        c: Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean,
+    ) {
+        if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && isCurrentlyActive) {
+            ViewCompat.setElevation(viewHolder.itemView, DRAGGED_ITEM_ELEVATION)
+        }
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
 
     override fun onMove(
@@ -60,6 +77,7 @@ class AttachedPhotoItemTouchHelperCallback(
     ) {
         if (viewHolder is PhotoAttachViewHolder.AttachedPhotoViewHolder) {
             viewHolder.stopMoving()
+            ViewCompat.setElevation(viewHolder.itemView, IDLE_ITEM_ELEVATION)
         }
     }
 
@@ -68,5 +86,10 @@ class AttachedPhotoItemTouchHelperCallback(
         direction: Int,
     ) {
         // TODO("Not yet implemented")
+    }
+
+    companion object {
+        private const val IDLE_ITEM_ELEVATION = 0f
+        private const val DRAGGED_ITEM_ELEVATION = 10f
     }
 }

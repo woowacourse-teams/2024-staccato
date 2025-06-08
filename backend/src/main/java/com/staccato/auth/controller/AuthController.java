@@ -10,6 +10,7 @@ import com.staccato.auth.controller.docs.AuthControllerDocs;
 import com.staccato.auth.service.AuthService;
 import com.staccato.auth.service.dto.request.LoginRequest;
 import com.staccato.auth.service.dto.response.LoginResponse;
+import com.staccato.auth.service.dto.response.LoginResponseV2;
 import com.staccato.config.log.annotation.Trace;
 import lombok.RequiredArgsConstructor;
 
@@ -21,13 +22,13 @@ public class AuthController implements AuthControllerDocs {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse = authService.login(loginRequest);
-        return ResponseEntity.ok(loginResponse);
+        LoginResponseV2 loginResponse = authService.login(loginRequest);
+        return ResponseEntity.ok(loginResponse.toLoginResponse());
     }
 
     @PostMapping("/members")
     public ResponseEntity<LoginResponse> loginByCode(@RequestParam(name = "code") String code) {
-        LoginResponse loginResponse = authService.loginByCode(code);
-        return ResponseEntity.ok(loginResponse);
+        LoginResponseV2 loginResponse = authService.loginByCode(code);
+        return ResponseEntity.ok(loginResponse.toLoginResponse());
     }
 }
