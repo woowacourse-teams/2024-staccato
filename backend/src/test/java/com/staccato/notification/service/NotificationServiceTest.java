@@ -15,14 +15,14 @@ import com.staccato.comment.repository.CommentRepository;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
-import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import com.staccato.notification.domain.NotificationToken;
 import com.staccato.notification.repository.NotificationTokenRepository;
+import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
 
@@ -41,12 +41,13 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
-    private CategoryInvitationRepository categoryInvitationRepository;
     private StaccatoRepository staccatoRepository;
     @Autowired
     private CommentRepository commentRepository;
     @Autowired
     private NotificationTokenRepository notificationTokenRepository;
+    @Autowired
+    private CategoryInvitationRepository categoryInvitationRepository;
     @MockBean
     private FcmService fcmService;
 
@@ -68,6 +69,28 @@ class NotificationServiceTest extends ServiceSliceTest {
     }
 
     @DisplayName("받은 초대 목록이 존재한다면, 알림이 존재한다.")
+    @Test
+    void isExistNotifications() {
+        // given
+        categoryInvitationRepository.save(CategoryInvitation.invite(category, sender, receiver1));
+
+        // when
+        NotificationExistResponse result = notificationService.isExistNotifications(receiver1);
+
+        // then
+        assertThat(result.isExist()).isTrue();
+    }
+
+    @DisplayName("받은 초대 목록이 존재하지 않는다면, 알림이 존재하지 않는다.")
+    @Test
+    void isNotExistNotifications() {
+        // when
+        NotificationExistResponse result = notificationService.isExistNotifications(receiver1);
+
+        // then
+        assertThat(result.isExist()).isFalse();
+    }
+
     @DisplayName("초대 알림을 전송한다.")
     @Test
     void sendInvitationAlert() {
@@ -97,7 +120,6 @@ class NotificationServiceTest extends ServiceSliceTest {
 
     @DisplayName("새로운 스타카토 알림을 전송한다.")
     @Test
-    void isExistNotifications() {
     void sendNewStaccatoAlert() {
         // when
         notificationService.sendNewStaccatoAlert(sender, category, List.of(receiver1, receiver2));
@@ -114,10 +136,6 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void sendNewCommentAlert() {
         // given
-        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
-        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
-        Category category = CategoryFixtures.defaultCategory().withHost(host).buildAndSave(categoryRepository);
-        categoryInvitationRepository.save(CategoryInvitation.invite(category, host, guest));
         Staccato staccato = StaccatoFixtures.defaultStaccato()
                 .withCategory(category)
                 .buildAndSave(staccatoRepository);
@@ -127,11 +145,9 @@ class NotificationServiceTest extends ServiceSliceTest {
                 .buildAndSave(commentRepository);
 
         // when
-        NotificationExistResponse result = notificationService.isExistNotifications(guest);
         notificationService.sendNewCommentAlert(sender, comment, List.of(receiver1, receiver2));
 
         // then
-        assertThat(result.isExist()).isTrue();
         verify(fcmService).sendPush(
                 argThat(tokens -> tokens.containsAll(List.of("token1", "token2"))),
                 eq("sender님의 코멘트"),
@@ -139,24 +155,19 @@ class NotificationServiceTest extends ServiceSliceTest {
         );
     }
 
-    @DisplayName("받은 초대 목록이 존재하지 않는다면, 알림이 존재하지 않는다.")
     @DisplayName("토큰이 존재하지 않으면 새로 저장한다.")
     @Test
-    void isNotExistNotifications() {
     void registerNewToken() {
         // given
-        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
         Member member = MemberFixtures.defaultMember().withNickname("newbie").buildAndSave(memberRepository);
         String token = "new-token";
 
         // when
-        NotificationExistResponse result = notificationService.isExistNotifications(guest);
         Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMember(member);
         notificationService.register(member, token);
         Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMember(member);
 
         // then
-        assertThat(result.isExist()).isFalse();
         assertAll(
                 () -> assertThat(beforeRegister.isPresent()).isFalse(),
                 () -> assertThat(afterRegister.isPresent()).isTrue(),

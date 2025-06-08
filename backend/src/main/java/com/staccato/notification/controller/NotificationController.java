@@ -26,7 +26,6 @@ public class NotificationController implements NotificationControllerDocs {
     @GetMapping("/exists")
     public ResponseEntity<NotificationExistResponse> isExistNotifications(@LoginMember Member member) {
         NotificationExistResponse response = notificationService.isExistNotifications(member);
-
         return ResponseEntity.ok(response);
     }
 

@@ -9,23 +9,24 @@ import com.staccato.config.log.annotation.Trace;
 import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
-import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import com.staccato.notification.domain.NotificationToken;
 import com.staccato.notification.repository.NotificationTokenRepository;
+import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import lombok.RequiredArgsConstructor;
 
 @Trace
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class NotificationService {
     private final CategoryInvitationRepository categoryInvitationRepository;
+    private final NotificationTokenRepository notificationTokenRepository;
+    private final FcmService fcmService;
 
+    @Transactional(readOnly = true)
     public NotificationExistResponse isExistNotifications(Member member) {
         boolean isExist = categoryInvitationRepository.existsByInviteeIdAndStatus(member.getId(), InvitationStatus.REQUESTED);
         return new NotificationExistResponse(isExist);
-    private final NotificationTokenRepository notificationTokenRepository;
-    private final FcmService fcmService;
+    }
 
     @Transactional
     public void register(Member member, String token) {
