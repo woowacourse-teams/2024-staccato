@@ -79,7 +79,7 @@ class InvitationViewModel
                     .onSuccess {
                         fetchReceivedInvitations()
                         updateHasInvitationAccepted()
-                        _toastMessage.emit(FromResource(R.string.invitation_management_accept_success))
+                        updateToastMessage(FromResource(R.string.invitation_management_accept_success))
                     }
                     .onServerError { handleServerError(it) }
                     .onException2 { handelException(it) }
@@ -150,8 +150,12 @@ class InvitationViewModel
             }
         }
 
+        private suspend fun updateToastMessage(toastMessage: ToastMessage) {
+            _toastMessage.emit(toastMessage)
+        }
+
         private suspend fun handleServerError(message: String) {
-            _toastMessage.emit(Plain(message))
+            updateToastMessage(Plain(message))
         }
 
         private suspend fun handelException(state: ExceptionState2) {
