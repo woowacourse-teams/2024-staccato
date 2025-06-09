@@ -48,7 +48,7 @@ jobs:
         run: |
           echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
 
-      - name: Create Google Map API Keys
+      - name: Create Google Maps SDK Keys
         run: |
           echo $SECRETS_PROPERTIES > secrets.properties
           echo $LOCAL_DEFAULTS_PROPERTIES > local.defaults.properties
