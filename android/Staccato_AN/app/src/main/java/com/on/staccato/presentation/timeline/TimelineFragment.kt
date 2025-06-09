@@ -46,7 +46,7 @@ class TimelineFragment :
         savedInstanceState: Bundle?,
     ) {
         setupBinding()
-        setUpObserving()
+        initObserving()
         logAccess()
     }
 
@@ -99,26 +99,50 @@ class TimelineFragment :
         findNavController().navigate(R.id.action_timelineFragment_to_categoryFragment, bundle)
     }
 
-    private fun setUpObserving() {
+    private fun initObserving() {
+        observeErrorMessage()
+        observeException()
+        observeIsRetry()
+        observeIsTimelineUpdated()
+        observeMemberNickname()
+        observeIsBottomSheetExpanded()
+        observeIsAtTop()
+    }
+
+    private fun observeErrorMessage() {
         timelineViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             showToast(message)
         }
+    }
 
-        observeException()
-        observeIsRetry()
+    private fun observeException() {
+        timelineViewModel.exception.observe(viewLifecycleOwner) { state ->
+            sharedViewModel.updateException(state)
+        }
+    }
 
+    private fun observeIsRetry() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.retryEvent.collect {
+                    timelineViewModel.loadTimeline()
+                }
+            }
+        }
+    }
+
+    private fun observeIsTimelineUpdated() {
         sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) { isUpdated ->
             if (isUpdated) {
                 timelineViewModel.loadTimeline()
             }
         }
+    }
 
+    private fun observeMemberNickname() {
         sharedViewModel.memberProfile.observe(viewLifecycleOwner) { memberProfile ->
             binding.nickname = memberProfile.nickname
         }
-
-        observeIsBottomSheetExpanded()
-        observeIsAtTop()
     }
 
     private fun observeIsBottomSheetExpanded() {
@@ -136,22 +160,6 @@ class TimelineFragment :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sharedViewModel.isAtTop.collect {
                     sharedViewModel.updateIsDraggable()
-                }
-            }
-        }
-    }
-
-    private fun observeException() {
-        timelineViewModel.exception.observe(viewLifecycleOwner) { state ->
-            sharedViewModel.updateException(state)
-        }
-    }
-
-    private fun observeIsRetry() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sharedViewModel.retryEvent.collect {
-                    timelineViewModel.loadTimeline()
                 }
             }
         }
