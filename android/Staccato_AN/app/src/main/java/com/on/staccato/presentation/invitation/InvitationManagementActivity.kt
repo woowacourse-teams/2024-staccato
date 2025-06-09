@@ -53,8 +53,13 @@ class InvitationManagementActivity : ComponentActivity() {
     companion object {
         const val RESULT_INVITATION_ACCEPTED = 100
 
-        fun launch(context: Context) {
-            context.startActivity(Intent(context, InvitationManagementActivity::class.java))
+        fun startWithResultLauncher(
+            context: Context,
+            activityLauncher: ActivityResultLauncher<Intent>,
+        ) {
+            Intent(context, InvitationManagementActivity::class.java).apply {
+                activityLauncher.launch(this)
+            }
         }
     }
 }

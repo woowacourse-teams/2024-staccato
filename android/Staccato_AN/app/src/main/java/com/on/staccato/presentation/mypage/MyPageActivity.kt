@@ -5,7 +5,9 @@ import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
@@ -21,6 +23,7 @@ import com.on.staccato.presentation.common.clipboard.ClipboardHelper
 import com.on.staccato.presentation.common.photo.PhotoAttachFragment
 import com.on.staccato.presentation.component.DefaultDivider
 import com.on.staccato.presentation.invitation.InvitationManagementActivity
+import com.on.staccato.presentation.invitation.InvitationManagementActivity.Companion.RESULT_INVITATION_ACCEPTED
 import com.on.staccato.presentation.mypage.component.MyPageMenuButton
 import com.on.staccato.presentation.mypage.viewmodel.MyPageViewModel
 import com.on.staccato.presentation.staccatocreation.OnUrisSelectedListener
@@ -41,6 +44,7 @@ class MyPageActivity :
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val photoAttachFragment by lazy { PhotoAttachFragment() }
     private val fragmentManager: FragmentManager = supportFragmentManager
+    private val invitationManagementLauncher = handleInvitationManagementResult()
 
     @Inject
     lateinit var clipboardHelper: ClipboardHelper
@@ -49,8 +53,8 @@ class MyPageActivity :
         setContents()
         initToolbar()
         initBindings()
+        finishOnBackPressed()
         loadMemberProfile()
-        observeMemberProfile()
         observeCopyingUuidCode()
         observeErrorMessage()
         observeException()
@@ -101,7 +105,12 @@ class MyPageActivity :
 
             MyPageMenuButton(
                 menuTitle = getString(R.string.mypage_invitation_management),
-                onClick = { InvitationManagementActivity.launch(this) },
+                onClick = {
+                    InvitationManagementActivity.startWithResultLauncher(
+                        context = this,
+                        activityLauncher = invitationManagementLauncher,
+                    )
+                },
                 hasNotification = hasNotification,
             )
         }
@@ -115,7 +124,7 @@ class MyPageActivity :
 
     private fun initToolbar() {
         binding.toolbarMypage.setNavigationOnClickListener {
-            finish()
+            finishWithResult()
         }
     }
 
@@ -126,14 +135,14 @@ class MyPageActivity :
         binding.memberProfileHandler = myPageViewModel
     }
 
-    private fun loadMemberProfile() {
-        myPageViewModel.fetchMemberProfile()
+    private fun finishOnBackPressed() {
+        onBackPressedDispatcher.addCallback(this) {
+            finishWithResult()
+        }
     }
 
-    private fun observeMemberProfile() {
-        myPageViewModel.memberProfile.observe(this) {
-            setResult(RESULT_OK)
-        }
+    private fun loadMemberProfile() {
+        myPageViewModel.fetchMemberProfile()
     }
 
     private fun observeCopyingUuidCode() {
@@ -148,7 +157,6 @@ class MyPageActivity :
 
     private fun observeErrorMessage() {
         myPageViewModel.errorMessage.observe(this) { errorMessage ->
-            finish()
             showToast(errorMessage)
         }
     }
@@ -167,7 +175,31 @@ class MyPageActivity :
         }
     }
 
+    private fun handleInvitationManagementResult() =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_INVITATION_ACCEPTED) {
+                myPageViewModel.updateHasTimelineUpdated()
+            }
+        }
+
+    private fun finishWithResult() {
+        setMyPageResult()
+        finish()
+    }
+
+    private fun setMyPageResult() {
+        val hasTimelineUpdated = myPageViewModel.hasTimelineUpdated
+        val hasProfileUpdated = myPageViewModel.hasProfileUpdated
+        val intent =
+            Intent()
+                .putExtra(UPDATED_TIMELINE_KEY, hasTimelineUpdated)
+                .putExtra(UPDATED_PROFILE_KEY, hasProfileUpdated)
+        setResult(RESULT_OK, intent)
+    }
+
     companion object {
+        const val UPDATED_TIMELINE_KEY = "hasTimelineUpdated"
+        const val UPDATED_PROFILE_KEY = "hasProfileUpdated"
         private const val UUID_CODE_LABEL = "uuidCode"
         private const val PRIVACY_POLICY_URL =
             "https://app.websitepolicies.com/policies/view/7jel2uwv"
