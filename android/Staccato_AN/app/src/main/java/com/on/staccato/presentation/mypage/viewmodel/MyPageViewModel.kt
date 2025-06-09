@@ -29,6 +29,12 @@ class MyPageViewModel
         private val myPageRepository: MyPageRepository,
         private val notificationRepository: NotificationRepository,
     ) : ViewModel(), MemberProfileHandler {
+        var hasTimelineUpdated = false
+        private set
+
+        var hasProfileUpdated = false
+        private set
+
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile>
             get() = _memberProfile
@@ -61,8 +67,8 @@ class MyPageViewModel
             viewModelScope.launch {
                 myPageRepository.changeProfileImage(multipart)
                     .onSuccess {
-                        _memberProfile.value =
-                            memberProfile.value?.copy(profileImageUrl = it)
+                        _memberProfile.value = memberProfile.value?.copy(profileImageUrl = it)
+                        hasProfileUpdated = true
                     }.onServerError(::handleError)
                     .onException2(::handleException2)
             }
@@ -84,6 +90,10 @@ class MyPageViewModel
                     .onServerError(::handleError)
                     .onException2(::handleException2)
             }
+        }
+
+        fun updateHasTimelineUpdated() {
+            hasTimelineUpdated = true
         }
 
         private fun handleError(errorMessage: String) {
