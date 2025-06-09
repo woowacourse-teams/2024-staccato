@@ -30,10 +30,10 @@ class MyPageViewModel
         private val notificationRepository: NotificationRepository,
     ) : ViewModel(), MemberProfileHandler {
         var hasTimelineUpdated = false
-        private set
+            private set
 
         var hasProfileUpdated = false
-        private set
+            private set
 
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile>
