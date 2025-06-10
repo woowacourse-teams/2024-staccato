@@ -56,7 +56,7 @@ fun TimelineItem(
                     },
             bitmapPixelSize = 500,
             url = category.categoryThumbnailUrl,
-            placeHolder = R.drawable.default_image,
+            errorImageRes = R.drawable.default_image,
             contentDescription = R.string.all_category_thumbnail_photo_description,
             radiusDp = 4.dp,
         )
