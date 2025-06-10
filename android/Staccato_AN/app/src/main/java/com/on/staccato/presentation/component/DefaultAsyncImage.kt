@@ -3,34 +3,35 @@ package com.on.staccato.presentation.component
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import coil.transform.RoundedCornersTransformation
 import com.on.staccato.R
-import com.on.staccato.presentation.util.dpToPx
 
 @Composable
 fun DefaultAsyncImage(
-    modifier: Modifier = Modifier,
-    bitmapPixelSize: Int,
-    url: String? = null,
     @DrawableRes placeHolder: Int,
     @StringRes contentDescription: Int,
+    modifier: Modifier = Modifier,
+    url: String? = null,
+    radiusDp: Dp = 0.dp,
+    bitmapPixelSize: Int,
     contentScale: ContentScale = ContentScale.Crop,
-    radiusPx: Float = 0f,
 ) {
     val painter =
         rememberAsyncImagePainter(
             model =
                 ImageRequest.Builder(LocalContext.current)
                     .data(url)
-                    .transformations(RoundedCornersTransformation(radiusPx.dpToPx(LocalContext.current)))
                     .size(bitmapPixelSize)
                     .placeholder(placeHolder)
                     .fallback(placeHolder)
@@ -39,7 +40,7 @@ fun DefaultAsyncImage(
         )
 
     Image(
-        modifier = modifier,
+        modifier = modifier.clip(RoundedCornerShape(radiusDp)),
         painter = painter,
         contentDescription = stringResource(contentDescription),
         contentScale = contentScale,
