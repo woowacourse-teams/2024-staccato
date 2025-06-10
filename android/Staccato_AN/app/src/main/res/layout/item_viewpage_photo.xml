@@ -4,7 +4,12 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="position"
+            type="Integer" />
+        <variable
+            name="handler"
+            type="com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoHandler" />
         <variable
             name="photoUrl"
             type="String" />
@@ -15,6 +20,7 @@
         android:layout_height="match_parent">
 
         <ImageView
+            android:onClick="@{()->handler.onShowOriginalPhoto(position)}"
             android:id="@+id/iv_item_photo"
             android:layout_width="0dp"
             android:layout_height="0dp"

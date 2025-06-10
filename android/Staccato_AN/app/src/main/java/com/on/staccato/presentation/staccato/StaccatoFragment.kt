@@ -17,6 +17,8 @@ import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.ShareManager
 import com.on.staccato.presentation.common.clipboard.ClipboardHelper
+import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoHandler
+import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoIndex
 import com.on.staccato.presentation.main.MainActivity
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.comments.CommentHandler
@@ -42,7 +44,8 @@ class StaccatoFragment :
     StaccatoShareHandler,
     StaccatoToolbarHandler,
     CommentHandler,
-    MenuHandler {
+    MenuHandler,
+    OriginalPhotoHandler {
     @Inject
     lateinit var loggingManager: LoggingManager
 
@@ -56,7 +59,7 @@ class StaccatoFragment :
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private val commentsViewModel: StaccatoCommentsViewModel by viewModels()
     private val commentsAdapter: CommentsAdapter by lazy { CommentsAdapter(this) }
-    private val pagePhotoAdapter: ViewpagePhotoAdapter by lazy { ViewpagePhotoAdapter() }
+    private val pagePhotoAdapter: ViewpagePhotoAdapter by lazy { ViewpagePhotoAdapter(this) }
     private val staccatoDeleteDialog =
         DeleteDialogFragment {
             staccatoViewModel.deleteStaccato(staccatoId)
@@ -93,6 +96,9 @@ class StaccatoFragment :
         showErrorToast()
         showExceptionSnackBar()
         logAccess()
+    }
+
+    override fun onShowOriginalPhoto(position: Int) {
     }
 
     override fun onDeleteClicked() {

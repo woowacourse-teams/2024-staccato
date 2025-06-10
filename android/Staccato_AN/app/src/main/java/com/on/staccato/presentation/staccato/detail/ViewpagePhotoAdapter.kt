@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.on.staccato.databinding.ItemViewpagePhotoBinding
+import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoHandler
 
-class ViewpagePhotoAdapter :
+class ViewpagePhotoAdapter(private val handler: OriginalPhotoHandler) :
     ListAdapter<String, ViewpagePhotoViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -14,14 +15,14 @@ class ViewpagePhotoAdapter :
     ): ViewpagePhotoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemViewpagePhotoBinding.inflate(inflater, parent, false)
-        return ViewpagePhotoViewHolder(binding)
+        return ViewpagePhotoViewHolder(binding, handler)
     }
 
     override fun onBindViewHolder(
         holder: ViewpagePhotoViewHolder,
         position: Int,
     ) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), position)
     }
 
     companion object {
