@@ -99,6 +99,7 @@ class StaccatoFragment :
     }
 
     override fun onShowOriginalPhoto(position: Int) {
+        staccatoViewModel.changeOriginalPhotoIndex(OriginalPhotoIndex(position))
     }
 
     override fun onDeleteClicked() {
