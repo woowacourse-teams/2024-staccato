@@ -17,6 +17,7 @@ import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.ShareManager
 import com.on.staccato.presentation.common.clipboard.ClipboardHelper
+import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoDialog
 import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoHandler
 import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoIndex
 import com.on.staccato.presentation.main.MainActivity
@@ -161,6 +162,9 @@ class StaccatoFragment :
         binding.shareHandler = this
         binding.staccatoViewModel = staccatoViewModel
         binding.commentsViewModel = commentsViewModel
+        binding.cvOriginalPhoto.setContent {
+            OriginalPhotoDialog()
+        }
     }
 
     private fun setNavigationClickListener() {
