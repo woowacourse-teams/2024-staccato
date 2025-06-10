@@ -71,48 +71,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/vp_staccato_photo_horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    bind:visibleOrGone="@{!staccatoViewModel.staccatoDetail.staccatoImageUrls.isEmpty()}"
-                    tools:listitem="@layout/item_viewpage_photo"
-                    tools:visibility="gone" />
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_staccato_photo_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="#00000000"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/vp_staccato_photo_horizontal"
-                    app:tabBackground="@drawable/selector_viewpager_indicator"
-                    app:tabGravity="center"
-                    app:tabIndicatorFullWidth="false"
-                    app:tabIndicatorHeight="0dp"
-                    app:tabPaddingEnd="0dp"
-                    app:tabPaddingStart="0dp"
-                    bind:visibleOrGone="@{staccatoViewModel.staccatoDetail.staccatoImageUrls.size > 1}"
-                    tools:visibility="gone" />
-
                 <TextView
                     android:id="@+id/tv_staccato_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="20dp"
                     android:text="@{staccatoViewModel.staccatoDetail.staccatoTitle}"
                     android:textAppearance="@style/Typography.Title1"
                     app:layout_constraintEnd_toStartOf="@id/iv_staccato_share"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tab_staccato_photo_horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="가나다라마바사아자차카타파하정확하게삼십글자를만들기위해노력" />
 
                 <ImageButton
@@ -126,17 +94,9 @@
                     android:padding="6dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/icon_share"
-                    app:layout_constraintBottom_toBottomOf="@id/divider_staccato_first"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_staccato_title"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tab_staccato_photo_horizontal" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_staccato_first"
-                    style="@style/DividerStyle"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_title" />
+                    app:layout_constraintTop_toTopOf="@id/tv_staccato_title" />
 
                 <TextView
                     android:id="@+id/tv_staccato_place_name"
@@ -148,7 +108,7 @@
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_staccato_first"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_title"
                     tools:text="장소 제목" />
 
                 <TextView
@@ -174,13 +134,30 @@
                     bind:visitedAtHistory="@{staccatoViewModel.staccatoDetail.visitedAt}"
                     tools:text="2024년 7월 15일 2시에 방문했어요" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_staccato_photo_horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="170dp"
+                    android:layout_marginTop="20dp"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:overScrollMode="never"
+                    android:paddingStart="16dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_visited_at"
+                    bind:visibleOrGone="@{!staccatoViewModel.staccatoDetail.staccatoImageUrls.isEmpty()}"
+                    tools:listitem="@layout/item_staccato_photo"
+                    tools:visibility="gone" />
+
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider_staccato_second"
                     style="@style/DividerStyle"
                     android:layout_marginTop="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_visited_at" />
+                    app:layout_constraintTop_toBottomOf="@id/rv_staccato_photo_horizontal" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_staccato_feeling_selection"

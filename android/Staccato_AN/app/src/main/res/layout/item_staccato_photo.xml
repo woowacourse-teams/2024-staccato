@@ -4,35 +4,40 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="position"
             type="Integer" />
+
         <variable
             name="handler"
             type="com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoHandler" />
+
         <variable
             name="photoUrl"
             type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="10dp">
 
         <ImageView
-            android:onClick="@{()->handler.onShowOriginalPhoto(position)}"
             android:id="@+id/iv_item_photo"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/viewpager_photo_description"
+            android:onClick="@{()->handler.onShowOriginalPhoto(position)}"
             android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="H,0.9:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:coilImageUrl="@{photoUrl}"
-            bind:coilPlaceHolder="@{@drawable/shape_all_gray2_4dp}" />
+            bind:coilRoundedCornerImageUrl="@{photoUrl}"
+            bind:coilRoundedCornerPlaceHolder="@{@drawable/shape_all_gray2_4dp}"
+            bind:coilRoundingRadiusDp="@{8f}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

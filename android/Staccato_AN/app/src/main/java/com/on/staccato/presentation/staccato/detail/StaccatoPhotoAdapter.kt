@@ -4,22 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.on.staccato.databinding.ItemViewpagePhotoBinding
+import com.on.staccato.databinding.ItemStaccatoPhotoBinding
 import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoHandler
 
-class ViewpagePhotoAdapter(private val handler: OriginalPhotoHandler) :
-    ListAdapter<String, ViewpagePhotoViewHolder>(diffUtil) {
+class StaccatoPhotoAdapter(private val handler: OriginalPhotoHandler) :
+    ListAdapter<String, StaccatoPhotoViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ViewpagePhotoViewHolder {
+    ): StaccatoPhotoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemViewpagePhotoBinding.inflate(inflater, parent, false)
-        return ViewpagePhotoViewHolder(binding, handler)
+        val binding = ItemStaccatoPhotoBinding.inflate(inflater, parent, false)
+        return StaccatoPhotoViewHolder(binding, handler)
     }
 
     override fun onBindViewHolder(
-        holder: ViewpagePhotoViewHolder,
+        holder: StaccatoPhotoViewHolder,
         position: Int,
     ) {
         holder.bind(getItem(position), position)

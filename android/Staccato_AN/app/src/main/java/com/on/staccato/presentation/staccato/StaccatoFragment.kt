@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayoutMediator
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentStaccatoBinding
 import com.on.staccato.presentation.base.BindingFragment
@@ -25,7 +24,7 @@ import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.staccato.comments.CommentHandler
 import com.on.staccato.presentation.staccato.comments.CommentsAdapter
 import com.on.staccato.presentation.staccato.comments.StaccatoCommentsViewModel
-import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
+import com.on.staccato.presentation.staccato.detail.StaccatoPhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.StaccatoFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
@@ -60,7 +59,7 @@ class StaccatoFragment :
     private val staccatoViewModel: StaccatoViewModel by viewModels()
     private val commentsViewModel: StaccatoCommentsViewModel by viewModels()
     private val commentsAdapter: CommentsAdapter by lazy { CommentsAdapter(this) }
-    private val pagePhotoAdapter: ViewpagePhotoAdapter by lazy { ViewpagePhotoAdapter(this) }
+    private val staccatoPhotoAdapter: StaccatoPhotoAdapter by lazy { StaccatoPhotoAdapter(this) }
     private val staccatoDeleteDialog =
         DeleteDialogFragment {
             staccatoViewModel.deleteStaccato(staccatoId)
@@ -87,7 +86,6 @@ class StaccatoFragment :
         if (isStaccatoCreated) sharedViewModel.setStaccatosHasUpdated()
         setUpBinding()
         setNavigationClickListener()
-        setUpViewPager()
         setUpComments()
         loadStaccato()
         loadComments()
@@ -162,6 +160,7 @@ class StaccatoFragment :
         binding.shareHandler = this
         binding.staccatoViewModel = staccatoViewModel
         binding.commentsViewModel = commentsViewModel
+        binding.rvStaccatoPhotoHorizontal.adapter = staccatoPhotoAdapter
         binding.cvOriginalPhoto.setContent {
             OriginalPhotoDialog()
         }
@@ -176,16 +175,6 @@ class StaccatoFragment :
     private fun setUpComments() {
         binding.rvStaccatoComments.adapter = commentsAdapter
         binding.rvStaccatoComments.itemAnimator = null
-    }
-
-    private fun setUpViewPager() {
-        binding.vpStaccatoPhotoHorizontal.adapter = pagePhotoAdapter
-        TabLayoutMediator(
-            binding.tabStaccatoPhotoHorizontal,
-            binding.vpStaccatoPhotoHorizontal,
-        ) { tab, _ ->
-            tab.setCustomView(R.layout.item_tab_dot)
-        }.attach()
     }
 
     private fun loadStaccato() {
@@ -204,7 +193,7 @@ class StaccatoFragment :
 
     private fun observeStaccatoDetail() {
         staccatoViewModel.staccatoDetail.observe(viewLifecycleOwner) { staccatoDetail ->
-            pagePhotoAdapter.submitList(staccatoDetail.staccatoImageUrls)
+            staccatoPhotoAdapter.submitList(staccatoDetail.staccatoImageUrls)
             sharedViewModel.updateStaccatoLocation(
                 staccatoDetail.latitude,
                 staccatoDetail.longitude,
