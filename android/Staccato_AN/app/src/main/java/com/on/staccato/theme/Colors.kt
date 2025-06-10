@@ -22,6 +22,7 @@ val Gray3 = Color(0xFF949494)
 val Gray4 = Color(0xFF777777)
 val Gray5 = Color(0xFF3E3E3E)
 val StaccatoBlack = Color(0xFF222222)
+val Black = Color.Black
 
 // Marker
 val Red = Color(0xFFEF4B59)
