@@ -19,12 +19,13 @@ import com.on.staccato.R
 
 @Composable
 fun DefaultAsyncImage(
-    @DrawableRes placeHolder: Int,
     @StringRes contentDescription: Int,
     modifier: Modifier = Modifier,
     url: String? = null,
     radiusDp: Dp = 0.dp,
-    bitmapPixelSize: Int,
+    bitmapPixelSize: Int? = null,
+    @DrawableRes placeHolder: Int? = null,
+    @DrawableRes errorImageRes: Int? = null,
     contentScale: ContentScale = ContentScale.Crop,
 ) {
     val painter =
@@ -32,10 +33,18 @@ fun DefaultAsyncImage(
             model =
                 ImageRequest.Builder(LocalContext.current)
                     .data(url)
-                    .size(bitmapPixelSize)
-                    .placeholder(placeHolder)
-                    .fallback(placeHolder)
-                    .error(placeHolder)
+                    .apply {
+                        bitmapPixelSize?.let {
+                            size(it)
+                        }
+                        placeHolder?.let {
+                            placeholder(it)
+                        }
+                        errorImageRes?.let {
+                            fallback(it)
+                            error(it)
+                        }
+                    }
                     .build(),
         )
 
