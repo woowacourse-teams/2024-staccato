@@ -97,14 +97,25 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_staccato_place_name"
                     tools:text="상세 주소" />
 
+                <ImageView
+                    android:id="@+id/iv_calendar"
+                    android:layout_width="14dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingTop="1dp"
+                    android:src="@drawable/icon_calendar"
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_detail" />
+
                 <TextView
                     android:id="@+id/tv_staccato_visited_at"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:textAppearance="@style/Typography.Body2"
-                    app:layout_constraintStart_toStartOf="@id/tv_staccato_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_detail"
+                    android:layout_marginStart="6dp"
+                    android:textAppearance="@style/Typography.Body3"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_calendar"
+                    app:layout_constraintStart_toEndOf="@id/iv_calendar"
+                    app:layout_constraintTop_toTopOf="@id/iv_calendar"
                     bind:visitedAtHistory="@{staccatoViewModel.staccatoDetail.visitedAt}"
                     tools:text="2024년 7월 15일 2시에 방문했어요" />
 

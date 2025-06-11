@@ -112,7 +112,7 @@
     <string name="staccato_add">기록하기</string>
     <string name="staccato_enter_log">코멘트 입력하기</string>
     <string name="staccato_empty_comments">코멘트를 남겨보세요!</string>
-    <string name="staccato_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
+    <string name="staccato_how_was_your_feeling">이때의 기분은 어땠나요?</string>
     <string name="staccato_comment_has_been_deleted">코멘트를 삭제했어요!</string>
     <string name="staccato_loading_failure">스타카토를 불러올 수 없어요!</string>
     <string name="staccato_feeling_selection_description">스타카토 기분</string>
