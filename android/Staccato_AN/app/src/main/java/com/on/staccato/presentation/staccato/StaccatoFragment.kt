@@ -28,7 +28,6 @@ import com.on.staccato.presentation.staccato.detail.StaccatoPhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.StaccatoFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
-import com.on.staccato.presentation.util.MenuHandler
 import com.on.staccato.presentation.util.showPopupMenu
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
@@ -44,7 +43,6 @@ class StaccatoFragment :
     StaccatoShareHandler,
     StaccatoToolbarHandler,
     CommentHandler,
-    MenuHandler,
     OriginalPhotoHandler {
     @Inject
     lateinit var loggingManager: LoggingManager
@@ -131,12 +129,12 @@ class StaccatoFragment :
         commentsViewModel.setSelectedComment(id)
         view.showPopupMenu(
             menuRes = R.menu.menu_comment,
-            menuHandler = ::setupActionBy,
+            menuHandler = ::handleCommentMenuItemClick,
             gravity = gravity,
         )
     }
 
-    override fun setupActionBy(menuItemId: Int) {
+    fun handleCommentMenuItemClick(menuItemId: Int) {
         when (menuItemId) {
             R.id.comment_delete -> {
                 commentDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
