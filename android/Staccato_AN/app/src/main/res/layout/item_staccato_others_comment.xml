@@ -26,7 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:coilCircleImageUrl="@{othersComment.memberImageUrl}"
-            bind:coilPlaceHolder="@{@drawable/shape_place_holder_oval}" />
+            bind:coilPlaceHolder="@{@drawable/icon_member}" />
 
         <TextView
             android:id="@+id/tv_staccato_others_comment_name"

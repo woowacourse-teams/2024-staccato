@@ -8,6 +8,12 @@
         <item name="android:textAppearance">@style/Typography.Title2</item>
     </style>
 
+    <style name="SmallTitleStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/Typography.Title3</item>
+    </style>
+
     <style name="RequiredMarkStyle" parent="SubTitleStyle">
         <item name="android:layout_marginStart">4dp</item>
         <item name="android:text">@string/all_required_mark</item>

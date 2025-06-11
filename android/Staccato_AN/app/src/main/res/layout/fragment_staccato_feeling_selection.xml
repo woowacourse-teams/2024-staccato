@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/tv_staccato_feeling_selection_title"
-            style="@style/SubTitleStyle"
+            style="@style/SmallTitleStyle"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/staccato_how_was_your_feeling"

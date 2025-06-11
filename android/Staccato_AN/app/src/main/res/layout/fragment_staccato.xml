@@ -157,7 +157,7 @@
 
                 <TextView
                     android:id="@+id/tv_staccato_comments_title"
-                    style="@style/SubTitleStyle"
+                    style="@style/SmallTitleStyle"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/staccato_logs"
