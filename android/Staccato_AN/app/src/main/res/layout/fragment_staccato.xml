@@ -9,12 +9,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="toolbarHandler"
-            type="com.on.staccato.presentation.staccato.StaccatoToolbarHandler" />
-
-        <variable
-            name="shareHandler"
-            type="com.on.staccato.presentation.staccato.StaccatoShareHandler" />
+            name="staccatoHandler"
+            type="com.on.staccato.presentation.staccato.StaccatoHandler" />
 
         <variable
             name="staccatoViewModel"
@@ -32,28 +28,6 @@
         android:background="@color/white"
         tools:context=".presentation.ui.staccato.StaccatoActivity">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar_staccato"
-            style="@style/NavigationToolbarStyle"
-            android:fillViewport="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_detail_delete"
-                style="@style/ToolbarMenuStyle"
-                android:onClick="@{() -> toolbarHandler.onDeleteClicked()}"
-                android:text="@string/all_delete" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_detail_update"
-                style="@style/ToolbarMenuStyle"
-                android:onClick="@{() -> toolbarHandler.onUpdateClicked(staccatoViewModel.staccatoDetail.categoryId, staccatoViewModel.staccatoDetail.categoryTitle)}"
-                android:text="@string/all_update" />
-
-        </com.google.android.material.appbar.MaterialToolbar>
-
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nsv_staccato"
             android:layout_width="0dp"
@@ -64,7 +38,7 @@
             app:layout_constraintBottom_toTopOf="@id/et_staccato_comments_input"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_staccato">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraint_staccato_contents"
@@ -76,25 +50,25 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
                     android:text="@{staccatoViewModel.staccatoDetail.staccatoTitle}"
                     android:textAppearance="@style/Typography.Title1"
-                    app:layout_constraintEnd_toStartOf="@id/iv_staccato_share"
+                    app:layout_constraintEnd_toStartOf="@id/iv_staccato_menu"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="가나다라마바사아자차카타파하정확하게삼십글자를만들기위해노력" />
 
                 <ImageButton
-                    android:id="@+id/iv_staccato_share"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:id="@+id/iv_staccato_menu"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_marginEnd="10dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/staccato_share"
-                    android:onClick="@{()-> shareHandler.onStaccatoShareClicked()}"
-                    android:padding="6dp"
+                    android:onClick="@{()-> staccatoHandler.onStaccatoMenuClicked()}"
+                    android:padding="2dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/icon_share"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_staccato_title"
+                    android:src="@drawable/icon_pop_up_menu"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_staccato_title" />
 

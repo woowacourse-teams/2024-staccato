@@ -10,6 +10,7 @@
     <string name="all_cancel">취소</string>
     <string name="all_confirm">확인</string>
     <string name="all_photo">사진</string>
+    <string name="all_share">공유</string>
     <string name="all_photo_number">(%s/%s)</string>
     <string name="all_photo_attach">사진 첨부하기</string>
     <string name="all_visited_at">날짜 및 시간</string>

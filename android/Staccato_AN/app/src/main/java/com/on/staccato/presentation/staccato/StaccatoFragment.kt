@@ -40,9 +40,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class StaccatoFragment :
     BindingFragment<FragmentStaccatoBinding>(R.layout.fragment_staccato),
-    StaccatoShareHandler,
-    StaccatoToolbarHandler,
     CommentHandler,
+    StaccatoHandler,
     OriginalPhotoHandler {
     @Inject
     lateinit var loggingManager: LoggingManager
@@ -83,7 +82,6 @@ class StaccatoFragment :
     ) {
         if (isStaccatoCreated) sharedViewModel.setStaccatosHasUpdated()
         setUpBinding()
-        setNavigationClickListener()
         setUpComments()
         loadStaccato()
         loadComments()
@@ -99,26 +97,11 @@ class StaccatoFragment :
         staccatoViewModel.changeOriginalPhotoIndex(OriginalPhotoIndex(position))
     }
 
-    override fun onDeleteClicked() {
-        staccatoDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
-    }
-
-    override fun onUpdateClicked(
-        categoryId: Long,
-        categoryTitle: String,
-    ) {
-        val staccatoUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
-        StaccatoUpdateActivity.startWithResultLauncher(
-            staccatoId = staccatoId,
-            categoryId = categoryId,
-            categoryTitle = categoryTitle,
-            context = requireContext(),
-            activityLauncher = staccatoUpdateLauncher,
+    override fun onStaccatoMenuClicked() {
+        binding.ivStaccatoMenu.showPopupMenu(
+            menuRes = R.menu.menu_staccato,
+            menuHandler = ::handleStaccatoMenuItemClick,
         )
-    }
-
-    override fun onStaccatoShareClicked() {
-        staccatoViewModel.createStaccatoShareLink()
     }
 
     override fun onCommentLongClicked(
@@ -132,6 +115,20 @@ class StaccatoFragment :
             menuHandler = ::handleCommentMenuItemClick,
             gravity = gravity,
         )
+    }
+
+    fun handleStaccatoMenuItemClick(menuItemId: Int) {
+        when (menuItemId) {
+            R.id.staccato_delete -> staccatoDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
+
+            R.id.staccato_modify ->
+                startStaccatoUpdateActivity(
+                    staccatoViewModel.staccatoDetail.value!!.categoryId,
+                    staccatoViewModel.staccatoDetail.value!!.staccatoTitle,
+                )
+
+            R.id.staccato_share -> staccatoViewModel.createStaccatoShareLink()
+        }
     }
 
     fun handleCommentMenuItemClick(menuItemId: Int) {
@@ -152,21 +149,28 @@ class StaccatoFragment :
         }
     }
 
+    private fun startStaccatoUpdateActivity(
+        categoryId: Long,
+        categoryTitle: String,
+    ) {
+        val staccatoUpdateLauncher = (activity as MainActivity).staccatoUpdateLauncher
+        StaccatoUpdateActivity.startWithResultLauncher(
+            staccatoId = staccatoId,
+            categoryId = categoryId,
+            categoryTitle = categoryTitle,
+            context = requireContext(),
+            activityLauncher = staccatoUpdateLauncher,
+        )
+    }
+
     private fun setUpBinding() {
         binding.lifecycleOwner = this
-        binding.toolbarHandler = this
-        binding.shareHandler = this
+        binding.staccatoHandler = this
         binding.staccatoViewModel = staccatoViewModel
         binding.commentsViewModel = commentsViewModel
         binding.rvStaccatoPhotoHorizontal.adapter = staccatoPhotoAdapter
         binding.cvOriginalPhoto.setContent {
             OriginalPhotoDialog()
-        }
-    }
-
-    private fun setNavigationClickListener() {
-        binding.toolbarStaccato.setNavigationOnClickListener {
-            findNavController().popBackStack()
         }
     }
 
