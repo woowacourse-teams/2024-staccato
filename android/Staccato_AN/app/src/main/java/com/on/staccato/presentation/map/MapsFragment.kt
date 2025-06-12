@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -22,12 +23,14 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.on.staccato.R
+import com.on.staccato.databinding.FragmentMapsBinding
 import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.common.location.GPSManager
+import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.KEY_HAS_VISITED_SETTINGS
 import com.on.staccato.presentation.common.location.LocationPermissionManager
-import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
+import com.on.staccato.presentation.map.component.MyLocationFloatingActionButton
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
 import com.on.staccato.presentation.util.showSnackBar
 import com.on.staccato.util.logging.AnalyticsEvent
@@ -48,6 +51,9 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     @Inject
     lateinit var loggingManager: LoggingManager
 
+    private var _binding: FragmentMapsBinding? = null
+    private val binding get() = requireNotNull(_binding)
+
     private lateinit var map: GoogleMap
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
 
@@ -60,19 +66,19 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         OnMapReadyCallback { googleMap ->
             map = googleMap
             googleMap.setMapStyle()
-            googleMap.moveDefaultLocation()
-            checkLocationSetting()
-            googleMap.onMarkerClicked()
-            googleMap.setOnMyLocationButtonClickListener(this)
             googleMap.setMapPadding()
+            googleMap.moveDefaultLocation()
+            googleMap.onMarkerClicked()
+            checkLocationSetting()
         }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_maps, container, false)
+    ): View {
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_maps, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(
@@ -82,8 +88,10 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         super.onViewCreated(view, savedInstanceState)
         display = view.resources.displayMetrics
         mapsViewModel.loadStaccatos()
+        setupBinding()
         setupMap()
         setupPermissionRequestLauncher(view)
+        handleHasVisitedSettings()
         observeStaccatoId()
         observeMarkerOptions()
         observeUpdatedStaccato()
@@ -93,19 +101,25 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         observeIsRetry()
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (this::map.isInitialized) checkLocationSetting()
-    }
-
     override fun onStop() {
         super.onStop()
         sharedViewModel.updateIsSettingClicked(false)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onMyLocationButtonClick(): Boolean {
         mapsViewModel.getCurrentLocation()
         return false
+    }
+
+    private fun setupBinding() {
+        binding.cvMyLocation.setContent {
+            MyLocationFloatingActionButton(onClick = ::checkLocationSetting)
+        }
     }
 
     private fun setupMap() {
@@ -118,6 +132,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         setMapStyle(
             MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.google_map_style),
         )
+        uiSettings.isMyLocationButtonEnabled = false
     }
 
     private fun GoogleMap.moveDefaultLocation() {
@@ -141,6 +156,16 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             )
     }
 
+    private fun handleHasVisitedSettings() {
+        childFragmentManager.setFragmentResultListener(
+            KEY_HAS_VISITED_SETTINGS,
+            viewLifecycleOwner,
+        ) { _, bundle ->
+            val hasVisitedSettings = bundle.getBoolean(KEY_HAS_VISITED_SETTINGS, false)
+            if (hasVisitedSettings) checkLocationSetting()
+        }
+    }
+
     private fun checkLocationSetting() {
         gpsManager.checkLocationSetting(
             context = requireContext(),
@@ -161,26 +186,16 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             }
 
             shouldShowRequestLocationPermissionsRationale -> {
-                observeIsPermissionCanceled {
-                    locationPermissionManager.showLocationRequestRationaleDialog(
-                        childFragmentManager,
-                    )
-                }
+                locationPermissionManager.showLocationRequestRationaleDialog(
+                    childFragmentManager,
+                )
             }
 
             else -> {
-                observeIsPermissionCanceled {
-                    permissionRequestLauncher.launch(
-                        LocationPermissionManager.locationPermissions,
-                    )
-                }
+                permissionRequestLauncher.launch(
+                    LocationPermissionManager.locationPermissions,
+                )
             }
-        }
-    }
-
-    private fun observeIsPermissionCanceled(listener: PermissionCancelListener) {
-        sharedViewModel.isPermissionCanceled.observe(viewLifecycleOwner) { isCanceled ->
-            if (!isCanceled) listener.requestPermission()
         }
     }
 
