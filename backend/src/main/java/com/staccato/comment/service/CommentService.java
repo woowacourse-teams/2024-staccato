@@ -1,6 +1,5 @@
 package com.staccato.comment.service;
 
-import com.staccato.comment.service.dto.request.CommentRequest;
 import java.util.Comparator;
 import java.util.List;
 
@@ -9,13 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
+import com.staccato.comment.service.dto.request.CommentRequest;
 import com.staccato.comment.service.dto.request.CommentUpdateRequest;
 import com.staccato.comment.service.dto.response.CommentResponses;
 import com.staccato.config.log.annotation.Trace;
-import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
-import com.staccato.category.domain.Category;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
 
@@ -32,7 +30,7 @@ public class CommentService {
     @Transactional
     public long createComment(CommentRequest commentRequest, Member member) {
         Staccato staccato = getStaccato(commentRequest.staccatoId());
-        validateOwner(staccato.getCategory(), member);
+        staccato.validateOwner(member);
         Comment comment = commentRequest.toComment(staccato, member);
 
         return commentRepository.save(comment).getId();
@@ -40,7 +38,7 @@ public class CommentService {
 
     public CommentResponses readAllCommentsByStaccatoId(Member member, Long staccatoId) {
         Staccato staccato = getStaccato(staccatoId);
-        validateOwner(staccato.getCategory(), member);
+        staccato.validateOwner(member);
         List<Comment> comments = commentRepository.findAllByStaccatoId(staccatoId);
         sortByCreatedAtAscending(comments);
 
@@ -49,13 +47,7 @@ public class CommentService {
 
     private Staccato getStaccato(long staccatoId) {
         return staccatoRepository.findById(staccatoId)
-            .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
-    }
-
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
+                .orElseThrow(() -> new StaccatoException("요청하신 스타카토를 찾을 수 없어요."));
     }
 
     private void sortByCreatedAtAscending(List<Comment> comments) {
@@ -65,7 +57,7 @@ public class CommentService {
     @Transactional
     public void updateComment(Member member, Long commentId, CommentUpdateRequest commentUpdateRequest) {
         Comment comment = getComment(commentId);
-        validateCommentOwner(comment, member);
+        comment.validateOwner(member);
         comment.changeContent(commentUpdateRequest.content());
     }
 
@@ -77,14 +69,8 @@ public class CommentService {
     @Transactional
     public void deleteComment(long commentId, Member member) {
         commentRepository.findById(commentId).ifPresent(comment -> {
-            validateCommentOwner(comment, member);
+            comment.validateOwner(member);
             commentRepository.deleteById(commentId);
         });
-    }
-
-    private void validateCommentOwner(Comment comment, Member member) {
-        if (comment.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
     }
 }
