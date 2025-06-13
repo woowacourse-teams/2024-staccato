@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -704,7 +703,7 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     @DisplayName("공동카테고리의 GUEST는 카테고리를 나갈 수 있다.")
     @Test
-    void exitCategory() {
+    void leaveCategory() {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
         Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
@@ -714,7 +713,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .buildAndSave(categoryRepository);
 
         // when
-        categoryService.exitCategory(category.getId(), guest);
+        categoryService.leaveCategory(category.getId(), guest);
 
         // then
         boolean memberInCategoryFlag = categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), guest.getId());
@@ -724,7 +723,7 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     @DisplayName("카테고리 ID에 해당하는 카테고리가 없으면 예외를 발생한다.")
     @Test
-    void failExitCategoryIfCategoryNotExist() {
+    void failLeaveCategoryIfCategoryNotExist() {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
         Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
@@ -734,14 +733,14 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .buildAndSave(categoryRepository);
 
         // when & then
-        assertThatThrownBy(() -> categoryService.exitCategory(category.getId() + 1, guest))
+        assertThatThrownBy(() -> categoryService.leaveCategory(category.getId() + 1, guest))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("요청하신 카테고리를 찾을 수 없어요.");
     }
 
     @DisplayName("사용자가 카테고리의 함께하는 사람에 속하지 않으면 예외를 발생한다.")
     @Test
-    void failExitCategoryIfMemberNotInCategory() {
+    void failLeaveCategoryIfMemberNotInCategory() {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
         Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
@@ -752,13 +751,13 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .buildAndSave(categoryRepository);
 
         // when & then
-        assertThatThrownBy(() -> categoryService.exitCategory(category.getId(), other))
+        assertThatThrownBy(() -> categoryService.leaveCategory(category.getId(), other))
                 .isInstanceOf(ForbiddenException.class);
     }
 
     @DisplayName("사용자가 카테고리의 HOST이면 예외를 발생한다.")
     @Test
-    void failExitCategoryIfMemberHost() {
+    void failLeaveCategoryIfMemberHost() {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
         Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
@@ -768,7 +767,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .buildAndSave(categoryRepository);
 
         // when & then
-        assertThatThrownBy(() -> categoryService.exitCategory(category.getId(), host))
+        assertThatThrownBy(() -> categoryService.leaveCategory(category.getId(), host))
                 .isInstanceOf(ForbiddenException.class);
     }
 }

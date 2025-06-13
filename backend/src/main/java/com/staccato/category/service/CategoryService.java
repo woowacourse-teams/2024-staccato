@@ -182,9 +182,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public void exitCategory(long categoryId, Member member) {
+    public void leaveCategory(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
-        validateExitPermission(category, member);
+        validateLeavePermission(category, member);
         category.removeCategoryMember(member);
         categoryMemberRepository.deleteByCategoryIdAndMemberId(category.getId(), member.getId());
     }
@@ -194,7 +194,7 @@ public class CategoryService {
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 
-    private void validateExitPermission(Category category, Member member) {
+    private void validateLeavePermission(Category category, Member member) {
         validateOwner(category, member);
         validateGuest(category, member);
     }
