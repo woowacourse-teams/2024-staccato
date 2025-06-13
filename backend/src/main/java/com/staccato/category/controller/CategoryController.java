@@ -119,4 +119,12 @@ public class CategoryController implements CategoryControllerDocs {
         categoryService.deleteCategory(categoryId, member);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{categoryId}/members/me")
+    public ResponseEntity<Void> exitCategory(
+            @PathVariable @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @LoginMember Member member) {
+        categoryService.exitCategory(categoryId, member);
+        return ResponseEntity.ok().build();
+    }
 }

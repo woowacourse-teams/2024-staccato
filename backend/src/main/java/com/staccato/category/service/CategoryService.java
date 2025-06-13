@@ -191,4 +191,8 @@ public class CategoryService {
             throw new ForbiddenException();
         }
     }
+
+    public void exitCategory(long categoryId, Member member) {
+        return;
+    }
 }
