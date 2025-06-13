@@ -15,6 +15,7 @@ import com.staccato.comment.repository.CommentRepository;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.fixture.notification.NotificationTokenFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
@@ -22,6 +23,7 @@ import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.notification.domain.NotificationToken;
 import com.staccato.notification.repository.NotificationTokenRepository;
+import com.staccato.notification.service.dto.request.NotificationTokenRequest;
 import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
@@ -63,9 +65,15 @@ class NotificationServiceTest extends ServiceSliceTest {
         receiver2 = MemberFixtures.defaultMember().withNickname("receiver2").buildAndSave(memberRepository);
         category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
 
-        notificationTokenRepository.save(new NotificationToken("senderToken", sender));
-        notificationTokenRepository.save(new NotificationToken("token1", receiver1));
-        notificationTokenRepository.save(new NotificationToken("token2", receiver2));
+        NotificationTokenFixtures.defaultNotificationToken(sender)
+                .withToken("senderToken")
+                .buildAndSave(notificationTokenRepository);
+        NotificationTokenFixtures.defaultNotificationToken(receiver1)
+                .withToken("token1")
+                .buildAndSave(notificationTokenRepository);
+        NotificationTokenFixtures.defaultNotificationToken(receiver2)
+                .withToken("token2")
+                .buildAndSave(notificationTokenRepository);
     }
 
     @DisplayName("받은 초대 목록이 존재한다면, 알림이 존재한다.")
@@ -160,18 +168,22 @@ class NotificationServiceTest extends ServiceSliceTest {
     void registerNewToken() {
         // given
         Member member = MemberFixtures.defaultMember().withNickname("newbie").buildAndSave(memberRepository);
-        String token = "new-token";
+        NotificationToken notificationToken = NotificationTokenFixtures.defaultNotificationToken(member).build();
+        NotificationTokenRequest notificationTokenRequest = new NotificationTokenRequest(
+                notificationToken.getToken(),
+                notificationToken.getDeviceType().getName(),
+                notificationToken.getDeviceId());
 
         // when
-        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMember(member);
-        notificationService.register(member, token);
-        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMember(member);
+        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
+        notificationService.register(member, notificationTokenRequest);
+        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), notificationToken.getDeviceType(), notificationToken.getDeviceId());
 
         // then
         assertAll(
                 () -> assertThat(beforeRegister.isPresent()).isFalse(),
                 () -> assertThat(afterRegister.isPresent()).isTrue(),
-                () -> assertThat(afterRegister.get().getToken()).isEqualTo(token)
+                () -> assertThat(afterRegister.get().getToken()).isEqualTo(notificationToken.getToken())
         );
     }
 
@@ -179,20 +191,21 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void registerAndUpdateToken() {
         // given
-        String oldToken = "old-token";
-        String updatedToken = "updated-token";
         Member member = MemberFixtures.defaultMember().withNickname("reuser").buildAndSave(memberRepository);
-        notificationTokenRepository.save(new NotificationToken(oldToken, member));
+        NotificationToken oldToken = NotificationTokenFixtures.defaultNotificationToken(member)
+                .withToken("old-token").buildAndSave(notificationTokenRepository);
+        NotificationTokenRequest notificationTokenRequest = new NotificationTokenRequest("updated-token", oldToken.getDeviceType()
+                .getName(), oldToken.getDeviceId());
 
         // when
-        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMember(member);
-        notificationService.register(member, updatedToken);
-        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMember(member);
+        Optional<NotificationToken> beforeRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
+        notificationService.register(member, notificationTokenRequest);
+        Optional<NotificationToken> afterRegister = notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), oldToken.getDeviceType(), oldToken.getDeviceId());
 
         // then
         assertAll(
-                () -> assertThat(beforeRegister.get().getToken()).isEqualTo(oldToken),
-                () -> assertThat(afterRegister.get().getToken()).isEqualTo(updatedToken)
+                () -> assertThat(beforeRegister.get().getToken()).isEqualTo(oldToken.getToken()),
+                () -> assertThat(afterRegister.get().getToken()).isEqualTo(notificationTokenRequest.token())
         );
     }
 }

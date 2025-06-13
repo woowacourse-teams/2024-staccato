@@ -11,6 +11,7 @@ import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
 import com.staccato.notification.domain.NotificationToken;
 import com.staccato.notification.repository.NotificationTokenRepository;
+import com.staccato.notification.service.dto.request.NotificationTokenRequest;
 import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -29,13 +30,18 @@ public class NotificationService {
     }
 
     @Transactional
-    public void register(Member member, String token) {
-        notificationTokenRepository.findByMember(member).ifPresentOrElse(
-                notificationToken -> notificationToken.update(token),
-                () -> {
-                    NotificationToken notificationToken = new NotificationToken(token, member);
-                    notificationTokenRepository.save(notificationToken);
-                });
+    public void register(Member member, NotificationTokenRequest notificationTokenRequest) {
+        notificationTokenRepository.findByMemberIdAndDeviceTypeAndDeviceId(member.getId(), notificationTokenRequest.toDeviceType(), notificationTokenRequest.deviceId())
+                .ifPresentOrElse(
+                        notificationToken -> notificationToken.updateToken(notificationTokenRequest.token()),
+                        () -> {
+                            NotificationToken notificationToken = new NotificationToken(
+                                    notificationTokenRequest.token(),
+                                    member,
+                                    notificationTokenRequest.toDeviceType(),
+                                    notificationTokenRequest.deviceId());
+                            notificationTokenRepository.save(notificationToken);
+                        });
     }
 
     public void sendInvitationAlert(Member sender, List<Member> receivers, Category category) {
@@ -65,8 +71,8 @@ public class NotificationService {
     }
 
     private void sendToMembers(String title, String message, List<Member> members) {
-        List<String> tokens = members.stream()
-                .flatMap(m -> notificationTokenRepository.findByMember(m).stream())
+        List<NotificationToken> notificationTokens = notificationTokenRepository.findByMemberIn(members);
+        List<String> tokens = notificationTokens.stream()
                 .map(NotificationToken::getToken)
                 .toList();
         fcmService.sendPush(tokens, title, message);

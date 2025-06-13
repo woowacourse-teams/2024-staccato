@@ -2,8 +2,6 @@ package com.staccato.notification.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import com.staccato.ControllerTest;
@@ -47,26 +45,37 @@ class NotificationControllerTest extends ControllerTest {
     void register() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
-
+        String notificationTokenRequest = """
+                {
+                  "token": "example-fcm-token",
+                  "deviceType": "ANDROID",
+                  "deviceId": "device-123456"
+                }
+                """;
         // when & then
         mockMvc.perform(post("/notifications/token")
-                        .param("token", "FCM_Token")
+                        .content(notificationTokenRequest)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
     }
 
     @DisplayName("알림용 토큰이 공백으로 전달되는 경우 등록에 실패합니다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"", " "})
-    void failRegister(String token) throws Exception {
+    @Test
+    void failRegister() throws Exception {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                HttpStatus.BAD_REQUEST.toString(), "토큰 값은 필수이며, 공백일 수 없습니다.");
-
+                HttpStatus.BAD_REQUEST.toString(), "토큰 값을 입력해주세요.");
+        String notificationTokenRequest = """
+                {
+                  "token": " ",
+                  "deviceType": "ANDROID",
+                  "deviceId": "device-123456"
+                }
+                """;
         // when & then
         mockMvc.perform(post("/notifications/token")
-                        .param("token", token)
+                        .content(notificationTokenRequest)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));

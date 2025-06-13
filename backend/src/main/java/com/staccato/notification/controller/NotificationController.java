@@ -1,17 +1,18 @@
 package com.staccato.notification.controller;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.staccato.config.auth.LoginMember;
 import com.staccato.member.domain.Member;
 import com.staccato.notification.controller.docs.NotificationControllerDocs;
 import com.staccato.notification.service.NotificationService;
+import com.staccato.notification.service.dto.request.NotificationTokenRequest;
 import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -31,9 +32,9 @@ public class NotificationController implements NotificationControllerDocs {
 
     @PostMapping("/token")
     public ResponseEntity<Void> register(
-            @LoginMember Member member, @RequestParam(value = "token") @NotBlank(message = "토큰 값은 필수이며, 공백일 수 없습니다.") String token
+            @LoginMember Member member, @RequestBody @Valid NotificationTokenRequest notificationTokenRequest
     ) {
-        notificationService.register(member, token);
+        notificationService.register(member, notificationTokenRequest);
         return ResponseEntity.ok().build();
     }
 }

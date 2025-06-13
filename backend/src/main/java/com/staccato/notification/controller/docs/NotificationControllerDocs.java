@@ -1,8 +1,9 @@
 package com.staccato.notification.controller.docs;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import com.staccato.member.domain.Member;
+import com.staccato.notification.service.dto.request.NotificationTokenRequest;
 import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,12 +25,16 @@ public interface NotificationControllerDocs {
                     <발생 가능한 케이스>
                                         
                     (1) token 값이 누락되거나 공백일 때
+                                        
+                    (2) deviceType 값이 누락되거나 공백일 때
+                    
+                    (2) deviceId 값이 누락되거나 공백일 때
 
                     """,
                     responseCode = "400")
     })
     ResponseEntity<Void> register(
             @Parameter(hidden = true) Member member,
-            @Parameter(description = "FCM token 값", example = "token") @NotBlank(message = "토큰 값은 필수이며, 공백일 수 없습니다.") String token
+            @Parameter(required = true) @Valid NotificationTokenRequest notificationTokenRequest
     );
 }
