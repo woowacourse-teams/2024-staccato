@@ -53,7 +53,7 @@ class NotificationControllerTest extends ControllerTest {
                 }
                 """;
         // when & then
-        mockMvc.perform(post("/notifications/token")
+        mockMvc.perform(post("/notifications/tokens")
                         .content(notificationTokenRequest)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk());
@@ -74,7 +74,7 @@ class NotificationControllerTest extends ControllerTest {
                 }
                 """;
         // when & then
-        mockMvc.perform(post("/notifications/token")
+        mockMvc.perform(post("/notifications/tokens")
                         .content(notificationTokenRequest)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isBadRequest())

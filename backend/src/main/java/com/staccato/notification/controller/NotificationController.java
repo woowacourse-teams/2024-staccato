@@ -30,7 +30,7 @@ public class NotificationController implements NotificationControllerDocs {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/token")
+    @PostMapping("/tokens")
     public ResponseEntity<Void> register(
             @LoginMember Member member, @RequestBody @Valid NotificationTokenRequest notificationTokenRequest
     ) {
