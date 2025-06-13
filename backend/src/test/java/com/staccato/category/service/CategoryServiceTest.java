@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -699,5 +700,26 @@ class CategoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(hostRole).isEqualTo(Role.HOST),
                 () -> assertThat(guestRole).isEqualTo(Role.GUEST)
         );
+    }
+
+    @DisplayName("공동카테고리의 GUEST는 카테고리를 나갈 수 있다.")
+    @Test
+    @Disabled
+    void exitCategory() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when
+        categoryService.exitCategory(category.getId(), guest);
+
+        // then
+        boolean memberInCategoryFlag = categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), guest.getId());
+
+        assertThat(memberInCategoryFlag).isFalse();
     }
 }

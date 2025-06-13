@@ -151,6 +151,14 @@ public class Category extends BaseEntity {
         return categoryMember.isGuest();
     }
 
+    public boolean isHost(Member member) {
+        CategoryMember categoryMember = categoryMembers.stream()
+                .filter(cm -> cm.isOwnedBy(member))
+                .findFirst()
+                .orElseThrow(ForbiddenException::new);
+        return categoryMember.isHost();
+    }
+
     public boolean isNotSameTitle(CategoryTitle title) {
         return !this.title.isSame(title);
     }

@@ -154,11 +154,6 @@ public class CategoryService {
         categoryRepository.deleteById(categoryId);
     }
 
-    private Category getCategoryById(long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-    }
-
     private void validateReadPermission(Category category, Member member) {
         validateOwner(category, member);
     }
@@ -180,19 +175,38 @@ public class CategoryService {
         validateHost(category, member);
     }
 
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
     private void validateHost(Category category, Member member) {
         if (category.isGuest(member)) {
             throw new ForbiddenException();
         }
     }
 
+    @Transactional
     public void exitCategory(long categoryId, Member member) {
-        return;
+        Category category = getCategoryById(categoryId);
+        validateExitPermission(category, member);
+        categoryMemberRepository.deleteByCategoryIdAndMemberId(category.getId(), member.getId());
+    }
+
+    private Category getCategoryById(long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
+    }
+
+    private void validateExitPermission(Category category, Member member) {
+        validateOwner(category, member);
+        validateGuest(category, member);
+    }
+
+    private void validateOwner(Category category, Member member) {
+        if (category.isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private void validateGuest(Category category, Member member) {
+        if (category.isHost(member)) {
+            throw new ForbiddenException();
+        }
     }
 }
