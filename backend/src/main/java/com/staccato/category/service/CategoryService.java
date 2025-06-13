@@ -185,6 +185,7 @@ public class CategoryService {
     public void exitCategory(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
         validateExitPermission(category, member);
+        category.removeCategoryMember(member);
         categoryMemberRepository.deleteByCategoryIdAndMemberId(category.getId(), member.getId());
     }
 

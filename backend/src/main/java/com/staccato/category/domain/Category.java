@@ -189,6 +189,13 @@ public class Category extends BaseEntity {
         }
     }
 
+    public void removeCategoryMember(Member member) {
+        categoryMembers.stream()
+                .filter(categoryMember -> categoryMember.isOwnedBy(member))
+                .findFirst()
+                .ifPresent(categoryMembers::remove);
+    }
+
 /*    public void increaseStaccatoCount() {
         staccatoCount = staccatoCount + 1;
     }

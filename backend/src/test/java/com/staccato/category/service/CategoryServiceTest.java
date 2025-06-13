@@ -704,7 +704,6 @@ class CategoryServiceTest extends ServiceSliceTest {
 
     @DisplayName("공동카테고리의 GUEST는 카테고리를 나갈 수 있다.")
     @Test
-    @Disabled
     void exitCategory() {
         // given
         Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
