@@ -2,12 +2,12 @@ package com.staccato.category.repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 import com.staccato.category.domain.CategoryMember;
 import com.staccato.category.domain.CategoryTitle;
 import com.staccato.member.domain.Member;
@@ -41,6 +41,4 @@ public interface CategoryMemberRepository extends JpaRepository<CategoryMember, 
     List<CategoryMember> findAllByCategoryIdAndMemberIn(long categoryId, List<Member> members);
 
     void deleteByCategoryIdAndMemberId(long categoryId, long memberId);
-
-    Optional<CategoryMember> findByCategoryIdAndMemberId(long categoryId, long memberId);
 }
