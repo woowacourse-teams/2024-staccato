@@ -542,4 +542,31 @@ class CategoryControllerTest extends ControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
     }
+
+    @DisplayName("사용자가 카테고리 식별자로 카테고리를 나간다.")
+    @Test
+    void exitCategory() throws Exception {
+        // given
+        long categoryId = 1;
+        when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
+
+        // when & then
+        mockMvc.perform(delete("/categories/{categoryId}/members/me", categoryId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("사용자가 잘못된 카테고리 식별자로 나가려고 하면 예외가 발생한다.")
+    @Test
+    void cannotExitCategoryByInvalidId() throws Exception {
+        // given
+        long invalidId = 0;
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "카테고리 식별자는 양수로 이루어져야 합니다.");
+
+        // when & then
+        mockMvc.perform(delete("/categories/{categoryId}/members/me", invalidId)
+                        .header(HttpHeaders.AUTHORIZATION, "token"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptionResponse)));
+    }
 }
