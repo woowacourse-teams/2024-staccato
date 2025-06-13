@@ -721,4 +721,54 @@ class CategoryServiceTest extends ServiceSliceTest {
 
         assertThat(memberInCategoryFlag).isFalse();
     }
+
+    @DisplayName("카테고리 ID에 해당하는 카테고리가 없으면 예외를 발생한다.")
+    @Test
+    void failExitCategoryIfCategoryNotExist() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when & then
+        assertThatThrownBy(() -> categoryService.exitCategory(category.getId() + 1, guest))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("요청하신 카테고리를 찾을 수 없어요.");
+    }
+
+    @DisplayName("사용자가 카테고리의 함께하는 사람에 속하지 않으면 예외를 발생한다.")
+    @Test
+    void failExitCategoryIfMemberNotInCategory() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Member other = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when & then
+        assertThatThrownBy(() -> categoryService.exitCategory(category.getId(), other))
+                .isInstanceOf(ForbiddenException.class);
+    }
+
+    @DisplayName("사용자가 카테고리의 HOST이면 예외를 발생한다.")
+    @Test
+    void failExitCategoryIfMemberHost() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when & then
+        assertThatThrownBy(() -> categoryService.exitCategory(category.getId(), host))
+                .isInstanceOf(ForbiddenException.class);
+    }
 }
