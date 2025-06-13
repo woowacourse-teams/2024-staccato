@@ -1,19 +1,28 @@
 package com.staccato.comment.domain;
 
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import com.staccato.category.domain.Category;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
-
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CommentTest {
     private Member member;
@@ -61,5 +70,54 @@ class CommentTest {
         assertThatThrownBy(() -> comment.changeContent("가".repeat(count)))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("댓글은 공백 포함 500자 이하로 입력해주세요.");
+    }
+
+    @Nested
+    @DisplayName("댓글의 소유자를 검증한다.")
+    class ValidateCommentOwner {
+
+        private Member host;
+        private Member guest;
+        private Category category;
+        private Staccato staccato;
+        private Comment hostComment;
+        private Comment guestComment;
+
+        @BeforeEach
+        void setUp() {
+            host = MemberFixtures.defaultMember().withNickname("host").build();
+            guest = MemberFixtures.defaultMember().withNickname("guest").build();
+            category = CategoryFixtures.defaultCategory()
+                    .withHost(host)
+                    .withGuests(List.of(guest))
+                    .build();
+            staccato = StaccatoFixtures.defaultStaccato()
+                    .withCategory(category)
+                    .build();
+            hostComment = CommentFixtures.defaultComment()
+                    .withStaccato(staccato)
+                    .withMember(host)
+                    .build();
+            guestComment = CommentFixtures.defaultComment()
+                    .withStaccato(staccato)
+                    .withMember(guest)
+                    .build();
+        }
+
+        @DisplayName("댓글은 댓글 작성자의 소유이다.")
+        @Test
+        void successValidateOwner() {
+            assertAll(
+                    () -> assertDoesNotThrow(() -> hostComment.validateOwner(host)),
+                    () -> assertDoesNotThrow(() -> guestComment.validateOwner(guest))
+            );
+        }
+
+        @DisplayName("댓글 작성자가 아니면 예외를 발생시킨다.")
+        @Test
+        void failValidateOwner() {
+            assertThatThrownBy(() -> hostComment.validateOwner(guest))
+                    .isInstanceOf(ForbiddenException.class);
+        }
     }
 }
