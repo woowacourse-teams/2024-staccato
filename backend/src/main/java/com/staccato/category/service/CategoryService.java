@@ -25,7 +25,6 @@ import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
-import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
@@ -108,7 +107,7 @@ public class CategoryService {
     public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
             Member member, long categoryId, CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest) {
         Category category = getCategoryById(categoryId);
-        validateOwner(category, member);
+        category.validateOwner(member);
         List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRangeAndCategory(
                 member,
                 categoryStaccatoLocationRangeRequest.swLat(),
@@ -155,7 +154,7 @@ public class CategoryService {
     }
 
     private void validateReadPermission(Category category, Member member) {
-        validateOwner(category, member);
+        category.validateOwner(member);
     }
 
     private void deleteAllRelatedCategory(long categoryId) {
@@ -171,14 +170,8 @@ public class CategoryService {
     }
 
     private void validateModificationPermission(Category category, Member member) {
-        validateOwner(category, member);
-        validateHost(category, member);
-    }
-
-    private void validateHost(Category category, Member member) {
-        if (category.isGuest(member)) {
-            throw new ForbiddenException();
-        }
+        category.validateOwner(member);
+        category.validateHost(member);
     }
 
     @Transactional
@@ -195,19 +188,7 @@ public class CategoryService {
     }
 
     private void validateLeavePermission(Category category, Member member) {
-        validateOwner(category, member);
-        validateGuest(category, member);
-    }
-
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    private void validateGuest(Category category, Member member) {
-        if (category.isHost(member)) {
-            throw new ForbiddenException();
-        }
+        category.validateOwner(member);
+        category.validateGuest(member);
     }
 }

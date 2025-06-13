@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -15,11 +16,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -185,6 +188,18 @@ public class Category extends BaseEntity {
 
     public void validateOwner(Member member) {
         if (isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    public void validateHost(Member member) {
+        if (isGuest(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    public void validateGuest(Member member) {
+        if (isHost(member)) {
             throw new ForbiddenException();
         }
     }
