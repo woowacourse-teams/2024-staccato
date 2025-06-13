@@ -98,7 +98,7 @@ public class CategoryService {
     public CategoryDetailResponseV3 readCategoryById(long categoryId, Member member) {
         Category category = categoryRepository.findWithCategoryMembersById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-        validateReadPermission(category, member);
+        category.validateOwner(member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
 
         return new CategoryDetailResponseV3(category, staccatos, member);
@@ -123,7 +123,8 @@ public class CategoryService {
     @Transactional
     public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
         Category originCategory = getCategoryById(categoryId);
-        validateModificationPermission(originCategory, member);
+        originCategory.validateOwner(member);
+        originCategory.validateHost(member);
         Category updatedCategory = categoryUpdateRequest.toCategory(originCategory);
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
             validateCategoryTitle(updatedCategory, member);
@@ -135,7 +136,8 @@ public class CategoryService {
     @Transactional
     public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
         Category category = getCategoryById(categoryId);
-        validateModificationPermission(category, member);
+        category.validateOwner(member);
+        category.validateHost(member);
         category.changeColor(categoryColorRequest.toColor());
     }
 
@@ -148,13 +150,10 @@ public class CategoryService {
     @Transactional
     public void deleteCategory(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
-        validateModificationPermission(category, member);
+        category.validateOwner(member);
+        category.validateHost(member);
         deleteAllRelatedCategory(categoryId);
         categoryRepository.deleteById(categoryId);
-    }
-
-    private void validateReadPermission(Category category, Member member) {
-        category.validateOwner(member);
     }
 
     private void deleteAllRelatedCategory(long categoryId) {
@@ -169,15 +168,11 @@ public class CategoryService {
         categoryInvitationRepository.deleteAllByCategoryIdInBulk(categoryId);
     }
 
-    private void validateModificationPermission(Category category, Member member) {
-        category.validateOwner(member);
-        category.validateHost(member);
-    }
-
     @Transactional
     public void leaveCategory(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
-        validateLeavePermission(category, member);
+        category.validateOwner(member);
+        category.validateGuest(member);
         category.removeCategoryMember(member);
         categoryMemberRepository.deleteByCategoryIdAndMemberId(category.getId(), member.getId());
     }
@@ -185,10 +180,5 @@ public class CategoryService {
     private Category getCategoryById(long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-    }
-
-    private void validateLeavePermission(Category category, Member member) {
-        category.validateOwner(member);
-        category.validateGuest(member);
     }
 }
