@@ -3,8 +3,13 @@ package com.staccato.category.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
 import com.staccato.fixture.member.MemberFixtures;
@@ -14,6 +19,8 @@ import com.staccato.staccato.domain.Staccato;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class CategoryTest {
     @DisplayName("기본 카테고리는 멤버 이름으로 만들어진다.")
@@ -113,35 +120,100 @@ class CategoryTest {
         assertThat(category.getColor()).isEqualTo(Color.BLUE);
     }
 
-    @DisplayName("멤버가 GUEST이면, 참을 반환한다.")
+    @DisplayName("카테고리에 소속된 멤버(HOST, GUEST)라면 예외를 발생시키지 않는다.")
     @Test
-    void isGuestReturnTrueIfGuestMember() {
+    void successValidateOwnerIfHostOrGuest() {
         // given
-        Member member = MemberFixtures.defaultMember().build();
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
         Category category = CategoryFixtures.defaultCategory()
-                .withGuests(List.of(member))
+                .withHost(host)
+                .withGuests(List.of(guest))
                 .build();
 
-        // when
-        boolean isDenied = category.isGuest(member);
-
-        // then
-        assertThat(isDenied).isEqualTo(true);
+        // when & then
+        assertAll(
+                () -> assertDoesNotThrow(() -> category.validateOwner(host)),
+                () -> assertDoesNotThrow(() -> category.validateOwner(guest))
+        );
     }
 
-    @DisplayName("멤버가 HOST이면, 거짓을 반환한다.")
+    @DisplayName("카테고리에 소속된 멤버가 아니라면 예외를 발생시킨다.")
     @Test
-    void isGuestReturnFalseIfHostMember() {
+    void failValidateOwnerIfMemberNotInCategory() {
         // given
-        Member member = MemberFixtures.defaultMember().build();
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        Member other = MemberFixtures.defaultMember().withNickname("other").build();
         Category category = CategoryFixtures.defaultCategory()
-                .withHost(member).build();
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .build();
 
-        // when
-        boolean isDenied = category.isGuest(member);
+        // when & then
+        assertThatThrownBy(() -> category.validateOwner(other))
+                .isInstanceOf(ForbiddenException.class);
+    }
 
-        // then
-        assertThat(isDenied).isEqualTo(false);
+    @Nested
+    @DisplayName("HOST 및 GUEST를 검증한다.")
+    class ValidateHostOrGuest {
+
+        private Member host;
+        private Member guest;
+        private Category category;
+
+        @BeforeEach
+        void setUp() {
+            host = MemberFixtures.defaultMember().withNickname("host").build();
+            guest = MemberFixtures.defaultMember().withNickname("guest").build();
+            category = CategoryFixtures.defaultCategory()
+                    .withHost(host)
+                    .withGuests(List.of(guest))
+                    .build();
+        }
+
+        @DisplayName("validateHost는 멤버가 HOST라면 예외를 발생시키지 않는다.")
+        @Test
+        void successValidateHostIfMemberIsHost() {
+            assertDoesNotThrow(() -> category.validateHost(host));
+        }
+
+        @DisplayName("validateHost는 멤버가 GUEST라면 예외를 발생시킨다.")
+        @Test
+        void failValidateHostIfMemberIsGuest() {
+            assertThatThrownBy(() -> category.validateHost(guest))
+                    .isInstanceOf(ForbiddenException.class);
+        }
+
+        @DisplayName("validateHost는 멤버가 카테고리에 소속되어 있지 않으면 예외를 발생시킨다.")
+        @Test
+        void failValidateHostIfMemberNotInCategory() {
+            Member other = MemberFixtures.defaultMember().withNickname("other").build();
+            assertThatThrownBy(() -> category.validateHost(other))
+                    .isInstanceOf(ForbiddenException.class);
+        }
+
+        @DisplayName("validateGuest는 멤버가 GUEST라면 예외를 발생시키지 않는다.")
+        @Test
+        void successValidateGuestIfMemberIsGuest() {
+            assertDoesNotThrow(() -> category.validateGuest(guest));
+        }
+
+        @DisplayName("validateGuest는 멤버가 HOST라면 예외를 발생시킨다.")
+        @Test
+        void failValidateGuestIfMemberIsHost() {
+            assertThatThrownBy(() -> category.validateGuest(host))
+                    .isInstanceOf(ForbiddenException.class);
+        }
+
+        @DisplayName("validateGuest는 멤버가 카테고리에 소속되어 있지 않으면 예외를 발생시킨다.")
+        @Test
+        void failValidateGuestIfMemberNotInCategory() {
+            Member other = MemberFixtures.defaultMember().withNickname("other").build();
+            assertThatThrownBy(() -> category.validateGuest(other))
+                    .isInstanceOf(ForbiddenException.class);
+        }
     }
 
 /*

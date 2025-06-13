@@ -141,25 +141,44 @@ public class Category extends BaseEntity {
         return term.doesNotContain(date);
     }
 
-    public boolean isNotOwnedBy(Member member) {
+    public void validateOwner(Member member) {
+        if (isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private boolean isNotOwnedBy(Member member) {
         return categoryMembers.stream()
                 .noneMatch(categoryMember -> categoryMember.isOwnedBy(member));
     }
 
-    public boolean isGuest(Member member) {
-        CategoryMember categoryMember = categoryMembers.stream()
-                .filter(cm -> cm.isOwnedBy(member))
-                .findFirst()
-                .orElseThrow(ForbiddenException::new);
+    public void validateHost(Member member) {
+        if (isGuest(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private boolean isGuest(Member member) {
+        CategoryMember categoryMember = findCategoryMember(member);
         return categoryMember.isGuest();
     }
 
-    public boolean isHost(Member member) {
-        CategoryMember categoryMember = categoryMembers.stream()
+    public void validateGuest(Member member) {
+        if (isHost(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private boolean isHost(Member member) {
+        CategoryMember categoryMember = findCategoryMember(member);
+        return categoryMember.isHost();
+    }
+
+    private CategoryMember findCategoryMember(Member member) {
+        return categoryMembers.stream()
                 .filter(cm -> cm.isOwnedBy(member))
                 .findFirst()
                 .orElseThrow(ForbiddenException::new);
-        return categoryMember.isHost();
     }
 
     public boolean isNotSameTitle(CategoryTitle title) {
@@ -184,24 +203,6 @@ public class Category extends BaseEntity {
 
     public long getCategoryMemberCount() {
         return categoryMembers.size();
-    }
-
-    public void validateOwner(Member member) {
-        if (isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    public void validateHost(Member member) {
-        if (isGuest(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    public void validateGuest(Member member) {
-        if (isHost(member)) {
-            throw new ForbiddenException();
-        }
     }
 
     public void removeCategoryMember(Member member) {
