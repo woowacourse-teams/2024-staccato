@@ -2,10 +2,7 @@ package com.staccato.comment.domain;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -76,47 +73,46 @@ class CommentTest {
     @DisplayName("댓글의 소유자를 검증한다.")
     class ValidateCommentOwner {
 
-        private Member host;
-        private Member guest;
+        private Member member;
         private Category category;
         private Staccato staccato;
-        private Comment hostComment;
-        private Comment guestComment;
 
         @BeforeEach
         void setUp() {
-            host = MemberFixtures.defaultMember().withNickname("host").build();
-            guest = MemberFixtures.defaultMember().withNickname("guest").build();
+            member = MemberFixtures.defaultMember().withNickname("member").build();
             category = CategoryFixtures.defaultCategory()
-                    .withHost(host)
-                    .withGuests(List.of(guest))
+                    .withHost(member)
                     .build();
             staccato = StaccatoFixtures.defaultStaccato()
                     .withCategory(category)
                     .build();
-            hostComment = CommentFixtures.defaultComment()
-                    .withStaccato(staccato)
-                    .withMember(host)
-                    .build();
-            guestComment = CommentFixtures.defaultComment()
-                    .withStaccato(staccato)
-                    .withMember(guest)
-                    .build();
         }
 
-        @DisplayName("댓글은 댓글 작성자의 소유이다.")
+        @DisplayName("댓글 작성자 본인만 댓글을 수정할 수 있다.")
         @Test
-        void successValidateOwner() {
-            assertAll(
-                    () -> assertDoesNotThrow(() -> hostComment.validateOwner(host)),
-                    () -> assertDoesNotThrow(() -> guestComment.validateOwner(guest))
-            );
+        void validateCommentOwnerSuccess() {
+            // given
+            Comment comment = CommentFixtures.defaultComment()
+                    .withStaccato(staccato)
+                    .withMember(member)
+                    .build();
+
+            // when & then
+            assertDoesNotThrow(() -> comment.validateOwner(member));
         }
 
-        @DisplayName("댓글 작성자가 아니면 예외를 발생시킨다.")
+        @DisplayName("댓글 작성자가 아니면 댓글을 수정할 수 없다.")
         @Test
-        void failValidateOwner() {
-            assertThatThrownBy(() -> hostComment.validateOwner(guest))
+        void validateCommentOwnerFail() {
+            // given
+            Comment comment = CommentFixtures.defaultComment()
+                    .withStaccato(staccato)
+                    .withMember(member)
+                    .build();
+            Member other = MemberFixtures.defaultMember().withNickname("other").build();
+
+            // when & then
+            assertThatThrownBy(() -> comment.validateOwner(other))
                     .isInstanceOf(ForbiddenException.class);
         }
     }
