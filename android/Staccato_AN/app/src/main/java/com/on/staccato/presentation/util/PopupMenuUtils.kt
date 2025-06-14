@@ -7,7 +7,7 @@ import androidx.annotation.MenuRes
 import com.on.staccato.R
 
 fun interface MenuHandler {
-    fun setupActionBy(menuItemId: Int)
+    fun onMenuItemClick(menuItemId: Int)
 }
 
 fun View.showPopupMenu(
@@ -35,7 +35,7 @@ private fun setUpCreationMenu(
     handler: MenuHandler,
 ) {
     popup.setOnMenuItemClickListener { menuItem ->
-        handler.setupActionBy(menuItem.itemId)
+        handler.onMenuItemClick(menuItem.itemId)
         false
     }
 }
