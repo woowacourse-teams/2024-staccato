@@ -545,7 +545,7 @@ class CategoryControllerTest extends ControllerTest {
 
     @DisplayName("사용자가 카테고리 식별자로 카테고리를 나간다.")
     @Test
-    void leaveCategory() throws Exception {
+    void deleteSelfFromCategory() throws Exception {
         // given
         long categoryId = 1;
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
@@ -558,7 +558,7 @@ class CategoryControllerTest extends ControllerTest {
 
     @DisplayName("사용자가 잘못된 카테고리 식별자로 나가려고 하면 예외가 발생한다.")
     @Test
-    void cannotLeaveCategoryByInvalidId() throws Exception {
+    void cannotDeleteSelfFromCategoryByInvalidId() throws Exception {
         // given
         long invalidId = 0;
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), "카테고리 식별자는 양수로 이루어져야 합니다.");

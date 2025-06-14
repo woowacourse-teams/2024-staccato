@@ -169,7 +169,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void leaveCategory(long categoryId, Member member) {
+    public void deleteSelfFromCategory(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
         category.validateOwner(member);
         category.validateGuest(member);
