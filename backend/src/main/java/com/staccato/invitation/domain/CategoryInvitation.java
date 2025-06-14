@@ -10,10 +10,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+
 import com.staccato.category.domain.Category;
 import com.staccato.config.domain.BaseEntity;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
+
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -59,8 +62,10 @@ public class CategoryInvitation extends BaseEntity {
         return !inviter.equals(member);
     }
 
-    public boolean isNotInvitee(Member member) {
-        return !invitee.equals(member);
+    public void validateInvitee(Member member) {
+        if (!invitee.equals(member)) {
+            throw new ForbiddenException();
+        }
     }
 
     public void cancel() {

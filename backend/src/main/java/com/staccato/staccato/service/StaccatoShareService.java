@@ -7,19 +7,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.staccato.category.domain.Category;
 import com.staccato.comment.domain.Comment;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.jwt.ShareTokenProvider;
 import com.staccato.config.jwt.dto.ShareTokenPayload;
 import com.staccato.config.log.annotation.Trace;
-import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.staccato.domain.Staccato;
-import com.staccato.staccato.domain.StaccatoImage;
-import com.staccato.staccato.repository.StaccatoImageRepository;
 import com.staccato.staccato.repository.StaccatoRepository;
 import com.staccato.staccato.service.dto.response.StaccatoShareLinkResponse;
 import com.staccato.staccato.service.dto.response.StaccatoSharedResponse;
@@ -42,7 +38,7 @@ public class StaccatoShareService {
 
     public StaccatoShareLinkResponse createStaccatoShareLink(Long staccatoId, Member member) {
         Staccato staccato = getStaccatoById(staccatoId);
-        validateCategoryOwner(staccato.getCategory(), member);
+        staccato.validateOwner(member);
 
         ShareTokenPayload shareTokenPayload = new ShareTokenPayload(staccatoId, member.getId());
         String token = shareTokenProvider.create(shareTokenPayload);
@@ -72,11 +68,5 @@ public class StaccatoShareService {
     private Member getMemberById(long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new StaccatoException("요청하신 멤버를 찾을 수 없어요."));
-    }
-
-    private void validateCategoryOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
     }
 }

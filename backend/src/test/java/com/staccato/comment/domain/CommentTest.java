@@ -1,19 +1,25 @@
 package com.staccato.comment.domain;
 
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import com.staccato.category.domain.Category;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.comment.CommentFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.fixture.staccato.StaccatoFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
-
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CommentTest {
     private Member member;
@@ -61,5 +67,53 @@ class CommentTest {
         assertThatThrownBy(() -> comment.changeContent("가".repeat(count)))
                 .isInstanceOf(StaccatoException.class)
                 .hasMessage("댓글은 공백 포함 500자 이하로 입력해주세요.");
+    }
+
+    @Nested
+    @DisplayName("댓글의 소유자를 검증한다.")
+    class ValidateCommentOwner {
+
+        private Member member;
+        private Category category;
+        private Staccato staccato;
+
+        @BeforeEach
+        void setUp() {
+            member = MemberFixtures.defaultMember().withNickname("member").build();
+            category = CategoryFixtures.defaultCategory()
+                    .withHost(member)
+                    .build();
+            staccato = StaccatoFixtures.defaultStaccato()
+                    .withCategory(category)
+                    .build();
+        }
+
+        @DisplayName("댓글 작성자 본인만 댓글을 수정할 수 있다.")
+        @Test
+        void validateCommentOwnerSuccess() {
+            // given
+            Comment comment = CommentFixtures.defaultComment()
+                    .withStaccato(staccato)
+                    .withMember(member)
+                    .build();
+
+            // when & then
+            assertDoesNotThrow(() -> comment.validateOwner(member));
+        }
+
+        @DisplayName("댓글 작성자가 아니면 댓글을 수정할 수 없다.")
+        @Test
+        void validateCommentOwnerFail() {
+            // given
+            Comment comment = CommentFixtures.defaultComment()
+                    .withStaccato(staccato)
+                    .withMember(member)
+                    .build();
+            Member other = MemberFixtures.defaultMember().withNickname("other").build();
+
+            // when & then
+            assertThatThrownBy(() -> comment.validateOwner(other))
+                    .isInstanceOf(ForbiddenException.class);
+        }
     }
 }

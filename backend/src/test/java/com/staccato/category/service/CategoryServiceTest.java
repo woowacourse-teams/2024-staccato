@@ -700,4 +700,75 @@ class CategoryServiceTest extends ServiceSliceTest {
                 () -> assertThat(guestRole).isEqualTo(Role.GUEST)
         );
     }
+
+    @DisplayName("공동카테고리의 GUEST는 카테고리를 나갈 수 있다.")
+    @Test
+    void deleteSelfFromCategory() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when
+        categoryService.deleteSelfFromCategory(category.getId(), guest);
+
+        // then
+        boolean memberInCategoryFlag = categoryMemberRepository.existsByCategoryIdAndMemberId(category.getId(), guest.getId());
+
+        assertThat(memberInCategoryFlag).isFalse();
+    }
+
+    @DisplayName("카테고리 ID에 해당하는 카테고리가 없으면 예외를 발생한다.")
+    @Test
+    void failDeleteSelfFromCategoryIfCategoryNotExist() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when & then
+        assertThatThrownBy(() -> categoryService.deleteSelfFromCategory(category.getId() + 1, guest))
+                .isInstanceOf(StaccatoException.class)
+                .hasMessage("요청하신 카테고리를 찾을 수 없어요.");
+    }
+
+    @DisplayName("사용자가 카테고리의 함께하는 사람에 속하지 않으면 공동 카테고리를 나갈 권한이 없다.")
+    @Test
+    void failDeleteSelfFromCategoryIfMemberNotInCategory() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Member other = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when & then
+        assertThatThrownBy(() -> categoryService.deleteSelfFromCategory(category.getId(), other))
+                .isInstanceOf(ForbiddenException.class);
+    }
+
+    @DisplayName("사용자가 카테고리의 HOST이면 공동 카테고리를 나갈 수 없다.")
+    @Test
+    void failDeleteSelfFromCategoryIfMemberHost() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when & then
+        assertThatThrownBy(() -> categoryService.deleteSelfFromCategory(category.getId(), host))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("방장은 카테고리를 나갈 수 없어요.");
+    }
 }
