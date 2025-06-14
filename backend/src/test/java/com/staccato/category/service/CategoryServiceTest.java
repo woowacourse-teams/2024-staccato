@@ -768,6 +768,7 @@ class CategoryServiceTest extends ServiceSliceTest {
 
         // when & then
         assertThatThrownBy(() -> categoryService.deleteSelfFromCategory(category.getId(), host))
-                .isInstanceOf(ForbiddenException.class);
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage("방장은 카테고리를 나갈 수 없어요.");
     }
 }

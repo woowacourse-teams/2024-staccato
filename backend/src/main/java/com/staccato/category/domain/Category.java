@@ -163,7 +163,7 @@ public class Category extends BaseEntity {
         return categoryMember.isGuest();
     }
 
-    public void validateGuest(Member member) {
+    public void validateNotHost(Member member) {
         if (isHost(member)) {
             throw new ForbiddenException();
         }

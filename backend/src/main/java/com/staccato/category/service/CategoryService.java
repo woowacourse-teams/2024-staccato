@@ -25,6 +25,7 @@ import com.staccato.category.service.dto.response.CategoryResponsesV3;
 import com.staccato.category.service.dto.response.CategoryStaccatoLocationResponses;
 import com.staccato.comment.repository.CommentRepository;
 import com.staccato.config.log.annotation.Trace;
+import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
@@ -172,7 +173,8 @@ public class CategoryService {
     public void deleteSelfFromCategory(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
         category.validateOwner(member);
-        category.validateGuest(member);
+        validateNotHost(category, member);
+
         category.removeCategoryMember(member);
         categoryMemberRepository.deleteByCategoryIdAndMemberId(category.getId(), member.getId());
     }
@@ -180,5 +182,13 @@ public class CategoryService {
     private Category getCategoryById(long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
+    }
+
+    private void validateNotHost(Category category, Member member) {
+        try {
+            category.validateNotHost(member);
+        } catch (ForbiddenException e) {
+            throw new ForbiddenException("방장은 카테고리를 나갈 수 없어요.");
+        }
     }
 }
