@@ -738,7 +738,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .hasMessage("요청하신 카테고리를 찾을 수 없어요.");
     }
 
-    @DisplayName("사용자가 카테고리의 함께하는 사람에 속하지 않으면 예외를 발생한다.")
+    @DisplayName("사용자가 카테고리의 함께하는 사람에 속하지 않으면 공동 카테고리를 나갈 권한이 없다.")
     @Test
     void failDeleteSelfFromCategoryIfMemberNotInCategory() {
         // given
@@ -755,7 +755,7 @@ class CategoryServiceTest extends ServiceSliceTest {
                 .isInstanceOf(ForbiddenException.class);
     }
 
-    @DisplayName("사용자가 카테고리의 HOST이면 예외를 발생한다.")
+    @DisplayName("사용자가 카테고리의 HOST이면 공동 카테고리를 나갈 수 없다.")
     @Test
     void failDeleteSelfFromCategoryIfMemberHost() {
         // given
