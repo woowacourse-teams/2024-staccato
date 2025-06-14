@@ -34,4 +34,8 @@ public class SwaggerExamples {
     public static final String CATEGORY_MEMBER_COUNT = "11";
     public static final String INVITATION_ID = "1";
     public static final String SEARCHED_MEMBER_STATUS = "REQUESTED";
+
+    public static final String NOTIFICATION_TOKEN = "token";
+    public static final String DEVICE_TYPE = "ANDROID";
+    public static final String DEVICE_ID = "241Ae231es";
 }
