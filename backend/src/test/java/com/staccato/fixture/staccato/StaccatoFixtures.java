@@ -17,7 +17,9 @@ public class StaccatoFixtures {
         return new StaccatoBuilder()
                 .withVisitedAt(LocalDateTime.of(2024, 6, 1, 0, 0))
                 .withTitle("staccatoTitle")
-                .withSpot(BigDecimal.ZERO.setScale(14), BigDecimal.ZERO.setScale(14));
+                .withSpot(BigDecimal.ZERO.setScale(14), BigDecimal.ZERO.setScale(14))
+                .withCreatedBy(1L)
+                .withModifiedBy(1L);
     }
 
     public static class StaccatoBuilder {
@@ -27,8 +29,8 @@ public class StaccatoFixtures {
         Spot spot;
         Category category;
         StaccatoImages staccatoImages = new StaccatoImages(List.of());
-        Member createdBy;
-        Member modifiedBy;
+        Long createdBy;
+        Long modifiedBy;
 
         public StaccatoBuilder withVisitedAt(LocalDateTime visitedAt) {
             this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);
@@ -56,8 +58,18 @@ public class StaccatoFixtures {
         }
 
         public StaccatoBuilder withCreator(Member auditor) {
-            this.createdBy = auditor;
-            this.modifiedBy = auditor;
+            this.createdBy = auditor.getId();
+            this.modifiedBy = auditor.getId();
+            return this;
+        }
+
+        public StaccatoBuilder withCreatedBy(Long createdBy) {
+            this.createdBy = createdBy;
+            return this;
+        }
+
+        public StaccatoBuilder withModifiedBy(Long modifiedBy) {
+            this.modifiedBy = modifiedBy;
             return this;
         }
 

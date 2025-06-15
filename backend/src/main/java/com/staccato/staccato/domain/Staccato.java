@@ -54,12 +54,10 @@ public class Staccato extends BaseEntity {
     private Category category;
     @Embedded
     private StaccatoImages staccatoImages = new StaccatoImages();
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false, updatable = false)
-    private Member createdBy;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "modified_by", nullable = false)
-    private Member modifiedBy;
+    @Column(nullable = false)
+    private Long createdBy;
+    @Column(nullable = false)
+    private Long modifiedBy;
 
     public static Staccato create(
             LocalDateTime visitedAt,
@@ -81,8 +79,8 @@ public class Staccato extends BaseEntity {
                 longitude,
                 new StaccatoImages(staccatoImageUrls),
                 category,
-                auditor,
-                auditor);
+                auditor.getId(),
+                auditor.getId());
     }
 
     @Builder
@@ -95,8 +93,8 @@ public class Staccato extends BaseEntity {
             @NonNull BigDecimal longitude,
             @NonNull StaccatoImages staccatoImages,
             @NonNull Category category,
-            @NonNull Member createdBy,
-            @NonNull Member modifiedBy
+            Long createdBy,
+            Long modifiedBy
     ) {
         validateIsWithinCategoryTerm(visitedAt, category);
         this.visitedAt = visitedAt.truncatedTo(ChronoUnit.SECONDS);

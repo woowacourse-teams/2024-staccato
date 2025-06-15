@@ -266,6 +266,7 @@ class StaccatoTest {
         Member creator = MemberFixtures.defaultMember().withNickname("creator").build();
         Category category = CategoryFixtures.defaultCategory()
                 .withHost(creator)
+                .withTerm(null, null)
                 .build();
 
         // when
@@ -283,8 +284,8 @@ class StaccatoTest {
 
         // then
         assertAll(
-                () -> assertThat(staccato.getCreatedBy()).isEqualTo(creator),
-                () -> assertThat(staccato.getModifiedBy()).isEqualTo(creator)
+                () -> assertThat(staccato.getCreatedBy()).isEqualTo(creator.getId()),
+                () -> assertThat(staccato.getModifiedBy()).isEqualTo(creator.getId())
         );
     }
 
@@ -310,7 +311,7 @@ class StaccatoTest {
         original.update(updateData);
 
         // then
-        assertThat(original.getCreatedBy()).isEqualTo(creator);
+        assertThat(original.getCreatedBy()).isEqualTo(creator.getId());
     }
 
     @DisplayName("Staccato update 시 modifiedBy는 최근 수정자로 갱신된다.")
@@ -335,6 +336,6 @@ class StaccatoTest {
         original.update(updateData);
 
         // then
-        assertThat(original.getModifiedBy()).isEqualTo(updater);
+        assertThat(original.getModifiedBy()).isEqualTo(updater.getId());
     }
 }
