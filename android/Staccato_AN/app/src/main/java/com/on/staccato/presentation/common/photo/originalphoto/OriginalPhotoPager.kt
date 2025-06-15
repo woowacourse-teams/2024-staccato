@@ -40,7 +40,8 @@ fun OriginalPhotoPager(
         userScrollEnabled = scrollable,
     ) { page ->
         PinchToZoomView(
-            onScaleChange = { scrollable = it == DEFAULT_MIN_ZOOM_SCALE }
+            onScaleChange = { scrollable = it == DEFAULT_MIN_ZOOM_SCALE },
+            onDrag = { !scrollable },
         ) {
             DefaultAsyncImage(
                 modifier = Modifier.fillMaxSize(),
