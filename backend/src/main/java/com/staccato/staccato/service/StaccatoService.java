@@ -40,7 +40,7 @@ public class StaccatoService {
     public StaccatoIdResponse createStaccato(StaccatoRequest staccatoRequest, Member member) {
         Category category = getCategoryById(staccatoRequest.categoryId());
         category.validateOwner(member);
-        Staccato staccato = staccatoRequest.toStaccato(category);
+        Staccato staccato = staccatoRequest.toStaccato(category, member);
 
         staccatoRepository.save(staccato);
         eventPublisher.publishEvent(new StaccatoCreatedEvent(member, category));
@@ -81,7 +81,7 @@ public class StaccatoService {
             staccato.validateCategoryChangeable(targetCategory);
         }
 
-        Staccato newStaccato = staccatoRequest.toStaccato(targetCategory);
+        Staccato newStaccato = staccatoRequest.toStaccato(targetCategory, member);
         List<StaccatoImage> existingImages = staccato.existingImages();
         removeExistingImages(existingImages);
         staccato.update(newStaccato);
