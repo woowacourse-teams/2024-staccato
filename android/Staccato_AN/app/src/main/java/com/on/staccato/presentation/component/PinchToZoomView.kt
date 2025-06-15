@@ -111,17 +111,21 @@ fun PinchToZoomView(
                     scaleY = scale,
                     translationX = offset.x,
                     translationY = offset.y,
-                )
+                ),
     ) {
         content()
     }
 }
 
-private fun clampOffset(offset: Offset, scale: Float, size: IntSize): Offset {
+private fun clampOffset(
+    offset: Offset,
+    scale: Float,
+    size: IntSize,
+): Offset {
     val maxX = (size.width * (scale - 1)) / 2
     val maxY = (size.height * (scale - 1)) / 2
     return Offset(
         x = offset.x.coerceIn(-maxX, maxX),
-        y = offset.y.coerceIn(-maxY, maxY)
+        y = offset.y.coerceIn(-maxY, maxY),
     )
 }

@@ -38,9 +38,9 @@ fun OriginalPhotoPager(
     HorizontalPager(
         state = pagerState,
         modifier =
-        modifier
-            .fillMaxSize()
-            .background(Black),
+            modifier
+                .fillMaxSize()
+                .background(Black),
         userScrollEnabled = scrollable,
     ) { page ->
         PinchToZoomView(

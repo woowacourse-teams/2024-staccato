@@ -22,27 +22,30 @@ import com.on.staccato.theme.White
 fun OriginalPhotoTopBar(
     isVisible: Boolean,
     title: String? = null,
-    onNavigationClick: () -> Unit
+    onNavigationClick: () -> Unit,
 ) {
     AnimatedVisibility(
         visible = isVisible,
-        enter = slideInVertically(
-            initialOffsetY = { -it },
-            animationSpec = tween(durationMillis = 300)
-        ),
-        exit = slideOutVertically(
-            targetOffsetY = { -it },
-            animationSpec = tween(durationMillis = 300)
-        )
+        enter =
+            slideInVertically(
+                initialOffsetY = { -it },
+                animationSpec = tween(durationMillis = 300),
+            ),
+        exit =
+            slideOutVertically(
+                targetOffsetY = { -it },
+                animationSpec = tween(durationMillis = 300),
+            ),
     ) {
         DefaultNavigationTopBar(
             title = title,
             onNavigationClick = onNavigationClick,
-            colors = DefaultTopAppBarColors.copy(
-                containerColor = TranslucentBlack,
-                navigationIconContentColor = White,
-                titleContentColor = White,
-            ),
+            colors =
+                DefaultTopAppBarColors.copy(
+                    containerColor = TranslucentBlack,
+                    navigationIconContentColor = White,
+                    titleContentColor = White,
+                ),
         )
     }
 }

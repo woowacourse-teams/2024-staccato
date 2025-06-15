@@ -54,7 +54,7 @@ fun DefaultNavigationTopBar(
             title = {
                 if (title != null) {
                     TopBarTitleText(
-                        title =  title,
+                        title = title,
                         subtitle = subtitle,
                         isTitleCentered = isTitleCentered,
                         color = colors.titleContentColor,
@@ -75,7 +75,7 @@ fun DefaultNavigationTopBar(
             title = {
                 if (title != null) {
                     TopBarTitleText(
-                        title =  title,
+                        title = title,
                         subtitle = subtitle,
                         isTitleCentered = isTitleCentered,
                         color = colors.titleContentColor,
@@ -135,7 +135,7 @@ private fun TopBarTitleText(
 private fun NavigationIconButton(
     @DrawableRes vectorResource: Int,
     onNavigationClick: () -> Unit,
-    color: Color = Gray3
+    color: Color = Gray3,
 ) {
     Icon(
         modifier =

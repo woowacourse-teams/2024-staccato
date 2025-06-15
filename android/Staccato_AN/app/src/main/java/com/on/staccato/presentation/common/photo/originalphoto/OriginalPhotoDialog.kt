@@ -20,7 +20,9 @@ fun OriginalPhotoDialog(viewModel: StaccatoViewModel = hiltViewModel<StaccatoVie
     val imageUrls = viewModel.staccatoDetail.value?.staccatoImageUrls ?: emptyList()
     var topBarVisibility by remember { mutableStateOf(true) }
 
-    fun dismiss() { viewModel.changeOriginalPhotoIndex(OriginalPhotoIndex.unavailable) }
+    fun dismiss() {
+        viewModel.changeOriginalPhotoIndex(OriginalPhotoIndex.unavailable)
+    }
 
     if (originalPhotoIndex.value.isAvailable) {
         Dialog(
@@ -36,7 +38,7 @@ fun OriginalPhotoDialog(viewModel: StaccatoViewModel = hiltViewModel<StaccatoVie
                     modifier = Modifier.padding(paddingValues),
                     imageUrls = imageUrls,
                     initialPage = originalPhotoIndex.value.initialPage,
-                    onTap = { topBarVisibility = !topBarVisibility }
+                    onTap = { topBarVisibility = !topBarVisibility },
                 )
                 OriginalPhotoTopBar(
                     isVisible = topBarVisibility,
