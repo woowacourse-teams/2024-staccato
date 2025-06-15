@@ -148,9 +148,9 @@ jobs:
         include:
           - api-level: 28
             profile: "pixel_4"
-          - api-level: 32
+          - api-level: 34
             profile: "pixel_6"
-          - api-level: 32
+          - api-level: 34
             profile: "Nexus 7"
       fail-fast: false
     permissions:
