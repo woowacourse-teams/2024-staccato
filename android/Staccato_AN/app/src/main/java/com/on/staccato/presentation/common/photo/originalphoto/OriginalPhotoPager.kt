@@ -17,6 +17,9 @@ import com.on.staccato.presentation.component.DEFAULT_MIN_ZOOM_SCALE
 import com.on.staccato.presentation.component.DefaultAsyncImage
 import com.on.staccato.presentation.component.PinchToZoomView
 import com.on.staccato.theme.Black
+import kotlin.math.absoluteValue
+
+private const val ZOOM_SCROLLABLE_TOLERANCE = 0.05f
 
 @Composable
 fun OriginalPhotoPager(
@@ -40,7 +43,9 @@ fun OriginalPhotoPager(
         userScrollEnabled = scrollable,
     ) { page ->
         PinchToZoomView(
-            onScaleChange = { scrollable = it == DEFAULT_MIN_ZOOM_SCALE },
+            onScaleChange = { scale ->
+                scrollable = (scale - DEFAULT_MIN_ZOOM_SCALE).absoluteValue < ZOOM_SCROLLABLE_TOLERANCE
+            },
             onDrag = { !scrollable },
         ) {
             DefaultAsyncImage(
