@@ -30,7 +30,7 @@ fun ParticipantItem(profileImageUrl: String? = null) {
             modifier = Modifier.clip(CircleShape),
             bitmapPixelSize = 150,
             url = profileImageUrl,
-            placeHolder = R.drawable.icon_member,
+            errorImageRes = R.drawable.icon_member,
             contentDescription = R.string.mates_profile_image_description,
             contentScale = ContentScale.Crop,
         )

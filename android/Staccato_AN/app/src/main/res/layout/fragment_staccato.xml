@@ -9,12 +9,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="toolbarHandler"
-            type="com.on.staccato.presentation.staccato.StaccatoToolbarHandler" />
-
-        <variable
-            name="shareHandler"
-            type="com.on.staccato.presentation.staccato.StaccatoShareHandler" />
+            name="staccatoHandler"
+            type="com.on.staccato.presentation.staccato.StaccatoHandler" />
 
         <variable
             name="staccatoViewModel"
@@ -32,28 +28,6 @@
         android:background="@color/white"
         tools:context=".presentation.ui.staccato.StaccatoActivity">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar_staccato"
-            style="@style/NavigationToolbarStyle"
-            android:fillViewport="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_detail_delete"
-                style="@style/ToolbarMenuStyle"
-                android:onClick="@{() -> toolbarHandler.onDeleteClicked()}"
-                android:text="@string/all_delete" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_detail_update"
-                style="@style/ToolbarMenuStyle"
-                android:onClick="@{() -> toolbarHandler.onUpdateClicked(staccatoViewModel.staccatoDetail.categoryId, staccatoViewModel.staccatoDetail.categoryTitle)}"
-                android:text="@string/all_update" />
-
-        </com.google.android.material.appbar.MaterialToolbar>
-
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nsv_staccato"
             android:layout_width="0dp"
@@ -64,79 +38,39 @@
             app:layout_constraintBottom_toTopOf="@id/et_staccato_comments_input"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_staccato">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraint_staccato_contents"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/vp_staccato_photo_horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    bind:visibleOrGone="@{!staccatoViewModel.staccatoDetail.staccatoImageUrls.isEmpty()}"
-                    tools:listitem="@layout/item_viewpage_photo"
-                    tools:visibility="gone" />
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_staccato_photo_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="#00000000"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/vp_staccato_photo_horizontal"
-                    app:tabBackground="@drawable/selector_viewpager_indicator"
-                    app:tabGravity="center"
-                    app:tabIndicatorFullWidth="false"
-                    app:tabIndicatorHeight="0dp"
-                    app:tabPaddingEnd="0dp"
-                    app:tabPaddingStart="0dp"
-                    bind:visibleOrGone="@{staccatoViewModel.staccatoDetail.staccatoImageUrls.size > 1}"
-                    tools:visibility="gone" />
-
                 <TextView
                     android:id="@+id/tv_staccato_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:text="@{staccatoViewModel.staccatoDetail.staccatoTitle}"
                     android:textAppearance="@style/Typography.Title1"
-                    app:layout_constraintEnd_toStartOf="@id/iv_staccato_share"
+                    app:layout_constraintEnd_toStartOf="@id/iv_staccato_menu"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tab_staccato_photo_horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="가나다라마바사아자차카타파하정확하게삼십글자를만들기위해노력" />
 
                 <ImageButton
-                    android:id="@+id/iv_staccato_share"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:id="@+id/iv_staccato_menu"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_marginEnd="10dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/staccato_share"
-                    android:onClick="@{()-> shareHandler.onStaccatoShareClicked()}"
-                    android:padding="6dp"
+                    android:onClick="@{()-> staccatoHandler.onStaccatoMenuClicked()}"
+                    android:padding="2dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/icon_share"
-                    app:layout_constraintBottom_toBottomOf="@id/divider_staccato_first"
+                    android:src="@drawable/icon_pop_up_menu"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tab_staccato_photo_horizontal" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/divider_staccato_first"
-                    style="@style/DividerStyle"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_title" />
+                    app:layout_constraintTop_toTopOf="@id/tv_staccato_title" />
 
                 <TextView
                     android:id="@+id/tv_staccato_place_name"
@@ -148,7 +82,7 @@
                     android:textAppearance="@style/Typography.Body1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider_staccato_first"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_title"
                     tools:text="장소 제목" />
 
                 <TextView
@@ -163,16 +97,44 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_staccato_place_name"
                     tools:text="상세 주소" />
 
+                <ImageView
+                    android:id="@+id/iv_calendar"
+                    android:layout_width="14dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingTop="1dp"
+                    android:src="@drawable/icon_calendar"
+                    app:layout_constraintStart_toStartOf="@id/tv_staccato_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_detail" />
+
                 <TextView
                     android:id="@+id/tv_staccato_visited_at"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:textAppearance="@style/Typography.Body2"
-                    app:layout_constraintStart_toStartOf="@id/tv_staccato_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_detail"
+                    android:layout_marginStart="6dp"
+                    android:textAppearance="@style/Typography.Body3"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_calendar"
+                    app:layout_constraintStart_toEndOf="@id/iv_calendar"
+                    app:layout_constraintTop_toTopOf="@id/iv_calendar"
                     bind:visitedAtHistory="@{staccatoViewModel.staccatoDetail.visitedAt}"
                     tools:text="2024년 7월 15일 2시에 방문했어요" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_staccato_photo_horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="170dp"
+                    android:layout_marginTop="20dp"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:overScrollMode="never"
+                    android:paddingStart="16dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_visited_at"
+                    bind:visibleOrGone="@{!staccatoViewModel.staccatoDetail.staccatoImageUrls.isEmpty()}"
+                    tools:listitem="@layout/item_staccato_photo"
+                    tools:visibility="gone" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider_staccato_second"
@@ -180,7 +142,7 @@
                     android:layout_marginTop="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_staccato_visited_at" />
+                    app:layout_constraintTop_toBottomOf="@id/rv_staccato_photo_horizontal" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/container_staccato_feeling_selection"
@@ -195,7 +157,7 @@
 
                 <TextView
                     android:id="@+id/tv_staccato_comments_title"
-                    style="@style/SubTitleStyle"
+                    style="@style/SmallTitleStyle"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/staccato_logs"
@@ -205,8 +167,7 @@
                 <ImageView
                     android:id="@+id/iv_staccato_comments_default_empty"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_height="100dp"
                     android:contentDescription="@string/all_staccato_main_character"
                     android:src="@drawable/staccato_character_gray"
                     app:layout_constraintBottom_toTopOf="@id/tv_staccato_comments_empty"
@@ -221,10 +182,11 @@
                     android:id="@+id/tv_staccato_comments_empty"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center_horizontal"
                     android:text="@string/staccato_empty_comments"
                     android:textAppearance="@style/Typography.Body4"
+                    android:textColor="@color/gray3"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -274,6 +236,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/et_staccato_comments_input"
             bind:sendButtonEnabled="@{commentsViewModel.commentInput}" />
+
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/cv_original_photo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
