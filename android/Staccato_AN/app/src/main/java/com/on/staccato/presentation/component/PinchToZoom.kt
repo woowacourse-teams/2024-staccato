@@ -28,7 +28,7 @@ const val DEFAULT_MIN_ZOOM_SCALE = 1f
 private const val DEFAULT_MAX_ZOOM_SCALE = 2f
 
 @Composable
-fun PinchToZoomView(
+fun PinchToZoom(
     modifier: Modifier = Modifier,
     minScale: Float = DEFAULT_MIN_ZOOM_SCALE,
     maxScale: Float = DEFAULT_MAX_ZOOM_SCALE,
