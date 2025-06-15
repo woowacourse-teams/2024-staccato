@@ -13,6 +13,7 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -29,7 +30,7 @@ import com.on.staccato.theme.Title2
 import com.on.staccato.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
-private val TopAppBarColors =
+val DefaultTopAppBarColors =
     TopAppBarColors(
         containerColor = White,
         scrolledContainerColor = White,
@@ -44,27 +45,49 @@ fun DefaultNavigationTopBar(
     title: String? = null,
     subtitle: String? = null,
     isTitleCentered: Boolean = true,
-    @DrawableRes vectorResource: Int = R.drawable.icon_arrow_left,
+    @DrawableRes navigationIconResource: Int = R.drawable.icon_arrow_left,
     onNavigationClick: () -> Unit,
-    colors: TopAppBarColors = TopAppBarColors,
+    colors: TopAppBarColors = DefaultTopAppBarColors,
 ) {
     if (isTitleCentered) {
         CenterAlignedTopAppBar(
             title = {
-                if (title != null) TopBarTitleText(title, subtitle, isTitleCentered)
+                if (title != null) {
+                    TopBarTitleText(
+                        title =  title,
+                        subtitle = subtitle,
+                        isTitleCentered = isTitleCentered,
+                        color = colors.titleContentColor,
+                    )
+                }
             },
             navigationIcon = {
-                NavigationIconButton(vectorResource, onNavigationClick)
+                NavigationIconButton(
+                    vectorResource = navigationIconResource,
+                    onNavigationClick = onNavigationClick,
+                    color = colors.navigationIconContentColor,
+                )
             },
             colors = colors,
         )
     } else {
         TopAppBar(
             title = {
-                if (title != null) TopBarTitleText(title, subtitle, isTitleCentered)
+                if (title != null) {
+                    TopBarTitleText(
+                        title =  title,
+                        subtitle = subtitle,
+                        isTitleCentered = isTitleCentered,
+                        color = colors.titleContentColor,
+                    )
+                }
             },
             navigationIcon = {
-                NavigationIconButton(vectorResource, onNavigationClick)
+                NavigationIconButton(
+                    vectorResource = navigationIconResource,
+                    onNavigationClick = onNavigationClick,
+                    color = colors.navigationIconContentColor,
+                )
             },
             colors = colors,
         )
@@ -76,6 +99,7 @@ private fun TopBarTitleText(
     title: String,
     subtitle: String?,
     isTitleCentered: Boolean,
+    color: Color = Gray5,
 ) {
     val titleAlignment =
         if (isTitleCentered) {
@@ -91,7 +115,7 @@ private fun TopBarTitleText(
         Text(
             text = title,
             style = Title2,
-            color = Gray5,
+            color = color,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
@@ -99,7 +123,7 @@ private fun TopBarTitleText(
             Text(
                 text = subtitle,
                 style = Body4,
-                color = Gray5,
+                color = color,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -111,6 +135,7 @@ private fun TopBarTitleText(
 private fun NavigationIconButton(
     @DrawableRes vectorResource: Int,
     onNavigationClick: () -> Unit,
+    color: Color = Gray3
 ) {
     Icon(
         modifier =
@@ -119,7 +144,7 @@ private fun NavigationIconButton(
                 .clickableWithoutRipple { onNavigationClick() },
         imageVector = ImageVector.vectorResource(id = vectorResource),
         contentDescription = stringResource(id = R.string.top_bar_navigation_back_icon),
-        tint = Gray3,
+        tint = color,
     )
 }
 
