@@ -116,6 +116,10 @@ class MainActivity :
         MyPageActivity.startWithResultLauncher(this, myPageLauncher)
     }
 
+    override fun onMyLocationClicked() {
+        sharedViewModel.updateMyLocationEvent()
+    }
+
     private fun loadMemberProfile() {
         sharedViewModel.fetchMemberProfile()
     }

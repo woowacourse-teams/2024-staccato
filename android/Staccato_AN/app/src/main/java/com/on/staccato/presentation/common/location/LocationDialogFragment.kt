@@ -9,6 +9,9 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.on.staccato.databinding.FragmentLocationDialogBinding
@@ -21,6 +24,12 @@ class LocationDialogFragment : DialogFragment(), LocationDialogHandler {
     private val binding get() = _binding!!
 
     private val sharedViewModel by activityViewModels<SharedViewModel>()
+    private lateinit var settingsLauncher: ActivityResultLauncher<Intent>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        settingsLauncher = registerSettingsResultLauncher()
+    }
 
     override fun onStart() {
         super.onStart()
@@ -55,18 +64,27 @@ class LocationDialogFragment : DialogFragment(), LocationDialogHandler {
     override fun onSettingClicked() {
         sharedViewModel.updateIsSettingClicked(isSettingClicked = true)
         navigateToSetting()
-        dismiss()
     }
 
     private fun navigateToSetting() {
         val uri = Uri.fromParts(PACKAGE_SCHEME, context?.packageName, null)
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri)
-        startActivity(intent)
+        settingsLauncher.launch(intent)
     }
+
+    private fun registerSettingsResultLauncher(): ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            parentFragmentManager.setFragmentResult(
+                KEY_HAS_VISITED_SETTINGS,
+                bundleOf(KEY_HAS_VISITED_SETTINGS to true),
+            )
+            dismiss()
+        }
 
     companion object {
         const val TAG = "LocationDialogFragment"
         const val PACKAGE_SCHEME = "package"
         const val PERMISSION_CANCEL_KEY = "isPermissionCanceled"
+        const val KEY_HAS_VISITED_SETTINGS = "hasVisitedSettings"
     }
 }
