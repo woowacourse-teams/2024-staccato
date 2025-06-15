@@ -258,4 +258,83 @@ class StaccatoTest {
                         .hasMessage("개인 카테고리 간에만 스타카토를 옮길 수 있어요.")
         );
     }
+
+    @DisplayName("Staccato 생성 시 생성자/수정자는 생성한 사람으로 만들어진다.")
+    @Test
+    void createdAndModifiedBySameWhenCreated() {
+        // given
+        Member creator = MemberFixtures.defaultMember().withNickname("creator").build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(creator)
+                .build();
+
+        // when
+        Staccato staccato = Staccato.create(
+                LocalDateTime.of(2025, 1, 1, 12, 0),
+                "첫 방문",
+                "장소명",
+                "주소",
+                BigDecimal.ONE,
+                BigDecimal.ONE,
+                List.of("https://image.url/1.jpg"),
+                category,
+                creator
+        );
+
+        // then
+        assertAll(
+                () -> assertThat(staccato.getCreatedBy()).isEqualTo(creator),
+                () -> assertThat(staccato.getModifiedBy()).isEqualTo(creator)
+        );
+    }
+
+    @DisplayName("Staccato update 시 createdBy는 변경되지 않는다.")
+    @Test
+    void createdByDoesNotChangeOnUpdate() {
+        // given
+        Member creator = MemberFixtures.defaultMember().withNickname("creator").build();
+        Member updater = MemberFixtures.defaultMember().withNickname("updater").build();
+        Category category = CategoryFixtures.defaultCategory().withHost(creator).build();
+
+        Staccato original = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withCreator(creator)
+                .build();
+
+        Staccato updateData = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withCreator(updater)
+                .build();
+
+        // when
+        original.update(updateData);
+
+        // then
+        assertThat(original.getCreatedBy()).isEqualTo(creator);
+    }
+
+    @DisplayName("Staccato update 시 modifiedBy는 최근 수정자로 갱신된다.")
+    @Test
+    void modifiedByChangesOnUpdate() {
+        // given
+        Member creator = MemberFixtures.defaultMember().withNickname("creator").build();
+        Member updater = MemberFixtures.defaultMember().withNickname("updater").build();
+        Category category = CategoryFixtures.defaultCategory().withHost(creator).build();
+
+        Staccato original = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withCreator(creator)
+                .build();
+
+        Staccato updateData = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withCreator(updater)
+                .build();
+
+        // when
+        original.update(updateData);
+
+        // then
+        assertThat(original.getModifiedBy()).isEqualTo(updater);
+    }
 }

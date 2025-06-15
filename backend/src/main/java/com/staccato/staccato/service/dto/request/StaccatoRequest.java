@@ -1,6 +1,7 @@
 package com.staccato.staccato.service.dto.request;
 
 import com.staccato.config.swagger.SwaggerExamples;
+import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,12 +11,10 @@ import java.util.Objects;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.staccato.category.domain.Category;
-import com.staccato.staccato.domain.StaccatoImages;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -55,16 +54,17 @@ public record StaccatoRequest(
         }
     }
 
-    public Staccato toStaccato(Category category) {
-        return Staccato.builder()
-                .visitedAt(visitedAt)
-                .title(staccatoTitle)
-                .placeName(placeName)
-                .latitude(latitude)
-                .longitude(longitude)
-                .address(address)
-                .category(category)
-                .staccatoImages(new StaccatoImages(staccatoImageUrls))
-                .build();
+    public Staccato toStaccato(Category category, Member creator) {
+        return Staccato.create(
+                visitedAt,
+                staccatoTitle,
+                placeName,
+                address,
+                latitude,
+                longitude,
+                staccatoImageUrls,
+                category,
+                creator
+        );
     }
 }
