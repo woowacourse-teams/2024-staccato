@@ -2,10 +2,9 @@ package com.staccato.invitation.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.category.repository.CategoryRepository;
@@ -15,13 +14,14 @@ import com.staccato.exception.StaccatoException;
 import com.staccato.invitation.domain.CategoryInvitation;
 import com.staccato.invitation.domain.InvitationStatus;
 import com.staccato.invitation.repository.CategoryInvitationRepository;
+import com.staccato.invitation.service.dto.event.CategoryInvitationAcceptedEvent;
+import com.staccato.invitation.service.dto.event.CategoryInvitationEvent;
 import com.staccato.invitation.service.dto.request.CategoryInvitationRequest;
 import com.staccato.invitation.service.dto.response.CategoryInvitationCreateResponses;
 import com.staccato.invitation.service.dto.response.CategoryInvitationReceivedResponses;
 import com.staccato.invitation.service.dto.response.CategoryInvitationSentResponses;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +35,7 @@ public class InvitationService {
     private final MemberRepository memberRepository;
     private final CategoryInvitationRepository categoryInvitationRepository;
     private final CategoryMemberRepository categoryMemberRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public CategoryInvitationCreateResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
@@ -42,7 +43,7 @@ public class InvitationService {
         validateInvitePermission(category, inviter);
         List<Member> invitees = memberRepository.findAllByIdIn(categoryInvitationRequest.inviteeIds());
         List<CategoryInvitation> invitations = categoryInvitationRepository.saveAll(createInvitations(category, inviter, invitees));
-
+        eventPublisher.publishEvent(new CategoryInvitationEvent(inviter, invitees, category));
         return CategoryInvitationCreateResponses.from(invitations);
     }
 
@@ -122,6 +123,7 @@ public class InvitationService {
         if (isInviteeNotInCategory(invitee, category)) {
             category.addGuests(List.of(invitation.getInvitee()));
         }
+        eventPublisher.publishEvent(new CategoryInvitationAcceptedEvent(invitee, category));
     }
 
     private boolean isInviteeNotInCategory(Member invitee, Category category) {

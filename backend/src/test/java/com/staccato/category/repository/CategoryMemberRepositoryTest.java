@@ -1,20 +1,13 @@
 package com.staccato.category.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import java.time.LocalDate;
 import java.util.List;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-
 import com.staccato.RepositoryTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.domain.CategoryMember;
@@ -23,6 +16,10 @@ import com.staccato.fixture.category.CategoryMemberFixtures;
 import com.staccato.fixture.member.MemberFixtures;
 import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CategoryMemberRepositoryTest extends RepositoryTest {
     @Autowired
@@ -205,5 +202,34 @@ class CategoryMemberRepositoryTest extends RepositoryTest {
             categoryMemberRepository.save(categoryMember2);
             categoryMemberRepository.flush();
         }).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @DisplayName("특정 카테고리에 속한 모든 멤버를 조회한다.")
+    @Test
+    void findAllMembersByCategoryId() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        Member guest2 = MemberFixtures.defaultMember().withNickname("guest2").buildAndSave(memberRepository);
+
+        Category category = CategoryFixtures.defaultCategory()
+                .withTitle("category")
+                .withHost(host)
+                .withGuests(List.of(guest, guest2))
+                .buildAndSave(categoryRepository);
+        CategoryFixtures.defaultCategory()
+                .withTitle("anotherCategory")
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+
+        // when
+        List<Member> result = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
+
+        // then
+        assertThat(result)
+                .hasSize(3)
+                .extracting(member -> member.getNickname().getNickname())
+                .containsExactlyInAnyOrder("host", "guest", "guest2");
     }
 }
