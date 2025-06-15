@@ -7,6 +7,6 @@ import com.staccato.util.DatabaseCleanerExtension;
 
 @ExtendWith(DatabaseCleanerExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Import({ServiceTestConfig.class})
+@Import({ServiceTestConfig.class, FcmTestConfig.class})
 public abstract class ServiceSliceTest {
 }
