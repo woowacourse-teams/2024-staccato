@@ -34,6 +34,7 @@ fun PinchToZoomView(
     maxScale: Float = DEFAULT_MAX_ZOOM_SCALE,
     onScaleChange: ((scale: Float) -> Unit)? = null,
     onDrag: ((Offset) -> Boolean)? = null,
+    onTap: ((Offset) -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     var scale by remember { mutableFloatStateOf(minScale) }
@@ -92,6 +93,7 @@ fun PinchToZoomView(
                     }
                 }.pointerInput(Unit) {
                     detectTapGestures(
+                        onTap = onTap,
                         onDoubleTap = { tapOffset ->
                             if (scale == minScale) {
                                 scale = maxScale

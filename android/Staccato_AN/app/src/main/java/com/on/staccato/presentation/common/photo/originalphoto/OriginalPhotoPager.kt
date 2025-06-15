@@ -25,6 +25,7 @@ private const val ZOOM_SCROLLABLE_TOLERANCE = 0.05f
 fun OriginalPhotoPager(
     imageUrls: List<String>,
     modifier: Modifier = Modifier,
+    onTap: () -> Unit,
     initialPage: Int = 0,
 ) {
     val pagerState =
@@ -47,6 +48,7 @@ fun OriginalPhotoPager(
                 scrollable = (scale - DEFAULT_MIN_ZOOM_SCALE).absoluteValue < ZOOM_SCROLLABLE_TOLERANCE
             },
             onDrag = { !scrollable },
+            onTap = { onTap() },
         ) {
             DefaultAsyncImage(
                 modifier = Modifier.fillMaxSize(),
@@ -64,5 +66,6 @@ fun OriginalPhotoPagerPreview() {
     OriginalPhotoPager(
         imageUrls = listOf("", "", ""),
         modifier = Modifier.fillMaxSize(),
+        onTap = {},
     )
 }
