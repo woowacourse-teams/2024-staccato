@@ -17,19 +17,16 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.clustering.ClusterManager
 import com.on.staccato.R
 import com.on.staccato.domain.model.StaccatoLocation
-import com.on.staccato.presentation.common.color.CategoryColor
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
-import com.on.staccato.presentation.util.showSnackBar
 import com.on.staccato.util.logging.AnalyticsEvent
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
@@ -49,6 +46,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     lateinit var loggingManager: LoggingManager
 
     private lateinit var map: GoogleMap
+    private lateinit var clusterManager: ClusterManager<StaccatoLocation>
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
 
     private lateinit var display: DisplayMetrics
@@ -62,9 +60,11 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             googleMap.setMapStyle()
             googleMap.moveDefaultLocation()
             checkLocationSetting()
-            googleMap.onMarkerClicked()
             googleMap.setOnMyLocationButtonClickListener(this)
             googleMap.setMapPadding()
+            clusterManager = ClusterManager(context, googleMap)
+            googleMap.setOnCameraIdleListener(clusterManager)
+            onMarkerClicked()
         }
 
     override fun onCreateView(
@@ -227,47 +227,24 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun observeMarkerOptions() {
         mapsViewModel.staccatoLocations.observe(viewLifecycleOwner) { staccatoLocations ->
-            if (this::map.isInitialized) {
+            if (this::map.isInitialized.not()) return@observe
+
+            staccatoLocations.map {
                 map.clear()
-                addMarkersAndGetIds(staccatoLocations)?.let { markerIds ->
-                    mapsViewModel.updateMarkers(
-                        markerIds,
-                        staccatoLocations.map { it.staccatoId },
-                    )
-                }
+                clusterManager.addItem(it)
             }
         }
     }
 
-    private fun addMarkersAndGetIds(staccatoLocation: List<StaccatoLocation>): List<String>? =
-        staccatoLocation.map {
-            val markerOption = it.toMarkerOption()
-            val addedMarker =
-                map.addMarker(markerOption) ?: run {
-                    handleMarkerError()
-                    return null
-                }
-            addedMarker.id
-        }
+    private fun onMarkerClicked() {
+        clusterManager.setOnClusterItemClickListener { item ->
+            mapsViewModel.updateStaccatoId(item.staccatoId)
 
-    private fun StaccatoLocation.toMarkerOption() =
-        MarkerOptions()
-            .position(LatLng(latitude, longitude))
-            .icon(BitmapDescriptorFactory.fromResource(CategoryColor.getMarkerResBy(color)))
-
-    private fun handleMarkerError() {
-        map.clear()
-        requireView().showSnackBar(getString(R.string.maps_markers_loading_error))
-    }
-
-    private fun GoogleMap.onMarkerClicked() {
-        setOnMarkerClickListener { marker ->
-            mapsViewModel.findStaccatoId(marker.id)
             loggingManager.logEvent(
                 AnalyticsEvent.NAME_STACCATO_READ,
                 Param(Param.KEY_IS_VIEWED_BY_MARKER, true),
             )
-            false
+            true
         }
     }
 

@@ -13,7 +13,6 @@ import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
-import com.on.staccato.presentation.map.model.MarkerUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -28,8 +27,6 @@ class MapsViewModel
     ) : ViewModel() {
         private val _staccatoLocations = MutableLiveData<List<StaccatoLocation>>()
         val staccatoLocations: LiveData<List<StaccatoLocation>> get() = _staccatoLocations
-
-        private val markerUiModels = MutableLiveData<List<MarkerUiModel>>()
 
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
@@ -57,11 +54,8 @@ class MapsViewModel
             _focusLocation.value = LocationUiModel(latitude, longitude)
         }
 
-        fun findStaccatoId(markerId: String?) {
-            _staccatoId.value =
-                markerUiModels.value?.first {
-                    it.markerId == markerId
-                }?.staccatoId ?: throw NoSuchElementException("marker id와 일치하는 스타카토가 없습니다.")
+        fun updateStaccatoId(staccatoId: Long) {
+            _staccatoId.value = staccatoId
         }
 
         fun loadStaccatos() {
@@ -71,19 +65,6 @@ class MapsViewModel
                     .onServerError(::handleServerError)
                     .onException2(::handelException)
             }
-        }
-
-        fun updateMarkers(
-            markerIds: List<String>,
-            staccatoIds: List<Long>,
-        ) {
-            markerUiModels.value =
-                markerIds.zip(staccatoIds) { markerId, staccatoId ->
-                    MarkerUiModel(
-                        staccatoId = staccatoId,
-                        markerId = markerId,
-                    )
-                }
         }
 
         private fun setStaccatoLocations(locations: List<StaccatoLocation>) {
