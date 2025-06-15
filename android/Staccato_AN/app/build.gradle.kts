@@ -194,9 +194,13 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
-    // Google Map
+    // Google Maps SDK
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
+    implementation(libs.maps.ktx)
+
+    // Google Maps SDK for Android utility library
+    implementation(libs.maps.utils.ktx)
 
     // Google Place
     implementation(libs.places)
