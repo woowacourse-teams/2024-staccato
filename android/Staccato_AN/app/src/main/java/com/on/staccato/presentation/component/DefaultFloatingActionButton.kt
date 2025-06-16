@@ -29,7 +29,7 @@ fun DefaultFloatingActionButton(
 ) {
     SmallFloatingActionButton(
         modifier = modifier,
-        onClick = { onClick() },
+        onClick = onClick,
         containerColor = containerColor,
         shape = shape,
         contentColor = contentColor,
