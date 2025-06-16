@@ -200,13 +200,13 @@ class CategoryTest {
         @DisplayName("validateGuest는 멤버가 GUEST라면 예외를 발생시키지 않는다.")
         @Test
         void successValidateGuestIfMemberIsGuest() {
-            assertDoesNotThrow(() -> category.validateNotHost(guest));
+            assertDoesNotThrow(() -> category.validateMemberCanLeave(guest));
         }
 
         @DisplayName("validateGuest는 멤버가 HOST라면 예외를 발생시킨다.")
         @Test
         void failValidateGuestIfMemberIsHost() {
-            assertThatThrownBy(() -> category.validateNotHost(host))
+            assertThatThrownBy(() -> category.validateMemberCanLeave(host))
                     .isInstanceOf(ForbiddenException.class);
         }
 
@@ -214,7 +214,7 @@ class CategoryTest {
         @Test
         void failValidateGuestIfMemberNotInCategory() {
             Member other = MemberFixtures.defaultMember().withNickname("other").build();
-            assertThatThrownBy(() -> category.validateNotHost(other))
+            assertThatThrownBy(() -> category.validateMemberCanLeave(other))
                     .isInstanceOf(ForbiddenException.class);
         }
     }
