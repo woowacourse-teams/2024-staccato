@@ -25,6 +25,7 @@ import androidx.compose.ui.util.fastForEach
 
 const val DEFAULT_MIN_ZOOM_SCALE = 1f
 private const val DEFAULT_MAX_ZOOM_SCALE = 2f
+private const val SLOW_MOVEMENT_COEFFICIENT = 0.8f
 
 @Composable
 fun PinchToZoom(
@@ -39,7 +40,6 @@ fun PinchToZoom(
     var scale by remember { mutableFloatStateOf(minScale) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     var containerSize by remember { mutableStateOf(IntSize.Zero) }
-    val slowMovement = 0.8f
 
     Box(
         modifier =
@@ -80,7 +80,7 @@ fun PinchToZoom(
                                     }
 
                                     if (pastTouchSlop) {
-                                        offset += dragAmount * scale * slowMovement
+                                        offset += dragAmount * scale * SLOW_MOVEMENT_COEFFICIENT
                                         offset = clampOffset(offset, scale, containerSize)
                                         val shouldConsume = onDrag?.invoke(dragAmount) ?: false
                                         if (shouldConsume) dragChange.consume()
