@@ -119,6 +119,11 @@
                     app:layout_constraintTop_toBottomOf="@id/view_main_drag_bar"
                     app:navGraph="@navigation/bottom_navigation_graph" />
 
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/cv_notification_rationale_dialog"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -138,11 +143,6 @@
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
                 app:srcCompat="@drawable/icon_plus"
                 app:tint="@color/white" />
-
-            <androidx.compose.ui.platform.ComposeView
-                android:id="@+id/cv_notification_rationale_dialog"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
