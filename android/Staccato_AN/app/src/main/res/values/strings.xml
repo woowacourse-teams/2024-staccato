@@ -37,6 +37,12 @@
     <string name="all_invitation_notification_indicator_description">카테고리 초대 알림 존재 표시</string>
     <string name="all_member_profile_image_description">사용자 프로필 사진</string>
 
+    // Notification
+    <string name="notification_permission_title">알림 설정</string>
+    <string name="notification_permission_rationale">알림을 활성화하면 아래 소식을 빠르게 받아볼 수 있어요.</string>
+    <string name="notification_permission_rationale_bullet">▪ 새로운 코멘트가 달렸을 때\n▪ 누군가 나를 카테고리에 초대했을 때\n▪ 공유 카테고리에 새로운 참여자가 생겼을 때\n▪ 공유 카테고리에 새로운 스타카토가 올라왔을 때</string>
+    <string name="notification_permission_denial">알림 권한을 거부 하셨습니다.</string>
+
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
 
