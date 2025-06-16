@@ -45,6 +45,9 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     @Inject
     lateinit var loggingManager: LoggingManager
 
+    @Inject
+    lateinit var clusterDrawManager: ClusterDrawManager
+
     private lateinit var map: GoogleMap
     private lateinit var clusterManager: ClusterManager<StaccatoLocation>
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
@@ -63,7 +66,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             googleMap.setOnMyLocationButtonClickListener(this)
             googleMap.setMapPadding()
             clusterManager = ClusterManager(context, googleMap)
-            googleMap.setOnCameraIdleListener(clusterManager)
+            clusterManager.setup(googleMap)
             onMarkerClicked()
         }
 
@@ -85,7 +88,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         setupMap()
         setupPermissionRequestLauncher(view)
         observeStaccatoId()
-        observeMarkerOptions()
+        observeStaccatoLocations()
         observeUpdatedStaccato()
         observeLocation()
         observeIsTimelineUpdated()
@@ -225,14 +228,29 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         }
     }
 
-    private fun observeMarkerOptions() {
+    private fun ClusterManager<StaccatoLocation>.setup(googleMap: GoogleMap) {
+        renderer = createStaccatoMarkerRender(googleMap)
+        setOnClusterClickListener {
+            // TODO: showStaccatosDialog
+            true
+        }
+        googleMap.setOnCameraIdleListener(clusterManager)
+    }
+
+    private fun createStaccatoMarkerRender(googleMap: GoogleMap) =
+        StaccatoMarkerRender(
+            context = requireContext(),
+            map = googleMap,
+            clusterManager = clusterManager,
+            clusterDrawManager = clusterDrawManager,
+        )
+
+    private fun observeStaccatoLocations() {
         mapsViewModel.staccatoLocations.observe(viewLifecycleOwner) { staccatoLocations ->
             if (this::map.isInitialized.not()) return@observe
-
-            staccatoLocations.map {
-                map.clear()
-                clusterManager.addItem(it)
-            }
+            clusterManager.clearItems()
+            clusterManager.addItems(staccatoLocations)
+            clusterManager.cluster()
         }
     }
 
