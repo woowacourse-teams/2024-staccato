@@ -139,6 +139,11 @@
                 app:srcCompat="@drawable/icon_plus"
                 app:tint="@color/white" />
 
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/cv_notification_rationale_dialog"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
