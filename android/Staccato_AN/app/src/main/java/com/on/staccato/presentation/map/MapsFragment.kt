@@ -81,7 +81,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         super.onViewCreated(view, savedInstanceState)
         display = view.resources.displayMetrics
         mapsViewModel.loadStaccatos()
-        observeMyLocationEvent()
+        observeCurrentLocationEvent()
         setupMap()
         setupPermissionRequestLauncher(view)
         handleHasVisitedSettings()
@@ -104,9 +104,9 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         return false
     }
 
-    private fun observeMyLocationEvent() {
+    private fun observeCurrentLocationEvent() {
         viewLifecycleOwner.lifecycleScope.launch {
-            sharedViewModel.myLocationEvent.collect {
+            sharedViewModel.currentLocationEvent.collect {
                 checkLocationSetting()
             }
         }

@@ -12,7 +12,7 @@ import com.on.staccato.theme.StaccatoBlue
 import com.on.staccato.theme.White
 
 @Composable
-fun MyLocationFloatingActionButton(onClick: () -> Unit) {
+fun CurrentLocationFloatingActionButton(onClick: () -> Unit) {
     DefaultFloatingActionButton(
         modifier =
             Modifier
@@ -21,15 +21,15 @@ fun MyLocationFloatingActionButton(onClick: () -> Unit) {
         onClick = onClick,
         containerColor = White,
         contentColor = StaccatoBlue,
-        iconId = R.drawable.icon_my_location,
-        iconContentDescriptionId = R.string.maps_my_location_btn_content_description,
+        iconId = R.drawable.icon_current_location,
+        iconContentDescriptionId = R.string.current_location_btn_content_description,
     )
 }
 
 @Preview
 @Composable
-fun MyLocationFloatingActionButtonPreview() {
-    MyLocationFloatingActionButton(
+fun CurrentLocationFloatingActionButtonPreview() {
+    CurrentLocationFloatingActionButton(
         onClick = {},
     )
 }

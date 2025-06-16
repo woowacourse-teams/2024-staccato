@@ -8,7 +8,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.on.staccato.R
 import com.on.staccato.presentation.util.dpToPx
 
-class MyLocationFabBehavior(
+class CurrentLocationFabBehavior(
     context: Context,
     attrs: AttributeSet,
 ) : FloatingActionButton.Behavior(context, attrs) {

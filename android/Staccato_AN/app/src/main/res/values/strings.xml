@@ -222,7 +222,6 @@
 
     // fragment_maps
     <string name="maps_markers_loading_error">마커를 불러오는 중에 오류가 발생했어요.</string>
-    <string name="maps_my_location_btn_content_description">현 위치로 이동</string>
 
     // exception snackbar message
     <string name="error_message_required_values">"필수 값을 모두 입력해 주세요."</string>
@@ -257,6 +256,9 @@
     <string name="invitation_management_dialog_reject_description">한 번 거절하면 되돌릴 수 없어요.</string>
     <string name="invitation_management_dialog_cancel_title">초대를 취소할까요?</string>
     <string name="invitation_management_dialog_cancel_description">나중에 다시 초대할 수 있어요.</string>
+
+    // current location
+    <string name="current_location_btn_content_description">현 위치로 이동</string>
 
     // NavigationTopBar
     <string name="top_bar_navigation_back_icon">상단 바 뒤로가기 아이콘</string>

@@ -86,12 +86,12 @@ class SharedViewModel
         private val _hasNotification = MutableLiveData<Boolean>(false)
         val hasNotification: LiveData<Boolean> get() = _hasNotification
 
-        private val _myLocationEvent = MutableSharedFlow<Unit>()
-        val myLocationEvent: SharedFlow<Unit> get() = _myLocationEvent.asSharedFlow()
+        private val _currentLocationEvent = MutableSharedFlow<Unit>()
+        val currentLocationEvent: SharedFlow<Unit> get() = _currentLocationEvent.asSharedFlow()
 
-        fun updateMyLocationEvent() {
+        fun updateCurrentLocationEvent() {
             viewModelScope.launch {
-                _myLocationEvent.emit(Unit)
+                _currentLocationEvent.emit(Unit)
             }
         }
 

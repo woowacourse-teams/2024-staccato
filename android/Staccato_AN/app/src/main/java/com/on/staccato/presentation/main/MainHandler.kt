@@ -5,5 +5,5 @@ interface MainHandler {
 
     fun onMyPageClicked()
 
-    fun onMyLocationClicked()
+    fun onCurrentLocationClicked()
 }
