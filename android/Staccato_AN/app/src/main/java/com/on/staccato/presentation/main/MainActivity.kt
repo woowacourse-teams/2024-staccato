@@ -28,7 +28,7 @@ import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
 import com.on.staccato.presentation.common.notification.NotificationPermissionManager
-import com.on.staccato.presentation.common.notification.NotificationRationaleDialog
+import com.on.staccato.presentation.common.notification.NotificationPermissionRationale
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
@@ -425,9 +425,7 @@ class MainActivity :
 
     private fun showNotificationPermissionRationale() {
         binding.cvNotificationRationaleDialog.setContent {
-            NotificationRationaleDialog {
-                moveToNotificationSetting()
-            }
+            NotificationPermissionRationale(::moveToNotificationSetting)
         }
     }
 
