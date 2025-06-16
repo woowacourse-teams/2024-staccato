@@ -84,7 +84,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         observeCurrentLocationEvent()
         setupMap()
         setupPermissionRequestLauncher(view)
-        handleHasVisitedSettings()
+        registerSettingsResultListener()
         observeStaccatoId()
         observeMarkerOptions()
         observeUpdatedStaccato()
@@ -146,7 +146,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             )
     }
 
-    private fun handleHasVisitedSettings() {
+    private fun registerSettingsResultListener() {
         childFragmentManager.setFragmentResultListener(
             KEY_HAS_VISITED_SETTINGS,
             viewLifecycleOwner,
