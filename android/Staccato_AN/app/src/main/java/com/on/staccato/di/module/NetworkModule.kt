@@ -36,6 +36,7 @@ object NetworkModule {
     @Singleton
     fun provideJson(): Json =
         Json {
+            encodeDefaults = true
             coerceInputValues = true
         }
 
