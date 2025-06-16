@@ -99,7 +99,7 @@ public class CategoryService {
     public CategoryDetailResponseV3 readCategoryById(long categoryId, Member member) {
         Category category = categoryRepository.findWithCategoryMembersById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-        validateReadPermission(category, member);
+        category.validateOwner(member);
         List<Staccato> staccatos = staccatoRepository.findAllByCategoryIdOrdered(categoryId);
 
         return new CategoryDetailResponseV3(category, staccatos, member);
@@ -108,7 +108,7 @@ public class CategoryService {
     public CategoryStaccatoLocationResponses readAllStaccatoByCategory(
             Member member, long categoryId, CategoryStaccatoLocationRangeRequest categoryStaccatoLocationRangeRequest) {
         Category category = getCategoryById(categoryId);
-        validateOwner(category, member);
+        category.validateOwner(member);
         List<Staccato> staccatos = staccatoRepository.findByMemberAndLocationRangeAndCategory(
                 member,
                 categoryStaccatoLocationRangeRequest.swLat(),
@@ -124,7 +124,8 @@ public class CategoryService {
     @Transactional
     public void updateCategory(CategoryUpdateRequest categoryUpdateRequest, Long categoryId, Member member) {
         Category originCategory = getCategoryById(categoryId);
-        validateModificationPermission(originCategory, member);
+        originCategory.validateOwner(member);
+        originCategory.validateHost(member);
         Category updatedCategory = categoryUpdateRequest.toCategory(originCategory);
         if (originCategory.isNotSameTitle(updatedCategory.getTitle())) {
             validateCategoryTitle(updatedCategory, member);
@@ -136,7 +137,8 @@ public class CategoryService {
     @Transactional
     public void updateCategoryColor(long categoryId, CategoryColorRequest categoryColorRequest, Member member) {
         Category category = getCategoryById(categoryId);
-        validateModificationPermission(category, member);
+        category.validateOwner(member);
+        category.validateHost(member);
         category.changeColor(categoryColorRequest.toColor());
     }
 
@@ -149,18 +151,10 @@ public class CategoryService {
     @Transactional
     public void deleteCategory(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
-        validateModificationPermission(category, member);
+        category.validateOwner(member);
+        category.validateHost(member);
         deleteAllRelatedCategory(categoryId);
         categoryRepository.deleteById(categoryId);
-    }
-
-    private Category getCategoryById(long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-    }
-
-    private void validateReadPermission(Category category, Member member) {
-        validateOwner(category, member);
     }
 
     private void deleteAllRelatedCategory(long categoryId) {
@@ -175,20 +169,26 @@ public class CategoryService {
         categoryInvitationRepository.deleteAllByCategoryIdInBulk(categoryId);
     }
 
-    private void validateModificationPermission(Category category, Member member) {
-        validateOwner(category, member);
-        validateHost(category, member);
+    @Transactional
+    public void deleteSelfFromCategory(long categoryId, Member member) {
+        Category category = getCategoryById(categoryId);
+        category.validateOwner(member);
+        validateNotHost(category, member);
+
+        category.removeCategoryMember(member);
+        categoryMemberRepository.deleteByCategoryIdAndMemberId(category.getId(), member.getId());
     }
 
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
+    private Category getCategoryById(long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
     }
 
-    private void validateHost(Category category, Member member) {
-        if (category.isGuest(member)) {
-            throw new ForbiddenException();
+    private void validateNotHost(Category category, Member member) {
+        try {
+            category.validateNotHost(member);
+        } catch (ForbiddenException e) {
+            throw new ForbiddenException("방장은 카테고리를 나갈 수 없어요.");
         }
     }
 }
