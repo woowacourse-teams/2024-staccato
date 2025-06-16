@@ -106,8 +106,10 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun observeCurrentLocationEvent() {
         viewLifecycleOwner.lifecycleScope.launch {
-            sharedViewModel.currentLocationEvent.collect {
-                checkLocationSetting()
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.currentLocationEvent.collect {
+                    checkLocationSetting()
+                }
             }
         }
     }
