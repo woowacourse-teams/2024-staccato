@@ -149,4 +149,13 @@ public interface CategoryControllerDocs {
     ResponseEntity<Void> deleteCategory(
             @Parameter(description = "카테고리 ID", example = "1") @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
             @Parameter(hidden = true) Member member);
+
+    @Operation(summary = "카테고리 나가기", description = "공동카테고리에서 나갑니다.")
+    @ApiResponses(value = {
+            @ApiResponse(description = "카테고리 나가기 성공", responseCode = "200"),
+            @ApiResponse(description = "Path Variable 형식이 잘못되었을 때 발생", responseCode = "400")
+    })
+    ResponseEntity<Void> deleteSelfFromCategory(
+            @Parameter(description = "카테고리 ID", example = "1") @Min(value = 1L, message = "카테고리 식별자는 양수로 이루어져야 합니다.") long categoryId,
+            @Parameter(hidden = true) Member member);
 }
