@@ -37,7 +37,7 @@ class NotificationControllerTest extends ControllerTest {
         mockMvc.perform(get("/notifications/exists")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("알림용 토큰을 등록합니다.")

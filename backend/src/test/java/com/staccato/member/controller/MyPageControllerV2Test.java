@@ -35,6 +35,6 @@ class MyPageControllerV2Test extends ControllerTest {
         mockMvc.perform(get("/v2/mypage")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 }

@@ -47,7 +47,7 @@ class AuthControllerV2Test extends ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(loginRequest))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse,true));
     }
 
     @DisplayName("닉네임이 공백만 있거나, 빈 문자열이거나, null이면 400을 반환한다.")

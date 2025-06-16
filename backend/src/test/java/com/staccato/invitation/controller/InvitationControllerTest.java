@@ -57,7 +57,7 @@ class InvitationControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invitationRequest))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("유효하지 않은 카테고리 식별자로 초대 요청 시 예외가 발생한다.")
@@ -146,7 +146,7 @@ class InvitationControllerTest extends ControllerTest {
         mockMvc.perform(get("/invitations/sent")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("초대 ID로 초대 요청을 수락한다.")
@@ -245,6 +245,6 @@ class InvitationControllerTest extends ControllerTest {
         mockMvc.perform(get("/invitations/received")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 }

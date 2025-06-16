@@ -100,7 +100,7 @@ class CategoryControllerTest extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/categories/1"))
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("기간이 없는 카테고리를 생성하는 요청/응답의 역직렬화/직렬화에 성공한다.")
@@ -129,7 +129,7 @@ class CategoryControllerTest extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/categories/1"))
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("사용자가 선택적으로 카테고리 정보를 입력하면, 새로운 카테고리를 생성한다.")
@@ -207,7 +207,7 @@ class CategoryControllerTest extends ControllerTest {
         mockMvc.perform(get("/categories")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("유효하지 않은 필터링 조건은 무시하고, 모든 카테고리 목록을 조회한다.")
@@ -257,7 +257,7 @@ class CategoryControllerTest extends ControllerTest {
                         .param("specificDate", LocalDate.now().toString())
                         .param("isPrivate", "false"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("specificDate 파라미터 없이 요청하면 예외가 발생한다.")
@@ -364,7 +364,7 @@ class CategoryControllerTest extends ControllerTest {
         mockMvc.perform(get("/categories/{categoryId}", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
 
@@ -412,7 +412,7 @@ class CategoryControllerTest extends ControllerTest {
         mockMvc.perform(get("/categories/{categoryId}", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("특정 카테고리에 속한 스타카토 목록 조회에 성공한다.")
@@ -461,7 +461,7 @@ class CategoryControllerTest extends ControllerTest {
                         .param("swLng", "123")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("적합한 경로변수와 데이터를 통해 스타카토 수정에 성공한다.")

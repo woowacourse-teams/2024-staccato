@@ -202,7 +202,7 @@ class StaccatoControllerTest extends ControllerTest {
         mockMvc.perform(get("/staccatos")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("적합한 경로변수를 통해 스타카토 조회에 성공한다.")
@@ -241,7 +241,7 @@ class StaccatoControllerTest extends ControllerTest {
         mockMvc.perform(get("/staccatos/{staccatoId}", staccatoId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("적합하지 않은 경로변수의 경우 스타카토 조회에 실패한다.")
@@ -369,7 +369,7 @@ class StaccatoControllerTest extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/staccatos/shared/" + "sample-token"))
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("토큰으로 스타카토의 정보를 불러온다.")
@@ -430,6 +430,6 @@ class StaccatoControllerTest extends ControllerTest {
         mockMvc.perform(get("/staccatos/shared/{token}", token)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 }
