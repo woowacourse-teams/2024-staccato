@@ -49,7 +49,7 @@ fun PinchToZoom(
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         var isZoomGesture = false
-                        var pastTouchSlop = false
+                        var isDragGesture = false
                         val touchSlop = viewConfiguration.touchSlop
                         awaitFirstDown(requireUnconsumed = false)
 
@@ -75,11 +75,11 @@ fun PinchToZoom(
                                 val dragAmount = dragChange.positionChange()
 
                                 if (scale > minScale) {
-                                    if (!pastTouchSlop && dragAmount.getDistance() > touchSlop) {
-                                        pastTouchSlop = true
+                                    if (!isDragGesture && dragAmount.getDistance() > touchSlop) {
+                                        isDragGesture = true
                                     }
 
-                                    if (pastTouchSlop) {
+                                    if (isDragGesture) {
                                         offset += dragAmount * scale * SLOW_MOVEMENT_COEFFICIENT
                                         offset = clampOffset(offset, scale, containerSize)
                                         val shouldConsume = onDrag?.invoke(dragAmount) ?: false
