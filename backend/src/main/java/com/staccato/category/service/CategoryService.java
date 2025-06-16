@@ -173,7 +173,7 @@ public class CategoryService {
     public void deleteSelfFromCategory(long categoryId, Member member) {
         Category category = getCategoryById(categoryId);
         category.validateOwner(member);
-        validateNotHost(category, member);
+        category.validateMemberCanLeave(member);
 
         category.removeCategoryMember(member);
         categoryMemberRepository.deleteByCategoryIdAndMemberId(category.getId(), member.getId());
@@ -182,13 +182,5 @@ public class CategoryService {
     private Category getCategoryById(long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-    }
-
-    private void validateNotHost(Category category, Member member) {
-        try {
-            category.validateNotHost(member);
-        } catch (ForbiddenException e) {
-            throw new ForbiddenException("방장은 카테고리를 나갈 수 없어요.");
-        }
     }
 }
