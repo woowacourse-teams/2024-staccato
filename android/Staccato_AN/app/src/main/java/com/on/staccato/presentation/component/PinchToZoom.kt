@@ -8,7 +8,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -42,8 +41,6 @@ fun PinchToZoom(
     var containerSize by remember { mutableStateOf(IntSize.Zero) }
     val slowMovement = 0.8f
 
-    LaunchedEffect(scale) { onScaleChange?.invoke(scale) }
-
     Box(
         modifier =
             modifier
@@ -65,6 +62,7 @@ fun PinchToZoom(
 
                                 val newScale = (scale * zoomChange).coerceIn(minScale, maxScale)
                                 scale = newScale
+                                onScaleChange?.invoke(scale)
                                 if (newScale > minScale) {
                                     offset += panChange * newScale
                                     offset = clampOffset(offset, newScale, containerSize)
@@ -97,11 +95,13 @@ fun PinchToZoom(
                         onDoubleTap = { tapOffset ->
                             if (scale == minScale) {
                                 scale = maxScale
+                                onScaleChange?.invoke(scale)
                                 val center = Offset(size.width / 2f, size.height / 2f)
                                 val pan = (center - tapOffset) * scale
                                 offset = clampOffset(pan, scale, containerSize)
                             } else {
                                 scale = minScale
+                                onScaleChange?.invoke(scale)
                                 offset = Offset.Zero
                             }
                         },
