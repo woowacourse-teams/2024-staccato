@@ -26,6 +26,8 @@ import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
+import com.on.staccato.presentation.map.cluster.ClusterDrawManager
+import com.on.staccato.presentation.map.cluster.StaccatoMarkerRender
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
 import com.on.staccato.util.logging.AnalyticsEvent
 import com.on.staccato.util.logging.LoggingManager

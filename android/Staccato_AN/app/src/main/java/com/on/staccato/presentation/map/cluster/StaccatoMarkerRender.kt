@@ -1,4 +1,4 @@
-package com.on.staccato.presentation.map
+package com.on.staccato.presentation.map.cluster
 
 import android.content.Context
 import com.google.android.gms.maps.GoogleMap
