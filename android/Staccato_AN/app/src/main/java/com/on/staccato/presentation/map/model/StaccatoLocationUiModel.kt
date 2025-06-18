@@ -22,3 +22,22 @@ data class StaccatoLocationUiModel(
 
     override fun getZIndex(): Float? = null
 }
+
+val dummyStaccatoLocationUiModel =
+    StaccatoLocationUiModel(
+        staccatoId = 1L,
+        latitude = 37.554677038139815,
+        longitude = 126.97061201084968,
+        color = CategoryColor.INDIGO,
+        staccatoTitle = "스타카토 제목",
+        visitedAt = LocalDateTime.now(),
+    )
+
+val dummyStaccatoLocationUiModels =
+    listOf(
+        dummyStaccatoLocationUiModel,
+        dummyStaccatoLocationUiModel.copy(
+            staccatoId = 2L,
+            staccatoTitle = "아주아주아주아주아주아주아주아주아주아주긴이름을가진스타카토",
+        ),
+    )
