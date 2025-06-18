@@ -15,9 +15,9 @@
     <string name="all_visited_at">날짜 및 시간</string>
     <string name="all_please_select_visited_at">날짜 및 시간을 선택해 주세요</string>
     <string name="all_please_select_color">색상을 선택해 주세요</string>
-    <string name="all_date_dots_format">%s. %s. %s</string>
+    <string name="all_date_dots_format">%d. %02d. %02d</string>
     <string name="all_date_kr_format">%s년 %s월 %s일</string>
-    <string name="all_date_time_am_pm_kr_format">%s년 %s월 %s일  %s %s시</string>
+    <string name="all_date_time_am_pm_kr_format">%s년 %02d월 %02d일 %s %s시</string>
     <string name="all_default_not_supported">아직 지원하지 않는 기능이에요.</string>
     <string name="all_required_mark">*</string>
     <string name="all_setting">설정</string>
@@ -32,8 +32,8 @@
     <string name="all_photo_attach_icon_description">사진 첨부란</string>
     <string name="all_category_thumbnail_photo_description">카테고리 썸네일 사진</string>
     <string name="all_waring">경고</string>
-    <string name="all_period_dot_different_year">%s. %s. %s - %s. %s. %s</string>
-    <string name="all_period_dot_same_year">%s. %s. %s - %s. %s</string>
+    <string name="all_period_dot_different_year">%d. %02d. %02d - %d. %02d. %02d</string>
+    <string name="all_period_dot_same_year">%d. %02d. %02d - %02d. %02d</string>
     <string name="all_invitation_notification_indicator_description">카테고리 초대 알림 존재 표시</string>
     <string name="all_member_profile_image_description">사용자 프로필 사진</string>
 
