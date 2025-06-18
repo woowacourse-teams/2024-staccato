@@ -21,13 +21,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.clustering.ClusterManager
 import com.on.staccato.R
-import com.on.staccato.domain.model.StaccatoLocation
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.cluster.ClusterDrawManager
 import com.on.staccato.presentation.map.cluster.StaccatoMarkerRender
+import com.on.staccato.presentation.map.model.StaccatoLocationUiModel
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
 import com.on.staccato.util.logging.AnalyticsEvent
 import com.on.staccato.util.logging.LoggingManager
@@ -51,7 +51,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     lateinit var clusterDrawManager: ClusterDrawManager
 
     private lateinit var map: GoogleMap
-    private lateinit var clusterManager: ClusterManager<StaccatoLocation>
+    private lateinit var clusterManager: ClusterManager<StaccatoLocationUiModel>
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
 
     private lateinit var display: DisplayMetrics
@@ -230,7 +230,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         }
     }
 
-    private fun ClusterManager<StaccatoLocation>.setup(googleMap: GoogleMap) {
+    private fun ClusterManager<StaccatoLocationUiModel>.setup(googleMap: GoogleMap) {
         renderer = createStaccatoMarkerRender(googleMap)
         setOnClusterClickListener {
             // TODO: showStaccatosDialog

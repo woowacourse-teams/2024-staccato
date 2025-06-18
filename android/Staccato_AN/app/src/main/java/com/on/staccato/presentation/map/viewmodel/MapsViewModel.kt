@@ -13,6 +13,8 @@ import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
+import com.on.staccato.presentation.map.model.StaccatoLocationUiModel
+import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -25,8 +27,8 @@ class MapsViewModel
         private val staccatoRepository: StaccatoRepository,
         private val locationRepository: LocationRepository,
     ) : ViewModel() {
-        private val _staccatoLocations = MutableLiveData<List<StaccatoLocation>>()
-        val staccatoLocations: LiveData<List<StaccatoLocation>> get() = _staccatoLocations
+        private val _staccatoLocations = MutableLiveData<List<StaccatoLocationUiModel>>()
+        val staccatoLocations: LiveData<List<StaccatoLocationUiModel>> get() = _staccatoLocations
 
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
@@ -68,7 +70,7 @@ class MapsViewModel
         }
 
         private fun setStaccatoLocations(locations: List<StaccatoLocation>) {
-            _staccatoLocations.value = locations
+            _staccatoLocations.value = locations.map { it.toUiModel() }
         }
 
         private fun handleServerError(message: String) {

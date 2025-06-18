@@ -4,6 +4,9 @@ import com.on.staccato.R
 import com.on.staccato.domain.model.Comment
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
+import com.on.staccato.domain.model.StaccatoLocation
+import com.on.staccato.presentation.common.color.CategoryColor
+import com.on.staccato.presentation.map.model.StaccatoLocationUiModel
 import com.on.staccato.presentation.staccato.comments.CommentUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.feeling.FeelingUiModel
@@ -49,3 +52,11 @@ fun Feeling.toFeelingUiModel(selectedFeeling: String = Feeling.NOTHING.value): F
         selectedFeeling == this.value,
     )
 }
+
+fun StaccatoLocation.toUiModel() =
+    StaccatoLocationUiModel(
+        staccatoId = staccatoId,
+        latitude = latitude,
+        longitude = longitude,
+        color = CategoryColor.getCategoryColorBy(color),
+    )
