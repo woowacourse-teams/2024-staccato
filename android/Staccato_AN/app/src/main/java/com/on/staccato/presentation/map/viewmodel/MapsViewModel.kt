@@ -89,7 +89,8 @@ class MapsViewModel
             markers: List<StaccatoMarkerUiModel>?,
         ) {
             if (isClusterMode && markers != null) {
-                _clusterStaccatoMarkers.emit(markers)
+                val sortedMarkers = markers.sortedByDescending { it.visitedAt }
+                _clusterStaccatoMarkers.emit(sortedMarkers)
             } else {
                 _clusterStaccatoMarkers.emit(emptyList())
             }
