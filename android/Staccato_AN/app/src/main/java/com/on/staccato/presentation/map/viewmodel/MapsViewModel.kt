@@ -70,7 +70,7 @@ class MapsViewModel
                 val result = staccatoRepository.getStaccatos()
                 result.onSuccess(::updateStaccatoMarkers)
                     .onServerError(::handleServerError)
-                    .onException2(::handelException)
+                    .onException2(::handleException)
             }
         }
 
@@ -104,7 +104,7 @@ class MapsViewModel
             _errorMessage.setValue(message)
         }
 
-        private fun handelException(state: ExceptionState2) {
+        private fun handleException(state: ExceptionState2) {
             _exception.setValue(state)
         }
     }
