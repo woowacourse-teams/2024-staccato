@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
+import androidx.core.os.bundleOf
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
@@ -21,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.clustering.ClusterManager
 import com.on.staccato.R
+import com.on.staccato.databinding.FragmentMapsBinding
 import com.on.staccato.presentation.common.location.GPSManager
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.common.location.PermissionCancelListener
@@ -29,6 +33,7 @@ import com.on.staccato.presentation.map.cluster.ClusterDrawManager
 import com.on.staccato.presentation.map.cluster.StaccatoMarkerRender
 import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
+import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.util.logging.AnalyticsEvent
 import com.on.staccato.util.logging.LoggingManager
 import com.on.staccato.util.logging.Param
@@ -49,6 +54,9 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     @Inject
     lateinit var clusterDrawManager: ClusterDrawManager
+
+    private var _binding: FragmentMapsBinding? = null
+    private val binding get() = requireNotNull(_binding)
 
     private lateinit var map: GoogleMap
     private lateinit var clusterManager: ClusterManager<StaccatoMarkerUiModel>
@@ -76,8 +84,9 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_maps, container, false)
+    ): View {
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_maps, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(
@@ -88,14 +97,35 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         display = view.resources.displayMetrics
         mapsViewModel.loadStaccatos()
         setupMap()
+        setupBiding()
         setupPermissionRequestLauncher(view)
-        observeStaccatoId()
-        observeStaccatoLocations()
+        observeStaccatoMarkers()
         observeUpdatedStaccato()
         observeLocation()
         observeIsTimelineUpdated()
         observeException()
         observeIsRetry()
+    }
+
+    private fun setupBiding() {
+        binding.cvMapsStaccatos.setContent {
+            StaccatosScreen(
+                onStaccatoClicked = { onStaccatoClicked(it) },
+            )
+        }
+    }
+
+    private fun onStaccatoClicked(staccatoId: Long) {
+        mapsViewModel.switchClusterMode(isClusterMode = false)
+        navigateToStaccatoBy(staccatoId)
+    }
+
+    private fun navigateToStaccatoBy(id: Long) {
+        val bundle =
+            bundleOf(
+                STACCATO_ID_KEY to id,
+            )
+        findNavController().navigate(R.id.action_staccatoFragment, bundle)
     }
 
     override fun onResume() {
@@ -108,6 +138,11 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         sharedViewModel.updateIsSettingClicked(false)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onMyLocationButtonClick(): Boolean {
         mapsViewModel.getCurrentLocation()
         return false
@@ -115,7 +150,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun setupMap() {
         val map: SupportMapFragment? =
-            childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+            childFragmentManager.findFragmentById(R.id.fragment_maps) as SupportMapFragment?
         map?.getMapAsync(callback)
     }
 
@@ -232,10 +267,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun ClusterManager<StaccatoMarkerUiModel>.setup(googleMap: GoogleMap) {
         renderer = createStaccatoMarkerRender(googleMap)
-        setOnClusterClickListener {
-            // TODO: showStaccatosDialog
-            true
-        }
+        onClickedClustered()
         googleMap.setOnCameraIdleListener(clusterManager)
     }
 
@@ -247,7 +279,17 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             clusterDrawManager = clusterDrawManager,
         )
 
-    private fun observeStaccatoLocations() {
+    private fun ClusterManager<StaccatoMarkerUiModel>.onClickedClustered() {
+        setOnClusterClickListener {
+            mapsViewModel.switchClusterMode(
+                isClusterMode = true,
+                markers = it.items.toList(),
+            )
+            true
+        }
+    }
+
+    private fun observeStaccatoMarkers() {
         mapsViewModel.staccatoMarkers.observe(viewLifecycleOwner) { markers ->
             if (this::map.isInitialized.not()) return@observe
             clusterManager.clearItems()
@@ -258,19 +300,13 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun onMarkerClicked() {
         clusterManager.setOnClusterItemClickListener { item ->
-            mapsViewModel.updateStaccatoId(item.staccatoId)
+            navigateToStaccatoBy(id = item.staccatoId)
 
             loggingManager.logEvent(
                 AnalyticsEvent.NAME_STACCATO_READ,
                 Param(Param.KEY_IS_VIEWED_BY_MARKER, true),
             )
             true
-        }
-    }
-
-    private fun observeStaccatoId() {
-        mapsViewModel.staccatoId.observe(viewLifecycleOwner) { id ->
-            sharedViewModel.updateStaccatoId(id)
         }
     }
 

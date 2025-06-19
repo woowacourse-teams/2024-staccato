@@ -75,7 +75,6 @@ class MainActivity :
         initBinding()
         loadMemberProfile()
         observeException()
-        observeStaccatoId()
         observeRetryEvent()
         setupBottomSheetController()
         setupBackPressedHandler()
@@ -135,16 +134,6 @@ class MainActivity :
         sharedViewModel.updateIsRetry()
     }
 
-    private fun observeStaccatoId() {
-        sharedViewModel.staccatoId.observe(this) { staccatoId ->
-            navigateToStaccato(staccatoId)
-            supportFragmentManager.setFragmentResult(
-                BOTTOM_SHEET_STATE_REQUEST_KEY,
-                bundleOf(BOTTOM_SHEET_NEW_STATE to STATE_EXPANDED),
-            )
-        }
-    }
-
     private fun observeRetryEvent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -153,17 +142,6 @@ class MainActivity :
                 }
             }
         }
-    }
-
-    private fun navigateToStaccato(staccatoId: Long?) {
-        val navOptions =
-            NavOptions.Builder()
-                .setPopUpTo(R.id.staccatoFragment, true)
-                .build()
-        val bundle =
-            bundleOf(STACCATO_ID_KEY to staccatoId)
-
-        navController.navigate(R.id.staccatoFragment, bundle, navOptions)
     }
 
     private fun updateBottomSheetIsDraggable() {

@@ -69,9 +69,6 @@ class SharedViewModel
         private val _isBottomSheetHalfExpanded = MutableLiveData(true)
         val isBottomSheetHalfExpanded: LiveData<Boolean> get() = _isBottomSheetHalfExpanded
 
-        private val _staccatoId = MutableLiveData<Long>()
-        val staccatoId: LiveData<Long> get() = _staccatoId
-
         private val _staccatoLocation = MutableLiveData<LocationUiModel>()
         val staccatoLocation: LiveData<LocationUiModel> get() = _staccatoLocation
 
@@ -150,10 +147,6 @@ class SharedViewModel
             viewModelScope.launch {
                 _halfModeEvent.emit(Unit)
             }
-        }
-
-        fun updateStaccatoId(id: Long) {
-            _staccatoId.value = id
         }
 
         fun updateStaccatoLocation(

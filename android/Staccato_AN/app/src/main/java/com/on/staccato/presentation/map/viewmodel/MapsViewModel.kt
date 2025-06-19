@@ -17,6 +17,9 @@ import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,6 +32,12 @@ class MapsViewModel
     ) : ViewModel() {
         private val _staccatoMarkers = MutableLiveData<List<StaccatoMarkerUiModel>>()
         val staccatoMarkers: LiveData<List<StaccatoMarkerUiModel>> get() = _staccatoMarkers
+
+        private val _clusterStaccatoMarkers = MutableStateFlow<List<StaccatoMarkerUiModel>>(emptyList())
+        val clusterStaccatoMarkers: StateFlow<List<StaccatoMarkerUiModel>> = _clusterStaccatoMarkers.asStateFlow()
+
+        private var _isClusterMode = MutableStateFlow(false)
+        val isClusterMode: StateFlow<Boolean> = _isClusterMode.asStateFlow()
 
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
@@ -56,20 +65,37 @@ class MapsViewModel
             _focusLocation.value = LocationUiModel(latitude, longitude)
         }
 
-        fun updateStaccatoId(staccatoId: Long) {
-            _staccatoId.value = staccatoId
-        }
-
         fun loadStaccatos() {
             viewModelScope.launch {
                 val result = staccatoRepository.getStaccatos()
-                result.onSuccess(::setStaccatoMarkers)
+                result.onSuccess(::updateStaccatoMarkers)
                     .onServerError(::handleServerError)
                     .onException2(::handelException)
             }
         }
 
-        private fun setStaccatoMarkers(markers: List<StaccatoMarker>) {
+        fun switchClusterMode(
+            isClusterMode: Boolean,
+            markers: List<StaccatoMarkerUiModel>? = null,
+        ) {
+            viewModelScope.launch {
+                _isClusterMode.emit(isClusterMode)
+                updateClusterStaccatoMarkers(isClusterMode, markers)
+            }
+        }
+
+        private suspend fun updateClusterStaccatoMarkers(
+            isClusterMode: Boolean,
+            markers: List<StaccatoMarkerUiModel>?,
+        ) {
+            if (isClusterMode && markers != null) {
+                _clusterStaccatoMarkers.emit(markers)
+            } else {
+                _clusterStaccatoMarkers.emit(emptyList())
+            }
+        }
+
+        private fun updateStaccatoMarkers(markers: List<StaccatoMarker>) {
             _staccatoMarkers.value = markers.map { it.toUiModel() }
         }
 
