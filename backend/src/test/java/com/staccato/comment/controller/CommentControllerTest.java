@@ -128,7 +128,7 @@ public class CommentControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "token"))
             .andExpect(status().isOk())
-            .andExpect(content().json(expectedResponse));
+            .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("스타카토 식별자가 양수가 아닐 경우 댓글 읽기에 실패한다.")
