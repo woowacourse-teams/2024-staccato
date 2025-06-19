@@ -9,4 +9,6 @@ data class StaccatoLocationDto(
     @SerialName("latitude") val latitude: Double,
     @SerialName("longitude") val longitude: Double,
     @SerialName("staccatoColor") val color: String,
+    @SerialName("title") val title: String,
+    @SerialName("visitedAt") val visitedAt: String,
 )

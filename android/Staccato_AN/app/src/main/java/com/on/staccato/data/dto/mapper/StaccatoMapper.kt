@@ -33,6 +33,8 @@ fun StaccatoLocationDto.toDomain() =
         latitude = latitude,
         longitude = longitude,
         color = color,
+        title = title,
+        visitedAt = LocalDateTime.parse(visitedAt),
     )
 
 fun StaccatoShareLinkResponse.toDomain() =

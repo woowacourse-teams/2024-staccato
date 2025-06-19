@@ -59,4 +59,6 @@ fun StaccatoLocation.toUiModel() =
         latitude = latitude,
         longitude = longitude,
         color = CategoryColor.getCategoryColorBy(color),
+        staccatoTitle = title,
+        visitedAt = visitedAt,
     )
