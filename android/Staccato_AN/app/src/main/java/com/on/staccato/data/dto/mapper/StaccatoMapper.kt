@@ -1,11 +1,11 @@
 package com.on.staccato.data.dto.mapper
 
-import com.on.staccato.data.dto.staccato.StaccatoLocationDto
+import com.on.staccato.data.dto.staccato.StaccatoMarkerDto
 import com.on.staccato.data.dto.staccato.StaccatoResponse
 import com.on.staccato.data.dto.staccato.StaccatoShareLinkResponse
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
-import com.on.staccato.domain.model.StaccatoLocation
+import com.on.staccato.domain.model.StaccatoMarker
 import com.on.staccato.domain.model.StaccatoShareLink
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -27,8 +27,8 @@ fun StaccatoResponse.toDomain() =
         feeling = Feeling.fromValue(feeling),
     )
 
-fun StaccatoLocationDto.toDomain() =
-    StaccatoLocation(
+fun StaccatoMarkerDto.toDomain() =
+    StaccatoMarker(
         staccatoId = staccatoId,
         latitude = latitude,
         longitude = longitude,

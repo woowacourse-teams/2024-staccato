@@ -16,13 +16,13 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.on.staccato.R
 import com.on.staccato.presentation.component.clickableWithoutRipple
-import com.on.staccato.presentation.map.model.StaccatoLocationUiModel
-import com.on.staccato.presentation.map.model.dummyStaccatoLocationUiModels
+import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
+import com.on.staccato.presentation.map.model.dummyStaccatoMarkerUiModels
 
 @Composable
 fun StaccatoItem(
     modifier: Modifier = Modifier,
-    staccato: StaccatoLocationUiModel,
+    staccato: StaccatoMarkerUiModel,
     onStaccatoClicked: (Long) -> Unit,
 ) {
     Row(
@@ -51,7 +51,7 @@ fun StaccatoItem(
 @Composable
 private fun StaccatoItemPreview(
     @PreviewParameter(StaccatoItemPreviewParameterProvider::class)
-    staccato: StaccatoLocationUiModel,
+    staccato: StaccatoMarkerUiModel,
 ) {
     StaccatoItem(
         onStaccatoClicked = {},
@@ -60,5 +60,5 @@ private fun StaccatoItemPreview(
 }
 
 private class StaccatoItemPreviewParameterProvider(
-    override val values: Sequence<StaccatoLocationUiModel> = dummyStaccatoLocationUiModels.asSequence(),
-) : PreviewParameterProvider<StaccatoLocationUiModel>
+    override val values: Sequence<StaccatoMarkerUiModel> = dummyStaccatoMarkerUiModels.asSequence(),
+) : PreviewParameterProvider<StaccatoMarkerUiModel>

@@ -8,29 +8,29 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
-import com.on.staccato.presentation.map.model.StaccatoLocationUiModel
+import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 
 class StaccatoMarkerRender(
     context: Context,
     map: GoogleMap?,
-    clusterManager: ClusterManager<StaccatoLocationUiModel>?,
+    clusterManager: ClusterManager<StaccatoMarkerUiModel>?,
     private val clusterDrawManager: ClusterDrawManager,
-) : DefaultClusterRenderer<StaccatoLocationUiModel>(context, map, clusterManager) {
+) : DefaultClusterRenderer<StaccatoMarkerUiModel>(context, map, clusterManager) {
     override fun onBeforeClusterRendered(
-        cluster: Cluster<StaccatoLocationUiModel>,
+        cluster: Cluster<StaccatoMarkerUiModel>,
         markerOptions: MarkerOptions,
     ) {
         val icon: BitmapDescriptor = clusterDrawManager.generateClusterIcon(cluster.size)
         markerOptions.icon(icon)
     }
 
-    override fun getDescriptorForCluster(cluster: Cluster<StaccatoLocationUiModel>): BitmapDescriptor =
+    override fun getDescriptorForCluster(cluster: Cluster<StaccatoMarkerUiModel>): BitmapDescriptor =
         clusterDrawManager.generateClusterIcon(
             cluster.size,
         )
 
     override fun onBeforeClusterItemRendered(
-        item: StaccatoLocationUiModel,
+        item: StaccatoMarkerUiModel,
         markerOptions: MarkerOptions,
     ) {
         val icon: BitmapDescriptor = BitmapDescriptorFactory.fromResource(item.color.markerRes)

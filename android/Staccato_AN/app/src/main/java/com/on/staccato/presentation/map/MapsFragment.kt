@@ -27,7 +27,7 @@ import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.cluster.ClusterDrawManager
 import com.on.staccato.presentation.map.cluster.StaccatoMarkerRender
-import com.on.staccato.presentation.map.model.StaccatoLocationUiModel
+import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
 import com.on.staccato.util.logging.AnalyticsEvent
 import com.on.staccato.util.logging.LoggingManager
@@ -51,7 +51,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     lateinit var clusterDrawManager: ClusterDrawManager
 
     private lateinit var map: GoogleMap
-    private lateinit var clusterManager: ClusterManager<StaccatoLocationUiModel>
+    private lateinit var clusterManager: ClusterManager<StaccatoMarkerUiModel>
     private lateinit var permissionRequestLauncher: ActivityResultLauncher<Array<String>>
 
     private lateinit var display: DisplayMetrics
@@ -230,7 +230,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         }
     }
 
-    private fun ClusterManager<StaccatoLocationUiModel>.setup(googleMap: GoogleMap) {
+    private fun ClusterManager<StaccatoMarkerUiModel>.setup(googleMap: GoogleMap) {
         renderer = createStaccatoMarkerRender(googleMap)
         setOnClusterClickListener {
             // TODO: showStaccatosDialog
@@ -248,10 +248,10 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         )
 
     private fun observeStaccatoLocations() {
-        mapsViewModel.staccatoLocations.observe(viewLifecycleOwner) { staccatoLocations ->
+        mapsViewModel.staccatoMarkers.observe(viewLifecycleOwner) { markers ->
             if (this::map.isInitialized.not()) return@observe
             clusterManager.clearItems()
-            clusterManager.addItems(staccatoLocations)
+            clusterManager.addItems(markers)
             clusterManager.cluster()
         }
     }

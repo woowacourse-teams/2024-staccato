@@ -5,12 +5,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.staccato.presentation.component.DefaultDivider
-import com.on.staccato.presentation.map.model.StaccatoLocationUiModel
-import com.on.staccato.presentation.map.model.dummyStaccatoLocationUiModels
+import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
+import com.on.staccato.presentation.map.model.dummyStaccatoMarkerUiModels
 
 @Composable
 fun Staccatos(
-    staccatos: List<StaccatoLocationUiModel>,
+    staccatos: List<StaccatoMarkerUiModel>,
     onStaccatoClicked: (Long) -> Unit,
 ) {
     LazyColumn {
@@ -31,7 +31,7 @@ fun Staccatos(
 @Composable
 fun StaccatoLocationsPreview() {
     Staccatos(
-        staccatos = dummyStaccatoLocationUiModels,
+        staccatos = dummyStaccatoMarkerUiModels,
         onStaccatoClicked = {},
     )
 }

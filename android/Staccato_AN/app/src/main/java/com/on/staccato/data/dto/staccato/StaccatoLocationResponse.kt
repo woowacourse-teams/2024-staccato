@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StaccatoLocationResponse(
-    @SerialName("staccatoLocationResponses") val staccatoLocationResponses: List<StaccatoLocationDto>,
+    @SerialName("staccatoLocationResponses") val staccatoLocationResponses: List<StaccatoMarkerDto>,
 )

@@ -5,7 +5,7 @@ import com.google.maps.android.clustering.ClusterItem
 import com.on.staccato.presentation.common.color.CategoryColor
 import java.time.LocalDateTime
 
-data class StaccatoLocationUiModel(
+data class StaccatoMarkerUiModel(
     val staccatoId: Long,
     val latitude: Double,
     val longitude: Double,
@@ -22,8 +22,8 @@ data class StaccatoLocationUiModel(
     override fun getZIndex(): Float? = null
 }
 
-val dummyStaccatoLocationUiModel =
-    StaccatoLocationUiModel(
+val dummyStaccatoMarkerUiModel =
+    StaccatoMarkerUiModel(
         staccatoId = 1L,
         latitude = 37.554677038139815,
         longitude = 126.97061201084968,
@@ -32,10 +32,10 @@ val dummyStaccatoLocationUiModel =
         visitedAt = LocalDateTime.now(),
     )
 
-val dummyStaccatoLocationUiModels =
+val dummyStaccatoMarkerUiModels =
     listOf(
-        dummyStaccatoLocationUiModel,
-        dummyStaccatoLocationUiModel.copy(
+        dummyStaccatoMarkerUiModel,
+        dummyStaccatoMarkerUiModel.copy(
             staccatoId = 2L,
             staccatoTitle = "아주아주아주아주아주아주아주아주아주아주긴이름을가진스타카토",
         ),

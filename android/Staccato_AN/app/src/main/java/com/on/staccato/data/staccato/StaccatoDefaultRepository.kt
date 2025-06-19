@@ -9,7 +9,7 @@ import com.on.staccato.data.network.ApiResult
 import com.on.staccato.data.network.handle
 import com.on.staccato.domain.model.Feeling
 import com.on.staccato.domain.model.Staccato
-import com.on.staccato.domain.model.StaccatoLocation
+import com.on.staccato.domain.model.StaccatoMarker
 import com.on.staccato.domain.model.StaccatoShareLink
 import com.on.staccato.domain.repository.StaccatoRepository
 import java.time.LocalDateTime
@@ -21,7 +21,7 @@ class StaccatoDefaultRepository
         private val remoteDataSource: StaccatoRemoteDataSource,
     ) :
     StaccatoRepository {
-        override suspend fun getStaccatos(): ApiResult<List<StaccatoLocation>> =
+        override suspend fun getStaccatos(): ApiResult<List<StaccatoMarker>> =
             remoteDataSource.fetchStaccatos().handle {
                 it.staccatoLocationResponses.map { dto -> dto.toDomain() }
             }

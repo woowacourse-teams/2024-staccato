@@ -11,13 +11,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.on.staccato.presentation.map.model.StaccatoLocationUiModel
-import com.on.staccato.presentation.map.model.dummyStaccatoLocationUiModels
+import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
+import com.on.staccato.presentation.map.model.dummyStaccatoMarkerUiModels
 import com.on.staccato.theme.White
 
 @Composable
 fun StaccatosDialog(
-    staccatos: List<StaccatoLocationUiModel>,
+    staccatos: List<StaccatoMarkerUiModel>,
     onDismissRequest: () -> Unit,
     onStaccatoClicked: (Long) -> Unit,
 ) {
@@ -50,7 +50,7 @@ fun StaccatosDialog(
 @Composable
 private fun StaccatosDialogPreview() {
     StaccatosDialog(
-        staccatos = dummyStaccatoLocationUiModels,
+        staccatos = dummyStaccatoMarkerUiModels,
         onDismissRequest = {},
         onStaccatoClicked = {},
     )

@@ -2,7 +2,7 @@ package com.on.staccato.domain.model
 
 import java.time.LocalDateTime
 
-data class StaccatoLocation(
+data class StaccatoMarker(
     val staccatoId: Long,
     val latitude: Double,
     val longitude: Double,

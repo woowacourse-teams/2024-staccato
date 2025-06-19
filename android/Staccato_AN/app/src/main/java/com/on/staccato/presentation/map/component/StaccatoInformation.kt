@@ -9,14 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.staccato.presentation.common.toYearMonthDay
-import com.on.staccato.presentation.map.model.StaccatoLocationUiModel
-import com.on.staccato.presentation.map.model.dummyStaccatoLocationUiModel
+import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
+import com.on.staccato.presentation.map.model.dummyStaccatoMarkerUiModel
 import com.on.staccato.theme.Title3
 
 @Composable
 fun StaccatoInformation(
     modifier: Modifier = Modifier,
-    staccato: StaccatoLocationUiModel,
+    staccato: StaccatoMarkerUiModel,
 ) {
     Column(modifier = modifier) {
         Text(
@@ -31,5 +31,5 @@ fun StaccatoInformation(
 @Preview(showBackground = true)
 @Composable
 private fun StaccatoTitleAndVisitedAtPreview() {
-    StaccatoInformation(staccato = dummyStaccatoLocationUiModel)
+    StaccatoInformation(staccato = dummyStaccatoMarkerUiModel)
 }

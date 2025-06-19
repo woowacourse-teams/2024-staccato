@@ -7,13 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.network.onException2
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
-import com.on.staccato.domain.model.StaccatoLocation
+import com.on.staccato.domain.model.StaccatoMarker
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
-import com.on.staccato.presentation.map.model.StaccatoLocationUiModel
+import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,8 +27,8 @@ class MapsViewModel
         private val staccatoRepository: StaccatoRepository,
         private val locationRepository: LocationRepository,
     ) : ViewModel() {
-        private val _staccatoLocations = MutableLiveData<List<StaccatoLocationUiModel>>()
-        val staccatoLocations: LiveData<List<StaccatoLocationUiModel>> get() = _staccatoLocations
+        private val _staccatoMarkers = MutableLiveData<List<StaccatoMarkerUiModel>>()
+        val staccatoMarkers: LiveData<List<StaccatoMarkerUiModel>> get() = _staccatoMarkers
 
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
@@ -63,14 +63,14 @@ class MapsViewModel
         fun loadStaccatos() {
             viewModelScope.launch {
                 val result = staccatoRepository.getStaccatos()
-                result.onSuccess(::setStaccatoLocations)
+                result.onSuccess(::setStaccatoMarkers)
                     .onServerError(::handleServerError)
                     .onException2(::handelException)
             }
         }
 
-        private fun setStaccatoLocations(locations: List<StaccatoLocation>) {
-            _staccatoLocations.value = locations.map { it.toUiModel() }
+        private fun setStaccatoMarkers(markers: List<StaccatoMarker>) {
+            _staccatoMarkers.value = markers.map { it.toUiModel() }
         }
 
         private fun handleServerError(message: String) {
