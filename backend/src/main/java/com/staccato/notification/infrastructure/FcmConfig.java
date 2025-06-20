@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
-@Profile("!test")
 public class FcmConfig {
 
     private static final String SUCCESS_LOG = "[FCM][연결 성공] ";
