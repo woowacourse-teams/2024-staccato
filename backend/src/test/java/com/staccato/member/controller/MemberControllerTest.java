@@ -48,7 +48,7 @@ class MemberControllerTest extends ControllerTest {
                         .param("excludeCategoryId", "0")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("요청 인자로 검색어가 없어도 예외가 발생하지 않는다.")
@@ -71,7 +71,7 @@ class MemberControllerTest extends ControllerTest {
                         .param("excludeCategoryId", "1")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("요청 인자로 카테고리 식별자가 없어도 예외가 발생하지 않는다.")
@@ -102,6 +102,6 @@ class MemberControllerTest extends ControllerTest {
                         .param("nickname", "스타")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 }
