@@ -86,7 +86,7 @@ class SharedViewModel
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = myPageRepository.getMemberProfile()
-                result.onException2(::handleException)
+                result.onException2(::updateException)
                     .onServerError(::handleServerError)
                     .onSuccess(::setMemberProfile)
             }
@@ -97,7 +97,7 @@ class SharedViewModel
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
                     .onServerError(::handleServerError)
-                    .onException2(::handleException)
+                    .onException2(::updateException)
             }
         }
 
@@ -176,9 +176,5 @@ class SharedViewModel
 
         private fun handleServerError(errorMessage: String) {
             _errorMessage.postValue(errorMessage)
-        }
-
-        private fun handleException(state: ExceptionState2) {
-            _exception.postValue(state)
         }
     }
