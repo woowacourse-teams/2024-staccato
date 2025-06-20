@@ -17,7 +17,7 @@ import retrofit2.http.Path
 
 interface StaccatoApiService {
     @GET(STACCATOS_PATH_V2)
-    suspend fun getStaccatos(): ApiResult<StaccatoLocationResponse>
+    suspend fun getStaccatoMarkers(): ApiResult<StaccatoLocationResponse>
 
     @GET(STACCATO_PATH_WITH_ID)
     suspend fun getStaccato(

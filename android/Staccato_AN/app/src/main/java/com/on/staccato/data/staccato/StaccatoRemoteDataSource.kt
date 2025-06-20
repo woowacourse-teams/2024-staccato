@@ -15,7 +15,7 @@ class StaccatoRemoteDataSource
     constructor(
         private val staccatoApiService: StaccatoApiService,
     ) : StaccatoDataSource {
-        override suspend fun fetchStaccatos(): ApiResult<StaccatoLocationResponse> = staccatoApiService.getStaccatos()
+        override suspend fun fetchStaccatos(): ApiResult<StaccatoLocationResponse> = staccatoApiService.getStaccatoMarkers()
 
         override suspend fun fetchStaccato(staccatoId: Long): ApiResult<StaccatoResponse> =
             staccatoApiService.getStaccato(
