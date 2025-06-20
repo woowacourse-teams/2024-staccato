@@ -12,11 +12,11 @@ interface InvitationRepository {
 
     suspend fun getReceivedInvitations(): ApiResult<List<ReceivedInvitation>>
 
+    suspend fun getSentInvitations(): ApiResult<List<SentInvitation>>
+
     suspend fun acceptInvitation(invitationId: Long): ApiResult<Unit>
 
     suspend fun rejectInvitation(invitationId: Long): ApiResult<Unit>
-
-    suspend fun getSentInvitations(): ApiResult<List<SentInvitation>>
 
     suspend fun cancelInvitation(invitationId: Long): ApiResult<Unit>
 }
