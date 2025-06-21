@@ -1,5 +1,7 @@
 package com.on.staccato.presentation.category.viewmodel
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +23,9 @@ import com.on.staccato.domain.repository.InvitationRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.category.invite.model.InviteState
 import com.on.staccato.presentation.category.invite.model.toUiModel
+import com.on.staccato.presentation.category.model.CategoryDialogState
+import com.on.staccato.presentation.category.model.CategoryDialogState.None
+import com.on.staccato.presentation.category.model.CategoryDialogState.Exit
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -64,6 +69,9 @@ class CategoryViewModel
 
         private val _selectedMembers = MutableStateFlow(emptyMembers)
         val selectedMembers = _selectedMembers.asStateFlow()
+
+        private val _dialogState = mutableStateOf<CategoryDialogState>(None)
+        val dialogState: State<CategoryDialogState> = _dialogState
 
         val members =
             combine(
@@ -151,6 +159,29 @@ class CategoryViewModel
             viewModelScope.launch {
                 searchedMembers.emit(emptyMembers)
             }
+        }
+
+        fun showExitDialog() {
+            _dialogState.value = Exit(onConfirm = ::exitCategory)
+        }
+
+        fun dismissDialog() {
+            _dialogState.value = None
+        }
+
+        private fun exitCategory() {
+            viewModelScope.launch {
+                val id = _category.value?.id
+                if (id == null) {
+                    _isDeleted.setValue(false)
+                    return@launch
+                }
+                categoryRepository.deleteMeFromCategory(id)
+                    .onSuccess { updateIsDeleteSuccess() }
+                    .onServerError(::handleServerError)
+                    .onException2(::handelException)
+            }
+            dismissDialog()
         }
 
         private fun clearAllMembers() {
