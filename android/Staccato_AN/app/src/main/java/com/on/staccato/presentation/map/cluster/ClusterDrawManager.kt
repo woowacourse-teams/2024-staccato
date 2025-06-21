@@ -9,6 +9,7 @@ import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.on.staccato.R
 import com.on.staccato.presentation.map.model.ClusterColor
 import javax.inject.Inject
 
@@ -36,25 +37,23 @@ class ClusterDrawManager
         private fun drawClusterBackground(
             clusterColor: ClusterColor,
             canvas: Canvas,
-            size: Int = BITMAP_SIZE,
         ) {
-            val center = size / OUTER_RADIUS_DIVISOR
-            val innerRadius = center * INNER_RADIUS_RATIO
+            val innerRadiusRatio = calculateInnerRadiusRatio()
+            val innerRadius = OUTER_RADIUS * innerRadiusRatio
             val outerPaint: Paint = createBackgroundPaint(clusterColor.outerCircle)
             val innerPaint: Paint = createBackgroundPaint(clusterColor.innerCircle)
 
-            canvas.drawCircle(center, center, center, outerPaint)
-            canvas.drawCircle(center, center, innerRadius, innerPaint)
+            canvas.drawCircle(OUTER_RADIUS, OUTER_RADIUS, OUTER_RADIUS, outerPaint)
+            canvas.drawCircle(OUTER_RADIUS, OUTER_RADIUS, innerRadius, innerPaint)
         }
 
         private fun drawStaccatoCount(
             canvas: Canvas,
             staccatoCount: Int,
-            center: Float = BITMAP_SIZE / OUTER_RADIUS_DIVISOR,
         ) {
             val textPaint = createTextPaint()
-            val textY = (center - (textPaint.descent() + textPaint.ascent()) / 2)
-            canvas.drawText("$staccatoCount", center, textY, textPaint)
+            val textY = (OUTER_RADIUS - (textPaint.descent() + textPaint.ascent()) / 2)
+            canvas.drawText(context.getString(R.string.cluster_staccato_count, staccatoCount), OUTER_RADIUS, textY, textPaint)
         }
 
         private fun createBackgroundPaint(
@@ -69,17 +68,20 @@ class ClusterDrawManager
         private fun createTextPaint(): Paint =
             Paint().apply {
                 color = Color.WHITE
-                textSize = 40f
+                textSize = 38f
                 textAlign = Paint.Align.CENTER
                 isFakeBoldText = true
                 isAntiAlias = true
             }
 
+        private fun calculateInnerRadiusRatio() = (PI * INNER_RADIUS * INNER_RADIUS) / (PI * OUTER_RADIUS * OUTER_RADIUS)
+
         companion object {
             private val CLUSTER_SMALL = 2..9
             private val CLUSTER_MEDIUM = 10..99
-            private const val BITMAP_SIZE = 150
-            private const val OUTER_RADIUS_DIVISOR = 2.0f
-            private const val INNER_RADIUS_RATIO = 0.8f
+            private const val BITMAP_SIZE = 160
+            private const val OUTER_RADIUS = BITMAP_SIZE / 2.0f
+            private const val INNER_RADIUS = 73
+            private const val PI = 3.14f
         }
     }

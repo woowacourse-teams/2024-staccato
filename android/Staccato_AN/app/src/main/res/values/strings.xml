@@ -263,4 +263,7 @@
     // NavigationTopBar
     <string name="top_bar_navigation_back_icon">상단 바 뒤로가기 아이콘</string>
 
+    // Cluster
+    <string name="cluster_staccato_count">%d</string>
+
 </resources>
