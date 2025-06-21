@@ -59,7 +59,9 @@ public class NotificationEventListener {
         Category category = event.category();
         if (category.getIsShared()) {
             List<Member> existingMembers = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
-            notificationService.sendNewCommentAlert(event.commenter(), event.comment(), existingMembers);
+            List<Member> targetMembers = excludeSelf(existingMembers, event.commenter());
+
+            notificationService.sendNewCommentAlert(event.commenter(), event.comment(), targetMembers);
         }
     }
 
