@@ -15,6 +15,7 @@ import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.adapter.MemberInviteHandler
 import com.on.staccato.presentation.category.adapter.MembersAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
+import com.on.staccato.presentation.category.component.ExitDialogScreen
 import com.on.staccato.presentation.category.invite.InviteScreen
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
@@ -92,7 +93,7 @@ class CategoryFragment :
     }
 
     override fun onExitClicked() {
-         // TODO: 나가기 다이얼로그 띄우기
+         viewModel.showExitDialog()
     }
 
     override fun onStaccatoClicked(staccatoId: Long) {
@@ -152,6 +153,7 @@ class CategoryFragment :
         binding.toolbarHandler = this
         binding.categoryHandler = this
         binding.cvMemberInvite.setContent { InviteScreen() }
+        binding.cvCategoryExitDialog.setContent { ExitDialogScreen() }
         observeIsPermissionCanceled()
     }
 
