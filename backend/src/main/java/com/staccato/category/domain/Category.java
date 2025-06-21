@@ -163,9 +163,9 @@ public class Category extends BaseEntity {
         return categoryMember.isGuest();
     }
 
-    public void validateNotHost(Member member) {
+    public void validateMemberCanLeave(Member member) {
         if (isHost(member)) {
-            throw new ForbiddenException();
+            throw new ForbiddenException("방장은 카테고리를 나갈 수 없어요.");
         }
     }
 
