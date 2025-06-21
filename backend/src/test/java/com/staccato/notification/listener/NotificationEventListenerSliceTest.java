@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.invitation.service.dto.event.CategoryInvitationAcceptedEvent;
 import com.staccato.member.domain.Member;
 import com.staccato.notification.service.NotificationService;
 import com.staccato.staccato.service.dto.event.StaccatoCreatedEvent;
@@ -61,6 +62,39 @@ public class NotificationEventListenerSliceTest {
                 argThat(targets ->
                         targets.size() == 2 &&
                         !targets.contains(creator) &&
+                        targets.containsAll(List.of(member1, member2))
+                )
+        );
+    }
+
+    @DisplayName("초대를 수락한 멤버에게는 초대 수락 알림을 보내지 않는다.")
+    @Test
+    void handleInvitationAcceptedShouldExcludeInvitee() {
+        // given
+        Member invitee = MemberFixtures.defaultMember()
+                .withNickname("invitee").build();
+        Member member1 = MemberFixtures.defaultMember()
+                .withNickname("member1").build();
+        Member member2 = MemberFixtures.defaultMember()
+                .withNickname("member2").build();
+
+        Category sharedCategory = mock(Category.class);
+        when(sharedCategory.getId()).thenReturn(1L);
+        when(categoryMemberRepository.findAllMembersByCategoryId(1L))
+                .thenReturn(List.of(invitee, member1, member2));
+
+        CategoryInvitationAcceptedEvent event = new CategoryInvitationAcceptedEvent(invitee, sharedCategory);
+
+        // when
+        listener.handleInvitationAccepted(event);
+
+        // then
+        verify(notificationService).sendAcceptAlert(
+                eq(invitee),
+                eq(sharedCategory),
+                argThat(targets ->
+                        targets.size() == 2 &&
+                        !targets.contains(invitee) &&
                         targets.containsAll(List.of(member1, member2))
                 )
         );

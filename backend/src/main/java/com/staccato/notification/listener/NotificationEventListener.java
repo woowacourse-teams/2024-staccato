@@ -1,10 +1,12 @@
 package com.staccato.notification.listener;
 
 import java.util.List;
+
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryMemberRepository;
 import com.staccato.comment.service.dto.event.CommentCreatedEvent;
@@ -13,6 +15,7 @@ import com.staccato.invitation.service.dto.event.CategoryInvitationEvent;
 import com.staccato.member.domain.Member;
 import com.staccato.notification.service.NotificationService;
 import com.staccato.staccato.service.dto.event.StaccatoCreatedEvent;
+
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -27,7 +30,9 @@ public class NotificationEventListener {
     public void handleInvitationAccepted(CategoryInvitationAcceptedEvent event) {
         Category category = event.category();
         List<Member> existingMembers = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
-        notificationService.sendAcceptAlert(event.invitee(), event.category(), existingMembers);
+        List<Member> targetMembers = excludeSelf(existingMembers, event.invitee());
+
+        notificationService.sendAcceptAlert(event.invitee(), event.category(), targetMembers);
     }
 
     @Async
@@ -42,10 +47,7 @@ public class NotificationEventListener {
         Category category = event.category();
         if (category.getIsShared()) {
             List<Member> existingMembers = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
-
-            List<Member> targetMembers = existingMembers.stream()
-                    .filter(member -> !member.equals(event.creator()))
-                    .toList();
+            List<Member> targetMembers = excludeSelf(existingMembers, event.creator());
 
             notificationService.sendNewStaccatoAlert(event.creator(), event.category(), targetMembers);
         }
@@ -59,5 +61,11 @@ public class NotificationEventListener {
             List<Member> existingMembers = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
             notificationService.sendNewCommentAlert(event.commenter(), event.comment(), existingMembers);
         }
+    }
+
+    private List<Member> excludeSelf(List<Member> members, Member self) {
+        return members.stream()
+                .filter(member -> !member.equals(self))
+                .toList();
     }
 }
