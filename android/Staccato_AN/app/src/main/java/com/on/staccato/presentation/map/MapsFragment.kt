@@ -97,7 +97,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         mapsViewModel.loadStaccatos()
         observeCurrentLocationEvent()
         setupMap()
-        setupBiding()
+        setupBinding()
         setupPermissionRequestLauncher(view)
         registerSettingsResultListener()
         observeStaccatoMarkers()
@@ -108,7 +108,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         observeIsRetry()
     }
 
-    private fun setupBiding() {
+    private fun setupBinding() {
         binding.cvMapsStaccatos.setContent {
             StaccatosScreen(
                 onStaccatoClicked = { onStaccatoClicked(it) },
