@@ -129,11 +129,6 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         findNavController().navigate(R.id.action_staccatoFragment, bundle)
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (this::map.isInitialized) checkLocationSetting()
-    }
-
     override fun onStop() {
         super.onStop()
         sharedViewModel.updateIsSettingClicked(false)
