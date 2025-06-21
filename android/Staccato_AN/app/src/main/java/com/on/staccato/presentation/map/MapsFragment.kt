@@ -308,6 +308,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     private fun onMarkerClicked() {
         clusterManager.setOnClusterItemClickListener { item ->
             navigateToStaccatoBy(id = item.staccatoId)
+            sharedViewModel.updateHalfModeEvent()
 
             loggingManager.logEvent(
                 AnalyticsEvent.NAME_STACCATO_READ,
