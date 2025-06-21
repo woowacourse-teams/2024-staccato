@@ -42,7 +42,12 @@ public class NotificationEventListener {
         Category category = event.category();
         if (category.getIsShared()) {
             List<Member> existingMembers = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
-            notificationService.sendNewStaccatoAlert(event.creator(), event.category(), existingMembers);
+
+            List<Member> targetMembers = existingMembers.stream()
+                    .filter(member -> !member.equals(event.creator()))
+                    .toList();
+
+            notificationService.sendNewStaccatoAlert(event.creator(), event.category(), targetMembers);
         }
     }
 
