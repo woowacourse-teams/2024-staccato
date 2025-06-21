@@ -75,6 +75,8 @@
     <string name="category_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
     <string name="category_error_staccato_record_impossible">스타카토를 기록할 수 없어요.</string>
     <string name="category_invite_description">카테고리 초대 버튼</string>
+    <string name="category_exit_title">정말 나가시겠습니까?</string>
+    <string name="category_exit_complete">카테고리에서 나갔어요.</string>
 
     // item_mates
     <string name="mates_profile_image_description">함께 한 사람 프로필 이미지</string>
