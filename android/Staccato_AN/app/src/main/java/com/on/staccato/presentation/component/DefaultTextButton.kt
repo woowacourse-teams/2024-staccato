@@ -22,6 +22,8 @@ import com.on.staccato.theme.StaccatoBlack
 import com.on.staccato.theme.StaccatoBlue
 import com.on.staccato.theme.White
 
+val DefaultTextButtonPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp)
+
 @Composable
 fun DefaultTextButton(
     text: String,

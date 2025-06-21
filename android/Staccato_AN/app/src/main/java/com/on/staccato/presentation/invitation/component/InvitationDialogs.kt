@@ -1,10 +1,9 @@
 package com.on.staccato.presentation.invitation.component
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.on.staccato.R
+import com.on.staccato.presentation.component.DefaultTextButtonPadding
 import com.on.staccato.presentation.component.DefaultAlertDialog
 import com.on.staccato.presentation.component.DefaultTextButton
 import com.on.staccato.presentation.invitation.model.InvitationDialogState
@@ -15,8 +14,6 @@ import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray4
 import com.on.staccato.theme.StaccatoBlue
 import com.on.staccato.theme.White
-
-private val ButtonPaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp)
 
 @Composable
 fun InvitationDialogs(
@@ -36,7 +33,7 @@ fun InvitationDialogs(
                         onClick = state.onConfirm,
                         backgroundColor = StaccatoBlue,
                         textColor = White,
-                        contentPadding = ButtonPaddingValues,
+                        contentPadding = DefaultTextButtonPadding,
                     )
                 },
                 dismissButton = {
@@ -45,7 +42,7 @@ fun InvitationDialogs(
                         onClick = onDismiss,
                         backgroundColor = Gray1,
                         textColor = Gray4,
-                        contentPadding = ButtonPaddingValues,
+                        contentPadding = DefaultTextButtonPadding,
                     )
                 },
             )
@@ -61,7 +58,7 @@ fun InvitationDialogs(
                         onClick = state.onConfirm,
                         backgroundColor = StaccatoBlue,
                         textColor = White,
-                        contentPadding = ButtonPaddingValues,
+                        contentPadding = DefaultTextButtonPadding,
                     )
                 },
                 dismissButton = {
@@ -70,7 +67,7 @@ fun InvitationDialogs(
                         onClick = onDismiss,
                         backgroundColor = Gray1,
                         textColor = Gray4,
-                        contentPadding = ButtonPaddingValues,
+                        contentPadding = DefaultTextButtonPadding,
                     )
                 },
             )
