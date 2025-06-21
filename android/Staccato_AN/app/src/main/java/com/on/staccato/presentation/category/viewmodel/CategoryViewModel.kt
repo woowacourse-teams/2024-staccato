@@ -26,6 +26,8 @@ import com.on.staccato.presentation.category.invite.model.toUiModel
 import com.on.staccato.presentation.category.model.CategoryDialogState
 import com.on.staccato.presentation.category.model.CategoryDialogState.None
 import com.on.staccato.presentation.category.model.CategoryDialogState.Exit
+import com.on.staccato.presentation.category.model.CategoryState
+import com.on.staccato.presentation.category.model.CategoryState.*
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -33,8 +35,11 @@ import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -57,9 +62,6 @@ class CategoryViewModel
         private val _exceptionState = MutableSingleLiveData<ExceptionState2>()
         val exceptionState: SingleLiveData<ExceptionState2> get() = _exceptionState
 
-        private val _isDeleted = MutableSingleLiveData<Boolean>()
-        val isDeleted: SingleLiveData<Boolean> get() = _isDeleted
-
         private val _isInviteMode = MutableStateFlow(false)
         val isInviteMode: StateFlow<Boolean> get() = _isInviteMode
 
@@ -69,6 +71,9 @@ class CategoryViewModel
 
         private val _selectedMembers = MutableStateFlow(emptyMembers)
         val selectedMembers = _selectedMembers.asStateFlow()
+
+        private val _categoryState = MutableSharedFlow<CategoryState>()
+        val categoryState: SharedFlow<CategoryState> = _categoryState.asSharedFlow()
 
         private val _dialogState = mutableStateOf<CategoryDialogState>(None)
         val dialogState: State<CategoryDialogState> = _dialogState
@@ -139,12 +144,12 @@ class CategoryViewModel
             viewModelScope.launch {
                 val id = _category.value?.id
                 if (id == null) {
-                    _isDeleted.setValue(false)
+                    _categoryState.emit(Deleted(success = false))
                     return@launch
                 }
 
                 val result: ApiResult<Unit> = categoryRepository.deleteCategory(id)
-                result.onSuccess { updateIsDeleteSuccess() }
+                result.onSuccess { updateToDeletedState() }
                     .onServerError(::handleServerError)
                     .onException2(::handelException)
             }
@@ -173,11 +178,11 @@ class CategoryViewModel
             viewModelScope.launch {
                 val id = _category.value?.id
                 if (id == null) {
-                    _isDeleted.setValue(false)
+                    _categoryState.emit(Error)
                     return@launch
                 }
                 categoryRepository.deleteMeFromCategory(id)
-                    .onSuccess { updateIsDeleteSuccess() }
+                    .onSuccess { updateToExitState() }
                     .onServerError(::handleServerError)
                     .onException2(::handelException)
             }
@@ -200,8 +205,12 @@ class CategoryViewModel
             participatingMembers.emit(Participants(category.participants))
         }
 
-        private fun updateIsDeleteSuccess() {
-            _isDeleted.setValue(true)
+        private suspend fun updateToDeletedState() {
+            _categoryState.emit(Deleted(success = true))
+        }
+
+        private suspend fun updateToExitState() {
+            _categoryState.emit(Exited)
         }
 
         private fun handleServerError(message: String) {

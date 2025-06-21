@@ -78,6 +78,10 @@
     <string name="category_exit_title">정말 나가시겠습니까?</string>
     <string name="category_exit_complete">카테고리에서 나갔어요.</string>
 
+    // category error message
+    <string name="category_delete_error">지금은 카테고리를 삭제할 수 없어요.</string>
+    <string name="category_empty_error">지금은 카테고리를 불러올 수 없어요.</string>
+
     // item_mates
     <string name="mates_profile_image_description">함께 한 사람 프로필 이미지</string>
 
@@ -201,10 +205,6 @@
     <string name="snack_bar_gallery_error">사진을 불러올 수 없습니다.\n잠시 후에 다시 시도해 주세요.</string>
     <string name="snack_bar_no_camera">실행할 수 있는 카메라 앱이 없습니다.</string>
     <string name="snack_bar_move_to_setting">설정하기</string>
-
-    // dialog_delete_impossibility
-    <string name="category_delete_title">카테고리를 삭제할 수 없어요.</string>
-    <string name="category_delete_description">아직 스타카토가 남아있어요!</string>
 
     // dialog_delete
     <string name="delete_title">정말 삭제할까요?</string>
