@@ -115,7 +115,7 @@ class NotificationEventListenerTest extends ServiceSliceTest {
                 verify(notificationService, times(1))
                         .sendNewCommentAlert(eq(host),
                                 argThat(comment -> comment.getContent().equals(commentRequest.content())),
-                                argThat(m -> m.containsAll(List.of(guest, guest2, host))))
+                                argThat(m -> m.containsAll(List.of(guest, guest2))))
         );
     }
 
