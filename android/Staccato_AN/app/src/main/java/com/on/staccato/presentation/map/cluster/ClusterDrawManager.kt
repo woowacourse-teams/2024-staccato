@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.on.staccato.R
@@ -68,9 +69,9 @@ class ClusterDrawManager
         private fun createTextPaint(): Paint =
             Paint().apply {
                 color = Color.WHITE
-                textSize = 38f
+                textSize = 44f
                 textAlign = Paint.Align.CENTER
-                isFakeBoldText = true
+                typeface = ResourcesCompat.getFont(context, R.font.pretendard_medium)
                 isAntiAlias = true
             }
 
