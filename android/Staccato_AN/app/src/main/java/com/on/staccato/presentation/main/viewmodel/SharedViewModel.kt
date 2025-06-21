@@ -83,6 +83,15 @@ class SharedViewModel
         private val _hasNotification = MutableLiveData<Boolean>(false)
         val hasNotification: LiveData<Boolean> get() = _hasNotification
 
+        private val _currentLocationEvent = MutableSharedFlow<Unit>()
+        val currentLocationEvent: SharedFlow<Unit> get() = _currentLocationEvent.asSharedFlow()
+
+        fun updateCurrentLocationEvent() {
+            viewModelScope.launch {
+                _currentLocationEvent.emit(Unit)
+            }
+        }
+
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = myPageRepository.getMemberProfile()

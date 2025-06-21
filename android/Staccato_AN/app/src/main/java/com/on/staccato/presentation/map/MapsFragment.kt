@@ -26,8 +26,8 @@ import com.google.maps.android.clustering.ClusterManager
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentMapsBinding
 import com.on.staccato.presentation.common.location.GPSManager
+import com.on.staccato.presentation.common.location.LocationDialogFragment.Companion.KEY_HAS_VISITED_SETTINGS
 import com.on.staccato.presentation.common.location.LocationPermissionManager
-import com.on.staccato.presentation.common.location.PermissionCancelListener
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.cluster.ClusterDrawManager
 import com.on.staccato.presentation.map.cluster.StaccatoMarkerRender
@@ -71,10 +71,10 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         OnMapReadyCallback { googleMap ->
             map = googleMap
             googleMap.setMapStyle()
+            googleMap.setMapPadding()
             googleMap.moveDefaultLocation()
             checkLocationSetting()
             googleMap.setOnMyLocationButtonClickListener(this)
-            googleMap.setMapPadding()
             clusterManager = ClusterManager(context, googleMap)
             clusterManager.setup(googleMap)
             onMarkerClicked()
@@ -96,9 +96,11 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         super.onViewCreated(view, savedInstanceState)
         display = view.resources.displayMetrics
         mapsViewModel.loadStaccatos()
+        observeCurrentLocationEvent()
         setupMap()
         setupBiding()
         setupPermissionRequestLauncher(view)
+        registerSettingsResultListener()
         observeStaccatoMarkers()
         observeUpdatedStaccato()
         observeLocation()
@@ -148,6 +150,16 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         return false
     }
 
+    private fun observeCurrentLocationEvent() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.currentLocationEvent.collect {
+                    checkLocationSetting()
+                }
+            }
+        }
+    }
+
     private fun setupMap() {
         val map: SupportMapFragment? =
             childFragmentManager.findFragmentById(R.id.fragment_maps) as SupportMapFragment?
@@ -158,6 +170,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         setMapStyle(
             MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.google_map_style),
         )
+        uiSettings.isMyLocationButtonEnabled = false
     }
 
     private fun GoogleMap.moveDefaultLocation() {
@@ -181,6 +194,16 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             )
     }
 
+    private fun registerSettingsResultListener() {
+        childFragmentManager.setFragmentResultListener(
+            KEY_HAS_VISITED_SETTINGS,
+            viewLifecycleOwner,
+        ) { _, bundle ->
+            val hasVisitedSettings = bundle.getBoolean(KEY_HAS_VISITED_SETTINGS, false)
+            if (hasVisitedSettings) checkLocationSetting()
+        }
+    }
+
     private fun checkLocationSetting() {
         gpsManager.checkLocationSetting(
             context = requireContext(),
@@ -201,26 +224,16 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             }
 
             shouldShowRequestLocationPermissionsRationale -> {
-                observeIsPermissionCanceled {
-                    locationPermissionManager.showLocationRequestRationaleDialog(
-                        childFragmentManager,
-                    )
-                }
+                locationPermissionManager.showLocationRequestRationaleDialog(
+                    childFragmentManager,
+                )
             }
 
             else -> {
-                observeIsPermissionCanceled {
-                    permissionRequestLauncher.launch(
-                        LocationPermissionManager.locationPermissions,
-                    )
-                }
+                permissionRequestLauncher.launch(
+                    LocationPermissionManager.locationPermissions,
+                )
             }
-        }
-    }
-
-    private fun observeIsPermissionCanceled(listener: PermissionCancelListener) {
-        sharedViewModel.isPermissionCanceled.observe(viewLifecycleOwner) { isCanceled ->
-            if (!isCanceled) listener.requestPermission()
         }
     }
 
