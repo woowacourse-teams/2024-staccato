@@ -91,6 +91,10 @@ class CategoryFragment :
         deleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
     }
 
+    override fun onExitClicked() {
+         // TODO: 나가기 다이얼로그 띄우기
+    }
+
     override fun onStaccatoClicked(staccatoId: Long) {
         loggingManager.logEvent(
             NAME_STACCATO_READ,
