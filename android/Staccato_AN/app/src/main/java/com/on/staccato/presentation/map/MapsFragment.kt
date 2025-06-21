@@ -74,7 +74,6 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
             googleMap.setMapPadding()
             googleMap.moveDefaultLocation()
             checkLocationSetting()
-            googleMap.setOnMyLocationButtonClickListener(this)
             clusterManager = ClusterManager(context, googleMap)
             clusterManager.setup(googleMap)
             onMarkerClicked()
