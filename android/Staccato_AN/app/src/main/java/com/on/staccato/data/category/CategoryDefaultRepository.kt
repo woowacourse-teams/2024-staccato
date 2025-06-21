@@ -50,4 +50,6 @@ class CategoryDefaultRepository
         ): ApiResult<Unit> = categoryDataSource.updateCategory(categoryId, newCategory).handle()
 
         override suspend fun deleteCategory(categoryId: Long): ApiResult<Unit> = categoryDataSource.deleteCategory(categoryId).handle()
+
+        override suspend fun deleteMeFromCategory(categoryId: Long): ApiResult<Unit> = categoryDataSource.deleteMeFromCategory(categoryId).handle()
     }
