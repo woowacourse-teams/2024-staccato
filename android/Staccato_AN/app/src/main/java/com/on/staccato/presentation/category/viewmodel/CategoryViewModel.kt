@@ -55,14 +55,14 @@ class CategoryViewModel
         private val _isDeleted = MutableSingleLiveData<Boolean>()
         val isDeleted: SingleLiveData<Boolean> get() = _isDeleted
 
-        private var _isInviteMode = MutableStateFlow(false)
+        private val _isInviteMode = MutableStateFlow(false)
         val isInviteMode: StateFlow<Boolean> get() = _isInviteMode
 
-        var participatingMembers = MutableStateFlow(emptyParticipants)
+        val participatingMembers = MutableStateFlow(emptyParticipants)
 
-        private var searchedMembers = MutableStateFlow(emptyMembers)
+        private val searchedMembers = MutableStateFlow(emptyMembers)
 
-        private var _selectedMembers = MutableStateFlow(emptyMembers)
+        private val _selectedMembers = MutableStateFlow(emptyMembers)
         val selectedMembers = _selectedMembers.asStateFlow()
 
         val members =
