@@ -9,7 +9,7 @@ import com.on.staccato.domain.model.StaccatoShareLink
 import java.time.LocalDateTime
 
 interface StaccatoRepository {
-    suspend fun getStaccatos(): ApiResult<List<StaccatoMarker>>
+    suspend fun getStaccatoMarkers(): ApiResult<List<StaccatoMarker>>
 
     suspend fun getStaccato(staccatoId: Long): ApiResult<Staccato>
 

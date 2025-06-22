@@ -10,7 +10,7 @@ import com.on.staccato.data.dto.staccato.StaccatoUpdateRequest
 import com.on.staccato.data.network.ApiResult
 
 interface StaccatoDataSource {
-    suspend fun fetchStaccatos(): ApiResult<StaccatoMarkerResponses>
+    suspend fun fetchStaccatoMarkers(): ApiResult<StaccatoMarkerResponses>
 
     suspend fun fetchStaccato(staccatoId: Long): ApiResult<StaccatoResponse>
 

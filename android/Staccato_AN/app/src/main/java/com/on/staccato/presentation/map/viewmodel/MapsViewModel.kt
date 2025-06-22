@@ -65,9 +65,9 @@ class MapsViewModel
             _focusLocation.value = LocationUiModel(latitude, longitude)
         }
 
-        fun loadStaccatos() {
+        fun loadStaccatoMarkers() {
             viewModelScope.launch {
-                val result = staccatoRepository.getStaccatos()
+                val result = staccatoRepository.getStaccatoMarkers()
                 result.onSuccess(::updateStaccatoMarkers)
                     .onServerError(::handleServerError)
                     .onException2(::handleException)

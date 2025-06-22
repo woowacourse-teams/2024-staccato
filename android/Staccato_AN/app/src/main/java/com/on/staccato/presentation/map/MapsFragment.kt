@@ -94,7 +94,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     ) {
         super.onViewCreated(view, savedInstanceState)
         display = view.resources.displayMetrics
-        mapsViewModel.loadStaccatos()
+        mapsViewModel.loadStaccatoMarkers()
         observeCurrentLocationEvent()
         setupMap()
         setupBinding()
@@ -320,13 +320,13 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
 
     private fun observeUpdatedStaccato() {
         sharedViewModel.isStaccatosUpdated.observe(viewLifecycleOwner) { isUpdated ->
-            if (isUpdated) mapsViewModel.loadStaccatos()
+            if (isUpdated) mapsViewModel.loadStaccatoMarkers()
         }
     }
 
     private fun observeIsTimelineUpdated() {
         sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) {
-            if (it) mapsViewModel.loadStaccatos()
+            if (it) mapsViewModel.loadStaccatoMarkers()
         }
     }
 
@@ -340,7 +340,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sharedViewModel.retryEvent.collect {
-                    mapsViewModel.loadStaccatos()
+                    mapsViewModel.loadStaccatoMarkers()
                 }
             }
         }

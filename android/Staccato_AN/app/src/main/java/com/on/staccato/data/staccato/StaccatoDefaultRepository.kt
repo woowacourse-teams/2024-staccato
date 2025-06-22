@@ -21,8 +21,8 @@ class StaccatoDefaultRepository
         private val remoteDataSource: StaccatoRemoteDataSource,
     ) :
     StaccatoRepository {
-        override suspend fun getStaccatos(): ApiResult<List<StaccatoMarker>> =
-            remoteDataSource.fetchStaccatos().handle {
+        override suspend fun getStaccatoMarkers(): ApiResult<List<StaccatoMarker>> =
+            remoteDataSource.fetchStaccatoMarkers().handle {
                 it.staccatoMarkerResponses.map { dto -> dto.toDomain() }
             }
 
