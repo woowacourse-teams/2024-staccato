@@ -1,8 +1,11 @@
 package com.staccato.notification.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
+
 import org.springframework.stereotype.Service;
+
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
@@ -15,10 +18,10 @@ import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.MessagingErrorCode;
 import com.google.firebase.messaging.MulticastMessage;
-import com.google.firebase.messaging.Notification;
 import com.google.firebase.messaging.SendResponse;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.notification.repository.NotificationTokenRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,27 +39,21 @@ public class FcmService {
     private final NotificationTokenRepository notificationTokenRepository;
     private final Executor fcmCallbackExecutor;
 
-    public void sendPush(List<String> tokens, String title, String body) {
+    public void sendPush(List<String> tokens, String title, String body, Map<String, String> data) {
         if (tokens == null || tokens.isEmpty()) {
             log.warn(SEND_FAIL_LOG + "FCM 전송 대상 토큰이 없습니다.");
             return;
         }
         for (int i = 0; i < tokens.size(); i += FCM_MULTICAST_LIMIT) {
             List<String> batch = tokens.subList(i, Math.min(i + FCM_MULTICAST_LIMIT, tokens.size()));
-            MulticastMessage message = createMulticastMessage(batch, title, body);
+            MulticastMessage message = createMulticastMessage(batch, title, body, data);
             ApiFuture<BatchResponse> future = firebaseMessaging.sendEachForMulticastAsync(message);
             registerCallback(future, batch);
         }
     }
 
-    private MulticastMessage createMulticastMessage(List<String> tokens, String title, String body) {
-        return MulticastMessage.builder()
-                .setNotification(Notification.builder()
-                        .setTitle(title)
-                        .setBody(body)
-                        .build()
-                )
-                .putData("click_action", "PUSH_CLICK")
+    private MulticastMessage createMulticastMessage(List<String> tokens, String title, String body, Map<String, String> customData) {
+        MulticastMessage.Builder builder = MulticastMessage.builder()
                 .setAndroidConfig(AndroidConfig.builder()
                         .setPriority(AndroidConfig.Priority.HIGH)
                         .setNotification(AndroidNotification.builder()
@@ -76,8 +73,14 @@ public class FcmService {
                                 .build())
                         .build()
                 )
-                .addAllTokens(tokens)
-                .build();
+                .putData("click_action", "PUSH_CLICK")
+                .addAllTokens(tokens);
+
+        if (customData != null) {
+            customData.forEach(builder::putData);
+        }
+
+        return builder.build();
     }
 
     private void registerCallback(ApiFuture<BatchResponse> future, List<String> tokens) {

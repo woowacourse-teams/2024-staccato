@@ -44,7 +44,7 @@ public class NotificationEventListener {
         Category category = event.category();
         if (category.getIsShared()) {
             List<Member> targetMembers = getTargetMembers(event.category(), event.creator());
-            notificationService.sendNewStaccatoAlert(event.creator(), event.category(), targetMembers);
+            notificationService.sendNewStaccatoAlert(event.creator(), event.category(), event.staccato(), targetMembers);
         }
     }
 
@@ -54,7 +54,7 @@ public class NotificationEventListener {
         Category category = event.category();
         if (category.getIsShared()) {
             List<Member> targetMembers = getTargetMembers(event.category(), event.commenter());
-            notificationService.sendNewCommentAlert(event.commenter(), event.comment(), targetMembers);
+            notificationService.sendNewCommentAlert(event.commenter(), event.comment(), event.staccato(), targetMembers);
         }
     }
 

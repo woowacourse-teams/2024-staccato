@@ -1,21 +1,24 @@
 package com.staccato.notification.service;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
 import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.MulticastMessage;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FcmServiceTest {
@@ -35,7 +38,7 @@ class FcmServiceTest {
         when(firebaseMessaging.sendEachForMulticastAsync(any(MulticastMessage.class))).thenReturn(future);
 
         // when
-        fcmService.sendPush(tokens, "TestTitle", "TestBody");
+        fcmService.sendPush(tokens, "TestTitle", "TestBody", Map.of());
 
         // then
         verify(firebaseMessaging).sendEachForMulticastAsync(any(MulticastMessage.class));
@@ -45,7 +48,7 @@ class FcmServiceTest {
     @Test
     void failSendPush() {
         // given
-        fcmService.sendPush(List.of(), "title", "body");
+        fcmService.sendPush(List.of(), "title", "body", Map.of());
 
         // when & then
         verifyNoInteractions(firebaseMessaging);
