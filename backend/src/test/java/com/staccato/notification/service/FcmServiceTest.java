@@ -38,7 +38,7 @@ class FcmServiceTest {
         when(firebaseMessaging.sendEachForMulticastAsync(any(MulticastMessage.class))).thenReturn(future);
 
         // when
-        fcmService.sendPush(tokens, "TestTitle", "TestBody", Map.of());
+        fcmService.sendPush(tokens, Map.of());
 
         // then
         verify(firebaseMessaging).sendEachForMulticastAsync(any(MulticastMessage.class));
@@ -48,7 +48,7 @@ class FcmServiceTest {
     @Test
     void failSendPush() {
         // given
-        fcmService.sendPush(List.of(), "title", "body", Map.of());
+        fcmService.sendPush(List.of(), Map.of());
 
         // when & then
         verifyNoInteractions(firebaseMessaging);

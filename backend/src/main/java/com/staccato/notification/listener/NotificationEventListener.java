@@ -35,7 +35,8 @@ public class NotificationEventListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleInvitation(CategoryInvitationEvent event) {
-        notificationService.sendInvitationAlert(event.inviter(), event.invitees(), event.category());
+        List<Member> targetMembers = event.invitees();
+        notificationService.sendInvitationAlert(event.inviter(), event.category(), targetMembers);
     }
 
     @Async

@@ -48,7 +48,7 @@ public class NotificationService {
                         });
     }
 
-    public void sendInvitationAlert(Member sender, List<Member> receivers, Category category) {
+    public void sendInvitationAlert(Member sender, Category category, List<Member> receivers) {
         Map<String, String> data = Map.of(
                 "type", "RECEIVE_INVITATION",
                 "title", String.format("%s님이 초대를 보냈어요", sender.getNickname().getNickname()),

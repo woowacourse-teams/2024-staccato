@@ -1,12 +1,19 @@
 package com.staccato.notification.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verify;
+
 import java.util.List;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
 import com.staccato.ServiceSliceTest;
 import com.staccato.category.domain.Category;
 import com.staccato.category.repository.CategoryRepository;
@@ -28,12 +35,6 @@ import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import com.staccato.staccato.domain.Staccato;
 import com.staccato.staccato.repository.StaccatoRepository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-
 class NotificationServiceTest extends ServiceSliceTest {
 
     @Autowired
@@ -53,26 +54,38 @@ class NotificationServiceTest extends ServiceSliceTest {
     @MockBean
     private FcmService fcmService;
 
-    private Member sender;
-    private Member receiver1;
-    private Member receiver2;
+    private Member host;
+    private Member guest;
+    private Member other;
     private Category category;
+    private Staccato staccato;
+    private Comment comment;
 
     @BeforeEach
     void setUp() {
-        sender = MemberFixtures.defaultMember().withNickname("sender").buildAndSave(memberRepository);
-        receiver1 = MemberFixtures.defaultMember().withNickname("receiver1").buildAndSave(memberRepository);
-        receiver2 = MemberFixtures.defaultMember().withNickname("receiver2").buildAndSave(memberRepository);
-        category = CategoryFixtures.defaultCategory().buildAndSave(categoryRepository);
+        host = MemberFixtures.defaultMember().withNickname("host").buildAndSave(memberRepository);
+        guest = MemberFixtures.defaultMember().withNickname("guest").buildAndSave(memberRepository);
+        other = MemberFixtures.defaultMember().withNickname("other").buildAndSave(memberRepository);
+        category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .withGuests(List.of(guest))
+                .buildAndSave(categoryRepository);
+        staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .buildAndSave(staccatoRepository);
+        comment = CommentFixtures.defaultComment()
+                .withStaccato(staccato)
+                .withMember(host)
+                .buildAndSave(commentRepository);
 
-        NotificationTokenFixtures.defaultNotificationToken(sender)
-                .withToken("senderToken")
+        NotificationTokenFixtures.defaultNotificationToken(host)
+                .withToken("hostToken")
                 .buildAndSave(notificationTokenRepository);
-        NotificationTokenFixtures.defaultNotificationToken(receiver1)
-                .withToken("token1")
+        NotificationTokenFixtures.defaultNotificationToken(guest)
+                .withToken("guestToken")
                 .buildAndSave(notificationTokenRepository);
-        NotificationTokenFixtures.defaultNotificationToken(receiver2)
-                .withToken("token2")
+        NotificationTokenFixtures.defaultNotificationToken(other)
+                .withToken("otherToken")
                 .buildAndSave(notificationTokenRepository);
     }
 
@@ -80,10 +93,10 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void isExistNotifications() {
         // given
-        categoryInvitationRepository.save(CategoryInvitation.invite(category, sender, receiver1));
+        categoryInvitationRepository.save(CategoryInvitation.invite(category, host, other));
 
         // when
-        NotificationExistResponse result = notificationService.isExistNotifications(receiver1);
+        NotificationExistResponse result = notificationService.isExistNotifications(other);
 
         // then
         assertThat(result.isExist()).isTrue();
@@ -93,7 +106,7 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void isNotExistNotifications() {
         // when
-        NotificationExistResponse result = notificationService.isExistNotifications(receiver1);
+        NotificationExistResponse result = notificationService.isExistNotifications(other);
 
         // then
         assertThat(result.isExist()).isFalse();
@@ -103,12 +116,17 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void sendInvitationAlert() {
         // when
-        notificationService.sendInvitationAlert(sender, List.of(receiver1, receiver2), category);
+        notificationService.sendInvitationAlert(host, category, List.of(other));
 
         // then
-        verify(fcmService).sendPush(argThat(tokens -> tokens.containsAll(List.of("token1", "token2"))),
-                eq("sender님이 초대를 보냈어요"),
-                eq(category.getTitle().getTitle())
+        verify(fcmService).sendPush(
+                argThat(tokens -> tokens.containsAll(List.of("otherToken"))),
+                argThat(data ->
+                        "RECEIVE_INVITATION".equals(data.get("type")) &&
+                                String.format("%s님이 초대를 보냈어요", host.getNickname().getNickname())
+                                        .equals(data.get("title")) &&
+                                category.getTitle().getTitle().equals(data.get("body"))
+                )
         );
     }
 
@@ -116,13 +134,19 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void sendAcceptAlert() {
         // when
-        notificationService.sendAcceptAlert(receiver1, category, List.of(sender, receiver2));
+        notificationService.sendAcceptAlert(other, category, List.of(host, guest));
 
         // then
         verify(fcmService).sendPush(
-                argThat(tokens -> tokens.containsAll(List.of("senderToken", "token2"))),
-                eq("receiver1님이 참여했어요"),
-                eq(category.getTitle().getTitle() + "에서 환영해주세요!")
+                argThat(tokens -> tokens.containsAll(List.of("hostToken", "guestToken"))),
+                argThat(data ->
+                        "ACCEPT_INVITATION".equals(data.get("type")) &&
+                                String.format("%s님이 참여했어요", other.getNickname().getNickname())
+                                        .equals(data.get("title")) &&
+                                String.format("%s에서 환영해주세요!", category.getTitle().getTitle())
+                                        .equals(data.get("body")) &&
+                                String.valueOf(category.getId()).equals(data.get("categoryId"))
+                )
         );
     }
 
@@ -130,36 +154,38 @@ class NotificationServiceTest extends ServiceSliceTest {
     @Test
     void sendNewStaccatoAlert() {
         // when
-        notificationService.sendNewStaccatoAlert(sender, category, List.of(receiver1, receiver2));
+        notificationService.sendNewStaccatoAlert(host, category, staccato, List.of(guest));
 
         // then
         verify(fcmService).sendPush(
-                argThat(tokens -> tokens.containsAll(List.of("token1", "token2"))),
-                eq("스타카토가 추가됐어요"),
-                eq("sender님이 " + category.getTitle().getTitle() + "에 남긴 스타카토를 확인해보세요")
+                argThat(tokens -> tokens.containsAll(List.of("guestToken"))),
+                argThat(data ->
+                        "STACCATO_CREATED".equals(data.get("type")) &&
+                                "스타카토가 추가됐어요".equals(data.get("title")) &&
+                                String.format("%s님이 %s에 남긴 스타카토를 확인해보세요",
+                                        host.getNickname().getNickname(),
+                                        category.getTitle().getTitle()).equals(data.get("body")) &&
+                                String.valueOf(staccato.getId()).equals(data.get("staccatoId"))
+                )
         );
     }
 
-    @DisplayName("새로운 댓글 알림을 전송한다.")
+    @DisplayName("새로운 코멘트 알림을 전송한다.")
     @Test
     void sendNewCommentAlert() {
-        // given
-        Staccato staccato = StaccatoFixtures.defaultStaccato()
-                .withCategory(category)
-                .buildAndSave(staccatoRepository);
-        Comment comment = CommentFixtures.defaultComment()
-                .withMember(sender)
-                .withStaccato(staccato)
-                .buildAndSave(commentRepository);
-
         // when
-        notificationService.sendNewCommentAlert(sender, comment, List.of(receiver1, receiver2));
+        notificationService.sendNewCommentAlert(host, comment, staccato, List.of(guest));
 
         // then
         verify(fcmService).sendPush(
-                argThat(tokens -> tokens.containsAll(List.of("token1", "token2"))),
-                eq("sender님의 코멘트"),
-                eq(comment.getContent())
+                argThat(tokens -> tokens.containsAll(List.of("guestToken"))),
+                argThat(data ->
+                        "COMMENT_CREATED".equals(data.get("type")) &&
+                                String.format("%s님의 코멘트", host.getNickname().getNickname())
+                                        .equals(data.get("title")) &&
+                                comment.getContent().equals(data.get("body")) &&
+                                String.valueOf(staccato.getId()).equals(data.get("staccatoId"))
+                )
         );
     }
 
