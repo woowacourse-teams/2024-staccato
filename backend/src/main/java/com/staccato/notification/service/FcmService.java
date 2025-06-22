@@ -13,7 +13,6 @@ import com.google.firebase.messaging.AndroidConfig;
 import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.ApnsConfig;
 import com.google.firebase.messaging.Aps;
-import com.google.firebase.messaging.ApsAlert;
 import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.MessagingErrorCode;
@@ -39,41 +38,32 @@ public class FcmService {
     private final NotificationTokenRepository notificationTokenRepository;
     private final Executor fcmCallbackExecutor;
 
-    public void sendPush(List<String> tokens, String title, String body, Map<String, String> data) {
+    public void sendPush(List<String> tokens, Map<String, String> data) {
         if (tokens == null || tokens.isEmpty()) {
             log.warn(SEND_FAIL_LOG + "FCM 전송 대상 토큰이 없습니다.");
             return;
         }
         for (int i = 0; i < tokens.size(); i += FCM_MULTICAST_LIMIT) {
-            List<String> batch = tokens.subList(i, Math.min(i + FCM_MULTICAST_LIMIT, tokens.size()));
-            MulticastMessage message = createMulticastMessage(batch, title, body, data);
+            List<String> batchTokens = tokens.subList(i, Math.min(i + FCM_MULTICAST_LIMIT, tokens.size()));
+            MulticastMessage message = createMulticastMessage(batchTokens, data);
             ApiFuture<BatchResponse> future = firebaseMessaging.sendEachForMulticastAsync(message);
-            registerCallback(future, batch);
+            registerCallback(future, batchTokens);
         }
     }
 
-    private MulticastMessage createMulticastMessage(List<String> tokens, String title, String body, Map<String, String> customData) {
+    private MulticastMessage createMulticastMessage(List<String> tokens, Map<String, String> customData) {
         MulticastMessage.Builder builder = MulticastMessage.builder()
                 .setAndroidConfig(AndroidConfig.builder()
                         .setPriority(AndroidConfig.Priority.HIGH)
                         .setNotification(AndroidNotification.builder()
                                 .setClickAction("PUSH_CLICK")
-                                .setSound("default")
                                 .build())
-                        .build()
-                )
+                        .build())
                 .setApnsConfig(ApnsConfig.builder()
                         .setAps(Aps.builder()
-                                .setAlert(ApsAlert.builder()
-                                        .setTitle(title)
-                                        .setBody(body)
-                                        .build())
-                                .setSound("default")
                                 .setCategory("PUSH_CLICK")
                                 .build())
-                        .build()
-                )
-                .putData("click_action", "PUSH_CLICK")
+                        .build())
                 .addAllTokens(tokens);
 
         if (customData != null) {
