@@ -28,10 +28,7 @@ public class NotificationEventListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleInvitationAccepted(CategoryInvitationAcceptedEvent event) {
-        Category category = event.category();
-        List<Member> existingMembers = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
-        List<Member> targetMembers = excludeSelf(existingMembers, event.invitee());
-
+        List<Member> targetMembers = getTargetMembers(event.category(), event.invitee());
         notificationService.sendAcceptAlert(event.invitee(), event.category(), targetMembers);
     }
 
@@ -46,9 +43,7 @@ public class NotificationEventListener {
     public void handleNewStaccato(StaccatoCreatedEvent event) {
         Category category = event.category();
         if (category.getIsShared()) {
-            List<Member> existingMembers = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
-            List<Member> targetMembers = excludeSelf(existingMembers, event.creator());
-
+            List<Member> targetMembers = getTargetMembers(event.category(), event.creator());
             notificationService.sendNewStaccatoAlert(event.creator(), event.category(), targetMembers);
         }
     }
@@ -58,16 +53,14 @@ public class NotificationEventListener {
     public void handleNewComment(CommentCreatedEvent event) {
         Category category = event.category();
         if (category.getIsShared()) {
-            List<Member> existingMembers = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
-            List<Member> targetMembers = excludeSelf(existingMembers, event.commenter());
-
+            List<Member> targetMembers = getTargetMembers(event.category(), event.commenter());
             notificationService.sendNewCommentAlert(event.commenter(), event.comment(), targetMembers);
         }
     }
 
-    private List<Member> excludeSelf(List<Member> members, Member self) {
-        return members.stream()
-                .filter(member -> !member.equals(self))
-                .toList();
+    private List<Member> getTargetMembers(Category category, Member excludeMember) {
+        List<Member> members = categoryMemberRepository.findAllMembersByCategoryId(category.getId());
+        members.remove(excludeMember);
+        return members;
     }
 }
