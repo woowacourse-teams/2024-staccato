@@ -30,7 +30,7 @@ import com.on.staccato.presentation.common.location.LocationDialogFragment.Compa
 import com.on.staccato.presentation.common.location.LocationPermissionManager
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.map.cluster.ClusterDrawManager
-import com.on.staccato.presentation.map.cluster.StaccatoMarkerRender
+import com.on.staccato.presentation.map.cluster.StaccatoMarkerClusterRenderer
 import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 import com.on.staccato.presentation.map.viewmodel.MapsViewModel
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
@@ -273,13 +273,13 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun ClusterManager<StaccatoMarkerUiModel>.setup(googleMap: GoogleMap) {
-        renderer = createStaccatoMarkerRender(googleMap)
+        renderer = createStaccatoMarkerClusterRenderer(googleMap)
         onClickedClustered()
         googleMap.setOnCameraIdleListener(clusterManager)
     }
 
-    private fun createStaccatoMarkerRender(googleMap: GoogleMap) =
-        StaccatoMarkerRender(
+    private fun createStaccatoMarkerClusterRenderer(googleMap: GoogleMap) =
+        StaccatoMarkerClusterRenderer(
             context = requireContext(),
             map = googleMap,
             clusterManager = clusterManager,

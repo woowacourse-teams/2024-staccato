@@ -10,7 +10,7 @@ import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 
-class StaccatoMarkerRender(
+class StaccatoMarkerClusterRenderer(
     context: Context,
     map: GoogleMap?,
     clusterManager: ClusterManager<StaccatoMarkerUiModel>?,
