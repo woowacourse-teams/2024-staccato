@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
@@ -24,10 +25,13 @@ class StaccatoMarkerClusterRenderer(
         markerOptions.icon(icon)
     }
 
-    override fun getDescriptorForCluster(cluster: Cluster<StaccatoMarkerUiModel>): BitmapDescriptor =
-        clusterDrawManager.generateClusterIcon(
-            cluster.size,
-        )
+    override fun onClusterUpdated(
+        cluster: Cluster<StaccatoMarkerUiModel>,
+        marker: Marker,
+    ) {
+        val icon: BitmapDescriptor = clusterDrawManager.generateClusterIcon(cluster.size)
+        marker.setIcon(icon)
+    }
 
     override fun onBeforeClusterItemRendered(
         item: StaccatoMarkerUiModel,
