@@ -23,7 +23,7 @@ class StaccatoDefaultRepository
     StaccatoRepository {
         override suspend fun getStaccatos(): ApiResult<List<StaccatoMarker>> =
             remoteDataSource.fetchStaccatos().handle {
-                it.staccatoLocationResponses.map { dto -> dto.toDomain() }
+                it.staccatoMarkerResponses.map { dto -> dto.toDomain() }
             }
 
         override suspend fun getStaccato(staccatoId: Long): ApiResult<Staccato> =
