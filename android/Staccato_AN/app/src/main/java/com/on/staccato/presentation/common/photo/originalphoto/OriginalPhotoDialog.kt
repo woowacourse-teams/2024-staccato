@@ -60,7 +60,7 @@ fun OriginalPhotoDialogPreview() {
     )
 }
 
-private val dummyImageUrls =
+val dummyImageUrls =
     listOf(
         "https://avatars.githubusercontent.com/u/46596035?v=4",
         "https://avatars.githubusercontent.com/u/103019852?v=4",

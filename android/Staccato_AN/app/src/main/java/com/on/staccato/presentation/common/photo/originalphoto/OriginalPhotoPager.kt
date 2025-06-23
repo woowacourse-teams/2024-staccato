@@ -64,7 +64,7 @@ fun OriginalPhotoPager(
 @Preview
 fun OriginalPhotoPagerPreview() {
     OriginalPhotoPager(
-        imageUrls = listOf("", "", ""),
+        imageUrls = dummyImageUrls,
         modifier = Modifier.fillMaxSize(),
         onTap = {},
     )
