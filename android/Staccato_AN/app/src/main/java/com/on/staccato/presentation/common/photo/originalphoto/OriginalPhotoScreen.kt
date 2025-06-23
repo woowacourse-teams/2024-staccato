@@ -10,7 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 
 @Composable
-fun OriginalPhotoScreen(viewModel: StaccatoViewModel = hiltViewModel<StaccatoViewModel>()) {
+fun OriginalPhotoScreen(viewModel: StaccatoViewModel = hiltViewModel()) {
     val originalPhotoIndex by viewModel.originalPhotoIndex.collectAsState()
     val staccatoDetail = viewModel.staccatoDetail.value
     val imageUrls = staccatoDetail?.staccatoImageUrls ?: emptyList()
