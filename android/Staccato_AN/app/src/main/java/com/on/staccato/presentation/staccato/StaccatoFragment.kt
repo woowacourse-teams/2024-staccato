@@ -119,12 +119,16 @@ class StaccatoFragment :
 
     fun handleStaccatoMenuItemClick(menuItemId: Int) {
         when (menuItemId) {
-            R.id.staccato_delete -> staccatoDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
+            R.id.staccato_delete ->
+                staccatoDeleteDialog.show(
+                    parentFragmentManager,
+                    DeleteDialogFragment.TAG,
+                )
 
             R.id.staccato_modify ->
                 startStaccatoUpdateActivity(
-                    staccatoViewModel.staccatoDetail.value!!.categoryId,
-                    staccatoViewModel.staccatoDetail.value!!.staccatoTitle,
+                    staccatoViewModel.staccatoDetail.value?.categoryId ?: return,
+                    staccatoViewModel.staccatoDetail.value?.staccatoTitle ?: return,
                 )
 
             R.id.staccato_share -> staccatoViewModel.createStaccatoShareLink()
@@ -136,6 +140,7 @@ class StaccatoFragment :
             R.id.comment_delete -> {
                 commentDeleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
             }
+
             R.id.comment_copy -> {
                 val comment =
                     commentsViewModel.selectedComment?.content
