@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -15,11 +16,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+
 import com.staccato.config.domain.BaseEntity;
 import com.staccato.exception.ForbiddenException;
 import com.staccato.exception.StaccatoException;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -138,17 +141,44 @@ public class Category extends BaseEntity {
         return term.doesNotContain(date);
     }
 
-    public boolean isNotOwnedBy(Member member) {
+    public void validateOwner(Member member) {
+        if (isNotOwnedBy(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private boolean isNotOwnedBy(Member member) {
         return categoryMembers.stream()
                 .noneMatch(categoryMember -> categoryMember.isOwnedBy(member));
     }
 
-    public boolean isGuest(Member member) {
-        CategoryMember categoryMember = categoryMembers.stream()
+    public void validateHost(Member member) {
+        if (isGuest(member)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private boolean isGuest(Member member) {
+        CategoryMember categoryMember = findCategoryMember(member);
+        return categoryMember.isGuest();
+    }
+
+    public void validateMemberCanLeave(Member member) {
+        if (isHost(member)) {
+            throw new ForbiddenException("방장은 카테고리를 나갈 수 없어요.");
+        }
+    }
+
+    private boolean isHost(Member member) {
+        CategoryMember categoryMember = findCategoryMember(member);
+        return categoryMember.isHost();
+    }
+
+    private CategoryMember findCategoryMember(Member member) {
+        return categoryMembers.stream()
                 .filter(cm -> cm.isOwnedBy(member))
                 .findFirst()
                 .orElseThrow(ForbiddenException::new);
-        return categoryMember.isGuest();
     }
 
     public boolean isNotSameTitle(CategoryTitle title) {
@@ -175,10 +205,11 @@ public class Category extends BaseEntity {
         return categoryMembers.size();
     }
 
-    public void validateOwner(Member member) {
-        if (isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
+    public void removeCategoryMember(Member member) {
+        categoryMembers.stream()
+                .filter(categoryMember -> categoryMember.isOwnedBy(member))
+                .findFirst()
+                .ifPresent(categoryMembers::remove);
     }
 
 /*    public void increaseStaccatoCount() {
