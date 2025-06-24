@@ -2,6 +2,7 @@ package com.staccato.staccato.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -50,17 +51,19 @@ class StaccatoControllerV2Test extends ControllerTest {
         // given
         when(authService.extractFromToken(anyString())).thenReturn(MemberFixtures.defaultMember().build());
         Category category = CategoryFixtures.defaultCategory().withColor(Color.PINK).build();
-        StaccatoLocationResponseV2 response1 = new StaccatoLocationResponseV2(
-                StaccatoFixtures.defaultStaccato()
-                        .withCategory(category)
-                        .withSpot(BigDecimal.ZERO, BigDecimal.ZERO).build()
-        );
-        StaccatoLocationResponseV2 response2 = new StaccatoLocationResponseV2(
-                StaccatoFixtures.defaultStaccato()
-                        .withCategory(category)
-                        .withSpot(new BigDecimal("123.456789"), new BigDecimal("123.456789")).build()
-        );
-        StaccatoLocationResponsesV2 responses = new StaccatoLocationResponsesV2(List.of(response1, response2));
+        Staccato staccato = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withSpot(BigDecimal.ZERO, BigDecimal.ZERO)
+                .withTitle("title")
+                .withVisitedAt(LocalDateTime.of(2024, 5, 1, 0, 0))
+                .build();
+        Staccato staccato2 = StaccatoFixtures.defaultStaccato()
+                .withCategory(category)
+                .withSpot(new BigDecimal("123.456789"), new BigDecimal("123.456789"))
+                .withTitle("title2")
+                .withVisitedAt(LocalDateTime.of(2024, 5, 2, 0, 0))
+                .build();
+        StaccatoLocationResponsesV2 responses = StaccatoLocationResponsesV2.of(List.of(staccato, staccato2));
 
         when(staccatoService.readAllStaccato(any(Member.class), any(StaccatoLocationRangeRequest.class))).thenReturn(responses);
         String expectedResponse = """
@@ -70,13 +73,17 @@ class StaccatoControllerV2Test extends ControllerTest {
                              "staccatoId": null,
                              "staccatoColor": "pink",
                              "latitude": 0,
-                             "longitude": 0
+                             "longitude": 0,
+                             "title": "title",
+                             "visitedAt": "2024-05-01T00:00:00"
                          },
                          {
                              "staccatoId": null,
                              "staccatoColor": "pink",
                              "latitude": 123.456789,
-                             "longitude": 123.456789
+                             "longitude": 123.456789,
+                             "title": "title2",
+                             "visitedAt": "2024-05-02T00:00:00"
                          }
                     ]
                 }
@@ -86,7 +93,7 @@ class StaccatoControllerV2Test extends ControllerTest {
         mockMvc.perform(get("/v2/staccatos")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("유효하지 않은 위도 또는 경도 쿼리로 스타카토 목록 조회 시 예외가 발생한다.")
@@ -146,6 +153,6 @@ class StaccatoControllerV2Test extends ControllerTest {
         mockMvc.perform(get("/v2/staccatos/{staccatoId}", staccatoId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 }

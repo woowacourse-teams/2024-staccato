@@ -40,7 +40,8 @@ public class InvitationService {
     @Transactional
     public CategoryInvitationCreateResponses invite(Member inviter, CategoryInvitationRequest categoryInvitationRequest) {
         Category category = getCategoryById(categoryInvitationRequest.categoryId());
-        validateInvitePermission(category, inviter);
+        category.validateOwner(inviter);
+        category.validateHost(inviter);
         List<Member> invitees = memberRepository.findAllByIdIn(categoryInvitationRequest.inviteeIds());
         List<CategoryInvitation> invitations = categoryInvitationRepository.saveAll(createInvitations(category, inviter, invitees));
         eventPublisher.publishEvent(new CategoryInvitationEvent(inviter, invitees, category));
@@ -50,23 +51,6 @@ public class InvitationService {
     private Category getCategoryById(long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new StaccatoException("요청하신 카테고리를 찾을 수 없어요."));
-    }
-
-    private void validateInvitePermission(Category category, Member member) {
-        validateOwner(category, member);
-        validateHost(category, member);
-    }
-
-    private void validateOwner(Category category, Member member) {
-        if (category.isNotOwnedBy(member)) {
-            throw new ForbiddenException();
-        }
-    }
-
-    private void validateHost(Category category, Member member) {
-        if (category.isGuest(member)) {
-            throw new ForbiddenException();
-        }
     }
 
     private List<CategoryInvitation> createInvitations(Category category, Member inviter, List<Member> invitees) {
@@ -116,7 +100,7 @@ public class InvitationService {
     @Transactional
     public void accept(Member invitee, long invitationId) {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        validateInvitee(invitation, invitee);
+        invitation.validateInvitee(invitee);
         invitation.accept();
 
         Category category = invitation.getCategory();
@@ -133,19 +117,13 @@ public class InvitationService {
     @Transactional
     public void reject(Member invitee, long invitationId) {
         CategoryInvitation invitation = getCategoryInvitationById(invitationId);
-        validateInvitee(invitation, invitee);
+        invitation.validateInvitee(invitee);
         invitation.reject();
     }
 
     private CategoryInvitation getCategoryInvitationById(long invitationId) {
         return categoryInvitationRepository.findById(invitationId)
                 .orElseThrow(() -> new StaccatoException("요청하신 초대 정보를 찾을 수 없어요."));
-    }
-
-    private void validateInvitee(CategoryInvitation invitation, Member invitee) {
-        if (invitation.isNotInvitee(invitee)) {
-            throw new ForbiddenException();
-        }
     }
 
     public CategoryInvitationReceivedResponses readReceivedInvitations(Member invitee) {
