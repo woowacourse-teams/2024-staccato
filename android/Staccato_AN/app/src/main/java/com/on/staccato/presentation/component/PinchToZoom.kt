@@ -48,15 +48,13 @@ fun PinchToZoom(
                 .onSizeChanged { containerSize = it }
                 .pointerInput(Unit) {
                     awaitEachGesture {
-                        var isZoomGesture = false
                         var isDragGesture = false
                         val touchSlop = viewConfiguration.touchSlop
                         awaitFirstDown(requireUnconsumed = false)
 
                         do {
                             val event = awaitPointerEvent()
-                            if (event.changes.size > 1) {
-                                isZoomGesture = true
+                            if (event.changes.size == 2) {
                                 val zoomChange = event.calculateZoom()
                                 val panChange = event.calculatePan()
 
@@ -70,7 +68,7 @@ fun PinchToZoom(
                                     offset = Offset.Zero
                                 }
                                 event.changes.fastForEach { it.consume() }
-                            } else if (!isZoomGesture) {
+                            } else if (event.changes.size == 1) {
                                 val dragChange = event.changes.first()
                                 val dragAmount = dragChange.positionChange()
 
