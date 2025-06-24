@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -28,25 +29,25 @@ fun DefaultAsyncImage(
     @DrawableRes errorImageRes: Int? = null,
     contentScale: ContentScale = ContentScale.Crop,
 ) {
-    val painter =
-        rememberAsyncImagePainter(
-            model =
-                ImageRequest.Builder(LocalContext.current)
-                    .data(url)
-                    .apply {
-                        bitmapPixelSize?.let {
-                            size(it)
-                        }
-                        placeHolder?.let {
-                            placeholder(it)
-                        }
-                        errorImageRes?.let {
-                            fallback(it)
-                            error(it)
-                        }
+    val context = LocalContext.current
+    val imageRequest =
+        remember(url, bitmapPixelSize, placeHolder, errorImageRes) {
+            ImageRequest.Builder(context)
+                .data(url)
+                .apply {
+                    bitmapPixelSize?.let {
+                        size(it)
                     }
-                    .build(),
-        )
+                    placeHolder?.let {
+                        placeholder(it)
+                    }
+                    errorImageRes?.let {
+                        fallback(it)
+                        error(it)
+                    }
+                }.build()
+        }
+    val painter = rememberAsyncImagePainter(model = imageRequest)
 
     Image(
         modifier = modifier.clip(RoundedCornerShape(radiusDp)),
