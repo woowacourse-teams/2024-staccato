@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
