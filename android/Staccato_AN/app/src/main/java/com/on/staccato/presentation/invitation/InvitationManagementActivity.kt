@@ -23,7 +23,6 @@ class InvitationManagementActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         showInvitationManagementScreen()
         collectHasInvitationAccepted()
-        finishOnBackPressed()
     }
 
     private fun showInvitationManagementScreen() {
@@ -41,12 +40,6 @@ class InvitationManagementActivity : ComponentActivity() {
                     if (hasInvitationAccepted) setResult(RESULT_INVITATION_ACCEPTED)
                 }
             }
-        }
-    }
-
-    private fun finishOnBackPressed() {
-        onBackPressedDispatcher.addCallback(this) {
-            finish()
         }
     }
 
