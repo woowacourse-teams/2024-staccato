@@ -24,14 +24,14 @@ class InvitationDefaultRepository
         override suspend fun getReceivedInvitations(): ApiResult<List<ReceivedInvitation>> =
             invitationApiService.getReceivedInvitations().handle { it.toDomain() }
 
+        override suspend fun getSentInvitations(): ApiResult<List<SentInvitation>> =
+            invitationApiService.getSentInvitations().handle { it.toDomain() }
+
         override suspend fun acceptInvitation(invitationId: Long): ApiResult<Unit> =
             invitationApiService.postInvitationAccept(invitationId = invitationId).handle()
 
         override suspend fun rejectInvitation(invitationId: Long): ApiResult<Unit> =
             invitationApiService.postInvitationReject(invitationId = invitationId).handle()
-
-        override suspend fun getSentInvitations(): ApiResult<List<SentInvitation>> =
-            invitationApiService.getSentInvitations().handle { it.toDomain() }
 
         override suspend fun cancelInvitation(invitationId: Long): ApiResult<Unit> =
             invitationApiService.postInvitationCancel(invitationId = invitationId).handle()
