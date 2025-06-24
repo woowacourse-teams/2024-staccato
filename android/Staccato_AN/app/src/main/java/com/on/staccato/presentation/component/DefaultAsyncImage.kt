@@ -58,11 +58,29 @@ fun DefaultAsyncImage(
 
 @Preview
 @Composable
-private fun DefaultAsyncImagePreview() {
+private fun ValidUrlAsyncImagePreview() {
+    PreviewAsyncImage(url = "https://avatars.githubusercontent.com/u/103019852?v=4")
+}
+
+@Preview
+@Composable
+private fun NullUrlAsyncImagePreview() {
+    PreviewAsyncImage(url = null)
+}
+
+@Preview
+@Composable
+private fun EmptyUrlAsyncImagePreview() {
+    PreviewAsyncImage(url = "")
+}
+
+@Composable
+private fun PreviewAsyncImage(url: String?) {
     DefaultAsyncImage(
+        url = url,
         bitmapPixelSize = 150,
-        url = "https://avatars.githubusercontent.com/u/103019852?v=4",
         placeHolder = R.drawable.icon_member,
+        errorImageRes = R.drawable.icon_member,
         contentDescription = R.string.all_category_thumbnail_photo_description,
     )
 }
