@@ -30,6 +30,6 @@ fun StaccatoInformation(
 
 @Preview(showBackground = true)
 @Composable
-private fun StaccatoTitleAndVisitedAtPreview() {
+private fun StaccatoInformationPreview() {
     StaccatoInformation(staccato = dummyStaccatoMarkerUiModel)
 }
