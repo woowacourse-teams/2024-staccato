@@ -7,11 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 
 @Composable
 fun OriginalPhotoScreen(viewModel: StaccatoViewModel = hiltViewModel()) {
-    val originalPhotoIndex by viewModel.originalPhotoIndex.collectAsState()
+    val originalPhotoIndex by viewModel.originalPhotoIndex.collectAsStateWithLifecycle()
     val staccatoDetail = viewModel.staccatoDetail.value
     val imageUrls = staccatoDetail?.staccatoImageUrls ?: emptyList()
     val staccatoTitle = staccatoDetail?.staccatoTitle ?: ""
