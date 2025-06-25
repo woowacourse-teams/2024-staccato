@@ -13,7 +13,7 @@ import com.on.staccato.presentation.category.INVALID_ID
 import com.on.staccato.presentation.category.VALID_ID
 import com.on.staccato.presentation.category.category
 import com.on.staccato.presentation.category.categoryUiModel
-import com.on.staccato.presentation.category.model.CategoryState
+import com.on.staccato.presentation.category.model.CategoryEvent
 import com.on.staccato.presentation.category.naMembers
 import com.on.staccato.presentation.category.naMembersUiModel
 import com.on.staccato.presentation.category.nana
@@ -136,13 +136,13 @@ class CategoryViewModelTest {
             coEvery { categoryRepository.deleteCategory(VALID_ID) } returns Success(Unit)
 
             // when
-            val sharedFlow = viewModel.categoryState
+            val sharedFlow = viewModel.categoryEvent
             val job = launch(StandardTestDispatcher(testScheduler)) { viewModel.deleteCategory() }
 
             // then
-            val actual = sharedFlow.first { it is CategoryState.Deleted }
-            assertThat(actual).isInstanceOf(CategoryState.Deleted::class.java)
-            assertThat((actual as CategoryState.Deleted).success).isTrue()
+            val actual = sharedFlow.first { it is CategoryEvent.Deleted }
+            assertThat(actual).isInstanceOf(CategoryEvent.Deleted::class.java)
+            assertThat((actual as CategoryEvent.Deleted).success).isTrue()
             job.cancel()
         }
 

@@ -26,10 +26,10 @@ import com.on.staccato.presentation.category.invite.model.toUiModel
 import com.on.staccato.presentation.category.model.CategoryDialogState
 import com.on.staccato.presentation.category.model.CategoryDialogState.Exit
 import com.on.staccato.presentation.category.model.CategoryDialogState.None
-import com.on.staccato.presentation.category.model.CategoryState
-import com.on.staccato.presentation.category.model.CategoryState.Deleted
-import com.on.staccato.presentation.category.model.CategoryState.Error
-import com.on.staccato.presentation.category.model.CategoryState.Exited
+import com.on.staccato.presentation.category.model.CategoryEvent
+import com.on.staccato.presentation.category.model.CategoryEvent.Deleted
+import com.on.staccato.presentation.category.model.CategoryEvent.Error
+import com.on.staccato.presentation.category.model.CategoryEvent.Exited
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.common.MutableSingleLiveData
@@ -74,8 +74,8 @@ class CategoryViewModel
         private val _selectedMembers = MutableStateFlow(emptyMembers)
         val selectedMembers = _selectedMembers.asStateFlow()
 
-        private val _categoryState = MutableSharedFlow<CategoryState>()
-        val categoryState: SharedFlow<CategoryState> = _categoryState.asSharedFlow()
+        private val _categoryEvent = MutableSharedFlow<CategoryEvent>()
+        val categoryEvent: SharedFlow<CategoryEvent> = _categoryEvent.asSharedFlow()
 
         private val _dialogState = mutableStateOf<CategoryDialogState>(None)
         val dialogState: State<CategoryDialogState> = _dialogState
@@ -146,7 +146,7 @@ class CategoryViewModel
             viewModelScope.launch {
                 val id = _category.value?.id
                 if (id == null) {
-                    _categoryState.emit(Deleted(success = false))
+                    _categoryEvent.emit(Deleted(success = false))
                     return@launch
                 }
 
@@ -180,7 +180,7 @@ class CategoryViewModel
             viewModelScope.launch {
                 val id = _category.value?.id
                 if (id == null) {
-                    _categoryState.emit(Error)
+                    _categoryEvent.emit(Error)
                     return@launch
                 }
                 categoryRepository.leaveCategory(id)
@@ -208,11 +208,11 @@ class CategoryViewModel
         }
 
         private suspend fun updateToDeletedState() {
-            _categoryState.emit(Deleted(success = true))
+            _categoryEvent.emit(Deleted(success = true))
         }
 
         private suspend fun updateToExitState() {
-            _categoryState.emit(Exited)
+            _categoryEvent.emit(Exited)
         }
 
         private fun handleServerError(message: String) {

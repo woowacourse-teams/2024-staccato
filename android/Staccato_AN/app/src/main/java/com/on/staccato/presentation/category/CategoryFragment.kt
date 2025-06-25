@@ -19,7 +19,7 @@ import com.on.staccato.presentation.category.adapter.MembersAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
 import com.on.staccato.presentation.category.component.ExitDialogScreen
 import com.on.staccato.presentation.category.invite.InviteScreen
-import com.on.staccato.presentation.category.model.CategoryState
+import com.on.staccato.presentation.category.model.CategoryEvent
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
@@ -193,14 +193,14 @@ class CategoryFragment :
     private fun observeCategoryState() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(state = Lifecycle.State.STARTED) {
-                viewModel.categoryState.collect { state -> onCategoryState(state) }
+                viewModel.categoryEvent.collect { state -> onCategoryState(state) }
             }
         }
     }
 
-    private fun onCategoryState(state: CategoryState) {
+    private fun onCategoryState(state: CategoryEvent) {
         when (state) {
-            is CategoryState.Deleted -> {
+            is CategoryEvent.Deleted -> {
                 if (state.success) {
                     sharedViewModel.setTimelineHasUpdated()
                     showToast(getString(R.string.category_delete_complete))
@@ -210,13 +210,13 @@ class CategoryFragment :
                 findNavController().popBackStack()
             }
 
-            is CategoryState.Exited -> {
+            is CategoryEvent.Exited -> {
                 sharedViewModel.setTimelineHasUpdated()
                 showToast(getString(R.string.category_exit_complete))
                 findNavController().popBackStack()
             }
 
-            is CategoryState.Error -> {
+            is CategoryEvent.Error -> {
                 sharedViewModel.setTimelineHasUpdated()
                 showToast(getString(R.string.category_empty_error))
                 findNavController().popBackStack()
