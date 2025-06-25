@@ -146,12 +146,12 @@ class CategoryViewModel
             viewModelScope.launch {
                 val id = _category.value?.id
                 if (id == null) {
-                    _categoryEvent.emit(Deleted(success = false))
+                    updateToDeletedEvent(false)
                     return@launch
                 }
 
                 val result: ApiResult<Unit> = categoryRepository.deleteCategory(id)
-                result.onSuccess { updateToDeletedEvent() }
+                result.onSuccess { updateToDeletedEvent(true) }
                     .onServerError(::handleServerError)
                     .onException2(::handelException)
             }
@@ -207,8 +207,8 @@ class CategoryViewModel
             participatingMembers.emit(Participants(category.participants))
         }
 
-        private suspend fun updateToDeletedEvent() {
-            _categoryEvent.emit(Deleted(success = true))
+        private suspend fun updateToDeletedEvent(success: Boolean) {
+            _categoryEvent.emit(Deleted(success = success))
         }
 
         private suspend fun updateToExitEvent() {
