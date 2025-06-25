@@ -1,7 +1,6 @@
 package com.on.staccato.presentation.common.photo.originalphoto
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,7 +21,7 @@ fun OriginalPhotoScreen(viewModel: StaccatoViewModel = hiltViewModel()) {
         OriginalPhotoDialog(
             imageUrls = imageUrls,
             originalPhotoIndex = originalPhotoIndex,
-            staccatoTitle = staccatoTitle,
+            topBarTitle = staccatoTitle,
             topBarVisibility = topBarVisibility,
             onDismiss = { viewModel.changeOriginalPhotoIndex(OriginalPhotoIndex.unavailable) },
             onTab = { topBarVisibility = !topBarVisibility },

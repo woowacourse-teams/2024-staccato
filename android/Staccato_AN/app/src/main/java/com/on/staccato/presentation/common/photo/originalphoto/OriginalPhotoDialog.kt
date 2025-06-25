@@ -14,7 +14,7 @@ import androidx.compose.ui.window.DialogProperties
 
 @Composable
 fun OriginalPhotoDialog(
-    staccatoTitle: String,
+    topBarTitle: String,
     imageUrls: List<String>,
     originalPhotoIndex: OriginalPhotoIndex,
     topBarVisibility: Boolean,
@@ -38,7 +38,7 @@ fun OriginalPhotoDialog(
             )
             OriginalPhotoTopBar(
                 isVisible = topBarVisibility,
-                title = staccatoTitle,
+                title = topBarTitle,
                 onNavigationClick = onDismiss,
             )
         }
@@ -51,7 +51,7 @@ fun OriginalPhotoDialogPreview() {
     var topBarVisibility by remember { mutableStateOf(true) }
 
     OriginalPhotoDialog(
-        staccatoTitle = "스타카토 원본 사진 프리뷰",
+        topBarTitle = "스타카토 원본 사진 프리뷰",
         imageUrls = dummyImageUrls,
         originalPhotoIndex = OriginalPhotoIndex(0),
         topBarVisibility = topBarVisibility,
