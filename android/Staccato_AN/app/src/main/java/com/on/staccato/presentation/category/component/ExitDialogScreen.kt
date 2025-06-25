@@ -6,9 +6,7 @@ import com.on.staccato.presentation.category.model.CategoryDialogState.Exit
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
 
 @Composable
-fun ExitDialogScreen(
-    viewModel: CategoryViewModel = hiltViewModel(),
-) {
+fun ExitDialogScreen(viewModel: CategoryViewModel = hiltViewModel()) {
     when (val dialogState = viewModel.dialogState.value) {
         is Exit -> {
             ExitDialog(

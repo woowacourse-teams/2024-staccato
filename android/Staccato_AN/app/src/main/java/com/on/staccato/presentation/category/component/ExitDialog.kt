@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.staccato.R
-import com.on.staccato.presentation.component.DefaultTextButtonPadding
 import com.on.staccato.presentation.component.DefaultAlertDialog
 import com.on.staccato.presentation.component.DefaultTextButton
+import com.on.staccato.presentation.component.DefaultTextButtonPadding
 import com.on.staccato.theme.Gray1
 import com.on.staccato.theme.Gray4
 import com.on.staccato.theme.StaccatoBlue

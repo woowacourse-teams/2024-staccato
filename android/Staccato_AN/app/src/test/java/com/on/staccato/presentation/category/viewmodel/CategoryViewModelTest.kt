@@ -137,9 +137,7 @@ class CategoryViewModelTest {
 
             // when
             val sharedFlow = viewModel.categoryState
-            val job = launch(StandardTestDispatcher(testScheduler)) {
-                viewModel.deleteCategory()
-            }
+            val job = launch(StandardTestDispatcher(testScheduler)) { viewModel.deleteCategory() }
 
             // then
             val actual = sharedFlow.first { it is CategoryState.Deleted }

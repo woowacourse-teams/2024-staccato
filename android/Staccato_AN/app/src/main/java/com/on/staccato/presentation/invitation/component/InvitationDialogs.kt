@@ -3,9 +3,9 @@ package com.on.staccato.presentation.invitation.component
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.on.staccato.R
-import com.on.staccato.presentation.component.DefaultTextButtonPadding
 import com.on.staccato.presentation.component.DefaultAlertDialog
 import com.on.staccato.presentation.component.DefaultTextButton
+import com.on.staccato.presentation.component.DefaultTextButtonPadding
 import com.on.staccato.presentation.invitation.model.InvitationDialogState
 import com.on.staccato.presentation.invitation.model.InvitationDialogState.Cancel
 import com.on.staccato.presentation.invitation.model.InvitationDialogState.None

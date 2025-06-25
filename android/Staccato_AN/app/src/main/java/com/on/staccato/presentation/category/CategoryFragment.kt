@@ -96,7 +96,7 @@ class CategoryFragment :
     }
 
     override fun onExitClicked() {
-         viewModel.showExitDialog()
+        viewModel.showExitDialog()
     }
 
     override fun onStaccatoClicked(staccatoId: Long) {
@@ -199,7 +199,7 @@ class CategoryFragment :
     }
 
     private fun onCategoryState(state: CategoryState) {
-        when(state) {
+        when (state) {
             is CategoryState.Deleted -> {
                 if (state.success) {
                     sharedViewModel.setTimelineHasUpdated()

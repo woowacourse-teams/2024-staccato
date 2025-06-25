@@ -24,10 +24,12 @@ import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.category.invite.model.InviteState
 import com.on.staccato.presentation.category.invite.model.toUiModel
 import com.on.staccato.presentation.category.model.CategoryDialogState
-import com.on.staccato.presentation.category.model.CategoryDialogState.None
 import com.on.staccato.presentation.category.model.CategoryDialogState.Exit
+import com.on.staccato.presentation.category.model.CategoryDialogState.None
 import com.on.staccato.presentation.category.model.CategoryState
-import com.on.staccato.presentation.category.model.CategoryState.*
+import com.on.staccato.presentation.category.model.CategoryState.Deleted
+import com.on.staccato.presentation.category.model.CategoryState.Error
+import com.on.staccato.presentation.category.model.CategoryState.Exited
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.common.MutableSingleLiveData
