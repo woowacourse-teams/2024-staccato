@@ -183,7 +183,7 @@ class CategoryViewModel
                     _categoryState.emit(Error)
                     return@launch
                 }
-                categoryRepository.deleteMeFromCategory(id)
+                categoryRepository.leaveCategory(id)
                     .onSuccess { updateToExitState() }
                     .onServerError(::handleServerError)
                     .onException2(::handelException)
