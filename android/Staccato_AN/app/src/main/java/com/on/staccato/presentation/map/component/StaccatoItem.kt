@@ -47,7 +47,7 @@ fun StaccatoItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 private fun StaccatoItemPreview(
     @PreviewParameter(StaccatoItemPreviewParameterProvider::class)
