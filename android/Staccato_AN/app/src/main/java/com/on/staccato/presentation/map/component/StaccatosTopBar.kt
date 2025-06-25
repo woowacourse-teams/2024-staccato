@@ -31,7 +31,7 @@ fun StaccatosTopBar(
             modifier
                 .fillMaxWidth()
                 .height(60.dp)
-                .padding(horizontal = 16.dp, vertical = 18.dp),
+                .padding(horizontal = 16.dp, vertical = 19.dp),
         contentAlignment = Alignment.Center,
     ) {
         Icon(

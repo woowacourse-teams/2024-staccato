@@ -28,7 +28,7 @@ fun StaccatoItem(
     Row(
         modifier =
             modifier
-                .padding(start = 18.dp, end = 13.dp, top = 13.dp, bottom = 13.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 18.dp)
                 .fillMaxWidth()
                 .clickableWithoutRipple { onStaccatoClicked(staccato.staccatoId) },
         verticalAlignment = Alignment.CenterVertically,

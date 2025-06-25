@@ -13,7 +13,6 @@ import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
 import com.on.staccato.presentation.map.model.dummyStaccatoMarkerUiModel
 import com.on.staccato.theme.SemiBold16
 import com.on.staccato.theme.StaccatoBlack
-import com.on.staccato.theme.Title3
 
 @Composable
 fun StaccatoInformation(

@@ -37,7 +37,7 @@ class StaccatoMarkerClusterRenderer(
         item: StaccatoMarkerUiModel,
         markerOptions: MarkerOptions,
     ) {
-        val icon: BitmapDescriptor = BitmapDescriptorFactory.fromResource(item.color.markerRes)
+        val icon: BitmapDescriptor = BitmapDescriptorFactory.fromResource(item.color.markerResWithShadow)
         markerOptions.icon(icon)
     }
 }
