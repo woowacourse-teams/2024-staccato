@@ -29,7 +29,7 @@ fun Staccatos(
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
-fun StaccatoLocationsPreview() {
+fun StaccatosPreview() {
     Staccatos(
         staccatos = dummyStaccatoMarkerUiModels,
         onStaccatoClicked = {},
