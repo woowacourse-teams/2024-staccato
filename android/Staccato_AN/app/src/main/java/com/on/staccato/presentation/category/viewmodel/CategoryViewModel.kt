@@ -1,7 +1,5 @@
 package com.on.staccato.presentation.category.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.network.ApiResult
@@ -23,6 +21,7 @@ import com.on.staccato.presentation.category.invite.model.InviteState
 import com.on.staccato.presentation.category.invite.model.toUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
+import com.on.staccato.presentation.category.model.defaultCategoryUiModel
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
@@ -43,8 +42,8 @@ class CategoryViewModel
         private val memberRepository: MemberRepository,
         private val invitationRepository: InvitationRepository,
     ) : ViewModel() {
-        private val _category = MutableLiveData<CategoryUiModel>()
-        val category: LiveData<CategoryUiModel> get() = _category
+        private val _category = MutableStateFlow<CategoryUiModel>(defaultCategoryUiModel)
+        val category: StateFlow<CategoryUiModel> = _category.asStateFlow()
 
         private val _toastMessage = MutableSingleLiveData<String>()
         val toastMessage: SingleLiveData<String> get() = _toastMessage
@@ -78,14 +77,16 @@ class CategoryViewModel
 
         fun inviteMemberBy(ids: List<Long>) {
             if (selectedMembers.value.members.isEmpty()) return
-            category.value?.id?.let { categoryId ->
-                viewModelScope.launch {
-                    invitationRepository.invite(categoryId, ids).onSuccess {
-                        _toastMessage.setValue("${ids.size}명을 초대했어요!") // stringRes로 빼기
-                        toggleInviteMode(false)
-                    }.onServerError(::handleServerError)
-                        .onException { handleServerError(it.message) }
-                }
+
+            val categoryId = _category.value.id
+            if (categoryId == DEFAULT_CATEGORY_ID) return
+
+            viewModelScope.launch {
+                invitationRepository.invite(categoryId, ids).onSuccess {
+                    _toastMessage.setValue("${ids.size}명을 초대했어요!") // stringRes로 빼기
+                    toggleInviteMode(false)
+                }.onServerError(::handleServerError)
+                    .onException { handleServerError(it.message) }
             }
         }
 
@@ -129,8 +130,8 @@ class CategoryViewModel
 
         fun deleteCategory() {
             viewModelScope.launch {
-                val id = _category.value?.id
-                if (id == null) {
+                val id = _category.value.id
+                if (id == DEFAULT_CATEGORY_ID) {
                     _isDeleted.setValue(false)
                     return@launch
                 }

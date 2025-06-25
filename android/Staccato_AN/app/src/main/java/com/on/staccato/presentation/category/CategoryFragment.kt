@@ -5,11 +5,14 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
 import com.on.staccato.databinding.FragmentCategoryBinding
+import com.on.staccato.domain.model.Participants
 import com.on.staccato.domain.model.Role
 import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.adapter.MemberInviteHandler
@@ -39,6 +42,7 @@ import com.on.staccato.util.logging.Param.Companion.KEY_IS_CREATED_IN_MAIN
 import com.on.staccato.util.logging.Param.Companion.KEY_IS_VIEWED_BY_MARKER
 import com.on.staccato.util.logging.Param.Companion.PARAM_CATEGORY_FRAGMENT
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -71,7 +75,7 @@ class CategoryFragment :
         initBinding()
         initToolbar()
         initAdapter()
-        observeCategory()
+        observeCategoryInformation()
         observeIsDeleteSuccess()
         showErrorToast()
         showExceptionSnackBar()
@@ -168,17 +172,28 @@ class CategoryFragment :
         binding.rvCategoryStaccatos.adapter = staccatosAdapter
     }
 
-    private fun observeCategory() {
-        viewModel.category.observe(viewLifecycleOwner) { category ->
-            staccatosAdapter.updateStaccatos(category.staccatos)
-            membersAdapter.updateInvitable(category.myRole == Role.HOST)
-        }
-
+    private fun observeCategoryInformation() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.participatingMembers.collect {
-                membersAdapter.submitMembers(it.members)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                combine(
+                    viewModel.category,
+                    viewModel.participatingMembers,
+                ) { category, participatingMembers ->
+                    category to participatingMembers
+                }.collect { (category, participatingMembers) ->
+                    updateAdapters(category, participatingMembers)
+                }
             }
         }
+    }
+
+    private fun updateAdapters(
+        category: CategoryUiModel,
+        participatingMembers: Participants,
+    ) {
+        staccatosAdapter.updateStaccatos(category.staccatos)
+        membersAdapter.updateInvitable(category.myRole == Role.HOST)
+        membersAdapter.submitMembers(participatingMembers.members)
     }
 
     private fun observeIsDeleteSuccess() {
