@@ -36,6 +36,7 @@
     <string name="all_period_dot_same_year">%d. %02d. %02d - %02d. %02d</string>
     <string name="all_invitation_notification_indicator_description">카테고리 초대 알림 존재 표시</string>
     <string name="all_member_profile_image_description">사용자 프로필 사진</string>
+    <string name="all_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
 
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
@@ -72,9 +73,10 @@
     <string name="category_staccatos">스타카토</string>
     <string name="category_delete_complete">카테고리가 삭제되었습니다.</string>
     <string name="category_staccato_empty">카테고리가 비어있어요.\n스타카토를 찍어볼까요?</string>
-    <string name="category_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
     <string name="category_error_staccato_record_impossible">스타카토를 기록할 수 없어요.</string>
     <string name="category_invite_description">카테고리 초대 버튼</string>
+    <string name="category_staccato_creation">기록하기</string>
+    <string name="category_staccato_refresh_btn_description">스타카토 새로고침</string>
 
     // item_mates
     <string name="mates_profile_image_description">함께 한 사람 프로필 이미지</string>
@@ -107,7 +109,6 @@
     // fragment_staccato
     <string name="staccato_at_history">%s에 방문했어요</string>
     <string name="staccato_logs">코멘트</string>
-    <string name="staccato_add">기록하기</string>
     <string name="staccato_enter_log">코멘트 입력하기</string>
     <string name="staccato_empty_comments">코멘트를 남겨보세요!</string>
     <string name="staccato_how_was_your_feeling">이 때의 기분은 어땠나요?</string>
