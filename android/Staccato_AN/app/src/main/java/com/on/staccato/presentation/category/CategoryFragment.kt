@@ -96,7 +96,7 @@ class CategoryFragment :
     }
 
     override fun onExitClicked() {
-        viewModel.showExitDialog()
+        viewModel.showLeaveDialog()
     }
 
     override fun onStaccatoClicked(staccatoId: Long) {

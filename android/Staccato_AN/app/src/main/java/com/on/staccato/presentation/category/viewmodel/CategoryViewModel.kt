@@ -168,15 +168,15 @@ class CategoryViewModel
             }
         }
 
-        fun showExitDialog() {
-            _dialogState.value = Exit(onConfirm = ::exitCategory)
+        fun showLeaveDialog() {
+            _dialogState.value = Exit(onConfirm = ::leaveCategory)
         }
 
         fun dismissDialog() {
             _dialogState.value = None
         }
 
-        private fun exitCategory() {
+        private fun leaveCategory() {
             viewModelScope.launch {
                 val id = _category.value?.id
                 if (id == null) {
