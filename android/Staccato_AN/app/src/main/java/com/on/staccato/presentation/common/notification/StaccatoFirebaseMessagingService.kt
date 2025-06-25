@@ -25,7 +25,7 @@ class StaccatoFirebaseMessagingService :
     override fun onNewToken(token: String) {
         _job = SupervisorJob()
         CoroutineScope(job).launch {
-            notificationRepository.updateNewFcmToken(token)
+            notificationRepository.updateFcmToken(token)
         }
     }
 

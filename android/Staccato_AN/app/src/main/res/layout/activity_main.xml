@@ -120,7 +120,7 @@
                     app:navGraph="@navigation/bottom_navigation_graph" />
 
                 <androidx.compose.ui.platform.ComposeView
-                    android:id="@+id/cv_notification_rationale_dialog"
+                    android:id="@+id/cv_main_notification_rationale_dialog"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 

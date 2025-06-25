@@ -1,5 +1,6 @@
 package com.on.staccato.presentation.common.notification
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -15,6 +16,7 @@ class NotificationManager
         @ApplicationContext private val context: Context,
         private val permissionLauncher: NotificationPermissionManager,
     ) {
+        @SuppressLint("MissingPermission")
         fun notify(
             title: String,
             body: String,

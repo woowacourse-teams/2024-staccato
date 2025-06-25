@@ -26,8 +26,6 @@ enum class NotificationChannelType(
     ;
 
     companion object {
-        private fun NotificationChannelType.toNotificationChannel() = NotificationChannel(id, name, importance)
-
         fun toChannel(title: String): NotificationChannel {
             return when {
                 title.contains("님이 초대를 보냈어요") -> Invitation.toNotificationChannel()
@@ -37,5 +35,7 @@ enum class NotificationChannelType(
                 else -> Staccato.toNotificationChannel()
             }
         }
+
+        private fun NotificationChannelType.toNotificationChannel() = NotificationChannel(id, name, importance)
     }
 }

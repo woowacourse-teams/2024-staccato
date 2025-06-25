@@ -27,6 +27,7 @@ import com.on.staccato.presentation.invitation.received.component.AcceptButton
 import com.on.staccato.presentation.invitation.received.component.RejectButton
 import com.on.staccato.theme.Body3
 import com.on.staccato.theme.Gray4
+import com.on.staccato.theme.StaccatoBlack
 import com.on.staccato.theme.Title2
 import com.on.staccato.theme.White
 
@@ -70,15 +71,16 @@ fun NotificationRationaleDialog(
                 Text(
                     text = stringResource(R.string.notification_permission_title),
                     style = Title2,
+                    color = StaccatoBlack,
                 )
                 val rationaleTexts =
                     listOf(
-                        stringResource(R.string.notification_permission_rationale),
-                        stringResource(R.string.notification_permission_rationale_bullet),
+                        R.string.notification_permission_rationale,
+                        R.string.notification_permission_rationale_bullet,
                     )
                 rationaleTexts.forEach {
                     Text(
-                        text = it,
+                        text = stringResource(it),
                         style = Body3,
                         color = Gray4,
                         modifier = Modifier.padding(top = 10.dp),

@@ -6,7 +6,7 @@ import com.on.staccato.domain.model.notification.NotificationExistence
 interface NotificationRepository {
     suspend fun registerCurrentFcmToken()
 
-    suspend fun updateNewFcmToken(newToken: String)
+    suspend fun updateFcmToken(newToken: String)
 
     suspend fun getNotificationExistence(): ApiResult<NotificationExistence>
 }

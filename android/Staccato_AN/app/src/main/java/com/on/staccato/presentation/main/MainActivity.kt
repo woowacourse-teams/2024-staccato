@@ -428,16 +428,15 @@ class MainActivity :
     }
 
     private fun showNotificationPermissionRationale() {
-        binding.cvNotificationRationaleDialog.setContent {
+        binding.cvMainNotificationRationaleDialog.setContent {
             NotificationPermissionRationale(::moveToNotificationSetting)
         }
     }
 
     private fun moveToNotificationSetting() {
         val intent =
-            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
-            }
+            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
         startActivity(intent)
     }
 

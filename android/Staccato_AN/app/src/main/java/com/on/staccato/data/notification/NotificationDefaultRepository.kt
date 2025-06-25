@@ -32,7 +32,7 @@ class NotificationDefaultRepository
                 postFcmTokenIfValid(token, deviceId)
             }
 
-        override suspend fun updateNewFcmToken(newToken: String) {
+        override suspend fun updateFcmToken(newToken: String) {
             getDeviceId()?.let { deviceId ->
                 postFcmTokenIfValid(newToken, deviceId)
             }
