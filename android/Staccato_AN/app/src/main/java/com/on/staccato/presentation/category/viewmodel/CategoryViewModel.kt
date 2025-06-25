@@ -151,7 +151,7 @@ class CategoryViewModel
                 }
 
                 val result: ApiResult<Unit> = categoryRepository.deleteCategory(id)
-                result.onSuccess { updateToDeletedState() }
+                result.onSuccess { updateToDeletedEvent() }
                     .onServerError(::handleServerError)
                     .onException2(::handelException)
             }
@@ -180,11 +180,11 @@ class CategoryViewModel
             viewModelScope.launch {
                 val id = _category.value?.id
                 if (id == null) {
-                    _categoryEvent.emit(Error)
+                    updateToErrorEvent()
                     return@launch
                 }
                 categoryRepository.leaveCategory(id)
-                    .onSuccess { updateToExitState() }
+                    .onSuccess { updateToExitEvent() }
                     .onServerError(::handleServerError)
                     .onException2(::handelException)
             }
@@ -207,12 +207,16 @@ class CategoryViewModel
             participatingMembers.emit(Participants(category.participants))
         }
 
-        private suspend fun updateToDeletedState() {
+        private suspend fun updateToDeletedEvent() {
             _categoryEvent.emit(Deleted(success = true))
         }
 
-        private suspend fun updateToExitState() {
+        private suspend fun updateToExitEvent() {
             _categoryEvent.emit(Exited)
+        }
+
+        private suspend fun updateToErrorEvent() {
+            _categoryEvent.emit(Error)
         }
 
         private fun handleServerError(message: String) {
