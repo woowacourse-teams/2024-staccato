@@ -18,7 +18,8 @@ import androidx.compose.ui.unit.dp
 import com.on.staccato.R
 import com.on.staccato.presentation.component.clickableWithoutRipple
 import com.on.staccato.theme.Gray3
-import com.on.staccato.theme.Title2
+import com.on.staccato.theme.SemiBold16
+import com.on.staccato.theme.StaccatoBlack
 
 @Composable
 fun StaccatosTopBar(
@@ -42,7 +43,11 @@ fun StaccatosTopBar(
                     .clickableWithoutRipple(onClick = onDismissRequest),
             tint = Gray3,
         )
-        Text(text = stringResource(id = R.string.category_staccatos), style = Title2)
+        Text(
+            text = stringResource(id = R.string.staccatos_dialog_title),
+            style = SemiBold16,
+            color = StaccatoBlack,
+        )
     }
 }
 

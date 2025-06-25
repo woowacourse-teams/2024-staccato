@@ -266,4 +266,7 @@
     // Cluster
     <string name="cluster_staccato_count">%d</string>
 
+    // StaccatosDialog
+    <string name="staccatos_dialog_title">스타카토 목록</string>
+
 </resources>
