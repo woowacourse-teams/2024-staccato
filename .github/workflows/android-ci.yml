@@ -150,7 +150,7 @@ jobs:
             profile: "pixel_4"
           - api-level: 32
             profile: "pixel_6"
-          - api-level: 332
+          - api-level: 32
             profile: "Nexus 7"
       fail-fast: false
     permissions:
