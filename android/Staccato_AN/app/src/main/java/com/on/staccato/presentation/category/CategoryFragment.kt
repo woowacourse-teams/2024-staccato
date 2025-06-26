@@ -204,8 +204,8 @@ class CategoryFragment :
     }
 
     private fun observeIsStaccatosUpdated() {
-        sharedViewModel.isStaccatosUpdated.observe(viewLifecycleOwner) {
-            viewModel.loadCategory(categoryId)
+        sharedViewModel.isStaccatosUpdated.observe(viewLifecycleOwner) { isUpdated ->
+            if (isUpdated) viewModel.loadCategory(categoryId)
         }
     }
 

@@ -80,7 +80,7 @@ class StaccatoFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        if (isStaccatoCreated) sharedViewModel.setStaccatosHasUpdated()
+        if (isStaccatoCreated) sharedViewModel.updateIsStaccatosUpdated()
         setUpBinding()
         setNavigationClickListener()
         setUpViewPager()
@@ -204,7 +204,7 @@ class StaccatoFragment :
     private fun observeStaccatoDelete() {
         staccatoViewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
             if (isDeleted) {
-                sharedViewModel.setStaccatosHasUpdated()
+                sharedViewModel.updateIsStaccatosUpdated()
                 findNavController().popBackStack()
             }
         }

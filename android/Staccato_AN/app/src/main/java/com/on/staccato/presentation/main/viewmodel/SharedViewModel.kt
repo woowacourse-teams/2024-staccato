@@ -131,7 +131,7 @@ class SharedViewModel
             }
         }
 
-        fun setStaccatosHasUpdated() {
+        fun updateIsStaccatosUpdated() {
             viewModelScope.launch {
                 _isTimelineUpdated.emit(true)
             }
