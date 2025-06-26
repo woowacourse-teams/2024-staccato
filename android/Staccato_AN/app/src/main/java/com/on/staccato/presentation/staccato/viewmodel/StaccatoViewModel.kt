@@ -13,11 +13,14 @@ import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
+import com.on.staccato.presentation.common.photo.originalphoto.OriginalPhotoIndex
 import com.on.staccato.presentation.mapper.toStaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoDetailUiModel
 import com.on.staccato.presentation.staccato.detail.StaccatoShareEvent
 import com.on.staccato.presentation.util.ExceptionState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,6 +49,9 @@ class StaccatoViewModel
         private val _shareEvent = MutableSingleLiveData<StaccatoShareEvent>()
         val shareEvent: SingleLiveData<StaccatoShareEvent> get() = _shareEvent
 
+        private val _originalPhotoIndex = MutableStateFlow(OriginalPhotoIndex.unavailable)
+        val originalPhotoIndex: StateFlow<OriginalPhotoIndex> get() = _originalPhotoIndex
+
         fun createStaccatoShareLink() {
             val staccatoId = staccatoDetail.value?.id
             if (staccatoId == null) {
@@ -53,6 +59,10 @@ class StaccatoViewModel
                 return
             }
             getUserNickname(staccatoId)
+        }
+
+        fun changeOriginalPhotoIndex(originalPhotoIndex: OriginalPhotoIndex) {
+            _originalPhotoIndex.value = originalPhotoIndex
         }
 
         private fun getUserNickname(staccatoId: Long) {

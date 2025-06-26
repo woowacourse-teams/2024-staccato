@@ -27,8 +27,8 @@ android {
         applicationId = "com.on.staccato"
         minSdk = 26
         targetSdk = 34
-        versionCode = 12
-        versionName = "2.0.0"
+        versionCode = 13
+        versionName = "2.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["runnerBuilder"] =
@@ -171,6 +171,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.messaging.ktx)
 
     // Room
     implementation(libs.room)
@@ -194,9 +195,13 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
-    // Google Map
+    // Google Maps SDK
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
+    implementation(libs.maps.ktx)
+
+    // Google Maps SDK for Android utility library
+    implementation(libs.maps.utils.ktx)
 
     // Google Place
     implementation(libs.places)

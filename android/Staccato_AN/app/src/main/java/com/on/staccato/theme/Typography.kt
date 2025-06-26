@@ -66,11 +66,17 @@ val Body6 =
         fontWeight = FontWeight.SemiBold,
     )
 
-// 디자인 시스템 정리 전 임시 Typography
+// TODO: 디자인 시스템 정리 전 임시 Typography
 val Regular11 =
     defaultTextStyle(
         fontSize = 11.sp,
         fontWeight = FontWeight.Normal,
+    )
+
+val SemiBold16 =
+    defaultTextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.SemiBold,
     )
 
 private val Pretendard =

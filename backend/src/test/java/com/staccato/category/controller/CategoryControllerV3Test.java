@@ -99,7 +99,7 @@ class CategoryControllerV3Test extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/categories/1"))
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("기간이 없는 카테고리를 생성하는 요청/응답의 역직렬화/직렬화에 성공한다.")
@@ -130,7 +130,7 @@ class CategoryControllerV3Test extends ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/categories/1"))
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("사용자가 선택적으로 카테고리 정보를 입력하면, 새로운 카테고리를 생성한다.")
@@ -192,6 +192,7 @@ class CategoryControllerV3Test extends ControllerTest {
                     "startAt": "2024-01-01",
                     "endAt": "2024-12-31",
                     "isShared": true,
+                    "myRole":"host",
                     "members": [
                         {
                             "memberId": null,
@@ -221,7 +222,7 @@ class CategoryControllerV3Test extends ControllerTest {
         mockMvc.perform(get("/v3/categories/{categoryId}", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
 
@@ -248,6 +249,7 @@ class CategoryControllerV3Test extends ControllerTest {
                     "categoryTitle": "categoryTitle",
                     "description": "categoryDescription",
                     "categoryColor": "pink",
+                    "isShared": false,
                     "myRole": "host",
                     "members": [
                         {
@@ -272,7 +274,7 @@ class CategoryControllerV3Test extends ControllerTest {
         mockMvc.perform(get("/v3/categories/{categoryId}", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("사용자가 모든 카테고리 목록을 조회하는 응답 직렬화에 성공한다.")
@@ -354,7 +356,7 @@ class CategoryControllerV3Test extends ControllerTest {
         mockMvc.perform(get("/v3/categories")
                         .header(HttpHeaders.AUTHORIZATION, "token"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @DisplayName("유효하지 않은 필터링 조건은 무시하고, 모든 카테고리 목록을 조회한다.")

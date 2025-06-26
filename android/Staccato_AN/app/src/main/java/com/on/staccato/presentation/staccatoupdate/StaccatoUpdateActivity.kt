@@ -297,6 +297,7 @@ class StaccatoUpdateActivity :
                     .putExtra(STACCATO_ID_KEY, staccatoId)
                     .putExtra(CATEGORY_ID_KEY, categoryId)
                     .putExtra(CATEGORY_TITLE_KEY, categoryTitle)
+                    .putExtra(KEY_IS_STACCATO_UPDATED, true)
             setResult(RESULT_OK, intent)
             window.clearFlags(FLAG_NOT_TOUCHABLE)
             finish()
@@ -409,6 +410,7 @@ class StaccatoUpdateActivity :
     }
 
     companion object {
+        const val KEY_IS_STACCATO_UPDATED = "isStaccatoUpdated"
         private const val DEFAULT_ADDRESS = ""
 
         fun startWithResultLauncher(
