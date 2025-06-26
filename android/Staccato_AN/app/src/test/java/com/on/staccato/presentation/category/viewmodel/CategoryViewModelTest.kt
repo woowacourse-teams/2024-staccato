@@ -13,6 +13,7 @@ import com.on.staccato.presentation.category.INVALID_ID
 import com.on.staccato.presentation.category.VALID_ID
 import com.on.staccato.presentation.category.category
 import com.on.staccato.presentation.category.categoryUiModel
+import com.on.staccato.presentation.category.model.CategoryEvent
 import com.on.staccato.presentation.category.naMembers
 import com.on.staccato.presentation.category.naMembersUiModel
 import com.on.staccato.presentation.category.nana
@@ -27,6 +28,8 @@ import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -133,11 +136,14 @@ class CategoryViewModelTest {
             coEvery { categoryRepository.deleteCategory(VALID_ID) } returns Success(Unit)
 
             // when
-            viewModel.deleteCategory()
+            val sharedFlow = viewModel.categoryEvent
+            val job = launch(StandardTestDispatcher(testScheduler)) { viewModel.deleteCategory() }
 
             // then
-            val actual = viewModel.isDeleted.getOrAwaitValue()
-            assertThat(actual).isTrue()
+            val actual = sharedFlow.first { it is CategoryEvent.Deleted }
+            assertThat(actual).isInstanceOf(CategoryEvent.Deleted::class.java)
+            assertThat((actual as CategoryEvent.Deleted).success).isTrue()
+            job.cancel()
         }
 
     @Test

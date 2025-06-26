@@ -5,7 +5,9 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.on.staccato.R
@@ -15,7 +17,9 @@ import com.on.staccato.presentation.base.BindingFragment
 import com.on.staccato.presentation.category.adapter.MemberInviteHandler
 import com.on.staccato.presentation.category.adapter.MembersAdapter
 import com.on.staccato.presentation.category.adapter.StaccatosAdapter
+import com.on.staccato.presentation.category.component.ExitDialogScreen
 import com.on.staccato.presentation.category.invite.InviteScreen
+import com.on.staccato.presentation.category.model.CategoryEvent
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
@@ -72,8 +76,8 @@ class CategoryFragment :
         initToolbar()
         initAdapter()
         observeCategory()
-        observeIsDeleteSuccess()
-        showErrorToast()
+        observeCategoryState()
+        showToastMessage()
         showExceptionSnackBar()
         logAccess()
     }
@@ -89,6 +93,10 @@ class CategoryFragment :
 
     override fun onDeleteClicked() {
         deleteDialog.show(parentFragmentManager, DeleteDialogFragment.TAG)
+    }
+
+    override fun onExitClicked() {
+        viewModel.showLeaveDialog()
     }
 
     override fun onStaccatoClicked(staccatoId: Long) {
@@ -148,6 +156,7 @@ class CategoryFragment :
         binding.toolbarHandler = this
         binding.categoryHandler = this
         binding.cvMemberInvite.setContent { InviteScreen() }
+        binding.cvCategoryExitDialog.setContent { ExitDialogScreen() }
         observeIsPermissionCanceled()
     }
 
@@ -181,19 +190,41 @@ class CategoryFragment :
         }
     }
 
-    private fun observeIsDeleteSuccess() {
-        viewModel.isDeleted.observe(viewLifecycleOwner) { isDeleteSuccess ->
-            if (isDeleteSuccess) {
-                sharedViewModel.setTimelineHasUpdated()
-                showToast(getString(R.string.category_delete_complete))
-            } else {
-                showToast(getString(R.string.category_delete_title))
+    private fun observeCategoryState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(state = Lifecycle.State.STARTED) {
+                viewModel.categoryEvent.collect { state -> onCategoryState(state) }
             }
-            findNavController().popBackStack()
         }
     }
 
-    private fun showErrorToast() {
+    private fun onCategoryState(state: CategoryEvent) {
+        when (state) {
+            is CategoryEvent.Deleted -> {
+                if (state.success) {
+                    sharedViewModel.setTimelineHasUpdated()
+                    showToast(getString(R.string.category_delete_complete))
+                } else {
+                    showToast(getString(R.string.category_delete_error))
+                }
+                findNavController().popBackStack()
+            }
+
+            is CategoryEvent.Exited -> {
+                sharedViewModel.setTimelineHasUpdated()
+                showToast(getString(R.string.category_exit_complete))
+                findNavController().popBackStack()
+            }
+
+            is CategoryEvent.Error -> {
+                sharedViewModel.setTimelineHasUpdated()
+                showToast(getString(R.string.category_empty_error))
+                findNavController().popBackStack()
+            }
+        }
+    }
+
+    private fun showToastMessage() {
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             showToast(message)
         }
