@@ -26,6 +26,8 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
+import com.on.staccato.presentation.categorycreation.CategoryCreationActivity.Companion.KEY_IS_CATEGORY_CREATED
+import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity.Companion.KEY_IS_CATEGORY_UPDATED
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
@@ -65,8 +67,8 @@ class MainActivity :
 
     private val sharedViewModel: SharedViewModel by viewModels()
 
-    val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
-    val categoryUpdateLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
+    val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleCategoryCreationResult()
+    val categoryUpdateLauncher: ActivityResultLauncher<Intent> = handleCategoryUpdateResult()
     val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
     val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
     private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
@@ -236,12 +238,25 @@ class MainActivity :
         navController = navHostFragment.navController
     }
 
-    private fun handleCategoryResult() =
+    private fun handleCategoryCreationResult() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    sharedViewModel.setTimelineHasUpdated()
-                    val bundle: Bundle = makeBundle(it, CATEGORY_ID_KEY)
+                    val id = it.getLongExtra(CATEGORY_ID_KEY, 0L)
+                    val isCategoryCreated = it.getBooleanExtra(KEY_IS_CATEGORY_CREATED, false)
+                    val bundle = bundleOf(CATEGORY_ID_KEY to id, KEY_IS_CATEGORY_CREATED to isCategoryCreated)
+                    navigateTo(R.id.categoryFragment, R.id.timelineFragment, bundle, false)
+                }
+            }
+        }
+
+    private fun handleCategoryUpdateResult() =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let {
+                    val id = it.getLongExtra(CATEGORY_ID_KEY, 0L)
+                    val isCategoryCreated = it.getBooleanExtra(KEY_IS_CATEGORY_UPDATED, false)
+                    val bundle = bundleOf(CATEGORY_ID_KEY to id, KEY_IS_CATEGORY_UPDATED to isCategoryCreated)
                     navigateTo(R.id.categoryFragment, R.id.timelineFragment, bundle, false)
                 }
             }
@@ -266,14 +281,6 @@ class MainActivity :
                 loadMemberProfile()
             }
         }
-
-    private fun makeBundle(
-        it: Intent,
-        keyName: String,
-    ): Bundle {
-        val id = it.getLongExtra(keyName, 0L)
-        return bundleOf(keyName to id)
-    }
 
     private fun navigateTo(
         navigateToId: Int,

@@ -325,8 +325,12 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     }
 
     private fun observeIsTimelineUpdated() {
-        sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) {
-            if (it) mapsViewModel.loadStaccatoMarkers()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.isTimelineUpdated.collect { isUpdated ->
+                    if (isUpdated) mapsViewModel.loadStaccatoMarkers()
+                }
+            }
         }
     }
 

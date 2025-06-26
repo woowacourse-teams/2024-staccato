@@ -22,7 +22,9 @@ import com.on.staccato.presentation.category.invite.InviteScreen
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.category.viewmodel.CategoryViewModel
+import com.on.staccato.presentation.categorycreation.CategoryCreationActivity.Companion.KEY_IS_CATEGORY_CREATED
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity
+import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity.Companion.KEY_IS_CATEGORY_UPDATED
 import com.on.staccato.presentation.common.DeleteDialogFragment
 import com.on.staccato.presentation.common.DialogHandler
 import com.on.staccato.presentation.common.ToolbarHandler
@@ -56,6 +58,14 @@ class CategoryFragment :
     private val categoryId: Long by lazy {
         arguments?.getLong(CATEGORY_ID_KEY) ?: DEFAULT_CATEGORY_ID
     }
+
+    private val isCategoryUpdated: Boolean by lazy {
+        arguments?.getBoolean(KEY_IS_CATEGORY_UPDATED) ?: false
+    }
+
+    private val isCategoryCreated: Boolean by lazy {
+        arguments?.getBoolean(KEY_IS_CATEGORY_CREATED) ?: false
+    }
     private val viewModel: CategoryViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
@@ -71,11 +81,17 @@ class CategoryFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
+        // TODO: 초기에 한번만 부르도록 처리하기
         viewModel.loadCategory(categoryId)
+
+        if (isCategoryCreated || isCategoryUpdated) sharedViewModel.updateIsTimelineUpdated(true)
+        if (isCategoryUpdated) viewModel.loadCategory(categoryId)
+
         initBinding()
         initToolbar()
         initAdapter()
         observeCategoryInformation()
+        observeIsStaccatosUpdated()
         observeIsDeleteSuccess()
         showErrorToast()
         showExceptionSnackBar()
@@ -187,6 +203,12 @@ class CategoryFragment :
         }
     }
 
+    private fun observeIsStaccatosUpdated() {
+        sharedViewModel.isStaccatosUpdated.observe(viewLifecycleOwner) {
+            viewModel.loadCategory(categoryId)
+        }
+    }
+
     private fun updateAdapters(
         category: CategoryUiModel,
         participatingMembers: Participants,
@@ -199,7 +221,7 @@ class CategoryFragment :
     private fun observeIsDeleteSuccess() {
         viewModel.isDeleted.observe(viewLifecycleOwner) { isDeleteSuccess ->
             if (isDeleteSuccess) {
-                sharedViewModel.setTimelineHasUpdated()
+                sharedViewModel.updateIsTimelineUpdated(true)
                 showToast(getString(R.string.category_delete_complete))
             } else {
                 showToast(getString(R.string.category_delete_title))

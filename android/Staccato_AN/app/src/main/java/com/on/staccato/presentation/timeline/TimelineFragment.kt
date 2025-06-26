@@ -107,9 +107,14 @@ class TimelineFragment :
         observeException()
         observeIsRetry()
 
-        sharedViewModel.isTimelineUpdated.observe(viewLifecycleOwner) { isUpdated ->
-            if (isUpdated) {
-                timelineViewModel.loadTimeline()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sharedViewModel.isTimelineUpdated.collect { isUpdated ->
+                    if (isUpdated) {
+                        timelineViewModel.loadTimeline()
+                        sharedViewModel.updateIsTimelineUpdated(false)
+                    }
+                }
             }
         }
 
