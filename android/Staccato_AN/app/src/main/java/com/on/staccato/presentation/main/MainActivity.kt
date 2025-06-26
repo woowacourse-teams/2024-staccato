@@ -2,6 +2,7 @@ package com.on.staccato.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
@@ -26,13 +27,20 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
+import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
+import com.on.staccato.presentation.categorycreation.CategoryCreationActivity.Companion.KEY_IS_CATEGORY_CREATED
+import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity.Companion.KEY_IS_CATEGORY_UPDATED
+import com.on.staccato.presentation.common.notification.NotificationPermissionManager
+import com.on.staccato.presentation.common.notification.NotificationPermissionRationale
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.mypage.MyPageActivity.Companion.UPDATED_PROFILE_KEY
 import com.on.staccato.presentation.mypage.MyPageActivity.Companion.UPDATED_TIMELINE_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
+import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.DEFAULT_STACCATO_ID
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
+import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity.Companion.KEY_IS_STACCATO_UPDATED
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_BOTTOM_SHEET
@@ -63,27 +71,31 @@ class MainActivity :
 
     @Inject
     lateinit var loggingManager: LoggingManager
+
+    @Inject
+    lateinit var notificationPermissionManager: NotificationPermissionManager
+
     private var previousBottomSheetStateTime: Long = currentTimeMillis()
 
     private val sharedViewModel: SharedViewModel by viewModels()
 
-    val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
-    val categoryUpdateLauncher: ActivityResultLauncher<Intent> = handleCategoryResult()
-    val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
-    val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
+    val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleCategoryCreationResult()
+    val categoryUpdateLauncher: ActivityResultLauncher<Intent> = handleCategoryUpdateResult()
+    val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoCreationResult()
+    val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoUpdateResult()
     private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initBinding()
         loadMemberProfile()
         observeException()
-        observeStaccatoId()
         observeRetryEvent()
         setupBottomSheetController()
         setupBackPressedHandler()
         setUpBottomSheetBehaviorAction()
         setUpBottomSheetStateListener()
         updateBottomSheetIsDraggable()
+        registerAndLaunchNotificationPermission()
     }
 
     override fun onResume() {
@@ -141,16 +153,6 @@ class MainActivity :
         sharedViewModel.updateIsRetry()
     }
 
-    private fun observeStaccatoId() {
-        sharedViewModel.staccatoId.observe(this) { staccatoId ->
-            navigateToStaccato(staccatoId)
-            supportFragmentManager.setFragmentResult(
-                BOTTOM_SHEET_STATE_REQUEST_KEY,
-                bundleOf(BOTTOM_SHEET_NEW_STATE to STATE_EXPANDED),
-            )
-        }
-    }
-
     private fun observeRetryEvent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -159,17 +161,6 @@ class MainActivity :
                 }
             }
         }
-    }
-
-    private fun navigateToStaccato(staccatoId: Long?) {
-        val navOptions =
-            NavOptions.Builder()
-                .setPopUpTo(R.id.staccatoFragment, true)
-                .build()
-        val bundle =
-            bundleOf(STACCATO_ID_KEY to staccatoId)
-
-        navController.navigate(R.id.staccatoFragment, bundle, navOptions)
     }
 
     private fun updateBottomSheetIsDraggable() {
@@ -260,25 +251,49 @@ class MainActivity :
         navController = navHostFragment.navController
     }
 
-    private fun handleCategoryResult() =
+    private fun handleCategoryCreationResult() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    sharedViewModel.setTimelineHasUpdated()
-                    val bundle: Bundle = makeBundle(it, CATEGORY_ID_KEY)
+                    val id = it.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID)
+                    val isCategoryCreated = it.getBooleanExtra(KEY_IS_CATEGORY_CREATED, false)
+                    val bundle = bundleOf(CATEGORY_ID_KEY to id, KEY_IS_CATEGORY_CREATED to isCategoryCreated)
                     navigateTo(R.id.categoryFragment, R.id.timelineFragment, bundle, false)
                 }
             }
         }
 
-    private fun handleStaccatoResult() =
+    private fun handleCategoryUpdateResult() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    sharedViewModel.setStaccatosHasUpdated()
-                    val id = it.getLongExtra(STACCATO_ID_KEY, 0L)
+                    val id = it.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID)
+                    val isCategoryCreated = it.getBooleanExtra(KEY_IS_CATEGORY_UPDATED, false)
+                    val bundle = bundleOf(CATEGORY_ID_KEY to id, KEY_IS_CATEGORY_UPDATED to isCategoryCreated)
+                    navigateTo(R.id.categoryFragment, R.id.timelineFragment, bundle, false)
+                }
+            }
+        }
+
+    private fun handleStaccatoCreationResult() =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let {
+                    val id = it.getLongExtra(STACCATO_ID_KEY, DEFAULT_STACCATO_ID)
                     val isStaccatoCreated = it.getBooleanExtra(CREATED_STACCATO_KEY, false)
                     val bundle = bundleOf(STACCATO_ID_KEY to id, CREATED_STACCATO_KEY to isStaccatoCreated)
+                    navigateTo(R.id.staccatoFragment, R.id.staccatoFragment, bundle, true)
+                }
+            }
+        }
+
+    private fun handleStaccatoUpdateResult() =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let {
+                    val id = it.getLongExtra(STACCATO_ID_KEY, DEFAULT_STACCATO_ID)
+                    val isStaccatoCreated = it.getBooleanExtra(KEY_IS_STACCATO_UPDATED, false)
+                    val bundle = bundleOf(STACCATO_ID_KEY to id, KEY_IS_STACCATO_UPDATED to isStaccatoCreated)
                     navigateTo(R.id.staccatoFragment, R.id.staccatoFragment, bundle, true)
                 }
             }
@@ -290,19 +305,11 @@ class MainActivity :
                 result.data?.let {
                     val hasTimelineUpdated = it.getBooleanExtra(UPDATED_TIMELINE_KEY, false)
                     val hasProfileUpdated = it.getBooleanExtra(UPDATED_PROFILE_KEY, false)
-                    if (hasTimelineUpdated) sharedViewModel.setTimelineHasUpdated()
+                    if (hasTimelineUpdated) sharedViewModel.updateIsTimelineUpdated(true)
                     if (hasProfileUpdated) loadMemberProfile()
                 }
             }
         }
-
-    private fun makeBundle(
-        it: Intent,
-        keyName: String,
-    ): Bundle {
-        val id = it.getLongExtra(keyName, 0L)
-        return bundleOf(keyName to id)
-    }
 
     private fun navigateTo(
         navigateToId: Int,
@@ -415,6 +422,28 @@ class MainActivity :
         val timeDuration = currentTime - previousBottomSheetStateTime
         previousBottomSheetStateTime = currentTime
         return timeDuration / MILLISECONDS_TO_SECONDS
+    }
+
+    private fun registerAndLaunchNotificationPermission() {
+        notificationPermissionManager.register(
+            caller = this,
+            activity = this,
+            showRationale = ::showNotificationPermissionRationale,
+        )
+        notificationPermissionManager.launch()
+    }
+
+    private fun showNotificationPermissionRationale() {
+        binding.cvMainNotificationRationaleDialog.setContent {
+            NotificationPermissionRationale(::moveToNotificationSetting)
+        }
+    }
+
+    private fun moveToNotificationSetting() {
+        val intent =
+            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+        startActivity(intent)
     }
 
     companion object {

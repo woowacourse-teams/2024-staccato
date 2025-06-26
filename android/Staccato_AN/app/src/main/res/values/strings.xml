@@ -16,9 +16,9 @@
     <string name="all_visited_at">날짜 및 시간</string>
     <string name="all_please_select_visited_at">날짜 및 시간을 선택해 주세요</string>
     <string name="all_please_select_color">색상을 선택해 주세요</string>
-    <string name="all_date_dots_format">%s. %s. %s</string>
+    <string name="all_date_dots_format">%d. %02d. %02d</string>
     <string name="all_date_kr_format">%s년 %s월 %s일</string>
-    <string name="all_date_time_am_pm_kr_format">%s년 %s월 %s일  %s %s시</string>
+    <string name="all_date_time_am_pm_kr_format">%s년 %02d월 %02d일 %s %s시</string>
     <string name="all_default_not_supported">아직 지원하지 않는 기능이에요.</string>
     <string name="all_required_mark">*</string>
     <string name="all_setting">설정</string>
@@ -33,11 +33,21 @@
     <string name="all_photo_attach_icon_description">사진 첨부란</string>
     <string name="all_category_thumbnail_photo_description">카테고리 썸네일 사진</string>
     <string name="all_waring">경고</string>
-    <string name="all_period_dot_different_year">%s. %s. %s - %s. %s. %s</string>
-    <string name="all_period_dot_same_year">%s. %s. %s - %s. %s</string>
+    <string name="all_period_dot_different_year">%d. %02d. %02d - %d. %02d. %02d</string>
+    <string name="all_period_dot_same_year">%d. %02d. %02d - %02d. %02d</string>
     <string name="all_invitation_notification_indicator_description">카테고리 초대 알림 존재 표시</string>
     <string name="all_member_profile_image_description">사용자 프로필 사진</string>
+    <string name="all_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
     <string name="all_original_photo">원본 사진</string>
+
+    // Notification
+    <string name="notification_permission_title">알림 설정</string>
+    <string name="notification_permission_rationale">알림을 활성화하면 아래 소식을 빠르게 받아볼 수 있어요.</string>
+    <string name="notification_permission_rationale_bullet">▪ 새로운 코멘트가 달렸을 때\n▪ 누군가 나를 카테고리에 초대했을 때\n▪ 공유 카테고리에 새로운 참여자가 생겼을 때\n▪ 공유 카테고리에 새로운 스타카토가 올라왔을 때</string>
+    <string name="notification_permission_denial">알림 권한을 거부 하셨습니다.</string>
+    <string name="channel_name_invitation">초대 알림</string>
+    <string name="channel_name_category">카테고리 알림</string>
+    <string name="channel_name_comment">댓글 알림</string>
 
     // MainActivity
     <string name="main_end">버튼을 한 번 더 누르면 종료됩니다.</string>
@@ -74,9 +84,10 @@
     <string name="category_staccatos">스타카토</string>
     <string name="category_delete_complete">카테고리가 삭제되었습니다.</string>
     <string name="category_staccato_empty">카테고리가 비어있어요.\n스타카토를 찍어볼까요?</string>
-    <string name="category_staccato_creation_btn_description">스타카토 기록하기로 이동</string>
     <string name="category_error_staccato_record_impossible">스타카토를 기록할 수 없어요.</string>
     <string name="category_invite_description">카테고리 초대 버튼</string>
+    <string name="category_staccato_creation">기록하기</string>
+    <string name="category_staccato_refresh_btn_description">스타카토 새로고침</string>
     <string name="category_exit_title">정말 나가시겠습니까?</string>
     <string name="category_exit_complete">카테고리에서 나갔어요.</string>
 
@@ -115,7 +126,6 @@
     // fragment_staccato
     <string name="staccato_at_history">%s에 방문했어요</string>
     <string name="staccato_logs">코멘트</string>
-    <string name="staccato_add">기록하기</string>
     <string name="staccato_enter_log">코멘트 입력하기</string>
     <string name="staccato_empty_comments">코멘트를 남겨보세요!</string>
     <string name="staccato_how_was_your_feeling">이때의 기분은 어땠나요?</string>
@@ -266,5 +276,11 @@
 
     // NavigationTopBar
     <string name="top_bar_navigation_back_icon">상단 바 뒤로가기 아이콘</string>
+
+    // Cluster
+    <string name="cluster_staccato_count">%d</string>
+
+    // StaccatosDialog
+    <string name="staccatos_dialog_title">스타카토 목록</string>
 
 </resources>

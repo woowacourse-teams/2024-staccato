@@ -35,8 +35,10 @@ public class CommentService {
         Staccato staccato = getStaccato(commentRequest.staccatoId());
         staccato.validateOwner(member);
         Comment comment = commentRequest.toComment(staccato, member);
+
+        commentRepository.save(comment);
         eventPublisher.publishEvent(new CommentCreatedEvent(member, staccato.getCategory(), comment));
-        return commentRepository.save(comment).getId();
+        return comment.getId();
     }
 
     public CommentResponses readAllCommentsByStaccatoId(Member member, Long staccatoId) {
