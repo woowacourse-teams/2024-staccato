@@ -14,7 +14,7 @@ import com.on.staccato.presentation.login.LoginActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class NotificationManager
+class StaccatoNotificationManager
     @Inject
     constructor(
         @ApplicationContext private val context: Context,

@@ -17,7 +17,7 @@ class StaccatoFirebaseMessagingService :
     lateinit var notificationRepository: NotificationRepository
 
     @Inject
-    lateinit var notificationManager: NotificationManager
+    lateinit var staccatoNotificationManager: StaccatoNotificationManager
 
     private var _job: Job? = null
     private val job get() = requireNotNull(_job)
@@ -35,7 +35,7 @@ class StaccatoFirebaseMessagingService :
         val body = message.notification?.body
         if (title.isNullOrBlank() || body.isNullOrBlank()) return
 
-        notificationManager.notify(title = title, body = body)
+        staccatoNotificationManager.notify(title = title, body = body)
     }
 
     override fun onDestroy() {
