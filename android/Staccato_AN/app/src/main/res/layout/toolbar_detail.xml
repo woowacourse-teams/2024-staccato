@@ -18,6 +18,13 @@
         style="@style/NavigationToolbarStyle">
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_detail_exit"
+            style="@style/ToolbarMenuStyle"
+            android:onClick="@{() -> toolbarHandler.onExitClicked()}"
+            android:text="나가기"
+            bind:visibleOrGone="@{!isHost}" />
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_detail_delete"
             style="@style/ToolbarMenuStyle"
             android:onClick="@{() -> toolbarHandler.onDeleteClicked()}"

@@ -4,4 +4,6 @@ interface ToolbarHandler {
     fun onUpdateClicked()
 
     fun onDeleteClicked()
+
+    fun onExitClicked()
 }

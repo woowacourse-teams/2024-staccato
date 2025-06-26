@@ -35,5 +35,5 @@ val defaultCategoryUiModel =
         members = emptyList(),
         staccatos = emptyList(),
         isShared = false,
-        myRole = Role.HOST,
+        myRole = Role.GUEST,
     )
