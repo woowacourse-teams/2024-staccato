@@ -56,9 +56,9 @@ fun TimelineItem(
                     },
             bitmapPixelSize = 500,
             url = category.categoryThumbnailUrl,
-            placeHolder = R.drawable.default_image,
+            errorImageRes = R.drawable.default_image,
             contentDescription = R.string.all_category_thumbnail_photo_description,
-            radiusPx = 6f,
+            radiusDp = 4.dp,
         )
 
         Spacer(modifier = Modifier.constrainAs(firstSpacer) { start.linkTo(thumbnail.end) }.size(15.dp))
