@@ -2,7 +2,6 @@ package com.on.staccato.presentation.common.notification
 
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -27,18 +26,11 @@ class StaccatoNotificationManager
         ) {
             if (permissionLauncher.isNotificationUnavailable()) return
 
-            val channel = NotificationChannelType.toChannel(title)
-            registerNotificationChannel(channel)
-
+            val channel = NotificationChannelType.toChannel(context, title)
             val notification = createNotification(channel, title, body)
             val notificationId = System.currentTimeMillis().toInt()
 
             NotificationManagerCompat.from(context).notify(notificationId, notification)
-        }
-
-        private fun registerNotificationChannel(channel: NotificationChannel) {
-            val manager = context.getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel)
         }
 
         private fun createNotification(
