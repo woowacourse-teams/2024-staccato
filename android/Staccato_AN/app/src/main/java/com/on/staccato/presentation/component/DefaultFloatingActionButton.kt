@@ -49,6 +49,6 @@ fun DefaultFloatingActionButtonPreview() {
         containerColor = StaccatoBlue,
         contentColor = White,
         iconId = R.drawable.icon_plus,
-        iconContentDescriptionId = R.string.staccato_add,
+        iconContentDescriptionId = R.string.category_staccato_creation,
     )
 }

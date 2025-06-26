@@ -14,6 +14,7 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityCategoryUpdateBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
+import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.categoryupdate.component.PeriodActiveSwitch
 import com.on.staccato.presentation.categoryupdate.viewmodel.CategoryUpdateViewModel
 import com.on.staccato.presentation.common.color.CategoryColor.Companion.getCategoryColorBy
@@ -154,9 +155,11 @@ class CategoryUpdateActivity :
         }
     }
 
-    private fun navigateToCategory(isUpdateSuccess: Boolean) {
-        if (isUpdateSuccess) {
-            val intent = Intent().putExtra(CATEGORY_ID_KEY, categoryId)
+    private fun navigateToCategory(isUpdated: Boolean) {
+        if (isUpdated) {
+            val intent =
+                Intent().putExtra(CATEGORY_ID_KEY, categoryId)
+                    .putExtra(KEY_IS_CATEGORY_UPDATED, true)
             setResult(RESULT_OK, intent)
             finish()
         }
@@ -216,7 +219,7 @@ class CategoryUpdateActivity :
     }
 
     companion object {
-        private const val DEFAULT_CATEGORY_ID = 0L
+        const val KEY_IS_CATEGORY_UPDATED = "isCategoryUpdated"
 
         fun startWithResultLauncher(
             categoryId: Long,

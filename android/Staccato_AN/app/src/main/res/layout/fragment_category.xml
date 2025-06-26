@@ -155,7 +155,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_category_mates"
-                    bind:visibleOrGone="@{viewModel.category.isShared}" />
+                    bind:visibleOrGone="@{viewModel.category.isShared}"
+                    tools:listitem="@layout/item_member_profile" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider_category_mates"
@@ -175,6 +176,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider_category_mates" />
 
+                <ImageButton
+                    android:id="@+id/btn_category_refresh_staccatos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/transparent"
+                    android:contentDescription="@string/all_staccato_creation_btn_description"
+                    android:paddingHorizontal="6dp"
+                    android:src="@drawable/icon_refresh"
+                    android:onClick="@{() -> categoryHandler.onCategoryRefreshClicked()}"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_category_staccatos"
+                    app:layout_constraintStart_toEndOf="@id/tv_category_staccatos"
+                    app:layout_constraintTop_toTopOf="@id/tv_category_staccatos"
+                    bind:visibleOrGone="@{viewModel.category.isShared}" />
+
                 <FrameLayout
                     android:id="@+id/frame_category_add_staccatos"
                     android:layout_width="wrap_content"
@@ -189,8 +204,8 @@
                     <Button
                         android:id="@+id/btn_category_add_staccatos"
                         style="@style/BoundedIconButtonStyle"
-                        android:contentDescription="@string/category_staccato_creation_btn_description"
-                        android:text="@string/staccato_add"
+                        android:contentDescription="@string/all_staccato_creation_btn_description"
+                        android:text="@string/category_staccato_creation"
                         app:icon="@drawable/icon_edit" />
 
                 </FrameLayout>
