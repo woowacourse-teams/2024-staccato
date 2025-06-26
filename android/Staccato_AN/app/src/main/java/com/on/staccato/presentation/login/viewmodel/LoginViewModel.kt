@@ -11,10 +11,14 @@ import com.on.staccato.data.network.onSuccess
 import com.on.staccato.domain.model.Nickname
 import com.on.staccato.domain.model.NicknameState
 import com.on.staccato.domain.repository.LoginRepository
+import com.on.staccato.domain.repository.NotificationRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.util.ExceptionState
+import com.on.staccato.util.launchOnce
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,6 +27,7 @@ class LoginViewModel
     @Inject
     constructor(
         private val repository: LoginRepository,
+        private val notificationRepository: NotificationRepository,
     ) : ViewModel() {
         val nickname = MutableLiveData("")
 
@@ -52,6 +57,12 @@ class LoginViewModel
                         .onServerError(::handleError)
                         .onException(::handleException)
                 }
+            }
+        }
+
+        fun registerCurrentFcmToken() {
+            CoroutineScope(SupervisorJob()).launchOnce {
+                notificationRepository.registerCurrentFcmToken()
             }
         }
 

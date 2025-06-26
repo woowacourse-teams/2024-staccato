@@ -2,6 +2,7 @@ package com.on.staccato.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
@@ -29,6 +30,8 @@ import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity.Companion.KEY_IS_CATEGORY_CREATED
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity.Companion.KEY_IS_CATEGORY_UPDATED
+import com.on.staccato.presentation.common.notification.NotificationPermissionManager
+import com.on.staccato.presentation.common.notification.NotificationPermissionRationale
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.mypage.MyPageActivity.Companion.UPDATED_PROFILE_KEY
@@ -68,6 +71,10 @@ class MainActivity :
 
     @Inject
     lateinit var loggingManager: LoggingManager
+
+    @Inject
+    lateinit var notificationPermissionManager: NotificationPermissionManager
+
     private var previousBottomSheetStateTime: Long = currentTimeMillis()
 
     private val sharedViewModel: SharedViewModel by viewModels()
@@ -88,6 +95,7 @@ class MainActivity :
         setUpBottomSheetBehaviorAction()
         setUpBottomSheetStateListener()
         updateBottomSheetIsDraggable()
+        registerAndLaunchNotificationPermission()
     }
 
     override fun onResume() {
@@ -414,6 +422,28 @@ class MainActivity :
         val timeDuration = currentTime - previousBottomSheetStateTime
         previousBottomSheetStateTime = currentTime
         return timeDuration / MILLISECONDS_TO_SECONDS
+    }
+
+    private fun registerAndLaunchNotificationPermission() {
+        notificationPermissionManager.register(
+            caller = this,
+            activity = this,
+            showRationale = ::showNotificationPermissionRationale,
+        )
+        notificationPermissionManager.launch()
+    }
+
+    private fun showNotificationPermissionRationale() {
+        binding.cvMainNotificationRationaleDialog.setContent {
+            NotificationPermissionRationale(::moveToNotificationSetting)
+        }
+    }
+
+    private fun moveToNotificationSetting() {
+        val intent =
+            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+        startActivity(intent)
     }
 
     companion object {

@@ -90,6 +90,7 @@ class LoginActivity : AppCompatActivity(), LoginHandler {
     }
 
     private fun navigateToMainActivity() {
+        loginViewModel.registerCurrentFcmToken()
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val options =
