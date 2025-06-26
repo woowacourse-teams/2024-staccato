@@ -51,6 +51,5 @@ class CategoryDefaultRepository
 
         override suspend fun deleteCategory(categoryId: Long): ApiResult<Unit> = categoryDataSource.deleteCategory(categoryId).handle()
 
-        override suspend fun leaveCategory(categoryId: Long): ApiResult<Unit> =
-            categoryDataSource.deleteMeFromCategory(categoryId).handle()
+        override suspend fun leaveCategory(categoryId: Long): ApiResult<Unit> = categoryDataSource.deleteMeFromCategory(categoryId).handle()
     }
