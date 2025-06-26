@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,6 +44,9 @@ class InvitationViewModel
 
         private val _sentInvitations: MutableStateFlow<List<SentInvitationUiModel>> = MutableStateFlow(emptyList())
         val sentInvitations: StateFlow<List<SentInvitationUiModel>> = _sentInvitations.asStateFlow()
+
+        private val _hasInvitationAccepted: MutableSharedFlow<Boolean> = MutableSharedFlow(replay = 0)
+        val hasInvitationAccepted: SharedFlow<Boolean> = _hasInvitationAccepted.asSharedFlow()
 
         private val _dialogState: MutableState<InvitationDialogState> = mutableStateOf(None)
         val dialogState: State<InvitationDialogState> = _dialogState
@@ -73,8 +77,9 @@ class InvitationViewModel
                 val result = invitationRepository.acceptInvitation(invitationId)
                 result
                     .onSuccess {
-                        _toastMessage.emit(FromResource(R.string.invitation_management_accept_success))
                         fetchReceivedInvitations()
+                        updateHasInvitationAccepted()
+                        updateToastMessage(FromResource(R.string.invitation_management_accept_success))
                     }
                     .onServerError { handleServerError(it) }
                     .onException2 { handelException(it) }
@@ -115,6 +120,10 @@ class InvitationViewModel
             _receivedInvitations.value = invitations.map { it.toUiModel() }
         }
 
+        private suspend fun updateHasInvitationAccepted() {
+            _hasInvitationAccepted.emit(true)
+        }
+
         private fun rejectInvitation(invitationId: Long) {
             dismissDialog()
             viewModelScope.launch {
@@ -141,8 +150,12 @@ class InvitationViewModel
             }
         }
 
+        private suspend fun updateToastMessage(toastMessage: ToastMessage) {
+            _toastMessage.emit(toastMessage)
+        }
+
         private suspend fun handleServerError(message: String) {
-            _toastMessage.emit(Plain(message))
+            updateToastMessage(Plain(message))
         }
 
         private suspend fun handelException(state: ExceptionState2) {

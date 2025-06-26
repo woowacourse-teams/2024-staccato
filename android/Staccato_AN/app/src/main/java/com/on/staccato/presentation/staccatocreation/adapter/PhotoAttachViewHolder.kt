@@ -7,8 +7,7 @@ import com.on.staccato.databinding.ItemAttachedPhotoBinding
 import com.on.staccato.presentation.common.photo.AttachedPhotoHandler
 import com.on.staccato.presentation.common.photo.AttachedPhotoUiModel
 
-sealed class PhotoAttachViewHolder(binding: ViewDataBinding) :
-    RecyclerView.ViewHolder(binding.root) {
+sealed class PhotoAttachViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
     class AddPhotoViewHolder(
         private val binding: ItemAddPhotoBinding,
         private val attachedPhotoHandler: AttachedPhotoHandler,

@@ -55,6 +55,11 @@ interface CategoryApiService {
         @Path(CATEGORY_ID) categoryId: Long,
     ): ApiResult<Unit>
 
+    @DELETE(CATEGORY_MEMBERS_ME_PATH)
+    suspend fun deleteMeFromCategory(
+        @Path(CATEGORY_ID) categoryId: Long,
+    ): ApiResult<Unit>
+
     companion object {
         private const val CATEGORIES_PATH = "/categories"
         private const val CANDIDATES_PATH = "/candidates"
@@ -62,11 +67,13 @@ interface CategoryApiService {
         private const val CATEGORY_PATH_WITH_ID = "$CATEGORIES_PATH/{$CATEGORY_ID}"
         private const val CATEGORY_COLOR_CHANGE_PATH = "$CATEGORIES_PATH/{$CATEGORY_ID}/colors"
         private const val CATEGORY_PATH_WITH_CANDIDATES = "$CATEGORIES_PATH$CANDIDATES_PATH"
-        private const val CURRENT_DATE = "currentDate"
         private const val CATEGORIES_PATH_V2 = "/v2${CATEGORIES_PATH}"
         private const val CATEGORY_PATH_WITH_ID_V3 = "/v3$CATEGORIES_PATH/{$CATEGORY_ID}"
         private const val CATEGORIES_PATH_V3 = "/v3${CATEGORIES_PATH}"
+        private const val CATEGORY_MEMBERS_PATH = "$CATEGORY_PATH_WITH_ID/members"
+        private const val CATEGORY_MEMBERS_ME_PATH = "$CATEGORY_MEMBERS_PATH/me"
         private const val SORT = "sort"
         private const val FILTERS = "filters"
+        private const val CURRENT_DATE = "currentDate"
     }
 }

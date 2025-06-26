@@ -31,6 +31,8 @@ import com.on.staccato.presentation.common.notification.NotificationPermissionMa
 import com.on.staccato.presentation.common.notification.NotificationPermissionRationale
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.mypage.MyPageActivity
+import com.on.staccato.presentation.mypage.MyPageActivity.Companion.UPDATED_PROFILE_KEY
+import com.on.staccato.presentation.mypage.MyPageActivity.Companion.UPDATED_TIMELINE_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
@@ -293,7 +295,12 @@ class MainActivity :
     private fun handleMyPageResult() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                loadMemberProfile()
+                result.data?.let {
+                    val hasTimelineUpdated = it.getBooleanExtra(UPDATED_TIMELINE_KEY, false)
+                    val hasProfileUpdated = it.getBooleanExtra(UPDATED_PROFILE_KEY, false)
+                    if (hasTimelineUpdated) sharedViewModel.setTimelineHasUpdated()
+                    if (hasProfileUpdated) loadMemberProfile()
+                }
             }
         }
 
