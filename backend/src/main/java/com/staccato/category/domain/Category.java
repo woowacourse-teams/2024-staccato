@@ -117,6 +117,8 @@ public class Category extends BaseEntity {
                     .build();
             categoryMembers.add(categoryMember);
         });
+
+        setUpdatedAt(LocalDateTime.now());
     }
 
     public void update(Category updatedCategory, List<Staccato> staccatos) {
