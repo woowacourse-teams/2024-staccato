@@ -46,13 +46,11 @@ class SharedViewModel
         private val _memberProfile = MutableLiveData<MemberProfile>()
         val memberProfile: LiveData<MemberProfile> get() = _memberProfile
 
-        private val _isTimelineUpdated = MutableLiveData(false)
-        val isTimelineUpdated: LiveData<Boolean>
-            get() = _isTimelineUpdated
+        private val _isTimelineUpdated = MutableStateFlow(false)
+        val isTimelineUpdated: StateFlow<Boolean> = _isTimelineUpdated.asStateFlow()
 
-        private val _isStaccatosUpdated = MutableSingleLiveData(false)
-        val isStaccatosUpdated: SingleLiveData<Boolean>
-            get() = _isStaccatosUpdated
+        private val _isStaccatosUpdated = MutableLiveData<Boolean>(false)
+        val isStaccatosUpdated: LiveData<Boolean> get() = _isStaccatosUpdated
 
         private val _isPermissionCanceled = MutableLiveData(false)
         val isPermissionCanceled: LiveData<Boolean> get() = _isPermissionCanceled
@@ -68,9 +66,6 @@ class SharedViewModel
 
         private val _isBottomSheetHalfExpanded = MutableLiveData(true)
         val isBottomSheetHalfExpanded: LiveData<Boolean> get() = _isBottomSheetHalfExpanded
-
-        private val _staccatoId = MutableLiveData<Long>()
-        val staccatoId: LiveData<Long> get() = _staccatoId
 
         private val _staccatoLocation = MutableLiveData<LocationUiModel>()
         val staccatoLocation: LiveData<LocationUiModel> get() = _staccatoLocation
@@ -89,6 +84,13 @@ class SharedViewModel
         private val _currentLocationEvent = MutableSharedFlow<Unit>()
         val currentLocationEvent: SharedFlow<Unit> get() = _currentLocationEvent.asSharedFlow()
 
+        private val _categoryRefreshEvent = MutableSingleLiveData<Boolean>()
+        val categoryRefreshEvent: SingleLiveData<Boolean> get() = _categoryRefreshEvent
+
+        fun updateCategoryRefreshEvent() {
+            _categoryRefreshEvent.setValue(true)
+        }
+
         fun updateCurrentLocationEvent() {
             viewModelScope.launch {
                 _currentLocationEvent.emit(Unit)
@@ -98,7 +100,7 @@ class SharedViewModel
         fun fetchMemberProfile() {
             viewModelScope.launch {
                 val result = myPageRepository.getMemberProfile()
-                result.onException2(::handleException)
+                result.onException2(::updateException)
                     .onServerError(::handleServerError)
                     .onSuccess(::setMemberProfile)
             }
@@ -109,7 +111,7 @@ class SharedViewModel
                 notificationRepository.getNotificationExistence()
                     .onSuccess { _hasNotification.value = it.isExist }
                     .onServerError(::handleServerError)
-                    .onException2(::handleException)
+                    .onException2(::updateException)
             }
         }
 
@@ -129,13 +131,17 @@ class SharedViewModel
             _latestIsDraggable.value = _isDraggable.value
         }
 
-        fun setTimelineHasUpdated() {
-            _isTimelineUpdated.value = true
+        fun updateIsTimelineUpdated(value: Boolean) {
+            viewModelScope.launch {
+                _isTimelineUpdated.emit(value)
+            }
         }
 
-        fun setStaccatosHasUpdated() {
-            _isTimelineUpdated.value = true
-            _isStaccatosUpdated.setValue(true)
+        fun updateIsStaccatosUpdated(value: Boolean) {
+            viewModelScope.launch {
+                _isTimelineUpdated.emit(true)
+            }
+            _isStaccatosUpdated.value = value
         }
 
         fun updateIsPermissionCanceled() {
@@ -159,10 +165,6 @@ class SharedViewModel
             viewModelScope.launch {
                 _halfModeEvent.emit(Unit)
             }
-        }
-
-        fun updateStaccatoId(id: Long) {
-            _staccatoId.value = id
         }
 
         fun updateStaccatoLocation(
@@ -192,9 +194,5 @@ class SharedViewModel
 
         private fun handleServerError(errorMessage: String) {
             _errorMessage.postValue(errorMessage)
-        }
-
-        private fun handleException(state: ExceptionState2) {
-            _exception.postValue(state)
         }
     }

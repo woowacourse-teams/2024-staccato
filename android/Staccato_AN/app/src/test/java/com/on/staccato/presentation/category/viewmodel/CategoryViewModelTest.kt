@@ -77,7 +77,7 @@ class CategoryViewModelTest {
             viewModel.loadCategory(VALID_ID)
 
             // then
-            val actual = viewModel.category.getOrAwaitValue()
+            val actual = viewModel.category.first()
             assertThat(actual).isEqualTo(categoryUiModel)
         }
 

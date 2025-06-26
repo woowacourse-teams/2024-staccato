@@ -7,15 +7,19 @@ import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.network.onException2
 import com.on.staccato.data.network.onServerError
 import com.on.staccato.data.network.onSuccess
-import com.on.staccato.domain.model.StaccatoLocation
+import com.on.staccato.domain.model.StaccatoMarker
 import com.on.staccato.domain.repository.LocationRepository
 import com.on.staccato.domain.repository.StaccatoRepository
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.map.model.LocationUiModel
-import com.on.staccato.presentation.map.model.MarkerUiModel
+import com.on.staccato.presentation.map.model.StaccatoMarkerUiModel
+import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,10 +30,14 @@ class MapsViewModel
         private val staccatoRepository: StaccatoRepository,
         private val locationRepository: LocationRepository,
     ) : ViewModel() {
-        private val _staccatoLocations = MutableLiveData<List<StaccatoLocation>>()
-        val staccatoLocations: LiveData<List<StaccatoLocation>> get() = _staccatoLocations
+        private val _staccatoMarkers = MutableLiveData<List<StaccatoMarkerUiModel>>()
+        val staccatoMarkers: LiveData<List<StaccatoMarkerUiModel>> get() = _staccatoMarkers
 
-        private val markerUiModels = MutableLiveData<List<MarkerUiModel>>()
+        private val _clusterStaccatoMarkers = MutableStateFlow<List<StaccatoMarkerUiModel>>(emptyList())
+        val clusterStaccatoMarkers: StateFlow<List<StaccatoMarkerUiModel>> = _clusterStaccatoMarkers.asStateFlow()
+
+        private var _isClusterMode = MutableStateFlow(false)
+        val isClusterMode: StateFlow<Boolean> = _isClusterMode.asStateFlow()
 
         private val _errorMessage = MutableSingleLiveData<String>()
         val errorMessage: SingleLiveData<String> get() = _errorMessage
@@ -57,44 +65,46 @@ class MapsViewModel
             _focusLocation.value = LocationUiModel(latitude, longitude)
         }
 
-        fun findStaccatoId(markerId: String?) {
-            _staccatoId.value =
-                markerUiModels.value?.first {
-                    it.markerId == markerId
-                }?.staccatoId ?: throw NoSuchElementException("marker id와 일치하는 스타카토가 없습니다.")
-        }
-
-        fun loadStaccatos() {
+        fun loadStaccatoMarkers() {
             viewModelScope.launch {
-                val result = staccatoRepository.getStaccatos()
-                result.onSuccess(::setStaccatoLocations)
+                val result = staccatoRepository.getStaccatoMarkers()
+                result.onSuccess(::updateStaccatoMarkers)
                     .onServerError(::handleServerError)
-                    .onException2(::handelException)
+                    .onException2(::handleException)
             }
         }
 
-        fun updateMarkers(
-            markerIds: List<String>,
-            staccatoIds: List<Long>,
+        fun switchClusterMode(
+            isClusterMode: Boolean,
+            markers: List<StaccatoMarkerUiModel>? = null,
         ) {
-            markerUiModels.value =
-                markerIds.zip(staccatoIds) { markerId, staccatoId ->
-                    MarkerUiModel(
-                        staccatoId = staccatoId,
-                        markerId = markerId,
-                    )
-                }
+            viewModelScope.launch {
+                _isClusterMode.emit(isClusterMode)
+                updateClusterStaccatoMarkers(isClusterMode, markers)
+            }
         }
 
-        private fun setStaccatoLocations(locations: List<StaccatoLocation>) {
-            _staccatoLocations.value = locations
+        private suspend fun updateClusterStaccatoMarkers(
+            isClusterMode: Boolean,
+            markers: List<StaccatoMarkerUiModel>?,
+        ) {
+            if (isClusterMode && markers != null) {
+                val sortedMarkers = markers.sortedByDescending { it.visitedAt }
+                _clusterStaccatoMarkers.emit(sortedMarkers)
+            } else {
+                _clusterStaccatoMarkers.emit(emptyList())
+            }
+        }
+
+        private fun updateStaccatoMarkers(markers: List<StaccatoMarker>) {
+            _staccatoMarkers.value = markers.map { it.toUiModel() }
         }
 
         private fun handleServerError(message: String) {
             _errorMessage.setValue(message)
         }
 
-        private fun handelException(state: ExceptionState2) {
+        private fun handleException(state: ExceptionState2) {
             _exception.setValue(state)
         }
     }
