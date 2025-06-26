@@ -219,6 +219,27 @@ class CategoryTest {
         }
     }
 
+    @DisplayName("GUEST가 추가되면, 카테고리의 updatedAt이 갱신된다.")
+    @Test
+    void changeUpdatedAtWhenAddGuest() {
+        // given
+        Member host = MemberFixtures.defaultMember().withNickname("host").build();
+        Member guest = MemberFixtures.defaultMember().withNickname("guest").build();
+        Category category = CategoryFixtures.defaultCategory()
+                .withHost(host)
+                .build();
+
+        LocalDateTime beforeUpdatedAt = category.getUpdatedAt();
+
+        // when
+        category.addGuests(List.of(guest));
+
+        // then
+        LocalDateTime afterUpdatedAt = category.getUpdatedAt();
+
+        assertThat(beforeUpdatedAt).isBefore(afterUpdatedAt);
+    }
+
 /*
     @DisplayName("처음 카테고리를 생성했을 때 스타카토는 0개이다.")
     @Test
