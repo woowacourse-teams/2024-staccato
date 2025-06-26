@@ -42,6 +42,9 @@ class CategoryViewModel
         private val memberRepository: MemberRepository,
         private val invitationRepository: InvitationRepository,
     ) : ViewModel() {
+        var categoryId: Long = DEFAULT_CATEGORY_ID
+            private set
+
         private val _category = MutableStateFlow<CategoryUiModel>(defaultCategoryUiModel)
         val category: StateFlow<CategoryUiModel> = _category.asStateFlow()
 
@@ -112,6 +115,13 @@ class CategoryViewModel
                             searchedMembers.emit(it)
                         }
                 }
+            }
+        }
+
+        fun updateCategoryId(id: Long) {
+            if (categoryId != id) {
+                categoryId = id
+                loadCategory(id)
             }
         }
 

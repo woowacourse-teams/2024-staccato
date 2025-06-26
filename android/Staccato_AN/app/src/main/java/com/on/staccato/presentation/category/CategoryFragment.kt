@@ -66,6 +66,7 @@ class CategoryFragment :
     private val isCategoryCreated: Boolean by lazy {
         arguments?.getBoolean(KEY_IS_CATEGORY_CREATED) ?: false
     }
+
     private val viewModel: CategoryViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels<SharedViewModel>()
     private val deleteDialog = DeleteDialogFragment { onConfirmClicked() }
@@ -81,8 +82,7 @@ class CategoryFragment :
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        // TODO: 초기에 한번만 부르도록 처리하기
-        viewModel.loadCategory(categoryId)
+        viewModel.updateCategoryId(categoryId)
 
         if (isCategoryCreated || isCategoryUpdated) sharedViewModel.updateIsTimelineUpdated(true)
         if (isCategoryUpdated) viewModel.loadCategory(categoryId)
@@ -205,7 +205,10 @@ class CategoryFragment :
 
     private fun observeIsStaccatosUpdated() {
         sharedViewModel.isStaccatosUpdated.observe(viewLifecycleOwner) { isUpdated ->
-            if (isUpdated) viewModel.loadCategory(categoryId)
+            if (isUpdated) {
+                viewModel.loadCategory(categoryId)
+                sharedViewModel.updateIsStaccatosUpdated(false)
+            }
         }
     }
 

@@ -26,6 +26,7 @@ import com.on.staccato.presentation.staccato.detail.ViewpagePhotoAdapter
 import com.on.staccato.presentation.staccato.feeling.StaccatoFeelingSelectionFragment
 import com.on.staccato.presentation.staccato.viewmodel.StaccatoViewModel
 import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity
+import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity.Companion.KEY_IS_STACCATO_UPDATED
 import com.on.staccato.presentation.util.MenuHandler
 import com.on.staccato.presentation.util.showPopupMenu
 import com.on.staccato.presentation.util.showSnackBarWithAction
@@ -76,11 +77,15 @@ class StaccatoFragment :
         arguments?.getBoolean(CREATED_STACCATO_KEY) ?: false
     }
 
+    private val isStaccatoUpdated by lazy {
+        arguments?.getBoolean(KEY_IS_STACCATO_UPDATED) ?: false
+    }
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        if (isStaccatoCreated) sharedViewModel.updateIsStaccatosUpdated()
+        if (isStaccatoCreated || isStaccatoUpdated) sharedViewModel.updateIsStaccatosUpdated(true)
         setUpBinding()
         setNavigationClickListener()
         setUpViewPager()
@@ -204,7 +209,7 @@ class StaccatoFragment :
     private fun observeStaccatoDelete() {
         staccatoViewModel.isDeleted.observe(viewLifecycleOwner) { isDeleted ->
             if (isDeleted) {
-                sharedViewModel.updateIsStaccatosUpdated()
+                sharedViewModel.updateIsStaccatosUpdated(true)
                 findNavController().popBackStack()
             }
         }

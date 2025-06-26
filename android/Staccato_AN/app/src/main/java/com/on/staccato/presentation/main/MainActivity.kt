@@ -26,13 +26,16 @@ import com.on.staccato.R
 import com.on.staccato.databinding.ActivityMainBinding
 import com.on.staccato.presentation.base.BindingActivity
 import com.on.staccato.presentation.category.CategoryFragment.Companion.CATEGORY_ID_KEY
+import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
 import com.on.staccato.presentation.categorycreation.CategoryCreationActivity.Companion.KEY_IS_CATEGORY_CREATED
 import com.on.staccato.presentation.categoryupdate.CategoryUpdateActivity.Companion.KEY_IS_CATEGORY_UPDATED
 import com.on.staccato.presentation.main.viewmodel.SharedViewModel
 import com.on.staccato.presentation.mypage.MyPageActivity
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.CREATED_STACCATO_KEY
+import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.DEFAULT_STACCATO_ID
 import com.on.staccato.presentation.staccato.StaccatoFragment.Companion.STACCATO_ID_KEY
 import com.on.staccato.presentation.staccatocreation.StaccatoCreationActivity
+import com.on.staccato.presentation.staccatoupdate.StaccatoUpdateActivity.Companion.KEY_IS_STACCATO_UPDATED
 import com.on.staccato.presentation.util.showSnackBarWithAction
 import com.on.staccato.presentation.util.showToast
 import com.on.staccato.util.logging.AnalyticsEvent.Companion.NAME_BOTTOM_SHEET
@@ -69,8 +72,8 @@ class MainActivity :
 
     val categoryCreationLauncher: ActivityResultLauncher<Intent> = handleCategoryCreationResult()
     val categoryUpdateLauncher: ActivityResultLauncher<Intent> = handleCategoryUpdateResult()
-    val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
-    val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoResult()
+    val staccatoCreationLauncher: ActivityResultLauncher<Intent> = handleStaccatoCreationResult()
+    val staccatoUpdateLauncher: ActivityResultLauncher<Intent> = handleStaccatoUpdateResult()
     private val myPageLauncher: ActivityResultLauncher<Intent> = handleMyPageResult()
 
     override fun initStartView(savedInstanceState: Bundle?) {
@@ -242,7 +245,7 @@ class MainActivity :
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    val id = it.getLongExtra(CATEGORY_ID_KEY, 0L)
+                    val id = it.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID)
                     val isCategoryCreated = it.getBooleanExtra(KEY_IS_CATEGORY_CREATED, false)
                     val bundle = bundleOf(CATEGORY_ID_KEY to id, KEY_IS_CATEGORY_CREATED to isCategoryCreated)
                     navigateTo(R.id.categoryFragment, R.id.timelineFragment, bundle, false)
@@ -254,7 +257,7 @@ class MainActivity :
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    val id = it.getLongExtra(CATEGORY_ID_KEY, 0L)
+                    val id = it.getLongExtra(CATEGORY_ID_KEY, DEFAULT_CATEGORY_ID)
                     val isCategoryCreated = it.getBooleanExtra(KEY_IS_CATEGORY_UPDATED, false)
                     val bundle = bundleOf(CATEGORY_ID_KEY to id, KEY_IS_CATEGORY_UPDATED to isCategoryCreated)
                     navigateTo(R.id.categoryFragment, R.id.timelineFragment, bundle, false)
@@ -262,13 +265,25 @@ class MainActivity :
             }
         }
 
-    private fun handleStaccatoResult() =
+    private fun handleStaccatoCreationResult() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    val id = it.getLongExtra(STACCATO_ID_KEY, 0L)
+                    val id = it.getLongExtra(STACCATO_ID_KEY, DEFAULT_STACCATO_ID)
                     val isStaccatoCreated = it.getBooleanExtra(CREATED_STACCATO_KEY, false)
                     val bundle = bundleOf(STACCATO_ID_KEY to id, CREATED_STACCATO_KEY to isStaccatoCreated)
+                    navigateTo(R.id.staccatoFragment, R.id.staccatoFragment, bundle, true)
+                }
+            }
+        }
+
+    private fun handleStaccatoUpdateResult() =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let {
+                    val id = it.getLongExtra(STACCATO_ID_KEY, DEFAULT_STACCATO_ID)
+                    val isStaccatoCreated = it.getBooleanExtra(KEY_IS_STACCATO_UPDATED, false)
+                    val bundle = bundleOf(STACCATO_ID_KEY to id, KEY_IS_STACCATO_UPDATED to isStaccatoCreated)
                     navigateTo(R.id.staccatoFragment, R.id.staccatoFragment, bundle, true)
                 }
             }

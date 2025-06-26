@@ -49,9 +49,8 @@ class SharedViewModel
         private val _isTimelineUpdated = MutableStateFlow(false)
         val isTimelineUpdated: StateFlow<Boolean> = _isTimelineUpdated.asStateFlow()
 
-        private val _isStaccatosUpdated = MutableSingleLiveData(false)
-        val isStaccatosUpdated: SingleLiveData<Boolean>
-            get() = _isStaccatosUpdated
+        private val _isStaccatosUpdated = MutableLiveData<Boolean>(false)
+        val isStaccatosUpdated: LiveData<Boolean> get() = _isStaccatosUpdated
 
         private val _isPermissionCanceled = MutableLiveData(false)
         val isPermissionCanceled: LiveData<Boolean> get() = _isPermissionCanceled
@@ -131,11 +130,11 @@ class SharedViewModel
             }
         }
 
-        fun updateIsStaccatosUpdated() {
+        fun updateIsStaccatosUpdated(value: Boolean) {
             viewModelScope.launch {
                 _isTimelineUpdated.emit(true)
             }
-            _isStaccatosUpdated.setValue(true)
+            _isStaccatosUpdated.value = value
         }
 
         fun updateIsPermissionCanceled() {
