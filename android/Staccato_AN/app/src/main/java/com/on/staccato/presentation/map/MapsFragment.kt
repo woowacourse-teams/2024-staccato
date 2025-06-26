@@ -41,6 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// TODO: 스타카토 마커 호출 횟수 줄이기
 @AndroidEntryPoint
 class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
     @Inject
@@ -104,6 +105,7 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
         observeUpdatedStaccato()
         observeLocation()
         observeIsTimelineUpdated()
+        observeCategoryRefreshEvent()
         observeException()
         observeIsRetry()
     }
@@ -331,6 +333,12 @@ class MapsFragment : Fragment(), OnMyLocationButtonClickListener {
                     if (isUpdated) mapsViewModel.loadStaccatoMarkers()
                 }
             }
+        }
+    }
+
+    private fun observeCategoryRefreshEvent() {
+        sharedViewModel.categoryRefreshEvent.observe(viewLifecycleOwner) {
+            mapsViewModel.loadStaccatoMarkers()
         }
     }
 

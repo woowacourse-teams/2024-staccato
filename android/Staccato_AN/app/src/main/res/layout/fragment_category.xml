@@ -184,9 +184,11 @@
                     android:contentDescription="@string/all_staccato_creation_btn_description"
                     android:paddingHorizontal="6dp"
                     android:src="@drawable/icon_refresh"
+                    android:onClick="@{() -> categoryHandler.onCategoryRefreshClicked()}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_category_staccatos"
                     app:layout_constraintStart_toEndOf="@id/tv_category_staccatos"
-                    app:layout_constraintTop_toTopOf="@id/tv_category_staccatos" />
+                    app:layout_constraintTop_toTopOf="@id/tv_category_staccatos"
+                    bind:visibleOrGone="@{viewModel.category.isShared}" />
 
                 <FrameLayout
                     android:id="@+id/frame_category_add_staccatos"

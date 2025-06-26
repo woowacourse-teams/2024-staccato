@@ -26,7 +26,7 @@ data class CategoryUiModel(
 val defaultCategoryUiModel =
     CategoryUiModel(
         id = DEFAULT_CATEGORY_ID,
-        title = "기본 카테고리",
+        title = "",
         categoryThumbnailUrl = null,
         startAt = null,
         endAt = null,

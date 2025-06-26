@@ -148,6 +148,12 @@ class CategoryFragment :
         }
     }
 
+    override fun onCategoryRefreshClicked() {
+        viewModel.loadCategory(categoryId)
+        // TODO: 스타카토 목록 동일하면 갱신하지 않도록 리팩터링
+        sharedViewModel.updateCategoryRefreshEvent()
+    }
+
     private fun navigateToStaccatoCreation(
         category: CategoryUiModel,
         isPermissionCanceled: Boolean,

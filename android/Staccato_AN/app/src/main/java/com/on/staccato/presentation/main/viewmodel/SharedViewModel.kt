@@ -84,6 +84,13 @@ class SharedViewModel
         private val _currentLocationEvent = MutableSharedFlow<Unit>()
         val currentLocationEvent: SharedFlow<Unit> get() = _currentLocationEvent.asSharedFlow()
 
+        private val _categoryRefreshEvent = MutableSingleLiveData<Boolean>()
+        val categoryRefreshEvent: SingleLiveData<Boolean> get() = _categoryRefreshEvent
+
+        fun updateCategoryRefreshEvent() {
+            _categoryRefreshEvent.setValue(true)
+        }
+
         fun updateCurrentLocationEvent() {
             viewModelScope.launch {
                 _currentLocationEvent.emit(Unit)
