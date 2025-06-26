@@ -60,7 +60,7 @@ jobs:
             android/Staccato_AN/secrets.properties
             android/Staccato_AN/local.defaults.properties
             android/Staccato_AN/app/google-services.json
-          retention-days: 1
+          retention-days: 15
           overwrite: 'true'
 
   ktlint-check:
@@ -148,9 +148,9 @@ jobs:
         include:
           - api-level: 28
             profile: "pixel_4"
-          - api-level: 33
+          - api-level: 32
             profile: "pixel_6"
-          - api-level: 33
+          - api-level: 32
             profile: "Nexus 7"
       fail-fast: false
     permissions:
