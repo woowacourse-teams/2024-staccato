@@ -7,7 +7,7 @@ import com.staccato.member.domain.Member;
 
 public record AcceptInvitationMessage(
         String categoryId,
-        String inviterName,
+        String inviteeName,
         String categoryTitle
 ) implements PushMessage {
     public AcceptInvitationMessage(Member invitee, Category category) {
@@ -28,13 +28,13 @@ public record AcceptInvitationMessage(
                 "title", getTitle(),
                 "body", getBody(),
                 "type", "ACCEPT_INVITATION",
-                "categoryId", String.valueOf(categoryId)
+                "categoryId", categoryId
         );
     }
 
     @Override
     public String getTitle() {
-        return String.format("%s님이 참여했어요", inviterName);
+        return String.format("%s님이 참여했어요", inviteeName);
     }
 
     @Override
