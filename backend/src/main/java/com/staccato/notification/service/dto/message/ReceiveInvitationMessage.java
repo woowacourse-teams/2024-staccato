@@ -21,6 +21,8 @@ public record ReceiveInvitationMessage(
     @Override
     public Map<String, String> toData() {
         return Map.of(
+                "title", getTitle(),
+                "body", getBody(),
                 "type", "RECEIVE-INVITATION"
         );
     }

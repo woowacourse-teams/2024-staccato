@@ -31,7 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class FcmService {
-
     private static final int FCM_MULTICAST_LIMIT = 500;
     private static final String SEND_SUCCESS_LOG = "[FCM][전송 완료] ";
     private static final String SEND_FAIL_LOG = "[FCM][전송 실패] ";
@@ -71,8 +70,6 @@ public class FcmService {
                 .setApnsConfig(APNS_CONFIG)
                 .addAllTokens(tokens)
                 .setNotification(pushMessage.toNotification())
-                .putData("title", pushMessage.getTitle())
-                .putData("body", pushMessage.getBody())
                 .putAllData(Objects.requireNonNullElse(pushMessage.toData(), Map.of()))
                 .build();
     }

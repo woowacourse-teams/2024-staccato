@@ -23,6 +23,8 @@ public record StaccatoCreatedMessage(
     @Override
     public Map<String, String> toData() {
         return Map.of(
+                "title", getTitle(),
+                "body", getBody(),
                 "type", "STACCATO_CREATED",
                 "staccatoId", String.valueOf(staccato.getId())
         );

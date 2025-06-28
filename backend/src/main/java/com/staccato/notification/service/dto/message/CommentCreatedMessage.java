@@ -23,6 +23,8 @@ public record CommentCreatedMessage(
     @Override
     public Map<String, String> toData() {
         return Map.of(
+                "title", getTitle(),
+                "body", getBody(),
                 "type", "COMMENT_CREATED",
                 "staccatoId", String.valueOf(staccato.getId())
         );
