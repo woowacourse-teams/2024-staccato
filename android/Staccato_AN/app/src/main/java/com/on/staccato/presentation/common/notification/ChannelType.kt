@@ -6,22 +6,22 @@ import android.content.Context
 import androidx.annotation.StringRes
 import com.on.staccato.R
 
-enum class NotificationChannelType(
+enum class ChannelType(
     val id: String,
     @StringRes val nameStringRes: Int,
     val importance: Int,
 ) {
-    Invitation(
+    INVITATION(
         id = "invitation",
         nameStringRes = R.string.channel_name_invitation,
         importance = NotificationManager.IMPORTANCE_HIGH,
     ),
-    Category(
+    CATEGORY(
         id = "category",
         nameStringRes = R.string.channel_name_category,
         importance = NotificationManager.IMPORTANCE_HIGH,
     ),
-    Comment(
+    COMMENT(
         id = "comment",
         nameStringRes = R.string.channel_name_comment,
         importance = NotificationManager.IMPORTANCE_HIGH,
@@ -36,11 +36,11 @@ enum class NotificationChannelType(
             title: String,
         ): NotificationChannel =
             when {
-                title.contains("님이 초대를 보냈어요") -> Invitation.toChannel(context)
-                title.contains("님이 참여했어요") -> Category.toChannel(context)
-                title.contains("스타카토가 추가됐어요") -> Category.toChannel(context)
-                title.contains("님의 코멘트") -> Comment.toChannel(context)
-                else -> Category.toChannel(context)
+                title.contains("님이 초대를 보냈어요") -> INVITATION.toChannel(context)
+                title.contains("님이 참여했어요") -> CATEGORY.toChannel(context)
+                title.contains("스타카토가 추가됐어요") -> CATEGORY.toChannel(context)
+                title.contains("님의 코멘트") -> COMMENT.toChannel(context)
+                else -> CATEGORY.toChannel(context)
             }
 
         private fun NotificationChannelType.toChannel(context: Context) =

@@ -26,7 +26,7 @@ class StaccatoNotificationManager
         ) {
             if (permissionLauncher.isNotificationUnavailable()) return
 
-            val channel = NotificationChannelType.toChannel(context, title)
+            val channel = ChannelType.toChannel(context, title)
             val notification = createNotification(channel, title, body)
             val notificationId = System.currentTimeMillis().toInt()
 
