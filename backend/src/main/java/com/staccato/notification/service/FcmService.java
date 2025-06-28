@@ -24,6 +24,7 @@ import com.staccato.notification.repository.NotificationTokenRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.regions.servicemetadata.ApsServiceMetadata;
 
 @Trace
 @Slf4j
@@ -31,10 +32,22 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class FcmService {
 
-    private final int FCM_MULTICAST_LIMIT = 500;
-    private final String SEND_SUCCESS_LOG = "[FCM][전송 완료] ";
-    private final String SEND_FAIL_LOG = "[FCM][전송 실패] ";
-    private final String TOKEN_DELETE_LOG = "[FCM][토큰 삭제] ";
+    private static final int FCM_MULTICAST_LIMIT = 500;
+    private static final String SEND_SUCCESS_LOG = "[FCM][전송 완료] ";
+    private static final String SEND_FAIL_LOG = "[FCM][전송 실패] ";
+    private static final String TOKEN_DELETE_LOG = "[FCM][토큰 삭제] ";
+    private static final AndroidConfig ANDROID_CONFIG = AndroidConfig.builder()
+            .setPriority(AndroidConfig.Priority.HIGH)
+            .setNotification(AndroidNotification.builder()
+                    .setClickAction("PUSH_CLICK")
+                    .build())
+            .build();
+    private static final ApnsConfig APNS_CONFIG = ApnsConfig.builder()
+            .setAps(Aps.builder()
+                    .setCategory("PUSH_CLICK")
+                    .build())
+            .build();
+
     private final FirebaseMessaging firebaseMessaging;
     private final NotificationTokenRepository notificationTokenRepository;
     private final Executor fcmCallbackExecutor;
@@ -54,17 +67,8 @@ public class FcmService {
 
     private MulticastMessage createMulticastMessage(List<String> tokens, Map<String, String> customData) {
         return MulticastMessage.builder()
-                .setAndroidConfig(AndroidConfig.builder()
-                        .setPriority(AndroidConfig.Priority.HIGH)
-                        .setNotification(AndroidNotification.builder()
-                                .setClickAction("PUSH_CLICK")
-                                .build())
-                        .build())
-                .setApnsConfig(ApnsConfig.builder()
-                        .setAps(Aps.builder()
-                                .setCategory("PUSH_CLICK")
-                                .build())
-                        .build())
+                .setAndroidConfig(ANDROID_CONFIG)
+                .setApnsConfig(APNS_CONFIG)
                 .addAllTokens(tokens)
                 .putAllData(Objects.requireNonNullElse(customData, Map.of()))
                 .build();
