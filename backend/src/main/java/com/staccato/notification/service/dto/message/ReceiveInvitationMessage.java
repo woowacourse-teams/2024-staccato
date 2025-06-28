@@ -7,9 +7,13 @@ import com.staccato.category.domain.Category;
 import com.staccato.member.domain.Member;
 
 public record ReceiveInvitationMessage(
-        Member inviter,
-        Category category
+        String inviterName,
+        String categoryTitle
 ) implements PushMessage {
+    public ReceiveInvitationMessage(Member inviter, Category category){
+        this(inviter.getNickname().getNickname(), category.getTitle().getTitle());
+    }
+
     @Override
     public Notification toNotification() {
         return Notification.builder()
@@ -23,18 +27,18 @@ public record ReceiveInvitationMessage(
         return Map.of(
                 "title", getTitle(),
                 "body", getBody(),
-                "type", "RECEIVE-INVITATION"
+                "type", "RECEIVE_INVITATION"
         );
     }
 
     @Override
     public String getTitle() {
-        return String.format("%s님이 초대를 보냈어요", inviter.getNickname().getNickname());
+        return String.format("%s님이 초대를 보냈어요", inviterName);
 
     }
 
     @Override
     public String getBody() {
-        return category.getTitle().getTitle();
+        return categoryTitle;
     }
 }

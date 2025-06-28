@@ -8,10 +8,14 @@ import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
 
 public record CommentCreatedMessage(
-        Member commentCreator,
-        Staccato staccato,
-        Comment comment
+        String staccatoId,
+        String commentCreatorName,
+        String commentContent
 ) implements PushMessage {
+    public CommentCreatedMessage(Member commentCreator, Staccato staccato, Comment comment){
+        this(String.valueOf(staccato.getId()), commentCreator.getNickname().getNickname(), comment.getContent());
+    }
+
     @Override
     public Notification toNotification() {
         return Notification.builder()
@@ -26,17 +30,17 @@ public record CommentCreatedMessage(
                 "title", getTitle(),
                 "body", getBody(),
                 "type", "COMMENT_CREATED",
-                "staccatoId", String.valueOf(staccato.getId())
+                "staccatoId", staccatoId
         );
     }
 
     @Override
     public String getTitle() {
-        return String.format("%s님의 코멘트", commentCreator.getNickname().getNickname());
+        return String.format("%s님의 코멘트", commentCreatorName);
     }
 
     @Override
     public String getBody() {
-        return comment.getContent();
+        return commentContent;
     }
 }
