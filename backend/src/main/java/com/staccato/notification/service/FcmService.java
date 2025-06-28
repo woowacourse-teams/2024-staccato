@@ -2,6 +2,7 @@ package com.staccato.notification.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class FcmService {
     }
 
     private MulticastMessage createMulticastMessage(List<String> tokens, Map<String, String> customData) {
-        MulticastMessage.Builder builder = MulticastMessage.builder()
+        return MulticastMessage.builder()
                 .setAndroidConfig(AndroidConfig.builder()
                         .setPriority(AndroidConfig.Priority.HIGH)
                         .setNotification(AndroidNotification.builder()
@@ -64,13 +65,9 @@ public class FcmService {
                                 .setCategory("PUSH_CLICK")
                                 .build())
                         .build())
-                .addAllTokens(tokens);
-
-        if (customData != null) {
-            customData.forEach(builder::putData);
-        }
-
-        return builder.build();
+                .addAllTokens(tokens)
+                .putAllData(Objects.requireNonNullElse(customData, Map.of()))
+                .build();
     }
 
     private void registerCallback(ApiFuture<BatchResponse> future, List<String> tokens) {
