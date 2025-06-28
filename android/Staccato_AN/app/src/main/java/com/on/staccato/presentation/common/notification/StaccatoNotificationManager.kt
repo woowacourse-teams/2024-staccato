@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.on.staccato.R
+import com.on.staccato.presentation.common.notification.ChannelType.Companion.toChannel
 import com.on.staccato.presentation.login.LoginActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -20,16 +21,12 @@ class StaccatoNotificationManager
         private val permissionLauncher: NotificationPermissionManager,
     ) {
         @SuppressLint("MissingPermission")
-        fun notify(
-            title: String,
-            body: String,
-        ) {
+        fun notify(staccatoNotification: StaccatoNotification) {
             if (permissionLauncher.isNotificationUnavailable()) return
 
-            val channel = ChannelType.toChannel(context, title)
-            val notification = createNotification(channel, title, body)
             val notificationId = System.currentTimeMillis().toInt()
-
+            val channel = staccatoNotification.channelType.toChannel(context)
+            val notification = createNotification(channel, staccatoNotification.title, staccatoNotification.body)
             NotificationManagerCompat.from(context).notify(notificationId, notification)
         }
 

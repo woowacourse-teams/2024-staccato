@@ -29,21 +29,8 @@ enum class ChannelType(
     ;
 
     companion object {
-        fun getAllChannels(context: Context): List<NotificationChannel> = NotificationChannelType.entries.map { it.toChannel(context) }
+        fun getAllChannels(context: Context): List<NotificationChannel> = ChannelType.entries.map { it.toChannel(context) }
 
-        fun toChannel(
-            context: Context,
-            title: String,
-        ): NotificationChannel =
-            when {
-                title.contains("님이 초대를 보냈어요") -> INVITATION.toChannel(context)
-                title.contains("님이 참여했어요") -> CATEGORY.toChannel(context)
-                title.contains("스타카토가 추가됐어요") -> CATEGORY.toChannel(context)
-                title.contains("님의 코멘트") -> COMMENT.toChannel(context)
-                else -> CATEGORY.toChannel(context)
-            }
-
-        private fun NotificationChannelType.toChannel(context: Context) =
-            NotificationChannel(id, context.getString(nameStringRes), importance)
+        fun ChannelType.toChannel(context: Context) = NotificationChannel(id, context.getString(nameStringRes), importance)
     }
 }
