@@ -57,38 +57,23 @@ public class NotificationService {
                         });
     }
 
-    public void sendInvitationAlert(Member sender, Category category, List<Member> receivers) {
-        ReceiveInvitationMessage message = new ReceiveInvitationMessage(
-                sender.getNickname().getNickname(),
-                category.getTitle().getTitle()
-        );
+    public void sendInvitationAlert(Member inviter, Category category, List<Member> receivers) {
+        ReceiveInvitationMessage message = new ReceiveInvitationMessage(inviter, category);
         sendToMembers(receivers, message);
     }
 
-    public void sendAcceptAlert(Member accepter, Category category, List<Member> receivers) {
-        AcceptInvitationMessage message = new AcceptInvitationMessage(
-                String.valueOf(category.getId()),
-                accepter.getNickname().getNickname(),
-                category.getTitle().getTitle()
-        );
+    public void sendAcceptAlert(Member invitee, Category category, List<Member> receivers) {
+        AcceptInvitationMessage message = new AcceptInvitationMessage(invitee, category);
         sendToMembers(receivers, message);
     }
 
     public void sendNewStaccatoAlert(Member staccatoCreator, Category category, Staccato staccato, List<Member> receivers) {
-        StaccatoCreatedMessage message = new StaccatoCreatedMessage(
-                String.valueOf(staccato.getId()),
-                staccatoCreator.getNickname().getNickname(),
-                category.getTitle().getTitle()
-        );
+        StaccatoCreatedMessage message = new StaccatoCreatedMessage(staccatoCreator, staccato, category);
         sendToMembers(receivers, message);
     }
 
     public void sendNewCommentAlert(Member commentCreator, Comment comment, Staccato staccato, List<Member> receivers) {
-        CommentCreatedMessage message = new CommentCreatedMessage(
-                String.valueOf(staccato.getId()),
-                commentCreator.getNickname().getNickname(),
-                comment.getContent()
-        );
+        CommentCreatedMessage message = new CommentCreatedMessage(commentCreator, staccato, comment);
         sendToMembers(receivers, message);
     }
 

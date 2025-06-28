@@ -123,11 +123,8 @@ class NotificationServiceTest extends ServiceSliceTest {
         notificationService.sendInvitationAlert(host, category, List.of(other));
 
         // then
-        List<String> expectedTokens = List.of("otherToken");     // sendToMembers와 동일 순서
-        PushMessage expectedMessage = new ReceiveInvitationMessage(
-                host.getNickname().getNickname(),
-                category.getTitle().getTitle()
-        );
+        List<String> expectedTokens = List.of("otherToken");
+        PushMessage expectedMessage = new ReceiveInvitationMessage(host, category);
 
         verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }
@@ -140,11 +137,7 @@ class NotificationServiceTest extends ServiceSliceTest {
 
         // then
         List<String> expectedTokens = List.of("hostToken", "guestToken");
-        PushMessage expectedMessage = new AcceptInvitationMessage(
-                String.valueOf(category.getId()),
-                other.getNickname().getNickname(),
-                category.getTitle().getTitle()
-        );
+        PushMessage expectedMessage = new AcceptInvitationMessage(other, category);
 
         verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }
@@ -157,11 +150,7 @@ class NotificationServiceTest extends ServiceSliceTest {
 
         // then
         List<String> expectedTokens = List.of("guestToken");
-        PushMessage expectedMessage = new StaccatoCreatedMessage(
-                String.valueOf(staccato.getId()),
-                host.getNickname().getNickname(),
-                category.getTitle().getTitle()
-        );
+        PushMessage expectedMessage = new StaccatoCreatedMessage(host, staccato, category);
 
         verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }
@@ -174,11 +163,7 @@ class NotificationServiceTest extends ServiceSliceTest {
 
         // then
         List<String> expectedTokens = List.of("guestToken");
-        PushMessage expectedMessage = new CommentCreatedMessage(
-                String.valueOf(staccato.getId()),
-                host.getNickname().getNickname(),
-                comment.getContent()
-        );
+        PushMessage expectedMessage = new CommentCreatedMessage(host, staccato, comment);
 
         verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }

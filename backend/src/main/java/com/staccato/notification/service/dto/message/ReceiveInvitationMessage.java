@@ -2,9 +2,12 @@ package com.staccato.notification.service.dto.message;
 
 import java.util.Map;
 
+import com.staccato.category.domain.Category;
+import com.staccato.member.domain.Member;
+
 public record ReceiveInvitationMessage(
-        String inviterName,
-        String categoryTitle
+        Member inviter,
+        Category category
 ) implements PushMessage {
 
     @Override
@@ -16,11 +19,12 @@ public record ReceiveInvitationMessage(
 
     @Override
     public String getTitle() {
-        return inviterName + "님이 초대를 보냈어요";
+        return String.format("%s님이 초대를 보냈어요", inviter.getNickname().getNickname());
+
     }
 
     @Override
     public String getBody() {
-        return categoryTitle;
+        return category.getTitle().getTitle();
     }
 }
