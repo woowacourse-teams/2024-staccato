@@ -1,7 +1,7 @@
 package com.on.staccato.presentation.category.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.on.staccato.data.network.ApiResult
@@ -21,15 +21,26 @@ import com.on.staccato.domain.repository.InvitationRepository
 import com.on.staccato.domain.repository.MemberRepository
 import com.on.staccato.presentation.category.invite.model.InviteState
 import com.on.staccato.presentation.category.invite.model.toUiModel
+import com.on.staccato.presentation.category.model.CategoryDialogState
+import com.on.staccato.presentation.category.model.CategoryDialogState.Exit
+import com.on.staccato.presentation.category.model.CategoryDialogState.None
+import com.on.staccato.presentation.category.model.CategoryEvent
+import com.on.staccato.presentation.category.model.CategoryEvent.Deleted
+import com.on.staccato.presentation.category.model.CategoryEvent.Error
+import com.on.staccato.presentation.category.model.CategoryEvent.Exited
 import com.on.staccato.presentation.category.model.CategoryUiModel
 import com.on.staccato.presentation.category.model.CategoryUiModel.Companion.DEFAULT_CATEGORY_ID
+import com.on.staccato.presentation.category.model.defaultCategoryUiModel
 import com.on.staccato.presentation.common.MutableSingleLiveData
 import com.on.staccato.presentation.common.SingleLiveData
 import com.on.staccato.presentation.mapper.toUiModel
 import com.on.staccato.presentation.util.ExceptionState2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -43,8 +54,11 @@ class CategoryViewModel
         private val memberRepository: MemberRepository,
         private val invitationRepository: InvitationRepository,
     ) : ViewModel() {
-        private val _category = MutableLiveData<CategoryUiModel>()
-        val category: LiveData<CategoryUiModel> get() = _category
+        var categoryId: Long = DEFAULT_CATEGORY_ID
+            private set
+
+        private val _category = MutableStateFlow<CategoryUiModel>(defaultCategoryUiModel)
+        val category: StateFlow<CategoryUiModel> = _category.asStateFlow()
 
         private val _toastMessage = MutableSingleLiveData<String>()
         val toastMessage: SingleLiveData<String> get() = _toastMessage
@@ -52,18 +66,21 @@ class CategoryViewModel
         private val _exceptionState = MutableSingleLiveData<ExceptionState2>()
         val exceptionState: SingleLiveData<ExceptionState2> get() = _exceptionState
 
-        private val _isDeleted = MutableSingleLiveData<Boolean>()
-        val isDeleted: SingleLiveData<Boolean> get() = _isDeleted
-
-        private var _isInviteMode = MutableStateFlow(false)
+        private val _isInviteMode = MutableStateFlow(false)
         val isInviteMode: StateFlow<Boolean> get() = _isInviteMode
 
-        var participatingMembers = MutableStateFlow(emptyParticipants)
+        val participatingMembers = MutableStateFlow(emptyParticipants)
 
-        private var searchedMembers = MutableStateFlow(emptyMembers)
+        private val searchedMembers = MutableStateFlow(emptyMembers)
 
-        private var _selectedMembers = MutableStateFlow(emptyMembers)
+        private val _selectedMembers = MutableStateFlow(emptyMembers)
         val selectedMembers = _selectedMembers.asStateFlow()
+
+        private val _categoryEvent = MutableSharedFlow<CategoryEvent>()
+        val categoryEvent: SharedFlow<CategoryEvent> = _categoryEvent.asSharedFlow()
+
+        private val _dialogState = mutableStateOf<CategoryDialogState>(None)
+        val dialogState: State<CategoryDialogState> = _dialogState
 
         val members =
             combine(
@@ -78,14 +95,16 @@ class CategoryViewModel
 
         fun inviteMemberBy(ids: List<Long>) {
             if (selectedMembers.value.members.isEmpty()) return
-            category.value?.id?.let { categoryId ->
-                viewModelScope.launch {
-                    invitationRepository.invite(categoryId, ids).onSuccess {
-                        _toastMessage.setValue("${ids.size}명을 초대했어요!") // stringRes로 빼기
-                        toggleInviteMode(false)
-                    }.onServerError(::handleServerError)
-                        .onException { handleServerError(it.message) }
-                }
+
+            val categoryId = _category.value.id
+            if (categoryId == DEFAULT_CATEGORY_ID) return
+
+            viewModelScope.launch {
+                invitationRepository.invite(categoryId, ids).onSuccess {
+                    _toastMessage.setValue("${ids.size}명을 초대했어요!") // stringRes로 빼기
+                    toggleInviteMode(false)
+                }.onServerError(::handleServerError)
+                    .onException { handleServerError(it.message) }
             }
         }
 
@@ -114,6 +133,13 @@ class CategoryViewModel
             }
         }
 
+        fun updateCategoryId(id: Long) {
+            if (categoryId != id) {
+                categoryId = id
+                loadCategory(id)
+            }
+        }
+
         fun loadCategory(id: Long) {
             if (id <= DEFAULT_CATEGORY_ID) {
                 handelException(ExceptionState2.UnknownError)
@@ -129,14 +155,14 @@ class CategoryViewModel
 
         fun deleteCategory() {
             viewModelScope.launch {
-                val id = _category.value?.id
-                if (id == null) {
-                    _isDeleted.setValue(false)
+                val id = _category.value.id
+                if (id == DEFAULT_CATEGORY_ID) {
+                    updateToDeletedEvent(false)
                     return@launch
                 }
 
                 val result: ApiResult<Unit> = categoryRepository.deleteCategory(id)
-                result.onSuccess { updateIsDeleteSuccess() }
+                result.onSuccess { updateToDeletedEvent(true) }
                     .onServerError(::handleServerError)
                     .onException2(::handelException)
             }
@@ -151,6 +177,29 @@ class CategoryViewModel
             viewModelScope.launch {
                 searchedMembers.emit(emptyMembers)
             }
+        }
+
+        fun showLeaveDialog() {
+            _dialogState.value = Exit(onConfirm = ::leaveCategory)
+        }
+
+        fun dismissDialog() {
+            _dialogState.value = None
+        }
+
+        private fun leaveCategory() {
+            viewModelScope.launch {
+                val id = _category.value?.id
+                if (id == null) {
+                    updateToErrorEvent()
+                    return@launch
+                }
+                categoryRepository.leaveCategory(id)
+                    .onSuccess { updateToExitEvent() }
+                    .onServerError(::handleServerError)
+                    .onException2(::handelException)
+            }
+            dismissDialog()
         }
 
         private fun clearAllMembers() {
@@ -169,8 +218,16 @@ class CategoryViewModel
             participatingMembers.emit(Participants(category.participants))
         }
 
-        private fun updateIsDeleteSuccess() {
-            _isDeleted.setValue(true)
+        private suspend fun updateToDeletedEvent(success: Boolean) {
+            _categoryEvent.emit(Deleted(success = success))
+        }
+
+        private suspend fun updateToExitEvent() {
+            _categoryEvent.emit(Exited)
+        }
+
+        private suspend fun updateToErrorEvent() {
+            _categoryEvent.emit(Error)
         }
 
         private fun handleServerError(message: String) {

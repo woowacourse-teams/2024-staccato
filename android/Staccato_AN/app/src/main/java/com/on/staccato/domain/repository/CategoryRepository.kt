@@ -33,4 +33,6 @@ interface CategoryRepository {
     ): ApiResult<Unit>
 
     suspend fun deleteCategory(categoryId: Long): ApiResult<Unit>
+
+    suspend fun leaveCategory(categoryId: Long): ApiResult<Unit>
 }

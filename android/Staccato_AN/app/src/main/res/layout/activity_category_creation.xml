@@ -192,7 +192,7 @@
                     android:scaleType="fitCenter"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_category_creation_color"
-                    bind:imageButtonIcon="@{viewModel.color.markerRes}"
+                    bind:imageButtonIcon="@{viewModel.color.markerResWithShadow}"
                     tools:src="@drawable/icon_marker_4x_brown" />
 
                 <TextView

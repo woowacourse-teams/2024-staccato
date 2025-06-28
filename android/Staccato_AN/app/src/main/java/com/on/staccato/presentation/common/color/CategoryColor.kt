@@ -53,6 +53,7 @@ import com.on.staccato.theme.Yellow15
 enum class CategoryColor(
     val label: String,
     @ColorRes val colorRes: Int,
+    @DrawableRes val markerResWithShadow: Int,
     @DrawableRes val markerRes: Int,
     val color: Color,
     val iconBackgroundColor: Color,
@@ -62,7 +63,8 @@ enum class CategoryColor(
     LIGHT_RED(
         label = "light_red",
         colorRes = R.color.light_red,
-        markerRes = R.drawable.icon_marker_4x_light_red,
+        markerResWithShadow = R.drawable.icon_marker_4x_light_red,
+        markerRes = R.drawable.icon_marker_light_red,
         color = LightRed,
         iconBackgroundColor = Red15,
         textColor = DarkRed,
@@ -71,7 +73,8 @@ enum class CategoryColor(
     RED(
         label = "red",
         colorRes = R.color.red,
-        markerRes = R.drawable.icon_marker_4x_red,
+        markerResWithShadow = R.drawable.icon_marker_4x_red,
+        markerRes = R.drawable.icon_marker_red,
         color = Red,
         iconBackgroundColor = Red15,
         textColor = White,
@@ -80,7 +83,8 @@ enum class CategoryColor(
     LIGHT_ORANGE(
         label = "light_orange",
         colorRes = R.color.light_orange,
-        markerRes = R.drawable.icon_marker_4x_light_orange,
+        markerResWithShadow = R.drawable.icon_marker_4x_light_orange,
+        markerRes = R.drawable.icon_marker_light_orange,
         color = LightOrange,
         iconBackgroundColor = Orange15,
         textColor = White,
@@ -89,7 +93,8 @@ enum class CategoryColor(
     ORANGE(
         label = "orange",
         colorRes = R.color.orange,
-        markerRes = R.drawable.icon_marker_4x_orange,
+        markerResWithShadow = R.drawable.icon_marker_4x_orange,
+        markerRes = R.drawable.icon_marker_orange,
         color = Orange,
         iconBackgroundColor = Orange15,
         textColor = DarkOrange,
@@ -98,7 +103,8 @@ enum class CategoryColor(
     LIGHT_YELLOW(
         label = "light_yellow",
         colorRes = R.color.light_yellow,
-        markerRes = R.drawable.icon_marker_4x_light_yellow,
+        markerResWithShadow = R.drawable.icon_marker_4x_light_yellow,
+        markerRes = R.drawable.icon_marker_light_yellow,
         color = LightYellow,
         iconBackgroundColor = Yellow15,
         textColor = DarkYellow,
@@ -107,7 +113,8 @@ enum class CategoryColor(
     YELLOW(
         label = "yellow",
         colorRes = R.color.yellow,
-        markerRes = R.drawable.icon_marker_4x_yellow,
+        markerResWithShadow = R.drawable.icon_marker_4x_yellow,
+        markerRes = R.drawable.icon_marker_yellow,
         color = Yellow,
         iconBackgroundColor = Yellow15,
         textColor = DarkYellow,
@@ -116,7 +123,8 @@ enum class CategoryColor(
     LIGHT_GREEN(
         label = "light_green",
         colorRes = R.color.light_green,
-        markerRes = R.drawable.icon_marker_4x_light_green,
+        markerResWithShadow = R.drawable.icon_marker_4x_light_green,
+        markerRes = R.drawable.icon_marker_light_green,
         color = LightGreen,
         iconBackgroundColor = Green15,
         textColor = DarkGreen,
@@ -125,7 +133,8 @@ enum class CategoryColor(
     GREEN(
         label = "green",
         colorRes = R.color.green,
-        markerRes = R.drawable.icon_marker_4x_green,
+        markerResWithShadow = R.drawable.icon_marker_4x_green,
+        markerRes = R.drawable.icon_marker_green,
         color = Green,
         iconBackgroundColor = Green15,
         textColor = DarkGreen,
@@ -134,7 +143,8 @@ enum class CategoryColor(
     LIGHT_MINT(
         label = "light_mint",
         colorRes = R.color.light_mint,
-        markerRes = R.drawable.icon_marker_4x_light_mint,
+        markerResWithShadow = R.drawable.icon_marker_4x_light_mint,
+        markerRes = R.drawable.icon_marker_light_mint,
         color = LightMint,
         iconBackgroundColor = Mint15,
         textColor = DarkMint,
@@ -143,7 +153,8 @@ enum class CategoryColor(
     MINT(
         label = "mint",
         colorRes = R.color.mint,
-        markerRes = R.drawable.icon_marker_4x_mint,
+        markerResWithShadow = R.drawable.icon_marker_4x_mint,
+        markerRes = R.drawable.icon_marker_mint,
         color = Mint,
         iconBackgroundColor = Mint15,
         textColor = DarkMint,
@@ -152,7 +163,8 @@ enum class CategoryColor(
     LIGHT_BLUE(
         label = "light_blue",
         colorRes = R.color.light_blue,
-        markerRes = R.drawable.icon_marker_4x_light_blue,
+        markerResWithShadow = R.drawable.icon_marker_4x_light_blue,
+        markerRes = R.drawable.icon_marker_light_blue,
         color = LightBlue,
         iconBackgroundColor = Blue15,
         textColor = DarkBlue,
@@ -161,7 +173,8 @@ enum class CategoryColor(
     BLUE(
         label = "blue",
         colorRes = R.color.blue,
-        markerRes = R.drawable.icon_marker_4x_blue,
+        markerResWithShadow = R.drawable.icon_marker_4x_blue,
+        markerRes = R.drawable.icon_marker_blue,
         color = Blue,
         iconBackgroundColor = Blue15,
         textColor = White,
@@ -170,7 +183,8 @@ enum class CategoryColor(
     LIGHT_INDIGO(
         label = "light_indigo",
         colorRes = R.color.light_indigo,
-        markerRes = R.drawable.icon_marker_4x_light_indigo,
+        markerResWithShadow = R.drawable.icon_marker_4x_light_indigo,
+        markerRes = R.drawable.icon_marker_light_indigo,
         color = LightIndigo,
         iconBackgroundColor = Indigo15,
         textColor = DarkIndigo,
@@ -179,7 +193,8 @@ enum class CategoryColor(
     INDIGO(
         label = "indigo",
         colorRes = R.color.indigo,
-        markerRes = R.drawable.icon_marker_4x_indigo,
+        markerResWithShadow = R.drawable.icon_marker_4x_indigo,
+        markerRes = R.drawable.icon_marker_indigo,
         color = Indigo,
         iconBackgroundColor = Indigo15,
         textColor = White,
@@ -188,7 +203,8 @@ enum class CategoryColor(
     LIGHT_PURPLE(
         label = "light_purple",
         colorRes = R.color.light_purple,
-        markerRes = R.drawable.icon_marker_4x_light_purple,
+        markerResWithShadow = R.drawable.icon_marker_4x_light_purple,
+        markerRes = R.drawable.icon_marker_light_purple,
         color = LightPurple,
         iconBackgroundColor = Purple15,
         textColor = DarkPurple,
@@ -197,7 +213,8 @@ enum class CategoryColor(
     PURPLE(
         label = "purple",
         colorRes = R.color.purple,
-        markerRes = R.drawable.icon_marker_4x_purple,
+        markerResWithShadow = R.drawable.icon_marker_4x_purple,
+        markerRes = R.drawable.icon_marker_purple,
         color = Purple,
         iconBackgroundColor = Purple15,
         textColor = White,
@@ -206,7 +223,8 @@ enum class CategoryColor(
     LIGHT_PINK(
         label = "light_pink",
         colorRes = R.color.light_pink,
-        markerRes = R.drawable.icon_marker_4x_light_pink,
+        markerResWithShadow = R.drawable.icon_marker_4x_light_pink,
+        markerRes = R.drawable.icon_marker_light_pink,
         color = LightPink,
         iconBackgroundColor = Pink15,
         textColor = DarkPink,
@@ -215,7 +233,8 @@ enum class CategoryColor(
     PINK(
         label = "pink",
         colorRes = R.color.pink,
-        markerRes = R.drawable.icon_marker_4x_pink,
+        markerResWithShadow = R.drawable.icon_marker_4x_pink,
+        markerRes = R.drawable.icon_marker_pink,
         color = Pink,
         iconBackgroundColor = Pink15,
         textColor = White,
@@ -224,7 +243,8 @@ enum class CategoryColor(
     LIGHT_BROWN(
         label = "light_brown",
         colorRes = R.color.light_brown,
-        markerRes = R.drawable.icon_marker_4x_light_brown,
+        markerResWithShadow = R.drawable.icon_marker_4x_light_brown,
+        markerRes = R.drawable.icon_marker_light_brown,
         color = LightBrown,
         iconBackgroundColor = Brown15,
         textColor = DarkBrown,
@@ -233,7 +253,8 @@ enum class CategoryColor(
     BROWN(
         label = "brown",
         colorRes = R.color.brown,
-        markerRes = R.drawable.icon_marker_4x_brown,
+        markerResWithShadow = R.drawable.icon_marker_4x_brown,
+        markerRes = R.drawable.icon_marker_brown,
         color = Brown,
         iconBackgroundColor = Brown15,
         textColor = White,
@@ -242,7 +263,8 @@ enum class CategoryColor(
     LIGHT_GRAY(
         label = "light_gray",
         colorRes = R.color.light_gray,
-        markerRes = R.drawable.icon_marker_4x_light_gray,
+        markerResWithShadow = R.drawable.icon_marker_4x_light_gray,
+        markerRes = R.drawable.icon_marker_light_gray,
         color = LightGray,
         iconBackgroundColor = Gray15,
         textColor = DarkGray,
@@ -251,7 +273,8 @@ enum class CategoryColor(
     GRAY(
         label = "gray",
         colorRes = R.color.gray,
-        markerRes = R.drawable.icon_marker_4x_gray,
+        markerResWithShadow = R.drawable.icon_marker_4x_gray,
+        markerRes = R.drawable.icon_marker_gray,
         color = Gray,
         iconBackgroundColor = Gray15,
         textColor = White,
@@ -263,7 +286,5 @@ enum class CategoryColor(
         fun getAllColors() = entries.toList()
 
         fun getCategoryColorBy(label: String) = entries.firstOrNull { it.label == label } ?: GRAY
-
-        fun getMarkerResBy(label: String) = entries.firstOrNull { it.label == label }?.markerRes ?: GRAY.markerRes
     }
 }
