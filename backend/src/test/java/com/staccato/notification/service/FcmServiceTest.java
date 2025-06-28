@@ -6,7 +6,6 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,12 @@ import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.MulticastMessage;
+import com.staccato.category.domain.Category;
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.member.domain.Member;
 import com.staccato.notification.service.dto.message.PushMessage;
+import com.staccato.notification.service.dto.message.ReceiveInvitationMessage;
 
 @ExtendWith(MockitoExtension.class)
 class FcmServiceTest {
@@ -56,21 +60,9 @@ class FcmServiceTest {
     }
 
     private PushMessage dummyPushMessage() {
-        return new PushMessage() {
-            @Override
-            public Map<String, String> toMap() {
-                return Map.of();
-            }
+        Member inviter = MemberFixtures.defaultMember().build();
+        Category category = CategoryFixtures.defaultCategory().build();
 
-            @Override
-            public String getTitle() {
-                return "";
-            }
-
-            @Override
-            public String getBody() {
-                return "";
-            }
-        };
+        return new ReceiveInvitationMessage(inviter, category);
     }
 }
