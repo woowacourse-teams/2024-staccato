@@ -1,21 +1,29 @@
 package com.staccato.notification.service;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.MulticastMessage;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import com.staccato.category.domain.Category;
+import com.staccato.fixture.category.CategoryFixtures;
+import com.staccato.fixture.member.MemberFixtures;
+import com.staccato.member.domain.Member;
+import com.staccato.notification.service.dto.message.PushMessage;
+import com.staccato.notification.service.dto.message.ReceiveInvitationMessage;
 
 @ExtendWith(MockitoExtension.class)
 class FcmServiceTest {
@@ -35,7 +43,7 @@ class FcmServiceTest {
         when(firebaseMessaging.sendEachForMulticastAsync(any(MulticastMessage.class))).thenReturn(future);
 
         // when
-        fcmService.sendPush(tokens, "TestTitle", "TestBody");
+        fcmService.sendPush(tokens, dummyPushMessage());
 
         // then
         verify(firebaseMessaging).sendEachForMulticastAsync(any(MulticastMessage.class));
@@ -45,9 +53,16 @@ class FcmServiceTest {
     @Test
     void failSendPush() {
         // given
-        fcmService.sendPush(List.of(), "title", "body");
+        fcmService.sendPush(List.of(), dummyPushMessage());
 
         // when & then
         verifyNoInteractions(firebaseMessaging);
+    }
+
+    private PushMessage dummyPushMessage() {
+        Member inviter = MemberFixtures.defaultMember().build();
+        Category category = CategoryFixtures.defaultCategory().build();
+
+        return new ReceiveInvitationMessage(inviter, category);
     }
 }

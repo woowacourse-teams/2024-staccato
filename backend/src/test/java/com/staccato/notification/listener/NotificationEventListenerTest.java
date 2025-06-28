@@ -80,14 +80,17 @@ class NotificationEventListenerTest extends ServiceSliceTest {
                 .withCategoryId(category.getId()).build();
 
         // when
-        staccatoService.createStaccato(staccatoRequest, staccatoCreator);
+        Long staccatoId = staccatoService.createStaccato(staccatoRequest, staccatoCreator).staccatoId();
 
         // then
+        Staccato staccato = staccatoRepository.findById(staccatoId).orElseThrow();
+
         Awaitility.await().atMost(Duration.ofSeconds(2)).untilAsserted(() ->
                 verify(notificationService, times(1))
                         .sendNewStaccatoAlert(
                                 eq(staccatoCreator),
                                 eq(category),
+                                eq(staccato),
                                 argThat(targets ->
                                         targets.size() == 2 &&
                                                 !targets.contains(staccatoCreator) &&
@@ -130,6 +133,7 @@ class NotificationEventListenerTest extends ServiceSliceTest {
                         .sendNewCommentAlert(
                                 eq(commentCreator),
                                 eq(comment),
+                                eq(staccato),
                                 argThat(targets ->
                                         targets.size() == 2 &&
                                                 !targets.contains(commentCreator) &&
@@ -167,10 +171,10 @@ class NotificationEventListenerTest extends ServiceSliceTest {
                 verify(notificationService, times(1))
                         .sendInvitationAlert(
                                 eq(host),
+                                eq(category),
                                 argThat(targets ->
                                         targets.size() == 2 &&
-                                                targets.containsAll(List.of(invitee1, invitee2))),
-                                eq(category)
+                                                targets.containsAll(List.of(invitee1, invitee2)))
                         )
         );
     }
