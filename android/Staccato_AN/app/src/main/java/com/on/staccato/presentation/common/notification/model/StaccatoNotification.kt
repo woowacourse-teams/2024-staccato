@@ -1,5 +1,10 @@
-package com.on.staccato.presentation.common.notification
+package com.on.staccato.presentation.common.notification.model
 
+import android.app.PendingIntent
+import android.content.Context
+import android.os.Build
+import com.on.staccato.presentation.common.notification.ChannelType
+import com.on.staccato.presentation.common.notification.NotificationType
 import com.on.staccato.presentation.common.notification.NotificationType.ACCEPT_INVITATION
 import com.on.staccato.presentation.common.notification.NotificationType.COMMENT_CREATED
 import com.on.staccato.presentation.common.notification.NotificationType.RECEIVE_INVITATION
@@ -10,38 +15,19 @@ sealed interface StaccatoNotification {
     val body: String
     val channelType: ChannelType
 
-    data class ReceiveInvitation(
-        override val channelType: ChannelType,
-        override val title: String,
-        override val body: String,
-    ) : StaccatoNotification
-
-    data class AcceptInvitation(
-        override val channelType: ChannelType,
-        override val title: String,
-        override val body: String,
-        val categoryId: Long,
-    ) : StaccatoNotification
-
-    data class StaccatoCreated(
-        override val channelType: ChannelType,
-        override val title: String,
-        override val body: String,
-        val staccatoId: Long,
-    ) : StaccatoNotification
-
-    data class CommentCreated(
-        override val channelType: ChannelType,
-        override val title: String,
-        override val body: String,
-        val staccatoId: Long,
-    ) : StaccatoNotification
+    fun createIntent(context: Context): PendingIntent
 
     companion object {
         private const val KEY_TITLE = "title"
         private const val KEY_BODY = "body"
         private const val KEY_CATEGORY_ID = "categoryId"
         private const val KEY_STACCATO_ID = "staccatoId"
+        val pendingIntentFlags =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
 
         fun from(
             type: NotificationType,
@@ -51,14 +37,14 @@ sealed interface StaccatoNotification {
             val body = data[KEY_BODY] ?: return null
             return when (type) {
                 RECEIVE_INVITATION ->
-                    ReceiveInvitation(
+                    ReceiveInvitationNotification(
                         channelType = type.channelType,
                         title = title,
                         body = body,
                     )
 
                 ACCEPT_INVITATION ->
-                    AcceptInvitation(
+                    AcceptInvitationNotification(
                         channelType = type.channelType,
                         title = title,
                         body = body,
@@ -66,7 +52,7 @@ sealed interface StaccatoNotification {
                     )
 
                 COMMENT_CREATED ->
-                    CommentCreated(
+                    CommentCreatedNotification(
                         channelType = type.channelType,
                         title = title,
                         body = body,
@@ -74,7 +60,7 @@ sealed interface StaccatoNotification {
                     )
 
                 STACCATO_CREATED ->
-                    StaccatoCreated(
+                    StaccatoCreatedNotification(
                         channelType = type.channelType,
                         title = title,
                         body = body,
