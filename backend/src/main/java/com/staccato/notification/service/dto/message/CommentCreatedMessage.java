@@ -2,6 +2,7 @@ package com.staccato.notification.service.dto.message;
 
 import java.util.Map;
 
+import com.google.firebase.messaging.Notification;
 import com.staccato.comment.domain.Comment;
 import com.staccato.member.domain.Member;
 import com.staccato.staccato.domain.Staccato;
@@ -11,9 +12,16 @@ public record CommentCreatedMessage(
         Staccato staccato,
         Comment comment
 ) implements PushMessage {
+    @Override
+    public Notification toNotification() {
+        return Notification.builder()
+                .setTitle(getTitle())
+                .setBody(getBody())
+                .build();
+    }
 
     @Override
-    public Map<String, String> toMap() {
+    public Map<String, String> toData() {
         return Map.of(
                 "type", "COMMENT_CREATED",
                 "staccatoId", String.valueOf(staccato.getId())
