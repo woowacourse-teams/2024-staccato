@@ -19,6 +19,7 @@ import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.MulticastMessage;
+import com.staccato.notification.service.dto.message.PushMessage;
 
 @ExtendWith(MockitoExtension.class)
 class FcmServiceTest {
@@ -38,7 +39,7 @@ class FcmServiceTest {
         when(firebaseMessaging.sendEachForMulticastAsync(any(MulticastMessage.class))).thenReturn(future);
 
         // when
-        fcmService.sendPush(tokens, Map.of());
+        fcmService.sendPush(tokens, dummyPushMessage());
 
         // then
         verify(firebaseMessaging).sendEachForMulticastAsync(any(MulticastMessage.class));
@@ -48,9 +49,28 @@ class FcmServiceTest {
     @Test
     void failSendPush() {
         // given
-        fcmService.sendPush(List.of(), Map.of());
+        fcmService.sendPush(List.of(), dummyPushMessage());
 
         // when & then
         verifyNoInteractions(firebaseMessaging);
+    }
+
+    private PushMessage dummyPushMessage() {
+        return new PushMessage() {
+            @Override
+            public Map<String, String> toMap() {
+                return Map.of();
+            }
+
+            @Override
+            public String getTitle() {
+                return "";
+            }
+
+            @Override
+            public String getBody() {
+                return "";
+            }
+        };
     }
 }

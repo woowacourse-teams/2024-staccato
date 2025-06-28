@@ -2,7 +2,6 @@ package com.staccato.notification.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
@@ -30,6 +29,11 @@ import com.staccato.member.domain.Member;
 import com.staccato.member.repository.MemberRepository;
 import com.staccato.notification.domain.NotificationToken;
 import com.staccato.notification.repository.NotificationTokenRepository;
+import com.staccato.notification.service.dto.message.AcceptInvitationMessage;
+import com.staccato.notification.service.dto.message.CommentCreatedMessage;
+import com.staccato.notification.service.dto.message.PushMessage;
+import com.staccato.notification.service.dto.message.ReceiveInvitationMessage;
+import com.staccato.notification.service.dto.message.StaccatoCreatedMessage;
 import com.staccato.notification.service.dto.request.NotificationTokenRequest;
 import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import com.staccato.staccato.domain.Staccato;
@@ -119,15 +123,13 @@ class NotificationServiceTest extends ServiceSliceTest {
         notificationService.sendInvitationAlert(host, category, List.of(other));
 
         // then
-        verify(fcmService).sendPush(
-                argThat(tokens -> tokens.containsAll(List.of("otherToken"))),
-                argThat(data ->
-                        "RECEIVE_INVITATION".equals(data.get("type")) &&
-                                String.format("%s님이 초대를 보냈어요", host.getNickname().getNickname())
-                                        .equals(data.get("title")) &&
-                                category.getTitle().getTitle().equals(data.get("body"))
-                )
+        List<String> expectedTokens = List.of("otherToken");     // sendToMembers와 동일 순서
+        PushMessage expectedMessage = new ReceiveInvitationMessage(
+                host.getNickname().getNickname(),
+                category.getTitle().getTitle()
         );
+
+        verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("초대 수락 알림을 전송한다.")
@@ -137,17 +139,14 @@ class NotificationServiceTest extends ServiceSliceTest {
         notificationService.sendAcceptAlert(other, category, List.of(host, guest));
 
         // then
-        verify(fcmService).sendPush(
-                argThat(tokens -> tokens.containsAll(List.of("hostToken", "guestToken"))),
-                argThat(data ->
-                        "ACCEPT_INVITATION".equals(data.get("type")) &&
-                                String.format("%s님이 참여했어요", other.getNickname().getNickname())
-                                        .equals(data.get("title")) &&
-                                String.format("%s에서 환영해주세요!", category.getTitle().getTitle())
-                                        .equals(data.get("body")) &&
-                                String.valueOf(category.getId()).equals(data.get("categoryId"))
-                )
+        List<String> expectedTokens = List.of("hostToken", "guestToken");
+        PushMessage expectedMessage = new AcceptInvitationMessage(
+                String.valueOf(category.getId()),
+                other.getNickname().getNickname(),
+                category.getTitle().getTitle()
         );
+
+        verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("새로운 스타카토 알림을 전송한다.")
@@ -157,17 +156,14 @@ class NotificationServiceTest extends ServiceSliceTest {
         notificationService.sendNewStaccatoAlert(host, category, staccato, List.of(guest));
 
         // then
-        verify(fcmService).sendPush(
-                argThat(tokens -> tokens.containsAll(List.of("guestToken"))),
-                argThat(data ->
-                        "STACCATO_CREATED".equals(data.get("type")) &&
-                                "스타카토가 추가됐어요".equals(data.get("title")) &&
-                                String.format("%s님이 %s에 남긴 스타카토를 확인해보세요",
-                                        host.getNickname().getNickname(),
-                                        category.getTitle().getTitle()).equals(data.get("body")) &&
-                                String.valueOf(staccato.getId()).equals(data.get("staccatoId"))
-                )
+        List<String> expectedTokens = List.of("guestToken");
+        PushMessage expectedMessage = new StaccatoCreatedMessage(
+                String.valueOf(staccato.getId()),
+                host.getNickname().getNickname(),
+                category.getTitle().getTitle()
         );
+
+        verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("새로운 코멘트 알림을 전송한다.")
@@ -177,16 +173,14 @@ class NotificationServiceTest extends ServiceSliceTest {
         notificationService.sendNewCommentAlert(host, comment, staccato, List.of(guest));
 
         // then
-        verify(fcmService).sendPush(
-                argThat(tokens -> tokens.containsAll(List.of("guestToken"))),
-                argThat(data ->
-                        "COMMENT_CREATED".equals(data.get("type")) &&
-                                String.format("%s님의 코멘트", host.getNickname().getNickname())
-                                        .equals(data.get("title")) &&
-                                comment.getContent().equals(data.get("body")) &&
-                                String.valueOf(staccato.getId()).equals(data.get("staccatoId"))
-                )
+        List<String> expectedTokens = List.of("guestToken");
+        PushMessage expectedMessage = new CommentCreatedMessage(
+                String.valueOf(staccato.getId()),
+                host.getNickname().getNickname(),
+                comment.getContent()
         );
+
+        verify(fcmService).sendPush(expectedTokens, expectedMessage);
     }
 
     @DisplayName("토큰이 존재하지 않으면 새로 저장한다.")

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
+import org.hibernate.resource.transaction.LocalSynchronizationException;
 import org.springframework.stereotype.Service;
 
 import com.google.api.core.ApiFuture;
@@ -21,6 +22,7 @@ import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.SendResponse;
 import com.staccato.config.log.annotation.Trace;
 import com.staccato.notification.repository.NotificationTokenRepository;
+import com.staccato.notification.service.dto.message.PushMessage;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,25 +54,27 @@ public class FcmService {
     private final NotificationTokenRepository notificationTokenRepository;
     private final Executor fcmCallbackExecutor;
 
-    public void sendPush(List<String> tokens, Map<String, String> data) {
+    public void sendPush(List<String> tokens, PushMessage pushMessage) {
         if (tokens == null || tokens.isEmpty()) {
             log.warn(SEND_FAIL_LOG + "FCM 전송 대상 토큰이 없습니다.");
             return;
         }
         for (int i = 0; i < tokens.size(); i += FCM_MULTICAST_LIMIT) {
             List<String> batchTokens = tokens.subList(i, Math.min(i + FCM_MULTICAST_LIMIT, tokens.size()));
-            MulticastMessage message = createMulticastMessage(batchTokens, data);
+            MulticastMessage message = createMulticastMessage(batchTokens, pushMessage);
             ApiFuture<BatchResponse> future = firebaseMessaging.sendEachForMulticastAsync(message);
             registerCallback(future, batchTokens);
         }
     }
 
-    private MulticastMessage createMulticastMessage(List<String> tokens, Map<String, String> customData) {
+    private MulticastMessage createMulticastMessage(List<String> tokens, PushMessage pushMessage) {
         return MulticastMessage.builder()
                 .setAndroidConfig(ANDROID_CONFIG)
                 .setApnsConfig(APNS_CONFIG)
                 .addAllTokens(tokens)
-                .putAllData(Objects.requireNonNullElse(customData, Map.of()))
+                .putData("title", pushMessage.getTitle())
+                .putData("body", pushMessage.getBody())
+                .putAllData(Objects.requireNonNullElse(pushMessage.toMap(), Map.of()))
                 .build();
     }
 

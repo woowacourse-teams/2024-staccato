@@ -3,8 +3,12 @@ package com.staccato.notification.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.SimpleAttributeSet;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.staccato.StaccatoApplication;
 import com.staccato.category.domain.Category;
 import com.staccato.comment.domain.Comment;
 import com.staccato.config.log.annotation.Trace;
@@ -13,6 +17,11 @@ import com.staccato.invitation.repository.CategoryInvitationRepository;
 import com.staccato.member.domain.Member;
 import com.staccato.notification.domain.NotificationToken;
 import com.staccato.notification.repository.NotificationTokenRepository;
+import com.staccato.notification.service.dto.message.AcceptInvitationMessage;
+import com.staccato.notification.service.dto.message.CommentCreatedMessage;
+import com.staccato.notification.service.dto.message.PushMessage;
+import com.staccato.notification.service.dto.message.ReceiveInvitationMessage;
+import com.staccato.notification.service.dto.message.StaccatoCreatedMessage;
 import com.staccato.notification.service.dto.request.NotificationTokenRequest;
 import com.staccato.notification.service.dto.response.NotificationExistResponse;
 import com.staccato.staccato.domain.Staccato;
@@ -49,51 +58,45 @@ public class NotificationService {
     }
 
     public void sendInvitationAlert(Member sender, Category category, List<Member> receivers) {
-        Map<String, String> data = Map.of(
-                "type", "RECEIVE_INVITATION",
-                "title", String.format("%s님이 초대를 보냈어요", sender.getNickname().getNickname()),
-                "body", category.getTitle().getTitle()
+        ReceiveInvitationMessage message = new ReceiveInvitationMessage(
+                sender.getNickname().getNickname(),
+                category.getTitle().getTitle()
         );
-        sendToMembers(receivers, data);
+        sendToMembers(receivers, message);
     }
 
     public void sendAcceptAlert(Member accepter, Category category, List<Member> receivers) {
-        Map<String, String> data = Map.of(
-                "type", "ACCEPT_INVITATION",
-                "title", String.format("%s님이 참여했어요", accepter.getNickname().getNickname()),
-                "body", String.format("%s에서 환영해주세요!", category.getTitle().getTitle()),
-                "categoryId", String.valueOf(category.getId())
+        AcceptInvitationMessage message = new AcceptInvitationMessage(
+                String.valueOf(category.getId()),
+                accepter.getNickname().getNickname(),
+                category.getTitle().getTitle()
         );
-        sendToMembers(receivers, data);
+        sendToMembers(receivers, message);
     }
 
-    public void sendNewStaccatoAlert(Member member, Category category, Staccato staccato, List<Member> receivers) {
-        Map<String, String> data = Map.of(
-                "type", "STACCATO_CREATED",
-                "title", "스타카토가 추가됐어요",
-                "body", String.format("%s님이 %s에 남긴 스타카토를 확인해보세요",
-                        member.getNickname().getNickname(),
-                        category.getTitle().getTitle()),
-                "staccatoId", String.valueOf(staccato.getId())
+    public void sendNewStaccatoAlert(Member staccatoCreator, Category category, Staccato staccato, List<Member> receivers) {
+        StaccatoCreatedMessage message = new StaccatoCreatedMessage(
+                String.valueOf(staccato.getId()),
+                staccatoCreator.getNickname().getNickname(),
+                category.getTitle().getTitle()
         );
-        sendToMembers(receivers, data);
+        sendToMembers(receivers, message);
     }
 
-    public void sendNewCommentAlert(Member commenter, Comment comment, Staccato staccato, List<Member> receivers) {
-        Map<String, String> data = Map.of(
-                "type", "COMMENT_CREATED",
-                "title", String.format("%s님의 코멘트", commenter.getNickname().getNickname()),
-                "body", comment.getContent(),
-                "staccatoId", String.valueOf(staccato.getId())
+    public void sendNewCommentAlert(Member commentCreator, Comment comment, Staccato staccato, List<Member> receivers) {
+        CommentCreatedMessage message = new CommentCreatedMessage(
+                String.valueOf(staccato.getId()),
+                commentCreator.getNickname().getNickname(),
+                comment.getContent()
         );
-        sendToMembers(receivers, data);
+        sendToMembers(receivers, message);
     }
 
-    private void sendToMembers(List<Member> members, Map<String, String> data) {
+    private void sendToMembers(List<Member> members, PushMessage pushMessage) {
         List<NotificationToken> notificationTokens = notificationTokenRepository.findByMemberIn(members);
         List<String> tokens = notificationTokens.stream()
                 .map(NotificationToken::getToken)
                 .toList();
-        fcmService.sendPush(tokens, data);
+        fcmService.sendPush(tokens, pushMessage);
     }
 }
